@@ -1,0 +1,38 @@
+
+a.link
+{
+  text-decoration: none;
+  color: initial;
+  display: block;
+  height: 100%;
+  width:100%;
+}
+
+.clicked_animate
+{
+  animation-duration: 300ms;
+  animation-name: click_animation;
+}
+
+@keyframes click_animation {
+  0% { background-color: rgba(150, 150, 240, 1); }
+  100% { background-color: rgba(255, 255, 255, 0); }
+}
+
+input[type=button].styled
+{
+  margin: 1px;
+}
+
+input[type=button].styled.selected
+{
+  background-color: #FAFAFF;
+  border-radius: 2px;
+  border-width: 1px;
+  padding: 2px 7px;
+}
+
+input[type=button].styled.selected:focus
+{
+  outline-style: none;
+}

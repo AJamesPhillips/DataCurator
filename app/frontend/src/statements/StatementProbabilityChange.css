@@ -1,0 +1,20 @@
+
+.statement_probability_change
+{
+    padding: 10px;
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.statement_probability_change > div
+{
+    flex: 1 1 auto;
+    padding: 5px;
+    border: thin solid #aaa;
+    width: 120px;
+}
+
+.statement_probability_change .perception, .statement_probability_change .explanation
+{
+    width: 300px;
+}

@@ -1,0 +1,82 @@
+.node_state_value {
+    min-height: 18px;
+    display: block;
+}
+
+.node_info_segments_container > div
+{
+    display: inline-flex;
+    border-top: thin solid black;
+    padding: 2px;
+}
+
+
+.node_info_segments_container .node_state_value_container
+{
+    border-right: thin solid black;
+    margin-left: -5px;
+    padding-left: 5px;
+    min-width: 20px;
+    height: 18px;
+    /* text-align: center; does seem to work */
+}
+
+.node_info_segments_container .node_judgements_container
+{
+    /* margin-right: -6px; /* Looks nicer when judgements container is adding the max width */
+    padding-right: 5px;
+    /* border-right: thin solid black; */
+}
+
+.node_info_segments_container .empty
+{
+    display: none;
+}
+
+
+.node_handle
+{
+    position: absolute;
+    background-color: initial;
+    left: -5px;
+    top: 0px;
+    border: none;
+    font-size: 15px;
+    color: rgba(0,0,0,0.3);
+}
+.node_handle:hover
+{
+    color: rgba(0,0,0,1);
+}
+
+.node_handle.movement
+{
+    left: -4px;
+}
+
+.node_handle.explore
+{
+    top: 20px;
+    font-size: 13px;
+}
+
+
+.node_is_selected
+{
+    z-index: 97;
+}
+
+.node_is_current_item
+{
+    z-index: 98;
+}
+
+.node_is_highlighted
+{
+    z-index: 99;
+}
+
+.node_is_moving
+{
+    z-index: 100;
+}

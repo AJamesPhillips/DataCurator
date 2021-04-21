@@ -1,0 +1,8 @@
+
+#search_container tbody
+{
+    position: absolute;
+    top: 60px;
+    height: 190px;
+    overflow: scroll;
+}

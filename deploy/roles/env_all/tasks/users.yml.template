@@ -1,0 +1,7 @@
+---
+- set_fact:
+  USERS_ENABLED:
+    "Jo Je":  # TODO SETUP: change this to your name in double quotes
+      user_name: joje  # TODO SETUP: change this to your username
+      key: "your_public_key.pub"  # TODO SETUP: change this to your key
+  USERS_DISABLED: {}

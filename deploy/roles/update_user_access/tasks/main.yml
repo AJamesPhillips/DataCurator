@@ -1,0 +1,29 @@
+---
+  - name: "[Debug] Users about to be created"
+    debug:
+      msg: "User {{ item.key }}, user name {{ item.value.user_name }}, with key: {{ item.value.key }}"
+    with_dict: "{{ USERS_ENABLED }}"
+  - name: Create users
+    user: name={{ item.value.user_name }} comment="{{ item.key }} User" shell=/bin/bash
+    with_dict: "{{ USERS_ENABLED }}"
+  - name: Give user sudo rights
+    lineinfile: dest=/etc/sudoers state=present regexp='^{{ item.value.user_name }} ALL\=' line='{{ item.value.user_name }} ALL=(ALL) NOPASSWD:ALL' validate='visudo -cf %s'
+    with_dict: "{{ USERS_ENABLED }}"
+  - name: Set public key for users
+    authorized_key: user={{ item.value.user_name }} key='{{ lookup('file', './public_keys/{{ item.value.key }}') }}'
+    with_dict: "{{ USERS_ENABLED }}"
+    notify:
+      - Restart ssh daemon
+
+  - name: "[Debug] Users about to be disabled"
+    debug:
+      msg: "User {{ item.key }}, user name {{ item.value.user_name }}, with key: {{ item.value.key }}"
+    with_dict: "{{ USERS_DISABLED }}"
+  - name: Remove user sudo rights
+    lineinfile: state=absent dest=/etc/sudoers regexp='^{{ item.value.user_name }}.*' validate='visudo -cf %s'
+    with_dict: "{{ USERS_DISABLED }}"
+  - name: Delete users
+    user: state=absent remove=yes force=yes name={{ item.value.user_name }} comment="{{ item.key }} User" shell=/bin/bash
+    with_dict: "{{ USERS_DISABLED }}"
+    notify:
+      - Restart ssh daemon

@@ -1,0 +1,18 @@
+[Unit]
+Description=node.js web app server
+
+[Service]
+ExecStart=/usr/bin/node {{ WEB_SERVER__SERVER_DIRECTORY }}server/main.js
+WorkingDirectory={{ WEB_SERVER__SERVER_DIRECTORY }}
+Restart=always
+# If log files are prefered, it is possible to write both `journal` as: `fd:some_file_desciptor` where `some_file_desciptor` points to: {{ WEB_SERVER__HOME_DIRECTORY }}log/node/node.log
+#StandardOutput=journal
+#StandardError=journal
+SyslogIdentifier={{ APP_SERVER_UPSTART_NAME }}
+User={{ WEB_SERVER__USER }}
+#Group={{ WEB_SERVER__USER }}
+Environment={% for key, value in RUNTIME_ENV.items() %}{{ key }}={{ value }} {% endfor %}
+
+
+[Install]
+WantedBy=multi-user.target

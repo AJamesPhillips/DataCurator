@@ -1,0 +1,12 @@
+
+.connection_terminal {
+    position: absolute;
+    background-color: white;
+    border: thin solid #555;
+}
+
+.connection_terminal:hover
+{
+    box-shadow: 0 0 6px blue;
+    background-color: rgb(53, 130, 247);
+}

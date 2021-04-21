@@ -1,0 +1,23 @@
+
+.judgement_badge
+{
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    margin: 0px 2px;
+}
+
+.judgement_badge.positive
+{
+    background-color: rgb(56, 175, 35);
+}
+
+.judgement_badge.negative
+{
+    background-color: rgb(175, 35, 35);
+}
+
+.judgement_badge.inactive
+{
+    background-color: rgb(175, 175, 175);
+}

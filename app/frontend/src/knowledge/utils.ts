@@ -1,0 +1,71 @@
+import {
+    ConnectionLocationType,
+    ConnectionTerminalType,
+    WComponent,
+    wcomponent_has_existence_predictions,
+} from "../shared/models/interfaces/SpecialisedObjects"
+import { get_created_at } from "../shared/models/utils_datetime"
+
+
+
+export function wcomponent_is_invalid_for_datetime (wcomponent: WComponent, display_at_datetime_ms: number)
+{
+    return (wcomponent_is_now_invalid(wcomponent, display_at_datetime_ms)
+        || wcomponent_is_not_yet_valid(wcomponent, display_at_datetime_ms))
+}
+
+
+function wcomponent_is_now_invalid (wcomponent: WComponent, display_at_datetime_ms: number)
+{
+    if (!wcomponent_has_existence_predictions(wcomponent)) return false
+
+    const last_existence_prediction = wcomponent.existence[wcomponent.existence.length - 1]
+    return (last_existence_prediction
+        && last_existence_prediction.conviction === 100
+        && last_existence_prediction.probability === 0
+        && display_at_datetime_ms > get_created_at(last_existence_prediction))
+}
+
+
+function wcomponent_is_not_yet_valid (wcomponent: WComponent, display_at_datetime_ms: number)
+{
+    return get_created_at(wcomponent) > display_at_datetime_ms
+}
+
+
+
+export function connection_terminal_type_to_location (type: ConnectionTerminalType | undefined, defalt: ConnectionLocationType): ConnectionLocationType
+{
+    if (!type) return defalt
+
+    if (type === "effector") return "top"
+    if (type === "effected") return "bottom"
+    return "left"
+}
+
+interface ConnectionTerminalLocationToTypeReturn
+{
+    type: ConnectionTerminalType
+    is_effector: boolean
+    is_meta: boolean
+}
+export function connection_terminal_location_to_type (location: ConnectionLocationType): ConnectionTerminalLocationToTypeReturn
+{
+    let type: ConnectionTerminalType
+
+    if (location === "top") type = "effector"
+    else if (location === "bottom") type = "effected"
+    else if (location === "left") type = "meta-effected"
+    else type = "meta-effector"
+
+    const is_effector = connection_terminal_type_is_effector(type)
+    const is_meta = type === "meta-effector" || type === "meta-effected"
+
+    return { type, is_effector, is_meta }
+}
+
+
+export function connection_terminal_type_is_effector (connection_terminal_type: ConnectionTerminalType)
+{
+    return connection_terminal_type === "effector" || connection_terminal_type === "meta-effector"
+}

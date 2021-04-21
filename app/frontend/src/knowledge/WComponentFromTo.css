@@ -1,0 +1,13 @@
+
+.wcomponent_from_to
+{
+    display: inline-flex;
+}
+
+.wcomponent_from_to input
+{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 200px;
+}

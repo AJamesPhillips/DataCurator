@@ -1,0 +1,78 @@
+.App {
+  /* text-align: center; */
+}
+
+#main_area
+{
+  float: left;
+  width: 70%;
+}
+
+.main_content
+{
+  height: 600px;
+  padding: 5px 5px 5px 0;
+}
+
+
+#side_panel
+{
+  overflow: scroll; /* quick hack */
+  width: 30%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #fbfbfb;
+}
+#side_panel_content
+{
+  padding: 5px;
+}
+
+
+table.list
+{
+  border-collapse: collapse;
+}
+
+.list tbody
+{
+  width: 100%;
+  display: block;
+}
+
+.list td a
+{
+  padding: 5px;
+}
+
+.list tr
+{
+  border: thin solid #CCC;
+}
+
+.list tr.match
+{
+  border: thin solid #DDF;
+  background-color: #F5F5FF;
+}
+
+.list.no_border > tr
+{
+  border: initial;
+}
+.list.no_border > tr:not(:first-child)
+{
+  border-top: thin solid #CCC;
+}
+.list.padded > tr > td
+{
+  padding: 5px 2px;
+}
+
+/* Global styles */
+.disabled
+{
+  color: #999;
+}

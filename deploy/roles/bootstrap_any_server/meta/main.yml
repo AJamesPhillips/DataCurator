@@ -1,0 +1,3 @@
+---
+dependencies:
+  - { role: update_user_access }

@@ -1,0 +1,9 @@
+
+.field_label
+{
+    display: inline-block;
+    font-size: 10px;
+}
+.field {
+    display: inline-block;
+}

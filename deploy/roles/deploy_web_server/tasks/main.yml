@@ -1,0 +1,6 @@
+---
+  - name: Restart server and nginx
+    shell: echo success
+    notify:
+      - Restart web app server
+      - Restart nginx

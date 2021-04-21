@@ -1,0 +1,36 @@
+---
+  - name: Install apt dependencies
+    apt:
+      name: "{{ item }}"
+      state: installed
+      update_cache: yes
+      cache_valid_time: 86400  # one day
+    with_items:
+      - nginx={{ VERSIONS.NGINX }}
+      # - fail2ban=0.8.11-1   # TODO: https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04
+
+  - set_fact:
+      path_to_nginx_dhparams: /etc/nginx/dhparams.pem
+
+  - name: Generate dhparams
+    shell: openssl dhparam -out {{ path_to_nginx_dhparams }} 2048
+    args:
+      creates: "{{ path_to_nginx_dhparams }}"
+
+  - set_fact:
+      SSL_DOMAIN: "{{ RUNTIME_ENV.REACT_APP_SERVER_HOST }}"
+  - name: "Copy app website nginx config over"
+    template: src=load_balancer_nginx.conf dest=/etc/nginx/sites-enabled/load_balancer_nginx.conf
+    notify:
+      - Restart nginx
+
+  - name: Make WEB_SERVER__PUBLIC_DIRECTORY {{ WEB_SERVER__PUBLIC_DIRECTORY }}
+    file:
+      path: "{{ WEB_SERVER__PUBLIC_DIRECTORY }}"
+      state: directory
+      mode: 0755
+
+  - name: Copy site down maintenance page
+    template:
+      src: maintenance.html2
+      dest: "{{ WEB_SERVER__PUBLIC_DIRECTORY }}maintenance.html2"

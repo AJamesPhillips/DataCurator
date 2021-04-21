@@ -1,0 +1,53 @@
+
+.editable_list.not_collapsable .expansion_button
+{
+    display: none;
+}
+
+.editable_list .expansion_button
+{
+    float: right;
+    border: thin solid #bbb;
+    border-radius: 3px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.editable_list .expansion_button
+{
+    font-size: 25px;
+    line-height: 0.1;
+    padding: 0px 3px;
+    vertical-align: super;
+    height: 17px;
+}
+.editable_list .expansion_button:before
+{
+    content: '\2304';
+}
+.editable_list.expanded .expansion_button:before
+{
+    font-size: 18px;
+    line-height: initial;
+    vertical-align: initial;
+    content: '\2303';
+}
+
+
+.editable_list.in_future .summary
+{
+    color: #bbb;
+}
+.editable_list.focused .summary
+{
+    font-weight: 800;
+}
+
+.editable_list .details, .editable_list .details2
+{
+    display: none;
+}
+.editable_list.expanded > .details, .editable_list.expanded > .details2
+{
+    display: initial;
+}

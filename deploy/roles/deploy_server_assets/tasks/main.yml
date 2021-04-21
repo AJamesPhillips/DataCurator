@@ -1,0 +1,32 @@
+---
+  - name: Clean and remake web server directory
+    file:
+      path: "{{ item.path }}"
+      state: "{{ item.state }}"
+      mode: u=rwX,g=rwX,o=r
+      owner: "{{ WEB_SERVER__USER }}"
+      group: "{{ WEB_SERVER__USER }}"
+    with_items:
+      - { state: absent, path: "{{ WEB_SERVER__APP_DIRECTORY }}" }
+      - { state: directory, path: "{{ WEB_SERVER__APP_DIRECTORY }}" }
+
+  - name: Copy over server assets
+    become_user: "{{ WEB_SERVER__USER }}"
+    synchronize: src={{ LOCAL_BUILT_APP_DIR }}/ dest={{ WEB_SERVER__APP_DIRECTORY }}
+
+  - name: Make web server directories have correct file permission and owner (synchronize `become_user` does not work)
+    file:
+      path: "{{ WEB_SERVER__HOME_DIRECTORY }}"
+      state: directory
+      mode: u=rwX,g=rX,o=rX
+      owner: "{{ WEB_SERVER__USER }}"
+      group: "{{ WEB_SERVER__USER }}"
+      recurse: yes
+
+  - name: "Install node dependencies in {{ WEB_SERVER__APP_DIRECTORY }}"
+    become_user: "{{ WEB_SERVER__USER }}"
+    command: "chdir={{ WEB_SERVER__APP_DIRECTORY }} {{ npm_config_prefix }}/bin/yarn install"
+
+  - name: Register server ip for later to avoid duplicate asset upload
+    set_fact:
+      deployed_server_assets_to_ips: "{{ deployed_server_assets_to_ips }} + {{ [ inventory_hostname ] }}"

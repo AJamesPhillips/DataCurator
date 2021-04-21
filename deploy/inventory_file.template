@@ -1,0 +1,26 @@
+[production_yourdomain]
+255.255.255.255  # TODO SETUP change this line to be your IP address
+
+[production:children]
+production_yourdomain
+
+
+# Later when you have a staging server you can use this
+[staging_yourdomain]
+255.255.255.255
+
+[staging:children]
+staging_yourdomain
+
+
+[load_balancer:children]
+production_yourdomain
+staging_yourdomain
+
+[dbserver:children]
+production_yourdomain
+staging_yourdomain
+
+[webservers:children]
+production_yourdomain
+staging_yourdomain

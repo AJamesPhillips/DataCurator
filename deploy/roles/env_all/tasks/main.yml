@@ -1,0 +1,58 @@
+---
+- import_tasks: users.yml
+
+- set_fact:
+    ENV: "{{ lookup('env', 'ENV') }}"
+
+- fail: msg="ENV={{ ENV }} not supported"
+  when: ENV != "production" and ENV != "staging"
+
+- debug:
+    msg: "Running with ENV: {{ ENV }}"
+
+- set_fact:
+    ROOT_PATH: "{{ role_path }}/../../../"
+
+- include_vars:
+    file: "{{ ROOT_PATH }}app/.env.{{ ENV }}"
+    name: RUNTIME_ENV
+    format: ENV
+
+- set_fact:
+    LOCAL_APP_DIR: "{{ ROOT_PATH }}app"
+    LOCAL_BUILT_APP_DIR: "{{ ROOT_PATH }}app/built_app"
+    WEB_SERVER__USER: www-data
+    WEB_SERVER__HOME_DIRECTORY: /var/www/
+    WEB_SERVER__APP_DIRECTORY: /var/www/built_app/
+    WEB_SERVER__SERVER_DIRECTORY: /var/www/built_app/compiled_all/
+    WEB_SERVER__PUBLIC_DIRECTORY: /var/www/built_app/public/
+    APP_SERVER_UPSTART_NAME: web_app_server
+
+# Set facts for different packages
+- set_fact:
+    # Nginx
+    VERSIONS:
+      NGINX: 1.10.3-0ubuntu0.16.04.2
+    # Node, npm, yarn
+    nodejs_version: "8.x"
+    nodejs_install_npm_user: "{{ WEB_SERVER__USER }}"
+    npm_config_prefix: "/usr/local/lib/npm"
+    nodejs_npm_global_packages:
+      - name: yarn
+    # Postgresql
+    postgresql_listen_addresses:
+      - "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_DB_ADDRESS }}"
+    postgresql_port: "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_DB_PORT }}"
+    postgresql_databases:
+      - name: "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_DB_DATABASE }}"
+    postgresql_users:
+      - name: "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_DB_USERNAME }}"
+        # Password is visible in plain text on server but at least the db has
+        # a password on it.
+        pass: "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_DB_PASSWORD }}"
+        encrypted: no # denotes if the password is already encrypted.
+
+# Keep track of which expensive roles have already been run
+- set_fact:
+    prepared_local_assets: false
+    deployed_server_assets_to_ips: []

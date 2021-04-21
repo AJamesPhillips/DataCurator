@@ -1,0 +1,125 @@
+import { h } from "preact"
+
+import { uncertain_date_to_string } from "../../form/datetime_utils"
+import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+import type {
+    WComponentStateV2SubType,
+    StateValueAndPredictionsSet,
+    StateValueAndPrediction,
+} from "../../shared/models/interfaces/state"
+import { get_probable_vap_set_values, get_vap_set_prob, get_vap_set_conviction } from "../../sharedf/wcomponent_state"
+import { update_substate } from "../../utils/update_state"
+import { prepare_new_vap, set_vap_probabilities } from "./utils"
+import { ValueAndPredictions } from "./ValueAndPredictions"
+
+
+
+export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType, show_created_at: boolean = false) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+{
+    vap_set = { ...vap_set, entries: get_vaps_from_set(vap_set, subtype) }
+
+    const values = get_probable_vap_set_values(vap_set, subtype)
+    const prob = get_vap_set_prob(vap_set, subtype)
+    const conv = get_vap_set_conviction(vap_set, subtype)
+
+    return <div>
+        {show_created_at && <div style={{ display: "inline-flex" }}>
+            Created: &nbsp;<EditableCustomDateTime
+                invariant_value={vap_set.created_at}
+                value={vap_set.custom_created_at}
+            />
+        </div>}
+        <div style={{ display: "inline-flex", width: "100%" }}>
+            {uncertain_date_to_string(vap_set.datetime) || "-"}
+            {subtype !== "boolean" && <div>&nbsp;
+            Value:&nbsp;{values}</div>}
+            &nbsp;
+            Prob:&nbsp;{prob}%
+            Confidence:&nbsp;{conv}%
+        </div>
+    </div>
+}
+
+
+
+export const get_details_for_single_vap_set = (subtype: WComponentStateV2SubType) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+{
+    const entries = get_vaps_from_set(vap_set, subtype)
+
+    return <div className="vap_set_details">
+        <br />
+        <div className="datetimes">
+            <div className="datetime_section">
+                <div className="datetime_title">min:</div>
+                <div className="datetime_value"><EditableCustomDateTime
+                    invariant_value={undefined}
+                    value={vap_set.datetime.min}
+                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "min", new_datetime))}
+                /></div>
+            </div>
+            <div className="datetime_section">
+                <div className="datetime_title">DateTime:</div>
+                <div className="datetime_value"><EditableCustomDateTime
+                    invariant_value={undefined}
+                    value={vap_set.datetime.value}
+                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "value", new_datetime))}
+                /></div>
+            </div>
+            <div className="datetime_section">
+                <div className="datetime_title">max:</div>
+                <div className="datetime_value"><EditableCustomDateTime
+                    invariant_value={undefined}
+                    value={vap_set.datetime.max}
+                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "max", new_datetime))}
+                /></div>
+            </div>
+        </div>
+        <br />
+        <div>
+            <ValueAndPredictions
+                created_at={get_custom_created_at(vap_set) || get_created_at(vap_set)}
+                subtype={subtype}
+                values_and_predictions={entries}
+                update_values_and_predictions={vaps => on_change(merge_entries(vaps, vap_set, subtype))}
+            />
+        </div>
+        <br />
+        <br />
+    </div>
+}
+
+
+const get_created_at = (item: StateValueAndPredictionsSet) => item.created_at
+const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom_created_at
+
+
+
+function get_vaps_from_set (vap_set: StateValueAndPredictionsSet, subtype: string)
+{
+    let vaps = vap_set.entries
+
+    if (subtype === "boolean" && vaps.length !== 1)
+    {
+        // ensure the ValueAndPrediction component always and only receives a single vap entry
+        const entries = vaps.length === 0 ? [prepare_new_vap()] : [vaps[0]]
+        return entries
+    }
+
+    vaps = set_vap_probabilities(vap_set.entries)
+
+    return vaps
+}
+
+
+
+function merge_entries (vaps: StateValueAndPrediction[], vap_set: StateValueAndPredictionsSet, subtype: string): StateValueAndPredictionsSet
+{
+    if (subtype === "boolean")
+    {
+        // For now we'll save any other values that were already here from other subtypes
+        vaps = vaps.concat(vap_set.entries.slice(1))
+    }
+
+    return { ...vap_set, entries: vaps }
+}
+

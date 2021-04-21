@@ -1,0 +1,45 @@
+
+.value_and_prediction
+{
+    background-color: #f7f7fb;
+}
+
+
+.value_and_predictions.only_one_vap .button_add_new_list_entry,
+.value_and_predictions.only_one_vap .button_container_confirmatory_delete
+{
+    display: none;
+}
+
+.value_and_predictions .item_descriptor
+{
+    display: none;
+}
+
+.value_and_predictions .entries_horizontal_dividers
+{
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.value_and_prediction_summary {
+    display: flex;
+}
+
+.value_and_prediction_summary .temporal_uncertainty
+{
+    flex: 6;
+}
+
+.value_and_prediction_summary .probabilities
+{
+    flex: 5;
+}
+
+.value_and_prediction_summary .temporal_uncertainty > div {
+    display: inline-flex;
+}
+
+.value_and_prediction_summary .probabilities > div > div
+{
+    display: inline-flex;
+}

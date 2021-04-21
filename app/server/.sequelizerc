@@ -1,0 +1,9 @@
+const path = require("path");
+
+const ROOT_PATH = "compiled_all/";
+
+module.exports = {
+    "config": path.resolve(ROOT_PATH, "scripts/sequelize_cli_config.js"),
+    "migrations-path": path.resolve(ROOT_PATH, "migrations"),
+    // "models-path": path.resolve(ROOT_PATH + "models", "models"),
+}

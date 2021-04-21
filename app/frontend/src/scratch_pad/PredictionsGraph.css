@@ -1,0 +1,68 @@
+
+
+.prediction_graph.mini .label
+{
+    font-size: 8px;
+    text-align: left;
+}
+/* .prediction_graph.mini .label:hover
+{
+    font-size: 20px;
+    background-color: white;
+    position: absolute;
+    top: -12px;
+    z-index: 1;
+} */
+.prediction_graph.mini .label_b
+{
+    position: absolute;
+    top: 0px;
+    right: 0;
+    text-align: right;
+}
+/* .prediction_graph.mini .label_b:hover
+{
+    top: -5px;
+} */
+
+
+.prediction_graph .prediction_column_container
+{
+    display: inline-block;
+}
+
+.prediction_graph .prediction_column
+{
+    background-color: rgb(250, 255, 173);
+}
+
+.prediction_graph .prediction_column:hover
+{
+    /* border: 1px solid orange;
+    margin: -1px; */
+    background-color: orange;
+}
+
+.prediction_graph .prediction_cell
+{
+    /* margin: 3px 0; */
+    /* padding: 1px; */
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.prediction_graph .prediction_cell:hover
+{
+    /* padding: 0px; */
+    border: 2px solid orange;
+}
+
+.multiple_mini_prediction_graphs > div
+{
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.prediction_graph.invalid, .prediction_graph.invalid .prediction_column
+{
+    background-color: rgba(255,0,0,0.4);
+}

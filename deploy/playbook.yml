@@ -1,0 +1,72 @@
+---
+- hosts: all
+  gather_facts: no
+  roles:
+  - { role: env_all, tags: [ 'always' ] }
+
+# Regarding `become_user: root`
+# We create a non root user, disabled ability to login as root, then become
+# root whilst installing so that we reduce exposure from root login password
+# scanners and to aid audit trail
+
+- hosts: all
+  become: yes
+  become_user: root
+  gather_facts: no
+  handlers:
+  - include: handlers/main.yml
+  roles:
+    # The reason `update_user_access` does not have the tag 'always' is because
+    # if you make a mistake you can be locked out of the machine permanently.
+    - { role: update_user_access, tags: ['update_user_access']}
+    # Because npm install fails on machines with less RAM (though yarn install seems fine)
+    - { role: swapfile,           tags: ['provision', 'provision_load_balancer', 'provision_dbserver', 'provision_webservers'],
+      swapfile_size: 2048MiB,
+      swapfile_use_dd: True
+    }
+
+- hosts: load_balancer
+  become: yes
+  become_user: root
+  gather_facts: yes
+  handlers:
+  - include: handlers/main.yml
+  roles:
+    - { role: provision_base,          tags: [ 'load_balancer', 'provision', 'provision_load_balancer' ] }
+    - {
+      role: lets_encrypt,              tags: [ 'load_balancer', 'provision', 'provision_load_balancer', 'cert' ],
+      letsencrypt_cert_domains: [ "{{ RUNTIME_ENV.REACT_APP_SERVER_HOST }}" ],
+      letsencrypt_authenticator: standalone,
+      letsencrypt_email: "{{ RUNTIME_ENV.REACT_APP_SUPPORT_EMAIL }}",
+      letsencrypt_renewal_frequency: { day: "*/3", hour: 10, minute: 10 }
+    }
+    - { role: provision_load_balancer, tags: [ 'load_balancer', 'provision', 'provision_load_balancer' ] }
+
+- hosts: dbserver
+  become: yes
+  become_user: root
+  gather_facts: yes
+  handlers:
+  - include: handlers/main.yml
+  roles:
+    - { role: provision_base,                tags: [ 'dbserver', 'provision', 'provision_dbserver' ] }
+    # Install node so we can later get the 'sequelize' npm package onto server
+    - { role: provision_node,                tags: [ 'dbserver', 'provision', 'provision_dbserver' ] }
+    - { role: provision_postgresql,          tags: [ 'dbserver', 'provision', 'provision_dbserver' ] }
+    - { role: prepare_server_assets_locally, tags: [ 'dbserver', 'deploy', 'deploy_dbserver' ], when: prepared_local_assets == false }
+    - { role: deploy_server_assets,          tags: [ 'dbserver', 'deploy', 'deploy_dbserver' ], when: inventory_hostname not in deployed_server_assets_to_ips }
+    - { role: migrate_server_db,             tags: [ 'dbserver', 'deploy', 'deploy_dbserver' ] }
+
+- hosts: webservers
+  become: yes
+  become_user: root
+  gather_facts: yes
+  handlers:
+  - include: handlers/main.yml
+  roles:
+    - { role: provision_base,                tags: [ 'webservers', 'provision', 'provision_webservers' ] }
+    - { role: provision_node,                tags: [ 'webservers', 'provision', 'provision_webservers' ] }
+    - { role: provision_web_server,          tags: [ 'webservers', 'provision', 'provision_webservers' ] }
+    - { role: prepare_server_assets_locally, tags: [ 'webservers', 'deploy', 'deploy_webservers' ], when: prepared_local_assets == false }
+    - { role: deploy_server_assets,          tags: [ 'webservers', 'deploy', 'deploy_webservers' ], when: inventory_hostname not in deployed_server_assets_to_ips }
+    - { role: deploy_web_server,             tags: [ 'webservers', 'deploy', 'deploy_webservers' ] }

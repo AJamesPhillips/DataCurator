@@ -1,0 +1,15 @@
+[submodule "ansible"]
+	path = ansible
+	url = git://github.com/AJamesPhillips/ansible.git
+[submodule "deploy/roles/provision_node"]
+	path = deploy/roles/provision_node
+	url = git@github.com:geerlingguy/ansible-role-nodejs.git
+[submodule "deploy/roles/swapfile"]
+	path = deploy/roles/swapfile
+	url = git@github.com:AJamesPhillips/ansible-swapfile.git
+[submodule "deploy/roles/provision_postgresql"]
+	path = deploy/roles/provision_postgresql
+	url = git@github.com:ANXS/postgresql.git
+[submodule "deploy/roles/lets_encrypt"]
+	path = deploy/roles/lets_encrypt
+	url = git@github.com:thefinn93/ansible-letsencrypt.git

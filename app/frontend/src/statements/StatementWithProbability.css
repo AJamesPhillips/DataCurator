@@ -1,0 +1,15 @@
+
+.statement_with_probability
+{
+    border: thin solid #bbb;
+    border-radius: 3px;
+    padding: 2px 4px;
+    display: inline-flex;
+}
+
+.statement_with_probability .statement
+{
+    margin: 5px;
+    padding: 5px;
+    max-width: 300px;
+}

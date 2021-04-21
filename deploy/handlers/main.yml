@@ -1,0 +1,4 @@
+---
+  - include: nginx.yml
+  - include: ssh_daemon.yml
+  - include: systemd.yml

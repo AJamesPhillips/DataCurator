@@ -1,0 +1,25 @@
+.vagrant/*
+*.log
+.vscode
+ansible_venv
+deploy/public_keys/*
+**/*.retry
+
+
+.env*
+
+# misc
+.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+node_modules
+compiled_all
+
+# Can be removed if repo is private
+deploy/inventory_file
+deploy/roles/env_all/tasks/users.yml
+
+app/server/state_backup
+app/server/config.json

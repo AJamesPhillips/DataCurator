@@ -1,0 +1,27 @@
+---
+  - name: Install apt dependencies
+    apt:
+      name: "{{ item }}"
+      state: installed
+      update_cache: yes
+      cache_valid_time: 86400  # one day
+    with_items:
+      - nginx={{ VERSIONS.NGINX }}
+
+  - name: Make directory for node app server logs
+    file:
+      path: "{{ RUNTIME_ENV.PRIVATE_SERVER_CONFIG_LOG_APP_SERVER_DIRECTORY }}"
+      state: directory
+      owner: "{{ WEB_SERVER__USER }}"
+      group: "{{ WEB_SERVER__USER }}"
+      mode: 0774
+
+  - name: Copy server systemd config over
+    template: src=../templates/app_server_systemd.service dest=/etc/systemd/system/{{ APP_SERVER_UPSTART_NAME }}.service
+    notify:
+    - reload systemd
+
+  - name: Copy nginx config over
+    template: src=../templates/app_server_nginx.conf dest=/etc/nginx/sites-enabled/app_server_nginx.conf
+    notify:
+      - Restart nginx

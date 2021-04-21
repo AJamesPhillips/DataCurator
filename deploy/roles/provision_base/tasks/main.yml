@@ -1,0 +1,6 @@
+---
+  - name: Update apt repo
+    apt: update_cache=yes  cache_valid_time=3600
+
+  - name: Make user for running applications as
+    user: name={{ WEB_SERVER__USER }} comment="{{ WEB_SERVER__USER }} User" shell=/bin/false home={{ WEB_SERVER__HOME_DIRECTORY }}

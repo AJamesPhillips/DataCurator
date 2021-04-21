@@ -1,0 +1,18 @@
+
+.delete_button .large
+{
+    background-color: pink;
+    border-radius: 3px;
+    border: thin solid darkred;
+    color: darkred;
+    cursor: pointer;
+    padding: 2px 7px;
+}
+
+.delete_button .disabled
+{
+    cursor: initial;
+    background-color: #ececec;
+    border-color: #cdcdcd;
+    color: #adadad;
+}

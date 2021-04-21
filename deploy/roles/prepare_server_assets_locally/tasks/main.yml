@@ -1,0 +1,31 @@
+---
+  - name: "prepare and build local files: install node dependencies locally"
+    local_action: shell cd {{ LOCAL_APP_DIR }} && yarn install --production=false
+    become: no
+
+  - name: build frontend app
+    become: no
+    local_action: shell cd {{ LOCAL_APP_DIR }} && npm run build
+
+  - name: build backend server app
+    become: no
+    local_action: shell cd {{ LOCAL_APP_DIR }} && npm run build-back
+
+  - name: make directory for transfer to server
+    become: no
+    local_action: shell (rm -rf {{ LOCAL_BUILT_APP_DIR }} || true) && mkdir {{ LOCAL_BUILT_APP_DIR }}
+
+  - name: copy other local assets into directory for transfer to server
+    become: no
+    local_action: shell cp -r {{ LOCAL_APP_DIR }}/{{ item.from }} {{ LOCAL_BUILT_APP_DIR }}/{{ item.get('to') or item.from }}
+    with_items:
+      - { from: package.json }
+      - { from: yarn.lock }
+      - { from: .sequelizerc }
+      - { from: ".env.{{ ENV }}" }
+      - { from: db.sh }
+      - { from: build, to: public }
+      - { from: compiled_all }
+
+  - set_fact:
+      prepared_local_assets: true

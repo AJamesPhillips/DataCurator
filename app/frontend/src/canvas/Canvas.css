@@ -1,0 +1,122 @@
+
+
+#graph_container
+{
+    cursor: move;
+    background-image:
+        linear-gradient(to right, #EEE 1px, transparent 1px),
+        linear-gradient(to bottom, #EEE 1px, transparent 1px);
+    overflow: hidden;
+    text-align: left;
+    vertical-align: top;
+}
+
+#graph_visuals_container
+{
+    overflow: visible;
+    position: relative;
+    transform-origin: left top;
+    height: 100%;
+}
+
+#graph_container svg
+{
+    overflow: visible;
+    pointer-events: none;
+}
+
+.visual
+{
+    position: absolute;
+    width: 200px;
+    cursor: pointer;
+}
+
+.graph_node
+{
+    position: absolute;
+    /* overflow: hidden; */
+}
+.graph_node.mouseable
+{
+    cursor: pointer;
+}
+.graph_node .text
+{
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+}
+.graph_node.max_width200
+{
+    max-width: 200px;
+}
+.graph_node:hover
+{
+    max-width: initial;
+}
+
+.graph_node > div
+{
+    border: thin solid #555;
+    border-radius: 5px;
+    background-color: #FCFCFC;
+}
+
+.graph_node.focused
+{
+    z-index: 100;
+}
+
+/* */
+.connection_line
+{
+    stroke: black;
+    fill: transparent;
+    pointer-events: none;
+}
+.connection_arrowhead
+{
+    fill: black;
+}
+.connection
+{
+    pointer-events: none;
+}
+.connection_line.mouseable, .connection_arrowhead.mouseable
+{
+    cursor: pointer;
+    pointer-events: initial;
+}
+.connection_line.mouseable:hover
+{
+    stroke-width: 3px;
+    stroke-dasharray: 6px 3px;
+    stroke-opacity: 1 !important;
+    filter: inherit !important;
+}
+.connection_arrowhead.mouseable:hover
+{
+    fill-opacity: 1 !important;
+}
+
+
+.highlighting_connection_lines .connection_line
+{
+    stroke: #BBB;
+}
+.highlighting_connection_lines .connection_arrowhead
+{
+    fill: #BBB;
+}
+
+.highlighted.connection_line
+{
+    stroke: blue;
+}
+.highlighted.connection_arrowhead
+{
+    fill: blue;
+}

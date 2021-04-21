@@ -1,0 +1,39 @@
+
+.editable_field.autocomplete
+{
+    position: relative;
+}
+
+.editable_field.autocomplete .options_outer
+{
+    position: absolute;
+    left: 0;
+    top: 1.15em;
+    z-index: 1;
+}
+.editable_field.autocomplete .options_inner
+{
+    position: absolute;
+    padding: 3px 5px;
+    border: thin solid #777;
+    border-radius: 3px;
+    background-color: rgba(251, 251, 251, 0.7);
+    backdrop-filter: blur(3px);
+}
+
+.editable_field.autocomplete .options_inner .option
+{
+    padding: 3px;
+    border: thin solid #777;
+    border-radius: 3px;
+    margin: 4px 2px;
+    width: fit-content;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255);
+}
+
+.editable_field.autocomplete .options_inner .option_wrapper.highlighted
+{
+    cursor: pointer;
+    background-color: rgba(205, 215, 255);
+}

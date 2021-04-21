@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: root
+  # We don't gather facts as there may not be /bin/python available yet
+  gather_facts: no
+  handlers:
+  - include: handlers/ssh_daemon.yml
+  pre_tasks:
+    - name: 'install python2'
+      raw: sudo apt-get -y install python-simplejson
+  roles:
+  - { role: env_all }
+  - { role: bootstrap_any_server }
