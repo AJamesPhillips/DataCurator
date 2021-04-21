@@ -17,7 +17,7 @@ export function state_routes (server: Server)
 
     function get_latest_state ()
     {
-        return existsSync(file_name_latest) ? readFileSync(file_name_latest).toString() : ""
+        return existsSync(file_name_latest) ? readFileSync(file_name_latest).toString() : JSON.stringify({ patterns: [], objects: [], statements: [] })
     }
 
 
