@@ -20,7 +20,7 @@ export function PredictionsBadgeConvictionMask (props: Props)
     const cell_size = size / elements_width
 
     // ;(window as any).new_mask = generate_predictions_badge_conviction_mask(props)
-    // console.log(JSON.stringify(window.mask_data).replace(/\],\[/g, "],\n    ["))
+    // console. log(JSON.stringify(window.mask_data).replace(/\],\[/g, "],\n    ["))
 
     return <g
         className="conviction_mask"

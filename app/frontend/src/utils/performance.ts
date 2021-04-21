@@ -2,5 +2,5 @@
 
 export function performance_logger (...args: any[])
 {
-    // console.log (...args)  // performance
+    // console. log (...args)  // performance
 }

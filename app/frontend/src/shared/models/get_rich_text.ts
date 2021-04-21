@@ -145,7 +145,7 @@ function get_ids_from_text (text: string): string[]
 
 function run_tests ()
 {
-    console.log("running tests of get_ids_from_text")
+    console. log("running tests of get_ids_from_text")
 
     let ids = get_ids_from_text("asd @@wc123 asd name@example.com #label dfg @@345 sf")
     test(ids, ["wc123", "345"])

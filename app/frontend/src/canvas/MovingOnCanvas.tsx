@@ -47,7 +47,7 @@
 //     const on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
 //     {
 //         e.currentTarget.innerHTML = `${e.clientX}, ${e.clientY}`
-//         console.log("Moving on_pointer_move", e.clientX)
+//         console. log("Moving on_pointer_move", e.clientX)
 //         // const position = calculate_xy_from_client_xy({
 //         //     client_x: e.clientX,
 //         //     client_y: e.clientY,
@@ -63,7 +63,7 @@
 
 //     return <div id="thing"
 //         onPointerMove={on_pointer_move}
-//         // onPointerMoveCapture={() => console.log("pointer move capture")}
+//         // onPointerMoveCapture={() => console. log("pointer move capture")}
 //         onPointerDown={props.update_position}
 //         style={{ width: 200, height: 200, backgroundColor: "blue" }}
 //         ref={r =>

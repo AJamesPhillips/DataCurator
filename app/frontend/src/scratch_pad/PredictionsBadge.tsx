@@ -206,7 +206,7 @@ function calc_new_counter_factual_state (args: CalcNewCounterFactualStateArgs): 
 
 function run_tests ()
 {
-    console.log("running tests of calc_new_counter_factual_state")
+    console. log("running tests of calc_new_counter_factual_state")
 
     let probability: number
     let conviction: number

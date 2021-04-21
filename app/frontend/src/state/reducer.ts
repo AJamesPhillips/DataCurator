@@ -35,7 +35,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
 
     state = derived_state_reducer(initial_state, state, action)
 
-    // console.log (action.type, action)
+    // console. log (action.type, action)
 
     return state
 })

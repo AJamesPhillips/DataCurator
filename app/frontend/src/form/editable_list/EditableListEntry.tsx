@@ -91,8 +91,6 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
                 ? " in_future "
                 : (created_datetime_ms === datetime_ms ? " focused " : ""))
 
-        if (created_datetime_ms > datetime_ms) debugger
-
         const class_name__not_collapsable = disable_collapsable ? " not_collapsable " : ""
         const class_name__expanded = internal__expanded ? " expanded " : ""
         const extra_class_names = " " + (this.props.extra_class_names || "") + " "

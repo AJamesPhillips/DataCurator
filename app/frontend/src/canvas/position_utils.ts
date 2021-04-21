@@ -61,7 +61,7 @@ export function calculate_xy_from_client_xy (args: CalculateXyFromClientXyArgs):
 
 function run_tests ()
 {
-    console.log("running tests for calculate_xy_from_client_xy")
+    console. log("running tests for calculate_xy_from_client_xy")
 
     let client: { client_x: number; client_y: number }
     let canvas_bounding_rect: BoundingRect = { width: 600, height: 900, left: 10, top: 15 }

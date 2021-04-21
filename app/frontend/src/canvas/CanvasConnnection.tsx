@@ -175,7 +175,7 @@ function to_vec (angle: number, r: number)
 
 function run_tests ()
 {
-    console.log("running tests of get_angle etc")
+    console. log("running tests of get_angle etc")
 
     const cx = 0
     const cy = 0

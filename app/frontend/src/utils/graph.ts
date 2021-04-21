@@ -367,7 +367,7 @@ function factory_ids_to_nodes <T> (graph: Graph): (ids: string[]) => T[]
 
 function run_tests ()
 {
-    console.log("running tests of make_graph, find_leaves")
+    console. log("running tests of make_graph, find_leaves")
 
     interface I
     {

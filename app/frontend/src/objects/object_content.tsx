@@ -214,7 +214,7 @@ function run_tests ()
 
 function _run_tests ()
 {
-    console.log("running tests of object_content")
+    console. log("running tests of object_content")
 
     if (!store) store = config_store()
 

@@ -62,7 +62,7 @@ export function calculate_new_zoom_xy (args: CalculateNewZoomXYArgs)
 
 function run_tests ()
 {
-    console.log("running tests of calculate_new_zoom_xy etc")
+    console. log("running tests of calculate_new_zoom_xy etc")
 
     let result: { x: number, y: number }
     const width = 900

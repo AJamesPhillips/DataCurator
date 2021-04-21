@@ -138,7 +138,7 @@ export function merge_routing_state (current_routing_state: RoutingState, new_ro
 
 function run_tests ()
 {
-    console.log("running tests of merge_routing_state")
+    console. log("running tests of merge_routing_state")
 
     const current_routing_state = {
         route: "wcomponents" as ROUTE_TYPES,

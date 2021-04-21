@@ -1,5 +1,4 @@
-import { h } from "preact"
-import { useState } from "preact/hooks"
+import { h, Component } from "preact"
 
 import "./Editable.css"
 import { date_to_string, valid_date_str, str_to_date, correct_datetime_for_local_time_zone } from "./datetime_utils"
@@ -16,29 +15,76 @@ interface OwnProps
 
 const shorten_if_only_days = true
 
-export function EditableCustomDateTime (props: OwnProps)
+interface State
+{
+    working_value: string
+}
+
+export class EditableCustomDateTime extends Component <OwnProps, State>
+{
+    constructor (props: OwnProps)
+    {
+        super(props)
+        const working_value = props_to_working_value(this.props)
+        this.state = { working_value }
+    }
+
+    componentWillReceiveProps (next_props: OwnProps)
+    {
+        const new_working_value = props_to_working_value(next_props)
+        if (props_to_working_value(this.props) !== new_working_value)
+        {
+            this.setState({ working_value: new_working_value })
+        }
+    }
+
+    set_working_value = (working_value: string) =>
+    {
+        this.setState({ working_value })
+    }
+
+    render ()
+    {
+        const { working_value } = this.state
+        const valid = !!(working_value && valid_date_str(working_value))
+
+
+        const { on_change } = this.props
+        if (!on_change) return <div>{working_value}</div>
+
+
+        const class_name = "editable_field " + (valid ? "" : "invalid ")
+        const title = "Created at " + (this.props.value ? "(custom)" : "")
+
+        return <div className={class_name} title={title}>
+            <input
+                type="text"
+                value={working_value}
+                onFocus={e => handle_on_focus(e, props_value(this.props), this.set_working_value)}
+                onChange={e => this.set_working_value(e.currentTarget.value)}
+                onBlur={() => handle_on_blur({
+                    valid, working_value, props: this.props, set_working_value: this.set_working_value, on_change
+                })}
+            />
+        </div>
+    }
+}
+
+
+
+function props_value (props: OwnProps)
 {
     const value = props.value || props.invariant_value
-    const [working_value, set_working_value] = useState<string>(date_to_string(value, shorten_if_only_days))
-    const valid = !!(working_value && valid_date_str(working_value))
+    return value
+}
 
 
-    const { on_change } = props
-    if (!on_change) return <div>{working_value}</div>
 
-
-    const class_name = "editable_field " + (valid ? "" : "invalid ")
-    const title = "Created at " + (props.value ? "(custom)" : "")
-
-    return <div className={class_name} title={title}>
-        <input
-            type="text"
-            value={working_value}
-            onFocus={e => handle_on_focus(e, value, set_working_value)}
-            onChange={e => set_working_value(e.currentTarget.value)}
-            onBlur={e => handle_on_blur({ valid, working_value, props, set_working_value, on_change })}
-        />
-    </div>
+function props_to_working_value (props: OwnProps)
+{
+    const value = props_value(props)
+    const working_value = date_to_string(value, shorten_if_only_days)
+    return working_value
 }
 
 

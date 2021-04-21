@@ -26,9 +26,7 @@ interface OwnProps
 export function ValueAndPredictionSets (props: OwnProps)
 {
     const vap_sets = validate_vap_sets_for_subtype(props.values_and_prediction_sets, props.subtype)
-    debugger
     const grouped_vap_sets = group_vap_sets_by_version(vap_sets)
-
 
     return <EditableList
         items={grouped_vap_sets}
@@ -42,7 +40,15 @@ export function ValueAndPredictionSets (props: OwnProps)
         prepare_new_item={prepare_new_item}
         update_items={items =>
         {
-            const ungrouped = ungroup_vap_sets_by_version(items)
+            const versioned_vap_set = (items as (VersionedStateVAPsSet & { custom_created_at?: Date })[]).map(i => {
+                if (!i.custom_created_at) return i
+                return {
+                    // unpleasant hack
+                    latest: { ...i.latest, custom_created_at: i.custom_created_at },
+                    older: i.older,
+                }
+            })
+            const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
             props.update_values_and_predictions(ungrouped)
         }}
         entries_extra_class_names="value_and_prediction_sets"

@@ -14,6 +14,6 @@ export function test <T> (got: T, expected: T)
     const str_expected = JSON.stringify(expected, Set_toJSON)
 
     const pass = str_got === str_expected
-    if (pass) console.log ("pass")
+    if (pass) console. log ("pass")
     else console.error (`fail: "${str_got}" !== "${str_expected}"`)
 }
