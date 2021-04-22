@@ -23,7 +23,8 @@ interface OwnProps
     position: CanvasPoint
     text: h.JSX.Element[]
     hidden?: boolean
-    is_highlighted?: false | "blue" | "orange"
+    unlimited_width?: boolean
+    glow?: false | "blue" | "orange"
     color?: string
     extra_css_class?: string
     children?: h.JSX.Element[]
@@ -45,11 +46,11 @@ export function ConnectableCanvasNode (props: OwnProps)
         padding: "6px 10px",
         display: props.hidden ? "none": ""
     }
-    if (props.is_highlighted) extra_node_styles.maxWidth = "initial"
+    if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
 
     const text_node_styles: h.JSX.CSSProperties =
     {
-        boxShadow: props.is_highlighted ? `0px 0px 5px ${props.is_highlighted}` : "",
+        boxShadow: props.glow ? `0px 0px 5px ${props.glow}` : "",
         backgroundColor: props.color || COLOURS.white,
         height: 36,
     }

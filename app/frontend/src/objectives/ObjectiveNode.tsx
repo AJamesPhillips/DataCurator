@@ -65,7 +65,8 @@ function _ObjectiveNode (props: Props)
             <div>{props.type}</div>,
             <b>{props.title}</b>
         ]}
-        is_highlighted={(props.is_selected || props.is_priority_selected) && "blue"}
+        unlimited_width={(props.is_selected || props.is_priority_selected)}
+        glow={(props.is_selected || props.is_priority_selected) && "blue"}
         color={get_colour(props.type)}
         on_click={on_click}
         on_pointer_enter={() => props.select_priority_objectives([props.id])}

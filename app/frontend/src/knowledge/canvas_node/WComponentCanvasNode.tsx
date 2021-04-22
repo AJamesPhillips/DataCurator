@@ -145,7 +145,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
     )
-    const highlight = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
+    const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
 
     return <ConnectableCanvasNode
@@ -161,7 +161,8 @@ function _WComponentCanvasNode (props: Props)
         ]}
         hidden={hidden}
         extra_css_class={extra_css_class}
-        is_highlighted={highlight}
+        unlimited_width={is_highlighted}
+        glow={glow}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
