@@ -45,9 +45,7 @@ export function ValueAndPredictionSets (props: OwnProps)
         update_items={versioned_vap_set =>
         {
             const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
-            // todo move this stable sort to the reducer so it's always available
-            const sorted_vap_sets = sort_list(ungrouped, get_created_at, "ascending")
-            props.update_values_and_predictions(sorted_vap_sets)
+            props.update_values_and_predictions(ungrouped)
         }}
         entries_extra_class_names="value_and_prediction_sets"
         disable_collapsed={true}

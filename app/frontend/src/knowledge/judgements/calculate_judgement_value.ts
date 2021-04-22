@@ -1,6 +1,6 @@
 import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
 import type { WComponentJudgement } from "../../shared/models/interfaces/judgement"
-import { WComponent, wcomponent_is_state } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
 
 
 
@@ -19,8 +19,6 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     const { wcomponent, target_wcomponent } = args
 
     if (!target_wcomponent) return undefined
-
-    if (!wcomponent_is_state(target_wcomponent)) return undefined
 
     const value = get_wcomponent_state_value(target_wcomponent)
     if (value === undefined) return undefined

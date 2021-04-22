@@ -75,7 +75,11 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
 }
 
 
-export function wcomponent_is_state (wcomponent: WComponent): wcomponent is WComponentNodeState
+export function wcomponent_is_state (wcomponent: WComponent): wcomponent is WComponentNodeState | WComponentNodeStateV2
+{
+    return wcomponent.type === "state" || wcomponent.type === "statev2"
+}
+export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WComponentNodeState
 {
     return wcomponent.type === "state"
 }

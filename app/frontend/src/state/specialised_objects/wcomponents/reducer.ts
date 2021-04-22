@@ -3,7 +3,8 @@ import type { AnyAction } from "redux"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
-    wcomponent_is_state,
+    wcomponent_is_statev1,
+    wcomponent_is_statev2,
 } from "../../../shared/models/interfaces/SpecialisedObjects"
 import { get_created_at } from "../../../shared/models/utils_datetime"
 import { sort_list } from "../../../utils/sort"
@@ -76,10 +77,16 @@ function tidy_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.validity = sorted_predictions
     }
 
-    if (wcomponent_is_state(wcomponent))
+    if (wcomponent_is_statev1(wcomponent))
     {
         const sorted_values = sort_list(wcomponent.values || [], get_created_at, "ascending")
         wcomponent.values = sorted_values
+    }
+
+    if (wcomponent_is_statev2(wcomponent))
+    {
+        const sorted_values = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at, "ascending")
+        wcomponent.values_and_prediction_sets = sorted_values
     }
 
     return wcomponent

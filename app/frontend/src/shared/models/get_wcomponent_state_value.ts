@@ -1,7 +1,13 @@
 import { find_leaf_groups, make_graph } from "../../utils/graph"
 import { sort_list } from "../../utils/sort"
-import { WComponent, wcomponent_is_state, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet, VersionedStateVAPsSet, WComponentStateV2SubType } from "./interfaces/state"
+import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
+import type {
+    StateValueAndPredictionsSet,
+    VersionedStateVAPsSet,
+    WComponentNodeState,
+    WComponentNodeStateV2,
+    WComponentStateV2SubType,
+} from "./interfaces/state"
 import type { TemporalUncertainty } from "./interfaces/uncertainty"
 import { get_created_at } from "./utils_datetime"
 
@@ -9,8 +15,15 @@ import { get_created_at } from "./utils_datetime"
 
 export function get_wcomponent_state_value (wcomponent: WComponent): string | null | undefined
 {
-    if (!wcomponent_is_state(wcomponent)) return undefined
+    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent)
+    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value(wcomponent)
 
+    return undefined
+}
+
+
+function get_wcomponent_statev1_value (wcomponent: WComponentNodeState): string | null | undefined
+{
     if (!wcomponent.values) return undefined // TODO remove once MVP reached
 
     const state_value_entry = wcomponent.values.last()
@@ -21,21 +34,20 @@ export function get_wcomponent_state_value (wcomponent: WComponent): string | nu
 }
 
 
-
-export function get_wcomponent_statev2_value (wcomponent: WComponent): string | null | undefined
+function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2): string | null | undefined
 {
-    if (!wcomponent_is_statev2(wcomponent)) return undefined
+    return "statev2"
 
-    const state_value_entry = wcomponent.values_and_prediction_sets.find_last(e => {
-        const dt = get_sim_datetime(e)
-        if (!dt) return false
-        // TODO
-        return true
-    })
+    // const state_value_entry = wcomponent.values_and_prediction_sets.find_last(e => {
+    //     const dt = get_sim_datetime(e)
+    //     if (!dt) return false
+    //     // TODO
+    //     return true
+    // })
 
-    if (!state_value_entry) return undefined
+    // if (!state_value_entry) return undefined
 
-    return state_value_entry.entries.sort((a, b) => a.probability > b.probability ? -1 : 1).first()?.value
+    // return state_value_entry.entries.sort((a, b) => a.probability > b.probability ? -1 : 1).first()?.value
 }
 
 

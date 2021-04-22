@@ -11,7 +11,7 @@ import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_s
 import {
     WComponent,
     wcomponent_is_plain_connection,
-    wcomponent_is_state,
+    wcomponent_is_statev1,
     wcomponent_is_judgement,
     wcomponent_is_statev2,
     wcomponent_has_validity_predictions,
@@ -92,14 +92,9 @@ function _WComponentForm (props: Props)
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
 
-        {wcomponent_is_state(wcomponent) && value &&
+        {value !== undefined &&
         <div style={{ cursor: "not-allowed" }}>
             Value: {value}
-        </div>}
-
-        {wcomponent_is_statev2(wcomponent) &&
-        <div style={{ cursor: "not-allowed" }}>
-            Value: {}
         </div>}
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
@@ -183,7 +178,7 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
-        {wcomponent_is_state(wcomponent) && <div>
+        {wcomponent_is_statev1(wcomponent) && <div>
             <p>
                 <ValueList
                     values={wcomponent.values || []}
