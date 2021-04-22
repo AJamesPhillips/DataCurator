@@ -10,21 +10,59 @@ export const factory_location_hash = (store: Store<RootState>) =>
 {
     let routing_state: RoutingState
 
+    const throttled_update_location_hash = factory_throttled_update_location_hash()
+
     record_location_hash_change(store)
 
     function update_location_hash ()
     {
         const state = store.getState()
-        if (routing_state === state.routing) return
+        if (state.routing === routing_state) return
+        const changed_only_xy = calc_changed_only_xy(routing_state, state.routing)
         routing_state = state.routing
 
-        const route = routing_state_to_string(routing_state)
-        window.location.hash = route
+        throttled_update_location_hash(changed_only_xy, state.routing)
     }
 
     update_location_hash() // initial invocation to update hash
 
     return update_location_hash
+}
+
+
+
+function factory_throttled_update_location_hash ()
+{
+    let timer_will_update_location_hash: NodeJS.Timeout | undefined
+
+    return (changed_only_xy: boolean, routing_state: RoutingState) =>
+    {
+        if (timer_will_update_location_hash)
+        {
+            clearTimeout(timer_will_update_location_hash)
+            timer_will_update_location_hash = undefined
+        }
+
+        if (!changed_only_xy)
+        {
+            const route = routing_state_to_string(routing_state)
+            window.location.hash = route
+            return
+        }
+
+        timer_will_update_location_hash = setTimeout(() => {
+            const route = routing_state_to_string(routing_state)
+            window.location.hash = route
+        }, 1000)
+    }
+}
+
+
+
+function calc_changed_only_xy (current: RoutingState, next: RoutingState): boolean
+{
+    if (!current || !current.args) return false
+    return current.args.x !== next.args.x || current.args.y !== next.args.y
 }
 
 
