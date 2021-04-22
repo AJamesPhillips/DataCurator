@@ -14,6 +14,7 @@ interface OwnProps<T>
     item: T
     get_created_at: (item: T) => Date
     get_custom_created_at?: (item: T) => Date | undefined
+    set_custom_created_at?: (item: T, new_custom_created_at: Date | undefined) => T
     get_summary: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
     get_details: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
     get_details2?: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
@@ -67,6 +68,7 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             item,
             get_created_at,
             get_custom_created_at,
+            set_custom_created_at = (item, custom_created_at) => ({ ...item, custom_created_at }),
             get_summary,
             get_details,
             get_details2,
@@ -99,7 +101,7 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
 
         const date_on_change = (new_custom_created_at: Date | undefined) =>
         {
-            on_change({ ...item, custom_created_at: new_custom_created_at })
+            on_change(set_custom_created_at(item, new_custom_created_at))
         }
 
         return <div className={class_name}>

@@ -13,6 +13,7 @@ interface OwnProps<U> {
     get_id: (item: U) => string
     get_created_at: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
+    set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
     get_summary: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
     get_details: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
     get_details2?: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
@@ -41,6 +42,7 @@ export function EditableList <T> (props: OwnProps<T>)
         get_id,
         get_created_at,
         get_custom_created_at,
+        set_custom_created_at,
         get_summary,
         get_details,
         get_details2,
@@ -90,6 +92,7 @@ export function EditableList <T> (props: OwnProps<T>)
                 item={new_item}
                 get_created_at={get_created_at}
                 get_custom_created_at={get_custom_created_at}
+                set_custom_created_at={set_custom_created_at}
                 get_summary={get_summary}
                 get_details={get_details}
                 get_details2={get_details2}

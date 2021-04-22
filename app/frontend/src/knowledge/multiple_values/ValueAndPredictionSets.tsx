@@ -34,20 +34,13 @@ export function ValueAndPredictionSets (props: OwnProps)
         get_id={get_latest_id}
         get_created_at={get_latest_created_at}
         get_custom_created_at={get_latest_custom_created_at}
+        set_custom_created_at={set_latest_custom_created_at}
         get_summary={get_summary(props.subtype)}
         get_details={get_details(props.subtype)}
         get_details2={get_details2(props.subtype)}
         prepare_new_item={prepare_new_item}
-        update_items={items =>
+        update_items={versioned_vap_set =>
         {
-            const versioned_vap_set = (items as (VersionedStateVAPsSet & { custom_created_at?: Date })[]).map(i => {
-                if (!i.custom_created_at) return i
-                return {
-                    // unpleasant hack
-                    latest: { ...i.latest, custom_created_at: i.custom_created_at },
-                    older: i.older,
-                }
-            })
             const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
             props.update_values_and_predictions(ungrouped)
         }}
@@ -59,6 +52,10 @@ export function ValueAndPredictionSets (props: OwnProps)
 const get_latest_id = (item: VersionedStateVAPsSet) => item.latest.id
 const get_latest_created_at = (item: VersionedStateVAPsSet) => item.latest.created_at
 const get_latest_custom_created_at = (item: VersionedStateVAPsSet) => item.latest.custom_created_at
+const set_latest_custom_created_at = (item: VersionedStateVAPsSet, custom_created_at: Date | undefined) =>
+{
+    return { ...item, latest: { ...item.latest, custom_created_at } }
+}
 
 
 
