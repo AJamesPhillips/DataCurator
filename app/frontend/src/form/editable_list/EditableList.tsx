@@ -129,6 +129,7 @@ export function EditableList <T> (props: OwnProps<T>)
                     item={item}
                     get_created_at={get_created_at}
                     get_custom_created_at={get_custom_created_at}
+                    set_custom_created_at={set_custom_created_at}
                     get_summary={get_summary}
                     get_details={get_details}
                     get_details2={get_details2}
