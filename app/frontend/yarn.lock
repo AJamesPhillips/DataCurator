@@ -415,6 +415,11 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/boom@4.3.5":
+  version "4.3.5"
+  resolved "https://registry.yarnpkg.com/@types/boom/-/boom-4.3.5.tgz#9ccca31e08c989bce483bd76b2de798526c608f5"
+  integrity sha512-lZj4Hyzb7X1iUXqh/T6Clml5IwguLyeEBschDvtIYzT2/QlB42vWBuEzq1bgr0dsQDf1NSapbZLkaT/ollvTDg==
+
 "@types/cacheable-request@^6.0.1":
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@types/cacheable-request/-/cacheable-request-6.0.1.tgz#5d22f3dded1fd3a84c0bbeb5039a7419c2c91976"

@@ -1,4 +1,4 @@
-import type * as Boom from "boom"
+import type { Payload } from "boom"
 
 
 export namespace RequestPayload {
@@ -11,5 +11,5 @@ export namespace ResponsePayload {
 
     export type DemoResponsePayload = {
         some_data: string
-    } | Boom.Payload
+    } | Payload
 }
