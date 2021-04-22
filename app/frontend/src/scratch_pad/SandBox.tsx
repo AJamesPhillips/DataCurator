@@ -15,5 +15,10 @@ export function SandBox ()
             value={custom_date}
             on_change={custom_date => set_custom_date(custom_date)}
         />
+        <EditableCustomDateTime
+            invariant_value={undefined} //new Date("2021-04-15 14:02")}
+            value={custom_date}
+            on_change={custom_date => set_custom_date(custom_date)}
+        />
     </div>
 }

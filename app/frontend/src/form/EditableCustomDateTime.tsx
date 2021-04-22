@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./Editable.css"
 import { date_to_string, valid_date_str, str_to_date, correct_datetime_for_local_time_zone } from "./datetime_utils"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 
 
 
@@ -19,15 +19,9 @@ const shorten_if_only_days = true
 export function EditableCustomDateTime (props: OwnProps)
 {
     const working_value_from_props = props_to_str_value(props)
-    const [props_str_value, set_props_str_value] = useState(working_value_from_props)
     const [working_value, set_working_value] = useState(working_value_from_props)
-
     // Ensure that if the props change, the working_value is updated
-    if (props_str_value !== working_value_from_props)
-    {
-        set_props_str_value(working_value_from_props)
-        set_working_value(working_value_from_props)
-    }
+    useEffect(() => set_working_value(working_value_from_props), [working_value_from_props])
 
     const valid = !!(working_value && valid_date_str(working_value))
 
