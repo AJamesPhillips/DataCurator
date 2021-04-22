@@ -62,6 +62,18 @@ export function group_vap_sets_by_version (vap_sets: StateValueAndPredictionsSet
 
 
 
+export function sort_grouped_vap_sets (grouped_vap_sets: VersionedStateVAPsSet[]): VersionedStateVAPsSet[]
+{
+    const get_sort_key = (grouped_vap_set: VersionedStateVAPsSet) =>
+    {
+        return get_vap_datetime_sort_key(grouped_vap_set.latest)
+    }
+
+    return sort_list(grouped_vap_sets, get_sort_key, "descending")
+}
+
+
+
 export function ungroup_vap_sets_by_version (grouped_vap_sets: VersionedStateVAPsSet[]): StateValueAndPredictionsSet[]
 {
     const vap_sets: StateValueAndPredictionsSet[] = []

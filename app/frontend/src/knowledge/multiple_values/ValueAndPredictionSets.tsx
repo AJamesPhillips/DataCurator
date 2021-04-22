@@ -8,9 +8,11 @@ import type {
 } from "../../shared/models/interfaces/state"
 import { get_new_value_id } from "../../utils/utils"
 import { EditableList } from "../../form/editable_list/EditableList"
-import { group_vap_sets_by_version, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
+import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
+import { sort_list } from "../../utils/sort"
+import { get_created_at } from "../../shared/models/utils_datetime"
 
 
 
@@ -27,9 +29,10 @@ export function ValueAndPredictionSets (props: OwnProps)
 {
     const vap_sets = validate_vap_sets_for_subtype(props.values_and_prediction_sets, props.subtype)
     const grouped_vap_sets = group_vap_sets_by_version(vap_sets)
+    const sorted_grouped_vap_sets = sort_grouped_vap_sets(grouped_vap_sets)
 
     return <EditableList
-        items={grouped_vap_sets}
+        items={sorted_grouped_vap_sets}
         item_descriptor="Value"
         get_id={get_latest_id}
         get_created_at={get_latest_created_at}
@@ -42,7 +45,9 @@ export function ValueAndPredictionSets (props: OwnProps)
         update_items={versioned_vap_set =>
         {
             const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
-            props.update_values_and_predictions(ungrouped)
+            // todo move this stable sort to the reducer so it's always available
+            const sorted_vap_sets = sort_list(ungrouped, get_created_at, "ascending")
+            props.update_values_and_predictions(sorted_vap_sets)
         }}
         entries_extra_class_names="value_and_prediction_sets"
         disable_collapsed={true}
