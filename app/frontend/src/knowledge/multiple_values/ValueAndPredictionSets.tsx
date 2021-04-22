@@ -79,8 +79,10 @@ const get_details = (subtype: WComponentStateV2SubType) => (versioned_vap_set: V
 }
 
 
-const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void, editing_new_item: boolean): h.JSX.Element =>
 {
+
+    if (editing_new_item) return <div />
 
     return <div className="vap_set_details">
         <br />

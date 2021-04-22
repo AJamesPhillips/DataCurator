@@ -13,9 +13,9 @@ interface OwnProps<U> {
     get_id: (item: U) => string
     get_created_at: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
-    get_summary: (item: U, on_change: (item: U) => void) => h.JSX.Element
-    get_details: (item: U, on_change: (item: U) => void) => h.JSX.Element
-    get_details2?: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    get_summary: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
+    get_details: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
+    get_details2?: (item: U, on_change: (item: U) => void, editing_new_item: boolean) => h.JSX.Element
     prepare_new_item: () => U
     update_items: (items: U[]) => void
     entries_extra_class_names?: string

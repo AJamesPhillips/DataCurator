@@ -14,9 +14,9 @@ interface OwnProps<T>
     item: T
     get_created_at: (item: T) => Date
     get_custom_created_at?: (item: T) => Date | undefined
-    get_summary: (item: T, on_change: (item: T) => void) => h.JSX.Element
-    get_details: (item: T, on_change: (item: T) => void) => h.JSX.Element
-    get_details2?: (item: T, on_change: (item: T) => void) => h.JSX.Element
+    get_summary: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
+    get_details: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
+    get_details2?: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
     expanded?: boolean
     disable_collapsable?: boolean
     editing_new_item?: boolean
@@ -72,7 +72,7 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             get_details2,
             datetime_ms,
             disable_collapsable,
-            editing_new_item,
+            editing_new_item = false,
             on_change,
             delete_item,
         } = this.props
@@ -106,11 +106,11 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             <div className="expansion_button" onClick={() => this.setState({ internal__expanded: !internal__expanded })}></div>
 
             <div className="summary">
-                {get_summary(item, on_change)}
+                {get_summary(item, on_change, editing_new_item)}
             </div>
 
             <div className="details">
-                {get_details(item, on_change)}
+                {get_details(item, on_change, editing_new_item)}
 
                 <ConfirmatoryDeleteButton on_delete={delete_item} />
 
@@ -122,7 +122,7 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             </div>
 
             <div className="details2">
-                {get_details2 && get_details2(item, on_change)}
+                {get_details2 && get_details2(item, on_change, editing_new_item)}
             </div>
         </div>
     }
