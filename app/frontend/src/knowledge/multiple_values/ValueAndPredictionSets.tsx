@@ -11,7 +11,7 @@ import { EditableList } from "../../form/editable_list/EditableList"
 import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
-import { sort_list } from "../../utils/sort"
+import { sort_list } from "../../shared/utils/sort"
 import { get_created_at } from "../../shared/models/utils_datetime"
 
 

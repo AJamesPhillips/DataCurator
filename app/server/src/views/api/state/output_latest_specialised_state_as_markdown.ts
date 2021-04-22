@@ -2,15 +2,16 @@ import { Server } from "@hapi/hapi"
 import { writeFileSync, existsSync, mkdirSync } from "fs"
 
 import { LOG_TAGS } from "../../../shared/constants"
-import { GetRichTextArgs, get_description, get_title } from "../../../shared/models/get_rich_text"
+import { GetFieldTextArgs, get_title, get_description } from "../../../shared/models/get_rich_text"
 import {
-    KnowledgeView,
-    Perception,
     SpecialisedObjectsFromToServer,
     specialised_objects_from_to_server_expected_keys,
+    Perception,
     WComponent,
+    KnowledgeView,
     WComponentsById,
-} from "../../../shared/models/SpecialisedObjects"
+} from "../../../shared/models/interfaces/SpecialisedObjects"
+
 
 
 
@@ -97,7 +98,7 @@ function get_file_contents_str(args: GetFileContentsStrArgs) {
 
     if (data_key === "wcomponents")
     {
-        const args: GetRichTextArgs = {
+        const args: GetFieldTextArgs = {
             wcomponent: single_data as any,
             wcomponents_by_id,
             rich_text: true,

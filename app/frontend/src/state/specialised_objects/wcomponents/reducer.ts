@@ -7,7 +7,7 @@ import {
     wcomponent_is_statev2,
 } from "../../../shared/models/interfaces/SpecialisedObjects"
 import { get_created_at } from "../../../shared/models/utils_datetime"
-import { sort_list } from "../../../utils/sort"
+import { sort_list } from "../../../shared/utils/sort"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"

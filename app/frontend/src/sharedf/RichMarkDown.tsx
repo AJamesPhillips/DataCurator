@@ -2,9 +2,9 @@ import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown from "markdown-to-jsx"
 
-import type { RootState } from "../../state/State"
-import { add_newlines_to_markdown } from "../../form/utils"
-import { replace_ids_in_text } from "./get_rich_text"
+import type { RootState } from "../state/State"
+import { add_newlines_to_markdown } from "../form/utils"
+import { replace_ids_in_text } from "../shared/models/get_rich_text"
 
 
 

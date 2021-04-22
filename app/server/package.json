@@ -23,6 +23,7 @@
     "@types/redux-form": "6.6.2",
     "@types/sequelize": "4.28.9",
     "deep-freeze": "0.0.1",
+    "graphlib": "2.1.8",
     "hapi-pino": "8.3.0",
     "jquery": "2.2.4",
     "lodash": "4.14.2",
@@ -44,6 +45,7 @@
     "xmlhttprequest": "1.8.0"
   },
   "devDependencies": {
+    "@types/graphlib": "2.1.7",
     "jasmine": "2.6.0",
     "react-scripts-ts": "3.1.0",
     "tslint": "5.2.0"

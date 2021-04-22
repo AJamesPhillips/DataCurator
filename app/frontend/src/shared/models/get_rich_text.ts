@@ -4,7 +4,7 @@ import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 
 
 
-interface GetFieldTextArgs extends GetIdReplacedTextArgs
+export interface GetFieldTextArgs extends GetIdReplacedTextArgs
 {
     wcomponent: WComponent
 }

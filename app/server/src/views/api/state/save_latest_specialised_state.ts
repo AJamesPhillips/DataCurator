@@ -6,7 +6,7 @@ import {
     SpecialisedObjectsFromToServer,
     SpecialisedObjectsFromToServerKeys,
     specialised_objects_from_to_server_expected_keys,
-} from "../../../shared/models/SpecialisedObjects"
+} from "../../../shared/models/interfaces/SpecialisedObjects"
 
 
 

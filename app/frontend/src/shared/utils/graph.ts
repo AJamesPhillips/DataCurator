@@ -1,8 +1,8 @@
 import { Graph } from "graphlib"
 import * as GraphLib from "graphlib"
-const alg = ((GraphLib as any).default as typeof GraphLib).alg
+const alg = (((GraphLib as any).default as typeof GraphLib) || GraphLib).alg
 
-import { test } from "../shared/utils/test"
+import { test } from "./test"
 
 
 

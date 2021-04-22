@@ -2,7 +2,7 @@ import { Component, h } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
-import { sort_list } from "../utils/sort"
+import { sort_list } from "../shared/utils/sort"
 
 
 

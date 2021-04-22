@@ -46,6 +46,7 @@ if (!Array.prototype.find_last) {
             for (let index = this.length - 1; index >= 0; --index) {
                 if (predicate(this[index])) return this[index]
             }
+            return undefined
         }
     })
 }

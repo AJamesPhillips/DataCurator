@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from "fs"
-import { SpecialisedObjectsFromToServer } from "../../../shared/models/SpecialisedObjects"
+import { SpecialisedObjectsFromToServer } from "../../../shared/models/interfaces/SpecialisedObjects"
+
 
 
 
