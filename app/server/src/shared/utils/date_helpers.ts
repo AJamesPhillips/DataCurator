@@ -241,10 +241,12 @@ export function date2str (date: Date, format: string)
 }
 
 
-export function date2str_auto (date: Date)
+export function date2str_auto (date: Date, shorten_if_only_days: boolean = true)
 {
+    // `date` should be timezone aware here so this behaviour may "be strange" for
+    // users of the same date who are in different timezones
     const only_days = date.getHours() === 0  // if locale hours is 0 then just render days
-    const format = only_days ? "yyyy-MM-dd" : "yyyy-MM-dd hh:mm"
+    const format = (shorten_if_only_days && only_days) ? "yyyy-MM-dd" : "yyyy-MM-dd hh:mm"
 
     return date2str(date, format)
 }

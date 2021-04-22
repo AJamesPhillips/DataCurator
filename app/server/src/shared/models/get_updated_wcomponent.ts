@@ -1,4 +1,4 @@
-import type { WComponent } from "./SpecialisedObjects"
+import type { WComponent } from "./interfaces/SpecialisedObjects"
 
 
 
