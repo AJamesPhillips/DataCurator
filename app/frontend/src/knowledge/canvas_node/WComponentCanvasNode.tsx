@@ -16,7 +16,7 @@ import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/models/get_rich_text"
 import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
-import { get_created_at } from "../../shared/models/utils_datetime"
+import { get_created_at_ms } from "../../shared/models/utils_datetime"
 
 
 
@@ -84,7 +84,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const kv_entry = knowledge_view.wc_id_map[id]
-    const hidden = display_at_created_ms < get_created_at(wcomponent)
+    const hidden = display_at_created_ms < get_created_at_ms(wcomponent)
 
 
     const on_pointer_down = () =>

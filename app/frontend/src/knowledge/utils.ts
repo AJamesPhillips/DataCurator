@@ -4,7 +4,7 @@ import {
     WComponent,
     wcomponent_has_existence_predictions,
 } from "../shared/models/interfaces/SpecialisedObjects"
-import { get_created_at } from "../shared/models/utils_datetime"
+import { get_created_at_ms } from "../shared/models/utils_datetime"
 
 
 
@@ -23,13 +23,13 @@ function wcomponent_is_now_invalid (wcomponent: WComponent, display_at_datetime_
     return (last_existence_prediction
         && last_existence_prediction.conviction === 100
         && last_existence_prediction.probability === 0
-        && display_at_datetime_ms > get_created_at(last_existence_prediction))
+        && display_at_datetime_ms > get_created_at_ms(last_existence_prediction))
 }
 
 
 function wcomponent_is_not_yet_valid (wcomponent: WComponent, display_at_datetime_ms: number)
 {
-    return get_created_at(wcomponent) > display_at_datetime_ms
+    return get_created_at_ms(wcomponent) > display_at_datetime_ms
 }
 
 

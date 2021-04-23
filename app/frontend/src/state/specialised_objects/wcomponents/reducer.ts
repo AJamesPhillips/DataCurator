@@ -6,7 +6,7 @@ import {
     wcomponent_is_statev1,
     wcomponent_is_statev2,
 } from "../../../shared/models/interfaces/SpecialisedObjects"
-import { get_created_at } from "../../../shared/models/utils_datetime"
+import { get_created_at_ms } from "../../../shared/models/utils_datetime"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
@@ -73,19 +73,19 @@ function tidy_wcomponent (wcomponent: WComponent): WComponent
 {
     if (wcomponent_has_validity_predictions(wcomponent))
     {
-        const sorted_predictions = sort_list(wcomponent.validity, get_created_at, "ascending")
+        const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, "ascending")
         wcomponent.validity = sorted_predictions
     }
 
     if (wcomponent_is_statev1(wcomponent))
     {
-        const sorted_values = sort_list(wcomponent.values || [], get_created_at, "ascending")
+        const sorted_values = sort_list(wcomponent.values || [], get_created_at_ms, "ascending")
         wcomponent.values = sorted_values
     }
 
     if (wcomponent_is_statev2(wcomponent))
     {
-        const sorted_values = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at, "ascending")
+        const sorted_values = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
         wcomponent.values_and_prediction_sets = sorted_values
     }
 

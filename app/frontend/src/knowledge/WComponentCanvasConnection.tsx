@@ -14,7 +14,7 @@ import {
     wcomponent_is_judgement,
 } from "../shared/models/interfaces/SpecialisedObjects"
 import { get_prob_and_conviction } from "../shared/models/uncertainty_utils"
-import { get_created_at } from "../shared/models/utils_datetime"
+import { get_created_at_ms } from "../shared/models/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
@@ -47,7 +47,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         else
         {
             is_invalid = (
-                get_created_at(wc) > display_at_datetime_ms
+                get_created_at_ms(wc) > display_at_datetime_ms
                 || wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms)
                 || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms)
             )
@@ -171,7 +171,7 @@ function calculate_display_params ({ wcomponent, display_at_datetime_ms }: Calcu
     {
         // TODO use validity in calculation as well
         const { validity = [], existence = [] } = wcomponent
-        const prediction_index_result = find_nearest_index_in_sorted_list(existence, p => get_created_at(p), display_at_datetime_ms)
+        const prediction_index_result = find_nearest_index_in_sorted_list(existence, p => get_created_at_ms(p), display_at_datetime_ms)
         const prediction = existence[Math.floor(prediction_index_result.index)]
 
 
