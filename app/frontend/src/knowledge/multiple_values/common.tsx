@@ -9,6 +9,7 @@ import type {
 } from "../../shared/models/interfaces/state"
 import { get_probable_vap_set_values, get_vap_set_prob, get_vap_set_conviction } from "../../sharedf/wcomponent_state"
 import { update_substate } from "../../utils/update_state"
+import { UncertainDateTime } from "../uncertainty/datetime"
 import { prepare_new_vap, set_vap_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 
@@ -48,32 +49,10 @@ export const get_details_for_single_vap_set = (subtype: WComponentStateV2SubType
 
     return <div className="vap_set_details">
         <br />
-        <div className="datetimes">
-            <div className="datetime_section">
-                <div className="datetime_title">min:</div>
-                <div className="datetime_value"><EditableCustomDateTime
-                    invariant_value={undefined}
-                    value={vap_set.datetime.min}
-                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "min", new_datetime))}
-                /></div>
-            </div>
-            <div className="datetime_section">
-                <div className="datetime_title">DateTime:</div>
-                <div className="datetime_value"><EditableCustomDateTime
-                    invariant_value={undefined}
-                    value={vap_set.datetime.value}
-                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "value", new_datetime))}
-                /></div>
-            </div>
-            <div className="datetime_section">
-                <div className="datetime_title">max:</div>
-                <div className="datetime_value"><EditableCustomDateTime
-                    invariant_value={undefined}
-                    value={vap_set.datetime.max}
-                    on_change={new_datetime => on_change(update_substate(vap_set, "datetime", "max", new_datetime))}
-                /></div>
-            </div>
-        </div>
+        <UncertainDateTime
+            datetime={vap_set.datetime}
+            on_change={datetime => on_change({ ...vap_set, datetime })}
+        />
         <br />
         <div>
             <ValueAndPredictions

@@ -1,0 +1,20 @@
+
+.datetimes
+{
+    display: flex;
+    /* width: 70%; */
+    flex-direction: column;
+}
+.datetimes .datetime_section
+{
+    display: flex;
+    padding: 2px 0;
+}
+.datetimes .datetime_section .datetime_title
+{
+    width: 100px;
+}
+.datetimes .datetime_section .datetime_value
+{
+    width: 200px;
+}

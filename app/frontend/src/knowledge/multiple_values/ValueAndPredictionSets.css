@@ -10,23 +10,3 @@
 {
     background-color: white;
 }
-
-.value_and_prediction_sets .datetimes
-{
-    display: flex;
-    /* width: 70%; */
-    flex-direction: column;
-}
-.value_and_prediction_sets .datetime_section
-{
-    display: flex;
-    padding: 2px 0;
-}
-.value_and_prediction_sets .datetime_section .datetime_title
-{
-    width: 100px;
-}
-.value_and_prediction_sets .datetime_section .datetime_value
-{
-    width: 200px;
-}

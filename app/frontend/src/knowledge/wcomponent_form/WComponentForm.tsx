@@ -17,6 +17,7 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_existence_predictions,
     wcomponent_types,
+    wcomponent_is_event,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
 import { Button } from "../../sharedf/Button"
@@ -25,6 +26,7 @@ import { get_wcomponent_from_state } from "../../state/specialised_objects/acces
 import type { RootState } from "../../state/State"
 import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSets"
 import { PredictionList } from "../predictions/PredictionList"
+import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
 import { WComponentKnowledgeView } from "../WComponentKnowledgeView"
@@ -139,11 +141,19 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_judgement(wcomponent) && <JudgementFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
-        <p><EditableText
-            placeholder={"Description..."}
-            value={wcomponent.description}
-            on_change={description => upsert_wcomponent({ description })}
-        /></p>
+        <p>
+            <EditableText
+                placeholder={"Description..."}
+                value={wcomponent.description}
+                on_change={description => upsert_wcomponent({ description })}
+            />
+        </p>
+
+        {/* {wcomponent_is_event(wcomponent) && <p>
+            <UncertainDateTime
+                datetime={wcomponent.datetime}
+            />
+        </p>} */}
 
         <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"}>
             <EditableCustomDateTime
