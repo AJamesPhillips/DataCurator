@@ -12,7 +12,6 @@ const root_state_keys: {[k in keyof RootState]: true} = {
     sync: true,
     routing: true,
     global_keys: true,
-    current_datetime: true,
     objectives: true,
     meta_wcomponents: true,
     derived: true,

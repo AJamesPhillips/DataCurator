@@ -6,7 +6,6 @@ import "./time_slider.css"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { created_at_datetime_ms_to_routing_args, routing_args_to_datetime_ms } from "../state/routing/routing_datetime"
 import type { TimeSliderData } from "./interfaces"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 
@@ -21,13 +20,13 @@ interface OwnProps extends TimeSliderData
 function map_state (state: RootState)
 {
     return {
-        datetime_ms: routing_args_to_datetime_ms(state),
+        datetime_ms: state.routing.args.created_at_ms,
     }
 }
 
 
 const map_dispatch = {
-    change_route: ACTIONS.routing.change_route
+    change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime
 }
 
 
@@ -57,8 +56,7 @@ function _TimeSlider (props: Props)
 
         if (update_route)
         {
-            const args = created_at_datetime_ms_to_routing_args(new_datetime_ms)
-            props.change_route({ route: undefined, sub_route: undefined, item_id: undefined, args })
+            props.change_display_at_created_datetime({ ms: new_datetime_ms })
         }
     }
 

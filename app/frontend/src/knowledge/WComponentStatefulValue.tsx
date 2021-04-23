@@ -2,7 +2,11 @@ import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { get_wcomponent_state_value } from "../shared/models/get_wcomponent_state_value"
-import { WComponent, wcomponent_is_judgement, wcomponent_is_state } from "../shared/models/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    wcomponent_is_judgement,
+    wcomponent_is_state,
+} from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
@@ -24,9 +28,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     let is_judgement = false
     let is_empty = true
 
+    const { created_at_ms, sim_ms } = state.routing.args
+
     if (wcomponent_is_state(wcomponent))
     {
-        value = get_wcomponent_state_value(wcomponent)
+        value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
         is_empty = value === undefined
     }
     else if (wcomponent_is_judgement(wcomponent))
@@ -36,7 +42,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
         const map = state.specialised_objects.wcomponents_by_id
         const target_wcomponent = map[wcomponent.judgement_target_wcomponent_id]
-        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent })
+        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
     }
 
     return { value, judgement_value, is_judgement, is_empty }

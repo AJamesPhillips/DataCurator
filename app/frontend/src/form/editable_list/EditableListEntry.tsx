@@ -2,7 +2,6 @@ import { Component, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./EditableListEntry.css"
-import { routing_args_to_datetime_ms } from "../../state/routing/routing_datetime"
 import type { RootState } from "../../state/State"
 import { ConfirmatoryDeleteButton } from "../ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../EditableCustomDateTime"
@@ -29,7 +28,7 @@ interface OwnProps<T>
 
 
 const map_state = (state: RootState) => ({
-    datetime_ms: routing_args_to_datetime_ms(state),
+    datetime_ms: state.routing.args.created_at_ms,
 })
 
 

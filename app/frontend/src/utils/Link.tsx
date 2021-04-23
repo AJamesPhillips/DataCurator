@@ -3,9 +3,11 @@ import type { Dispatch } from "redux"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./Link.css"
-import { merge_routing_state, routing_state_to_string } from "../state/routing/routing"
-import type { RootState, ROUTE_TYPES, RoutingArgs, SUB_ROUTE_TYPES } from "../state/State"
+import { routing_state_to_string } from "../state/routing/routing"
+import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
+import type { ROUTE_TYPES, RoutingStateArgs, SUB_ROUTE_TYPES } from "../state/routing/interfaces"
+import { merge_routing_state } from "../state/routing/merge_routing_state"
 
 
 
@@ -13,7 +15,7 @@ interface OwnProps {
     route: ROUTE_TYPES | undefined
     sub_route: SUB_ROUTE_TYPES | undefined
     item_id: string | null | undefined
-    args: Partial<RoutingArgs> | undefined
+    args: Partial<RoutingStateArgs> | undefined
     on_click?: () => void
     selected_on?: Set<"route" | "args.view">
 }
@@ -44,7 +46,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
 const map_dispatch = (dispatch: Dispatch, own_props: OwnProps) => ({
-    link_clicked: (routing_args: Partial<RoutingArgs>) => dispatch(ACTIONS.routing.change_route({
+    link_clicked: (routing_args: Partial<RoutingStateArgs>) => dispatch(ACTIONS.routing.change_route({
         route:     own_props.route,
         sub_route: own_props.sub_route,
         item_id:   own_props.item_id,
@@ -85,7 +87,7 @@ class _Link extends Component<Props, State>
 
     render ()
     {
-        const partial_routing_args: Partial<RoutingArgs> = this.props.args || {}
+        const partial_routing_args: Partial<RoutingStateArgs> = this.props.args || {}
 
         const on_click = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
             if (this.props.selected) return // no-op
@@ -133,7 +135,7 @@ interface LinkButtonOwnProps extends OwnProps
 
 function _LinkButton (props: Props & LinkButtonOwnProps)
 {
-    const partial_routing_args: Partial<RoutingArgs> = props.args || {}
+    const partial_routing_args: Partial<RoutingStateArgs> = props.args || {}
 
     const on_click = (e: h.JSX.TargetedEvent<HTMLInputElement, MouseEvent>) => {
         if (props.selected) return // no-op

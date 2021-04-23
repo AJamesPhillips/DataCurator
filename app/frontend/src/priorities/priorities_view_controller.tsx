@@ -4,7 +4,6 @@ import { project_priority_y } from "../canvas/display"
 import type { CanvasPoint } from "../canvas/interfaces"
 import { MainContentControls } from "../layout/MainContentControls"
 import { ViewController } from "../layout/ViewController"
-import { routing_args_to_datetime_ms } from "../state/routing/routing_datetime"
 import type { RootState } from "../state/State"
 import { factory_memoize_object } from "../utils/memoize"
 import { CurrentDatetimeLine } from "./CurrentDatetimeLine"
@@ -23,7 +22,7 @@ import { get_project_id_to_vertical_position } from "./project_priorities/vertic
 const memoize_order_args = factory_memoize_object<ProjectPriorityOrderArgs>()
 
 const map_state = (state: RootState) => {
-    const display_at_datetime_ms = routing_args_to_datetime_ms(state)
+    const display_at_datetime_ms = state.routing.args.created_at_ms
 
     const {
         earliest_ms,

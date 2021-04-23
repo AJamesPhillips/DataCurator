@@ -1,4 +1,4 @@
-import { current_datetime_actions } from "./current_datetime"
+import { display_at_created_datetime_actions } from "./datetime/display_at_created"
 import { display_actions } from "./display/actions"
 import { global_keys_actions } from "./global_keys/actions"
 import { objectives_actions } from "./objectives"
@@ -19,7 +19,7 @@ export const ACTIONS = {
     sync: sync_actions,
     routing: routing_actions,
     global_keys: global_keys_actions,
-    current_datetime: current_datetime_actions,
+    display_at_created_datetime: display_at_created_datetime_actions,
     objectives: objectives_actions,
     specialised_object: specialised_object_actions,
 }

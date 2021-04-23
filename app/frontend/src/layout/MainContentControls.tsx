@@ -35,7 +35,7 @@ function map_dispatch (dispatch: Dispatch)
         },
         change_rotation: (e: h.JSX.TargetedEvent<HTMLInputElement, Event>) =>
         {
-            const rotation = e.currentTarget.value
+            const rotation = parseInt(e.currentTarget.value, 10)
             dispatch(ACTIONS.routing.change_route({ args: { rotation } }))
         },
     }

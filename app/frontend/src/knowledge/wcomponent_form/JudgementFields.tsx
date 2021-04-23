@@ -30,6 +30,8 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 
     return {
         target_wcomponent,
+        created_at_ms: state.routing.args.created_at_ms,
+        sim_ms: state.routing.args.sim_ms,
     }
 }
 
@@ -41,11 +43,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementFields (props: Props)
 {
-    const { wcomponent, upsert_wcomponent, target_wcomponent } = props
+    const { wcomponent, upsert_wcomponent, target_wcomponent, created_at_ms, sim_ms } = props
 
     const { judgement_manual } = wcomponent
     const selected_option_id_for_manual = judgement_manual === undefined ? undefined : judgement_manual.toString()
 
+    const judgement = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
 
     return <p>
         <WComponentFromTo
@@ -54,7 +57,7 @@ function _JudgementFields (props: Props)
             parent_wcomponent_id={wcomponent.id}
             wcomponent={target_wcomponent}
             on_update={judgement_target_wcomponent_id => upsert_wcomponent({ judgement_target_wcomponent_id })}
-            />
+        />
 
         <p>
             <div style={{ display: "inline-flex" }}>
@@ -96,7 +99,7 @@ function _JudgementFields (props: Props)
 
         <p>
             <div style={{ display: "inline-flex" }}>
-                Current value: &nbsp; <JudgementBadge judgement={calculate_judgement_value({ wcomponent, target_wcomponent })} />
+                Current value: &nbsp; <JudgementBadge judgement={judgement} />
             </div>
         </p>
     </p>

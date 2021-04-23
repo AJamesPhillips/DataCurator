@@ -1,7 +1,8 @@
 import type { Store } from "redux"
 import { ACTIONS } from "../actions"
 
-import type { RootState, RoutingState } from "../State"
+import type { RootState } from "../State"
+import type { RoutingState } from "./interfaces"
 import { get_current_route_params, routing_state_to_string } from "./routing"
 
 
@@ -84,6 +85,7 @@ function record_location_hash_change (store: Store<RootState>)
             promise_state_ready = new Promise<void>(resolve =>
             {
                 const unsubscribe = store.subscribe(() => {
+                    // if (!state.sync.ready) return // TODO, do we need this?  Do we need any of this?
                     unsubscribe()
                     resolve()
                 })

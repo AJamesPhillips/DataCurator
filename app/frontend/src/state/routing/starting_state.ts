@@ -1,20 +1,26 @@
-import type { RoutingArgs, RoutingState } from "../State"
+import type { RoutingState, RoutingStateArgs } from "./interfaces"
 import { get_current_route_params } from "./routing"
-import { created_at_datetime_to_routing_args } from "./routing_datetime"
 
 
 
 export function get_routing_starting_state (): RoutingState
 {
-    const routing_args: RoutingArgs = {
-        ...created_at_datetime_to_routing_args(new Date()),
+    const now = new Date()
+    const now_ms = now.getTime()
+
+    const routing_args: RoutingStateArgs = {
         view: "priorities",
         subview_id: "",
         zoom: 100,
         x: 0,
         y: 0,
         order: "normal",
-        rotation: "0",
+        rotation: 0,
+
+        created_at_datetime: now,
+        created_at_ms: now_ms,
+        sim_datetime: now,
+        sim_ms: now_ms,
     }
 
     const default_routing_state: RoutingState = {

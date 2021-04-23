@@ -1,74 +1,17 @@
-import { test } from "../../shared/utils/test"
+import { date2str } from "../../shared/utils/date_helpers"
 import {
-    ALLOWED_ROUTES,
-    ALLOWED_SUB_ROUTES,
-    is_route_arg_key,
-    OrderType,
-    ROUTE_TYPES,
-    RoutingArgKey,
-    RoutingArgs,
     RoutingState,
-    routing_order_types,
-    routing_view_types,
+    ROUTE_TYPES,
+    ALLOWED_ROUTES,
     SUB_ROUTE_TYPES,
-    ViewType,
-} from "../State"
-import type { ActionChangeRouteArgs } from "./actions"
-
-
-
-function parse_url_for_routing_params ({ url, routing_state }: { url: string, routing_state: RoutingState }): RoutingState
-{
-    const hash = url.split("#")[1] || ""
-
-    const main_parts = hash.split("&")
-    const path = main_parts[0]
-    const new_args = main_parts.slice(1)
-
-    const path_parts = path.split("/").filter(p => !!p)
-    const route = path_parts[0] as ROUTE_TYPES
-
-    if (!ALLOWED_ROUTES.includes(route))
-    {
-        return { route: "statements", sub_route: null, item_id: null, args: routing_state.args }
-    }
-
-    const part2 = (path_parts.slice(1).join("/") || null) as SUB_ROUTE_TYPES
-    let sub_route: SUB_ROUTE_TYPES = null
-    let item_id: string | null = null
-
-    if (ALLOWED_SUB_ROUTES[route].includes(part2 as any)) sub_route = part2
-    else item_id = part2 as string
-
-    const args: RoutingArgs = {
-        ...routing_state.args,
-    }
-
-    if (new_args.length)
-    {
-        new_args.forEach(part => {
-            const [key, value] = part.split("=")
-            if (value === "") return
-            if (!is_route_arg_key(key)) return
-            const valid_value = valid_route_arg_value(key, value)
-            if (valid_value === undefined) return
-            ;(args as any)[key] = valid_value
-        })
-    }
-
-    return { route, sub_route, item_id, args }
-}
-
-
-
-function valid_route_arg_value (key: string, value: string)
-{
-    if (key === "view") return routing_view_types.includes(value) ? value : undefined
-    if (key === "order") return routing_order_types.includes(value) ? value : undefined
-    if (["x", "y", "zoom"].includes(key)) return parseInt(value)
-
-    return value
-}
+    ALLOWED_SUB_ROUTES,
+    RoutingStateArgs,
+    is_routing_view_types,
+    is_routing_order_types,
+    is_route_string_arg_number,
+    RoutingStringArgKey,
+} from "./interfaces"
+import { routing_arg_datetime_strings_to_datetime } from "./routing_datetime"
 
 
 
@@ -84,92 +27,124 @@ export function routing_state_to_string (args: RoutingState): string
 
 
 
-const exclude_routiing_keys = new Set<RoutingArgKey>(["order", "rotation"])
-export function routing_args_to_string (routing_args: RoutingArgs)
+const exclude_routing_keys = new Set([
+    "order", "rotation",
+    "created_at_datetime", "created_at_ms", "sim_datetime", "sim_ms",
+])
+export function routing_args_to_string (routing_args: RoutingStateArgs)
 {
-    const routing_args_str = Object.keys(routing_args)
-        .filter(k => !exclude_routiing_keys.has(k as any))
+    const data = {
+        ...routing_args,
+        cdate: date2str(routing_args.created_at_datetime, "yyyy-MM-dd"),
+        ctime: date2str(routing_args.created_at_datetime, "hh:mm:ss"),
+        sdate: date2str(routing_args.sim_datetime, "yyyy-MM-dd"),
+        stime: date2str(routing_args.sim_datetime, "hh:mm:ss"),
+    }
+
+    const routing_args_str = (Object.keys(routing_args) as (keyof typeof data)[])
+        .filter(k => !exclude_routing_keys.has(k))
         .sort()
         .reverse() // used so we can see x, y, zoom more easily
-        .map(key => `&${key}=${routing_args[key as RoutingArgKey]}`)
+        // Put cdate and ctime at the end so they are easiest to manually remove from url
+        .concat(["sdate", "stime", "cdate", "ctime"])
+        .map(key => `&${key}=${data[key]}`)
         .join("")
 
     return routing_args_str
 }
 
 
+
 export function get_current_route_params (routing_state: RoutingState): RoutingState
 {
     const url = window.location.toString()
-    const routing_params = parse_url_for_routing_params({ url, routing_state })
-    return routing_params
+    const new_routing_state = parse_url_for_state({ url, current_routing_state: routing_state })
+    return new_routing_state
 }
 
 
-//
 
-export function merge_routing_state (current_routing_state: RoutingState, new_routing_state: ActionChangeRouteArgs): RoutingState
+interface ParseUrlForStateArgs
 {
-    const {
-        route,
-        sub_route,
-        item_id,
-        args,
-    } = current_routing_state
+    url: string
+    current_routing_state: RoutingState
+}
+function parse_url_for_state ({ url, current_routing_state }: ParseUrlForStateArgs): RoutingState
+{
+    const hash = url.split("#")[1] || ""
 
-    const new_args = new_routing_state.args || {}
-    Object.keys(new_args).forEach(key => {
-        const value = new_args[key as RoutingArgKey]
-        const no_value = value === undefined || value === ""
-        const not_valid = !is_route_arg_key(key)
-        if (no_value || not_valid) delete new_args[key as RoutingArgKey]
+    const main_parts = hash.split("&")
+
+    const path = main_parts[0]
+    const path_parts = path.split("/").filter(p => !!p)
+    const { route, sub_route, item_id } = get_route_subroute_and_item_id(path_parts)
+
+    const args_from_url = main_parts.slice(1)
+    const args = update_args_from_url(current_routing_state.args, args_from_url)
+
+    return { route, sub_route, item_id, args }
+}
+
+
+
+function get_route_subroute_and_item_id (path_parts: string[])
+{
+    let route = path_parts[0] as ROUTE_TYPES
+    let sub_route: SUB_ROUTE_TYPES = null
+    let item_id: string | null = null
+
+    if (!ALLOWED_ROUTES.includes(route))
+    {
+        route = "statements"
+    }
+    else
+    {
+        const part2 = (path_parts.slice(1).join("/") || null) as SUB_ROUTE_TYPES
+
+        if (ALLOWED_SUB_ROUTES[route].includes(part2 as any)) sub_route = part2
+        else item_id = part2 as string
+    }
+
+    return { route, sub_route, item_id }
+}
+
+
+
+function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]): RoutingStateArgs
+{
+    args = { ...args }
+
+    let cdate: string | null = null
+    let ctime: string | null = null
+    let sdate: string | null = null
+    let stime: string | null = null
+
+    args_from_url.forEach(part => {
+        const [key, value] = part.split("=") as [RoutingStringArgKey, string]
+        update_args_with_value(key, value, args)
+
+        if (key === "cdate") cdate = value
+        else if (key === "ctime") ctime = value
+        else if (key === "sdate") sdate = value
+        else if (key === "stime") stime = value
     })
-    const merged_args = { ...args, ...new_args }
 
-    return {
-        route: new_routing_state.route || route,
-        sub_route: new_routing_state.sub_route === null ? null : (new_routing_state.sub_route || sub_route),
-        item_id: new_routing_state.item_id === null ? null : (new_routing_state.item_id || item_id),
-        args: merged_args,
-    }
+    args.created_at_datetime = routing_arg_datetime_strings_to_datetime(cdate, ctime)
+    args.sim_datetime = sdate ? routing_arg_datetime_strings_to_datetime(sdate, stime) : args.created_at_datetime
+
+    return args
 }
 
-
-
-function run_tests ()
+function update_args_with_value (key: RoutingStringArgKey, value: string, args: RoutingStateArgs)
 {
-    console. log("running tests of merge_routing_state")
-
-    const current_routing_state = {
-        route: "wcomponents" as ROUTE_TYPES,
-        sub_route: null as SUB_ROUTE_TYPES,
-        item_id: "wc53611570523449304",
-        args:
-        {
-            cdate: "2021-04-09",
-            ctime: "23:25:26",
-            view: "knowledge" as ViewType,
-            subview_id: "kv7207606403961189",
-            zoom: 100,
-            x: 0,
-            y: 0,
-            order: "normal" as OrderType,
-            rotation: "0"
-        }
+    if (key === "view")
+    {
+        if (is_routing_view_types(value)) args.view = value
     }
-
-    let new_routing_state: ActionChangeRouteArgs
-    let merged_routing_state: RoutingState
-
-    // Should not remove key's with values === 0
-    new_routing_state = { args: { x: 0 } }
-    merged_routing_state = merge_routing_state(current_routing_state, new_routing_state)
-    test(merged_routing_state, current_routing_state)
-
-    // Should not overwrite key's with undefined
-    new_routing_state = { args: { zoom: undefined } }
-    merged_routing_state = merge_routing_state(current_routing_state, new_routing_state)
-    test(merged_routing_state, current_routing_state)
+    else if (key === "subview_id") args.subview_id = value
+    else if (key === "order")
+    {
+        if (is_routing_order_types(value)) args.order = value
+    }
+    else if (is_route_string_arg_number(key)) args[key] = parseInt(value)
 }
-
-// run_tests()

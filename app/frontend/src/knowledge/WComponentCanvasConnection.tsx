@@ -16,7 +16,6 @@ import {
 import { get_prob_and_conviction } from "../shared/models/uncertainty_utils"
 import { get_created_at } from "../shared/models/utils_datetime"
 import { ACTIONS } from "../state/actions"
-import { routing_args_to_datetime_ms } from "../state/routing/routing_datetime"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
@@ -33,7 +32,7 @@ interface OwnProps
 
 const map_state = (state: RootState, props: OwnProps) =>
 {
-    const display_at_datetime_ms = routing_args_to_datetime_ms(state)
+    const display_at_datetime_ms = state.routing.args.created_at_ms
     const wc = get_wcomponent_from_state(state, props.id)
 
     let is_invalid = false

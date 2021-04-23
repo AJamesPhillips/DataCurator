@@ -8,7 +8,6 @@ import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import type { CanvasPoint } from "../../canvas/interfaces"
 import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../shared/models/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
-import { routing_args_to_datetime_ms } from "../../state/routing/routing_datetime"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { wcomponent_is_invalid_for_datetime } from "../utils"
@@ -36,7 +35,6 @@ const map_state = (state: RootState, props: OwnProps) =>
     const { canvas_bounding_rect: cbr } = state.display
 
     return {
-        display_at_datetime_ms: routing_args_to_datetime_ms(state),
         wcomponent: get_wcomponent_from_state(state, props.id),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === props.id,
@@ -46,6 +44,8 @@ const map_state = (state: RootState, props: OwnProps) =>
         meta_key_is_down,
         canvas_bounding_rect_left: cbr ? cbr.left : 0,
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
+        display_at_created_ms: state.routing.args.created_at_ms,
+        sim_ms: state.routing.args.sim_ms,
     }
 }
 
@@ -69,21 +69,22 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState<boolean>(false)
 
-    const { id, knowledge_view, display_at_datetime_ms, wcomponent, wcomponents_by_id,
+    const { id, knowledge_view, wcomponent, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
-        intercept_wcomponent_click_to_edit_link, meta_key_is_down, } = props
+        intercept_wcomponent_click_to_edit_link, meta_key_is_down,
+        display_at_created_ms, sim_ms, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!wcomponent) return <div>Could not find component of id {id}</div>
 
 
     // Do not show nodes if certain they are not valid / existing / likely
-    const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_datetime_ms)
+    const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms)
     if (certain_is_not_valid) return null
 
 
     const kv_entry = knowledge_view.wc_id_map[id]
-    const hidden = display_at_datetime_ms < get_created_at(wcomponent)
+    const hidden = display_at_created_ms < get_created_at(wcomponent)
 
 
     const on_pointer_down = () =>
@@ -135,7 +136,7 @@ function _WComponentCanvasNode (props: Props)
     }
 
 
-    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id })
+    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, created_at_ms: display_at_created_ms, sim_ms })
 
 
     const extra_css_class = (

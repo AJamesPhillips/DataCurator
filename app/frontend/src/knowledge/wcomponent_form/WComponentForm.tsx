@@ -55,6 +55,8 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         y: state.routing.args.y,
         zoom: state.routing.args.zoom,
         rich_text: state.display.rich_text_formatting,
+        created_at_ms: state.routing.args.created_at_ms,
+        sim_ms: state.routing.args.sim_ms,
     }
 }
 
@@ -73,7 +75,7 @@ function _WComponentForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, from_wcomponent, to_wcomponent, rich_text } = props
+    const { wcomponent, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
     const wcomponent_id = wcomponent.id
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
@@ -83,12 +85,12 @@ function _WComponentForm (props: Props)
     }
 
 
-    const value = get_wcomponent_state_value(wcomponent)
+    const value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
 
     return <div key={wcomponent_id}>
         <h2><EditableText
             placeholder={"Title..."}
-            value={rich_text ? replace_value_in_text({ text: wcomponent.title, wcomponent }) : wcomponent.title}
+            value={rich_text ? replace_value_in_text({ text: wcomponent.title, wcomponent, created_at_ms, sim_ms, }) : wcomponent.title}
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
 

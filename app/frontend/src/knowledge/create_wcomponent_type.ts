@@ -8,7 +8,6 @@ import type {
 } from "../shared/models/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen, h_step } from "../state/display/display"
-import { created_at_datetime_to_routing_args } from "../state/routing/routing_datetime"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import { config_store } from "../state/store"
@@ -104,5 +103,6 @@ export function create_wcomponent (args: Partial<WComponent>)
 
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view }))
     store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
-    store.dispatch(ACTIONS.routing.change_route({ item_id: wcomponent.id, args: created_at_datetime_to_routing_args(wcomponent.created_at) }))
+    store.dispatch(ACTIONS.routing.change_route({ item_id: wcomponent.id }))
+    store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({ datetime: wcomponent.created_at }))
 }

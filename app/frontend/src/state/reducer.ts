@@ -1,7 +1,7 @@
 import type { Reducer } from "preact/hooks"
 import type { AnyAction } from "redux"
 
-import { current_datetime_reducer } from "./current_datetime"
+import { display_at_created_datetime_reducer } from "./datetime/display_at_created"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
@@ -27,7 +27,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = sync_reducer(state, action)
     state = routing_reducer(state, action)
     state = global_keys_reducer(state, action)
-    state = current_datetime_reducer(state, action)
+    state = display_at_created_datetime_reducer(state, action)
     state = objectives_reducer(state, action)
     state = specialised_objects_reducer(state, action)
 

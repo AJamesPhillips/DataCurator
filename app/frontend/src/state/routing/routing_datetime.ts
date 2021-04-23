@@ -1,28 +1,30 @@
 import { date2str } from "../../shared/utils/date_helpers"
-import type { RootState } from "../State"
 
 
 
-export function routing_args_to_datetime_ms (state: RootState)
+export function routing_arg_datetime_strings_to_datetime (date: string | null, time: string | null): Date
 {
-    const datetime = new Date(state.routing.args.cdate + " " + state.routing.args.ctime)
-
-    if (Number.isNaN(datetime.getTime())) return 0
-
-    return datetime.getTime()
+    if (!date) return new Date()
+    return date_and_time_strings_to_datetime(date, time || "")
 }
 
 
-export function created_at_datetime_to_routing_args (date: Date): { cdate: string, ctime: string }
+function date_and_time_strings_to_datetime (date: string, time: string)
 {
-    return {
-        cdate: date2str(date, "yyyy-MM-dd"),
-        ctime: date2str(date, "hh:mm:ss"),
-    }
+    const datetime = new Date(date + " " + time)
+
+    if (Number.isNaN(datetime.getTime())) return new Date()
+
+    return datetime
 }
 
-export function created_at_datetime_ms_to_routing_args (date_ms: number): { cdate: string, ctime: string }
-{
-    const date = new Date(date_ms)
-    return created_at_datetime_to_routing_args(date)
-}
+
+// export function datetimes_to_routing_string_args (args: { created_at_datetime: Date, sim_datetime: Date })
+// {
+//     return {
+//         cdate: date2str(args.created_at_datetime, "yyyy-MM-dd"),
+//         ctime: date2str(args.created_at_datetime, "hh:mm:ss"),
+//         sdate: date2str(args.sim_datetime, "yyyy-MM-dd"),
+//         stime: date2str(args.sim_datetime, "hh:mm:ss"),
+//     }
+// }

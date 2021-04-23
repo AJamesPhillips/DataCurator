@@ -1,5 +1,6 @@
-import type { OrderType } from "../../state/State"
+import type { OrderType } from "../../state/routing/interfaces"
 import type { ProjectPriority, ProjectPrioritiesByProjectId } from "../interfaces"
+
 
 
 export function group_priorities_by_project (project_priorities: ProjectPriority[])

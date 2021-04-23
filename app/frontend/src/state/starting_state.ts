@@ -3,7 +3,7 @@ import { get_derived_starting_state } from "./derived/starting_state"
 import { get_routing_starting_state } from "./routing/starting_state"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
-import type { ObjectWithCache, Pattern, RootState, RoutingArgs, Statement } from "./State"
+import type { ObjectWithCache, Pattern, RootState, Statement } from "./State"
 
 
 
@@ -148,7 +148,6 @@ export function get_starting_state (): RootState
         sync: { ready: false, saving: false, status: "LOADING" },
         routing,
         global_keys: { last_key: undefined, last_key_time_stamp: undefined, keys_down: new Set(), },
-        current_datetime: { dt: new Date() },
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         derived: get_derived_starting_state(),

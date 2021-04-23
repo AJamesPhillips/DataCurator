@@ -1,9 +1,10 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { RootState, ROUTE_TYPES } from "../state/State"
 import "./Tab.css"
+import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
+import type { ROUTE_TYPES } from "../state/routing/interfaces"
 
 
 interface OwnProps {

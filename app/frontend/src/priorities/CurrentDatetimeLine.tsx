@@ -16,7 +16,7 @@ interface OwnProps
 const map_state = (state: RootState) =>
 {
     return {
-        current_datetime: state.current_datetime.dt
+        created_at_ms: state.routing.args.created_at_ms
     }
 }
 
@@ -30,9 +30,9 @@ function _CurrentDatetimeLine (props: Props)
     const {
         max_y,
         display_last_n_months = 5,
-        current_datetime,
+        created_at_ms,
     } = props
-    const x_val = x(current_datetime.getTime())
+    const x_val = x(created_at_ms)
 
     const previous_month_lines: h.JSX.Element[] = []
     if (display_last_n_months)

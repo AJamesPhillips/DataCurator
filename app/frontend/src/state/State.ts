@@ -1,7 +1,8 @@
 import type { AnyAction } from "redux"
+
 import type { DerivedState } from "./derived/State"
 import type { DisplayState } from "./display/state"
-
+import type { RoutingState } from "./routing/interfaces"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
 
@@ -85,107 +86,12 @@ export interface SyncState
 }
 
 
-export type ROUTE_TYPES = (
-    "filter"
-    | "statements"
-    | "objects"
-    | "patterns"
-    | "creation_context"
-    | "views"
-    //+ specialised objects
-    | "perceptions"
-    | "wcomponents"
-    //- specialised objects
-)
-export type SUB_ROUTE_TYPES = "objects_bulk_import" | "objects_bulk_import/setup" | "wcomponents_edit_multiple" | null
-export const ALLOWED_ROUTES: ROUTE_TYPES[] = [
-    "filter",
-    "statements",
-    "objects",
-    "patterns",
-    "creation_context",
-    "views",
-    "perceptions",
-    "wcomponents",
-]
-export const ALLOWED_SUB_ROUTES: {[k in ROUTE_TYPES]: SUB_ROUTE_TYPES[]} = {
-    "filter": [],
-    "statements": [],
-    "objects": ["objects_bulk_import", "objects_bulk_import/setup"],
-    "patterns": [],
-    "creation_context": [],
-    "views": [],
-    "perceptions": [],
-    "wcomponents": ["wcomponents_edit_multiple"],
-}
-export interface RoutingState
-{
-    route: ROUTE_TYPES
-    sub_route: SUB_ROUTE_TYPES
-    item_id: string | null
-    args: RoutingArgs
-}
-
-// TODO: merge with ROUTE_TYPES?
-export type ViewType = "priorities" | "knowledge" | "objectives"
-const _view_types: {[k in ViewType]: true} = {
-    "priorities": true,
-    "knowledge": true,
-    "objectives": true,
-}
-export const routing_view_types = Object.keys(_view_types)
-
-export type OrderType = "normal" | "reverse"
-const _order_types: {[k in OrderType]: true} = {
-    "normal": true,
-    "reverse": true,
-}
-export const routing_order_types = Object.keys(_order_types)
-
-export type RoutingArgs = {
-    cdate: string
-    ctime: string
-    sdate?: string
-    stime?: string
-    view: ViewType
-    subview_id: string
-    zoom: number
-    x: number
-    y: number
-    order: OrderType
-    rotation: string
-}
-export type RoutingArgKey = keyof RoutingArgs
-const ALLOWED_ROUTE_ARG_KEYS: RoutingArgKey[] = [
-    "cdate",
-    "ctime",
-    "sdate",
-    "stime",
-    "view",
-    "subview_id",
-    "zoom",
-    "x",
-    "y",
-    "order",
-    "rotation",
-]
-export function is_route_arg_key (key: string): key is RoutingArgKey
-{
-    return ALLOWED_ROUTE_ARG_KEYS.includes(key as RoutingArgKey)
-}
-
 
 export interface GlobalKeyPress
 {
     last_key: string | undefined
     last_key_time_stamp: number | undefined
     keys_down: Set<string>
-}
-
-
-export interface CurrentDateTime
-{
-    dt: Date
 }
 
 
@@ -214,7 +120,6 @@ export interface RootState extends RootStateCore
     sync: SyncState
     routing: RoutingState
     global_keys: GlobalKeyPress
-    current_datetime: CurrentDateTime
     objectives: ObjectivesState
     meta_wcomponents: MetaWComponentsState
     derived: DerivedState

@@ -11,16 +11,18 @@ interface CalculateJudgementValueArgs
 {
     wcomponent: WComponentJudgement
     target_wcomponent: WComponent | undefined
+    created_at_ms: number
+    sim_ms: number
     // potential_world: PotentialWorld | undefined
 }
 
 export function calculate_judgement_value (args: CalculateJudgementValueArgs): JudgementValue
 {
-    const { wcomponent, target_wcomponent } = args
+    const { wcomponent, target_wcomponent, created_at_ms, sim_ms } = args
 
     if (!target_wcomponent) return undefined
 
-    const value = get_wcomponent_state_value(target_wcomponent)
+    const value = get_wcomponent_state_value(target_wcomponent, created_at_ms, sim_ms)
     if (value === undefined) return undefined
 
     const {

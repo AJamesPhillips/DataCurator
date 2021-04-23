@@ -1,6 +1,8 @@
 import { h } from "preact"
-import { ALLOWED_ROUTES } from "../state/State"
+
+import { ALLOWED_ROUTES } from "../state/routing/interfaces"
 import { Tab } from "./Tab"
+
 
 
 interface TabsContainerProps

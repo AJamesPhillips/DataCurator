@@ -1,10 +1,11 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { ACTIONS } from "../state/actions"
-import type { RootState, ViewType } from "../state/State"
 import { KnowledgeViewForm } from "../knowledge_view/KnowledgeViewForm"
 import { KnowledgeViewList } from "../knowledge_view/KnowledgeViewList"
+import { ACTIONS } from "../state/actions"
+import type { ViewType } from "../state/routing/interfaces"
+import type { RootState } from "../state/State"
 import { LinkButton } from "../utils/Link"
 
 

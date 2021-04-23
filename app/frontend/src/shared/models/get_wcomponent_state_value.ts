@@ -13,16 +13,16 @@ import { get_created_at } from "./utils_datetime"
 
 
 
-export function get_wcomponent_state_value (wcomponent: WComponent): string | null | undefined
+export function get_wcomponent_state_value (wcomponent: WComponent, created_at_ms: number, sim_ms: number): string | null | undefined
 {
-    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent)
-    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value(wcomponent)
+    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
+    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value(wcomponent, created_at_ms, sim_ms)
 
     return undefined
 }
 
 
-function get_wcomponent_statev1_value (wcomponent: WComponentNodeState): string | null | undefined
+function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_at_ms: number, sim_ms: number): string | null | undefined
 {
     if (!wcomponent.values) return undefined // TODO remove once MVP reached
 
@@ -34,9 +34,13 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState): string 
 }
 
 
-function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2): string | null | undefined
+function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2, created_at_ms: number, sim_ms: number): string | null | undefined
 {
     return "statev2"
+
+    let vaps = wcomponent.values_and_prediction_sets
+
+    // vaps = filter_by_created_at
 
     // const state_value_entry = wcomponent.values_and_prediction_sets.find_last(e => {
     //     const dt = get_sim_datetime(e)
