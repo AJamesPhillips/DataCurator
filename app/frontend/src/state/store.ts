@@ -1,10 +1,10 @@
 import { createStore, Action, Store } from "redux"
 
-import { periodically_change_display_at_created_datetime } from "./datetime/display_at_created"
 import { toggle_rich_text_formatting_on_key_press } from "./display/display"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
 import { render_all_objects, render_all_objects_and_update_store } from "./objects/rendering"
 import { root_reducer } from "./reducer"
+import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"

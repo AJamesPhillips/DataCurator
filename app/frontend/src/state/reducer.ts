@@ -1,13 +1,14 @@
 import type { Reducer } from "preact/hooks"
 import type { AnyAction } from "redux"
 
-import { display_at_created_datetime_reducer } from "./datetime/display_at_created"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
 import { objectives_reducer } from "./objectives"
 import { objects_reducer } from "./objects/reducer"
 import { patterns_reducer } from "./patterns"
+import { display_at_created_datetime_reducer } from "./routing/datetime/display_at_created"
+import { display_at_sim_datetime_reducer } from "./routing/datetime/display_at_sim_datetime"
 import { routing_reducer } from "./routing/reducer"
 import { specialised_objects_reducer } from "./specialised_objects/reducer"
 import type { RootState } from "./State"
@@ -28,6 +29,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = routing_reducer(state, action)
     state = global_keys_reducer(state, action)
     state = display_at_created_datetime_reducer(state, action)
+    state = display_at_sim_datetime_reducer(state, action)
     state = objectives_reducer(state, action)
     state = specialised_objects_reducer(state, action)
 
