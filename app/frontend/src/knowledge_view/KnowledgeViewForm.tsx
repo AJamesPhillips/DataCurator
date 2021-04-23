@@ -44,7 +44,7 @@ function _KnowledgeViewForm (props: Props)
             extra_class_names="left"
             size="normal"
             disabled={!new_knowledge_view_title}
-            on_click={() => create_knowledge_view()}
+            on_pointer_down={() => create_knowledge_view()}
         />
     </div>
 }

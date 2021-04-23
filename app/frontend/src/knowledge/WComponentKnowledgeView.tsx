@@ -82,7 +82,7 @@ function _WComponentKnowledgeView (props: Props)
                 value="Add to current knowledge view"
                 extra_class_names="left"
                 size="normal"
-                on_click={() => update({})}
+                on_pointer_down={() => update({})}
             />
         </div>
     }

@@ -75,7 +75,7 @@ export function EditableList <T> (props: OwnProps<T>)
             is_hidden={!!new_item}
             value={`New ${item_descriptor}`}
             extra_class_names="button_add_new_list_entry"
-            on_click={e => {
+            on_pointer_down={e => {
                 e.stopPropagation()
                 make_new_item()
             }}
@@ -105,7 +105,7 @@ export function EditableList <T> (props: OwnProps<T>)
 
             <Button
                 value={`Add ${item_descriptor}`}
-                on_click={() => {
+                on_pointer_down={() => {
                     set_new_item(undefined)
                     update_items([...items, new_item])
                 }}
@@ -113,7 +113,7 @@ export function EditableList <T> (props: OwnProps<T>)
             <Button
                 value="Cancel"
                 extra_class_names="button_warning"
-                on_click={() => set_new_item(undefined)}
+                on_pointer_down={() => set_new_item(undefined)}
             />
             <br />
             <hr />

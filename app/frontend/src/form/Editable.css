@@ -9,7 +9,7 @@
     display: flex;
 }
 
-.editable_field input, .editable_field textarea {
+.editable_field input[type="text"], .editable_field textarea {
     border: none;
     font-family: inherit;
     font-size: inherit;
@@ -21,7 +21,7 @@
     max-width: 100%;
 }
 
-.editable_field input
+.editable_field input[type="text"]
 {
     height: 1.15em;
 }
@@ -31,7 +31,7 @@
     color: grey;
 }
 
-.editable_field.invalid input:focus, .editable_field.invalid textarea:focus
+.editable_field.invalid input[type="text"]:focus, .editable_field.invalid textarea:focus
 {
     background-color: pink;
 }

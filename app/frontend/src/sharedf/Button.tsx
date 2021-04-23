@@ -8,7 +8,10 @@ interface OwnProps
 {
     is_hidden?: boolean
     value: string
-    on_click: (e: h.JSX.TargetedMouseEvent<HTMLInputElement>) => void
+    // Some functionality legitimately needs to have pointer_down vs click.
+    // For example EditableCustomDateTime will hide the button which has triggered the blur
+    // and only pointer_down will work, the onClick will not even fire.
+    on_pointer_down: (e: h.JSX.TargetedMouseEvent<HTMLInputElement>) => void
     size?: "small" | "normal" | "large"
     is_left?: boolean
     disabled?: boolean
@@ -28,8 +31,8 @@ export function Button (props: OwnProps)
     return <input
         type="button"
         value={props.value}
-        onClick={e => props.on_click(e)}
+        onPointerDown={e => props.on_pointer_down(e)}
         className={class_names}
         disabled={props.disabled}
-    ></input>
+    />
 }

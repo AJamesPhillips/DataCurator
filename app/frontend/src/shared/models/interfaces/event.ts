@@ -3,7 +3,10 @@ import type { WComponentNodeBase } from "./wcomponent"
 
 
 
-export interface WComponentNodeEvent extends WComponentNodeBase
+export interface EventAt
 {
-    event_at?: Prediction[]
+    event_at: Prediction[]
 }
+
+
+export interface WComponentNodeEvent extends WComponentNodeBase, Partial<EventAt> {}

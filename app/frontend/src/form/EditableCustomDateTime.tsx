@@ -3,6 +3,9 @@ import { h } from "preact"
 import "./Editable.css"
 import { date_to_string, valid_date_str, str_to_date, correct_datetime_for_local_time_zone } from "./datetime_utils"
 import { useEffect, useState } from "preact/hooks"
+import { Button } from "../sharedf/Button"
+import { date2str } from "../shared/utils/date_helpers"
+import { test } from "../shared/utils/test"
 
 
 
@@ -20,13 +23,14 @@ export function EditableCustomDateTime (props: OwnProps)
 {
     const working_value_from_props = props_to_str_value(props)
     const [working_value, set_working_value] = useState(working_value_from_props)
+    const [editing, set_editing] = useState(false)
     // Ensure that if the props change, the working_value is updated
     useEffect(() => set_working_value(working_value_from_props), [working_value_from_props])
 
     const valid = !!(working_value && valid_date_str(working_value))
 
 
-    const { on_change } = props
+    const { invariant_value, value, on_change } = props
     if (!on_change) return <div>{working_value}</div>
 
 
@@ -37,12 +41,28 @@ export function EditableCustomDateTime (props: OwnProps)
         <input
             type="text"
             value={working_value}
-            onFocus={e => handle_on_focus(e, props_value(props), set_working_value)}
+            onFocus={e => {
+                const { new_working_value } = handle_on_focus(e, props_value(props))
+                set_working_value(new_working_value)
+                set_editing(true)
+            }}
             onChange={e => set_working_value(e.currentTarget.value)}
-            onBlur={() => handle_on_blur({
-                valid, working_value, props: props, set_working_value: set_working_value, on_change
-            })}
+            onBlur={() => {
+                const { new_value, new_working_value } = handle_on_blur({ valid, working_value, invariant_value, value })
+
+                set_working_value(new_working_value)
+                if (new_value !== false) on_change(new_value)
+                set_editing(false)
+            }}
         />
+        {editing && <Button
+            value="Today"
+            on_pointer_down={() => {
+                const new_working_value = date2str(new Date(), "yyyy-MM-dd") + " 00:00"
+                set_working_value(new_working_value)
+                on_change(new Date(new_working_value))
+            }}
+        />}
     </div>
 }
 
@@ -65,14 +85,12 @@ function props_to_str_value (props: OwnProps)
 
 
 
-function handle_on_focus (e: h.JSX.TargetedFocusEvent<HTMLInputElement>, value: Date | undefined, set_working_value: (v: string) => void)
+function handle_on_focus (e: h.JSX.TargetedFocusEvent<HTMLInputElement>, value: Date | undefined)
 {
-    const date_value = e.currentTarget.value ? value : new Date()
-    const value_str = date_to_string(date_value, false)
-    e.currentTarget.value = value_str
-    set_working_value(value_str)
-
-    e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+    const new_working_value = date_to_string(value, false)
+    e.currentTarget.value = new_working_value
+    // e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+    return { new_working_value }
 }
 
 
@@ -81,23 +99,27 @@ interface HandleOnBlurArgs
 {
     valid: boolean
     working_value: string
-    props: {
-        invariant_value: Date | undefined
-        value: Date | undefined
-    }
-    set_working_value: (v: string) => void
-    on_change: (v: Date | undefined) => void
+    invariant_value: Date | undefined
+    value: Date | undefined
 }
-function handle_on_blur (args: HandleOnBlurArgs): void {
-    const { valid, working_value, props, set_working_value, on_change } = args
+interface HandleOnBlurReturn
+{
+    new_value: Date | undefined | false
+    new_working_value: string
+}
+function handle_on_blur (args: HandleOnBlurArgs): HandleOnBlurReturn
+{
+    const { valid, working_value, invariant_value, value } = args
 
-    let new_value: Date | undefined
+    let new_value: Date | undefined | false
+    let new_working_value = date_to_string(new_value || invariant_value, shorten_if_only_days)
+
     if (!valid)
     {
         // Custom date is not valid
         new_value = undefined
     }
-    else if (str_to_date(working_value).getTime() === (props.invariant_value && props.invariant_value.getTime()))
+    else if (str_to_date(working_value).getTime() === (invariant_value && invariant_value.getTime()))
     {
         // Custom date is not needed
         new_value = undefined
@@ -106,19 +128,34 @@ function handle_on_blur (args: HandleOnBlurArgs): void {
     {
         const corrected_datetime = correct_datetime_for_local_time_zone(working_value)
 
-        if (corrected_datetime.getTime() === props.value?.getTime())
+        if (corrected_datetime.getTime() === value?.getTime())
         {
-            const date_value_str = date_to_string(props.value, shorten_if_only_days)
+            const date_value_str = date_to_string(value, shorten_if_only_days)
             // Still need to set this in case it was a date with only days for the user's timezone,
             // i.e. if it was "2021-04-16 00:00", this needs to be re-rendered as "2021-04-16"
-            set_working_value(date_value_str)
-            return
+            new_working_value = date_value_str
+            new_value = false
         }
-
-        new_value = corrected_datetime
+        else new_value = corrected_datetime
     }
 
-    const date_value_str = date_to_string(new_value || props.invariant_value, shorten_if_only_days)
-    set_working_value(date_value_str)
-    on_change(new_value)
+    return { new_value, new_working_value }
 }
+
+
+
+function run_tests ()
+{
+    console. log("running tests of handle_on_blur")
+
+    let valid = true
+    let working_value = "2020-01-01"
+    let invariant_value = undefined
+    let value = new Date("2020-01-01")
+    let result = handle_on_blur({ valid, working_value, invariant_value, value })
+
+    test(result.new_value, false)
+    test(result.new_working_value, "2020-01-01")
+}
+
+// run_tests()

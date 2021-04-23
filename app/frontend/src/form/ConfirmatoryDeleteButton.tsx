@@ -20,14 +20,14 @@ export function ConfirmatoryDeleteButton (props: OwnProps)
             is_hidden={!deleting}
             value="CONFIRM"
             extra_class_names="button_warning"
-            on_click={() => props.on_delete && props.on_delete()}
+            on_pointer_down={() => props.on_delete && props.on_delete()}
         />
 
         <Button
             is_hidden={!props.on_delete}
             value={deleting ? "CANCEL" : "DELETE"}
             extra_class_names={(deleting ? "" : " button_warning ")}
-            on_click={() => set_deleting(!deleting) }
+            on_pointer_down={() => set_deleting(!deleting) }
         />
     </div>
 }

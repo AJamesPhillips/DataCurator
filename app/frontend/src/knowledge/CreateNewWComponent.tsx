@@ -29,19 +29,19 @@ function _CreateNewWComponent (props: Props)
             value="Create Node (process)"
             extra_class_names="creation_option left"
             size="normal"
-            on_click={() => create_wcomponent_type("process")}
+            on_pointer_down={() => create_wcomponent_type("process")}
         />
         <Button
             value="Create Node (state)"
             extra_class_names="creation_option left"
             size="normal"
-            on_click={() => create_wcomponent_type("state")}
+            on_pointer_down={() => create_wcomponent_type("state")}
         />
         <Button
             value="Create Judgement"
             extra_class_names="creation_option left"
             size="normal"
-            on_click={() => create_wcomponent({
+            on_pointer_down={() => create_wcomponent({
                 type: "judgement",
                 judgement_target_wcomponent_id: props.a_selected_wcomponent_id,
             })}
@@ -50,7 +50,7 @@ function _CreateNewWComponent (props: Props)
             value="Create Connection (causal link)"
             extra_class_names="creation_option left"
             size="normal"
-            on_click={() => create_wcomponent_type("causal_link")}
+            on_pointer_down={() => create_wcomponent_type("causal_link")}
         />
     </div>
 }

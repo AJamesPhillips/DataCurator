@@ -3,6 +3,7 @@ import {
     Perception,
     SpecialisedObjectsFromToServer,
     WComponent,
+    wcomponent_has_event_at,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
@@ -72,6 +73,11 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
     if (wcomponent_has_vap_sets(wcomponent))
     {
         wcomponent.values_and_prediction_sets = wcomponent.values_and_prediction_sets && wcomponent.values_and_prediction_sets.map(parse_values_and_predictions_set)
+    }
+
+    if (wcomponent_has_event_at(wcomponent))
+    {
+        wcomponent.event_at = wcomponent.event_at.map(parse_dates)
     }
 
     return wcomponent

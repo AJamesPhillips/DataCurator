@@ -57,7 +57,7 @@ export function List <T> (props: OwnProps<T>)
         <Button
             value={`New ${new_item_descriptor || item_descriptor}`}
             extra_class_names="button_add_new_list_entry"
-            on_click={e => {
+            on_pointer_down={e => {
                 e.stopPropagation()
                 on_click_new_item()
             }}

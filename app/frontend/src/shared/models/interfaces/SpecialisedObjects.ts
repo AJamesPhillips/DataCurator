@@ -1,5 +1,5 @@
 import type { Base } from "./base"
-import type { WComponentNodeEvent } from "./event"
+import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
 import type {
     StateValueAndPredictionsSet,
@@ -115,6 +115,11 @@ export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
     return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement(wcomponent)
+}
+
+export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
+{
+    return (wcomponent as EventAt).event_at !== undefined
 }
 
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
