@@ -149,11 +149,20 @@ function _WComponentForm (props: Props)
             />
         </p>
 
-        {/* {wcomponent_is_event(wcomponent) && <p>
+        {wcomponent_is_event(wcomponent) && <p>
             <UncertainDateTime
-                datetime={wcomponent.datetime}
+                // Get a hacky implementation of event datetime
+                datetime={(wcomponent.event_at && wcomponent.event_at[0]) ? wcomponent.event_at[0].datetime : {}}
+                on_change={datetime => upsert_wcomponent({ event_at: [{
+                    ...((wcomponent.event_at && wcomponent.event_at[0]) || { created_at: new Date() }),
+                    id: "",
+                    explanation: "",
+                    probability: 1,
+                    conviction: 1,
+                    datetime,
+                }] })}
             />
-        </p>} */}
+        </p>}
 
         <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"}>
             <EditableCustomDateTime

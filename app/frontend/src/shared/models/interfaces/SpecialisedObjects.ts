@@ -1,6 +1,12 @@
 import type { Base } from "./base"
+import type { WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
-import type { StateValueAndPredictionsSet, StateValueString, WComponentNodeState, WComponentNodeStateV2 } from "./state"
+import type {
+    StateValueAndPredictionsSet,
+    StateValueString,
+    WComponentNodeState,
+    WComponentNodeStateV2,
+} from "./state"
 import type { ValidityPredictions, ExistencePredictions } from "./uncertainty"
 import type { WComponentNodeBase, WComponentNodeType } from "./wcomponent"
 
@@ -43,13 +49,6 @@ export interface WComponentBase extends Base
     // Explainable
     title: string
     description: string
-}
-
-
-
-export interface WComponentNodeEvent extends WComponentNodeBase
-{
-    // event_at: TemporalUncertainty[]
 }
 
 
