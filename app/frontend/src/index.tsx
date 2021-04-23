@@ -11,7 +11,7 @@ import { config_store } from "./state/store"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"
 import { DemoStatementProbability } from "./statements/StatementWithProbability"
 import { DemoStatementProbabilityExplorer } from "./statements/StatementProbabilityExplorer"
-import { DemoPredictionsBadge } from "./scratch_pad/PredictionsBadge"
+import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { SandBox } from "./scratch_pad/SandBox"
 
 const root = document.getElementById("root")
