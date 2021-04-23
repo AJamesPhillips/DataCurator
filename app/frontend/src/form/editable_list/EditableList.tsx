@@ -123,8 +123,8 @@ export function EditableList <T> (props: OwnProps<T>)
             style={{ display: expanded_items ? "" : "none", cursor: "initial" }}
             onClick={e => e.stopPropagation()}
         >
-            {items.map((item, index) => [
-                <hr className="entries_horizontal_dividers" />,
+            {items.map((item, index) => <div key={get_id(item)}>
+                <hr className="entries_horizontal_dividers" />
                 <EditableListEntry
                     item={item}
                     get_created_at={get_created_at}
@@ -138,8 +138,8 @@ export function EditableList <T> (props: OwnProps<T>)
                     on_change={item => update_items(upsert_entry(items, item, p2 => get_id(item) === get_id(p2), item_descriptor)) }
                     delete_item={() => update_items(remove_index(items, index)) }
                     extra_class_names={props.entries_extra_class_names}
-                />,
-            ])}
+                />
+            </div>)}
         </div>
     </div>
 }
