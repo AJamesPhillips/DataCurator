@@ -64,7 +64,7 @@ const get_summary = (subtype: WComponentStateV2SubType) => (versioned_vap_set: V
 {
     const { latest: latest_vap_set, older } = versioned_vap_set
 
-    return get_summary_for_single_vap_set(subtype, true)(latest_vap_set, latest => on_change({ latest, older }))
+    return get_summary_for_single_vap_set(subtype, false)(latest_vap_set, latest => on_change({ latest, older }))
 }
 
 

@@ -19,6 +19,7 @@ import {
     wcomponent_types,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
+import { Button } from "../../sharedf/Button"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -154,18 +155,18 @@ function _WComponentForm (props: Props)
 
         <br />
 
-        {wcomponent_has_validity_predictions(wcomponent) && <div>
+        <div>
             <p>
                 <PredictionList
                     item_descriptor="Validity"
-                    predictions={wcomponent.validity}
+                    predictions={wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []}
                     update_predictions={new_predictions => upsert_wcomponent({ validity: new_predictions }) }
                 />
             </p>
 
             <hr />
             <br />
-        </div>}
+        </div>
 
         {wcomponent_has_existence_predictions(wcomponent) && <div>
             <p>

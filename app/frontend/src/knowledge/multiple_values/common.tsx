@@ -14,7 +14,7 @@ import { ValueAndPredictions } from "./ValueAndPredictions"
 
 
 
-export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType, show_created_at: boolean = false) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType, show_created_at: boolean) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     vap_set = { ...vap_set, entries: get_vaps_from_set(vap_set, subtype) }
 
@@ -35,7 +35,7 @@ export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType
             Value:&nbsp;{values}</div>}
             &nbsp;
             Prob:&nbsp;{prob}%
-            Confidence:&nbsp;{conv}%
+            Cn:&nbsp;{conv}%
         </div>
     </div>
 }
