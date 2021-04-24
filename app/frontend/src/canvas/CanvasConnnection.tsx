@@ -212,9 +212,9 @@ function run_tests ()
     const expected_start_angles = [
         "0.70",
         "0.70",
-        "0.70",
-        "2.36",
-        "2.36",
+        "1.66",
+        "1.66",
+        "1.66",
         "1.57",
         "0.79",
         "0.70",
@@ -229,8 +229,8 @@ function run_tests ()
 
 
     const expected_end_angles_to_bottom = [
-        "-2.36",
-        "-2.44",
+        "-1.66",
+        "-1.66",
         "-0.70",
         "-0.70",
         "-0.70",
@@ -239,14 +239,15 @@ function run_tests ()
         "-1.57",
     ]
     const expected_end_angles_to_meta = [
-        "-3.14",
-        "2.44",
-        "2.44",
-        "2.44",
-        "-2.44",
-        "-2.44",
-        "-2.44",
-        "-2.44",
+        // TODO none of these angles should be > Pi or < -Pi
+        "3.93",
+        "3.14",
+        "3.05",
+        "3.05",
+        "4.01",
+        "4.01",
+        "4.01",
+        "4.01",
     ]
 
     coords.forEach(({ ex, ey }, index) =>

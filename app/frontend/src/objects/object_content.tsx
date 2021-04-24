@@ -237,7 +237,8 @@ function _run_tests ()
         { pidx: 0, id: "1" },
     ] }, patterns)
     const res2 = object_content({ object: obj2 })
-    test(res2, "ab val stat1")
+    test(res2, "ab val stat1")  // this fails but should pass
+    test(res2, "ab val, stat1 ")  // this passes but should fail
 
 
     patterns = [

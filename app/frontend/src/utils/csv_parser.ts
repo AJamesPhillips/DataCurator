@@ -117,4 +117,4 @@ function run_tests ()
     test(csv_to_array(`""\n`), [[``], [``]])
 }
 
-run_tests()
+// run_tests()
