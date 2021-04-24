@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import "./PredictionsBadgeConvictionMask.css"
+import "./PredictionBadgeConvictionMask.css"
 
 
 
@@ -23,7 +23,7 @@ export function PredictionsBadgeConvictionMask (props: Props)
     // console. log(JSON.stringify(window.mask_data).replace(/\],\[/g, "],\n    ["))
 
     return <g
-        className="conviction_mask"
+        className={`conviction_mask`}
         onMouseEnter={e => e.currentTarget.classList.add("hovered")}
         onMouseLeave={e => e.currentTarget.classList.remove("hovered")}
         ref={r => {
@@ -53,6 +53,8 @@ export function PredictionsBadgeConvictionMask (props: Props)
                 data-group_id={e[2]}
                 x={border_width + (e[0] * cell_size)}
                 y={border_width + (e[1] * cell_size)}
+                width={cell_size}
+                height={cell_size}
             />)}
         </g>
     </g>

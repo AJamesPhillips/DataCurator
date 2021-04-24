@@ -1,6 +1,7 @@
 import { h } from "preact"
 
-import { PredictionsBadgeConvictionMask } from "./PredictionsBadgeConvictionMask"
+import "./PredictionBadge.css"
+import { PredictionsBadgeConvictionMask } from "./PredictionBadgeConvictionMask"
 import { bounded } from "../../utils/utils"
 import { calc_new_counter_factual_state } from "./calc_new_counter_factual_state"
 
@@ -23,7 +24,7 @@ interface Props
 }
 
 
-export function PredictionsBadge (props: Props)
+export function PredictionBadge (props: Props)
 {
     const { size, elements_width = 10 } = props
     const total_elements = elements_width * elements_width
@@ -58,19 +59,21 @@ export function PredictionsBadge (props: Props)
     // const rnd_range = max_rnd - min_rnd
 
     const border_width = 3
-    const outline_colour = counter_factual_active ? "#27dcff" : "#c8c8c8"
+    const counter_factual_active__class = `counter_factual_${counter_factual_active ? "" : "in"}active`
+    const class_name = `prediction_badge ${counter_factual_active__class}`
 
     return <svg
         width={size + (border_width * 2)}
         height={size + (border_width * 2)}
         onClick={() => toggle_counter_factual()}
+        className={class_name}
     >
         <rect
             x={0}
             y={0}
             width={size + (border_width * 2)}
             height={size + (border_width * 2)}
-            fill={outline_colour}
+            className="outline"
         />
 
         <g>

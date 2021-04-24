@@ -1,8 +1,6 @@
 
 .conviction_mask g.parts rect
 {
-    width: 5px;
-    height: 5px;
     pointer-events: none;
 }
 

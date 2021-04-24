@@ -23,7 +23,7 @@ export function ProbablitySelection (props: OwnProps)
             value={probability}
             onChange={e => set_probability(parseFloat(e.currentTarget.value))}
             list="tickmarks_probability"
-        ></input>
+        />
 
         <datalist id="tickmarks_probability">
             {probabilities_plus_anchors.map(d => <option value={d}>{d}</option>)}
