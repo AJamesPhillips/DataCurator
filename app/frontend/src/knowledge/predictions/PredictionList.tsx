@@ -27,6 +27,7 @@ export function PredictionList (props: OwnProps)
         get_details={get_details}
         prepare_new_item={prepare_new_item}
         update_items={items => props.update_predictions(items)}
+        disable_collapsed={true}
     />
 }
 

@@ -27,7 +27,7 @@ export function WComponentLatestPrediction (props: OwnProps)
 
         if (last_prediction && last_prediction.probability === 0)
         {
-            return <p style={{ cursor: "not-allowed" }}>
+            return <p style={{ cursor: "not-allowed", display: "inline-flex", marginBlockEnd: 0 }}>
                 Not valid (<PredictionViewSummary prediction={last_prediction} />)
             </p>
         }

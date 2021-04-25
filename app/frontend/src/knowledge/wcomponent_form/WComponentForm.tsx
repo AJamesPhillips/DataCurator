@@ -5,6 +5,7 @@ import { AutocompleteText } from "../../form/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableText } from "../../form/EditableText"
+import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import { replace_value_in_text } from "../../shared/models/get_rich_text"
 import { get_updated_wcomponent } from "../../shared/models/get_updated_wcomponent"
 import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
@@ -97,12 +98,12 @@ function _WComponentForm (props: Props)
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
 
+        <WComponentLatestPrediction wcomponent={wcomponent} />
+
         {value !== undefined &&
         <div style={{ cursor: "not-allowed" }}>
             Value: {value}
         </div>}
-
-        <WComponentLatestPrediction wcomponent={wcomponent} />
 
         <p>Type: <div style={{ width: "60%", display: "inline-block" }}><AutocompleteText
             placeholder={"Type..."}
@@ -118,6 +119,21 @@ function _WComponentForm (props: Props)
                 selected_option_id={wcomponent.subtype}
                 get_options={() => wcomponent_statev2_subtype_options}
                 on_change={option_id => upsert_wcomponent({ subtype: option_id })}
+            />
+        </div></p>}
+
+        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" &&
+        <p><div style={{ display: "inline-flex" }}>
+            <div>Boolean representation:</div>
+            <EditableTextSingleLine
+                placeholder="True..."
+                value={wcomponent.boolean_true_str || ""}
+                on_change={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
+            />
+            <EditableTextSingleLine
+                placeholder="False..."
+                value={wcomponent.boolean_false_str || ""}
+                on_change={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
             />
         </div></p>}
 
