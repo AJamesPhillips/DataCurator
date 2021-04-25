@@ -15,6 +15,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
     values_and_prediction_sets: [
         {
             id: "1",
+            version: 1,
             created_at: d0,
             datetime: {}, // note it does not need a sim datetime value, just marked as future
             // though actually we do not even need to set this value?  What does it add?  This data of relative
@@ -29,10 +30,10 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
             entry_defaults: {
                 conviction: 1,
             },
-            next_version_id: "2",
         },
         {
             id: "2",
+            version: 2,
             created_at: d0,
             entries: [
                 { relative_probability: 1 }, // fix error
@@ -53,7 +54,8 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
     description: "Person A rolled a D3 dice",
     values_and_prediction_sets: [
         {
-            id: "",
+            id: "1",
+            version: 1,
             created_at: d0,
             datetime: {
                 // future: true, // this future === true can be computed from the fact min > now
@@ -68,7 +70,7 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 { value: "1", relative_probability: 1 },
                 { value: "2", relative_probability: 1 },
                 { value: "3", relative_probability: 1 },
-            ]
+            ],
         },
         // For now we can model it as below but in future it would be good to
         // instead have a +ve causal connection from the Person_A_rolled_a_2_on_a_d3_dice
@@ -76,7 +78,8 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
         // was queried for its current value it summed its causal effects tne updated
         // the probabilities of its options to give similar data as below.
         {
-            id: "",
+            id: "2",
+            version: 1,
             created_at: d1,
             datetime: { value: d1 },
             entry_defaults: {
@@ -86,7 +89,8 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 { value: "1", relative_probability: 0 },
                 { value: "2", relative_probability: 1 },
                 { value: "3", relative_probability: 0 },
-            ]
+            ],
+            previous_value_ids: ["2"],
         },
     ],
 }

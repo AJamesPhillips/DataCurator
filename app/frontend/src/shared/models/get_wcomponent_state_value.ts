@@ -1,3 +1,4 @@
+import { get_items_by_id, get_multiple_items_by_id } from "../../state/specialised_objects/utils"
 import { find_leaf_groups, make_graph } from "../utils/graph"
 import { sort_list } from "../utils/sort"
 import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
@@ -64,9 +65,12 @@ function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2, create
 
 
 
-const get_id = (vap_set: StateValueAndPredictionsSet) => vap_set.id
-const get_head_ids = (vap_set: StateValueAndPredictionsSet) => vap_set.next_version_id ? [vap_set.next_version_id] : []
-const get_tail_ids = (vap_set: StateValueAndPredictionsSet) => []
+const get_id = (vap_set: StateValueAndPredictionsSet) => `${vap_set.id}.${vap_set.version}`
+const get_head_ids = (vap_set: StateValueAndPredictionsSet) => []
+const get_tail_ids = (vap_set: StateValueAndPredictionsSet) =>
+{
+    return (vap_set.version > 1) ? [get_id({ ...vap_set, version: vap_set.version - 1 })] : []
+}
 
 export function group_vap_sets_by_version (vap_sets: StateValueAndPredictionsSet[]): VersionedStateVAPsSet[]
 {

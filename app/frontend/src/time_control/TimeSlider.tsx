@@ -118,7 +118,7 @@ function _TimeSlider (props: Props)
             {event_start_datetimes_ms.map(d => <option value={d}>{d}</option>)}
         </datalist>
 
-        <div style={{ maxWidth: 200, display: "inline-flex" }}>
+        <div style={{ maxWidth: 200, display: "inline-flex", float: "right" }}>
             <EditableCustomDateTime
                 invariant_value={undefined}
                 value={new Date(handle_position_ms)}

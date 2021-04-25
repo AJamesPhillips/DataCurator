@@ -6,11 +6,11 @@ import type {
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
 } from "../../shared/models/interfaces/state"
-import { get_new_value_id } from "../../utils/utils"
 import { EditableList } from "../../form/editable_list/EditableList"
 import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
+import { prepare_new_versioned_vap_set } from "./utils"
 
 
 
@@ -39,7 +39,7 @@ export function ValueAndPredictionSets (props: OwnProps)
         get_summary={get_summary(props.subtype)}
         get_details={get_details(props.subtype)}
         get_details2={get_details2(props.subtype)}
-        prepare_new_item={prepare_new_item}
+        prepare_new_item={prepare_new_versioned_vap_set}
         update_items={versioned_vap_set =>
         {
             const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
@@ -94,29 +94,6 @@ const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: 
 
         <br />
     </div>
-}
-
-
-
-function prepare_new_item (): VersionedStateVAPsSet
-{
-    return {
-        latest: prepare_new_vap_set_item(),
-        older: [],
-    }
-}
-
-
-function prepare_new_vap_set_item (): StateValueAndPredictionsSet
-{
-    const now = new Date()
-
-    return {
-        id: get_new_value_id(),
-        created_at: now,
-        datetime: { value: now },
-        entries: [],
-    }
 }
 
 
