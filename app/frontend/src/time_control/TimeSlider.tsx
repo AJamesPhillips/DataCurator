@@ -8,6 +8,7 @@ import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { TimeSliderData } from "./interfaces"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
+import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 
 
 
@@ -116,7 +117,15 @@ function _TimeSlider (props: Props)
             {event_start_datetimes_ms.map(d => <option value={d}>{d}</option>)}
         </datalist>
 
-        {date2str_auto(new Date(handle_position_ms))}
+        <div style={{ maxWidth: 200 }}>
+            <EditableCustomDateTime
+                invariant_value={undefined}
+                value={new Date(handle_position_ms)}
+                on_change={new_datetime => new_datetime && change_datetime_ms(new_datetime.getTime(), true)}
+                show_now_shortcut_button={true}
+                show_today_shortcut_button={false}
+            />
+        </div>
 
     </div>
 }

@@ -13,6 +13,7 @@ import { DemoStatementProbability } from "./statements/StatementWithProbability"
 import { DemoStatementProbabilityExplorer } from "./statements/StatementProbabilityExplorer"
 import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { SandBox } from "./scratch_pad/SandBox"
+import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCustomDateTime"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -26,6 +27,7 @@ if (root) {
     <li><a href="/prob_badge">Probability badge</a></li>
     <li><a href="/statement_probability">Statement probability</a></li>
     <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
+    <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
     <li><a href="/sandbox">Sandbox</a></li>
     </ul>`
   }
@@ -44,6 +46,10 @@ if (root) {
   else if (document.location.pathname === "/statement_probability_explorer")
   {
     render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
+  }
+  else if (document.location.pathname === "/sandbox/editable_custom_datetime")
+  {
+    render(<SandboxEditableCustomDateTime />, root)
   }
   else if (document.location.pathname === "/sandbox")
   {

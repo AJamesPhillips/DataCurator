@@ -40,7 +40,7 @@ export function uncertain_date_to_string (datetime: TemporalUncertainty)
 }
 
 
-function valid_date (date: Date)
+export function valid_date (date: Date)
 {
     return !Number.isNaN(date.getTime())
 }
