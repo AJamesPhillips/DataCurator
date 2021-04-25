@@ -9,6 +9,7 @@ import type { RootState } from "../state/State"
 import type { TimeSliderData } from "./interfaces"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { Button } from "../sharedf/Button"
 
 
 
@@ -117,14 +118,15 @@ function _TimeSlider (props: Props)
             {event_start_datetimes_ms.map(d => <option value={d}>{d}</option>)}
         </datalist>
 
-        <div style={{ maxWidth: 200 }}>
+        <div style={{ maxWidth: 200, display: "inline-flex" }}>
             <EditableCustomDateTime
                 invariant_value={undefined}
                 value={new Date(handle_position_ms)}
                 on_change={new_datetime => new_datetime && change_datetime_ms(new_datetime.getTime(), true)}
-                show_now_shortcut_button={true}
+                show_now_shortcut_button={false}
                 show_today_shortcut_button={false}
             />
+            <NowButton change_datetime_ms={datetime_ms => change_datetime_ms(datetime_ms, true)} />
         </div>
 
     </div>
@@ -132,3 +134,22 @@ function _TimeSlider (props: Props)
 
 
 export const TimeSlider = connector(_TimeSlider) as FunctionalComponent<OwnProps>
+
+
+
+interface NowButtonProps
+{
+    change_datetime_ms: (new_datetime_ms: number) => void
+}
+function NowButton (props: NowButtonProps)
+{
+    return <Button
+        value="Now"
+        on_pointer_down={() => {
+            // Add 60 seconds to ensure it is always the next minute
+            const datetime_ms = new Date().getTime() + 60000
+            props.change_datetime_ms(datetime_ms)
+        }}
+        is_left={true}
+    />
+}

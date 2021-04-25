@@ -86,12 +86,12 @@ interface NowButtonProps
 }
 function NowButton (props: NowButtonProps)
 {
-    // Add 30 seconds to ensure it is always the next minute
-    const datetime = new Date(new Date().getTime() + 30000)
-
     return <Button
         value="Now"
         on_pointer_down={() => {
+            // Add 30 seconds to ensure it rounds to nearest minute
+            const datetime = new Date(new Date().getTime() + 30000)
+
             const new_working_value = date2str(datetime, "yyyy-MM-dd hh:mm")
             props.set_working_value_str(new_working_value)
             props.on_change(new Date(new_working_value))
