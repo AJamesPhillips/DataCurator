@@ -1,6 +1,12 @@
 import type { Base } from "./base"
+import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
-import type { StateValueAndPredictionsSet, StateValueString, WComponentNodeState, WComponentNodeStateV2 } from "./state"
+import type {
+    StateValueAndPredictionsSet,
+    StateValueString,
+    WComponentNodeState,
+    WComponentNodeStateV2,
+} from "./state"
 import type { ValidityPredictions, ExistencePredictions } from "./uncertainty"
 import type { WComponentNodeBase, WComponentNodeType } from "./wcomponent"
 
@@ -46,13 +52,6 @@ export interface WComponentBase extends Base
 }
 
 
-
-export interface WComponentNodeEvent extends WComponentNodeBase
-{
-    // event_at: TemporalUncertainty[]
-}
-
-
 export interface WComponentNodeProcess extends WComponentNodeBase
 {
     // active: ProcessActiveStatus[]
@@ -74,6 +73,11 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
     to_type?: ConnectionTerminalType
 }
 
+
+export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WComponentNodeEvent
+{
+    return wcomponent.type === "event"
+}
 
 export function wcomponent_is_state (wcomponent: WComponent): wcomponent is WComponentNodeState | WComponentNodeStateV2
 {
@@ -111,6 +115,11 @@ export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
     return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement(wcomponent)
+}
+
+export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
+{
+    return (wcomponent as EventAt).event_at !== undefined
 }
 
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)

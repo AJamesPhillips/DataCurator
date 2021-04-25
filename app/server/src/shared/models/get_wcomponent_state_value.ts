@@ -9,24 +9,27 @@ import type {
     WComponentStateV2SubType,
 } from "./interfaces/state"
 import type { TemporalUncertainty } from "./interfaces/uncertainty"
-import { get_created_at } from "./utils_datetime"
+import { get_created_at_ms } from "./utils_datetime"
 
 
 
-export function get_wcomponent_state_value (wcomponent: WComponent): string | null | undefined
+type StateValue = string | null | undefined
+
+export function get_wcomponent_state_value (wcomponent: WComponent, created_at_ms: number, sim_ms: number): StateValue
 {
-    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent)
-    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value(wcomponent)
+    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
+    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value(wcomponent, created_at_ms, sim_ms)
 
     return undefined
 }
 
 
-function get_wcomponent_statev1_value (wcomponent: WComponentNodeState): string | null | undefined
+function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_at_ms: number, sim_ms: number): StateValue
 {
     if (!wcomponent.values) return undefined // TODO remove once MVP reached
 
-    const state_value_entry = wcomponent.values.last()
+    // .values are sorted created_at ascending
+    const state_value_entry = wcomponent.values.filter(v => get_created_at_ms(v) <= created_at_ms).last()
 
     if (!state_value_entry) return undefined
 
@@ -34,9 +37,18 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState): string 
 }
 
 
-function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2): string | null | undefined
+function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2, created_at_ms: number, sim_ms: number): StateValue
 {
     return "statev2"
+
+    let vaps = wcomponent.values_and_prediction_sets.filter(v =>
+    {
+        if (get_created_at_ms(v) > created_at_ms) return false
+
+        const sim_dt = get_sim_datetime(v)
+        return sim_dt ? (sim_dt.getTime() <= sim_ms) : true
+    })
+
 
     // const state_value_entry = wcomponent.values_and_prediction_sets.find_last(e => {
     //     const dt = get_sim_datetime(e)
@@ -127,7 +139,7 @@ function get_vap_datetime_sort_key (vap: StateValueAndPredictionsSet)
 {
     const dt = get_sim_datetime(vap)
     if (dt !== undefined) return dt.getTime()
-    return get_created_at(vap)
+    return get_created_at_ms(vap)
 }
 
 
@@ -146,3 +158,20 @@ export function get_vaps_ordered_by_prob (vap_set: StateValueAndPredictionsSet, 
     return vap_set.entries.filter(e => e.probability > 0)
         .sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
 }
+
+
+// function get_vaps_from_set (vap_set: StateValueAndPredictionsSet, subtype: string)
+// {
+//     let vaps = vap_set.entries
+
+//     if (subtype === "boolean" && vaps.length !== 1)
+//     {
+//         // ensure the ValueAndPrediction component always and only receives a single vap entry
+//         const entries = vaps.length === 0 ? [prepare_new_vap()] : [vaps[0]]
+//         return entries
+//     }
+
+//     vaps = set_vap_probabilities(vap_set.entries)
+
+//     return vaps
+// }

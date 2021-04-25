@@ -7,11 +7,14 @@ import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 export interface GetFieldTextArgs extends GetIdReplacedTextArgs
 {
     wcomponent: WComponent
+    created_at_ms: number
+    sim_ms: number
 }
 export function get_title (args: GetFieldTextArgs): string
 {
-    const title = args.wcomponent.title
-    const text = replace_value_in_text({ text: title, wcomponent: args.wcomponent })
+    const { wcomponent, created_at_ms, sim_ms } = args
+    const title = wcomponent.title
+    const text = replace_value_in_text({ text: title, wcomponent, created_at_ms, sim_ms })
 
     return replace_ids_in_text({ ...args, text })
 }
@@ -29,10 +32,12 @@ interface ReplaceValueInTextArgs
 {
     text: string
     wcomponent: WComponent
+    created_at_ms: number
+    sim_ms: number
 }
 export function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
-    const value = get_wcomponent_state_value(args.wcomponent)
+    const value = get_wcomponent_state_value(args.wcomponent, args.created_at_ms, args.sim_ms)
     const text = args.text.replace(/\$\{value\}/g, `${value}`)
     return text
 }
