@@ -1,4 +1,5 @@
 import { h } from "preact"
+import { useMemo } from "preact/hooks"
 
 import "./ValueAndPredictions.css"
 import type { StateValueAndPrediction, WComponentStateV2SubType } from "../../shared/models/interfaces/state"
@@ -8,6 +9,7 @@ import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableNumber } from "../../form/EditableNumber"
 import { prepare_new_vap } from "./utils"
 import { EditableText } from "../../form/EditableText"
+import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 
 
 
@@ -25,22 +27,31 @@ export function ValueAndPredictions (props: OwnProps)
 {
     const class_name_only_one_vap = props.subtype === "boolean" ? "only_one_vap" : ""
 
+    const item_top_props = useMemo(() => {
+        const props2: EditableListEntryTopProps<StateValueAndPrediction> = {
+            get_created_at: () => props.created_at,
+            get_summary: get_summary(props.subtype),
+            get_details: get_details(props.subtype),
+            extra_class_names: "value_and_prediction",
+        }
+
+        return props2
+    }, [props.created_at.getTime(), props.subtype])
+
     return <div className={`value_and_predictions ${class_name_only_one_vap}`}>
         <EditableList
             items={props.values_and_predictions}
             item_descriptor="Value and prediction"
             get_id={get_id}
-            get_created_at={() => props.created_at}
-            get_summary={get_summary(props.subtype)}
-            get_details={get_details(props.subtype)}
+            item_top_props={item_top_props}
             prepare_new_item={prepare_new_vap}
             update_items={items => props.update_values_and_predictions(items)}
-            entries_extra_class_names="value_and_prediction"
             disable_collapsed={true}
             disable_partial_collapsed={true}
         />
     </div>
 }
+
 
 
 const get_id = (item: StateValueAndPrediction) => item.id

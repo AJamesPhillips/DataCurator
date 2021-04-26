@@ -6,20 +6,25 @@ import { EditableCustomDateTime } from "../EditableCustomDateTime"
 
 
 
-interface OwnProps<T>
+export interface EditableListEntryTopProps<U>
 {
-    item: T
-    get_created_at: (item: T) => Date
-    get_custom_created_at?: (item: T) => Date | undefined
-    set_custom_created_at?: (item: T, new_custom_created_at: Date | undefined) => T
-    get_summary: (item: T, on_change: (item: T) => void) => h.JSX.Element
-    get_details: (item: T, on_change: (item: T) => void) => h.JSX.Element
-    get_details2?: (item: T, on_change: (item: T) => void) => h.JSX.Element
+    get_created_at: (item: U) => Date
+    get_custom_created_at?: (item: U) => Date | undefined
+    set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
+    get_summary: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    get_details: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    get_details2?: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    extra_class_names?: string
+}
+
+
+interface OwnProps<U> extends EditableListEntryTopProps<U>
+{
+    item: U
     expanded?: boolean
     disable_collapsable?: boolean
-    on_change: (item: T) => void
+    on_change: (item: U) => void
     delete_item?: () => void
-    extra_class_names?: string
 }
 
 
@@ -81,10 +86,15 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
         }
 
         return <div className={class_name}>
-            <div className="expansion_button" onClick={() => this.setState({ internal__expanded: !internal__expanded })}></div>
+            <div className="summary_header">
+                <div className="summary">
+                    {get_summary(item, on_change)}
+                </div>
 
-            <div className="summary">
-                {get_summary(item, on_change)}
+                <div
+                    className="expansion_button"
+                    onClick={() => this.setState({ internal__expanded: !internal__expanded })}
+                />
             </div>
 
             <div className="details">

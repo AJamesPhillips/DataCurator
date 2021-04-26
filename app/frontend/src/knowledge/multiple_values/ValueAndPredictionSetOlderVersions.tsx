@@ -9,8 +9,9 @@ import type {
 import {
     create_new_vap_set_version,
 } from "./utils"
-import { List } from "../../form/editable_list/List"
+import { ExpandableList } from "../../form/editable_list/ExpandableList"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
+import { render_list_content } from "../../form/editable_list/render_list_content"
 
 
 
@@ -31,21 +32,32 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
         props.update_versioned_vap_set(new_versioned_vap_set)
     }
 
-    return <List
-        items={props.versioned_vap_set.older}
-        item_descriptor="Older version"
+    const items = props.versioned_vap_set.older
+    const item_descriptor = "Older version"
+
+    return <ExpandableList
+        items_count={items.length}
+        item_descriptor={item_descriptor}
         new_item_descriptor="Version"
-        get_id={get_id}
-        get_created_at={get_created_at}
-        get_custom_created_at={get_custom_created_at}
-        get_summary={get_summary_for_single_vap_set(props.subtype, true)}
-        get_details={get_details_for_single_vap_set(props.subtype)}
-        on_click_new_item={make_new_version}
-        update_items={older =>
+        content={render_list_content(
         {
-            props.update_versioned_vap_set({ ...props.versioned_vap_set, older })
-        }}
-        entries_extra_class_names="value_and_prediction_sets"
+            items,
+            get_id,
+            update_items: older =>
+            {
+                props.update_versioned_vap_set({ ...props.versioned_vap_set, older })
+            },
+            item_descriptor,
+
+            item_top_props: {
+                get_created_at,
+                get_custom_created_at,
+                get_summary: get_summary_for_single_vap_set(props.subtype, true),
+                get_details: get_details_for_single_vap_set(props.subtype),
+                extra_class_names: "value_and_prediction_sets",
+            },
+        })}
+        on_click_new_item={make_new_version}
     />
 }
 

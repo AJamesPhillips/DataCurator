@@ -1,4 +1,9 @@
 
+.editable_list .summary_header
+{
+    display: flex;
+}
+
 .editable_list.not_collapsable .expansion_button
 {
     display: none;
@@ -6,15 +11,11 @@
 
 .editable_list .expansion_button
 {
-    float: right;
+    margin-left: auto;
     border: thin solid #bbb;
     border-radius: 3px;
     margin-right: 10px;
     cursor: pointer;
-}
-
-.editable_list .expansion_button
-{
     font-size: 25px;
     line-height: 0.1;
     padding: 0px 3px;

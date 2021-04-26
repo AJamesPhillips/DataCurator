@@ -1,10 +1,12 @@
 import { h } from "preact"
+import { useMemo } from "preact/hooks"
 
 import type { StateValueString } from "../../shared/models/interfaces/state"
 import { get_new_value_id } from "../../utils/utils"
 import { EditableList } from "../../form/editable_list/EditableList"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
+import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 
 
 
@@ -17,14 +19,22 @@ interface OwnProps {
 
 export function ValueList (props: OwnProps)
 {
+    const item_top_props = useMemo(() => {
+        const props2: EditableListEntryTopProps<StateValueString> = {
+            get_created_at,
+            get_custom_created_at,
+            get_summary,
+            get_details,
+        }
+
+        return props2
+    }, [])
+
     return <EditableList
         items={props.values}
         item_descriptor="Value"
         get_id={get_id}
-        get_created_at={get_created_at}
-        get_custom_created_at={get_custom_created_at}
-        get_summary={get_summary}
-        get_details={get_details}
+        item_top_props={item_top_props}
         prepare_new_item={prepare_new_item}
         update_items={items => props.update_values(items)}
     />

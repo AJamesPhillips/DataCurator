@@ -11,6 +11,8 @@ import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_versioned_vap_set } from "./utils"
 import { EditableList } from "../../form/editable_list/EditableList"
+import { useMemo } from "preact/hooks"
+import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 
 
 
@@ -29,23 +31,31 @@ export function ValueAndPredictionSets (props: OwnProps)
     const grouped_vap_sets = group_vap_sets_by_version(vap_sets)
     const sorted_grouped_vap_sets = sort_grouped_vap_sets(grouped_vap_sets)
 
+    const item_top_props = useMemo(() => {
+        const props2: EditableListEntryTopProps<VersionedStateVAPsSet> = {
+            get_created_at: get_latest_created_at,
+            get_custom_created_at: get_latest_custom_created_at,
+            set_custom_created_at: set_latest_custom_created_at,
+            get_summary: get_summary(props.subtype),
+            get_details: get_details(props.subtype),
+            get_details2: get_details2(props.subtype),
+            extra_class_names: "value_and_prediction_sets",
+        }
+
+        return props2
+    }, [props.subtype])
+
     return <EditableList
         items={sorted_grouped_vap_sets}
         item_descriptor="Value"
         get_id={get_latest_id}
-        get_created_at={get_latest_created_at}
-        get_custom_created_at={get_latest_custom_created_at}
-        set_custom_created_at={set_latest_custom_created_at}
-        get_summary={get_summary(props.subtype)}
-        get_details={get_details(props.subtype)}
-        get_details2={get_details2(props.subtype)}
+        item_top_props={item_top_props}
         prepare_new_item={prepare_new_versioned_vap_set}
         update_items={versioned_vap_set =>
         {
             const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
             props.update_values_and_predictions(ungrouped)
         }}
-        entries_extra_class_names="value_and_prediction_sets"
         disable_collapsed={true}
     />
 }
