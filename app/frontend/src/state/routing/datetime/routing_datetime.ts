@@ -19,12 +19,9 @@ function date_and_time_strings_to_datetime (date: string, time: string)
 }
 
 
-// export function datetimes_to_routing_string_args (args: { created_at_datetime: Date, sim_datetime: Date })
-// {
-//     return {
-//         cdate: date2str(args.created_at_datetime, "yyyy-MM-dd"),
-//         ctime: date2str(args.created_at_datetime, "hh:mm:ss"),
-//         sdate: date2str(args.sim_datetime, "yyyy-MM-dd"),
-//         stime: date2str(args.sim_datetime, "hh:mm:ss"),
-//     }
-// }
+
+export function get_datetime_and_ms (args: { datetime: Date; ms?: undefined } | { ms: number; datetime?: undefined })
+{
+    if (args.ms === undefined) return { ms: args.datetime.getTime(), datetime: args.datetime }
+    return { ms: args.ms, datetime: new Date(args.ms) }
+}

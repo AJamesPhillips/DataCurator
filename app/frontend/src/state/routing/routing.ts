@@ -131,6 +131,8 @@ function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]):
 
     args.created_at_datetime = routing_arg_datetime_strings_to_datetime(cdate, ctime)
     args.sim_datetime = sdate ? routing_arg_datetime_strings_to_datetime(sdate, stime) : args.created_at_datetime
+    args.created_at_ms = args.created_at_datetime.getTime()
+    args.sim_ms = args.sim_datetime.getTime()
 
     return args
 }

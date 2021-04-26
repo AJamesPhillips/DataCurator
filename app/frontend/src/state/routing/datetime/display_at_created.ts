@@ -1,7 +1,8 @@
 import type { Action, AnyAction, Store } from "redux"
-import { update_substate } from "../../../utils/update_state"
 
+import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
+import { get_datetime_and_ms } from "./routing_datetime"
 
 
 
@@ -9,8 +10,7 @@ export const display_at_created_datetime_reducer = (state: RootState, action: An
 {
     if (is_change_display_at_created_datetime(action))
     {
-        const datetime = action.datetime || new Date(action.ms)
-        const ms = action.ms !== undefined ? action.ms : action.datetime.getTime()
+        const { ms, datetime } = get_datetime_and_ms(action)
 
         const args = {
             ...state.routing.args,
