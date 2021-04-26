@@ -1,4 +1,4 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 
 import "./ValueAndPredictionSets.css"
 import type {
@@ -15,6 +15,9 @@ import { useCallback, useMemo } from "preact/hooks"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import type { ListContentProps } from "../../form/editable_list/ExpandableList"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
+import { partition_items_by_datetime_futures } from "../../shared/models/utils_datetime"
+import type { RootState } from "../../state/State"
+import { connect, ConnectedProps } from "react-redux"
 
 
 
@@ -26,10 +29,29 @@ interface OwnProps
 }
 
 
+const map_state = (state: RootState) => ({
+    created_at_ms: state.routing.args.created_at_ms,
+    sim_ms: state.routing.args.sim_ms,
+})
 
-export function ValueAndPredictionSets (props: OwnProps)
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _ValueAndPredictionSets (props: Props)
 {
-    const sorted_grouped_vap_sets = validate_sort_and_group_vap_sets_by_version(props.values_and_prediction_sets, props.subtype)
+    const { past_items, future_items } = partition_items_by_datetime_futures({
+        items: props.values_and_prediction_sets,
+        created_at_ms: props.created_at_ms,
+        sim_ms: props.sim_ms,
+    })
+    const sorted_grouped_past_vap_sets = validate_sort_and_group_vap_sets_by_version(past_items, props.subtype)
+    const sorted_grouped_future_vap_sets = validate_sort_and_group_vap_sets_by_version(future_items, props.subtype)
+    const all_items = [
+        ...sorted_grouped_past_vap_sets,
+        ...sorted_grouped_future_vap_sets,
+    ]
 
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<VersionedStateVAPsSet> = {
@@ -59,20 +81,35 @@ export function ValueAndPredictionSets (props: OwnProps)
 
     const content_renderer = (list_content_props: ListContentProps) =>
     {
-        const render_list_content = factory_render_list_content({
-            items: sorted_grouped_vap_sets,
+        const render_future_list_content = factory_render_list_content({
+            items: sorted_grouped_future_vap_sets,
+            get_id: get_latest_id,
+            update_items,
+            item_top_props,
+            item_descriptor,
+            extra_class_names: "future",
+        })
+
+        const render_past_list_content = factory_render_list_content({
+            items: sorted_grouped_past_vap_sets,
             get_id: get_latest_id,
             update_items,
             item_top_props,
             item_descriptor,
         })
 
-        return render_list_content(list_content_props)
+        return <div>
+            Future ({sorted_grouped_future_vap_sets.length}):
+            {render_future_list_content(list_content_props)}
+            <hr />
+            Past ({sorted_grouped_past_vap_sets.length}):
+            {render_past_list_content(list_content_props)}
+        </div>
     }
 
 
     return <EditableList
-        items={sorted_grouped_vap_sets}
+        items={all_items}
         item_descriptor={item_descriptor}
         content_renderer={content_renderer}
         get_id={get_latest_id}
@@ -82,6 +119,10 @@ export function ValueAndPredictionSets (props: OwnProps)
         disable_collapsed={true}
     />
 }
+
+export const ValueAndPredictionSets = connector(_ValueAndPredictionSets) as FunctionalComponent<OwnProps>
+
+
 
 const get_latest_id = (item: VersionedStateVAPsSet) => item.latest.id
 const get_latest_created_at = (item: VersionedStateVAPsSet) => item.latest.created_at

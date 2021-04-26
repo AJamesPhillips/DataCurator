@@ -26,7 +26,7 @@
 //     //     ? " in_future "
 //     //     : (created_datetime_ms === datetime_ms ? " focused " : ""))
 
-//     const { future_items, past_items } = split_items_by_datetimes({ items: props.items, })
+//
 
 //     return <EditableList
 //         {...props}
