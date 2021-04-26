@@ -12,6 +12,7 @@ export type EditableListProps <U> = Omit<ExpandableListProps, "content" | "on_cl
 & FactoryRenderListContentProps<U>
 & {
     prepare_new_item: () => U
+    content_renderer?: (list_content_props: ListContentProps) => h.JSX.Element | null
 }
 
 
@@ -38,6 +39,8 @@ export function EditableList <T> (props: EditableListProps<T>)
 
         content={(list_content_props: ListContentProps) =>
         {
+            const content_renderer = props.content_renderer || render_list_content
+
             return <div>
                 <NewItemForm
                     new_item={new_item}
@@ -51,7 +54,7 @@ export function EditableList <T> (props: EditableListProps<T>)
                     }}
                 />
 
-                {render_list_content(list_content_props)}
+                {content_renderer(list_content_props)}
             </div>
         }}
 

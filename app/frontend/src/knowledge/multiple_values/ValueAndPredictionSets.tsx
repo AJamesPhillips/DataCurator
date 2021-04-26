@@ -11,8 +11,10 @@ import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_versioned_vap_set } from "./utils"
 import { EditableList } from "../../form/editable_list/EditableList"
-import { useMemo } from "preact/hooks"
+import { useCallback, useMemo } from "preact/hooks"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import type { ListContentProps } from "../../form/editable_list/ExpandableList"
+import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 
 
 
@@ -27,9 +29,7 @@ interface OwnProps
 
 export function ValueAndPredictionSets (props: OwnProps)
 {
-    const vap_sets = validate_vap_sets_for_subtype(props.values_and_prediction_sets, props.subtype)
-    const grouped_vap_sets = group_vap_sets_by_version(vap_sets)
-    const sorted_grouped_vap_sets = sort_grouped_vap_sets(grouped_vap_sets)
+    const sorted_grouped_vap_sets = validate_sort_and_group_vap_sets_by_version(props.values_and_prediction_sets, props.subtype)
 
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<VersionedStateVAPsSet> = {
@@ -45,18 +45,40 @@ export function ValueAndPredictionSets (props: OwnProps)
         return props2
     }, [props.subtype])
 
+
+    const update_items = useCallback((versioned_vap_set: VersionedStateVAPsSet[]) =>
+    {
+        const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
+        props.update_values_and_predictions(ungrouped)
+
+    }, [props.update_values_and_predictions])
+
+
+    const item_descriptor = "Value"
+
+
+    const content_renderer = (list_content_props: ListContentProps) =>
+    {
+        const render_list_content = factory_render_list_content({
+            items: sorted_grouped_vap_sets,
+            get_id: get_latest_id,
+            update_items,
+            item_top_props,
+            item_descriptor,
+        })
+
+        return render_list_content(list_content_props)
+    }
+
+
     return <EditableList
         items={sorted_grouped_vap_sets}
-        item_descriptor="Value"
-        // content={() => <div>Pre list content</div>}
+        item_descriptor={item_descriptor}
+        content_renderer={content_renderer}
         get_id={get_latest_id}
         item_top_props={item_top_props}
         prepare_new_item={prepare_new_versioned_vap_set}
-        update_items={versioned_vap_set =>
-        {
-            const ungrouped = ungroup_vap_sets_by_version(versioned_vap_set)
-            props.update_values_and_predictions(ungrouped)
-        }}
+        update_items={update_items}
         disable_collapsed={true}
     />
 }
@@ -121,4 +143,15 @@ function validate_vap_sets_for_subtype (vap_sets: StateValueAndPredictionsSet[],
     }
 
     return vap_sets
+}
+
+
+
+function validate_sort_and_group_vap_sets_by_version(values_and_prediction_sets: StateValueAndPredictionsSet[], subtype: WComponentStateV2SubType)
+{
+    const vap_sets = validate_vap_sets_for_subtype(values_and_prediction_sets, subtype)
+    const grouped_vap_sets = group_vap_sets_by_version(vap_sets)
+    const sorted_grouped_vap_sets = sort_grouped_vap_sets(grouped_vap_sets)
+
+    return sorted_grouped_vap_sets
 }
