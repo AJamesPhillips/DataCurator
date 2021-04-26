@@ -27,25 +27,15 @@ interface OwnProps<T>
 
 
 
-const map_state = (state: RootState) => ({
-    datetime_ms: state.routing.args.created_at_ms,
-})
-
-
-
-const connector = connect(map_state)
-type Props<T> = ConnectedProps<typeof connector> & OwnProps<T>
-
-
 interface State
 {
     internal__expanded: boolean
 }
 
 
-class _EditableListEntry <T> extends Component<Props<T>, State>
+export class EditableListEntry <T> extends Component<OwnProps<T>, State>
 {
-    constructor (props: Props<T>)
+    constructor (props: OwnProps<T>)
     {
         super(props)
         this.state = {
@@ -53,7 +43,7 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
         }
     }
 
-    componentDidUpdate (prev_props: Props<T>, prev_state: State)
+    componentDidUpdate (prev_props: OwnProps<T>, prev_state: State)
     {
         if (this.props.expanded !== prev_props.expanded)
         {
@@ -71,7 +61,6 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             get_summary,
             get_details,
             get_details2,
-            datetime_ms,
             disable_collapsable,
             editing_new_item = false,
             on_change,
@@ -81,22 +70,14 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
         const created_at = get_created_at(item)
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined
 
-        const {
-            internal__expanded,
-        } = this.state
+        const { internal__expanded } = this.state
 
 
-        const created_datetime_ms = (custom_created_at || created_at).getTime()
-        const class_name__display = editing_new_item ? "" :
-            (created_datetime_ms > datetime_ms
-                ? " in_future "
-                : (created_datetime_ms === datetime_ms ? " focused " : ""))
+        const class_name__not_collapsable = disable_collapsable ? "not_collapsable" : ""
+        const class_name__expanded = internal__expanded ? "expanded" : ""
+        const extra_class_names = this.props.extra_class_names || ""
+        const class_name = `editable_list ${class_name__not_collapsable} ${class_name__expanded} ${extra_class_names}`
 
-        const class_name__not_collapsable = disable_collapsable ? " not_collapsable " : ""
-        const class_name__expanded = internal__expanded ? " expanded " : ""
-        const extra_class_names = " " + (this.props.extra_class_names || "") + " "
-
-        const class_name = "editable_list " + class_name__not_collapsable + class_name__expanded + class_name__display + extra_class_names
 
         const date_on_change = (new_custom_created_at: Date | undefined) =>
         {
@@ -127,11 +108,4 @@ class _EditableListEntry <T> extends Component<Props<T>, State>
             </div>
         </div>
     }
-}
-
-
-const _EditableListEntry2 = connector(_EditableListEntry)
-export function EditableListEntry<T> (own_props: OwnProps<T>)
-{
-    return <_EditableListEntry2 {...own_props}/>
 }
