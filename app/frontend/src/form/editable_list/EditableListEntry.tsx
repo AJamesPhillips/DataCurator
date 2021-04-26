@@ -1,8 +1,6 @@
 import { Component, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 
 import "./EditableListEntry.css"
-import type { RootState } from "../../state/State"
 import { ConfirmatoryDeleteButton } from "../ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../EditableCustomDateTime"
 
@@ -14,12 +12,11 @@ interface OwnProps<T>
     get_created_at: (item: T) => Date
     get_custom_created_at?: (item: T) => Date | undefined
     set_custom_created_at?: (item: T, new_custom_created_at: Date | undefined) => T
-    get_summary: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
-    get_details: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
-    get_details2?: (item: T, on_change: (item: T) => void, editing_new_item: boolean) => h.JSX.Element
+    get_summary: (item: T, on_change: (item: T) => void) => h.JSX.Element
+    get_details: (item: T, on_change: (item: T) => void) => h.JSX.Element
+    get_details2?: (item: T, on_change: (item: T) => void) => h.JSX.Element
     expanded?: boolean
     disable_collapsable?: boolean
-    editing_new_item?: boolean
     on_change: (item: T) => void
     delete_item?: () => void
     extra_class_names?: string
@@ -62,7 +59,6 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             get_details,
             get_details2,
             disable_collapsable,
-            editing_new_item = false,
             on_change,
             delete_item,
         } = this.props
@@ -88,11 +84,11 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             <div className="expansion_button" onClick={() => this.setState({ internal__expanded: !internal__expanded })}></div>
 
             <div className="summary">
-                {get_summary(item, on_change, editing_new_item)}
+                {get_summary(item, on_change)}
             </div>
 
             <div className="details">
-                {get_details(item, on_change, editing_new_item)}
+                {get_details(item, on_change)}
 
                 <ConfirmatoryDeleteButton on_delete={delete_item} />
 
@@ -104,7 +100,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             </div>
 
             <div className="details2">
-                {get_details2 && get_details2(item, on_change, editing_new_item)}
+                {get_details2 && get_details2(item, on_change)}
             </div>
         </div>
     }

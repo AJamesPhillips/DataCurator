@@ -32,6 +32,7 @@ export function Button (props: OwnProps)
         type="button"
         value={props.value}
         onPointerDown={e => props.on_pointer_down(e)}
+        onClick={e => e.stopImmediatePropagation()}
         className={class_names}
         disabled={props.disabled}
     />

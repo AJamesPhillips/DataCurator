@@ -22,7 +22,7 @@ export function prepare_new_vap (): StateValueAndPrediction
 
 
 
-function prepare_new_vap_set_item (): StateValueAndPredictionsSet
+function prepare_new_vap_set (): StateValueAndPredictionsSet
 {
     const now = new Date()
 
@@ -40,7 +40,7 @@ function prepare_new_vap_set_item (): StateValueAndPredictionsSet
 export function prepare_new_versioned_vap_set (): VersionedStateVAPsSet
 {
     return {
-        latest: prepare_new_vap_set_item(),
+        latest: prepare_new_vap_set(),
         older: [],
     }
 }

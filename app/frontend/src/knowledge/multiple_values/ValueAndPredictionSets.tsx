@@ -6,11 +6,11 @@ import type {
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
 } from "../../shared/models/interfaces/state"
-import { EditableList } from "../../form/editable_list/EditableList"
 import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_versioned_vap_set } from "./utils"
+import { EditableList } from "../../form/editable_list/EditableList"
 
 
 
@@ -53,7 +53,7 @@ export function ValueAndPredictionSets (props: OwnProps)
 const get_latest_id = (item: VersionedStateVAPsSet) => item.latest.id
 const get_latest_created_at = (item: VersionedStateVAPsSet) => item.latest.created_at
 const get_latest_custom_created_at = (item: VersionedStateVAPsSet) => item.latest.custom_created_at
-const set_latest_custom_created_at = (item: VersionedStateVAPsSet, custom_created_at: Date | undefined) =>
+const set_latest_custom_created_at = (item: VersionedStateVAPsSet, custom_created_at: Date | undefined): VersionedStateVAPsSet =>
 {
     return { ...item, latest: { ...item.latest, custom_created_at } }
 }
@@ -77,11 +77,8 @@ const get_details = (subtype: WComponentStateV2SubType) => (versioned_vap_set: V
 }
 
 
-const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void, editing_new_item: boolean): h.JSX.Element =>
+const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
-
-    if (editing_new_item) return <div />
-
     return <div className="vap_set_details">
         <br />
 

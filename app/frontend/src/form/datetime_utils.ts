@@ -27,7 +27,7 @@ export function date_to_string (date: Date | undefined, shorten_if_only_days: bo
 
 export function uncertain_date_to_string (datetime: TemporalUncertainty)
 {
-    if (!datetime.min && !datetime.value && !datetime.max) return "External"
+    if (!datetime.min && !datetime.value && !datetime.max) return "Eternal"
 
     const str = (
         date_to_string(datetime.min)

@@ -122,7 +122,9 @@ function handle_on_focus (e: h.JSX.TargetedFocusEvent<HTMLInputElement>, value: 
 {
     const new_working_value = date_to_string(value, false)
     e.currentTarget.value = new_working_value
-    // e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+    // Disabled for _?_ product reasoin
+    // Enabled because when you want to clear a whole date it is alot easier to do. -- 2021-04-26 12:11
+    e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
     return { new_working_value }
 }
 
