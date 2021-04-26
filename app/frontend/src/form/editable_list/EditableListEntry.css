@@ -4,6 +4,11 @@
     display: flex;
 }
 
+.editable_list .summary_header .summary
+{
+    width: 100%;
+}
+
 .editable_list.not_collapsable .expansion_button
 {
     display: none;

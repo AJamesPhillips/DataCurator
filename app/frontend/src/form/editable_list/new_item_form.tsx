@@ -1,15 +1,17 @@
 import { h } from "preact"
 
 import { Button } from "../../sharedf/Button"
-import type { EditableListProps } from "./EditableList"
-import { EditableListEntry } from "./EditableListEntry"
+import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
 
 
 
-interface NewItemForm<U> extends EditableListProps<U>
+export interface NewItemForm<U>
 {
     new_item: U | undefined
+    item_descriptor: string
     set_new_item: (new_item: U | undefined) => void
+    add_item: () => void
+    item_top_props: EditableListEntryTopProps<U>
 }
 
 export function new_item_form <T> (props: NewItemForm<T>)
@@ -42,7 +44,7 @@ export function new_item_form <T> (props: NewItemForm<T>)
             value={`Add ${props.item_descriptor}`}
             on_pointer_down={() => {
                 props.set_new_item(undefined)
-                props.update_items([...props.items, new_item])
+                props.add_item()
             }}
         />
         <Button

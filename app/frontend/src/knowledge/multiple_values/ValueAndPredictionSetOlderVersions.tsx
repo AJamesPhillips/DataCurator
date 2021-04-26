@@ -11,7 +11,7 @@ import {
 } from "./utils"
 import { ExpandableList } from "../../form/editable_list/ExpandableList"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
-import { render_list_content } from "../../form/editable_list/render_list_content"
+import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 
 
 
@@ -39,7 +39,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
         items_count={items.length}
         item_descriptor={item_descriptor}
         new_item_descriptor="Version"
-        content={render_list_content(
+        content={factory_render_list_content(
         {
             items,
             get_id,

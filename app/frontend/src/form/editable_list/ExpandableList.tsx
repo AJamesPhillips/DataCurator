@@ -14,7 +14,7 @@ export interface ListContentProps
 
 
 export interface ExpandableListProps {
-    content: (props: ListContentProps) => h.JSX.Element
+    content: (props: ListContentProps) => h.JSX.Element | null
     items_count?: number
     items_descriptor?: string
     item_descriptor: string

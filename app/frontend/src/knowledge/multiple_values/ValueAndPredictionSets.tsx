@@ -48,6 +48,7 @@ export function ValueAndPredictionSets (props: OwnProps)
     return <EditableList
         items={sorted_grouped_vap_sets}
         item_descriptor="Value"
+        // content={() => <div>Pre list content</div>}
         get_id={get_latest_id}
         item_top_props={item_top_props}
         prepare_new_item={prepare_new_versioned_vap_set}
