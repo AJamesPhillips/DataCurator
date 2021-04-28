@@ -3,18 +3,18 @@ import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
 
 import "./time_slider.css"
-import { date2str_auto } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import type { TimeSliderData } from "./interfaces"
+import type { TimeSliderEvent } from "./interfaces"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { Button } from "../sharedf/Button"
+import { NowButton } from "./NowButton"
 
 
 
-interface OwnProps extends TimeSliderData
+interface OwnProps
 {
+    events: TimeSliderEvent[]
     data_set_name: string
 }
 
@@ -40,7 +40,7 @@ const MSECONDS_PER_DAY = 86400000
 function _TimeSlider (props: Props)
 {
     const unique_event_start_datetimes_ms = new Set(props.events
-        .map(event => event.start_date.getTime()))
+        .map(event => event.datetime.getTime()))
 
     const event_start_datetimes_ms = [...unique_event_start_datetimes_ms]
         .sort((a, b) => a < b ? -1 : (a > b ? 1 : 0))
@@ -134,22 +134,3 @@ function _TimeSlider (props: Props)
 
 
 export const TimeSlider = connector(_TimeSlider) as FunctionalComponent<OwnProps>
-
-
-
-interface NowButtonProps
-{
-    change_datetime_ms: (new_datetime_ms: number) => void
-}
-function NowButton (props: NowButtonProps)
-{
-    return <Button
-        value="Now"
-        on_pointer_down={() => {
-            // Add 60 seconds to ensure it is always the next minute
-            const datetime_ms = new Date().getTime() + 60000
-            props.change_datetime_ms(datetime_ms)
-        }}
-        is_left={true}
-    />
-}

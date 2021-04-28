@@ -12,6 +12,7 @@ import {
     RoutingStringArgKey,
 } from "./interfaces"
 import { routing_arg_datetime_strings_to_datetime } from "./datetime/routing_datetime"
+import { test } from "../../shared/utils/test"
 
 
 
@@ -150,3 +151,36 @@ function update_args_with_value (key: RoutingStringArgKey, value: string, args: 
     }
     else if (is_route_string_arg_number(key)) args[key] = parseInt(value)
 }
+
+
+
+function run_tests ()
+{
+    console.log("running tests of routing_state_to_string")
+
+    let state: RoutingState
+    let result: string
+
+    state = {
+        route: "wcomponents",
+        sub_route: null,
+        item_id: "wc88",
+        args: {
+            view: "knowledge",
+            subview_id: "kv77",
+            zoom: 100,
+            x: 101,
+            y: 158,
+            order: "normal",
+            rotation: 0,
+            created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
+            created_at_ms: 1603299864000,
+            sim_datetime: new Date("2021-04-26T09:23:13.000Z"),
+            sim_ms: 1619428993000
+        }
+    }
+    result = routing_state_to_string(state)
+    test(result, "#wcomponents/wc88/&zoom=100&y=158&x=101&view=knowledge&subview_id=kv77&sdate=2021-04-26&stime=10:23:13&cdate=2020-10-21&ctime=18:04:24")
+}
+
+// run_tests()

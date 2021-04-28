@@ -1,9 +1,13 @@
 
 
+export type TimeSliderEventType = "now" | "created" | "sim"
 
 export interface TimeSliderEvent
 {
-    start_date: Date
+    datetime: Date
+    type: TimeSliderEventType
+    label?: string
+    color?: string
 }
 
 
@@ -11,13 +15,6 @@ export interface TimeSliderData
 {
     // earliest_ms: number
     // latest_ms: number
-    events: TimeSliderEvent[]
-}
-
-
-export interface TimeSliderV2Event
-{
-    datetime: Date
-    label: string
-    color: string
+    created_events: TimeSliderEvent[]
+    sim_events: TimeSliderEvent[]
 }

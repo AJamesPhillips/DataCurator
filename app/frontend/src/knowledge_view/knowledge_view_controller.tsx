@@ -75,18 +75,16 @@ const get_content_controls = (props: Props, state: {}, set_state: (s: Partial<Ro
     wcomponents
         .filter(wc => !!knowledge_view.wc_id_map[wc.id])
         .forEach(wc => get_time_slider_data.update(wc))
-    const { events } = get_time_slider_data.results()
+    const { created_events, sim_events } = get_time_slider_data.results()
 
     const elements = [
         <TimeSlider
-            events={events}
-            data_set_name="knowledge"
+            events={created_events}
+            data_set_name="knowledge_created_at_datetimes"
         />,
         <TimeSliderV2
-            events={[
-                { datetime: events[0].start_date, label: "", color: "black" },
-                // { datetime: new Date(new Date().getTime() + 86400000 * 14), label: "", color: "blue" },
-            ]}
+            events={sim_events}
+            data_set_name="knowledge_sim_datetimes"
         />,
     ]
 

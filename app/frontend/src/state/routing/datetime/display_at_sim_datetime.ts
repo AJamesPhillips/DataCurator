@@ -2,6 +2,7 @@ import type { Action, AnyAction } from "redux"
 
 import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
+import type { RoutingStateArgs } from "../interfaces"
 import { get_datetime_and_ms } from "./routing_datetime"
 
 
@@ -12,11 +13,12 @@ export const display_at_sim_datetime_reducer = (state: RootState, action: AnyAct
     {
         const { ms, datetime } = get_datetime_and_ms(action)
 
-        const args = {
+        const args: RoutingStateArgs = {
             ...state.routing.args,
-            sim_at_datetime: datetime,
-            sim_at_ms: ms,
+            sim_datetime: datetime,
+            sim_ms: ms,
         }
+
         state = update_substate(state, "routing", "args", args)
     }
 

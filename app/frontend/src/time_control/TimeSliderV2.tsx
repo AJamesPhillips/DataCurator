@@ -3,18 +3,20 @@ import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
 
 import "./time_slider.css"
-import { date2str_auto } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 // import { created_at_datetime_ms_to_routing_args } from "../state/routing/routing_datetime"
-import type { TimeSliderV2Event } from "./interfaces"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
+import type { TimeSliderEvent } from "./interfaces"
+import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { NowButton } from "./NowButton"
 
 
 
 interface OwnProps
 {
-    events: TimeSliderV2Event[]
+    events: TimeSliderEvent[]
+    data_set_name: string
 }
 
 
@@ -27,7 +29,7 @@ function map_state (state: RootState)
 
 
 const map_dispatch = {
-    change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime
+    change_display_at_sim_datetime: ACTIONS.display_at_sim_datetime.change_display_at_sim_datetime
 }
 
 
@@ -57,7 +59,7 @@ function _TimeSliderV2 (props: Props)
 
         if (update_route)
         {
-            props.change_display_at_created_datetime({ ms: new_datetime_ms })
+            props.change_display_at_sim_datetime({ ms: new_datetime_ms })
         }
     }
 
@@ -88,7 +90,7 @@ function _TimeSliderV2 (props: Props)
 
 
     return <div className="time_sliderv2">
-        {/* <div className="slider_container">
+        <div className="slider_container">
             <input
                 type="button"
                 value="<"
@@ -108,16 +110,25 @@ function _TimeSliderV2 (props: Props)
                 value={handle_position_ms}
                 min={earliest_ms}
                 max={latest_ms}
-                list={"tickmarks_timeslider_" + "props.data_set_name"}
+                list={"tickmarks_timeslider_" + props.data_set_name}
             ></input>
         </div>
         <br />
 
-        <datalist id={"tickmarks_timeslider_" + "props.data_set_name"}>
+        <datalist id={"tickmarks_timeslider_" + props.data_set_name}>
             {event_start_datetimes_ms.map(d => <option value={d}>{d}</option>)}
         </datalist>
 
-        {date2str_auto(new Date(handle_position_ms))} */}
+        <div style={{ maxWidth: 200, display: "inline-flex", float: "right" }}>
+            <EditableCustomDateTime
+                invariant_value={undefined}
+                value={new Date(handle_position_ms)}
+                on_change={new_datetime => new_datetime && change_datetime_ms(new_datetime.getTime(), true)}
+                show_now_shortcut_button={false}
+                show_today_shortcut_button={false}
+            />
+            <NowButton change_datetime_ms={datetime_ms => change_datetime_ms(datetime_ms, true)} />
+        </div>
 
     </div>
 }
