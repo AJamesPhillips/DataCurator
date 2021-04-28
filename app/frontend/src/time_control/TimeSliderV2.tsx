@@ -40,11 +40,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 const MSECONDS_PER_DAY = 86400000
 function _TimeSliderV2 (props: Props)
 {
-    const unique_event_start_datetimes_ms = new Set(props.events
-        .map(event => event.datetime.getTime()))
-
-    const event_start_datetimes_ms = [...unique_event_start_datetimes_ms]
-        .sort((a, b) => a < b ? -1 : (a > b ? 1 : 0))
+    const event_start_datetimes_ms = props.events.map(event => event.datetime.getTime())
 
     const earliest_ms = event_start_datetimes_ms[0]
     const latest_ms = event_start_datetimes_ms[event_start_datetimes_ms.length - 1]
@@ -89,20 +85,20 @@ function _TimeSliderV2 (props: Props)
     }
 
 
-    return <div className="time_sliderv2">
+    return <div className="time_slider">
         <div className="slider_container">
             <input
                 type="button"
                 value="<"
                 disabled={current_index.bounds === "n/a" || current_index.index <= 0}
                 onClick={move_to_event_datetime(-1)}
-            ></input>
+            />
             <input
                 type="button"
                 value=">"
                 disabled={current_index.bounds === "n/a" || current_index.index >= (event_start_datetimes_ms.length - 1)}
                 onClick={move_to_event_datetime(1)}
-            ></input>
+            />
             <input
                 type="range"
                 onChange={e => changed_handle_position(e, true)} // change to false for performance
@@ -111,7 +107,7 @@ function _TimeSliderV2 (props: Props)
                 min={earliest_ms}
                 max={latest_ms}
                 list={"tickmarks_timeslider_" + props.data_set_name}
-            ></input>
+            />
         </div>
         <br />
 

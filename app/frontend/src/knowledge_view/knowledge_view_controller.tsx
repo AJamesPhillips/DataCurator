@@ -5,7 +5,7 @@ import type { ChildrenRawData } from "../layout/interfaces"
 import { ViewController } from "../layout/ViewController"
 import { KnowledgeView, wcomponent_can_render_connection } from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
-import { factory_get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
+import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { TimeSlider } from "../time_control/TimeSlider"
 import { WComponentCanvasConnection } from "../knowledge/WComponentCanvasConnection"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
@@ -71,11 +71,8 @@ const get_content_controls = (props: Props, state: {}, set_state: (s: Partial<Ro
 
     if (!knowledge_view) return []
 
-    const get_time_slider_data = factory_get_wcomponent_time_slider_data()
-    wcomponents
-        .filter(wc => !!knowledge_view.wc_id_map[wc.id])
-        .forEach(wc => get_time_slider_data.update(wc))
-    const { created_events, sim_events } = get_time_slider_data.results()
+    const wcomponents_on_kv = wcomponents.filter(wc => !!knowledge_view.wc_id_map[wc.id])
+    const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     const elements = [
         <TimeSlider
