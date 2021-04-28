@@ -37,7 +37,7 @@ interface ReplaceValueInTextArgs
 }
 export function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
-    const value = get_wcomponent_state_value(args.wcomponent, args.created_at_ms, args.sim_ms)
+    const value = get_wcomponent_state_value(args.wcomponent, args.created_at_ms, args.sim_ms).value
     const text = args.text.replace(/\$\{value\}/g, `${value}`)
     return text
 }
