@@ -31,7 +31,8 @@ export const global_keys_reducer = (state: RootState, action: AnyAction): RootSt
 
         // Web browsers are broken: https://web.archive.org/web/20160304022453/http://bitspushedaround.com/on-a-few-things-you-may-not-know-about-the-hellish-command-key-and-javascript-events/
         // Clear all keys as Meta steals keyup events of all other keys
-        if (action.key === "Meta") keys_down = new Set()
+        // Update: 2021-04-28 this seems to not be the case any more so will comment this out for now
+        // if (action.key === "Meta") keys_down = new Set()
 
         state = {
             ...state,

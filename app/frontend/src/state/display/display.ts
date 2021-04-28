@@ -11,7 +11,7 @@ export function toggle_rich_text_formatting_on_key_press (store: Store<RootState
     {
         const state = store.getState()
 
-        const key_pattern_for_toggle = state.global_keys.keys_down.has("Meta") && state.global_keys.keys_down.has("e")
+        const key_pattern_for_toggle = state.global_keys.keys_down.has("Control") && state.global_keys.keys_down.has("e")
         if (!key_pattern_for_toggle) return
 
         const { last_key_time_stamp } = state.global_keys

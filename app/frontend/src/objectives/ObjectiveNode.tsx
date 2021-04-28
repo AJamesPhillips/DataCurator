@@ -16,7 +16,7 @@ interface ObjectiveNodeOwnProps extends ObjectiveNodeProps {}
 const map_state = (state: RootState, own_props: ObjectiveNodeOwnProps) => ({
     is_selected: state.objectives.selected_objective_ids.has(own_props.id),
     is_priority_selected: state.objectives.priority_selected_objective_ids.has(own_props.id),
-    key_down__meta: state.global_keys.keys_down.has("Meta"),
+    ctrl_key_is_down: state.global_keys.keys_down.has("Control"),
 })
 
 const map_dispatch = {
@@ -49,12 +49,12 @@ function _ObjectiveNode (props: Props)
     {
         if (props.is_selected)
         {
-            if (props.key_down__meta) props.remove_from_selected_objectives([props.id])
+            if (props.ctrl_key_is_down) props.remove_from_selected_objectives([props.id])
             else props.select_objectives([])
         }
         else
         {
-            if (props.key_down__meta) props.add_to_selected_objectives([props.id])
+            if (props.ctrl_key_is_down) props.add_to_selected_objectives([props.id])
             else props.select_objectives([props.id])
         }
     }

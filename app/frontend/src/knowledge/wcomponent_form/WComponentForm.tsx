@@ -258,8 +258,8 @@ function _WComponentForm (props: Props)
 
         <br />
 
-        {/* <hr /> */}
-        {/* {Array.from(props.keys.keys_down).join(", ")} */}
+        {/* <hr />
+        {Array.from(props.keys.keys_down).join(", ")} */}
 
     </div>
 }

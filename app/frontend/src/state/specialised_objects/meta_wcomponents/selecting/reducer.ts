@@ -17,7 +17,7 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
         let selected_wcomponent_ids_list = [...state.meta_wcomponents.selected_wcomponent_ids_list]
         let selected_wcomponent_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids)
 
-        const meta_key_down = state.global_keys.keys_down.has("Meta")
+        const meta_key_down = state.global_keys.keys_down.has("Control")
 
         if (meta_key_down)
         {

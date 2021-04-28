@@ -31,7 +31,7 @@ interface OwnProps
 const map_state = (state: RootState, props: OwnProps) =>
 {
     const intercept_wcomponent_click_to_edit_link = !!state.meta_wcomponents.intercept_wcomponent_click_to_edit_link
-    const meta_key_is_down = state.global_keys.keys_down.has("Meta")
+    const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
     const { canvas_bounding_rect: cbr } = state.display
 
     return {
@@ -41,7 +41,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(props.id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(props.id),
         intercept_wcomponent_click_to_edit_link,
-        meta_key_is_down,
+        ctrl_key_is_down,
         canvas_bounding_rect_left: cbr ? cbr.left : 0,
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
         display_at_created_ms: state.routing.args.created_at_ms,
@@ -71,7 +71,7 @@ function _WComponentCanvasNode (props: Props)
 
     const { id, knowledge_view, wcomponent, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
-        intercept_wcomponent_click_to_edit_link, meta_key_is_down,
+        intercept_wcomponent_click_to_edit_link, ctrl_key_is_down,
         display_at_created_ms, sim_ms, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
@@ -93,7 +93,7 @@ function _WComponentCanvasNode (props: Props)
 
         if (!intercept_wcomponent_click_to_edit_link)
         {
-            if (meta_key_is_down)
+            if (ctrl_key_is_down)
             {
                 change_route({ route: "wcomponents", sub_route: "wcomponents_edit_multiple", item_id: null })
             }
