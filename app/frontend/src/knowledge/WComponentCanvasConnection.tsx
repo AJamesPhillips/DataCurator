@@ -38,19 +38,24 @@ const map_state = (state: RootState, props: OwnProps) =>
     let is_invalid = false
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
-    if (wc && wcomponent_is_plain_connection(wc))
-    {
-        from_wc = get_wcomponent_from_state(state, wc.from_id)
-        to_wc = get_wcomponent_from_state(state, wc.to_id)
 
-        if (!from_wc || !to_wc) is_invalid = true
-        else
+    if (wc)
+    {
+        is_invalid = get_created_at_ms(wc) > display_at_datetime_ms
+
+        if (!is_invalid && wcomponent_is_plain_connection(wc))
         {
-            is_invalid = (
-                get_created_at_ms(wc) > display_at_datetime_ms
-                || wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms)
-                || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms)
-            )
+            from_wc = get_wcomponent_from_state(state, wc.from_id)
+            to_wc = get_wcomponent_from_state(state, wc.to_id)
+
+            if (!from_wc || !to_wc) is_invalid = true
+            else
+            {
+                is_invalid = (
+                    wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms)
+                    || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms)
+                )
+            }
         }
     }
 
