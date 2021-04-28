@@ -1,6 +1,6 @@
 import { h } from "preact"
-import { project_priority_y } from "../canvas/display"
 
+import { project_priority_y } from "../canvas/display"
 import type { CanvasPoint } from "../canvas/interfaces"
 import { MainContentControls } from "../layout/MainContentControls"
 import { ViewController } from "../layout/ViewController"
@@ -12,7 +12,11 @@ import { DailyActionsList } from "./daily_actions/DailyActionsList"
 import { convert_daily_actions_to_nodes } from "./daily_actions/daily_actions_to_nodes"
 import { get_daily_actions_meta_c } from "./daily_actions/get_daily_actions"
 import { get_project_priorities_meta_c } from "./project_priorities/get_project_priorities"
-import { ProjectPriorityOrderArgs, group_priorities_by_project, order_priorities_by_project } from "./project_priorities/group_and_order"
+import {
+    ProjectPriorityOrderArgs,
+    group_priorities_by_project,
+    order_priorities_by_project,
+} from "./project_priorities/group_and_order"
 import { ProjectPriorityNode } from "./project_priorities/ProjectPriorityNode"
 import { convert_project_priorities_to_nodes } from "./project_priorities/project_priorities_to_nodes"
 import { get_project_id_to_vertical_position } from "./project_priorities/vertical_position"
@@ -28,6 +32,7 @@ const map_state = (state: RootState) => {
         earliest_ms,
         latest_ms,
         project_priorities,
+        project_priority_events,
     } = get_project_priorities_meta_c(state)
     const order_args: ProjectPriorityOrderArgs = memoize_order_args({ type: state.routing.args.order })
     const daily_actions_meta = get_daily_actions_meta_c(state)
@@ -37,6 +42,7 @@ const map_state = (state: RootState) => {
         earliest_ms,
         latest_ms,
         project_priorities,
+        project_priority_events,
         order_args,
         daily_actions_meta,
     }
@@ -98,7 +104,7 @@ const get_content_controls = (props: Props, state: State, set_state: (s: Partial
 {
     const elements = [
         <MainContentControls
-            events={props.project_priorities}
+            events={props.project_priority_events}
             data_set_name="priorities"
         />,
     ]

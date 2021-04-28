@@ -32,7 +32,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     if (wcomponent_is_state(wcomponent))
     {
-        value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
+        value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms).value
         is_empty = value === undefined
     }
     else if (wcomponent_is_judgement(wcomponent))

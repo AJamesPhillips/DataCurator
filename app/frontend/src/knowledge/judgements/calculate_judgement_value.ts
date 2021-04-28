@@ -22,7 +22,7 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
     if (!target_wcomponent) return undefined
 
-    const value = get_wcomponent_state_value(target_wcomponent, created_at_ms, sim_ms)
+    const { value } = get_wcomponent_state_value(target_wcomponent, created_at_ms, sim_ms)
     if (value === undefined) return undefined
 
     const {

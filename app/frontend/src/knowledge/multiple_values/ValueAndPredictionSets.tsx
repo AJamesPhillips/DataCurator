@@ -6,7 +6,6 @@ import type {
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
 } from "../../shared/models/interfaces/state"
-import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/get_wcomponent_state_value"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_versioned_vap_set } from "./utils"
@@ -18,6 +17,7 @@ import { partition_items_by_datetime_futures } from "../../shared/models/utils_d
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { CustomisableEditableList } from "../../form/editable_list/CustomisableEditableList"
+import { ungroup_vap_sets_by_version, group_vap_sets_by_version, sort_grouped_vap_sets } from "../../shared/models/value_and_prediction/utils"
 
 
 

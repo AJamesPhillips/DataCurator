@@ -1,4 +1,5 @@
 import type { NodeField } from "../canvas/interfaces"
+import type { TimeSliderEvent } from "../time_control/interfaces"
 
 
 export interface ProjectPriority
@@ -14,6 +15,7 @@ export interface ProjectPriority
 export interface ProjectPrioritiesMeta
 {
     project_priorities: ProjectPriority[]
+    project_priority_events: TimeSliderEvent[]
     earliest_ms: number
     latest_ms: number
 }

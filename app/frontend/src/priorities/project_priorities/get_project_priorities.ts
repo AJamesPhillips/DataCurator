@@ -6,6 +6,7 @@ import type {
     ObjectWithCache,
     RootState,
 } from "../../state/State"
+import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { memoize } from "../../utils/memoize"
 import type { ProjectPrioritiesMeta, ProjectPriority } from "../interfaces"
 
@@ -18,12 +19,14 @@ export const get_project_priorities_meta_c = (state: RootState): ProjectPrioriti
     const raw_project_priorities = filter_for_project_priorities_c(state.objects)
     const {
         project_priorities,
+        project_priority_events,
         earliest_ms,
         latest_ms,
     } = get_project_priorities_c(raw_project_priorities, state.objects)
 
     return {
         project_priorities,
+        project_priority_events,
         earliest_ms,
         latest_ms,
     }
@@ -40,6 +43,8 @@ function _get_project_priorities (raw_project_priorities: ObjectWithCache[], obj
     let latest_ms = earliest_ms + 1
 
     const project_priorities: ProjectPriority[] = []
+    const project_priority_events: TimeSliderEvent[] = []
+
     raw_project_priorities.forEach(project_priority => {
         const { attributes } = project_priority
 
@@ -64,10 +69,16 @@ function _get_project_priorities (raw_project_priorities: ObjectWithCache[], obj
             project_id: project.id,
             fields: [{ name: "Effort", value: effort_value }]
         })
+
+        project_priority_events.push({
+            datetime: start_date,
+            type: "created",
+        })
     })
 
     return {
         project_priorities,
+        project_priority_events,
         earliest_ms,
         latest_ms,
     }
