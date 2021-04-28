@@ -21,6 +21,8 @@ export function CustomisableEditableList <T> (props: CustomisableEditableListPro
     const [new_item, set_new_item] = useState<T | undefined>(undefined)
 
     return <ExpandableList
+        items_count={props.items.length}
+
         on_click_new_item={() => {
             const item = props.prepare_new_item()
             set_new_item(item)
