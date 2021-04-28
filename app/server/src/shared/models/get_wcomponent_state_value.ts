@@ -9,8 +9,8 @@ import type {
     WComponentNodeStateV2,
     WComponentStateV2SubType,
 } from "./interfaces/state"
-import type { TemporalUncertainty } from "./interfaces/uncertainty"
-import { get_created_at_ms } from "./utils_datetime"
+import type { HasDateTime, TemporalUncertainty } from "./interfaces/uncertainty"
+import { get_created_at_ms, get_sim_datetime } from "./utils_datetime"
 
 
 
@@ -144,13 +144,6 @@ function get_vap_datetime_sort_key (vap: StateValueAndPredictionsSet)
     const dt = get_sim_datetime(vap)
     if (dt !== undefined) return dt.getTime()
     return get_created_at_ms(vap)
-}
-
-
-
-function get_sim_datetime (dt: { datetime: TemporalUncertainty })
-{
-    return (dt.datetime.min || dt.datetime.value || dt.datetime.max)
 }
 
 

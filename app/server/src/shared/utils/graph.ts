@@ -24,11 +24,14 @@ export function make_graph <E> (args: MakeGraphArgs<E>): GGraph<E>
 
     const graph = new Graph()
     items.forEach(item => graph.setNode(get_id(item), item))
+
+    const id_exists = (id: string) => graph.hasNode(id)
+
     items.forEach(item =>
     {
         const id = get_id(item)
-        get_head_ids(item).forEach(head_id => graph.setEdge(id, head_id))
-        get_tail_ids(item).forEach(tail_id => graph.setEdge(tail_id, id))
+        get_head_ids(item).filter(id_exists).forEach(head_id => graph.setEdge(id, head_id))
+        get_tail_ids(item).filter(id_exists).forEach(tail_id => graph.setEdge(tail_id, id))
     })
     return graph
 }
@@ -519,11 +522,23 @@ function run_tests ()
     }
 
 
+    function out_of_scope_node ()
+    {
+        const items = [
+            { id: "1", head_ids: ["2"], tail_ids: ["3"] },
+        ]
+        //  (3) --> 1 --> (2)
+        const graph = _make_graph(items)
+        return { items, graph }
+    }
+
+
     const s = simple_graph()
     const m = multi_group_graph()
     const scl = simple_circular_and_leaf()
     const smg = simple_multi_group_graph()
     const bcml = branched_circular_multi_leaf()
+    const oosn = out_of_scope_node()
 
 
     test_graph(s.graph, "0", { item: undefined, head_ids: [], tail_ids: [] })
@@ -550,6 +565,11 @@ function run_tests ()
     test_graph(m.graph, "15b", { item: m.items[17], head_ids: [], tail_ids: ["16b"] })
     test_graph(m.graph, "16b", { item: m.items[18], head_ids: ["15b"], tail_ids: ["17b"] })
     test_graph(m.graph, "17b", { item: m.items[19], head_ids: ["16b"], tail_ids: [] })
+
+
+    // make_graph should be able to gracefully handle edges going to nodes outside of scope
+    test_graph(oosn.graph, "1", { item: oosn.items[0], head_ids: [], tail_ids: [] })
+
 
     // find_leaf_ids
 

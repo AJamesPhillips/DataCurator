@@ -80,6 +80,14 @@ interface StateValueAndPredictionsSetIncremental extends Base
     // or will likely, be the same.
     entry_defaults?: Partial<StateValueAndPrediction>
 
+    // 2021-04-25 19:00
+    // Not using this field yet as we will explore a simpler modeling approach, namely to use
+    // the datetime in ascending order as the order to take the VAP sets in.
+    // I think there will be scenarios which will need this data structure but for now we will ignore.
+    // 2021-04-25 21:00
+    // No this is needed for potential scenarios where a value could be A or B and where it does not
+    // make sense to model this as exclusive option choices.  See two_time_dimensional_trees for
+    // example(s).
     previous_value_ids?: string[]
 }
 

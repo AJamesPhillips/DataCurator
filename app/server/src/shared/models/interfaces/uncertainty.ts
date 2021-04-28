@@ -96,8 +96,8 @@ export interface TemporalUncertainty extends Partial<PredictionBase>
 }
 
 
-
-export interface Prediction extends Base, PredictionBase {
+export interface HasDateTime
+{
     // this could be called start_datetime but calling it just datetime for now as ~~I imagine
     // in the future we will have an even more advanced TemporalUncertainty interface to
     // cover situations like: "valid from X " ...~~
@@ -107,6 +107,9 @@ export interface Prediction extends Base, PredictionBase {
     //        prediction itself to 0, **(not the prediction.datetime.probability)**
     datetime: TemporalUncertainty
 }
+
+
+export interface Prediction extends Base, PredictionBase, HasDateTime {}
 
 
 
