@@ -15,7 +15,6 @@ export interface FactoryRenderListContentProps <U>
     item_top_props: EditableListEntryTopProps<U>
 
     item_descriptor: string
-    extra_class_names?: string
 }
 
 export function factory_render_list_content <T> (own_props: FactoryRenderListContentProps<T>)
@@ -28,7 +27,6 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
         item_top_props,
 
         item_descriptor,
-        extra_class_names,
     } = own_props
 
 
@@ -55,7 +53,6 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                     disable_collapsable={disable_partial_collapsed}
                     on_change={item => update_items(upsert_entry(items, item, p2 => get_id(item) === get_id(p2), item_descriptor)) }
                     delete_item={() => update_items(remove_index(items, index)) }
-                    extra_class_names={extra_class_names}
                 />
             </div>)}
         </div>

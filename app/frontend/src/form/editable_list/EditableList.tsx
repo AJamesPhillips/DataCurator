@@ -1,8 +1,8 @@
 import { h } from "preact"
-import { useState } from "preact/hooks"
+import { CustomisableEditableList } from "./CustomisableEditableList"
 
-import { ExpandableList, ExpandableListProps, ListContentProps } from "./ExpandableList"
-import { NewItemForm } from "./NewItemForm"
+import type { ExpandableListProps } from "./ExpandableList"
+import type { NewItemForm } from "./NewItemForm"
 import { FactoryRenderListContentProps, factory_render_list_content } from "./render_list_content"
 
 
@@ -12,13 +12,11 @@ export type EditableListProps <U> = Omit<ExpandableListProps, "content" | "on_cl
 & FactoryRenderListContentProps<U>
 & {
     prepare_new_item: () => U
-    content_renderer?: (list_content_props: ListContentProps) => h.JSX.Element | null
 }
 
 
 export function EditableList <T> (props: EditableListProps<T>)
 {
-    const [new_item, set_new_item] = useState<T | undefined>(undefined)
 
     const render_list_content = factory_render_list_content({
         items: props.items,
@@ -31,33 +29,8 @@ export function EditableList <T> (props: EditableListProps<T>)
     })
 
 
-    return <ExpandableList
-        on_click_new_item={() => {
-            const item = props.prepare_new_item()
-            set_new_item(item)
-        }}
-
-        content={(list_content_props: ListContentProps) =>
-        {
-            const content_renderer = props.content_renderer || render_list_content
-
-            return <div>
-                <NewItemForm
-                    new_item={new_item}
-                    set_new_item={set_new_item}
-                    item_top_props={props.item_top_props}
-                    item_descriptor={props.item_descriptor}
-                    add_item={new_item =>
-                    {
-                        props.update_items([...props.items, new_item])
-                        set_new_item(undefined)
-                    }}
-                />
-
-                {content_renderer(list_content_props)}
-            </div>
-        }}
-
+    return <CustomisableEditableList
         {...props}
+        content_renderer={render_list_content}
     />
 }
