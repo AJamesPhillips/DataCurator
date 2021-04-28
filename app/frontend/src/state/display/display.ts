@@ -43,7 +43,7 @@ export const v_step = 100
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
     const x = round_coordinate(args.x + (half_screen_width * (100 / args.zoom)), h_step)
-    const y = round_coordinate(args.y + (half_screen_height * (100 / args.zoom)), v_step)
+    const y = round_coordinate(args.y - (half_screen_height * (100 / args.zoom)), v_step)
 
     return { x, y }
 }
