@@ -21,7 +21,7 @@ function wcomponent_is_now_invalid (wcomponent: WComponent, display_at_datetime_
 
     const last_existence_prediction = wcomponent.existence[wcomponent.existence.length - 1]
     return (last_existence_prediction
-        && last_existence_prediction.conviction === 100
+        && last_existence_prediction.conviction === 1
         && last_existence_prediction.probability === 0
         && display_at_datetime_ms > get_created_at_ms(last_existence_prediction))
 }
