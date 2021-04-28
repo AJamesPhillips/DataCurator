@@ -1,5 +1,6 @@
 import { h } from "preact"
 
+import "./common.css"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type {
@@ -8,7 +9,6 @@ import type {
     StateValueAndPrediction,
 } from "../../shared/models/interfaces/state"
 import { get_probable_vap_set_values, get_vap_set_prob, get_vap_set_conviction } from "../../sharedf/wcomponent_state"
-import { update_substate } from "../../utils/update_state"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { prepare_new_vap, set_vap_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
@@ -30,13 +30,13 @@ export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType
                 value={vap_set.custom_created_at}
             />
         </div>}
-        <div style={{ display: "inline-flex", width: "100%" }}>
-            {uncertain_date_to_string(vap_set.datetime) || "-"}
-            {subtype !== "boolean" && <div>&nbsp;
-            Value:&nbsp;{values}</div>}
-            &nbsp;
-            Prob:&nbsp;{prob}%
-            Cn:&nbsp;{conv}%
+        <div className="vap_set_summary_container" style={{ display: "inline-flex", width: "100%" }}>
+            <div>
+                {uncertain_date_to_string(vap_set.datetime) || "-"}
+            </div>
+            {subtype !== "boolean" && <div>Value:&nbsp;{values}</div>}
+            <div>Prob:&nbsp;{prob}&nbsp;%</div>
+            <div>Cn:&nbsp;{conv}&nbsp;%</div>
         </div>
     </div>
 }

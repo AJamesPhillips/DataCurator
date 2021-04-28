@@ -56,5 +56,7 @@ export function percentage_to_string (value: number | undefined): string
 {
     if (value === undefined) return ""
 
-    return (bounded(value, 0, 1) * 100).toPrecision(3)
+    const percent = bounded(value, 0, 1) * 100
+
+    return (percent).toPrecision(percent < 98 ? 2 : 3)
 }
