@@ -23,6 +23,7 @@
     "@types/redux-form": "6.6.2",
     "@types/sequelize": "4.28.9",
     "deep-freeze": "0.0.1",
+    "env-cmd": "^10.1.0",
     "graphlib": "2.1.8",
     "hapi-pino": "8.3.0",
     "jquery": "2.2.4",
@@ -51,9 +52,10 @@
     "tslint": "5.2.0"
   },
   "scripts": {
-    "start": "set -a && source .env.development && set +a && ts-node src/main.ts",
+    "start": "env-cmd -f ./.env.development ts-node src/main.ts",
+    "watch_build": "rm -rf compiled_all/ && tsc -w",
     "build": "rm -rf compiled_all/ && tsc",
-    "test": "set -a && source .env.test && set +a && react-scripts-ts test --env=jsdom --runInBand",
+    "test": "env-cmd -f ./.env.test react-scripts-ts test --env=jsdom --runInBand",
     "eject": "react-scripts-ts eject"
   }
 }
