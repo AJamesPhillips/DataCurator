@@ -1,4 +1,4 @@
-import { WComponentType, wcomponent_types } from "../../shared/models/interfaces/SpecialisedObjects"
+import { WComponentType, wcomponent_types } from "./interfaces/SpecialisedObjects"
 
 
 

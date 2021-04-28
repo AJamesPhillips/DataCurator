@@ -98,11 +98,15 @@ function get_file_contents_str(args: GetFileContentsStrArgs) {
 
     if (data_key === "wcomponents")
     {
+        const ms = new Date().getTime()
+
         const args: GetFieldTextArgs = {
             wcomponent: single_data as any,
             wcomponents_by_id,
             rich_text: true,
             root_url: "http://localhost:8080/app",
+            created_at_ms: ms,
+            sim_ms: ms,
         }
         title = get_title(args) || ""
         description = get_description(args) || ""

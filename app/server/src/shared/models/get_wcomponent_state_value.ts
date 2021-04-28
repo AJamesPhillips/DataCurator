@@ -1,4 +1,4 @@
-import { get_items_by_id, get_multiple_items_by_id } from "../../state/specialised_objects/utils"
+import { get_items_by_id, get_multiple_items_by_id } from "./utils"
 import { find_leaf_groups, make_graph } from "../utils/graph"
 import { sort_list } from "../utils/sort"
 import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"

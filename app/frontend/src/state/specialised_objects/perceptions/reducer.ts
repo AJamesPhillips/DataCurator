@@ -4,7 +4,7 @@ import type { Perception } from "../../../shared/models/interfaces/SpecialisedOb
 import { upsert_entry, remove_from_list_by_predicate } from "../../../utils/list"
 import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
-import { get_items_by_id } from "../utils"
+import { get_items_by_id } from "../../../shared/models/utils"
 import { is_upsert_perception, is_delete_perception } from "./actions"
 
 
