@@ -118,3 +118,12 @@ export interface VersionedStateVAPsSet
     latest: StateValueAndPredictionsSet
     older: StateValueAndPredictionsSet[]
 }
+
+
+
+export interface UIStateValue
+{
+    value: string | null | undefined
+    type: "single" | "multiple" | "multi-multiple"
+    modifier?: "assumed" | "likely"
+}
