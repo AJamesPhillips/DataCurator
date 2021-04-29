@@ -31,7 +31,7 @@ export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType
             />
         </div>}
         <div className="vap_set_summary_container" style={{ display: "inline-flex", width: "100%" }}>
-            <div>
+            <div className="datetimes">
                 {uncertain_date_to_string(vap_set.datetime) || "-"}
             </div>
             {subtype !== "boolean" && <div>Value:&nbsp;{values}</div>}

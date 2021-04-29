@@ -1,5 +1,6 @@
 import { test } from "../utils/test"
 import type { Base } from "./interfaces/base"
+import { Tense } from "./interfaces/datetime"
 import type { HasDateTime } from "./interfaces/uncertainty"
 
 
@@ -18,7 +19,6 @@ export function get_sim_datetime (item: HasDateTime)
 
 
 
-enum Tense { "past", "present", "future" }
 function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
 {
     const { min, value, max } = item.datetime

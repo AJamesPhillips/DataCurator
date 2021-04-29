@@ -13,11 +13,12 @@ import { useCallback, useMemo } from "preact/hooks"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import type { ListContentProps } from "../../form/editable_list/ExpandableList"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import { partition_items_by_datetime_futures } from "../../shared/models/utils_datetime"
+import { partition_items_by_datetimes } from "../../shared/models/utils_datetime"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { CustomisableEditableList } from "../../form/editable_list/CustomisableEditableList"
 import { ungroup_vap_sets_by_version, group_vap_sets_by_version, sort_grouped_vap_sets } from "../../shared/models/value_and_prediction/utils"
+import { Tense } from "../../shared/models/interfaces/datetime"
 
 
 
@@ -41,21 +42,24 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictionSets (props: Props)
 {
-    const { past_items, future_items } = partition_items_by_datetime_futures({
-        items: props.values_and_prediction_sets,
+    const { values_and_prediction_sets } = props
+    const { invalid_items, past_items, present_items, future_items } = partition_items_by_datetimes({
+        items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })
-    const sorted_grouped_past_vap_sets = validate_sort_and_group_vap_sets_by_version(past_items, props.subtype)
-    const sorted_grouped_future_vap_sets = validate_sort_and_group_vap_sets_by_version(future_items, props.subtype)
-    const all_items = [
-        ...sorted_grouped_past_vap_sets,
-        ...sorted_grouped_future_vap_sets,
-    ]
+    const sorted_grouped_future_versioned_vap_sets = validate_sort_and_group_vap_sets_by_version(future_items, props.subtype)
+    const sorted_grouped_present_versioned_vap_sets = validate_sort_and_group_vap_sets_by_version(present_items, props.subtype)
+    const sorted_grouped_past_versioned_vap_sets = validate_sort_and_group_vap_sets_by_version(past_items, props.subtype)
+    const all_items: VersionedStateVAPsSet[] = useMemo(() =>
+    {
+        return values_and_prediction_sets.map(latest => ({ latest, older: [] }))
+    }, [values_and_prediction_sets])
 
 
-    const item_top_props_future = useMemo(() => get_list_entry_top_props(props.subtype, true), [props.subtype])
-    const item_top_props_past = useMemo(() => get_list_entry_top_props(props.subtype, false), [props.subtype])
+    const item_top_props_future = useMemo(() => get_list_entry_top_props(props.subtype, Tense.future), [props.subtype])
+    const item_top_props_present = useMemo(() => get_list_entry_top_props(props.subtype, Tense.present), [props.subtype])
+    const item_top_props_past = useMemo(() => get_list_entry_top_props(props.subtype, Tense.past), [props.subtype])
 
 
     const update_items = useCallback((versioned_vap_set: VersionedStateVAPsSet[]) =>
@@ -72,15 +76,23 @@ function _ValueAndPredictionSets (props: Props)
     const content_renderer = (list_content_props: ListContentProps) =>
     {
         const render_future_list_content = factory_render_list_content({
-            items: sorted_grouped_future_vap_sets,
+            items: sorted_grouped_future_versioned_vap_sets,
             get_id: get_latest_id,
             update_items,
             item_top_props: item_top_props_future,
             item_descriptor,
         })
 
+        const render_present_list_content = factory_render_list_content({
+            items: sorted_grouped_present_versioned_vap_sets,
+            get_id: get_latest_id,
+            update_items,
+            item_top_props: item_top_props_present,
+            item_descriptor,
+        })
+
         const render_past_list_content = factory_render_list_content({
-            items: sorted_grouped_past_vap_sets,
+            items: sorted_grouped_past_versioned_vap_sets,
             get_id: get_latest_id,
             update_items,
             item_top_props: item_top_props_past,
@@ -88,10 +100,16 @@ function _ValueAndPredictionSets (props: Props)
         })
 
         return <div>
-            Future ({sorted_grouped_future_vap_sets.length}):
+            {invalid_items.length ? <div>
+                Hidden ({invalid_items.length})
+            </div> : null}
+            Future ({sorted_grouped_future_versioned_vap_sets.length}):
             {render_future_list_content(list_content_props)}
             <hr />
-            Past ({sorted_grouped_past_vap_sets.length}):
+            Present ({sorted_grouped_present_versioned_vap_sets.length}):
+            {render_present_list_content(list_content_props)}
+            <hr />
+            Past ({sorted_grouped_past_versioned_vap_sets.length}):
             {render_past_list_content(list_content_props)}
         </div>
     }
@@ -112,7 +130,7 @@ export const ValueAndPredictionSets = connector(_ValueAndPredictionSets) as Func
 
 
 
-function get_list_entry_top_props (subtype: WComponentStateV2SubType, is_future: boolean): EditableListEntryTopProps<VersionedStateVAPsSet> {
+function get_list_entry_top_props (subtype: WComponentStateV2SubType, tense: Tense): EditableListEntryTopProps<VersionedStateVAPsSet> {
     return {
         get_created_at: get_latest_created_at,
         get_custom_created_at: get_latest_custom_created_at,
@@ -120,7 +138,7 @@ function get_list_entry_top_props (subtype: WComponentStateV2SubType, is_future:
         get_summary: get_summary(subtype),
         get_details: get_details(subtype),
         get_details2: get_details2(subtype),
-        extra_class_names: `value_and_prediction_sets ${is_future ? "future": ""}`,
+        extra_class_names: `value_and_prediction_sets ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`,
     }
 }
 
