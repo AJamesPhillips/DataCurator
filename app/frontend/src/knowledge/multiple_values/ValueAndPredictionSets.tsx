@@ -13,7 +13,7 @@ import { useCallback, useMemo } from "preact/hooks"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import type { ListContentProps } from "../../form/editable_list/ExpandableList"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import { partition_items_by_datetimes } from "../../shared/models/utils_datetime"
+import { partition_and_prune_items_by_datetimes } from "../../shared/models/utils_datetime"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { CustomisableEditableList } from "../../form/editable_list/CustomisableEditableList"
@@ -43,7 +43,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ValueAndPredictionSets (props: Props)
 {
     const { values_and_prediction_sets } = props
-    const { invalid_items, past_items, present_items, future_items } = partition_items_by_datetimes({
+    const { invalid_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
         items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,

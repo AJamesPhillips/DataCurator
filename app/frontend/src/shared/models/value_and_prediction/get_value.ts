@@ -1,5 +1,5 @@
 import type { WComponentNodeStateV2, UIStateValue } from "../interfaces/state"
-import { get_created_at_ms, get_sim_datetime } from "../utils_datetime"
+import { get_created_at_ms, get_sim_datetime,  } from "../utils_datetime"
 
 
 
@@ -7,13 +7,12 @@ export function get_wcomponent_statev2_value (wcomponent: WComponentNodeStateV2,
 {
     return { value: "statev2", type: "single" }
 
-    let vaps = wcomponent.values_and_prediction_sets.filter(v =>
-    {
-        if (get_created_at_ms(v) > created_at_ms) return false
+    // const { past_items, future_items } = partition_items_by_datetimes({
+    //     items: wcomponent.values_and_prediction_sets, created_at_ms, sim_ms
+    // })
 
-        const sim_dt = get_sim_datetime(v)
-        return sim_dt ? (sim_dt.getTime() <= sim_ms) : true
-    })
+    // past_items, future_items
+
 
 
     // const state_value_entry = wcomponent.values_and_prediction_sets.find_last(e => {
