@@ -36,7 +36,7 @@ export function convert_daily_actions_to_nodes (args: ConvertActionsToNodesArgs)
 
             const node: DailyActionNodeProps = {
                 x: x(date_ms),
-                y: action_y(vertical_position),
+                y: action_y(vertical_position) - 10,
                 width,
                 height: action_height,
                 display,
