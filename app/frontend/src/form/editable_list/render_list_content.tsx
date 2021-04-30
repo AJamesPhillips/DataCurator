@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { upsert_entry, remove_index } from "../../utils/list"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
-import type { ListContentProps } from "./ExpandableList"
+import type { ExpandableListContentProps } from "./interfaces"
 
 
 
@@ -30,7 +30,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
     } = own_props
 
 
-    const render_list_content = (list_content_props: ListContentProps) =>
+    const render_list_content = (list_content_props: ExpandableListContentProps) =>
     {
         const {
             disable_partial_collapsed,

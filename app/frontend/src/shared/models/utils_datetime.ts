@@ -408,10 +408,10 @@ function test_partition_and_prune_items_by_datetimes ()
 
 function run_tests ()
 {
-    // test_get_tense_of_item()
-    // test_partition_items_by_datetimes()
-    // test_prune_present_by_temporal_and_logical_relations()
+    test_get_tense_of_item()
+    test_partition_items_by_datetimes()
+    test_prune_present_by_temporal_and_logical_relations()
     test_partition_and_prune_items_by_datetimes()
 }
 
-run_tests()
+// run_tests()

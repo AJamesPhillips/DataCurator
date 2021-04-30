@@ -1,0 +1,24 @@
+
+@keyframes morph_border_color {
+    0% { border-color: rgb(175,175,175); }
+    40% { border-color: rgb(125,125,255); }
+    65% { border-color: rgb(200,200,255); }
+    100% { border-color: rgb(175,175,175); }
+}
+
+@keyframes morph_color {
+    0% { color: initial; }
+    40% { color: rgb(125,125,255); }
+    65% { color: rgb(200,200,255); }
+    100% { color: initial; }
+}
+
+.new_item_form > .editable_list {
+    animation: morph_border_color 3s linear;
+    animation-iteration-count: infinite;
+}
+
+.add_new_item {
+    animation: morph_color 3s linear;
+    animation-iteration-count: infinite;
+}

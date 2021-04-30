@@ -37,6 +37,7 @@ export function ValueList (props: OwnProps)
         item_top_props={item_top_props}
         prepare_new_item={prepare_new_item}
         update_items={items => props.update_values(items)}
+        disable_collapsed={true}
     />
 }
 

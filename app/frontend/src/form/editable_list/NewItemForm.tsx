@@ -1,6 +1,7 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 
+import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
 
@@ -39,7 +40,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
     if (!new_item) return null
 
 
-    return <div onClick={e => e.stopPropagation()}>
+    return <div className="new_item_form" onClick={e => e.stopPropagation()}>
         <hr />
         <EditableListEntry
             item={new_item}
@@ -52,6 +53,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
         />
 
         <Button
+            extra_class_names="add_new_item"
             value={`Add ${item_descriptor}`}
             on_pointer_down={() =>
             {

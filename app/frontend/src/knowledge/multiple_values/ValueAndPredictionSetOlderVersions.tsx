@@ -9,7 +9,7 @@ import type {
 import {
     create_new_vap_set_version,
 } from "./utils"
-import { ExpandableList } from "../../form/editable_list/ExpandableList"
+import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 
@@ -35,7 +35,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
     const items = props.versioned_vap_set.older
     const item_descriptor = "Older version"
 
-    return <ExpandableList
+    return <ExpandableListWithAddButton
         items_count={items.length}
         item_descriptor={item_descriptor}
         new_item_descriptor="Version"
@@ -54,7 +54,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
                 get_custom_created_at,
                 get_summary: get_summary_for_single_vap_set(props.subtype, true),
                 get_details: get_details_for_single_vap_set(props.subtype),
-                extra_class_names: "value_and_prediction_sets",
+                extra_class_names: "value_and_prediction_set",
             },
         })}
         on_click_new_item={make_new_version}
