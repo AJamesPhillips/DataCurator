@@ -2,14 +2,17 @@ import { h } from "preact"
 import { useMemo } from "preact/hooks"
 
 import "./ValueAndPredictions.css"
-import type { StateValueAndPrediction, WComponentStateV2SubType } from "../../shared/models/interfaces/state"
-import { EditableList } from "../../form/editable_list/EditableList"
-import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
-import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableNumber } from "../../form/EditableNumber"
-import { prepare_new_vap } from "./utils"
+import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/EditableText"
+import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
+import { ListHeader } from "../../form/editable_list/ListHeader"
+import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
+import { factory_render_list_content } from "../../form/editable_list/render_list_content"
+import type { WComponentStateV2SubType, StateValueAndPrediction } from "../../shared/models/interfaces/state"
+import { prepare_new_vap } from "./utils"
 
 
 
@@ -38,17 +41,30 @@ export function ValueAndPredictions (props: OwnProps)
         return props2
     }, [props.created_at.getTime(), props.subtype])
 
+
+    const item_descriptor = "Value and prediction"
+
+
     return <div className={`value_and_predictions ${class_name_only_one_vap}`}>
-        <EditableList
-            items={props.values_and_predictions}
-            item_descriptor="Value and prediction"
-            get_id={get_id}
-            item_top_props={item_top_props}
-            prepare_new_item={prepare_new_vap}
-            update_items={items => props.update_values_and_predictions(items)}
-            disable_collapsed={true}
-            disable_partial_collapsed={true}
+        <ListHeader
+            items_descriptor={get_items_descriptor(item_descriptor, props.values_and_predictions.length)}
+            other_content={() => <ListHeaderAddButton
+                new_item_descriptor={item_descriptor}
+                on_pointer_down_new_list_entry={() => {
+                    props.update_values_and_predictions([
+                        ...props.values_and_predictions, prepare_new_vap(),
+                    ])}
+                }
+            />}
         />
+
+        {factory_render_list_content({
+            items: props.values_and_predictions,
+            get_id,
+            item_top_props,
+            item_descriptor,
+            update_items: props.update_values_and_predictions,
+        })({ expanded_item_rows: true, expanded_items: true, disable_partial_collapsed: false })}
     </div>
 }
 
