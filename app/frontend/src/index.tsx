@@ -14,6 +14,7 @@ import { DemoStatementProbabilityExplorer } from "./statements/StatementProbabil
 import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { SandBox } from "./scratch_pad/SandBox"
 import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCustomDateTime"
+import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -23,6 +24,7 @@ if (root) {
   {
     root.innerHTML = `<ul>
     <li><a href="/app">app</a></li>
+    <li><a href="/project_dashboard">Project dashboard</a></li>
     <li><a href="/prob_graph">Probability graph</a></li>
     <li><a href="/prob_badge">Probability badge</a></li>
     <li><a href="/statement_probability">Statement probability</a></li>
@@ -30,6 +32,10 @@ if (root) {
     <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
     <li><a href="/sandbox">Sandbox</a></li>
     </ul>`
+  }
+  else if (document.location.pathname === "/project_dashboard")
+  {
+    render(<Provider store={config_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
   }
   else if (document.location.pathname === "/prob_graph")
   {
