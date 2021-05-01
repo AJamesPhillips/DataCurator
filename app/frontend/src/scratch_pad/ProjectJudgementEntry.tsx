@@ -58,19 +58,19 @@ const _ProjectJudgementEntry = (props: Props) =>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
         </div>
-        <div
-            style={{ flex: "1", cursor: "pointer", display: "flex", justifyContent: "center" }}
-            onClick={() =>
-            {
+        <a
+            style={{ flex: "4", cursor: "pointer", display: "flex", textDecoration: "inherit", color: "inherit" }}
+            href={(() => {
                 const wcomponent_id = judgement.id
-                const url = get_url_for_wcomponent({ knowledge_view, wcomponent_id })
-                document.location.href = url
-            }}
+                return get_url_for_wcomponent({ knowledge_view, wcomponent_id })
+            })()}
         >
             <JudgementBadge
                 judgement={calculate_judgement_value({ wcomponent: judgement, target_wcomponent, created_at_ms, sim_ms })}
             />
-        </div>
+
+            {judgement.title}
+        </a>
     </div>
 }
 
