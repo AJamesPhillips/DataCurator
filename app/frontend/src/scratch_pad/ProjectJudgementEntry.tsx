@@ -59,7 +59,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
         </div>
         <div
-            style={{ flex: "1", cursor: "pointer" }}
+            style={{ flex: "1", cursor: "pointer", display: "flex", justifyContent: "center" }}
             onClick={() =>
             {
                 const wcomponent_id = judgement.id

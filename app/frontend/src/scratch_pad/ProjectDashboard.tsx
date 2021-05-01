@@ -32,6 +32,9 @@ const _ProjectDashboard = (props: Props) =>
     const judgements: WComponentJudgement[] = ids_in_kv.filter(id => props.judgements.has(id))
         .map(id => props.wcomponents_by_id[id] as WComponentJudgement)
         .filter(wc => !!wc)
+        .sort((j1, j2) => j1.judgement_target_wcomponent_id < j2.judgement_target_wcomponent_id ? -1 : (
+            j1.judgement_target_wcomponent_id > j2.judgement_target_wcomponent_id ? 1 : 0
+        ))
 
     const ms = new Date().getTime()
 
