@@ -11,7 +11,7 @@ import { replace_ids_in_text } from "../shared/models/get_rich_text"
 interface OwnProps
 {
     text: string
-    placeholder: string
+    placeholder?: string
 }
 
 const map_state = (state: RootState) => ({
@@ -29,7 +29,7 @@ class _RichMarkDown extends Component <Props>
 
     render ()
     {
-        const { text, rich_text, wcomponents_by_id, placeholder } = this.props
+        const { text, rich_text, wcomponents_by_id, placeholder = "..." } = this.props
 
         const value = replace_ids_in_text({ text, rich_text, wcomponents_by_id })
         return <Markdown>

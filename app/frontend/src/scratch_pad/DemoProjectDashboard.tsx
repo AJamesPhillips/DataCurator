@@ -1,7 +1,9 @@
 import { h, FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+
 import type { RootState } from "../state/State"
+import { ProjectDashboard } from "./ProjectDashboard"
 
 
 
@@ -32,6 +34,12 @@ const _DemoProjectDashboard = (props: Props) =>
                 {kv.title}
             </div>
         })}
+
+        {selected_knowledge_view && <div>
+            <hr />
+            <ProjectDashboard knowledge_view_id={selected_knowledge_view} />
+        </div>}
+
     </div>
 }
 
