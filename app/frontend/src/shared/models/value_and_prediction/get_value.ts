@@ -186,4 +186,4 @@ function run_tests ()
     test(display_value, { value: "A", type: "single", modifier: "uncertain" })
 }
 
-run_tests()
+// run_tests()

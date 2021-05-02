@@ -5,7 +5,6 @@ import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableLis
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { CounterfactualLayer } from "../shared/models/interfaces/counterfactual"
 import { date2str } from "../shared/utils/date_helpers"
-import { Link } from "../utils/Link"
 import { create_new_counterfactual_layer } from "./create_new_counterfactual_layer"
 
 
@@ -13,34 +12,33 @@ import { create_new_counterfactual_layer } from "./create_new_counterfactual_lay
 interface OwnProps
 {
     counterfactual_layers: CounterfactualLayer[]
+    on_change: (new_counterfactual_layers: CounterfactualLayer[]) => void
 }
 
 export function CounterfactualsList (props: OwnProps)
 {
-    const { counterfactual_layers } = props
+    const { counterfactual_layers, on_change } = props
 
     return <ExpandableListWithAddButton
         items_count={counterfactual_layers.length}
         on_click_new_item={() =>
         {
-            const knowledge_view = create_new_counterfactual_layer({ title: make_default_title() })
-            // props.upsert_knowledge_view({ knowledge_view })
+            const new_cfl = create_new_counterfactual_layer({ title: make_default_title() })
+            on_change([ ...counterfactual_layers, new_cfl ])
         }}
         content={factory_render_list_content({
             items: counterfactual_layers,
             get_id: kv => kv.id,
             update_items: new_cfls =>
             {
-                const changed_kv = new_cfls.find((new_cfl, index) => counterfactual_layers[index] !== new_cfl)
-                if (!changed_kv) return
-                // props.upsert_knowledge_view({ knowledge_view: changed_kv })
+                on_change(new_cfls)
             },
 
             item_top_props: { get_summary, get_details },
 
-            item_descriptor: "Counterfactual",
+            item_descriptor: "Counterfactual layer",
         })}
-        item_descriptor="Counterfactual"
+        item_descriptor="Counterfactual layer"
         disable_collapsed={true}
     />
 }
@@ -53,15 +51,7 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_summary (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
 {
-    return <Link
-        route={undefined}
-        sub_route={undefined}
-        item_id={undefined}
-        args={{ view: "knowledge", subview_id: counterfactual_layer.id }}
-        selected_on={new Set(["route", "args.subview_id"])}
-    >
-        {counterfactual_layer.title}
-    </Link>
+    return <div> {counterfactual_layer.title} </div>
 }
 
 

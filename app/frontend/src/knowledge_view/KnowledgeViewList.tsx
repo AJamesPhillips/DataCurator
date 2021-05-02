@@ -107,7 +107,7 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
 {
-    const counterfactuals = sort_list(
+    const counterfactual_layers = sort_list(
         Object.values(knowledge_view.counterfactual_layer_id_map),
         counterfactual_layer => counterfactual_layer.created_at.getTime(),
         "descending"
@@ -125,6 +125,18 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
 
         <br />
 
-        <CounterfactualsList counterfactual_layers={counterfactuals} />
+        <CounterfactualsList
+            counterfactual_layers={counterfactual_layers}
+            on_change={new_counterfactual_layers =>
+            {
+                const counterfactual_layer_id_map: typeof knowledge_view.counterfactual_layer_id_map = {}
+                new_counterfactual_layers.forEach(new_cfl =>
+                {
+                    counterfactual_layer_id_map[new_cfl.id] = new_cfl
+                })
+
+                on_change({ ...knowledge_view, counterfactual_layer_id_map })
+            }}
+        />
     </div>
 }
