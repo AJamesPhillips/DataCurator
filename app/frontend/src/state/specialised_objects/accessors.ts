@@ -1,4 +1,5 @@
 import type { KnowledgeView, Perception, WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
+import { sort_list } from "../../shared/utils/sort"
 import { is_knowledge_view_id } from "../../utils/utils"
 import type { RootState } from "../State"
 
@@ -43,25 +44,25 @@ export function get_base_knowledge_view (state: RootState): GetBaseKnowledgeView
     const knowledge_views = state.specialised_objects.knowledge_views
     const base_knowledge_views = knowledge_views.filter(kv => kv.is_base)
 
-    let earliest_base_kv: KnowledgeView | undefined = base_knowledge_views[0]
+    let base_knowledge_view: KnowledgeView | undefined
+    base_knowledge_view = base_knowledge_views[0]
 
     if (base_knowledge_views.length > 1)
     {
-        base_knowledge_views.slice(1).forEach(kv =>
+        base_knowledge_views.forEach(kv =>
         {
-            if (kv.created_at.getTime() < earliest_base_kv!.created_at.getTime())
+            if (kv.created_at.getTime() < base_knowledge_view!.created_at.getTime())
             {
-                earliest_base_kv = kv
+                base_knowledge_view = kv
             }
         })
     }
 
-    const other_knowledge_views = earliest_base_kv
-        ? knowledge_views.filter(kv => kv.id !== earliest_base_kv!.id)
-        : knowledge_views
+    const unsorted_other_knowledge_views = knowledge_views.filter(kv => !base_knowledge_view || kv.id !== base_knowledge_view.id)
+    const other_knowledge_views = sort_list(unsorted_other_knowledge_views, ({ created_at }) => created_at.getTime(), "descending")
 
     return {
-        base_knowledge_view: earliest_base_kv,
+        base_knowledge_view,
         other_knowledge_views,
     }
 }

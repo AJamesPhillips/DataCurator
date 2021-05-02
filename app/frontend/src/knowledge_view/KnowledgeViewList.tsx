@@ -1,15 +1,16 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+
 import { EditableTextSingleLine } from "../form/EditableTextSingleLine"
-import { EditableList } from "../form/editable_list/EditableList"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
 import { date2str } from "../shared/utils/date_helpers"
+import { sort_list } from "../shared/utils/sort"
 import { ACTIONS } from "../state/actions"
-
 import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
+import { CounterFactualsList } from "./CounterFactualsList"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 
 
@@ -70,6 +71,7 @@ function _KnowledgeViewList (props: Props)
             item_descriptor: "Knowledge View",
         })}
         item_descriptor="Knowledge View"
+        disable_collapsed={true}
     />
 }
 
@@ -105,6 +107,12 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
 {
+    const counter_factuals = sort_list(
+        Object.values(knowledge_view.counter_factual_layer_id_map),
+        counter_factual_layer => counter_factual_layer.created_at.getTime(),
+        "descending"
+    )
+
     return <div>
         <EditableTextSingleLine
             placeholder="Title..."
@@ -114,5 +122,7 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
                 on_change({ ...knowledge_view, title: new_title || default_title })
             }}
         />
+
+        <CounterFactualsList counter_factuals={counter_factuals} />
     </div>
 }
