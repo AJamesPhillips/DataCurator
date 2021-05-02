@@ -14,7 +14,11 @@ export function DisplayValue (props: OwnProps)
 {
     const { value, type, modifier } = props.UI_value
 
-    const assumption = modifier === "assumed" ? "assumption" : ""
+    const modifier_class_names = (
+        (modifier === "assumed" ? "assumption" : "")
+        + (modifier === "uncertain" ? "uncertain" : "")
+    )
 
-    return <span className={`value ${type} ${assumption}`} >{value}</span>
+
+    return <span className={`value ${type} ${modifier_class_names}`} >{value}</span>
 }
