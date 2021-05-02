@@ -130,10 +130,10 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
 
 // \u2717 --> ✗
 const format_wcomponent_id_error = (error: string, str: string) => `\u2717@@${str} (${error})`
-const format_wcomponent_url = (root_url: string, id: string) => `${root_url}#wcomponents/${id}&view=knowledge)`
+export const format_wcomponent_url = (root_url: string, id: string) => `${root_url}#wcomponents/${id}&view=knowledge`
 // \uD83D\uDD17 --> 🔗 aka the very ugly link (chain) character
 // \u25A1 --> □
-const format_wcomponent_link = (root_url: string, id: string) => `[\u25A1](${format_wcomponent_url(root_url, id)}`
+const format_wcomponent_link = (root_url: string, id: string) => `[\u25A1](${format_wcomponent_url(root_url, id)})`
 
 
 function get_functional_ids_from_text (text: string): { id: string, funktion: string }[]

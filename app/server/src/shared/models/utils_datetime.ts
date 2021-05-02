@@ -17,6 +17,12 @@ export function get_sim_datetime (item: HasDateTime)
     return (item.datetime.min || item.datetime.value || item.datetime.max)
 }
 
+function get_sim_datetime_ms (item: HasDateTime)
+{
+    const dt = get_sim_datetime(item)
+    return dt === undefined ? undefined : dt.getTime()
+}
+
 
 
 function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
@@ -65,7 +71,7 @@ interface PartitionItemsByDatetimeFuturesReturn<U>
     present_items: U[]
     future_items: U[]
 }
-export function partition_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
+function partition_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
 {
     const { items, created_at_ms, sim_ms } = args
 
@@ -90,6 +96,38 @@ export function partition_items_by_datetimes <U extends Base & HasDateTime> (arg
     })
 
     return { invalid_items, past_items, present_items, future_items }
+}
+
+
+
+function prune_present_by_temporal_and_logical_relations <U extends Base & HasDateTime> (present_items: U[]): { present: U[], past: U[] }
+{
+    let latest_present_datetime_ms = Number.NEGATIVE_INFINITY
+    const present_items_by_ms: { [index: number]: U[] } = {}
+    present_items.forEach(item =>
+    {
+        const ms = get_sim_datetime_ms(item)
+        const ms_value = ms === undefined ? Number.POSITIVE_INFINITY : ms
+        present_items_by_ms[ms_value] = present_items_by_ms[ms_value] || []
+        present_items_by_ms[ms_value].push(item)
+        latest_present_datetime_ms = Math.max(latest_present_datetime_ms, ms_value)
+    })
+
+    const present = present_items_by_ms[latest_present_datetime_ms] || []
+    const present_ids = new Set(present.map(({ id }) => id))
+    const past = present_items.filter(({ id }) => !present_ids.has(id))
+
+    return { present, past }
+}
+
+
+
+export function partition_and_prune_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
+{
+    const result = partition_items_by_datetimes(args)
+    const pruned = prune_present_by_temporal_and_logical_relations(result.present_items)
+
+    return { ...result, present_items: pruned.present, past_items: [...pruned.past, ...result.past_items] }
 }
 
 
@@ -237,10 +275,143 @@ function test_partition_items_by_datetimes ()
 
 
 
+function test_prune_present_by_temporal_and_logical_relations ()
+{
+    console .log("running tests of prune_present_by_temporal_and_logical_relations")
+
+    interface Simple extends Base, HasDateTime {}
+
+    function ids_prune_present_by_temporal_and_logical_relations (present: Simple[])
+    {
+        const result = prune_present_by_temporal_and_logical_relations(present)
+
+        return {
+            past: result.past.map(({ id }) => id),
+            present: result.present.map(({ id }) => id),
+        }
+    }
+
+    let items: Simple[]
+    let result: { present: string[], past: string[] }
+
+    const date1 = new Date("2021-04-01 00:01")
+    const date2 = new Date("2021-04-01 00:02")
+
+    const c1s1 = { id: "1", created_at: date1, datetime: { value: date1 } }
+    const c1s2 = { id: "2", created_at: date1, datetime: { value: date2 } }
+    const c2s1 = { id: "3", created_at: date2, datetime: { value: date1 } }
+    const c2s2 = { id: "4", created_at: date2, datetime: { value: date2 } }
+    const c2se = { id: "5", created_at: date2, datetime: {} }
+    const c2se2 = { id: "6", created_at: date2, datetime: {} }
+
+    items = []
+    result = ids_prune_present_by_temporal_and_logical_relations(items)
+    test(result, {
+        past: [],
+        present: [],
+    })
+
+    items = [c1s1, c1s2, c2s1, c2s2, c2se, c2se2]
+    result = ids_prune_present_by_temporal_and_logical_relations(items)
+    test(result, {
+        past: [c1s1.id, c1s2.id, c2s1.id, c2s2.id],
+        present: [c2se.id, c2se2.id],
+    })
+
+    items = [c1s1, c1s2, c2s1, c2s2]
+    result = ids_prune_present_by_temporal_and_logical_relations(items)
+    test(result, {
+        past: [c1s1.id, c2s1.id],
+        present: [c1s2.id, c2s2.id],
+    })
+}
+
+
+
+function test_partition_and_prune_items_by_datetimes ()
+{
+    console .log("running tests of partition_and_prune_items_by_datetimes")
+
+    interface Simple extends Base, HasDateTime {}
+
+    function ids_partition_and_prune_items_by_datetimes (args: PartitionItemsByDatetimeFuturesArgs<Simple>): PartitionItemsByDatetimeFuturesReturn<string>
+    {
+        const result = partition_and_prune_items_by_datetimes(args)
+        return {
+            invalid_items: result.invalid_items.map(({ id }) => id),
+            past_items: result.past_items.map(({ id }) => id),
+            present_items: result.present_items.map(({ id }) => id),
+            future_items: result.future_items.map(({ id }) => id),
+        }
+    }
+
+    let items: Simple[]
+    let result: PartitionItemsByDatetimeFuturesReturn<string>
+
+    const date1 = new Date("2021-04-01 00:01")
+    const date1_ms = date1.getTime()
+    const date2 = new Date("2021-04-01 00:02")
+    const date2_ms = date2.getTime()
+    const date3 = new Date("2021-04-01 00:03")
+    const date3_ms = date3.getTime()
+
+    const c1s1 = { id: "1", created_at: date1, datetime: { value: date1 } }
+    const c1s2 = { id: "2", created_at: date1, datetime: { value: date2 } }
+    const c2s1 = { id: "3", created_at: date2, datetime: { value: date1 } }
+    const c2s2 = { id: "4", created_at: date2, datetime: { value: date2 } }
+    const c2se = { id: "5", created_at: date2, datetime: {} }
+
+    items = []
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date3_ms, sim_ms: date3_ms })
+    test(result, {
+        invalid_items: [],
+        past_items: [],
+        present_items: [],
+        future_items: [],
+    })
+
+    items = [c1s1, c1s2, c2s1, c2s2, c2se]
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date3_ms, sim_ms: date3_ms })
+    test(result, {
+        invalid_items: [],
+        past_items: [c1s1.id, c1s2.id, c2s1.id, c2s2.id],
+        present_items: [c2se.id],
+        future_items: [],
+    })
+
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date3_ms, sim_ms: date1_ms })
+    test(result, {
+        invalid_items: [],
+        past_items: [],
+        present_items: [c1s1.id, c2s1.id, c2se.id],
+        future_items: [c1s2.id, c2s2.id],
+    })
+
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date1_ms, sim_ms: date3_ms })
+    test(result, {
+        invalid_items: [c2s1.id, c2s2.id, c2se.id],
+        past_items: [c1s1.id, c1s2.id],
+        present_items: [],
+        future_items: [],
+    })
+
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date1_ms, sim_ms: date1_ms })
+    test(result, {
+        invalid_items: [c2s1.id, c2s2.id, c2se.id],
+        past_items: [],
+        present_items: [c1s1.id],
+        future_items: [c1s2.id],
+    })
+}
+
+
+
 function run_tests ()
 {
     test_get_tense_of_item()
     test_partition_items_by_datetimes()
+    test_prune_present_by_temporal_and_logical_relations()
+    test_partition_and_prune_items_by_datetimes()
 }
 
 // run_tests()

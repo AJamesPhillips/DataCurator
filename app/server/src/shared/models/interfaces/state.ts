@@ -26,11 +26,11 @@ export interface WComponentNodeStateV2Incremental extends WComponentNodeBase
 }
 
 
-export type WComponentStateV2SubType = "boolean" | "number" | "datetime" | "other"
+export type WComponentStateV2SubType = "boolean" | "number" /*| "datetime"*/ | "other"
 const _wcomponent_statev2_subtypes: {[P in WComponentStateV2SubType]: true} = {
     boolean: true,
     number: true,
-    datetime: true,
+    // datetime: true,
     other: true,
 }
 export const wcomponent_statev2_subtypes: WComponentStateV2SubType[] = Object.keys(_wcomponent_statev2_subtypes) as any
@@ -121,9 +121,11 @@ export interface VersionedStateVAPsSet
 
 
 
+export type UIStateValueType = "single" | "multiple" // | "multi-multiple"
+export type UIStateValueModifer = "uncertain" | "assumed" | "likely"
 export interface UIStateValue
 {
     value: string | null | undefined
-    type: "single" | "multiple" | "multi-multiple"
-    modifier?: "assumed" | "likely"
+    type: UIStateValueType
+    modifier?: UIStateValueModifer
 }

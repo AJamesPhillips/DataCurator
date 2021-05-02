@@ -7,6 +7,7 @@ import { get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
 
 const default_value: UIStateValue = { value: undefined, type: "single" }
 
+// TODO make args into interface
 export function get_wcomponent_state_value (wcomponent: WComponent, created_at_ms: number, sim_ms: number): UIStateValue
 {
     if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)

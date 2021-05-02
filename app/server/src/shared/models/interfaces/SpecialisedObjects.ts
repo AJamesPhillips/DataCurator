@@ -1,4 +1,5 @@
 import type { Base } from "./base"
+import type { CounterfactualLayer } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
 import type {
@@ -164,6 +165,7 @@ export interface KnowledgeView
     title: string
     description: string
     wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
+    counterfactual_layer_id_map: { [counterfactual_id: string]: CounterfactualLayer }
     is_base?: true
 }
 
