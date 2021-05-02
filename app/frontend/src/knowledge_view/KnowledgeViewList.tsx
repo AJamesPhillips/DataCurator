@@ -10,7 +10,7 @@ import { sort_list } from "../shared/utils/sort"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
-import { CounterFactualsList } from "./CounterFactualsList"
+import { CounterfactualsList } from "./CounterfactualsList"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 
 
@@ -107,9 +107,9 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
 {
-    const counter_factuals = sort_list(
-        Object.values(knowledge_view.counter_factual_layer_id_map),
-        counter_factual_layer => counter_factual_layer.created_at.getTime(),
+    const counterfactuals = sort_list(
+        Object.values(knowledge_view.counterfactual_layer_id_map),
+        counterfactual_layer => counterfactual_layer.created_at.getTime(),
         "descending"
     )
 
@@ -123,6 +123,8 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
             }}
         />
 
-        <CounterFactualsList counter_factuals={counter_factuals} />
+        <br />
+
+        <CounterfactualsList counterfactual_layers={counterfactuals} />
     </div>
 }

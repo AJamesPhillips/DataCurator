@@ -3,11 +3,11 @@ import { h } from "preact"
 import "./PredictionBadge.css"
 import { PredictionsBadgeConvictionMask } from "./PredictionBadgeConvictionMask"
 import { bounded } from "../../utils/utils"
-import { calc_new_counter_factual_state } from "./calc_new_counter_factual_state"
+import { calc_new_counterfactual_state } from "./calc_new_counterfactual_state"
 
 
 
-interface SetCounterFactual
+interface SetCounterfactual
 {
     (args: { probability?: number | null, conviction?: number | null }): void
 }
@@ -18,9 +18,9 @@ interface Props
     probability: number
     conviction: number
     elements_width?: 10 //| 100
-    counter_factual_probability?: number | null
-    counter_factual_conviction?: number | null
-    set_counter_factual?: SetCounterFactual
+    counterfactual_probability?: number | null
+    counterfactual_conviction?: number | null
+    set_counterfactual?: SetCounterfactual
 }
 
 
@@ -30,27 +30,27 @@ export function PredictionBadge (props: Props)
     const total_elements = elements_width * elements_width
     const cell_size = size / elements_width
 
-    const { counter_factual_probability, counter_factual_conviction, set_counter_factual } = props
-    const counter_factual_active = is_num(counter_factual_probability) || is_num(counter_factual_conviction)
+    const { counterfactual_probability, counterfactual_conviction, set_counterfactual } = props
+    const counterfactual_active = is_num(counterfactual_probability) || is_num(counterfactual_conviction)
 
     const { probability: props_probability, conviction: props_conviction } = sanitise_props(props)
-    const final_probability = is_num(counter_factual_probability) ? counter_factual_probability : props_probability
-    const final_conviction = is_num(counter_factual_conviction) ? counter_factual_conviction : props_conviction
+    const final_probability = is_num(counterfactual_probability) ? counterfactual_probability : props_probability
+    const final_conviction = is_num(counterfactual_conviction) ? counterfactual_conviction : props_conviction
 
-    function toggle_counter_factual ()
+    function toggle_counterfactual ()
     {
-        if (!set_counter_factual) return
+        if (!set_counterfactual) return
 
-        const result = calc_new_counter_factual_state({
+        const result = calc_new_counterfactual_state({
             probability: props_probability,
             conviction: props_conviction,
-            counter_factual_probability,
-            counter_factual_conviction,
+            counterfactual_probability: counterfactual_probability,
+            counterfactual_conviction: counterfactual_conviction,
         })
 
-        set_counter_factual({
-            probability: result.new_counter_factual_probability,
-            conviction: result.new_counter_factual_conviction,
+        set_counterfactual({
+            probability: result.new_counterfactual_probability,
+            conviction: result.new_counterfactual_conviction,
         })
     }
 
@@ -59,13 +59,13 @@ export function PredictionBadge (props: Props)
     // const rnd_range = max_rnd - min_rnd
 
     const border_width = 3
-    const counter_factual_active__class = `counter_factual_${counter_factual_active ? "" : "in"}active`
-    const class_name = `prediction_badge ${counter_factual_active__class}`
+    const counterfactual_active__class = `counterfactual_${counterfactual_active ? "" : "in"}active`
+    const class_name = `prediction_badge ${counterfactual_active__class}`
 
     return <svg
         width={size + (border_width * 2)}
         height={size + (border_width * 2)}
-        onClick={() => toggle_counter_factual()}
+        onClick={() => toggle_counterfactual()}
         className={class_name}
     >
         <rect

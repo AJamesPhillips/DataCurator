@@ -2,7 +2,7 @@ import type { Base } from "./base"
 
 
 
-export interface CounterFactualLayer extends Base
+export interface CounterfactualLayer extends Base
 {
     title: string
     description: string
