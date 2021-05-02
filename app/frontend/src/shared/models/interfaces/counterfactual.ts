@@ -8,3 +8,9 @@ export interface CounterfactualLayer extends Base
     description: string
     inherits_from_id?: string
 }
+
+
+// export interface UINestedCounterfactualLayer extends CounterfactualLayer
+// {
+//     child_layers: CounterfactualLayer[]
+// }

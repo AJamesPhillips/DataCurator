@@ -66,7 +66,7 @@ function _KnowledgeViewList (props: Props)
                 props.upsert_knowledge_view({ knowledge_view: changed_kv })
             },
 
-            item_top_props: { get_summary, get_details },
+            item_top_props: { get_summary, get_details, get_details2 },
 
             item_descriptor: "Knowledge View",
         })}
@@ -113,7 +113,7 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
         "descending"
     )
 
-    return <div>
+    return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <EditableTextSingleLine
             placeholder="Title..."
             value={knowledge_view.title}
@@ -138,5 +138,14 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
                 on_change({ ...knowledge_view, counterfactual_layer_id_map })
             }}
         />
+
+        <br />
     </div>
+}
+
+
+
+function get_details2 ()
+{
+    return <div><br /><br /></div>
 }

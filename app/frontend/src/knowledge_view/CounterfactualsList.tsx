@@ -13,6 +13,7 @@ interface OwnProps
 {
     counterfactual_layers: CounterfactualLayer[]
     on_change: (new_counterfactual_layers: CounterfactualLayer[]) => void
+    // color?: "one" | "two"
 }
 
 export function CounterfactualsList (props: OwnProps)
@@ -51,7 +52,14 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_summary (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
 {
-    return <div> {counterfactual_layer.title} </div>
+    return <EditableTextSingleLine
+        placeholder="Title..."
+        value={counterfactual_layer.title}
+        on_change={new_title => {
+            const title = new_title || make_default_title()
+            on_change({ ...counterfactual_layer, title })
+        }}
+    />
 }
 
 
@@ -59,13 +67,6 @@ function get_summary (counterfactual_layer: CounterfactualLayer, on_change: (new
 function get_details (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
 {
     return <div>
-        <EditableTextSingleLine
-            placeholder="Title..."
-            value={counterfactual_layer.title}
-            on_change={new_title => {
-                const title = new_title || make_default_title()
-                on_change({ ...counterfactual_layer, title })
-            }}
-        />
+
     </div>
 }
