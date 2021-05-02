@@ -89,7 +89,7 @@ function _WComponentForm (props: Props)
     }
 
 
-    const value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
+    const value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms).value
 
     return <div key={wcomponent_id}>
         <h2><EditableText

@@ -121,9 +121,11 @@ export interface VersionedStateVAPsSet
 
 
 
+export type UIStateValueType = "single" | "multiple" // | "multi-multiple"
+export type UIStateValueModifer = "assumed" | "likely"
 export interface UIStateValue
 {
     value: string | null | undefined
-    type: "single" | "multiple" | "multi-multiple"
-    modifier?: "assumed" | "likely"
+    type: UIStateValueType
+    modifier?: UIStateValueModifer
 }
