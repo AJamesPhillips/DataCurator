@@ -52,21 +52,25 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_summary (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
 {
-    return <EditableTextSingleLine
-        placeholder="Title..."
-        value={counterfactual_layer.title}
-        on_change={new_title => {
-            const title = new_title || make_default_title()
-            on_change({ ...counterfactual_layer, title })
-        }}
-    />
+    return <div style={{ display: "inline-flex"}}>
+        <input
+            type="checkbox"
+            checked={false}
+        />
+        <EditableTextSingleLine
+            placeholder="Title..."
+            value={counterfactual_layer.title}
+            on_change={new_title => {
+                const title = new_title || make_default_title()
+                on_change({ ...counterfactual_layer, title })
+            }}
+        />
+    </div>
 }
 
 
 
 function get_details (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
 {
-    return <div>
-
-    </div>
+    return <div></div>
 }
