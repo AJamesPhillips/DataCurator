@@ -39,6 +39,7 @@ function _KnowledgeViewList (props: Props)
             sub_route={undefined}
             item_id={undefined}
             args={{ view: "knowledge", subview_id: base_knowledge_view.id }}
+            selected_on={new Set(["route", "args.subview_id"])}
         >
             {base_title}
         </Link>}
@@ -50,6 +51,7 @@ function _KnowledgeViewList (props: Props)
             sub_route={undefined}
             item_id={undefined}
             args={{ view: "knowledge", subview_id: id }}
+            selected_on={new Set(["route", "args.subview_id"])}
         >
             {title}
         </Link>)}

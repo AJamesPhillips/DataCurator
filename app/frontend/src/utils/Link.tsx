@@ -17,7 +17,7 @@ interface OwnProps {
     item_id: string | null | undefined
     args: Partial<RoutingStateArgs> | undefined
     on_click?: () => void
-    selected_on?: Set<"route" | "args.view">
+    selected_on?: Set<"route" | "args.view" | "args.subview_id">
 }
 
 
@@ -35,6 +35,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         if (own_props.args)
         {
             if (selected_on.has("args.view") && own_props.args.view !== undefined) selected = selected && own_props.args.view === current_routing_state.args.view
+
+            if (selected_on.has("args.subview_id") && own_props.args.subview_id !== undefined) selected = selected && own_props.args.subview_id === current_routing_state.args.subview_id
         }
     }
 
