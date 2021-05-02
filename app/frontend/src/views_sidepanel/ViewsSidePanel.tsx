@@ -1,7 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeViewForm } from "../knowledge_view/KnowledgeViewForm"
 import { KnowledgeViewList } from "../knowledge_view/KnowledgeViewList"
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
@@ -69,13 +68,7 @@ function _ViewsSidePanel (props: Props)
         <hr />
 
         {props.view === "knowledge" && <div>
-            <b>Select Knowledge View</b>
-
             <KnowledgeViewList />
-
-            <br />
-
-            <KnowledgeViewForm />
         </div>}
 
     </div>

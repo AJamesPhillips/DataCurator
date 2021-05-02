@@ -8,7 +8,7 @@ import { EditableCustomDateTime } from "../EditableCustomDateTime"
 
 export interface EditableListEntryTopProps<U>
 {
-    get_created_at: (item: U) => Date
+    get_created_at?: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
     set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
     get_summary: (item: U, on_change: (item: U) => void) => h.JSX.Element
@@ -68,7 +68,6 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             delete_item,
         } = this.props
 
-        const created_at = get_created_at(item)
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined
 
         const { internal__expanded } = this.state
@@ -102,8 +101,8 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
 
                 <ConfirmatoryDeleteButton on_delete={delete_item} />
 
-                {get_custom_created_at && <EditableCustomDateTime
-                    invariant_value={created_at}
+                {get_created_at && get_custom_created_at && <EditableCustomDateTime
+                    invariant_value={get_created_at(item)}
                     value={custom_created_at}
                     on_change={date_on_change}
                 />}
