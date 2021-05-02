@@ -41,7 +41,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     }
 
     return {
-        current_routing_state: state.routing,
+        current_routing_state,
         selected,
     }
 }

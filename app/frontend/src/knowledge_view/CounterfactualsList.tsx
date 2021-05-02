@@ -1,10 +1,13 @@
-import { h } from "preact"
+import { h, FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import { EditableTextSingleLine } from "../form/EditableTextSingleLine"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { CounterfactualLayer } from "../shared/models/interfaces/counterfactual"
 import { date2str } from "../shared/utils/date_helpers"
+import { ACTIONS } from "../state/actions"
+import type { ActionChangeRouteArgs } from "../state/routing/actions"
 import { create_new_counterfactual_layer } from "./create_new_counterfactual_layer"
 
 
@@ -16,7 +19,18 @@ interface OwnProps
     // color?: "one" | "two"
 }
 
-export function CounterfactualsList (props: OwnProps)
+
+
+const map_dispatch = {
+    change_route: ACTIONS.routing.change_route
+}
+
+const connector = connect(null, map_dispatch)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+
+function _CounterfactualsList (props: Props)
 {
     const { counterfactual_layers, on_change } = props
 
@@ -35,7 +49,10 @@ export function CounterfactualsList (props: OwnProps)
                 on_change(new_cfls)
             },
 
-            item_top_props: { get_summary, get_details },
+            item_top_props: {
+                get_summary: get_summary(props.change_route),
+                get_details,
+            },
 
             item_descriptor: "Counterfactual layer",
         })}
@@ -44,18 +61,22 @@ export function CounterfactualsList (props: OwnProps)
     />
 }
 
+export const CounterfactualsList = connector(_CounterfactualsList) as FunctionalComponent<OwnProps>
+
 
 
 const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 
 
-function get_summary (counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void)
+const get_summary = (change_route: (routing_state: ActionChangeRouteArgs) => void) =>
+(counterfactual_layer: CounterfactualLayer, on_change: (new_cfl: CounterfactualLayer) => void) =>
 {
     return <div style={{ display: "inline-flex"}}>
         <input
             type="checkbox"
             checked={false}
+            onClick={() => change_route({ args: { subview_id: counterfactual_layer.id } })}
         />
         <EditableTextSingleLine
             placeholder="Title..."
