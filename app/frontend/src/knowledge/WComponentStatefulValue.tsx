@@ -7,9 +7,11 @@ import {
     wcomponent_is_judgement,
     wcomponent_is_state,
 } from "../shared/models/interfaces/SpecialisedObjects"
+import type { UIStateValue } from "../shared/models/interfaces/state"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
+import { DisplayValue } from "./multiple_values/DisplayValue"
 
 
 
@@ -21,31 +23,19 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
+    const { created_at_ms, sim_ms } = state.routing.args
     const { wcomponent } = own_props
 
-    let value: string | null | undefined = undefined
-    let judgement_value = undefined
-    let is_judgement = false
-    let is_empty = true
 
-    const { created_at_ms, sim_ms } = state.routing.args
-
-    if (wcomponent_is_state(wcomponent))
+    let target_wcomponent: WComponent | undefined = undefined
+    if (wcomponent_is_judgement(wcomponent))
     {
-        value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms).value
-        is_empty = value === undefined
-    }
-    else if (wcomponent_is_judgement(wcomponent))
-    {
-        is_judgement = true
-        is_empty = false
-
         const map = state.specialised_objects.wcomponents_by_id
-        const target_wcomponent = map[wcomponent.judgement_target_wcomponent_id]
-        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
+        target_wcomponent = map[wcomponent.judgement_target_wcomponent_id]
     }
 
-    return { value, judgement_value, is_judgement, is_empty }
+
+    return { created_at_ms, sim_ms, target_wcomponent }
 }
 
 
@@ -55,13 +45,43 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentStatefulValue (props: Props)
 {
-    const { value, judgement_value, is_judgement, is_empty } = props
+    const { ui_value, judgement_value, is_judgement, is_empty } = process_props(props)
 
     const state_value_container_class_name = "node_state_value_container " + (is_empty ? "empty" : "")
 
-    const value_to_render = is_judgement ? <JudgementBadge judgement={judgement_value} /> : value
+    const value_to_render = is_judgement
+        ? <JudgementBadge judgement={judgement_value} />
+        : ui_value && <DisplayValue UI_value={ui_value} />
 
     return <div className={state_value_container_class_name}>{value_to_render}</div>
 }
 
 export const WComponentStatefulValue = connector(_WComponentStatefulValue) as FunctionalComponent<OwnProps>
+
+
+
+function process_props (props: Props)
+{
+    let ui_value: UIStateValue | undefined = undefined
+    let judgement_value = undefined
+    let is_judgement = false
+    let is_empty = true
+
+    const { wcomponent, created_at_ms, sim_ms, target_wcomponent } = props
+
+
+    if (wcomponent_is_state(wcomponent))
+    {
+        ui_value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
+        is_empty = ui_value.value === undefined
+    }
+    else if (wcomponent_is_judgement(wcomponent))
+    {
+        is_judgement = true
+        is_empty = false
+
+        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
+    }
+
+    return { ui_value, judgement_value, is_judgement, is_empty }
+}

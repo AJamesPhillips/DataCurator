@@ -1,0 +1,25 @@
+
+.value
+{
+    border: thin solid rgba(0, 0, 0, 0);
+    border-radius: 2px;
+    padding: 0 3px;
+}
+
+
+.value.assumption
+{
+    border: thin solid rgb(238, 152, 81);
+    background-color: rgba(238, 152, 81, 0.2);
+}
+
+.value.multiple, .value.uncertain
+{
+    /* text-shadow:
+     3px 2px 3px rgba(81, 203, 238, 0.7),
+    -3px -2px 3px rgba(81, 203, 238, 0.7),
+     6px -3px 6px rgba(81, 203, 238, 0.7),
+    -6px 3px 6px rgba(81, 203, 238, 0.7); */
+    border: thin solid rgb(81, 203, 238);
+    background-color: rgba(81, 203, 238, 0.2);
+}

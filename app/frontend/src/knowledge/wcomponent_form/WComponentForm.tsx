@@ -25,6 +25,7 @@ import { Button } from "../../sharedf/Button"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import { DisplayValue } from "../multiple_values/DisplayValue"
 import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSets"
 import { PredictionList } from "../predictions/PredictionList"
 import { UncertainDateTime } from "../uncertainty/datetime"
@@ -89,7 +90,7 @@ function _WComponentForm (props: Props)
     }
 
 
-    const value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms).value
+    const UI_value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
 
     return <div key={wcomponent_id}>
         <h2><EditableText
@@ -100,9 +101,9 @@ function _WComponentForm (props: Props)
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
 
-        {value !== undefined &&
+        {UI_value.value !== undefined &&
         <div style={{ cursor: "not-allowed" }}>
-            Value: {value}
+            Value: <DisplayValue UI_value={UI_value} />
         </div>}
 
         <p>Type: <div style={{ width: "60%", display: "inline-block" }}><AutocompleteText
