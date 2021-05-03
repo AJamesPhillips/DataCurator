@@ -10,6 +10,7 @@
     left: 0;
     top: 1.15em;
     z-index: 1;
+    width: 100%;
 }
 .editable_field.autocomplete .options_inner
 {

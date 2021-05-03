@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteText } from "../form/AutocompleteText"
+import { AutoCompleteOption, AutocompleteText } from "../form/AutocompleteText"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
@@ -16,6 +16,7 @@ interface OwnProps {
 
 const map_state = (state: RootState) => ({
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+    knowledge_views: state.specialised_objects.knowledge_views,
 })
 
 const map_dispatch = {
@@ -30,7 +31,7 @@ type Props = PropsFromRedux & OwnProps
 
 function _FoundationKnowledgeViewsList (props: Props)
 {
-    const { owner_knowledge_view, knowledge_views_by_id } = props
+    const { owner_knowledge_view, knowledge_views_by_id, knowledge_views } = props
 
     const foundation_knowledge_view_ids: string[] = owner_knowledge_view.foundation_knowledge_view_ids || []
     const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
@@ -38,7 +39,12 @@ function _FoundationKnowledgeViewsList (props: Props)
 
     const get_options = () =>
     {
-        return []
+        const options: AutoCompleteOption[] = knowledge_views
+            .filter(({ id }) => id !== owner_knowledge_view.id)
+            .map(({ id, title }) => ({ id, title }))
+            .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
+
+        return options
     }
 
 
