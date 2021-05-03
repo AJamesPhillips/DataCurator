@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import { upsert_entry, remove_index } from "../../utils/list"
+import { upsert_entry, remove_index, remove_from_list_by_predicate } from "../../utils/list"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
 import type { ExpandableListContentProps } from "./interfaces"
 
@@ -51,8 +51,18 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
-                    on_change={item => update_items(upsert_entry(items, item, p2 => get_id(item) === get_id(p2), item_descriptor)) }
-                    delete_item={() => update_items(remove_index(items, index)) }
+                    on_change={item =>
+                    {
+                        const predicate_by_id = (other: T) => get_id(item) === get_id(other)
+                        const new_items = upsert_entry(items, item, predicate_by_id, item_descriptor)
+                        update_items(new_items)
+                    }}
+                    delete_item={() =>
+                    {
+                        const predicate_by_id = (other: T) => get_id(item) === get_id(other)
+                        const new_items = remove_from_list_by_predicate(items, predicate_by_id)
+                        update_items(new_items)
+                    }}
                 />
             </div>)}
         </div>

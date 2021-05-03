@@ -10,6 +10,7 @@ import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { Tense } from "../../shared/models/interfaces/datetime"
 import type { StateValueAndPredictionsSet, WComponentStateV2SubType, VersionedStateVAPsSet } from "../../shared/models/interfaces/state"
 import { group_vap_sets_by_version, sort_grouped_vap_sets, ungroup_vap_sets_by_version } from "../../shared/models/value_and_prediction/utils"
+import { test } from "../../shared/utils/test"
 import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
 import { get_summary_for_single_vap_set, get_details_for_single_vap_set } from "./common"
 import { prepare_new_vap_set } from "./utils"
@@ -213,15 +214,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
-                    on_change={modified_item =>
-                    {
-                        let updated_all_vap_sets = all_vap_sets
-                        ungroup_vap_sets_by_version([modified_item]).forEach(modified_vap_set =>
-                        {
-                            updated_all_vap_sets = upsert_entry(updated_all_vap_sets, modified_vap_set, predicate_by_id(modified_vap_set), "")
-                        })
-                        update_items(updated_all_vap_sets)
-                    }}
+                    on_change={factory_handle_change({ all_vap_sets, item, update_items })}
                     delete_item={() =>
                     {
                         update_items(remove_from_list_by_predicate(all_vap_sets, predicate_by_id(item.latest)))
@@ -281,3 +274,97 @@ const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_vap_set: 
         <br />
     </div>
 }
+
+
+
+interface FactoryHandleChangeArgs
+{
+    all_vap_sets: StateValueAndPredictionsSet[]
+    item: VersionedStateVAPsSet
+    update_items: (updated_vap_sets: StateValueAndPredictionsSet[]) => void
+}
+function factory_handle_change (args: FactoryHandleChangeArgs): (item: VersionedStateVAPsSet) => void
+{
+    const {
+        all_vap_sets,
+        item,
+        update_items,
+    } = args
+
+    return (modified_item: VersionedStateVAPsSet) =>
+    {
+        let all_updated_vap_sets = all_vap_sets
+
+        const original_vap_sets = ungroup_vap_sets_by_version([item])
+        const vap_sets_for_update = ungroup_vap_sets_by_version([modified_item])
+
+
+        // Remove older deleted versions
+        original_vap_sets.forEach(original_vap_set =>
+        {
+            const predicate = predicate_by_id(original_vap_set)
+            const is_still_present = !!vap_sets_for_update.find(predicate)
+            if (!is_still_present)
+            {
+                all_updated_vap_sets = remove_from_list_by_predicate(all_updated_vap_sets, predicate)
+            }
+        })
+
+
+        vap_sets_for_update.forEach(modified_vap_set =>
+        {
+            all_updated_vap_sets = upsert_entry(all_updated_vap_sets, modified_vap_set, predicate_by_id(modified_vap_set), "")
+        })
+        update_items(all_updated_vap_sets)
+    }
+}
+
+
+
+function run_tests ()
+{
+    console.log("running tests of factory_handle_change for ValueAndPredictionSetsComponent")
+    // Test it handles delete of a nested older version
+
+    const created_at = new Date("2021-04-30T10:51:06.041Z")
+    const v1: StateValueAndPredictionsSet = {
+        id: "vps20",
+        version: 1,
+        created_at,
+        datetime: {},
+        entries: []
+    }
+    const v2: StateValueAndPredictionsSet = {
+        id: "vps20",
+        version: 2,
+        created_at,
+        datetime: {},
+        entries: []
+    }
+    const another_vap_set: StateValueAndPredictionsSet = {
+        id: "vps10",
+        version: 1,
+        created_at,
+        datetime: {},
+        entries: []
+    }
+    const all_vap_sets = [ v1, v2, another_vap_set ]
+
+    function get_unique_id (item: StateValueAndPredictionsSet)
+    {
+        return `${item.id} ${item.version}`
+    }
+
+    factory_handle_change({
+        all_vap_sets,
+        item: { latest: v2, older: [v1] },
+        update_items: updated_items =>
+        {
+            const got = updated_items.map(get_unique_id)
+            const expected = [get_unique_id(v2), get_unique_id(another_vap_set)]
+            test(got, expected)
+        }
+    })({ latest: v2, older: [] })
+}
+
+// run_tests()
