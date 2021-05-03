@@ -20,7 +20,6 @@ export const get_new_value_id = () => "vl" + get_new_id()
 export const get_new_value_and_prediction_set_id = () => "vps" + get_new_id()
 export const get_new_vap_id = () => "vap" + get_new_id()
 export const get_new_knowledge_view_id = () => "kv" + get_new_id()
-export const get_new_counterfactual_layer_id = () => "cfl" + get_new_id()
 export const get_new_counterfactual_id = () => "cf" + get_new_id()
 
 

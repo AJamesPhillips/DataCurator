@@ -19,6 +19,7 @@ export function get_items_by_id <I extends { id: string, title?: string }> (item
 }
 
 
+
 export function get_multiple_items_by_id <I extends { id: string, title?: string }> (items: I[]): { [id: string]: I[] }
 {
     const map: { [id: string]: I[] } = {}
@@ -31,6 +32,7 @@ export function get_multiple_items_by_id <I extends { id: string, title?: string
 
     return map
 }
+
 
 
 type IDsByType = { [t in WComponentType]: Set<string> }

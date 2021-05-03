@@ -6,11 +6,9 @@ import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableLis
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
 import { date2str } from "../shared/utils/date_helpers"
-import { sort_list } from "../shared/utils/sort"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
-import { CounterfactualsList } from "./CounterfactualsList"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 
 
@@ -107,11 +105,6 @@ const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
 {
-    const counterfactual_layers = sort_list(
-        Object.values(knowledge_view.counterfactual_layer_id_map),
-        counterfactual_layer => counterfactual_layer.created_at.getTime(),
-        "descending"
-    )
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <EditableTextSingleLine
@@ -120,22 +113,6 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
             on_change={new_title => {
                 const default_title = knowledge_view.is_base ? "Base" : make_default_title()
                 on_change({ ...knowledge_view, title: new_title || default_title })
-            }}
-        />
-
-        <br />
-
-        <CounterfactualsList
-            counterfactual_layers={counterfactual_layers}
-            on_change={new_counterfactual_layers =>
-            {
-                const counterfactual_layer_id_map: typeof knowledge_view.counterfactual_layer_id_map = {}
-                new_counterfactual_layers.forEach(new_cfl =>
-                {
-                    counterfactual_layer_id_map[new_cfl.id] = new_cfl
-                })
-
-                on_change({ ...knowledge_view, counterfactual_layer_id_map })
             }}
         />
 

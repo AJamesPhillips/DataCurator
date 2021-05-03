@@ -7,10 +7,10 @@ export function get_specialised_objects_starting_state (): SpecialisedObjectsSta
     return {
         perceptions_by_id: {},
         wcomponents_by_id: {},
+        knowledge_views_by_id: {},
         // derived
         perceptions: [],
         wcomponents: [],
-        knowledge_views: [],
         wcomponent_ids_by_type: {
             event: new Set(),
             state: new Set(),
@@ -21,6 +21,7 @@ export function get_specialised_objects_starting_state (): SpecialisedObjectsSta
             relation_link: new Set(),
             judgement: new Set(),
         },
+        knowledge_views: [],
         // predictions: [],
     }
 }

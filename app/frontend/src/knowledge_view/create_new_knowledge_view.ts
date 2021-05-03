@@ -11,7 +11,6 @@ export function create_new_knowledge_view (args: Partial<KnowledgeView> = {})
         title: "",
         description: "",
         wc_id_map: {},
-        counterfactual_layer_id_map: {},
         ...args,
     }
 

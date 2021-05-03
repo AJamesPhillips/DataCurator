@@ -93,17 +93,9 @@ const parse_values_and_predictions_set = (vap_set: StateValueAndPredictionsSet) 
 
 function parse_knowledge_view (knowledge_view: KnowledgeView): KnowledgeView
 {
-    const counterfactual_layer_id_map: typeof knowledge_view.counterfactual_layer_id_map = {}
-
-    Object.values(knowledge_view.counterfactual_layer_id_map).forEach(cfl =>
-    {
-        counterfactual_layer_id_map[cfl.id] = parse_dates(cfl)
-    })
-
     return {
         ...knowledge_view,
         created_at: new Date(knowledge_view.created_at),
-        counterfactual_layer_id_map,
     }
 }
 
