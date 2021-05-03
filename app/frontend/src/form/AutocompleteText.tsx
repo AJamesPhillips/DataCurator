@@ -1,4 +1,4 @@
-import { Component, h } from "preact"
+import { Component, h, Options } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
@@ -149,7 +149,8 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
     }
 
 
-    async conditional_on_change (id: E["id"] | undefined) {
+    conditional_on_change = async (id: E["id"] | undefined) =>
+    {
         await new Promise<void>(resolve =>
         {
             this.setState({ editing: false, temp_value_str: undefined }, resolve)
@@ -211,26 +212,24 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
                 onChange={e => this.setState({ temp_value_str: e.currentTarget.value })}
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
-                    if (this.state.editing && final_value) this.conditional_on_change(final_value.id)
+                    if (this.state.editing)
+                    {
+                        this.conditional_on_change(final_value ? final_value.id : undefined)
+                    }
 
                     on_blur()
                 }}
             />
-            <div className="options_outer" style={{ display: this.state.editing ? "" : "none" }}>
-                <div className="options_inner">
-                    {options_to_display.map((option, index) => <div
-                        className={"option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : "")}
-                        onMouseDown={() => this.conditional_on_change(option.id)}
-                        onMouseOver={() => {
-                            this.setState({ highlighted_option_index: index })
-                            on_mouse_over_option(option.id)
-                        }}
-                        onMouseLeave={() => on_mouse_leave_option(option.id)}
-                    >
-                        <div className="option">{option.title}</div>
-                    </div>)}
-                </div>
-            </div>
+
+            <Options
+                editing={this.state.editing}
+                options_to_display={options_to_display}
+                is_option_wrapper_highlighted={is_option_wrapper_highlighted}
+                conditional_on_change={this.conditional_on_change}
+                set_highlighted_option_index={index => this.setState({ highlighted_option_index: index })}
+                on_mouse_over_option={on_mouse_over_option}
+                on_mouse_leave_option={on_mouse_leave_option}
+            />
         </div>
     }
 }
@@ -247,4 +246,40 @@ function get_valid_value <E extends AutoCompleteOption> (options: E[], value_str
     }
 
     return options[0]
+}
+
+
+
+interface OptionsOwnProps <E>
+{
+    editing: boolean
+    options_to_display: E[]
+    is_option_wrapper_highlighted: (option: E, index: number) => boolean
+    conditional_on_change: (option_id: string | undefined) => void
+    set_highlighted_option_index: (index: number) => void
+    on_mouse_over_option: (option_id: string | undefined) => void
+    on_mouse_leave_option: (option_id: string | undefined) => void
+}
+function Options <E extends AutoCompleteOption> (props: OptionsOwnProps<E>)
+{
+    const { editing, options_to_display, is_option_wrapper_highlighted, conditional_on_change,
+        set_highlighted_option_index, on_mouse_over_option, on_mouse_leave_option, } = props
+
+    if (options_to_display.length === 0) return null
+
+    return <div className="options_outer" style={{ display: editing ? "" : "none" }}>
+        <div className="options_inner">
+            {options_to_display.map((option, index) => <div
+                className={"option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : "")}
+                onMouseDown={() => conditional_on_change(option.id)}
+                onMouseOver={() => {
+                    set_highlighted_option_index(index)
+                    on_mouse_over_option(option.id)
+                }}
+                onMouseLeave={() => on_mouse_leave_option(option.id)}
+            >
+                <div className="option">{option.title || option.id || "none"}</div>
+            </div>)}
+        </div>
+    </div>
 }
