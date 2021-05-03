@@ -10,8 +10,8 @@ import {
     WComponent,
     KnowledgeView,
     WComponentsById,
+    SpecialisedObjectsFromToServerKeys,
 } from "../../../shared/models/interfaces/SpecialisedObjects"
-
 
 
 
@@ -52,7 +52,7 @@ function ensure_directory(directory_path: string) {
 
 
 
-function write_directory_data (directory: string, data: (Perception | WComponent | KnowledgeView)[], data_key: keyof SpecialisedObjectsFromToServer)
+function write_directory_data (directory: string, data: (Perception | WComponent | KnowledgeView)[], data_key: SpecialisedObjectsFromToServerKeys)
 {
     const wcomponents_by_id: WComponentsById = {}
     if (data_key === "wcomponents")
@@ -85,7 +85,7 @@ function write_directory_data (directory: string, data: (Perception | WComponent
 interface GetFileContentsStrArgs
 {
     single_data: Perception | WComponent | KnowledgeView
-    data_key: keyof SpecialisedObjectsFromToServer
+    data_key: SpecialisedObjectsFromToServerKeys
     wcomponents_by_id: WComponentsById
 }
 function get_file_contents_str(args: GetFileContentsStrArgs) {

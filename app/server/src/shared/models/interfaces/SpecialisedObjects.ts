@@ -250,3 +250,13 @@ export interface SpecialisedObjectsFromToServer
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
 }
+
+// Used on the server
+export type SpecialisedObjectsFromToServerKeys = keyof SpecialisedObjectsFromToServer
+const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjectsFromToServerKeys]: true} = {
+    perceptions: true,
+    wcomponents: true,
+    knowledge_views: true,
+}
+// Used on the server
+export const specialised_objects_from_to_server_expected_keys: (SpecialisedObjectsFromToServerKeys)[] = Object.keys(_specialised_objects_from_to_server_expected_keys) as any
