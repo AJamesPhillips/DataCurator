@@ -42,7 +42,7 @@ const get_children = ({ sync_ready, wcomponents, knowledge_view_id, knowledge_vi
     const nodes = wcomponents
         .filter(({ type }) => type !== "causal_link")
         .filter(({ id }) => knowledge_view.wc_id_map[id])
-    const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} knowledge_view={knowledge_view} />)
+    const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} knowledge_view_id={knowledge_view_id} />)
 
     const p = Object.values(knowledge_view.wc_id_map)[0]
     const content_coordinates: CanvasPoint[] = p ? [p] : []

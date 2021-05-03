@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import type { CanvasPoint } from "../../canvas/interfaces"
-import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { KnowledgeViewWComponentEntry } from "../../shared/models/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -23,23 +23,26 @@ import { get_created_at_ms } from "../../shared/models/utils_datetime"
 interface OwnProps
 {
     id: string
-    knowledge_view: KnowledgeView
+    knowledge_view_id: string
 }
 
 
 
-const map_state = (state: RootState, props: OwnProps) =>
+const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const intercept_wcomponent_click_to_edit_link = !!state.meta_wcomponents.intercept_wcomponent_click_to_edit_link
     const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
     const { canvas_bounding_rect: cbr } = state.display
 
+    const knowledge_view = state.specialised_objects.knowledge_views_by_id[own_props.knowledge_view_id]
+
     return {
-        wcomponent: get_wcomponent_from_state(state, props.id),
+        wcomponent: get_wcomponent_from_state(state, own_props.id),
+        kv_entry: knowledge_view && knowledge_view.wc_id_map[own_props.id],
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-        is_current_item: state.routing.item_id === props.id,
-        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(props.id),
-        is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(props.id),
+        is_current_item: state.routing.item_id === own_props.id,
+        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
+        is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         intercept_wcomponent_click_to_edit_link,
         ctrl_key_is_down,
         canvas_bounding_rect_left: cbr ? cbr.left : 0,
@@ -69,13 +72,14 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState<boolean>(false)
 
-    const { id, knowledge_view, wcomponent, wcomponents_by_id,
+    const { id, kv_entry, wcomponent, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         intercept_wcomponent_click_to_edit_link, ctrl_key_is_down,
         display_at_created_ms, sim_ms, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!wcomponent) return <div>Could not find component of id {id}</div>
+    if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
 
 
     // Do not show nodes if certain they are not valid / existing / likely
@@ -83,8 +87,6 @@ function _WComponentCanvasNode (props: Props)
     if (certain_is_not_valid) return null
 
 
-    const kv_entry = knowledge_view.wc_id_map[id]
-    if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
     const hidden = display_at_created_ms < get_created_at_ms(wcomponent)
 
 
@@ -118,7 +120,7 @@ function _WComponentCanvasNode (props: Props)
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id: props.id,
-            knowledge_view_id: props.knowledge_view.id,
+            knowledge_view_id: props.knowledge_view_id,
             entry: new_entry,
         })
 

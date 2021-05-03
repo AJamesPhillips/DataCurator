@@ -76,7 +76,7 @@ function _FoundationKnowledgeViewsList (props: Props)
 
         {foundation_knowledge_views.map((foundation_knowledge_view, index) =>
         {
-            return <div style={{ display: "flex", flexDirection: "row" }}>
+            return <div style={{ display: "flex", flexDirection: "row" }} key={foundation_knowledge_view.id}>
                 <div style={{ flex: "1" }}>{total - index}</div>
                 <div style={{ flex: "9" }}>{foundation_knowledge_view.title}</div>
                 <div style={{ flex: "3" }}>
