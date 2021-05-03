@@ -138,12 +138,12 @@ const format_wcomponent_link = (root_url: string, id: string) => `[\u25A1](${for
 
 function get_functional_ids_from_text (text: string): { id: string, funktion: string }[]
 {
-    return [...text.matchAll(/.*?(@@\w*\d+)\.([\w]+)/g)].map(entry => ({ id: entry[1].slice(2), funktion: entry[2] }))
+    return [...text.matchAll(/.*?(@@\w*\d+)\.([\w]+)/g)].map(entry => ({ id: entry[1]!.slice(2), funktion: entry[2]! }))
 }
 
 function get_ids_from_text (text: string): string[]
 {
-    return [...text.matchAll(/.*?(@@\w*\d+)/g)].map(entry => entry[1].slice(2))
+    return [...text.matchAll(/.*?(@@\w*\d+)/g)].map(entry => entry[1]!.slice(2))
 }
 
 
