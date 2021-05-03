@@ -3,8 +3,10 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutoCompleteOption, AutocompleteText } from "../form/AutocompleteText"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
+import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
+import { remove_from_list_by_predicate } from "../utils/list"
 
 
 
@@ -31,7 +33,7 @@ type Props = PropsFromRedux & OwnProps
 
 function _FoundationKnowledgeViewsList (props: Props)
 {
-    const { owner_knowledge_view, knowledge_views_by_id, knowledge_views } = props
+    const { owner_knowledge_view, knowledge_views_by_id, knowledge_views, on_change } = props
 
     const foundation_knowledge_view_ids: string[] = owner_knowledge_view.foundation_knowledge_view_ids || []
     const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
@@ -57,15 +59,28 @@ function _FoundationKnowledgeViewsList (props: Props)
             placeholder="Search for knowledge view to add..."
             selected_option_id={undefined}
             get_options={get_options}
-            on_change={() => {}}
+            on_change={id =>
+            {
+                if (!id) return
+                on_change([id, ...foundation_knowledge_view_ids])
+            }}
         />
 
 
         {foundation_knowledge_views.map((foundation_knowledge_view, index) =>
         {
-            return <div>
-                <div>{total - index}</div>
-                <div>{foundation_knowledge_view.title}</div>
+            return <div style={{ display: "flex", flexDirection: "row" }}>
+                <div style={{ flex: "1" }}>{total - index}</div>
+                <div style={{ flex: "9" }}>{foundation_knowledge_view.title}</div>
+                <div style={{ flex: "3" }}>
+                    <Button
+                        value="remove"
+                        on_pointer_down={() =>
+                        {
+                            on_change(remove_from_list_by_predicate(foundation_knowledge_view_ids, id => id === foundation_knowledge_view.id))
+                        }}
+                    />
+                </div>
             </div>
         })}
     </div>
