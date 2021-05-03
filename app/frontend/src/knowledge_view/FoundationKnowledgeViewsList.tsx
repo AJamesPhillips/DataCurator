@@ -36,6 +36,7 @@ function _FoundationKnowledgeViewsList (props: Props)
     const { owner_knowledge_view, knowledge_views_by_id, knowledge_views, on_change } = props
 
     const foundation_knowledge_view_ids = owner_knowledge_view.foundation_knowledge_view_ids || []
+    const foundation_knowledge_view_ids_set = new Set(foundation_knowledge_view_ids)
 
     const foundation_knowledge_views: KnowledgeView[] = []
     foundation_knowledge_view_ids.forEach(id =>
@@ -48,7 +49,7 @@ function _FoundationKnowledgeViewsList (props: Props)
     const get_options = () =>
     {
         const options: AutoCompleteOption[] = knowledge_views
-            .filter(({ id }) => id !== owner_knowledge_view.id)
+            .filter(({ id }) => id !== owner_knowledge_view.id && !foundation_knowledge_view_ids_set.has(id))
             .map(({ id, title }) => ({ id, title }))
             .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
 
