@@ -169,7 +169,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         const value_str = this.get_value_str()
 
         const final_value = get_valid_value(options_to_display, value_str)
-        const valid = value_str.toLowerCase() === final_value.title.toLowerCase()
+        const valid = !final_value || value_str.toLowerCase() === final_value.title.toLowerCase()
 
         const {
             placeholder,
@@ -180,12 +180,12 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         } = this.props
 
 
-        const is_option_wrapper_highlighted = (option: E, index: number) =>
+        const is_option_wrapper_highlighted = (option: E, index: number): boolean =>
         {
             const { highlighted_option_index } = this.state
             if (highlighted_option_index !== undefined) return index === highlighted_option_index
 
-            return option.id === final_value.id
+            return !!final_value && option.id === final_value.id
         }
 
 
@@ -211,7 +211,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
                 onChange={e => this.setState({ temp_value_str: e.currentTarget.value })}
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
-                    if (this.state.editing) this.conditional_on_change(final_value.id)
+                    if (this.state.editing && final_value) this.conditional_on_change(final_value.id)
 
                     on_blur()
                 }}
@@ -236,7 +236,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
 }
 
 
-function get_valid_value <E extends AutoCompleteOption> (options: E[], value_str: string): E
+function get_valid_value <E extends AutoCompleteOption> (options: E[], value_str: string): E | undefined
 {
     const lower_value_str = value_str.toLowerCase()
 

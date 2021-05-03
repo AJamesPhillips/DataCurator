@@ -10,6 +10,7 @@ import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
+import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 
 
 
@@ -107,7 +108,7 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
 {
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
-        <div style={{ display: "inline-flex" }}>
+        <p style={{ display: "inline-flex" }}>
             Title: <EditableTextSingleLine
                 placeholder="Title..."
                 value={knowledge_view.title}
@@ -116,22 +117,31 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
                     on_change({ ...knowledge_view, title: new_title || default_title })
                 }}
             />
+        </p>
+
+        <div>
+            Allow counterfactuals:
+            <input
+                type="checkbox"
+                checked={knowledge_view.allows_assumptions}
+                disabled={knowledge_view.is_base}
+                onClick={() =>
+                {
+                    const allows_assumptions = knowledge_view.allows_assumptions ? undefined : true
+                    on_change({ ...knowledge_view, allows_assumptions })
+                }}
+            />
         </div>
 
-        <br />
-        <br />
-
-        Allow counterfactuals:
-        <input
-            type="checkbox"
-            checked={knowledge_view.allows_assumptions}
-            disabled={knowledge_view.is_base}
-            onClick={() =>
-            {
-                const allows_assumptions = knowledge_view.allows_assumptions ? undefined : true
-                on_change({ ...knowledge_view, allows_assumptions })
-            }}
-        />
+        <p>
+            <FoundationKnowledgeViewsList
+                owner_knowledge_view={knowledge_view}
+                on_change={foundation_knowledge_view_ids =>
+                {
+                    on_change({ ...knowledge_view, foundation_knowledge_view_ids })
+                }}
+            />
+        </p>
 
         <br />
     </div>
