@@ -7,7 +7,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
-    wcomponent_has_vaps as wcomponent_has_vap_sets,
+    wcomponent_has_VAPs as wcomponent_has_VAP_sets,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/models/interfaces/state"
 import type { Prediction, TemporalUncertainty } from "../../shared/models/interfaces/uncertainty"
@@ -70,7 +70,7 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.values = wcomponent.values && wcomponent.values.map(parse_values)
     }
 
-    if (wcomponent_has_vap_sets(wcomponent))
+    if (wcomponent_has_VAP_sets(wcomponent))
     {
         wcomponent.values_and_prediction_sets = wcomponent.values_and_prediction_sets && wcomponent.values_and_prediction_sets.map(parse_values_and_predictions_set)
     }
@@ -87,7 +87,7 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
 
 const parse_prediction = (prediction: Prediction) => parse_dates(prediction)
 const parse_values = (value: StateValueString) => parse_dates(value)
-const parse_values_and_predictions_set = (vap_set: StateValueAndPredictionsSet) => parse_dates(vap_set)
+const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) => parse_dates(VAP_set)
 
 
 

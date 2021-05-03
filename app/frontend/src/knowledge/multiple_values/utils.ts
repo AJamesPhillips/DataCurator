@@ -4,14 +4,14 @@ import type {
     VersionedStateVAPsSet,
 } from "../../shared/models/interfaces/state"
 import { test } from "../../shared/utils/test"
-import { get_new_value_and_prediction_set_id, get_new_vap_id } from "../../utils/utils"
+import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../utils/utils"
 
 
 
-export function prepare_new_vap (): StateValueAndPrediction
+export function prepare_new_VAP (): StateValueAndPrediction
 {
     return {
-        id: get_new_vap_id(),
+        id: get_new_VAP_id(),
         explanation: "",
         probability: 1,
         conviction: 1,
@@ -22,7 +22,7 @@ export function prepare_new_vap (): StateValueAndPrediction
 
 
 
-export function prepare_new_vap_set (): StateValueAndPredictionsSet
+export function prepare_new_VAP_set (): StateValueAndPredictionsSet
 {
     const now = new Date()
 
@@ -37,24 +37,24 @@ export function prepare_new_vap_set (): StateValueAndPredictionsSet
 
 
 
-export function create_new_vap_set_version (versioned_vap_set: VersionedStateVAPsSet)
+export function create_new_VAP_set_version (versioned_VAP_set: VersionedStateVAPsSet)
 {
-    const current_latest = versioned_vap_set.latest
-    const latest = clone_vap_set(current_latest)
-    const older = [current_latest, ...versioned_vap_set.older]
-    const new_versioned_vap_set = { latest, older }
+    const current_latest = versioned_VAP_set.latest
+    const latest = clone_VAP_set(current_latest)
+    const older = [current_latest, ...versioned_VAP_set.older]
+    const new_versioned_VAP_set = { latest, older }
 
-    return new_versioned_vap_set
+    return new_versioned_VAP_set
 }
 
 
-function clone_vap_set (vap_set: StateValueAndPredictionsSet): StateValueAndPredictionsSet
+function clone_VAP_set (VAP_set: StateValueAndPredictionsSet): StateValueAndPredictionsSet
 {
     const clone = {
-        ...vap_set,
-        version: vap_set.version + 1,
+        ...VAP_set,
+        version: VAP_set.version + 1,
         created_at: new Date(),
-        entries: vap_set.entries.map(e => ({ ...e, description: "", explanation: "" })),
+        entries: VAP_set.entries.map(e => ({ ...e, description: "", explanation: "" })),
     }
 
     delete clone.custom_created_at
@@ -65,48 +65,48 @@ function clone_vap_set (vap_set: StateValueAndPredictionsSet): StateValueAndPred
 
 
 
-export function set_vap_probabilities (vaps: StateValueAndPrediction[]): StateValueAndPrediction[]
+export function set_VAP_probabilities (VAPs: StateValueAndPrediction[]): StateValueAndPrediction[]
 {
-    const multiple = vaps.length > 1
+    const multiple = VAPs.length > 1
     let total_relative_probability = 0
 
-    vaps = vaps.map(vap =>
+    VAPs = VAPs.map(VAP =>
     {
         const relative_probability = multiple
-            ? (vap.relative_probability === undefined ? vap.probability : vap.relative_probability)
+            ? (VAP.relative_probability === undefined ? VAP.probability : VAP.relative_probability)
             : undefined
 
         if (relative_probability !== undefined) total_relative_probability += relative_probability
 
-        return { ...vap, relative_probability }
+        return { ...VAP, relative_probability }
     })
 
     if (multiple)
     {
         total_relative_probability = total_relative_probability || 1
 
-        vaps = vaps.map(vap =>
+        VAPs = VAPs.map(VAP =>
         {
-            const probability = vap.relative_probability! / total_relative_probability
+            const probability = VAP.relative_probability! / total_relative_probability
 
-            return { ...vap, probability }
+            return { ...VAP, probability }
         })
     }
 
-    return vaps
+    return VAPs
 }
 
 
 
 function run_tests ()
 {
-    console. log("running tests of create_new_vap_set_version ")
+    console. log("running tests of create_new_VAP_set_version ")
 
     const date1 = new Date()
-    let versioned_vap_set: VersionedStateVAPsSet
-    let new_versioned_vap_set: VersionedStateVAPsSet
+    let versioned_VAP_set: VersionedStateVAPsSet
+    let new_versioned_VAP_set: VersionedStateVAPsSet
 
-    versioned_vap_set = {
+    versioned_VAP_set = {
         latest: {
             id: "1",
             version: 2,
@@ -124,9 +124,9 @@ function run_tests ()
             }
         ],
     }
-    new_versioned_vap_set = create_new_vap_set_version(versioned_vap_set)
+    new_versioned_VAP_set = create_new_VAP_set_version(versioned_VAP_set)
 
-    let latest = new_versioned_vap_set.latest
+    let latest = new_versioned_VAP_set.latest
     test(latest.created_at.getTime() >= date1.getTime(), true)
     test({ ...latest, created_at: date1 }, {
         id: "1",
@@ -135,7 +135,7 @@ function run_tests ()
         datetime: {},
         entries: [],
     })
-    test(new_versioned_vap_set.older, [versioned_vap_set.latest, ...versioned_vap_set.older])
+    test(new_versioned_VAP_set.older, [versioned_VAP_set.latest, ...versioned_VAP_set.older])
 }
 
 // run_tests()

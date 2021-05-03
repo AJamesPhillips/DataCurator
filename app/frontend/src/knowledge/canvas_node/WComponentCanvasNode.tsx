@@ -84,6 +84,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const kv_entry = knowledge_view.wc_id_map[id]
+    if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
     const hidden = display_at_created_ms < get_created_at_ms(wcomponent)
 
 

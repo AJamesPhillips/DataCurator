@@ -11,7 +11,7 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const ready = state.sync.ready
-    const perceptions = state.specialised_objects.perceptions
+    const perceptions = state.derived.perceptions
 
     return { ready, perceptions }
 }

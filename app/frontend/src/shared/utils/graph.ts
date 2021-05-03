@@ -121,7 +121,7 @@ function find_leaf_ids_for_id (graph: Graph, node_id: string): string[]
 
     const connections = alg.dijkstra(graph, node_id)
 
-    return leaf_ids.filter(leaf_id => connections[leaf_id].distance < Number.POSITIVE_INFINITY)
+    return leaf_ids.filter(leaf_id => connections[leaf_id]!.distance < Number.POSITIVE_INFINITY)
 }
 
 

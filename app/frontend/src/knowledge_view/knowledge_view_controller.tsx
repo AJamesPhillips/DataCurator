@@ -3,7 +3,7 @@ import { h } from "preact"
 import type { CanvasPoint } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
 import { ViewController } from "../layout/ViewController"
-import { KnowledgeView, wcomponent_can_render_connection } from "../shared/models/interfaces/SpecialisedObjects"
+import { wcomponent_can_render_connection } from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { TimeSlider } from "../time_control/TimeSlider"
@@ -17,17 +17,17 @@ const map_state = (state: RootState) =>
 {
     const sync_ready = state.sync.ready
 
-    const wcomponents = state.specialised_objects.wcomponents
     const knowledge_view_id = state.routing.args.subview_id
-    const knowledge_view = state.specialised_objects.knowledge_views.find(({ id }) => id === knowledge_view_id)!
+    const wcomponents = state.derived.wcomponents
+    const knowledge_view = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
 
     if (sync_ready && knowledge_view_id && !knowledge_view) throw new Error(`Could not find knowledge_view: "${knowledge_view_id}"`)
 
     return {
         sync_ready,
-        wcomponents,
         knowledge_view_id,
-        knowledge_view: knowledge_view as KnowledgeView | undefined,
+        wcomponents,
+        knowledge_view: knowledge_view,
     }
 }
 
@@ -39,7 +39,8 @@ const get_children = ({ sync_ready, wcomponents, knowledge_view_id, knowledge_vi
 {
     if (!sync_ready || !knowledge_view_id || !knowledge_view) return { elements: [], content_coordinates: [] }
 
-    const nodes = wcomponents.filter(({ type }) => type !== "causal_link")
+    const nodes = wcomponents
+        .filter(({ type }) => type !== "causal_link")
         .filter(({ id }) => knowledge_view.wc_id_map[id])
     const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} knowledge_view={knowledge_view} />)
 

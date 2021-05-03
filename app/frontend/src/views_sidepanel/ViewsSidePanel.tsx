@@ -39,7 +39,7 @@ function _ViewsSidePanel (props: Props)
 {
     const view_types: ViewType[] = ["priorities", "knowledge", "objectives"]
     const views: { view: ViewType, name: string }[] = view_types.map(view => ({
-        view, name: view[0].toUpperCase() + view.slice(1)
+        view, name: view[0]!.toUpperCase() + view.slice(1)
     }))
 
     return <div className="views_side_panel">

@@ -44,7 +44,7 @@ if (!Array.prototype.find_last) {
         configurable: false,
         value: function find_last<T> (this: T[], predicate: (t: T) => boolean): T | undefined {
             for (let index = this.length - 1; index >= 0; --index) {
-                if (predicate(this[index])) return this[index]
+                if (predicate(this[index]!)) return this[index]
             }
             return undefined
         }

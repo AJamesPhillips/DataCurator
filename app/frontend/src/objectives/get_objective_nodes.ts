@@ -4,6 +4,7 @@ import { memoize } from "../utils/memoize"
 import type { Objective, ObjectiveNodeProps } from "./interfaces"
 
 
+
 export const get_earliest_ms = memoize(_get_earliest_ms)
 
 function _get_earliest_ms (objectives_data: Objective[])
@@ -51,7 +52,7 @@ function _get_objective_nodes_props (objectives: Objective[]): ObjectiveNodeProp
     if (!preceeding_id_to_objective_map[""])
     {
         console.warn(`Require at least one Objective with a position at the root.  Will pick one at random.`)
-        const o = objective_nodes_props[0]
+        const o = objective_nodes_props[0]!
         preceeding_id_to_objective_map[""] = o
         delete preceeding_id_to_objective_map[o.main.preceeding_id]
     }
@@ -60,7 +61,7 @@ function _get_objective_nodes_props (objectives: Objective[]): ObjectiveNodeProp
     let vertical_ordinal = 0
     while (Object.keys(preceeding_id_to_objective_map).length)
     {
-        const o = preceeding_id_to_objective_map[id]
+        const o = preceeding_id_to_objective_map[id]!
         delete preceeding_id_to_objective_map[id]
         o.vertical_ordinal = vertical_ordinal++
         id = o.id

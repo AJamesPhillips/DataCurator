@@ -15,7 +15,7 @@ export function group_priorities_by_project (project_priorities: ProjectPriority
             priorities_by_project[project_id] = { project_priorities: [], vertical_position: 0 }
         }
 
-        priorities_by_project[project_id].project_priorities.push(project_priority)
+        priorities_by_project[project_id]!.project_priorities.push(project_priority)
     })
 
     return priorities_by_project
@@ -33,15 +33,18 @@ export function order_priorities_by_project (priorities_by_project: ProjectPrior
 
     Object.keys(priorities_by_project).forEach(project_id =>
     {
-        let { project_priorities } = priorities_by_project[project_id]
+        const priorities = priorities_by_project[project_id]
+        if (!priorities) return
+
+        let { project_priorities } = priorities
         project_priorities.sort((a, b) => a.start_date.getTime() < b.start_date.getTime() ? -1 : 1)
-        priorities_by_project[project_id].project_priorities = project_priorities
+        priorities_by_project[project_id]!.project_priorities = project_priorities
 
         if (project_priorities.length === 0) return
 
         projects_by_start_ms.push({
             project_id,
-            start_ms: project_priorities[0].start_date.getTime()
+            start_ms: project_priorities[0]!.start_date.getTime()
         })
     })
 
@@ -60,7 +63,10 @@ export function order_priorities_by_project (priorities_by_project: ProjectPrior
             ? index
             : projects_by_start_ms.length - 1 - index
 
-        priorities_by_project[project_id].vertical_position = vertical_position
+        const priorities = priorities_by_project[project_id]
+        if (!priorities) return
+
+        priorities.vertical_position = vertical_position
     })
 
     return priorities_by_project

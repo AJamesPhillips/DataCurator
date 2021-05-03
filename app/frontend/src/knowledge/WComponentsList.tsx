@@ -13,7 +13,7 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const ready = state.sync.ready
-    const wcomponents = state.specialised_objects.wcomponents
+    const wcomponents = state.derived.wcomponents
     const wcomponents_by_id = state.specialised_objects.wcomponents_by_id
 
     return { ready, wcomponents, wcomponents_by_id }

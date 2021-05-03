@@ -24,7 +24,7 @@ export function add_newlines_to_markdown (text: string): string
     {
         if (i > 0)
         {
-            const previous_line = lines[i - 1]
+            const previous_line = lines[i - 1]!
             if (previous_line.match(regexp_text_line) && !previous_line.match(regexp_list_line))
             {
                 if (line.match(regexp_list_line))

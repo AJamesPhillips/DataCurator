@@ -14,9 +14,9 @@ interface OwnProps
 
 
 const map_state = (state: RootState, { knowledge_view_id }: OwnProps) => ({
-    judgements: state.specialised_objects.wcomponent_ids_by_type.judgement,
+    judgements: state.derived.wcomponent_ids_by_type.judgement,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    knowledge_view: state.specialised_objects.knowledge_views.find(({ id }) => id === knowledge_view_id)
+    knowledge_view: state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
 })
 
 const connector = connect(map_state)

@@ -1,6 +1,5 @@
 import type { KnowledgeView, Perception, WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
 import { sort_list } from "../../shared/utils/sort"
-import { is_knowledge_view_id } from "../../utils/utils"
 import type { RootState } from "../State"
 
 
@@ -26,10 +25,7 @@ export function get_current_knowledge_view_from_state (state: RootState): Knowle
 
 export function get_knowledge_view_from_state (state: RootState, knowledge_view_id: string): KnowledgeView | undefined
 {
-    if (!is_knowledge_view_id(knowledge_view_id)) return undefined
-
-    // TODO change to dictionary indexed by id
-    return state.specialised_objects.knowledge_views.find(({ id }) => id === knowledge_view_id)
+    return state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
 }
 
 
@@ -41,7 +37,7 @@ interface GetBaseKnowledgeViewReturn
 }
 export function get_base_knowledge_view (state: RootState): GetBaseKnowledgeViewReturn
 {
-    const knowledge_views = state.specialised_objects.knowledge_views
+    const knowledge_views = state.derived.knowledge_views
     const base_knowledge_views = knowledge_views.filter(kv => kv.is_base)
 
     let base_knowledge_view: KnowledgeView | undefined

@@ -1,5 +1,6 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
+
 import { ProbablitySelection } from "../probability/ProbabililtySelection"
 import { get_probability_option } from "../probability/probabilities"
 import { ProbabilityGraph } from "../probability/ProbabilityGraph"
@@ -185,7 +186,7 @@ export function PredictionsGraph (props: PredictionsGraphArgs)
         return (new_conviction: number) =>
         {
             const new_data = [...data]
-            new_data[column] = { progress: new_data[column].progress, conviction: new_conviction }
+            new_data[column] = { progress: new_data[column]!.progress, conviction: new_conviction }
 
             set_data_safely(new_data)
         }

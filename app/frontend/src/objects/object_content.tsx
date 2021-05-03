@@ -81,13 +81,13 @@ function render_content (state: RenderState, content: string, attributes: Object
     while (!match.done)
     {
         rendered_content += match.value[1]
-        const attribute_index_lookup = match.value[2]  // 0 or 0.0 etc
+        const attribute_index_lookup = match.value[2]!  // 0 or 0.0 etc
         rendered_content += attribute_content(state, attribute_index_lookup, attributes, depth)
 
         const new_match = iter.next()
         if (new_match.done)
         {
-            const num = match.value[0].length + match.value.index!
+            const num = match.value[0]!.length + match.value.index!
             rendered_content += content.slice(num)
         }
         match = new_match
@@ -108,7 +108,7 @@ function attribute_content (state: RenderState, attribute_index_lookup: string, 
 function get_attributes_from_compound_index_lookup (attribute_index_lookup: string, attributes: ObjectAttribute[])
 {
     const parts = attribute_index_lookup.split(".").map(i => parseInt(i))
-    const matching_attributes = get_attributes_by_index_lookup(parts[0], attributes)
+    const matching_attributes = get_attributes_by_index_lookup(parts[0]!, attributes)
 
     return { matching_attributes, parts: parts.slice(1) }
 }

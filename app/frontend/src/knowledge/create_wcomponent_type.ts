@@ -85,7 +85,9 @@ export function create_wcomponent (args: Partial<WComponent>)
     if (current_knowledge_view)
     {
         const currently_selected_wcomponent_id = state.meta_wcomponents.selected_wcomponent_ids_list[0]
-        const currently_selected_wcomponent_position = current_knowledge_view.wc_id_map[currently_selected_wcomponent_id]
+        const currently_selected_wcomponent_position = currently_selected_wcomponent_id
+            ? current_knowledge_view.wc_id_map[currently_selected_wcomponent_id]
+            : undefined
 
         let position: CanvasPoint
         if (currently_selected_wcomponent_position)

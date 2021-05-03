@@ -1,7 +1,7 @@
 import {
     WComponent,
     wcomponent_has_validity_predictions,
-    wcomponent_has_vaps,
+    wcomponent_has_VAPs,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
 
@@ -56,7 +56,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
             })
         }
 
-        if (wcomponent_has_vaps(wcomponent))
+        if (wcomponent_has_VAPs(wcomponent))
         {
             wcomponent.values_and_prediction_sets.forEach(({ created_at, custom_created_at, datetime }) =>
             {

@@ -16,7 +16,10 @@ export function convert_project_priorities_to_nodes (args: ConvertProjectPriorit
 
     Object.keys(priorities_by_project).forEach(project_id =>
     {
-        const { project_priorities, vertical_position } = priorities_by_project[project_id]
+        const priorities = priorities_by_project[project_id]
+        if (!priorities) return
+
+        const { project_priorities, vertical_position } = priorities
 
         project_priorities.forEach(({ id, name, start_date, fields }) =>
         {

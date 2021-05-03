@@ -90,9 +90,10 @@ const get_children = (props: Props, state: State, set_state: (s: Partial<State>)
     ]
 
     const content_coordinates: CanvasPoint[] = []
-    if (project_priority_nodes.length)
+    const first_project_priority_nodes = project_priority_nodes.first()
+    if (first_project_priority_nodes)
     {
-        const { x: left, y: top } = project_priority_nodes[0]
+        const { x: left, y: top } = first_project_priority_nodes
         content_coordinates.push({ left, top })
     }
 

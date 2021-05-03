@@ -12,7 +12,7 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { WComponentStateV2SubType, StateValueAndPrediction } from "../../shared/models/interfaces/state"
-import { prepare_new_vap } from "./utils"
+import { prepare_new_VAP } from "./utils"
 
 
 
@@ -28,7 +28,7 @@ interface OwnProps
 
 export function ValueAndPredictions (props: OwnProps)
 {
-    const class_name_only_one_vap = props.subtype === "boolean" ? "only_one_vap" : ""
+    const class_name_only_one_VAP = props.subtype === "boolean" ? "only_one_VAP" : ""
 
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<StateValueAndPrediction> = {
@@ -45,14 +45,14 @@ export function ValueAndPredictions (props: OwnProps)
     const item_descriptor = "Value and prediction"
 
 
-    return <div className={`value_and_predictions ${class_name_only_one_vap}`}>
+    return <div className={`value_and_predictions ${class_name_only_one_VAP}`}>
         <ListHeader
             items_descriptor={get_items_descriptor(item_descriptor, props.values_and_predictions.length)}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() => {
                     props.update_values_and_predictions([
-                        ...props.values_and_predictions, prepare_new_vap(),
+                        ...props.values_and_predictions, prepare_new_VAP(),
                     ])}
                 }
             />}

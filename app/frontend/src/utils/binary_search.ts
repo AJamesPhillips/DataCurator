@@ -10,7 +10,7 @@ export function find_index_in_sorted_list <I> (sorted_list: I[], get_key: (item:
     while (start <= end) {
         let middle = Math.floor((start + end) / 2)
 
-        const key = get_key(sorted_list[middle])
+        const key = get_key(sorted_list[middle]!)
 
         if (key === find_key) {
             // found the key
@@ -37,7 +37,7 @@ export function find_nearest_index_in_sorted_list <I> (sorted_list: I[], get_key
     while (start <= end) {
         let middle = Math.floor((start + end) / 2)
 
-        const key = get_key(sorted_list[middle])
+        const key = get_key(sorted_list[middle]!)
 
         if (key === find_key) {
             // found the key

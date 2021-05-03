@@ -18,7 +18,7 @@ interface OwnProps {
 
 const map_state = (state: RootState) => ({
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
-    knowledge_views: state.specialised_objects.knowledge_views,
+    knowledge_views: state.derived.knowledge_views,
 })
 
 const map_dispatch = {
@@ -35,8 +35,14 @@ function _FoundationKnowledgeViewsList (props: Props)
 {
     const { owner_knowledge_view, knowledge_views_by_id, knowledge_views, on_change } = props
 
-    const foundation_knowledge_view_ids: string[] = owner_knowledge_view.foundation_knowledge_view_ids || []
-    const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
+    const foundation_knowledge_view_ids = owner_knowledge_view.foundation_knowledge_view_ids || []
+
+    const foundation_knowledge_views: KnowledgeView[] = []
+    foundation_knowledge_view_ids.forEach(id =>
+    {
+        const kv = knowledge_views_by_id[id]
+        if (kv) foundation_knowledge_views.push(kv)
+    })
 
 
     const get_options = () =>

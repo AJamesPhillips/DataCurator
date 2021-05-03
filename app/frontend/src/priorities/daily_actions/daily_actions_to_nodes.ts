@@ -23,12 +23,12 @@ export function convert_daily_actions_to_nodes (args: ConvertActionsToNodesArgs)
 
     Object.keys(daily_actions_meta).forEach(project_id =>
     {
-        const project_actions = daily_actions_meta[project_id]
-        const vertical_position = project_id_to_vertical_position[project_id]
+        const project_actions = daily_actions_meta[project_id]!
+        const vertical_position = project_id_to_vertical_position[project_id]!
 
         Object.keys(project_actions).sort().forEach(date_str =>
         {
-            const a = project_actions[date_str]
+            const a = project_actions[date_str]!
 
             const date = new Date(date_str)
             const date_ms = date.getTime()

@@ -7,6 +7,7 @@ import { memoize } from "../../utils/memoize"
 import { factory_filter_objects_by_pattern_id_c } from "../../state/objects/filter_objects"
 
 
+
 const PATTERN_ACTION_V2 = "p9"
 
 const filter_objects_c = factory_filter_objects_by_pattern_id_c(PATTERN_ACTION_V2)
@@ -62,8 +63,8 @@ function _get_daily_actions_meta (raw_actions: ObjectWithCache[])
         {
             date_strs.forEach(date_str =>
             {
-                actions_by_project_id[project_id][date_str] = actions_by_project_id[project_id][date_str] || { action_ids: [] }
-                actions_by_project_id[project_id][date_str].action_ids.push(action_id)
+                actions_by_project_id[project_id]![date_str] = actions_by_project_id[project_id]![date_str] || { action_ids: [] }
+                actions_by_project_id[project_id]![date_str]!.action_ids.push(action_id)
             })
         })
 

@@ -76,8 +76,8 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         {
             if (highlighted_option_index !== undefined)
             {
-                const selected_id = displayed_options[highlighted_option_index].id
-                await this.conditional_on_change(selected_id)
+                const selected_option = displayed_options[highlighted_option_index]
+                if (selected_option) await this.conditional_on_change(selected_option.id)
             }
 
             e.currentTarget.blur()
@@ -143,7 +143,11 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         const map_target_to_score: { [target: string]: number } = {}
         results.forEach(({ target, score }) => map_target_to_score[target] = score)
 
-        const options_to_display: E[] = sort_list(this.options, o => map_target_to_score[o.title] === undefined ? -10000 : map_target_to_score[o.title], "descending")
+        const options_to_display: E[] = sort_list(this.options, o =>
+            {
+                const score = map_target_to_score[o.title]
+                return score === undefined ? -10000 : score
+            }, "descending")
 
         return options_to_display
     }
@@ -239,11 +243,8 @@ function get_valid_value <E extends AutoCompleteOption> (options: E[], value_str
 {
     const lower_value_str = value_str.toLowerCase()
 
-    for (let i = 0; i < options.length; ++i) {
-        const option = options[i]
-
-        if (option.title.toLowerCase() === lower_value_str) return option
-    }
+    const match = options.find(option => option.title.toLowerCase() === lower_value_str)
+    if (match) return match
 
     return options[0]
 }

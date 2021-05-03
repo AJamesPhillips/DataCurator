@@ -1,9 +1,8 @@
 import type { AnyAction } from "redux"
 
-import { replace_element } from "../../../../utils/list"
-import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
 import { get_current_knowledge_view_from_state } from "../../accessors"
+import { handle_upsert_knowledge_view } from "../utils"
 import { is_bulk_edit_knowledge_view_entries } from "./actions"
 
 
@@ -22,7 +21,10 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
 
             wcomponent_ids.forEach(id =>
             {
-                const new_entry = { ...kv.wc_id_map[id] }
+                const existing_entry = kv.wc_id_map[id]
+                if (!existing_entry) return
+
+                const new_entry = { ...existing_entry }
 
                 new_entry.left += change_left
                 new_entry.top += change_top
@@ -32,10 +34,12 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
 
             const new_kv = { ...kv, wc_id_map: new_wc_id_map }
 
-            const new_knowledge_views = replace_element(state.specialised_objects.knowledge_views, new_kv, ({ id }) => id === new_kv.id)
-            state = update_substate(state, "specialised_objects", "knowledge_views", new_knowledge_views)
+            state = handle_upsert_knowledge_view(state, new_kv)
         }
-
+        else
+        {
+            console.error("There should always be a current knowledge view if bulk editing position of world components")
+        }
     }
 
     return state

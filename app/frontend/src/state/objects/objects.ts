@@ -17,7 +17,13 @@ export function convert_from_pattern_attributes (attributes: PatternAttribute[])
 
 export function merge_pattern_attributes (attributes: CoreObjectAttribute[], pattern: Pattern): ObjectAttribute[]
 {
-    return attributes.map(a => ({ ...a, pattern: pattern.attributes[a.pidx] }))
+    const new_attributes: ObjectAttribute[] = []
+    attributes.forEach(a =>
+    {
+        const pattern_attributes = pattern.attributes[a.pidx]
+        if (pattern_attributes) new_attributes.push({ ...a, pattern: pattern_attributes })
+    })
+    return new_attributes
 }
 
 

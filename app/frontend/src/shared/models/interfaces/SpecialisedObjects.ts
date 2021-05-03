@@ -22,7 +22,7 @@ export interface Perception extends Base
 
 // World Component
 export type WComponent = WComponentNode | WComponentConnection | WComponentJudgement
-export type WComponentsById = { [id: string]: WComponent }
+export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
 type WComponentConnectionType = "causal_link" | "relation_link"
@@ -137,7 +137,7 @@ export function wcomponent_has_values (wcomponent: WComponent): wcomponent is (W
     return (wcomponent as WComponentNodeState).values !== undefined
 }
 
-export function wcomponent_has_vaps (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_has_VAPs (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }
@@ -168,7 +168,7 @@ export interface KnowledgeView
     allows_assumptions?: true
     foundation_knowledge_view_ids?: string[]
 }
-export type KnowledgeViewsById = { [id: string]: KnowledgeView }
+export type KnowledgeViewsById = { [id: string]: KnowledgeView /*| undefined*/ }
 
 export interface KnowledgeViewWComponentEntry
 {
@@ -250,10 +250,3 @@ export interface SpecialisedObjectsFromToServer
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
 }
-export type SpecialisedObjectsFromToServerKeys = keyof SpecialisedObjectsFromToServer
-const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjectsFromToServerKeys]: true} = {
-    perceptions: true,
-    wcomponents: true,
-    knowledge_views: true,
-}
-export const specialised_objects_from_to_server_expected_keys: (SpecialisedObjectsFromToServerKeys)[] = Object.keys(_specialised_objects_from_to_server_expected_keys) as any

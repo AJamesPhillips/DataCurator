@@ -20,7 +20,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    wcomponents: state.specialised_objects.wcomponents,
+    wcomponents: state.derived.wcomponents,
 })
 
 

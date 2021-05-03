@@ -76,7 +76,7 @@ function parse_url_for_state ({ url, current_routing_state }: ParseUrlForStateAr
 
     const main_parts = hash.split("&")
 
-    const path = main_parts[0]
+    const path = main_parts[0]!
     const path_parts = path.split("/").filter(p => !!p)
     const { route, sub_route, item_id } = get_route_subroute_and_item_id(path_parts)
 

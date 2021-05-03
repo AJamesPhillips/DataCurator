@@ -16,22 +16,32 @@ import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
 
 export const wcomponents_reducer = (state: RootState, action: AnyAction): RootState =>
 {
-    let should_update_derived_fields = false
-
 
     if (is_upsert_wcomponent(action))
     {
         const wcomponent = tidy_wcomponent(action.wcomponent)
-        state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent.id, wcomponent)
+        const wcomponent_id = wcomponent.id
 
-        const set = new Set(state.specialised_objects.wcomponent_ids_by_type[wcomponent.type])
-        if (!set.has(wcomponent.id))
+
+        state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent_id, wcomponent)
+
+
+        const existing = state.specialised_objects.wcomponents_by_id[wcomponent_id]
+        if (existing && existing.type !== wcomponent.type)
         {
-            set.add(wcomponent.id)
-            state = update_subsubstate(state, "specialised_objects", "wcomponent_ids_by_type", wcomponent.type, set)
+            const existing_set = new Set(state.derived.wcomponent_ids_by_type[existing.type])
+            existing_set.delete(wcomponent_id)
+            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", existing.type, existing_set)
         }
 
-        should_update_derived_fields = true
+
+        const set = new Set(state.derived.wcomponent_ids_by_type[wcomponent.type])
+        // id may already be in this set if it is an update rather than an insert, and if they update is of a different field
+        if (!set.has(wcomponent_id))
+        {
+            set.add(wcomponent_id)
+            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", wcomponent.type, set)
+        }
     }
 
 
@@ -40,29 +50,19 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
         const { wcomponent_id } = action
         const map = { ...state.specialised_objects.wcomponents_by_id }
         const existing = map[wcomponent_id]
-        delete map[wcomponent_id]
-        state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
-
-        const set = new Set(state.specialised_objects.wcomponent_ids_by_type[existing.type])
-        set.delete(wcomponent_id)
-        state = update_subsubstate(state, "specialised_objects", "wcomponent_ids_by_type", existing.type, set)
-
-        should_update_derived_fields = true
-    }
 
 
-    if (should_update_derived_fields)
-    {
-        const wcomponents = Object.values(state.specialised_objects.wcomponents_by_id)
+        if (existing)
+        {
+            delete map[wcomponent_id]
+            state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
 
-        const specialised_objects = {
-            ...state.specialised_objects,
-            wcomponents,
+
+            const set = new Set(state.derived.wcomponent_ids_by_type[existing.type])
+            set.delete(wcomponent_id)
+            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", existing.type, set)
         }
-
-        state = {...state, specialised_objects }
     }
-
 
     return state
 }
@@ -85,8 +85,8 @@ function tidy_wcomponent (wcomponent: WComponent): WComponent
 
     if (wcomponent_is_statev2(wcomponent))
     {
-        const sorted_values = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
-        wcomponent.values_and_prediction_sets = sorted_values
+        const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
+        wcomponent.values_and_prediction_sets = sorted_VAP_sets
     }
 
     return wcomponent

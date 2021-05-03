@@ -29,19 +29,19 @@ export function PredictionsBadgeConvictionMask (props: Props)
         ref={r => {
             if (!r) return
 
-            const parts = r.getElementsByClassName("parts")[0]
+            const parts = r.getElementsByClassName("parts")[0]!
 
-            for (let i = 0; i < parts.children.length; ++i) {
-                const el = parts.children[i]
+            Array.from(parts.children).forEach(el =>
+            {
                 const group_id_string = el.getAttribute("data-group_id")
-                if (!group_id_string) continue
+                if (!group_id_string) return
 
                 const group_id = parseInt(group_id_string, 10) / 100
                 let style = group_id <= conviction ? `display: none;` : ""
                 const grey = 130 + Math.random() * 45
                 style += `fill: rgb(${grey},${grey},${grey})`
                 el.setAttribute("style", style)
-            }
+            })
         }}
     >
         {/* Make the g element have max size: */}
@@ -90,7 +90,7 @@ function generate_predictions_badge_conviction_mask (props: Props)
     {
         const choices = (Object.keys(groups) as (keyof typeof groups)[]).filter(k => groups[k] > 0)
         const index = Math.floor(Math.random() * choices.length)
-        const group_id = choices[index]
+        const group_id = choices[index]!
         groups[group_id] -= 1
         return group_id
     }
@@ -103,7 +103,7 @@ function generate_predictions_badge_conviction_mask (props: Props)
             .forEach(k => Array.from(Array(groups[k])).forEach(_ => choices.push(k)))
 
         const index = Math.floor(Math.random() * choices.length)
-        const group_id = choices[index]
+        const group_id = choices[index]!
         groups[group_id] -= 1
         return group_id
     }
@@ -128,7 +128,7 @@ function generate_predictions_badge_conviction_mask (props: Props)
 
 
 // mask_data is of the form: [e.xs, e.ys, group_id]
-const mask_data = [
+const mask_data: [number, number, number][] = [
     [0,9,40],
     [0,8,30],
     [0,7,40],

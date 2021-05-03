@@ -29,7 +29,7 @@ export function ObjectBulkImportSetup ()
         {
             const new_models = [...models]
             new_models[index] = {
-                ...new_models[index],
+                ...new_models[index]!,
                 [field]: value
             }
 

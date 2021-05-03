@@ -8,31 +8,31 @@ import type {
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
 } from "../../shared/models/interfaces/state"
-import { get_probable_vap_set_values, get_vap_set_prob, get_vap_set_conviction } from "../../sharedf/wcomponent_state"
+import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { UncertainDateTime } from "../uncertainty/datetime"
-import { prepare_new_vap, set_vap_probabilities } from "./utils"
+import { prepare_new_VAP, set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 
 
 
-export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType, show_created_at: boolean) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    vap_set = { ...vap_set, entries: get_vaps_from_set(vap_set, subtype) }
+    VAP_set = { ...VAP_set, entries: get_VAPs_from_set(VAP_set, subtype) }
 
-    const values = get_probable_vap_set_values(vap_set, subtype)
-    const prob = get_vap_set_prob(vap_set, subtype)
-    const conv = get_vap_set_conviction(vap_set, subtype)
+    const values = get_probable_VAP_set_values(VAP_set, subtype)
+    const prob = get_VAP_set_prob(VAP_set, subtype)
+    const conv = get_VAP_set_conviction(VAP_set, subtype)
 
     return <div>
         {show_created_at && <div style={{ display: "inline-flex" }}>
             Created: &nbsp;<EditableCustomDateTime
-                invariant_value={vap_set.created_at}
-                value={vap_set.custom_created_at}
+                invariant_value={VAP_set.created_at}
+                value={VAP_set.custom_created_at}
             />
         </div>}
-        <div className="vap_set_summary_container" style={{ display: "inline-flex", width: "100%" }}>
+        <div className="VAP_set_summary_container" style={{ display: "inline-flex", width: "100%" }}>
             <div className="datetimes">
-                {uncertain_date_to_string(vap_set.datetime) || "-"}
+                {uncertain_date_to_string(VAP_set.datetime) || "-"}
             </div>
             {subtype !== "boolean" && <div>Value:&nbsp;{values}</div>}
             <div>Prob:&nbsp;{prob}&nbsp;%</div>
@@ -43,23 +43,23 @@ export const get_summary_for_single_vap_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details_for_single_vap_set = (subtype: WComponentStateV2SubType) => (vap_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    const entries = get_vaps_from_set(vap_set, subtype)
+    const entries = get_VAPs_from_set(VAP_set, subtype)
 
-    return <div className="vap_set_details">
+    return <div className="VAP_set_details">
         <br />
         <UncertainDateTime
-            datetime={vap_set.datetime}
-            on_change={datetime => on_change({ ...vap_set, datetime })}
+            datetime={VAP_set.datetime}
+            on_change={datetime => on_change({ ...VAP_set, datetime })}
         />
         <br />
         <div>
             <ValueAndPredictions
-                created_at={get_custom_created_at(vap_set) || get_created_at(vap_set)}
+                created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
                 subtype={subtype}
                 values_and_predictions={entries}
-                update_values_and_predictions={vaps => on_change(merge_entries(vaps, vap_set, subtype))}
+                update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, subtype))}
             />
         </div>
         <br />
@@ -73,32 +73,33 @@ const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom
 
 
 
-function get_vaps_from_set (vap_set: StateValueAndPredictionsSet, subtype: string)
+function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: string)
 {
-    let vaps = vap_set.entries
+    let VAPs = VAP_set.entries
+    const first_VAP = VAPs.first()
 
-    if (subtype === "boolean" && vaps.length !== 1)
+    if (subtype === "boolean" && VAPs.length !== 1)
     {
-        // ensure the ValueAndPrediction component always and only receives a single vap entry
-        const entries = vaps.length === 0 ? [prepare_new_vap()] : [vaps[0]]
+        // ensure the ValueAndPrediction component always and only receives a single VAP entry
+        const entries = first_VAP ? [first_VAP] : [prepare_new_VAP()]
         return entries
     }
 
-    vaps = set_vap_probabilities(vap_set.entries)
+    VAPs = set_VAP_probabilities(VAP_set.entries)
 
-    return vaps
+    return VAPs
 }
 
 
 
-function merge_entries (vaps: StateValueAndPrediction[], vap_set: StateValueAndPredictionsSet, subtype: string): StateValueAndPredictionsSet
+function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, subtype: string): StateValueAndPredictionsSet
 {
     if (subtype === "boolean")
     {
         // For now we'll save any other values that were already here from other subtypes
-        vaps = vaps.concat(vap_set.entries.slice(1))
+        VAPs = VAPs.concat(VAP_set.entries.slice(1))
     }
 
-    return { ...vap_set, entries: vaps }
+    return { ...VAP_set, entries: VAPs }
 }
 

@@ -43,7 +43,7 @@ function _JudgementBadgeC (props: Props)
 {
     const { wcomponent, target_wcomponent, created_at_ms, sim_ms } = props
 
-    if (!target_wcomponent || !wcomponent_is_judgement(wcomponent)) return null
+    if (!wcomponent || !target_wcomponent || !wcomponent_is_judgement(wcomponent)) return null
 
     const judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
 

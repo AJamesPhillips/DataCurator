@@ -8,7 +8,7 @@ import { ProjectDashboard } from "./ProjectDashboard"
 
 
 const map_state = (state: RootState) => ({
-    knowledge_views: state.specialised_objects.knowledge_views
+    knowledge_views: state.derived.knowledge_views
 })
 
 const connector = connect(map_state)

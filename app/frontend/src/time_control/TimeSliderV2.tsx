@@ -79,6 +79,7 @@ function _TimeSliderV2 (props: Props)
             }
 
             const new_datetime_ms = event_start_datetimes_ms[next_index]
+            if (!new_datetime_ms) return
 
             change_datetime_ms(new_datetime_ms, true)
         }

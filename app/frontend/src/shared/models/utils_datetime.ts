@@ -109,7 +109,7 @@ function prune_present_by_temporal_and_logical_relations <U extends Base & HasDa
         const ms = get_sim_datetime_ms(item)
         const ms_value = ms === undefined ? Number.POSITIVE_INFINITY : ms
         present_items_by_ms[ms_value] = present_items_by_ms[ms_value] || []
-        present_items_by_ms[ms_value].push(item)
+        present_items_by_ms[ms_value]!.push(item)
         latest_present_datetime_ms = Math.max(latest_present_datetime_ms, ms_value)
     })
 

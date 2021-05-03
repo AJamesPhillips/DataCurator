@@ -11,6 +11,7 @@ import { ObjectiveNode } from "./ObjectiveNode"
 import { objectives_data } from "./temp_data"
 
 
+
 const map_state = (state: RootState) => {
     const objective_nodes_props = get_objective_nodes_props_c(objectives_data)
     const objective_connections_props = get_objective_connections_props_c(objective_nodes_props)
@@ -39,7 +40,7 @@ const get_children = (props: Props) => {
     const content_coordinates: CanvasPoint[] = []
     if (props.objective_nodes_props.length)
     {
-        const { created_at, vertical_ordinal } = props.objective_nodes_props[0]
+        const { created_at, vertical_ordinal } = props.objective_nodes_props[0]!
         const left = x(created_at.getTime())
         const top = vertical_ordinal_to_y(vertical_ordinal)
         content_coordinates.push({ left, top })

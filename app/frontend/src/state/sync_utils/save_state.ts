@@ -9,7 +9,7 @@ import {
     RootState,
 } from "../State"
 import { ACTIONS } from "../actions"
-import { SpecialisedObjectsFromToServer, specialised_objects_from_to_server_expected_keys } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer } from "../../shared/models/interfaces/SpecialisedObjects"
 import { supported_keys } from "./supported_keys"
 
 
@@ -99,11 +99,11 @@ function convert_attribute_to_core (attribute: ObjectAttribute): CoreObjectAttri
 
 function get_specialised_state_to_save (state: RootState)
 {
-    const specialised_state: SpecialisedObjectsFromToServer = {} as any
-    specialised_objects_from_to_server_expected_keys.forEach(key =>
-    {
-        specialised_state[key] = state.specialised_objects[key] as any
-    })
+    const specialised_state: SpecialisedObjectsFromToServer = {
+        perceptions: state.derived.perceptions,
+        wcomponents: state.derived.wcomponents,
+        knowledge_views: state.derived.knowledge_views,
+    }
 
     return specialised_state
 }

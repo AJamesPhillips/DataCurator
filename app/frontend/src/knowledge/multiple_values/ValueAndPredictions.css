@@ -5,8 +5,8 @@
 }
 
 
-.value_and_predictions.only_one_vap .button_add_new_list_entry,
-.value_and_predictions.only_one_vap .button_container_confirmatory_delete
+.value_and_predictions.only_one_VAP .button_add_new_list_entry,
+.value_and_predictions.only_one_VAP .button_container_confirmatory_delete
 {
     display: none;
 }

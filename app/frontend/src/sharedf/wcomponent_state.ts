@@ -1,31 +1,34 @@
 import { percentage_to_string } from "../form/EditablePercentage"
 import type { StateValueAndPredictionsSet, WComponentStateV2SubType } from "../shared/models/interfaces/state"
-import { get_vaps_ordered_by_prob } from "../shared/models/value_and_prediction/utils"
+import { get_VAPs_ordered_by_prob } from "../shared/models/value_and_prediction/utils"
 
 
 
-export function get_probable_vap_set_values (vap_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
+export function get_probable_VAP_set_values (VAP_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
 {
-    const vaps = get_vaps_ordered_by_prob(vap_set.entries, subtype)
-    if (subtype === "boolean") return vaps[0].probability > 0.5 ? "True" : "False"
+    const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, subtype)
+    const first_VAP = VAPs[0]
+    if (subtype === "boolean" && first_VAP) return first_VAP.probability > 0.5 ? "True" : "False"
 
-    return vaps.map(e => e.value).join(", ") || "-"
+    return VAPs.map(e => e.value).join(", ") || "-"
 }
 
 
-export function get_vap_set_prob (vap_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
+export function get_VAP_set_prob (VAP_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
 {
-    const vaps = get_vaps_ordered_by_prob(vap_set.entries, subtype)
-    if (subtype === "boolean") return percentage_to_string(vaps[0].probability)
+    const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, subtype)
+    const first_VAP = VAPs[0]
+    if (subtype === "boolean" && first_VAP) return percentage_to_string(first_VAP.probability)
 
-    return vaps.map(e => percentage_to_string(e.probability)).join(", ")
+    return VAPs.map(e => percentage_to_string(e.probability)).join(", ")
 }
 
 
-export function get_vap_set_conviction (vap_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
+export function get_VAP_set_conviction (VAP_set: StateValueAndPredictionsSet, subtype: WComponentStateV2SubType)
 {
-    const vaps = get_vaps_ordered_by_prob(vap_set.entries, subtype)
-    if (subtype === "boolean") return percentage_to_string(vaps[0].conviction)
+    const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, subtype)
+    const first_VAP = VAPs[0]
+    if (subtype === "boolean" && first_VAP) return percentage_to_string(first_VAP.conviction)
 
-    return vaps.map(e => percentage_to_string(e.conviction)).join(", ")
+    return VAPs.map(e => percentage_to_string(e.conviction)).join(", ")
 }

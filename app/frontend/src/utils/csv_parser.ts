@@ -34,7 +34,7 @@ export function csv_to_array (str_data: string)
         match_quoted = str_data.match(regexp_quoted)
         if (match_quoted && match_quoted.length)
         {
-            sub_str = match_quoted![0]
+            sub_str = match_quoted![0]!
             trailing_comma = sub_str.endsWith(",")
             const str_to_add = (trailing_comma ? sub_str.slice(1, -2) : sub_str.slice(1, -1)).replace(/""/g, `"`)
             new_line.push(str_to_add)
@@ -43,7 +43,7 @@ export function csv_to_array (str_data: string)
         }
         else if (match_unquoted!.length)
         {
-            sub_str = match_unquoted![0]
+            sub_str = match_unquoted![0]!
             trailing_comma = sub_str.endsWith(",")
             const str_to_add = trailing_comma ? sub_str.slice(0, -1) : sub_str
             new_line.push(str_to_add)
@@ -56,7 +56,7 @@ export function csv_to_array (str_data: string)
         {
             needs_new_line = true
             exit_in = 2
-            str_data = str_data.slice(match_new_line[0].length)
+            str_data = str_data.slice(match_new_line[0]!.length)
         }
 
         if (str_data === "") exit_in -= 1
