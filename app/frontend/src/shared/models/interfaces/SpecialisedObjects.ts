@@ -165,6 +165,7 @@ export interface KnowledgeView
     description: string
     wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
     is_base?: true
+    allows_assumptions?: true
 }
 export type KnowledgeViewsById = { [id: string]: KnowledgeView }
 
