@@ -31,7 +31,7 @@ export function prepare_new_VAP_set (): StateValueAndPredictionsSet
         version: 1,
         created_at: now,
         datetime: { value: now },
-        entries: [],
+        entries: [prepare_new_VAP()],
     }
 }
 
