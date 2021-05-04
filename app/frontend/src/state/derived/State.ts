@@ -1,6 +1,6 @@
 import type {
     KnowledgeView,
-    KnowledgeViewWComponentEntry,
+    KnowledgeViewWComponentIdEntryMap,
     Perception,
     WComponent,
     WComponentType,
@@ -10,7 +10,7 @@ import type {
 
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
-    derived_wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
+    derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
 
 

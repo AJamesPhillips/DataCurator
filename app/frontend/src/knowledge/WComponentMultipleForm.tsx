@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { EditablePosition } from "../form/EditablePosition"
+import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
 
 
 
@@ -20,6 +21,7 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     bulk_edit_knowledge_view_entries: ACTIONS.specialised_object.bulk_edit_knowledge_view_entries,
+    bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
 }
 
 
@@ -33,7 +35,7 @@ function _WComponentMultipleForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent_ids, bulk_edit_knowledge_view_entries } = props
+    const { wcomponent_ids, bulk_edit_knowledge_view_entries, bulk_add_to_knowledge_view } = props
 
 
     return <div>
@@ -48,6 +50,21 @@ function _WComponentMultipleForm (props: Props)
                         wcomponent_ids: Array.from(wcomponent_ids),
                         change_left: p.left,
                         change_top: p.top,
+                    })
+                }}
+            />
+        </p>
+
+        <p>
+            Add to knowledge view
+            <SelectKnowledgeView
+                on_change={knowledge_view_id =>
+                {
+                    if (!knowledge_view_id) return
+
+                    bulk_add_to_knowledge_view({
+                        knowledge_view_id,
+                        wcomponent_ids: Array.from(wcomponent_ids),
                     })
                 }}
             />

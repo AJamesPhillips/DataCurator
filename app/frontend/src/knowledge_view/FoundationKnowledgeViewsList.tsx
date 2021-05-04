@@ -1,12 +1,12 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutoCompleteOption, AutocompleteText } from "../form/AutocompleteText"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { remove_from_list_by_predicate } from "../utils/list"
+import { SelectKnowledgeView } from "./SelectKnowledgeView"
 
 
 
@@ -18,7 +18,6 @@ interface OwnProps {
 
 const map_state = (state: RootState) => ({
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
-    knowledge_views: state.derived.knowledge_views,
 })
 
 const map_dispatch = {
@@ -33,28 +32,26 @@ type Props = PropsFromRedux & OwnProps
 
 function _FoundationKnowledgeViewsList (props: Props)
 {
-    const { owner_knowledge_view, knowledge_views_by_id, knowledge_views, on_change } = props
+    const { owner_knowledge_view, knowledge_views_by_id, on_change } = props
 
     const foundation_knowledge_view_ids = owner_knowledge_view.foundation_knowledge_view_ids || []
     const foundation_knowledge_view_ids_set = new Set(foundation_knowledge_view_ids)
 
     const foundation_knowledge_views: KnowledgeView[] = []
+    const unfound_ids: string[] = []
     foundation_knowledge_view_ids.forEach(id =>
     {
         const kv = knowledge_views_by_id[id]
         if (kv) foundation_knowledge_views.push(kv)
+        // knowledge view may have been deleted in the intervening time
+        else unfound_ids.push(id)
     })
 
+    if (unfound_ids.length) console.warn(`Unfounded foundational knowledge view ids: ${unfound_ids.join(", ")}`)
 
-    const get_options = () =>
-    {
-        const options: AutoCompleteOption[] = knowledge_views
-            .filter(({ id }) => id !== owner_knowledge_view.id && !foundation_knowledge_view_ids_set.has(id))
-            .map(({ id, title }) => ({ id, title }))
-            .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
 
-        return options
-    }
+    const exclude_ids = new Set(foundation_knowledge_view_ids_set)
+    exclude_ids.add(owner_knowledge_view.id)
 
 
     const total = foundation_knowledge_views.length
@@ -62,10 +59,9 @@ function _FoundationKnowledgeViewsList (props: Props)
     return <div>
         Foundational Knowledge Views ({total})
 
-        <AutocompleteText
+        <SelectKnowledgeView
             placeholder="Search for knowledge view to add..."
-            selected_option_id={undefined}
-            get_options={get_options}
+            exclude_ids={exclude_ids}
             on_change={id =>
             {
                 if (!id) return
@@ -90,6 +86,8 @@ function _FoundationKnowledgeViewsList (props: Props)
                 </div>
             </div>
         })}
+
+        {unfound_ids.length && <div>Could not find {unfound_ids.length} knowledge views</div>}
     </div>
 }
 
