@@ -204,11 +204,11 @@ function _WComponentForm (props: Props)
             <br />
         </div>
 
-        {wcomponent_has_existence_predictions(wcomponent) && <div>
+        {!wcomponent_is_statev2(wcomponent) && <div>
             <p>
                 <PredictionList
                     item_descriptor="Existence"
-                    predictions={wcomponent.existence}
+                    predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
                     update_predictions={new_predictions => upsert_wcomponent({ existence: new_predictions }) }
                 />
             </p>

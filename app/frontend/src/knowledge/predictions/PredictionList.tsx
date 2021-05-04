@@ -74,7 +74,7 @@ function prepare_new_item (): Prediction
         created_at: now,
         datetime: { value: now },
         explanation: "",
-        probability: 0,
+        probability: 1,
         conviction: 0,
     }
 }
