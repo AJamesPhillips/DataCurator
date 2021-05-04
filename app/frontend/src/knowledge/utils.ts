@@ -3,6 +3,7 @@ import {
     ConnectionTerminalType,
     WComponent,
     wcomponent_has_existence_predictions,
+    wcomponent_has_validity_predictions,
 } from "../shared/models/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/models/utils_datetime"
 
@@ -17,13 +18,27 @@ export function wcomponent_is_invalid_for_datetime (wcomponent: WComponent, disp
 
 function wcomponent_is_now_invalid (wcomponent: WComponent, display_at_datetime_ms: number)
 {
-    if (!wcomponent_has_existence_predictions(wcomponent)) return false
+    let invalid = false
 
-    const last_existence_prediction = wcomponent.existence[wcomponent.existence.length - 1]
-    return (last_existence_prediction
-        && last_existence_prediction.conviction === 1
-        && last_existence_prediction.probability === 0
-        && display_at_datetime_ms > get_created_at_ms(last_existence_prediction))
+    if (wcomponent_has_existence_predictions(wcomponent))
+    {
+        const last_existence_prediction = wcomponent.existence[wcomponent.existence.length - 1]
+        invalid = (!!last_existence_prediction
+            && last_existence_prediction.conviction === 1
+            && last_existence_prediction.probability === 0
+            && display_at_datetime_ms > get_created_at_ms(last_existence_prediction))
+    }
+
+    if (!invalid && wcomponent_has_validity_predictions(wcomponent))
+    {
+        const last_validity_prediction = wcomponent.validity[wcomponent.validity.length - 1]
+        invalid = invalid || (!!last_validity_prediction
+            && last_validity_prediction.conviction === 1
+            && last_validity_prediction.probability === 0
+            && display_at_datetime_ms > get_created_at_ms(last_validity_prediction))
+    }
+
+    return invalid
 }
 
 

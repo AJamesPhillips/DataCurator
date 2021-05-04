@@ -177,8 +177,8 @@ interface CalculateIntensityBlurArgs
 }
 function calculate_display_params ({ wcomponent, display_at_datetime_ms }: CalculateIntensityBlurArgs)
 {
-    let intensity = 1
-    let blur = 0
+    let intensity = 1 // out of 1
+    let blur = 0      // out of 100
     let hidden = false
 
     if (wcomponent_is_plain_connection(wcomponent))

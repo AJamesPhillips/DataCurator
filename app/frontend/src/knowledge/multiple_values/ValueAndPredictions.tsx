@@ -28,7 +28,8 @@ interface OwnProps
 
 export function ValueAndPredictions (props: OwnProps)
 {
-    const class_name_only_one_VAP = props.subtype === "boolean" ? "only_one_VAP" : ""
+    const VAPs = props.values_and_predictions
+    const class_name_only_one_VAP = (props.subtype === "boolean" && VAPs.length >= 1) ? "only_one_VAP" : ""
 
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<StateValueAndPrediction> = {
@@ -47,19 +48,19 @@ export function ValueAndPredictions (props: OwnProps)
 
     return <div className={`value_and_predictions ${class_name_only_one_VAP}`}>
         <ListHeader
-            items_descriptor={get_items_descriptor(item_descriptor, props.values_and_predictions.length)}
+            items_descriptor={get_items_descriptor(item_descriptor, VAPs.length)}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() => {
                     props.update_values_and_predictions([
-                        ...props.values_and_predictions, prepare_new_VAP(),
+                        ...VAPs, prepare_new_VAP(),
                     ])}
                 }
             />}
         />
 
         {factory_render_list_content({
-            items: props.values_and_predictions,
+            items: VAPs,
             get_id,
             item_top_props,
             item_descriptor,

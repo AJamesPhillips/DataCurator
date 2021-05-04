@@ -10,7 +10,7 @@ import type {
 } from "../../shared/models/interfaces/state"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { UncertainDateTime } from "../uncertainty/datetime"
-import { prepare_new_VAP, set_VAP_probabilities } from "./utils"
+import { set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 
 
@@ -76,12 +76,11 @@ const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom
 function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: string)
 {
     let VAPs = VAP_set.entries
-    const first_VAP = VAPs.first()
 
     if (subtype === "boolean" && VAPs.length !== 1)
     {
-        // ensure the ValueAndPrediction component always and only receives a single VAP entry
-        const entries = first_VAP ? [first_VAP] : [prepare_new_VAP()]
+        // ensure the ValueAndPrediction component always and only receives up to a single VAP entry
+        const entries = VAPs.slice(0, 1)
         return entries
     }
 
