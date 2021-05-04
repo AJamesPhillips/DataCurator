@@ -69,7 +69,9 @@ const _ProjectJudgementEntry = (props: Props) =>
                 judgement={calculate_judgement_value({ wcomponent: judgement, target_wcomponent, created_at_ms, sim_ms })}
             />
 
-            {judgement.title}
+            <RichMarkDown
+                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: judgement, created_at_ms, sim_ms })}
+            />
         </a>
     </div>
 }

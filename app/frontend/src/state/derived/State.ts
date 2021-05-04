@@ -14,11 +14,14 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 }
 
 
+export type WComponentIdsByType = { [t in WComponentType]: Set<string> }
+
+
 export interface DerivedState
 {
     perceptions: Perception[]
     wcomponents: WComponent[]
-    wcomponent_ids_by_type: { [t in WComponentType]: Set<string> }
+    wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 
     base_knowledge_view: KnowledgeView | undefined
