@@ -48,6 +48,13 @@ export class CanvasNode extends Component<CanvasNodeProps>
             onClick={on_click}
             onPointerEnter={on_pointer_enter}
             onPointerLeave={on_pointer_leave}
+            onContextMenu={e =>
+            {
+                // Currently when the ctrl key is depressed so that multiple elements can be selected
+                // when a node is clicked, the context menu appears and interferes with this process
+                // TODO make this conditional on trying to select multiple nodes
+                e.preventDefault()
+            }}
         >
             {children}
         </div>
