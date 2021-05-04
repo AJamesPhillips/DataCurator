@@ -16,11 +16,15 @@ export function get_perception_from_state (state: RootState, id: string | null):
 }
 
 
-export function get_current_knowledge_view_from_state (state: RootState): KnowledgeView | undefined
+export function get_current_UI_knowledge_view_from_state (state: RootState)
 {
-    const id = state.routing.args.subview_id
-    return get_knowledge_view_from_state(state, id)
+    return state.derived.current_UI_knowledge_view
 }
+export function get_current_knowledge_view_from_state (state: RootState)
+{
+    return state.specialised_objects.knowledge_views_by_id[state.routing.args.subview_id]
+}
+
 
 
 export function get_knowledge_view_from_state (state: RootState, knowledge_view_id: string): KnowledgeView | undefined

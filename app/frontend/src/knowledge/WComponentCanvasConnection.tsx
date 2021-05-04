@@ -12,6 +12,7 @@ import {
     wcomponent_is_plain_connection,
     ConnectionLocationType,
     wcomponent_is_judgement,
+    KnowledgeViewWComponentIdEntryMap,
 } from "../shared/models/interfaces/SpecialisedObjects"
 import { get_prob_and_conviction } from "../shared/models/uncertainty_utils"
 import { get_created_at_ms } from "../shared/models/utils_datetime"
@@ -26,12 +27,13 @@ import { connection_terminal_type_to_location, wcomponent_is_invalid_for_datetim
 interface OwnProps
 {
     id: string
-    knowledge_view: KnowledgeView
 }
 
 
 const map_state = (state: RootState, props: OwnProps) =>
 {
+    const { current_UI_knowledge_view } = state.derived
+
     const display_at_datetime_ms = state.routing.args.created_at_ms
     const wc = get_wcomponent_from_state(state, props.id)
 
@@ -60,6 +62,7 @@ const map_state = (state: RootState, props: OwnProps) =>
     }
 
     return {
+        current_UI_knowledge_view,
         display_at_datetime_ms,
         wc,
         is_invalid,
@@ -81,13 +84,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentCanvasConnection (props: Props)
 {
     const {
-        id, knowledge_view, display_at_datetime_ms, wc, is_invalid, is_current_item,
+        id, current_UI_knowledge_view, display_at_datetime_ms, wc, is_invalid, is_current_item,
         clicked_wcomponent, change_route,
     } = props
 
     if (!wc)
     {
-        console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but could not find`)
+        console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but could not find it`)
         return null
     }
 
@@ -99,6 +102,12 @@ function _WComponentCanvasConnection (props: Props)
 
     if (is_invalid) return null
 
+    if (!current_UI_knowledge_view)
+    {
+        console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but no current_UI_knowledge_view`)
+        return null
+    }
+
 
     const on_click = () =>
     {
@@ -108,7 +117,7 @@ function _WComponentCanvasConnection (props: Props)
 
 
     const { from_node_position, to_node_position, from_connection_location, to_connection_location,
-    } = get_connection_terminal_positions({ wcomponent: wc, knowledge_view })
+    } = get_connection_terminal_positions({ wcomponent: wc, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
 
     const { intensity, blur, hidden } = calculate_display_params({ wcomponent: wc, display_at_datetime_ms })
 
@@ -133,9 +142,9 @@ export const WComponentCanvasConnection = connector(_WComponentCanvasConnection)
 interface GetConnectionTerminalPositionsArgs
 {
     wcomponent: WComponentConnection | WComponentJudgement
-    knowledge_view: KnowledgeView
+    wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
-function get_connection_terminal_positions ({ wcomponent, knowledge_view }: GetConnectionTerminalPositionsArgs)
+function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnectionTerminalPositionsArgs)
 {
     let from_node_position: KnowledgeViewWComponentEntry | undefined = undefined
     let to_node_position: KnowledgeViewWComponentEntry | undefined = undefined
@@ -144,15 +153,15 @@ function get_connection_terminal_positions ({ wcomponent, knowledge_view }: GetC
 
     if (wcomponent_is_plain_connection(wcomponent))
     {
-        from_node_position = knowledge_view.wc_id_map[wcomponent.from_id]
-        to_node_position = knowledge_view.wc_id_map[wcomponent.to_id]
+        from_node_position = wc_id_map[wcomponent.from_id]
+        to_node_position = wc_id_map[wcomponent.to_id]
         from_connection_location = connection_terminal_type_to_location(wcomponent.from_type, from_connection_location)
         to_connection_location = connection_terminal_type_to_location(wcomponent.to_type, to_connection_location)
     }
     else if (wcomponent_is_judgement(wcomponent))
     {
-        from_node_position = knowledge_view.wc_id_map[wcomponent.id]
-        to_node_position = knowledge_view.wc_id_map[wcomponent.judgement_target_wcomponent_id]
+        from_node_position = wc_id_map[wcomponent.id]
+        to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
         to_connection_location = "left"
     }
 

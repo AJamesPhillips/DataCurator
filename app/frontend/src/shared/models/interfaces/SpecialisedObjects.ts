@@ -155,7 +155,10 @@ export function wcomponent_has_VAPs (wcomponent: WComponent): wcomponent is (WCo
 //     // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
 // }
 
-
+export interface KnowledgeViewWComponentIdEntryMap
+{
+    [world_component_id: string]: KnowledgeViewWComponentEntry
+}
 
 export interface KnowledgeView
 {
@@ -163,7 +166,7 @@ export interface KnowledgeView
     created_at: Date
     title: string
     description: string
-    wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
+    wc_id_map: KnowledgeViewWComponentIdEntryMap
     is_base?: true
     allows_assumptions?: true
     foundation_knowledge_view_ids?: string[]

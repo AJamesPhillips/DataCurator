@@ -1,7 +1,7 @@
 import type { AnyAction } from "redux"
 
 import type { RootState } from "../../../State"
-import { get_current_knowledge_view_from_state } from "../../accessors"
+import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state } from "../../accessors"
 import { handle_upsert_knowledge_view } from "../utils"
 import { is_bulk_edit_knowledge_view_entries } from "./actions"
 
@@ -15,14 +15,14 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
         const { wcomponent_ids, change_left, change_top } = action
 
         const kv = get_current_knowledge_view_from_state(state)
-        if (kv)
+        const UI_kv = get_current_UI_knowledge_view_from_state(state)
+        if (kv && UI_kv)
         {
             const new_wc_id_map = { ...kv.wc_id_map }
 
             wcomponent_ids.forEach(id =>
             {
-                const existing_entry = kv.wc_id_map[id]
-                if (!existing_entry) return
+                const existing_entry = UI_kv.derived_wc_id_map[id]!
 
                 const new_entry = { ...existing_entry }
 

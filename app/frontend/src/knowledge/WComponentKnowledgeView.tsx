@@ -7,7 +7,7 @@ import { EditablePosition } from "../form/EditablePosition"
 import { KnowledgeViewWComponentEntry, wcomponent_is_plain_connection } from "../shared/models/interfaces/SpecialisedObjects"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
-import { get_current_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 
 
@@ -20,9 +20,17 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
+    const knowledge_view = get_current_knowledge_view_from_state(state)
+    const knowledge_view_entry = knowledge_view && knowledge_view.wc_id_map[own_props.wcomponent_id]
+    const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
+    const UI_knowledge_view_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.wcomponent_id]
+
     return {
         wcomponent: get_wcomponent_from_state(state, own_props.wcomponent_id),
-        current_knowledge_view: get_current_knowledge_view_from_state(state),
+        knowledge_view_id: knowledge_view && knowledge_view.id,
+        knowledge_view_title: knowledge_view && knowledge_view.title,
+        UI_knowledge_view_entry,
+        knowledge_view_entry,
     }
 }
 
@@ -39,25 +47,22 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeView (props: Props)
 {
-    const { wcomponent_id, wcomponent, current_knowledge_view } = props
+    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry, knowledge_view_entry } = props
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
 
-    if (!current_knowledge_view) return <div>No current knowledge view selected</div>
+    if (!knowledge_view_id) return <div>No current knowledge view selected</div>
 
-
-    const knowledge_view_id = current_knowledge_view.id
-    const entry = current_knowledge_view.wc_id_map[wcomponent_id]
 
     function update (arg: Partial<KnowledgeViewWComponentEntry>)
     {
         const new_entry: KnowledgeViewWComponentEntry = {
-            ...(entry || { left: 0, top: 0 }),
+            ...(UI_knowledge_view_entry || { left: 0, top: 0 }),
             ...arg,
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id,
-            knowledge_view_id,
+            knowledge_view_id: knowledge_view_id!,
             entry: new_entry,
         })
     }
@@ -67,45 +72,40 @@ function _WComponentKnowledgeView (props: Props)
     {
         props.delete_knowledge_view_entry({
             wcomponent_id,
-            knowledge_view_id,
+            knowledge_view_id: knowledge_view_id!,
         })
     }
 
 
-    if (!entry)
-    {
-        return <div>
-            Current Knowledge View: <br />
-            {current_knowledge_view.title} <br />
+    return <div>
+        Current Knowledge View: <br />
+        {knowledge_view_title} <br />
+        <br />
 
+        {!knowledge_view_entry && <div>
+            Not present in this knowledge view
+            {UI_knowledge_view_entry && " but is present in a foundational knowledge view"}
+            <br />
             <Button
                 value="Add to current knowledge view"
                 extra_class_names="left"
                 size="normal"
                 on_pointer_down={() => update({})}
             />
-        </div>
-    }
+        </div>}
 
 
-    return <div>
-        Current Knowledge View: <br />
-        {current_knowledge_view.title} <br />
-        <br />
-
-        {!wcomponent_is_plain_connection(wcomponent) && [
-        <div>
+        {knowledge_view_entry && !wcomponent_is_plain_connection(wcomponent) && <div>
             Position:
             <MoveToPositionButton
                 description="Show node"
-                move_to_xy={lefttop_to_xy({ ...entry, zoom: 100 }, true)}
+                move_to_xy={lefttop_to_xy({ ...knowledge_view_entry, zoom: 100 }, true)}
             />
-            <EditablePosition point={entry} on_update={update} />
-        </div>,
-        <br />,
-        ]}
+            <EditablePosition point={knowledge_view_entry} on_update={update} />
+            <br />
+        </div>}
 
-        {entry && <div>
+        {knowledge_view_entry && <div>
             <ConfirmatoryDeleteButton
                 on_delete={() => delete_entry()}
             />

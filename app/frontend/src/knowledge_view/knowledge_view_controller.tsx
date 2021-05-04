@@ -17,17 +17,15 @@ const map_state = (state: RootState) =>
 {
     const sync_ready = state.sync.ready
 
-    const knowledge_view_id = state.routing.args.subview_id
     const wcomponents = state.derived.wcomponents
-    const knowledge_view = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
+    const { current_UI_knowledge_view } = state.derived
 
-    if (sync_ready && knowledge_view_id && !knowledge_view) throw new Error(`Could not find knowledge_view: "${knowledge_view_id}"`)
+    if (sync_ready && !current_UI_knowledge_view) console.log(`No current_UI_knowledge_view`)
 
     return {
         sync_ready,
-        knowledge_view_id,
         wcomponents,
-        knowledge_view: knowledge_view,
+        current_UI_knowledge_view,
     }
 }
 
@@ -35,16 +33,16 @@ type Props = ReturnType<typeof map_state>
 
 
 
-const get_children = ({ sync_ready, wcomponents, knowledge_view_id, knowledge_view }: Props): ChildrenRawData =>
+const get_children = ({ sync_ready, wcomponents, current_UI_knowledge_view }: Props): ChildrenRawData =>
 {
-    if (!sync_ready || !knowledge_view_id || !knowledge_view) return { elements: [], content_coordinates: [] }
+    if (!sync_ready || !current_UI_knowledge_view) return { elements: [], content_coordinates: [] }
 
     const nodes = wcomponents
         .filter(({ type }) => type !== "causal_link")
-        .filter(({ id }) => knowledge_view.wc_id_map[id])
-    const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} knowledge_view_id={knowledge_view_id} />)
+        .filter(({ id }) => current_UI_knowledge_view.derived_wc_id_map[id])
+    const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} />)
 
-    const p = Object.values(knowledge_view.wc_id_map)[0]
+    const p = Object.values(current_UI_knowledge_view.derived_wc_id_map)[0]
     const content_coordinates: CanvasPoint[] = p ? [p] : []
 
     return {
@@ -55,24 +53,24 @@ const get_children = ({ sync_ready, wcomponents, knowledge_view_id, knowledge_vi
 
 
 
-const get_svg_upper_children = ({ wcomponents, knowledge_view }: Props) =>
+const get_svg_upper_children = ({ wcomponents, current_UI_knowledge_view }: Props) =>
 {
-    if (!knowledge_view) return []
+    if (!current_UI_knowledge_view) return []
 
     const connections = wcomponents.filter(wcomponent_can_render_connection)
 
-    return connections.map(({ id }) => <WComponentCanvasConnection id={id} knowledge_view={knowledge_view} />)
+    return connections.map(({ id }) => <WComponentCanvasConnection id={id} />)
 }
 
 
 
 const get_content_controls = (props: Props, state: {}, set_state: (s: Partial<RootState>) => void) =>
 {
-    const { wcomponents, knowledge_view } = props
+    const { wcomponents, current_UI_knowledge_view } = props
 
-    if (!knowledge_view) return []
+    if (!current_UI_knowledge_view) return []
 
-    const wcomponents_on_kv = wcomponents.filter(wc => !!knowledge_view.wc_id_map[wc.id])
+    const wcomponents_on_kv = wcomponents.filter(wc => !!current_UI_knowledge_view.derived_wc_id_map[wc.id])
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     const elements = [

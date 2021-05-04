@@ -8,7 +8,7 @@ import type {
 } from "../shared/models/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen, h_step } from "../state/display/display"
-import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import { config_store } from "../state/store"
 import { floor_datetime } from "../utils/datetime"
@@ -79,14 +79,14 @@ export function create_wcomponent (args: Partial<WComponent>)
 
     const wcomponent = get_new_wcomponent_object(args)
 
-    const current_knowledge_view = get_current_knowledge_view_from_state(state)
+    const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
     let add_to_knowledge_view: AddToKnowledgeViewArgs | undefined = undefined
     if (current_knowledge_view)
     {
         const currently_selected_wcomponent_id = state.meta_wcomponents.selected_wcomponent_ids_list[0]
         const currently_selected_wcomponent_position = currently_selected_wcomponent_id
-            ? current_knowledge_view.wc_id_map[currently_selected_wcomponent_id]
+            ? current_knowledge_view.derived_wc_id_map[currently_selected_wcomponent_id]
             : undefined
 
         let position: CanvasPoint

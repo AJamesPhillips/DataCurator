@@ -1,5 +1,17 @@
-import type { KnowledgeView, Perception, WComponent, WComponentType } from "../../shared/models/interfaces/SpecialisedObjects"
+import type {
+    KnowledgeView,
+    KnowledgeViewWComponentEntry,
+    Perception,
+    WComponent,
+    WComponentType,
+} from "../../shared/models/interfaces/SpecialisedObjects"
 
+
+
+export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
+{
+    derived_wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
+}
 
 
 export interface DerivedState
@@ -12,4 +24,6 @@ export interface DerivedState
     base_knowledge_view: KnowledgeView | undefined
     other_knowledge_views: KnowledgeView[]
     judgement_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
+
+    current_UI_knowledge_view: DerivedUIKnowledgeView | undefined
 }

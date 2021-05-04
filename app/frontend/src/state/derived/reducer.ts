@@ -1,3 +1,5 @@
+import type { AnyAction } from "redux"
+
 import type { WComponentJudgement } from "../../shared/models/interfaces/judgement"
 import { wcomponent_is_judgement } from "../../shared/models/interfaces/SpecialisedObjects"
 import { sort_list } from "../../shared/utils/sort"
@@ -7,7 +9,7 @@ import type { RootState } from "../State"
 
 
 
-export function derived_state_reducer (initial_state: RootState, state: RootState)
+export function derived_state_reducer (initial_state: RootState, state: RootState, action: AnyAction)
 {
 
     if (initial_state.specialised_objects.perceptions_by_id !== state.specialised_objects.perceptions_by_id)
@@ -35,7 +37,9 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         state = update_substate(state, "derived", "judgement_ids_by_target_id", judgement_ids_by_target_id)
     }
 
+
     state = knowledge_views_derived_reducer(initial_state, state)
+
 
     return state
 }
