@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../../form/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import { replace_value_in_text } from "../../shared/models/get_rich_text"
@@ -19,6 +20,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_types,
     wcomponent_is_event,
+    wcomponent_is_causal_link,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
 import { Button } from "../../sharedf/Button"
@@ -153,6 +155,24 @@ function _WComponentForm (props: Props)
                 parent_wcomponent_id={wcomponent_id}
                 wcomponent={to_wcomponent}
                 on_update={to_id => upsert_wcomponent({ to_id })}
+            />
+        </p>}
+
+        {wcomponent_is_causal_link(wcomponent) && <p>
+            Effect when true: <EditableNumber
+                placeholder="..."
+                value={wcomponent.effect_when_true}
+                allow_undefined={true}
+                on_change={effect_when_true => upsert_wcomponent({ effect_when_true })}
+            />
+        </p>}
+
+        {wcomponent_is_causal_link(wcomponent) && <p>
+            Effect when false: <EditableNumber
+                placeholder="..."
+                value={wcomponent.effect_when_false}
+                allow_undefined={true}
+                on_change={effect_when_false => upsert_wcomponent({ effect_when_false })}
             />
         </p>}
 

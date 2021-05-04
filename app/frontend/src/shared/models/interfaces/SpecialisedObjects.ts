@@ -21,7 +21,7 @@ export interface Perception extends Base
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentJudgement
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
 export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
@@ -72,6 +72,12 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
     from_type?: ConnectionTerminalType
     to_type?: ConnectionTerminalType
 }
+export interface WComponentCausalConnection extends WComponentConnection
+{
+    type: "causal_link"
+    effect_when_true?: number
+    effect_when_false?: number
+}
 
 
 export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WComponentNodeEvent
@@ -92,7 +98,7 @@ export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WC
     return wcomponent.type === "statev2"
 }
 
-function wcomponent_is_causal_link (wcomponent: WComponent)
+export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
     return wcomponent.type === "causal_link"
 }
