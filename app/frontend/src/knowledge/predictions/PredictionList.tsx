@@ -6,6 +6,7 @@ import { get_new_prediction_id } from "../../utils/utils"
 import { EditableList } from "../../form/editable_list/EditableList"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import { get_today_str } from "../../shared/utils/date_helpers"
 
 
 
@@ -72,6 +73,7 @@ function prepare_new_item (): Prediction
     return {
         id: get_new_prediction_id(),
         created_at: now,
+        custom_created_at: new Date(get_today_str()),
         datetime: { value: now },
         explanation: "",
         probability: 1,

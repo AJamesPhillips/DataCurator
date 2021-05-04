@@ -4,7 +4,7 @@ import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"
 import { useEffect, useState } from "preact/hooks"
 import { Button } from "../sharedf/Button"
-import { date2str } from "../shared/utils/date_helpers"
+import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import { test } from "../shared/utils/test"
 
 
@@ -69,9 +69,9 @@ export function EditableCustomDateTime (props: OwnProps)
         {editing && show_today_shortcut_button && <Button
             value="Today"
             on_pointer_down={() => {
-                const new_working_value = date2str(new Date(), "yyyy-MM-dd") + " 00:00"
-                set_working_value_str(new_working_value)
-                on_change(new Date(new_working_value))
+                const today_dt_str = get_today_str()
+                set_working_value_str(today_dt_str)
+                on_change(new Date(today_dt_str))
             }}
         />}
     </div>

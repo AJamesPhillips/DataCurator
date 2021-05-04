@@ -7,6 +7,7 @@ import { EditableList } from "../../form/editable_list/EditableList"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import { get_today_str } from "../../shared/utils/date_helpers"
 
 
 
@@ -54,6 +55,7 @@ function prepare_new_item (): StateValueString
     return {
         id: get_new_value_id(),
         created_at: now,
+        custom_created_at: new Date(get_today_str()),
         value: "",
         start_datetime: now,
         description: "",

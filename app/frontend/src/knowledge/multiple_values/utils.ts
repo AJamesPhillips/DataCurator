@@ -3,6 +3,7 @@ import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
 } from "../../shared/models/interfaces/state"
+import { get_today_str } from "../../shared/utils/date_helpers"
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../utils/utils"
 
@@ -30,7 +31,8 @@ export function prepare_new_VAP_set (): StateValueAndPredictionsSet
         id: get_new_value_and_prediction_set_id(),
         version: 1,
         created_at: now,
-        datetime: { value: now },
+        custom_created_at: new Date(get_today_str()),
+        datetime: { min: now },
         entries: [prepare_new_VAP()],
     }
 }

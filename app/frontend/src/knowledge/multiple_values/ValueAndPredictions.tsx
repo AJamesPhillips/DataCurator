@@ -125,7 +125,7 @@ const get_summary = (subtype: WComponentStateV2SubType) => (item: StateValueAndP
                 />
             </div>
             <div>
-                Confidence: &nbsp; <EditablePercentage
+                Cn: &nbsp; <EditablePercentage
                     placeholder="..."
                     value={item.conviction}
                     on_change={conviction => on_change({ ...item, conviction })}
