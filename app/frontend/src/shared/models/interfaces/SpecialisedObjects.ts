@@ -96,6 +96,11 @@ export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is 
     return wcomponent.type === "judgement"
 }
 
+export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
+{
+    return wcomponent.type === "counterfactual"
+}
+
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
     return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement(wcomponent)

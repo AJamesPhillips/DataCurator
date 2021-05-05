@@ -184,8 +184,8 @@ export interface WComponentCounterfactual extends WComponentNodeBase
     type: "counterfactual"
     target_wcomponent_id: string
     // subtype: "existence" | "validity"
-    VAP_set_id: string
-    VAP_id: string
+    target_VAP_set_id: string
+    target_VAP_id: string
     probability?: number
     conviction?: number
 }

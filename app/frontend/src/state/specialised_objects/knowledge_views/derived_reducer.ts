@@ -1,7 +1,11 @@
-import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/models/interfaces/SpecialisedObjects"
+import {
+    KnowledgeView,
+    KnowledgeViewWComponentIdEntryMap,
+    wcomponent_is_counterfactual,
+} from "../../../shared/models/interfaces/SpecialisedObjects"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
-import type { DerivedUIKnowledgeView } from "../../derived/State"
+import type { DerivedUIKnowledgeView, WcIdCounterfactualsMap } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view } from "../accessors"
 
@@ -34,6 +38,11 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
         {
             state = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
         }
+        // else if ()
+        // {
+        //     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
+        //     state = update_subsubstate(state, "derived", "current_UI_knowledge_view", "s", {})
+        // }
     }
     else if (state.derived.current_UI_knowledge_view)
     {
@@ -85,6 +94,27 @@ function get_knowledge_view (state: RootState, id: string)
 function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv: KnowledgeView): RootState
 {
     const { current_UI_knowledge_view: current_UI_kv } = state.derived
+
+    const derived_wc_id_map = get_derived_wc_id_map(current_UI_kv, current_kv, intial_state, state)
+    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
+
+    const current_UI_knowledge_view: DerivedUIKnowledgeView = {
+        ...current_kv,
+        derived_wc_id_map,
+        wc_id_counterfactuals_map,
+    }
+    // do not need to do this but helps reduce confusion when debugging
+    delete (current_UI_knowledge_view as any).wc_id_map
+
+    state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+
+    return state
+}
+
+
+
+function get_derived_wc_id_map (current_UI_kv: DerivedUIKnowledgeView | undefined, current_kv: KnowledgeView, intial_state: RootState, state: RootState)
+{
     const to_compose: KnowledgeViewWComponentIdEntryMap[] = []
     let previous_update = false
 
@@ -110,11 +140,36 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
 
     to_compose.push(current_kv.wc_id_map)
     const derived_wc_id_map = Object.assign({}, ...to_compose) as KnowledgeViewWComponentIdEntryMap
-    const current_UI_knowledge_view: DerivedUIKnowledgeView = { ...current_kv, derived_wc_id_map }
-    // do not need to do this but helps reduce confusion when debugging
-    delete (current_UI_knowledge_view as any).wc_id_map
 
-    state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+    return derived_wc_id_map
+}
 
-    return state
+
+
+function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: KnowledgeView): WcIdCounterfactualsMap
+{
+    const map: WcIdCounterfactualsMap = {}
+
+    Object.keys(knowledge_view.wc_id_map).forEach(wcomponent_id =>
+    {
+        const counterfactual = state.specialised_objects.wcomponents_by_id[wcomponent_id]
+        if (!counterfactual || !wcomponent_is_counterfactual(counterfactual)) return
+
+        const { target_wcomponent_id, target_VAP_set_id, target_VAP_id } = counterfactual
+
+        const level_VAP_set_ids = map[target_wcomponent_id] || { VAP_set: {} }
+        map[target_wcomponent_id] = level_VAP_set_ids
+
+        const level_VAP_ids = level_VAP_set_ids.VAP_set[target_VAP_set_id] || {}
+        level_VAP_set_ids.VAP_set[target_VAP_set_id] = level_VAP_ids
+
+        if (level_VAP_ids[target_VAP_id])
+        {
+            console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id]}", will not overwrite with: "${counterfactual.id}"`)
+            return
+        }
+        level_VAP_ids[target_VAP_id] = counterfactual.id
+    })
+
+    return map
 }
