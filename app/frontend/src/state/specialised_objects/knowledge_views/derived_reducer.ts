@@ -4,7 +4,7 @@ import {
     wcomponent_is_counterfactual,
 } from "../../../shared/models/interfaces/SpecialisedObjects"
 import { sort_list } from "../../../shared/utils/sort"
-import { update_substate } from "../../../utils/update_state"
+import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView, WcIdCounterfactualsMap } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view } from "../accessors"
@@ -38,15 +38,15 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
         {
             state = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
         }
-        // else if ()
-        // {
-        //     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
-        //     state = update_subsubstate(state, "derived", "current_UI_knowledge_view", "s", {})
-        // }
-    }
-    else if (state.derived.current_UI_knowledge_view)
-    {
-        state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
+        else if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id && current_kv)
+        {
+            const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
+            const current_UI_knowledge_view = {
+                ...state.derived.current_UI_knowledge_view!,
+                wc_id_counterfactuals_map,
+            }
+            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+        }
     }
 
 
@@ -165,7 +165,7 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
 
         if (level_VAP_ids[target_VAP_id])
         {
-            console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id]}", will not overwrite with: "${counterfactual.id}"`)
+            console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id]!.id}", will not overwrite with: "${counterfactual.id}"`)
             return
         }
         level_VAP_ids[target_VAP_id] = counterfactual

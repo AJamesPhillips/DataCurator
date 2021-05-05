@@ -16,7 +16,7 @@ import { get_new_wcomponent_id } from "../utils/utils"
 
 
 
-function get_new_wcomponent_object (args: Partial<WComponent>)
+export function get_new_wcomponent_object (args: Partial<WComponent>)
 {
     const created_at = new Date()
     const base: WComponentBase = {
