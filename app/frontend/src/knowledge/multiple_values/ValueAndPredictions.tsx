@@ -22,6 +22,7 @@ import { get_current_knowledge_view_from_state } from "../../state/specialised_o
 
 interface OwnProps
 {
+    wcomponent_id?: string
     created_at: Date
     subtype: WComponentStateV2SubType
     values_and_predictions: StateValueAndPrediction[]
@@ -30,8 +31,9 @@ interface OwnProps
 
 
 
-const map_state = (state: RootState) => {
+const map_state = (state: RootState, props: OwnProps) => {
     const current_knowledge_view = get_current_knowledge_view_from_state(state)
+
     const allows_assumptions = !!(current_knowledge_view && current_knowledge_view.allows_assumptions)
 
     return {
@@ -156,6 +158,7 @@ const get_summary = (subtype: WComponentStateV2SubType, allows_assumptions: bool
                 size={20}
                 probability={item.probability}
                 conviction={item.conviction}
+
             />
         </div>
     </div>

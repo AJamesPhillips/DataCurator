@@ -20,6 +20,8 @@ import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlder
 
 interface OwnProps
 {
+    wcomponent_id: string
+
     item_descriptor: string
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     subtype: WComponentStateV2SubType
@@ -37,18 +39,10 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const [new_item, set_new_item] = useState<StateValueAndPredictionsSet | undefined>(undefined)
 
     const {
+        wcomponent_id,
         item_descriptor, values_and_prediction_sets, subtype,
         invalid_items, future_items, present_items, past_items,
     } = props
-
-
-    const VAP_set_item_top_props: EditableListEntryTopProps<StateValueAndPredictionsSet> = {
-        get_created_at: v => v.created_at,
-        get_custom_created_at: v => v.custom_created_at,
-        get_summary: get_summary_for_single_VAP_set(subtype, false),
-        get_details: get_details_for_single_VAP_set(subtype),
-        extra_class_names: `value_and_prediction_set new`
-    }
 
 
     const sorted_grouped_future_versioned_VAP_sets = validate_sort_and_group_VAP_sets_by_version(future_items, subtype)
@@ -60,6 +54,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets: values_and_prediction_sets,
         grouped_versioned_VAP_sets: sorted_grouped_future_versioned_VAP_sets,
         update_items: props.update_items,
+        wcomponent_id,
         subtype,
         tense: Tense.future,
     })
@@ -68,6 +63,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets: values_and_prediction_sets,
         grouped_versioned_VAP_sets: sorted_grouped_present_versioned_VAP_sets,
         update_items: props.update_items,
+        wcomponent_id,
         subtype,
         tense: Tense.present,
     })
@@ -76,9 +72,19 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets: values_and_prediction_sets,
         grouped_versioned_VAP_sets: sorted_grouped_past_versioned_VAP_sets,
         update_items: props.update_items,
+        wcomponent_id,
         subtype,
         tense: Tense.past,
     })
+
+
+    const new_VAP_set_form_top_props: EditableListEntryTopProps<StateValueAndPredictionsSet> = {
+        get_created_at: v => v.created_at,
+        get_custom_created_at: v => v.custom_created_at,
+        get_summary: get_summary_for_single_VAP_set(subtype, false),
+        get_details: get_details_for_single_VAP_set(subtype),
+        extra_class_names: `value_and_prediction_set new`
+    }
 
 
     return <div className="value_and_prediction_sets">
@@ -94,7 +100,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         <NewItemForm
             new_item={new_item}
             set_new_item={set_new_item}
-            item_top_props={VAP_set_item_top_props}
+            item_top_props={new_VAP_set_form_top_props}
             item_descriptor={item_descriptor}
             add_item={new_item =>
             {
@@ -180,6 +186,7 @@ interface FactoryRenderListContentArgs <U, V>
     grouped_versioned_VAP_sets: V[]
     all_VAP_sets: U[]
     update_items: (items: U[]) => void
+    wcomponent_id: string
     subtype: WComponentStateV2SubType
     tense: Tense
 }
@@ -208,7 +215,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     get_custom_created_at={get_latest_custom_created_at}
                     set_custom_created_at={set_latest_custom_created_at}
                     get_summary={get_summary(subtype)}
-                    get_details={get_details(subtype)}
+                    get_details={get_details(subtype, args.wcomponent_id)}
                     get_details2={get_details2(subtype)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
@@ -251,11 +258,11 @@ const get_summary = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: V
 
 
 
-const get_details = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details = (subtype: WComponentStateV2SubType, wcomponent_id: string) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
 
-    return get_details_for_single_VAP_set(subtype)(latest_VAP_set, latest => on_change({ latest, older }))
+    return get_details_for_single_VAP_set(subtype, wcomponent_id)(latest_VAP_set, latest => on_change({ latest, older }))
 }
 
 

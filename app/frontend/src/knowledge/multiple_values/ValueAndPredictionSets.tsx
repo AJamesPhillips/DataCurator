@@ -14,6 +14,7 @@ import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsCompone
 
 interface OwnProps
 {
+    wcomponent_id: string
     subtype: WComponentStateV2SubType
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     update_values_and_predictions: (values_and_predictions: StateValueAndPredictionsSet[]) => void
@@ -32,7 +33,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictionSets (props: Props)
 {
-    const { values_and_prediction_sets, subtype } = props
+    const { wcomponent_id, values_and_prediction_sets, subtype } = props
     const { invalid_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
         items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
@@ -40,6 +41,8 @@ function _ValueAndPredictionSets (props: Props)
     })
 
     return <ValueAndPredictionSetsComponent
+        wcomponent_id={wcomponent_id}
+
         item_descriptor="Value"
         values_and_prediction_sets={values_and_prediction_sets}
         subtype={subtype}

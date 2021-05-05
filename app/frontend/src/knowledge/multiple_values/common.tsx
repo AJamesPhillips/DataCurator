@@ -43,7 +43,7 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType, wcomponent_id?: string) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     const entries = get_VAPs_from_set(VAP_set, subtype)
 
@@ -56,6 +56,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
         <br />
         <div>
             <ValueAndPredictions
+                wcomponent_id={wcomponent_id}
                 created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
                 subtype={subtype}
                 values_and_predictions={entries}

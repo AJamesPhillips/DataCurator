@@ -252,6 +252,7 @@ function _WComponentForm (props: Props)
         {wcomponent_is_statev2(wcomponent) && <div>
             <p>
                 <ValueAndPredictionSets
+                    wcomponent_id={wcomponent.id}
                     subtype={wcomponent.subtype}
                     values_and_prediction_sets={wcomponent.values_and_prediction_sets || []}
                     update_values_and_predictions={values_and_prediction_sets =>
