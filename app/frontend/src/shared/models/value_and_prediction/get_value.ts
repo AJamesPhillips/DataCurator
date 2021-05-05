@@ -31,9 +31,16 @@ function get_probable_VAP_set_display_values (wcomponent: WComponentNodeStateV2,
     let all_VAPs: StateValueAndPrediction[] = []
     present_items.forEach(VAP_set =>
     {
-        const VAPs = is_boolean
+        const VAPs = (is_boolean
             ? VAP_set.entries.slice(0, 1)
-            : VAP_set.entries.filter(({ probability, conviction }) => probability > 0 || conviction < 1)
+            : VAP_set.entries.filter(({ probability, conviction }) =>
+            {
+                return !(probability === 0 && conviction === 1)
+            }))
+            .filter(({ conviction }) =>
+            {
+                return conviction !== 0
+            })
         all_VAPs = all_VAPs.concat(VAPs)
     })
 
@@ -46,6 +53,7 @@ function get_probable_VAP_set_display_values (wcomponent: WComponentNodeStateV2,
     let value_strings: string[] = []
     if (is_boolean)
     {
+        // Should we return something that's neither true nor false if probability === 0.5?
         value_strings = VAPs_by_prob.map(VAP => VAP.probability > 0.5
             ? (wcomponent.boolean_true_str || "True")
             : (wcomponent.boolean_false_str || "False"))
@@ -133,6 +141,11 @@ function run_tests ()
             { id: "VAP1", value: "A", probability: 1, conviction: 0.5, description: "", explanation: "" },
         ]
     }
+    const certain_no_cn: StateValueAndPredictionsSet = {
+        id: "", created_at: dt1, version: 1, datetime: {}, entries: [
+            { id: "VAP1", value: "A", probability: 1, conviction: 0, description: "", explanation: "" },
+        ]
+    }
 
 
     display_value = get_probable_VAP_set_display_values(wcomponent_other, [])
@@ -177,13 +190,33 @@ function run_tests ()
     display_value = get_probable_VAP_set_display_values({ ...wcomponent_boolean, boolean_false_str: "No" }, [no_chance])
     test(display_value, { value: "No", type: "single" })
 
-    // uncertainty
+    // uncertainty for "boolean" subtype
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_boolean, [uncertain_prob])
+    test(display_value, { value: "False", type: "single", modifier: "uncertain" })
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_boolean, [uncertain_cn])
+    test(display_value, { value: "True", type: "single", modifier: "uncertain" })
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_boolean, [certain_no_cn])
+    test(display_value, { value: undefined, type: "single" })
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_boolean, [single, certain_no_cn])
+    test(display_value, { value: "True", type: "single" })
+
+    // uncertainty for "other" subtype
 
     display_value = get_probable_VAP_set_display_values(wcomponent_other, [uncertain_prob])
     test(display_value, { value: "A", type: "single", modifier: "uncertain" })
 
     display_value = get_probable_VAP_set_display_values(wcomponent_other, [uncertain_cn])
     test(display_value, { value: "A", type: "single", modifier: "uncertain" })
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_other, [certain_no_cn])
+    test(display_value, { value: undefined, type: "single" })
+
+    display_value = get_probable_VAP_set_display_values(wcomponent_other, [single, certain_no_cn])
+    test(display_value, { value: "A", type: "single" })
 }
 
 // run_tests()
