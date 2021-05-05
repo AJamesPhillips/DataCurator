@@ -1,20 +1,22 @@
 import type { WComponent, WComponentsById } from "./interfaces/SpecialisedObjects"
 import { test } from "../utils/test"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
+import type { WComponentCounterfactuals } from "../../state/derived/State"
 
 
 
 export interface GetFieldTextArgs extends GetIdReplacedTextArgs
 {
     wcomponent: WComponent
+    counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
 }
 export function get_title (args: GetFieldTextArgs): string
 {
-    const { wcomponent, created_at_ms, sim_ms } = args
+    const { wcomponent, counterfactuals, created_at_ms, sim_ms } = args
     const title = wcomponent.title
-    const text = replace_value_in_text({ text: title, wcomponent, created_at_ms, sim_ms })
+    const text = replace_value_in_text({ text: title, wcomponent, counterfactuals, created_at_ms, sim_ms })
 
     return replace_ids_in_text({ ...args, text })
 }
@@ -32,12 +34,18 @@ interface ReplaceValueInTextArgs
 {
     text: string
     wcomponent: WComponent
+    counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
 }
 export function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
-    const value = get_wcomponent_state_value(args.wcomponent, args.created_at_ms, args.sim_ms).value
+    const value = get_wcomponent_state_value({
+        wcomponent: args.wcomponent,
+        counterfactuals: args.counterfactuals,
+        created_at_ms: args.created_at_ms,
+        sim_ms: args.sim_ms,
+    }).value
     const text = args.text.replace(/\$\{value\}/g, `${value}`)
     return text
 }

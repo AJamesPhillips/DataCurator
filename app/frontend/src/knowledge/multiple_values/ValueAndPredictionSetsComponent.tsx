@@ -338,7 +338,7 @@ function factory_handle_change (args: FactoryHandleChangeArgs): (item: Versioned
 
 function run_tests ()
 {
-    console.log("running tests of factory_handle_change for ValueAndPredictionSetsComponent")
+    console. log("running tests of factory_handle_change for ValueAndPredictionSetsComponent")
     // Test it handles delete of a nested older version
 
     const created_at = new Date("2021-04-30T10:51:06.041Z")

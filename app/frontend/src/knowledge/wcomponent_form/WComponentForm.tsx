@@ -24,6 +24,7 @@ import {
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
 import { wcomponent_types } from "../../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../../state/actions"
+import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { DisplayValue } from "../multiple_values/DisplayValue"
@@ -52,8 +53,13 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         to_wcomponent = get_wcomponent_from_state(state, wcomponent.to_id)
     }
 
+
+    const counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
+
+
     return {
         ready: state.sync.ready,
+        counterfactuals,
         from_wcomponent,
         to_wcomponent,
         // keys: state.global_keys,
@@ -81,7 +87,7 @@ function _WComponentForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
+    const { wcomponent, counterfactuals, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
     const wcomponent_id = wcomponent.id
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
@@ -91,12 +97,12 @@ function _WComponentForm (props: Props)
     }
 
 
-    const UI_value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
+    const UI_value = get_wcomponent_state_value({ wcomponent, counterfactuals, created_at_ms, sim_ms })
 
     return <div key={wcomponent_id}>
         <h2><EditableText
             placeholder={"Title..."}
-            value={rich_text ? replace_value_in_text({ text: wcomponent.title, wcomponent, created_at_ms, sim_ms, }) : wcomponent.title}
+            value={rich_text ? replace_value_in_text({ text: wcomponent.title, wcomponent, counterfactuals, created_at_ms, sim_ms, }) : wcomponent.title}
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
 

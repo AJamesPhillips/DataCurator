@@ -17,10 +17,12 @@ export interface VAP_set_id_counterfactual_map
 {
     [target_VAP_set_id: string]: VAP_id_counterfactual_map
 }
+export interface WComponentCounterfactuals
+{
+    VAP_set: VAP_set_id_counterfactual_map
+}
 export type WcIdCounterfactualsMap = {
-    [target_wcomponent_id: string]: {
-        VAP_set: VAP_set_id_counterfactual_map
-    }
+    [target_wcomponent_id: string]: WComponentCounterfactuals
 }
 
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">

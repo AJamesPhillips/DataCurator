@@ -8,6 +8,8 @@ import {
     wcomponent_is_state,
 } from "../shared/models/interfaces/SpecialisedObjects"
 import type { UIStateValue } from "../shared/models/interfaces/state"
+import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
+import type { WComponentCounterfactuals } from "../state/derived/State"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
@@ -26,16 +28,21 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { created_at_ms, sim_ms } = state.routing.args
     const { wcomponent } = own_props
 
-
+    let counterfactuals: WComponentCounterfactuals | undefined
     let target_wcomponent: WComponent | undefined = undefined
     if (wcomponent_is_judgement(wcomponent))
     {
-        const map = state.specialised_objects.wcomponents_by_id
-        target_wcomponent = map[wcomponent.judgement_target_wcomponent_id]
+        const target_id = wcomponent.judgement_target_wcomponent_id
+        target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
+        counterfactuals = get_wcomponent_counterfactuals(state, target_id)
+    }
+    else
+    {
+        counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
     }
 
 
-    return { created_at_ms, sim_ms, target_wcomponent }
+    return { counterfactuals, created_at_ms, sim_ms, target_wcomponent }
 }
 
 
@@ -50,6 +57,7 @@ function _WComponentStatefulValue (props: Props)
     const state_value_container_class_name = "node_state_value_container " + (is_empty ? "empty" : "")
 
     const value_to_render = is_judgement
+        // Refactor this to use JudgementBadgeC
         ? <JudgementBadge judgement={judgement_value} />
         : ui_value && <DisplayValue UI_value={ui_value} />
 
@@ -67,12 +75,12 @@ function process_props (props: Props)
     let is_judgement = false
     let is_empty = true
 
-    const { wcomponent, created_at_ms, sim_ms, target_wcomponent } = props
+    const { wcomponent, counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
 
 
     if (wcomponent_is_state(wcomponent))
     {
-        ui_value = get_wcomponent_state_value(wcomponent, created_at_ms, sim_ms)
+        ui_value = get_wcomponent_state_value({ wcomponent, counterfactuals, created_at_ms, sim_ms })
         is_empty = ui_value.value === undefined
     }
     else if (wcomponent_is_judgement(wcomponent))
@@ -80,7 +88,7 @@ function process_props (props: Props)
         is_judgement = true
         is_empty = false
 
-        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
+        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals: counterfactuals, created_at_ms, sim_ms })
     }
 
     return { ui_value, judgement_value, is_judgement, is_empty }

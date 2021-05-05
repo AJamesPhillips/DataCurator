@@ -10,7 +10,7 @@ interface OwnProps
     judgement: JudgementValue
 }
 
-
+// Refactor this to be hidden inside JudgementBadgeC
 export function JudgementBadge (props: OwnProps)
 {
     const class_name = `judgement_badge ${props.judgement ? "positive" : props.judgement === undefined ? "inactive" : "negative"}`

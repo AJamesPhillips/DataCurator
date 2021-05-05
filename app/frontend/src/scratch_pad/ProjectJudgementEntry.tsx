@@ -9,6 +9,7 @@ import { get_wcomponent_state_value } from "../shared/models/get_wcomponent_stat
 import type { WComponentJudgement } from "../shared/models/interfaces/judgement"
 import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
+import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 
 
@@ -22,10 +23,17 @@ interface OwnProps
 }
 
 
-const map_state = (state: RootState, { judgement }: OwnProps) => ({
-    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    target_wcomponent: state.specialised_objects.wcomponents_by_id[judgement.judgement_target_wcomponent_id],
-})
+const map_state = (state: RootState, { judgement }: OwnProps) =>
+{
+    const target_wc_id = judgement.judgement_target_wcomponent_id
+    const target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wc_id]
+
+    return {
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        target_wcomponent,
+        counterfactuals: get_wcomponent_counterfactuals(state, target_wc_id),
+    }
+}
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
@@ -36,7 +44,7 @@ const _ProjectJudgementEntry = (props: Props) =>
     if (!props.target_wcomponent) return <div>Can not find judgement's target wcomponent of id: {props.judgement.judgement_target_wcomponent_id}</div>
 
 
-    const { knowledge_view, judgement, target_wcomponent, wcomponents_by_id, created_at_ms, sim_ms } = props
+    const { knowledge_view, judgement, target_wcomponent, counterfactuals, wcomponents_by_id, created_at_ms, sim_ms } = props
 
     return <div style={{ display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa" }}>
         <div
@@ -49,11 +57,11 @@ const _ProjectJudgementEntry = (props: Props) =>
             }}
         >
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, created_at_ms, sim_ms })}
+                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, counterfactuals, created_at_ms, sim_ms })}
             />
         </div>
         <div style={{ flex: "1", textAlign: "right" }}>
-            {get_wcomponent_state_value(target_wcomponent, created_at_ms, sim_ms).value}
+            {get_wcomponent_state_value({ wcomponent: target_wcomponent, counterfactuals, created_at_ms, sim_ms }).value}
         </div>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
@@ -66,11 +74,11 @@ const _ProjectJudgementEntry = (props: Props) =>
             })()}
         >
             <JudgementBadge
-                judgement={calculate_judgement_value({ wcomponent: judgement, target_wcomponent, created_at_ms, sim_ms })}
+                judgement={calculate_judgement_value({ wcomponent: judgement, target_wcomponent, target_counterfactuals: undefined, created_at_ms, sim_ms })}
             />
 
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: judgement, created_at_ms, sim_ms })}
+                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: judgement, counterfactuals: undefined, created_at_ms, sim_ms })}
             />
         </a>
     </div>

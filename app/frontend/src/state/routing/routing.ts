@@ -156,7 +156,7 @@ function update_args_with_value (key: RoutingStringArgKey, value: string, args: 
 
 function run_tests ()
 {
-    console.log("running tests of routing_state_to_string")
+    console. log("running tests of routing_state_to_string")
 
     let state: RoutingState
     let result: string

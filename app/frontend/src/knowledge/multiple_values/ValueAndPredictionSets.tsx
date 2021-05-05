@@ -9,6 +9,7 @@ import { partition_and_prune_items_by_datetimes } from "../../shared/models/util
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
+import { get_wcomponent_VAP_set_counterfactuals } from "../../state/derived/accessor"
 
 
 
@@ -23,12 +24,12 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const counterfactuals_map = state.derived.current_UI_knowledge_view && state.derived.current_UI_knowledge_view.wc_id_counterfactuals_map[own_props.wcomponent_id]
+    const VAP_set_counterfactuals_map = get_wcomponent_VAP_set_counterfactuals(state, own_props.wcomponent_id)
 
     return {
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
-        VAP_set_counterfactuals_map: counterfactuals_map && counterfactuals_map.VAP_set,
+        VAP_set_counterfactuals_map,
     }
 }
 

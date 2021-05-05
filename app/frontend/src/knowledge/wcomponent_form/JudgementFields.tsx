@@ -8,6 +8,7 @@ import {
     WComponentJudgement,
 } from "../../shared/models/interfaces/judgement"
 import type { WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
+import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "../judgements/calculate_judgement_value"
@@ -25,11 +26,13 @@ interface OwnProps
 
 const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 {
-
-    const target_wcomponent: WComponent | undefined = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
+    const target_id = wcomponent.judgement_target_wcomponent_id
+    const target_wcomponent = get_wcomponent_from_state(state, target_id)
+    const target_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
 
     return {
         target_wcomponent,
+        target_counterfactuals,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }
@@ -43,12 +46,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementFields (props: Props)
 {
-    const { wcomponent, upsert_wcomponent, target_wcomponent, created_at_ms, sim_ms } = props
+    const { wcomponent, upsert_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
 
     const { judgement_manual } = wcomponent
     const selected_option_id_for_manual = judgement_manual === undefined ? undefined : judgement_manual.toString()
 
-    const judgement = calculate_judgement_value({ wcomponent, target_wcomponent, created_at_ms, sim_ms })
+    const judgement = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 
     return <p>
         <WComponentFromTo
