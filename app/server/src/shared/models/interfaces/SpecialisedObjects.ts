@@ -8,7 +8,7 @@ import type {
     WComponentNodeStateV2,
 } from "./state"
 import type { ValidityPredictions, ExistencePredictions } from "./uncertainty"
-import type { WComponentNodeBase, WComponentNodeType } from "./wcomponent"
+import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent"
 
 
 
@@ -21,35 +21,9 @@ export interface Perception extends Base
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentJudgement
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
 export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
-
-type WComponentConnectionType = "causal_link" | "relation_link"
-export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement"
-const _wcomponent_types: {[P in WComponentType]: true} = {
-    event: true,
-    state: true,
-    statev2: true,
-    process: true,
-    actor: true,
-    causal_link: true,
-    relation_link: true,
-    judgement: true,
-}
-export const wcomponent_types: WComponentType[] = Object.keys(_wcomponent_types) as any
-
-
-export interface WComponentBase extends Base
-{
-    type: WComponentType
-    // previous_versions: WComponentID[] // could be formed from more than one previous WComponent
-    // next_versions: WComponentID[] // more than one next WComponent could be formed from this
-
-    // Explainable
-    title: string
-    description: string
-}
 
 
 export interface WComponentNodeProcess extends WComponentNodeBase
@@ -72,6 +46,12 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
     from_type?: ConnectionTerminalType
     to_type?: ConnectionTerminalType
 }
+export interface WComponentCausalConnection extends WComponentConnection
+{
+    type: "causal_link"
+    effect_when_true?: number
+    effect_when_false?: number
+}
 
 
 export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WComponentNodeEvent
@@ -92,7 +72,7 @@ export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WC
     return wcomponent.type === "statev2"
 }
 
-function wcomponent_is_causal_link (wcomponent: WComponent)
+export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
     return wcomponent.type === "causal_link"
 }
@@ -155,7 +135,10 @@ export function wcomponent_has_VAPs (wcomponent: WComponent): wcomponent is (WCo
 //     // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
 // }
 
-
+export interface KnowledgeViewWComponentIdEntryMap
+{
+    [world_component_id: string]: KnowledgeViewWComponentEntry
+}
 
 export interface KnowledgeView
 {
@@ -163,7 +146,7 @@ export interface KnowledgeView
     created_at: Date
     title: string
     description: string
-    wc_id_map: { [world_component_id: string]: KnowledgeViewWComponentEntry }
+    wc_id_map: KnowledgeViewWComponentIdEntryMap
     is_base?: true
     allows_assumptions?: true
     foundation_knowledge_view_ids?: string[]

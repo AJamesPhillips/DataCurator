@@ -250,3 +250,10 @@ export function date2str_auto (date: Date, shorten_if_only_days: boolean = true)
 
     return date2str(date, format)
 }
+
+
+
+export function get_today_str ()
+{
+    return date2str(new Date(), "yyyy-MM-dd") + " 00:00"
+}

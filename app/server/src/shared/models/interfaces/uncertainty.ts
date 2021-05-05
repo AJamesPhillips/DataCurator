@@ -153,6 +153,9 @@ export interface ValidityPredictions
 // +++ 2021-04-15
 // The existence prediction is the ?same? as the boolean state subtype?  Use this instead?
 // --- 2021-04-15
+// +++ 2021-05-04
+// Perhaps this should only exist on non state components e.g. causal connections like wc4?
+// --- 2021-05-04
 export interface ExistencePredictions
 {
     // This used to be TemporalUncertainty but a prediction needs to have its own uncertainty
