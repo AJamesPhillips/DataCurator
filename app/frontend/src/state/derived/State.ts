@@ -4,16 +4,19 @@ import type {
     Perception,
     WComponent,
 } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { WComponentCounterfactual } from "../../shared/models/interfaces/uncertainty"
 import type { WComponentType } from "../../shared/models/interfaces/wcomponent"
 
 
 
+export interface WcIdCounterfactualsVAP_map
+{
+    [target_VAP_id: string]: WComponentCounterfactual
+}
 export type WcIdCounterfactualsMap = {
     [target_wcomponent_id: string]: {
         VAP_set: {
-            [target_VAP_set_id: string]: {
-                [target_VAP_id: string]: string // string is the id of the counterfactual wcomponent
-            }
+            [target_VAP_set_id: string]: WcIdCounterfactualsVAP_map
         }
     }
 }

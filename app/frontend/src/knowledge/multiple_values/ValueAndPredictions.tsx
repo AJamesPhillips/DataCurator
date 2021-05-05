@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { useMemo } from "preact/hooks"
+import type { Dispatch } from "redux"
 
 import "./ValueAndPredictions.css"
 import { EditableNumber } from "../../form/EditableNumber"
@@ -16,13 +17,18 @@ import { prepare_new_VAP } from "./utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-import { get_current_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { ACTIONS } from "../../state/actions"
+import type { WComponentCounterfactual } from "../../shared/models/interfaces/uncertainty"
+import { wcomponent_is_counterfactual } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { WcIdCounterfactualsVAP_map } from "../../state/derived/State"
 
 
 
 interface OwnProps
 {
     wcomponent_id?: string
+    VAP_set_id?: string
     created_at: Date
     subtype: WComponentStateV2SubType
     values_and_predictions: StateValueAndPrediction[]
@@ -32,16 +38,71 @@ interface OwnProps
 
 
 const map_state = (state: RootState, props: OwnProps) => {
-    const current_knowledge_view = get_current_knowledge_view_from_state(state)
+    const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
-    const allows_assumptions = !!(current_knowledge_view && current_knowledge_view.allows_assumptions)
+    let allows_assumptions = false
+    // let counterfactuals: (WComponentCounterfactual | undefined)[] = []
+    let VAP_counterfactuals_map: WcIdCounterfactualsVAP_map | undefined = undefined
+
+    const { wcomponent_id, VAP_set_id } = props
+    if (current_UI_knowledge_view)
+    {
+        const { allows_assumptions: aa, wc_id_counterfactuals_map } = current_UI_knowledge_view
+        allows_assumptions = !!aa
+
+        const VAP_set_map = wcomponent_id ? wc_id_counterfactuals_map[wcomponent_id] : undefined
+        VAP_counterfactuals_map = (VAP_set_map && VAP_set_id && VAP_set_map.VAP_set[VAP_set_id]) || undefined
+
+        // if (VAP_map)
+        // {
+        //     counterfactuals = props.values_and_predictions.map(({ id }) =>
+        //     {
+        //         const counterfactual_wcomponent_id = VAP_map[id]
+        //         if (!counterfactual_wcomponent_id) return undefined
+        //         const counterfactual_wcomponent = state.specialised_objects.wcomponents_by_id[counterfactual_wcomponent_id]
+        //         if (!counterfactual_wcomponent) return undefined
+        //         if (!wcomponent_is_counterfactual(counterfactual_wcomponent)) return undefined
+        //         return counterfactual_wcomponent
+        //     })
+        // }
+    }
+
 
     return {
         allows_assumptions,
+        VAP_counterfactuals_map,
     }
 }
 
-const connector = connect(map_state)
+
+
+function map_dispatch (dispatch: Dispatch, own_props: OwnProps)
+{
+    interface UpsertCounterfactualArgs
+    {
+        id: string
+        target_wcomponent_id: string
+        target_VAP_set_id: string
+        target_VAP_id: string
+        probability?: number
+        conviction?: number
+    }
+
+    return {
+        upsert_counterfactual: (args: UpsertCounterfactualArgs) =>
+        {
+            // dispatch(ACTIONS.specialised_object.upsert_wcomponent({
+            //     wcomponent: {
+            //         type: "counterfactual"
+            //     }
+            // }))
+        }
+    }
+}
+
+
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -53,7 +114,7 @@ function _ValueAndPredictions (props: Props)
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<StateValueAndPrediction> = {
             get_created_at: () => props.created_at,
-            get_summary: get_summary(props.subtype, props.allows_assumptions),
+            get_summary: get_summary(props.subtype, props.allows_assumptions, props.VAP_counterfactuals_map),
             get_details: get_details(props.subtype),
             extra_class_names: "value_and_prediction",
         }
@@ -95,12 +156,14 @@ export const ValueAndPredictions = connector(_ValueAndPredictions) as Functional
 const get_id = (item: StateValueAndPrediction) => item.id
 
 
-const get_summary = (subtype: WComponentStateV2SubType, allows_assumptions: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_summary = (subtype: WComponentStateV2SubType, allows_assumptions: boolean, VAP_counterfactuals_map: WcIdCounterfactualsVAP_map | undefined) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const is_boolean = subtype === "boolean"
     const has_rel_prob = item.relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean
     const disabled_rel_prob = !has_rel_prob || is_boolean
+
+    const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[item.id]
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">
@@ -158,7 +221,8 @@ const get_summary = (subtype: WComponentStateV2SubType, allows_assumptions: bool
                 size={20}
                 probability={item.probability}
                 conviction={item.conviction}
-
+                counterfactual_probability={counterfactual && counterfactual.probability}
+                counterfactual_conviction={counterfactual && counterfactual.conviction}
             />
         </div>
     </div>

@@ -168,7 +168,7 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
             console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id]}", will not overwrite with: "${counterfactual.id}"`)
             return
         }
-        level_VAP_ids[target_VAP_id] = counterfactual.id
+        level_VAP_ids[target_VAP_id] = counterfactual
     })
 
     return map

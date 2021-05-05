@@ -57,6 +57,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
         <div>
             <ValueAndPredictions
                 wcomponent_id={wcomponent_id}
+                VAP_set_id={VAP_set.id}
                 created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
                 subtype={subtype}
                 values_and_predictions={entries}
