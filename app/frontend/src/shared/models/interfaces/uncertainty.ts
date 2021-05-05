@@ -1,4 +1,5 @@
 import type { Base } from "./base"
+import type { WComponentNodeBase } from "./wcomponent"
 
 
 
@@ -175,3 +176,16 @@ export interface ExistencePredictions
 // probability of the item in question.
 // Or as we have chosen so far to do, keep these two concepts seperate from each other
 // --- 2021-04-10
+
+
+
+export interface WComponentCounterfactual extends WComponentNodeBase
+{
+    type: "counterfactual"
+    target_wcomponent_id: string
+    // subtype: "existence" | "validity"
+    VAP_set_id: string
+    VAP_id: string
+    probability?: number
+    conviction?: number
+}

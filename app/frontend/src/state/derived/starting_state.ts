@@ -16,6 +16,7 @@ export function get_derived_starting_state (): DerivedState
             causal_link: new Set(),
             relation_link: new Set(),
             judgement: new Set(),
+            counterfactual: new Set(),
         },
         knowledge_views: [],
 

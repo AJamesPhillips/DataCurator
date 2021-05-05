@@ -62,6 +62,7 @@ function update_wcomponent_ids_by_type (state: RootState)
         causal_link: new Set(),
         relation_link: new Set(),
         judgement: new Set(),
+        counterfactual: new Set(),
     }
 
     state.derived.wcomponents.forEach(wcomponent =>

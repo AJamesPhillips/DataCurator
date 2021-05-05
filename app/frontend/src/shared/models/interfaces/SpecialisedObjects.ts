@@ -7,7 +7,7 @@ import type {
     WComponentNodeState,
     WComponentNodeStateV2,
 } from "./state"
-import type { ValidityPredictions, ExistencePredictions } from "./uncertainty"
+import type { ValidityPredictions, ExistencePredictions, WComponentCounterfactual } from "./uncertainty"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent"
 
 
@@ -32,7 +32,11 @@ export interface WComponentNodeProcess extends WComponentNodeBase
     // end: TemporalUncertainty
 }
 
-export type WComponentNode = WComponentNodeEvent | WComponentNodeState | WComponentNodeStateV2 | WComponentNodeProcess
+export type WComponentNode = WComponentNodeEvent
+    | WComponentNodeState
+    | WComponentNodeStateV2
+    | WComponentNodeProcess
+    | WComponentCounterfactual
 
 
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
