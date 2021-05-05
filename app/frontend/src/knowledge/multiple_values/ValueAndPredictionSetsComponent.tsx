@@ -86,7 +86,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const new_VAP_set_form_top_props: EditableListEntryTopProps<StateValueAndPredictionsSet> = {
         get_created_at: v => v.created_at,
         get_custom_created_at: v => v.custom_created_at,
-        get_summary: get_summary_for_single_VAP_set(subtype, false),
+        get_summary: get_summary_for_single_VAP_set(subtype, false, undefined),
         get_details: get_details_for_single_VAP_set(subtype),
         extra_class_names: `value_and_prediction_set new`
     }
@@ -220,7 +220,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     get_created_at={get_latest_created_at}
                     get_custom_created_at={get_latest_custom_created_at}
                     set_custom_created_at={set_latest_custom_created_at}
-                    get_summary={get_summary(subtype)}
+                    get_summary={get_summary(subtype, args.VAP_set_counterfactuals_map)}
                     get_details={get_details(subtype, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
                     get_details2={get_details2(subtype)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
@@ -233,7 +233,8 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                         update_items(remove_from_list_by_predicate(all_VAP_sets, predicate_by_id(item.latest)))
                     }}
                 />
-            </div>)}
+            </div>
+            )}
         </div>
     }
 
@@ -255,11 +256,12 @@ const set_latest_custom_created_at = (item: VersionedStateVAPsSet, custom_create
 }
 
 
-const get_summary = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_summary = (subtype: WComponentStateV2SubType, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
+    const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[latest_VAP_set.id]
 
-    return get_summary_for_single_VAP_set(subtype, false)(latest_VAP_set, latest => on_change({ latest, older }))
+    return get_summary_for_single_VAP_set(subtype, false, VAP_counterfactuals_map)(latest_VAP_set, latest => on_change({ latest, older }))
 }
 
 

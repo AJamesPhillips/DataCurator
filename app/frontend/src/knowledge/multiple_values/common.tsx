@@ -12,13 +12,17 @@ import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction }
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import type { VAP_set_id_counterfactual_map } from "../../state/derived/State"
+import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../state/derived/State"
+import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
 
 
 
-export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    VAP_set = { ...VAP_set, entries: get_VAPs_from_set(VAP_set, subtype) }
+    let VAPs = get_VAPs_from_set(VAP_set, subtype)
+    console.log("VAP_counterfactuals_map...", VAP_counterfactuals_map)
+    VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
+    VAP_set = { ...VAP_set, entries: VAPs }
 
     const values = get_probable_VAP_set_values(VAP_set, subtype)
     const prob = get_VAP_set_prob(VAP_set, subtype)
@@ -106,4 +110,3 @@ function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndP
 
     return { ...VAP_set, entries: VAPs }
 }
-

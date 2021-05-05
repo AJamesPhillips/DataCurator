@@ -20,6 +20,8 @@ import { ACTIONS } from "../../state/actions"
 import type { WComponentCounterfactual } from "../../shared/models/interfaces/uncertainty"
 import type { VAP_id_counterfactual_map } from "../../state/derived/State"
 import { get_new_wcomponent_object } from "../create_wcomponent_type"
+import { is_counterfactual_active } from "../counterfactuals/active"
+import { merge_counterfactual_into_VAP } from "../counterfactuals/merge"
 
 
 
@@ -129,50 +131,44 @@ interface GetSummaryArgs
     VAP_set_id: string | undefined
     upsert_counterfactual: (counterfactual: WComponentCounterfactual, knowledge_view_id: string) => void
 }
-const get_summary = (args: GetSummaryArgs) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const { subtype, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
         wcomponent_id, VAP_set_id, upsert_counterfactual } = args
 
-    const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[item.id]
-    const cf_probability = counterfactual && counterfactual.probability
-    const cf_conviction = counterfactual && counterfactual.conviction
-    const counterfactual_active = cf_probability !== undefined || cf_conviction !== undefined
+    const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
+    const counterfactual_active = is_counterfactual_active(counterfactual)
+    const { probability, conviction } = merge_counterfactual_into_VAP(VAP, counterfactual)
 
     const is_boolean = subtype === "boolean"
-    const has_rel_prob = item.relative_probability !== undefined
+    const has_rel_prob = VAP.relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean || counterfactual_active
     const disabled_rel_prob = !has_rel_prob || is_boolean
     const disabled_conviction = counterfactual_active
 
-    const probability = cf_probability !== undefined ? cf_probability : item.probability
-    const conviction = cf_conviction !== undefined ? cf_conviction : item.conviction
-
-
-    if (counterfactual) console.log("rendering VAP ", counterfactual!.probability, counterfactual!.conviction)
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">
             {!is_boolean && <div>
                 min: &nbsp; <EditableTextSingleLine
                     placeholder="..."
-                    value={item.min || ""}
-                    on_change={min => on_change({ ...item, min })}
+                    value={VAP.min || ""}
+                    on_change={min => on_change({ ...VAP, min })}
                 />
             </div>}
             <div>
                 value: &nbsp; <EditableTextSingleLine
                     disabled={is_boolean}
                     placeholder="..."
-                    value={is_boolean ? "True" : item.value}
-                    on_change={value => on_change({ ...item, value })}
+                    value={is_boolean ? "True" : VAP.value}
+                    on_change={value => on_change({ ...VAP, value })}
                 />
             </div>
             {!is_boolean && <div>
                 max: &nbsp; <EditableTextSingleLine
                     placeholder="..."
-                    value={item.max || ""}
-                    on_change={max => on_change({ ...item, max })}
+                    value={VAP.max || ""}
+                    on_change={max => on_change({ ...VAP, max })}
                 />
             </div>}
         </div>
@@ -182,16 +178,16 @@ const get_summary = (args: GetSummaryArgs) => (item: StateValueAndPrediction, on
                     disabled={disabled_prob}
                     placeholder="..."
                     value={probability}
-                    on_change={probability => on_change({ ...item, probability })}
+                    on_change={probability => on_change({ ...VAP, probability })}
                 />
             </div>
             <div className={disabled_rel_prob ? "disabled" : ""}>
                 Rel prob: &nbsp; <EditableNumber
                     disabled={disabled_rel_prob}
                     placeholder="..."
-                    value={is_boolean ? undefined : item.relative_probability}
+                    value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
-                    on_change={relative_probability => on_change({ ...item, relative_probability })}
+                    on_change={relative_probability => on_change({ ...VAP, relative_probability })}
                 />
             </div>
             <div className={disabled_conviction ? "disabled" : ""}>
@@ -199,15 +195,15 @@ const get_summary = (args: GetSummaryArgs) => (item: StateValueAndPrediction, on
                     disabled={disabled_conviction}
                     placeholder="..."
                     value={conviction}
-                    on_change={conviction => on_change({ ...item, conviction })}
+                    on_change={conviction => on_change({ ...VAP, conviction })}
                 />
             </div>
 
             <PredictionBadge
                 disabled={!allows_assumptions}
                 size={20}
-                probability={item.probability}
-                conviction={item.conviction}
+                probability={VAP.probability}
+                conviction={VAP.conviction}
                 counterfactual_probability={counterfactual && counterfactual.probability}
                 counterfactual_conviction={counterfactual && counterfactual.conviction}
                 set_counterfactual={args =>
@@ -218,7 +214,7 @@ const get_summary = (args: GetSummaryArgs) => (item: StateValueAndPrediction, on
                         type: "counterfactual",
                         target_wcomponent_id: wcomponent_id,
                         target_VAP_set_id: VAP_set_id,
-                        target_VAP_id: item.id,
+                        target_VAP_id: VAP.id,
                     }) as WComponentCounterfactual)
 
                     cf = { ...cf, ...args }
