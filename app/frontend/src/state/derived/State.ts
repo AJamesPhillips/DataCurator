@@ -3,8 +3,8 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
     Perception,
     WComponent,
-    WComponentType,
 } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { WComponentType } from "../../shared/models/interfaces/wcomponent"
 
 
 

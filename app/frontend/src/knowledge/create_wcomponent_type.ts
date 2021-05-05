@@ -4,8 +4,8 @@ import type {
     WComponent,
     WComponentNode,
     WComponentConnection,
-    WComponentBase,
 } from "../shared/models/interfaces/SpecialisedObjects"
+import type { WComponentBase } from "../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen, h_step } from "../state/display/display"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"

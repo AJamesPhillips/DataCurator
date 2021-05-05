@@ -1,4 +1,4 @@
-import type { WComponentBase } from "./SpecialisedObjects"
+import type { WComponentBase } from "./wcomponent"
 
 
 

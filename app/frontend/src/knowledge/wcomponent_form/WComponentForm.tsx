@@ -18,12 +18,11 @@ import {
     wcomponent_is_statev2,
     wcomponent_has_validity_predictions,
     wcomponent_has_existence_predictions,
-    wcomponent_types,
     wcomponent_is_event,
     wcomponent_is_causal_link,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
-import { Button } from "../../sharedf/Button"
+import { wcomponent_types } from "../../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"

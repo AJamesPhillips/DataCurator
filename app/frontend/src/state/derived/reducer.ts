@@ -1,6 +1,3 @@
-import type { AnyAction } from "redux"
-
-import type { WComponentJudgement } from "../../shared/models/interfaces/judgement"
 import { wcomponent_is_judgement } from "../../shared/models/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
@@ -11,7 +8,7 @@ import type { WComponentIdsByType } from "./State"
 
 
 
-export function derived_state_reducer (initial_state: RootState, state: RootState, action: AnyAction)
+export function derived_state_reducer (initial_state: RootState, state: RootState)
 {
 
     if (initial_state.specialised_objects.perceptions_by_id !== state.specialised_objects.perceptions_by_id)
