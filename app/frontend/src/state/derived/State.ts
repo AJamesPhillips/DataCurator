@@ -9,15 +9,17 @@ import type { WComponentType } from "../../shared/models/interfaces/wcomponent"
 
 
 
-export interface WcIdCounterfactualsVAP_map
+export interface VAP_id_counterfactual_map
 {
     [target_VAP_id: string]: WComponentCounterfactual
 }
+export interface VAP_set_id_counterfactual_map
+{
+    [target_VAP_set_id: string]: VAP_id_counterfactual_map
+}
 export type WcIdCounterfactualsMap = {
     [target_wcomponent_id: string]: {
-        VAP_set: {
-            [target_VAP_set_id: string]: WcIdCounterfactualsVAP_map
-        }
+        VAP_set: VAP_set_id_counterfactual_map
     }
 }
 

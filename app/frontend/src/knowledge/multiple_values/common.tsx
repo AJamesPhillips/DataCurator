@@ -12,6 +12,7 @@ import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction }
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
+import type { VAP_set_id_counterfactual_map } from "../../state/derived/State"
 
 
 
@@ -43,9 +44,10 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType, wcomponent_id?: string) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    const entries = get_VAPs_from_set(VAP_set, subtype)
+    const VAPs = get_VAPs_from_set(VAP_set, subtype)
+    const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
 
     return <div className="VAP_set_details">
         <br />
@@ -60,7 +62,8 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
                 VAP_set_id={VAP_set.id}
                 created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
                 subtype={subtype}
-                values_and_predictions={entries}
+                values_and_predictions={VAPs}
+                VAP_counterfactuals_map={VAP_counterfactuals_map}
                 update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, subtype))}
             />
         </div>

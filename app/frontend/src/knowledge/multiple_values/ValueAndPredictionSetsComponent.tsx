@@ -11,6 +11,7 @@ import { Tense } from "../../shared/models/interfaces/datetime"
 import type { StateValueAndPredictionsSet, WComponentStateV2SubType, VersionedStateVAPsSet } from "../../shared/models/interfaces/state"
 import { group_VAP_sets_by_version, sort_grouped_VAP_sets, ungroup_VAP_sets_by_version } from "../../shared/models/value_and_prediction/utils"
 import { test } from "../../shared/utils/test"
+import type { VAP_set_id_counterfactual_map } from "../../state/derived/State"
 import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
 import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set } from "./common"
 import { prepare_new_VAP_set } from "./utils"
@@ -21,6 +22,7 @@ import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlder
 interface OwnProps
 {
     wcomponent_id: string
+    VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
 
     item_descriptor: string
     values_and_prediction_sets: StateValueAndPredictionsSet[]
@@ -39,7 +41,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const [new_item, set_new_item] = useState<StateValueAndPredictionsSet | undefined>(undefined)
 
     const {
-        wcomponent_id,
+        wcomponent_id, VAP_set_counterfactuals_map,
         item_descriptor, values_and_prediction_sets, subtype,
         invalid_items, future_items, present_items, past_items,
     } = props
@@ -55,6 +57,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         grouped_versioned_VAP_sets: sorted_grouped_future_versioned_VAP_sets,
         update_items: props.update_items,
         wcomponent_id,
+        VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.future,
     })
@@ -64,6 +67,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         grouped_versioned_VAP_sets: sorted_grouped_present_versioned_VAP_sets,
         update_items: props.update_items,
         wcomponent_id,
+        VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.present,
     })
@@ -73,6 +77,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         grouped_versioned_VAP_sets: sorted_grouped_past_versioned_VAP_sets,
         update_items: props.update_items,
         wcomponent_id,
+        VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.past,
     })
@@ -187,6 +192,7 @@ interface FactoryRenderListContentArgs <U, V>
     all_VAP_sets: U[]
     update_items: (items: U[]) => void
     wcomponent_id: string
+    VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
     subtype: WComponentStateV2SubType
     tense: Tense
 }
@@ -215,7 +221,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     get_custom_created_at={get_latest_custom_created_at}
                     set_custom_created_at={set_latest_custom_created_at}
                     get_summary={get_summary(subtype)}
-                    get_details={get_details(subtype, args.wcomponent_id)}
+                    get_details={get_details(subtype, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
                     get_details2={get_details2(subtype)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
@@ -258,11 +264,11 @@ const get_summary = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: V
 
 
 
-const get_details = (subtype: WComponentStateV2SubType, wcomponent_id: string) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details = (subtype: WComponentStateV2SubType, wcomponent_id: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
 
-    return get_details_for_single_VAP_set(subtype, wcomponent_id)(latest_VAP_set, latest => on_change({ latest, older }))
+    return get_details_for_single_VAP_set(subtype, wcomponent_id, VAP_set_counterfactuals_map)(latest_VAP_set, latest => on_change({ latest, older }))
 }
 
 

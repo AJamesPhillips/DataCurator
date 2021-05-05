@@ -21,10 +21,17 @@ interface OwnProps
 }
 
 
-const map_state = (state: RootState) => ({
-    created_at_ms: state.routing.args.created_at_ms,
-    sim_ms: state.routing.args.sim_ms,
-})
+const map_state = (state: RootState, own_props: OwnProps) =>
+{
+    const counterfactuals_map = state.derived.current_UI_knowledge_view && state.derived.current_UI_knowledge_view.wc_id_counterfactuals_map[own_props.wcomponent_id]
+
+    return {
+        created_at_ms: state.routing.args.created_at_ms,
+        sim_ms: state.routing.args.sim_ms,
+        VAP_set_counterfactuals_map: counterfactuals_map && counterfactuals_map.VAP_set,
+    }
+}
+
 
 
 const connector = connect(map_state)
@@ -33,7 +40,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictionSets (props: Props)
 {
-    const { wcomponent_id, values_and_prediction_sets, subtype } = props
+    const { wcomponent_id, VAP_set_counterfactuals_map, values_and_prediction_sets, subtype } = props
     const { invalid_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
         items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
@@ -42,6 +49,7 @@ function _ValueAndPredictionSets (props: Props)
 
     return <ValueAndPredictionSetsComponent
         wcomponent_id={wcomponent_id}
+        VAP_set_counterfactuals_map={VAP_set_counterfactuals_map}
 
         item_descriptor="Value"
         values_and_prediction_sets={values_and_prediction_sets}

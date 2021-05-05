@@ -1,5 +1,4 @@
 import { FunctionalComponent, h } from "preact"
-import { useMemo } from "preact/hooks"
 
 import "./ValueAndPredictions.css"
 import { EditableNumber } from "../../form/EditableNumber"
@@ -19,7 +18,7 @@ import type { RootState } from "../../state/State"
 import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import { ACTIONS } from "../../state/actions"
 import type { WComponentCounterfactual } from "../../shared/models/interfaces/uncertainty"
-import type { WcIdCounterfactualsVAP_map } from "../../state/derived/State"
+import type { VAP_id_counterfactual_map } from "../../state/derived/State"
 import { get_new_wcomponent_object } from "../create_wcomponent_type"
 
 
@@ -31,32 +30,19 @@ interface OwnProps
     created_at: Date
     subtype: WComponentStateV2SubType
     values_and_predictions: StateValueAndPrediction[]
+    VAP_counterfactuals_map?: VAP_id_counterfactual_map
     update_values_and_predictions: (values_and_predictions: StateValueAndPrediction[]) => void
 }
 
 
 
-const map_state = (state: RootState, props: OwnProps) => {
+const map_state = (state: RootState) => {
     const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
-    let allows_assumptions = false
-    let VAP_counterfactuals_map: WcIdCounterfactualsVAP_map | undefined = undefined
-
-
-    const { wcomponent_id, VAP_set_id } = props
-    if (current_UI_knowledge_view)
-    {
-        const { allows_assumptions: aa, wc_id_counterfactuals_map } = current_UI_knowledge_view
-        allows_assumptions = !!aa
-
-        const VAP_set_map = wcomponent_id ? wc_id_counterfactuals_map[wcomponent_id] : undefined
-        VAP_counterfactuals_map = (VAP_set_map && VAP_set_id && VAP_set_map.VAP_set[VAP_set_id]) || undefined
-    }
-
+    const allows_assumptions = !!(current_UI_knowledge_view && current_UI_knowledge_view.allows_assumptions)
 
     return {
         allows_assumptions,
-        VAP_counterfactuals_map,
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
     }
 }
@@ -137,7 +123,7 @@ interface GetSummaryArgs
 {
     subtype: WComponentStateV2SubType
     allows_assumptions: boolean
-    VAP_counterfactuals_map: WcIdCounterfactualsVAP_map | undefined
+    VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined
     knowledge_view_id: string | undefined
     wcomponent_id: string | undefined
     VAP_set_id: string | undefined
