@@ -1,4 +1,4 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { useMemo } from "preact/hooks"
 
 import "./ValueAndPredictions.css"
@@ -13,6 +13,10 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { WComponentStateV2SubType, StateValueAndPrediction } from "../../shared/models/interfaces/state"
 import { prepare_new_VAP } from "./utils"
+import { PredictionBadge } from "../predictions/PredictionBadge"
+import { connect, ConnectedProps } from "react-redux"
+import type { RootState } from "../../state/State"
+import { get_current_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 
 
 
@@ -26,7 +30,20 @@ interface OwnProps
 
 
 
-export function ValueAndPredictions (props: OwnProps)
+const map_state = (state: RootState) => {
+    const current_knowledge_view = get_current_knowledge_view_from_state(state)
+    const allows_assumptions = !!(current_knowledge_view && current_knowledge_view.allows_assumptions)
+
+    return {
+        allows_assumptions,
+    }
+}
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _ValueAndPredictions (props: Props)
 {
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (props.subtype === "boolean" && VAPs.length >= 1) ? "only_one_VAP" : ""
@@ -34,7 +51,7 @@ export function ValueAndPredictions (props: OwnProps)
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<StateValueAndPrediction> = {
             get_created_at: () => props.created_at,
-            get_summary: get_summary(props.subtype),
+            get_summary: get_summary(props.subtype, props.allows_assumptions),
             get_details: get_details(props.subtype),
             extra_class_names: "value_and_prediction",
         }
@@ -69,12 +86,14 @@ export function ValueAndPredictions (props: OwnProps)
     </div>
 }
 
+export const ValueAndPredictions = connector(_ValueAndPredictions) as FunctionalComponent<OwnProps>
+
 
 
 const get_id = (item: StateValueAndPrediction) => item.id
 
 
-const get_summary = (subtype: WComponentStateV2SubType) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_summary = (subtype: WComponentStateV2SubType, allows_assumptions: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const is_boolean = subtype === "boolean"
     const has_rel_prob = item.relative_probability !== undefined
@@ -131,6 +150,13 @@ const get_summary = (subtype: WComponentStateV2SubType) => (item: StateValueAndP
                     on_change={conviction => on_change({ ...item, conviction })}
                 />
             </div>
+
+            <PredictionBadge
+                disabled={!allows_assumptions}
+                size={20}
+                probability={item.probability}
+                conviction={item.conviction}
+            />
         </div>
     </div>
 }
