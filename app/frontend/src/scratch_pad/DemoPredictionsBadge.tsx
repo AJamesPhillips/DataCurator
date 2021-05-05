@@ -12,13 +12,12 @@ export function DemoPredictionsBadge ()
     const [conviction, set_conviction] = useState(1)
     const [size, set_size] = useState(50)
 
-    const [counterfactual_probability, set_counterfactual_probability] = useState<null | number>(null)
-    const [counterfactual_conviction, set_counterfactual_conviction] = useState<null | number>(null)
-    function set_counterfactual (args: { probability?: number | null, conviction?: number | null })
+    const [counterfactual_probability, set_counterfactual_probability] = useState<number | undefined>(undefined)
+    const [counterfactual_conviction, set_counterfactual_conviction] = useState<number | undefined>(undefined)
+    function set_counterfactual (args: { probability?: number, conviction?: number })
     {
-        const { probability, conviction } = args
-        probability !== undefined && set_counterfactual_probability(probability)
-        conviction !== undefined && set_counterfactual_conviction(conviction)
+        set_counterfactual_probability(args.probability)
+        set_counterfactual_conviction(args.conviction)
     }
 
     return <div>

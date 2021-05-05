@@ -9,7 +9,7 @@ import { calc_new_counterfactual_state } from "./calc_new_counterfactual_state"
 
 interface SetCounterfactual
 {
-    (args: { probability?: number | null, conviction?: number | null }): void
+    (args: { probability?: number, conviction?: number }): void
 }
 
 interface Props
@@ -19,8 +19,8 @@ interface Props
     probability: number
     conviction: number
     elements_width?: 10 //| 100
-    counterfactual_probability?: number | null
-    counterfactual_conviction?: number | null
+    counterfactual_probability?: number
+    counterfactual_conviction?: number
     set_counterfactual?: SetCounterfactual
 }
 
