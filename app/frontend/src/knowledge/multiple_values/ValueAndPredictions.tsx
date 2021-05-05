@@ -146,6 +146,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
     const disabled_rel_prob = !has_rel_prob || is_boolean
     const disabled_conviction = counterfactual_active
 
+    const disabled_setting_counterfactual = !allows_assumptions || !knowledge_view_id || !wcomponent_id || !VAP_set_id
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">
@@ -200,7 +201,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
             </div>
 
             <PredictionBadge
-                disabled={!allows_assumptions}
+                disabled={disabled_setting_counterfactual}
                 size={20}
                 probability={VAP.probability}
                 conviction={VAP.conviction}

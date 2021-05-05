@@ -20,7 +20,6 @@ import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
 export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     let VAPs = get_VAPs_from_set(VAP_set, subtype)
-    console.log("VAP_counterfactuals_map...", VAP_counterfactuals_map)
     VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
     VAP_set = { ...VAP_set, entries: VAPs }
 

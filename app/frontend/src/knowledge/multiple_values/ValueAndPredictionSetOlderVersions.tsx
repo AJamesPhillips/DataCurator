@@ -52,7 +52,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
             item_top_props: {
                 get_created_at,
                 get_custom_created_at,
-                get_summary: get_summary_for_single_VAP_set(props.subtype, true),
+                get_summary: get_summary_for_single_VAP_set(props.subtype, true, undefined),
                 get_details: get_details_for_single_VAP_set(props.subtype),
                 extra_class_names: "value_and_prediction_set",
             },
