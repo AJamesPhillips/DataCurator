@@ -14,6 +14,7 @@ interface SetCounterfactual
 
 interface Props
 {
+    disabled?: boolean
     size: number
     probability: number
     conviction: number
@@ -65,8 +66,9 @@ export function PredictionBadge (props: Props)
     return <svg
         width={size + (border_width * 2)}
         height={size + (border_width * 2)}
-        onClick={() => toggle_counterfactual()}
+        onClick={() => (!props.disabled) && toggle_counterfactual()}
         className={class_name}
+        style={{ cursor: props.disabled ? "not-allowed" : "pointer" }}
     >
         <rect
             x={0}
