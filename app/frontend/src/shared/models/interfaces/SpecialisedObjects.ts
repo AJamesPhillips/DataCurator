@@ -28,6 +28,7 @@ export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 export interface WComponentNodeProcess extends WComponentNodeBase
 {
+    is_action?: boolean
     // active: ProcessActiveStatus[]
     // end: TemporalUncertainty
 }
@@ -74,6 +75,11 @@ export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WC
 export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WComponentNodeStateV2
 {
     return wcomponent.type === "statev2"
+}
+
+export function wcomponent_is_process (wcomponent: WComponent): wcomponent is WComponentNodeProcess
+{
+    return wcomponent.type === "process"
 }
 
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection

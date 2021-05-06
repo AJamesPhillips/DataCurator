@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
@@ -20,6 +21,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_event,
     wcomponent_is_causal_link,
+    wcomponent_is_process,
 } from "../../shared/models/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
 import { wcomponent_types } from "../../shared/models/interfaces/wcomponent"
@@ -119,6 +121,14 @@ function _WComponentForm (props: Props)
             get_options={() => wcomponent_type_options}
             on_change={option_id => upsert_wcomponent({ type: option_id })}
         /></div></p>
+
+        {wcomponent_is_process(wcomponent) &&
+        <p>Is action: <div style={{ width: "60%", display: "inline-block" }}>
+            <EditableCheckbox
+                value={wcomponent.is_action}
+                on_change={is_action => upsert_wcomponent({ is_action })}
+            />
+        </div></p>}
 
         {wcomponent_is_statev2(wcomponent) &&
         <p>Sub type: <div style={{ width: "60%", display: "inline-block" }}>
