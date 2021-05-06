@@ -1,0 +1,9 @@
+
+.summary_container > div {
+    flex: 2;
+    margin: 3px;
+}
+
+.summary_container > .datetimes {
+    flex: 3;
+}

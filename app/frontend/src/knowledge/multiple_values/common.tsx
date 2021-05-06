@@ -1,8 +1,5 @@
 import { h } from "preact"
 
-import "./common.css"
-import { uncertain_date_to_string } from "../../form/datetime_utils"
-import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type {
     WComponentStateV2SubType,
     StateValueAndPredictionsSet,
@@ -14,6 +11,7 @@ import { set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../state/derived/State"
 import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
+import { SummaryForPrediction } from "../predictions/common"
 
 
 
@@ -27,22 +25,13 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
     const prob = get_VAP_set_prob(VAP_set, subtype)
     const conv = get_VAP_set_conviction(VAP_set, subtype)
 
-    return <div>
-        {show_created_at && <div style={{ display: "inline-flex" }}>
-            Created: &nbsp;<EditableCustomDateTime
-                invariant_value={VAP_set.created_at}
-                value={VAP_set.custom_created_at}
-            />
-        </div>}
-        <div className="VAP_set_summary_container" style={{ display: "inline-flex", width: "100%" }}>
-            <div className="datetimes">
-                {uncertain_date_to_string(VAP_set.datetime) || "-"}
-            </div>
-            {subtype !== "boolean" && <div>Value:&nbsp;{values}</div>}
-            <div>Prob:&nbsp;{prob}&nbsp;%</div>
-            <div>Cn:&nbsp;{conv}&nbsp;%</div>
-        </div>
-    </div>
+    return <SummaryForPrediction
+        created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
+        value={subtype !== "boolean" ? values : ""}
+        datetime={VAP_set.datetime}
+        probability={prob}
+        conviction={conv}
+    />
 }
 
 

@@ -1,9 +1,0 @@
-
-.VAP_set_summary_container > div {
-    flex: 2;
-    margin: 3px;
-}
-
-.VAP_set_summary_container > .datetimes {
-    flex: 3;
-}
