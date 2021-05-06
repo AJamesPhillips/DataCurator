@@ -3,7 +3,8 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { WComponent } from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
-import { wcomponent_is_invalid_for_datetime } from "./utils"
+import { PredictionViewSummary } from "./predictions/PredictionView"
+import { wcomponent_is_invalid_for_datetime, wcomponent_present_existence_for_datetimes } from "./utils"
 
 
 
@@ -37,12 +38,12 @@ function _WComponentLatestPrediction (props: Props)
     }
 
 
-    // const invalid = wcomponent_is_invalid_for_datetime(wcomponent, created_at_ms)
+    const present_prediction = wcomponent_present_existence_for_datetimes(wcomponent, created_at_ms, sim_ms)
 
+    if (!present_prediction) return null
 
     return <p style={{ cursor: "not-allowed" }}>
-        Last existence prediction
-        {/* <PredictionViewSummary prediction={last_prediction} /> */}
+        <PredictionViewSummary prediction={present_prediction} />
     </p>
 }
 

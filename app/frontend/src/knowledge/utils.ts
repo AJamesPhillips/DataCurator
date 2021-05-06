@@ -47,21 +47,23 @@ function get_present_prediction (predictions: Prediction[], created_at_ms: numbe
 }
 
 
-
-export function wcomponent_is_existence_for_datetime (wcomponent: WComponent, created_at_ms: number, sim_ms: number): number
+export function wcomponent_present_existence_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
 {
-    let existence = 0
-    const invalid = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
-    if (!invalid)
-    {
-        existence = 1
-        if (wcomponent_has_existence_predictions(wcomponent))
-        {
-            const last_existence_prediction = get_present_prediction(wcomponent.existence, created_at_ms, sim_ms)
+    let present_existence_prediction: Prediction | undefined = undefined
 
-            if (last_existence_prediction) existence = last_existence_prediction.probability
-        }
+    const invalid = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
+    if (!invalid && wcomponent_has_existence_predictions(wcomponent))
+    {
+        present_existence_prediction = get_present_prediction(wcomponent.existence, created_at_ms, sim_ms)
     }
+
+    return present_existence_prediction
+}
+export function wcomponent_existence_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number): number
+{
+    const present_existence_prediction = wcomponent_present_existence_for_datetimes(wcomponent, created_at_ms, sim_ms)
+
+    const existence = present_existence_prediction ? present_existence_prediction.probability : 1
 
     return existence
 }
