@@ -4,28 +4,32 @@ import type { VAP_id_counterfactual_map } from "../../state/derived/State"
 
 
 
-export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): StateValueAndPrediction
+export interface CounterfactualStateValueAndPrediction extends StateValueAndPrediction
 {
-    if (!counterfactual) return VAP
+    counterfactual: boolean
+}
+
+
+export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): CounterfactualStateValueAndPrediction
+{
+    if (!counterfactual) return { ...VAP, counterfactual: false }
 
     const cf_probability = counterfactual && counterfactual.probability
     const cf_conviction = counterfactual && counterfactual.conviction
 
     const probability = cf_probability !== undefined ? cf_probability : VAP.probability
     const conviction = cf_conviction !== undefined ? cf_conviction : VAP.conviction
+    const cf = cf_probability !== undefined || cf_conviction !== undefined
 
-    return ({ ...VAP, probability, conviction })
+    return ({ ...VAP, probability, conviction, counterfactual: cf })
 }
 
 
-
-export function merge_counterfactuals_into_VAPs (VAPs: StateValueAndPrediction[], VAP_counterfactuals_map?: VAP_id_counterfactual_map): StateValueAndPrediction[]
+export function merge_counterfactuals_into_VAPs (VAPs: StateValueAndPrediction[], VAP_counterfactuals_map?: VAP_id_counterfactual_map): CounterfactualStateValueAndPrediction[]
 {
-    if (!VAP_counterfactuals_map) return VAPs
-
     return VAPs.map(VAP =>
     {
-        const counterfactual = VAP_counterfactuals_map[VAP.id]
+        const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
         return merge_counterfactual_into_VAP(VAP, counterfactual)
     })
 }

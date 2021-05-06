@@ -1,4 +1,4 @@
-import { merge_all_counterfactuals_into_all_VAPs } from "../../../knowledge/counterfactuals/merge"
+import { CounterfactualStateValueAndPrediction, merge_all_counterfactuals_into_all_VAPs } from "../../../knowledge/counterfactuals/merge"
 import type { WComponentCounterfactuals } from "../../../state/derived/State"
 import { test } from "../../utils/test"
 import type {
@@ -38,7 +38,8 @@ export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArg
 
 
 
-function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all_VAPs: StateValueAndPrediction[]): UIStateValue {
+function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all_VAPs: CounterfactualStateValueAndPrediction[]): UIStateValue
+{
     const { subtype } = wcomponent
     const is_boolean = subtype === "boolean"
 
@@ -48,16 +49,26 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
     const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, subtype)
 
     let value_strings: string[] = []
+    let cf = false
     if (is_boolean)
     {
         // Should we return something that's neither true nor false if probability === 0.5?
-        value_strings = VAPs_by_prob.map(VAP => VAP.probability > 0.5
+        value_strings = VAPs_by_prob.map(VAP =>
+        {
+            cf = cf || VAP.counterfactual
+
+            return VAP.probability > 0.5
             ? (wcomponent.boolean_true_str || "True")
-            : (wcomponent.boolean_false_str || "False"))
+            : (wcomponent.boolean_false_str || "False")
+        })
     }
     else
     {
-        value_strings = VAPs_by_prob.map(e => e.value)
+        value_strings = VAPs_by_prob.map(VAP =>
+        {
+            cf = cf || VAP.counterfactual
+            return VAP.value
+        })
     }
 
 
@@ -79,6 +90,8 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
         value = value_strings.slice(0, 2).join(", ")
         if (value_strings.length > 2) value += `, (${value_strings.length - 2} more)`
     }
+
+    if (cf) modifier = "assumed"
 
     return { value, type, modifier }
 }
@@ -107,7 +120,7 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], wc
 }
 
 
-
+/*
 function run_tests ()
 {
     console. log("running tests of get_probable_VAP_set_display_values")
@@ -247,3 +260,4 @@ function run_tests ()
 }
 
 // run_tests()
+*/
