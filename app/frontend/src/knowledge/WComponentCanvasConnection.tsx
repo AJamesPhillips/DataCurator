@@ -35,6 +35,7 @@ const map_state = (state: RootState, props: OwnProps) =>
     const { current_UI_knowledge_view } = state.derived
 
     const display_at_datetime_ms = state.routing.args.created_at_ms
+    const sim_ms = state.routing.args.sim_ms
     const wc = get_wcomponent_from_state(state, props.id)
 
     let is_invalid = false
@@ -54,8 +55,8 @@ const map_state = (state: RootState, props: OwnProps) =>
             else
             {
                 is_invalid = (
-                    wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms)
-                    || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms)
+                    wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms, sim_ms)
+                    || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms, sim_ms)
                 )
             }
         }

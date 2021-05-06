@@ -87,7 +87,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     // Do not show nodes if certain they are not valid / existing / likely
-    const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms)
+    const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms, sim_ms)
     if (certain_is_not_valid) return null
 
 

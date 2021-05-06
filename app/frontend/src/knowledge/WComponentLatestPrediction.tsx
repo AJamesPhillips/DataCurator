@@ -1,11 +1,9 @@
-import { h } from "preact"
+import { h, FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
-import {
-    WComponent,
-    wcomponent_has_existence_predictions,
-    wcomponent_has_validity_predictions,
-} from "../shared/models/interfaces/SpecialisedObjects"
-import { PredictionViewSummary } from "./predictions/PredictionView"
+import type { WComponent } from "../shared/models/interfaces/SpecialisedObjects"
+import type { RootState } from "../state/State"
+import { wcomponent_is_invalid_for_datetime } from "./utils"
 
 
 
@@ -15,33 +13,37 @@ interface OwnProps
 }
 
 
-export function WComponentLatestPrediction (props: OwnProps)
+const map_state = (state: RootState) => ({
+    created_at_ms: state.routing.args.created_at_ms,
+    sim_ms: state.routing.args.sim_ms,
+})
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _WComponentLatestPrediction (props: Props)
 {
-    const { wcomponent } = props
+    const { wcomponent, created_at_ms, sim_ms } = props
+
+    const invalid = wcomponent_is_invalid_for_datetime(wcomponent, created_at_ms, sim_ms)
 
 
-    if (wcomponent_has_validity_predictions(wcomponent))
+    if (invalid)
     {
-        const { validity } = wcomponent
-        const last_prediction = validity[validity.length - 1]
-
-        if (last_prediction && last_prediction.probability === 0)
-        {
-            return <p style={{ cursor: "not-allowed", display: "inline-flex", marginBlockEnd: 0 }}>
-                Not valid (<PredictionViewSummary prediction={last_prediction} />)
-            </p>
-        }
+        return <p style={{ cursor: "not-allowed", display: "inline-flex", marginBlockEnd: 0 }}>
+            Not valid (last validity prediction)
+        </p>
     }
 
 
-    if (!wcomponent_has_existence_predictions(wcomponent)) return null
+    // const invalid = wcomponent_is_invalid_for_datetime(wcomponent, created_at_ms)
 
-    const { existence } = wcomponent
-    const last_prediction = existence[existence.length - 1]
-
-    if (!last_prediction) return null
 
     return <p style={{ cursor: "not-allowed" }}>
-        <PredictionViewSummary prediction={last_prediction} />
+        Last existence prediction
+        {/* <PredictionViewSummary prediction={last_prediction} /> */}
     </p>
 }
+
+export const WComponentLatestPrediction = connector(_WComponentLatestPrediction) as FunctionalComponent<OwnProps>
