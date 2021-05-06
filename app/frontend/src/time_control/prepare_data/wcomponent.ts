@@ -69,11 +69,13 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
     })
 
 
+    const locked_min_ms = min_ms
+    const locked_max_ms = max_ms
     ;(["created", "sim"] as TimeSliderEventType[]).forEach(type => {
-        create_event(new Date(min_ms), type)
-        create_event(new Date(max_ms), type)
-        create_event(new Date(min_ms - 86400000), type)
-        create_event(new Date(max_ms + 86400000), type)
+        create_event(new Date(locked_min_ms), type)
+        create_event(new Date(locked_max_ms), type)
+        create_event(new Date(locked_min_ms - 86400000), type)
+        create_event(new Date(locked_max_ms + 86400000), type)
     });
 
 
