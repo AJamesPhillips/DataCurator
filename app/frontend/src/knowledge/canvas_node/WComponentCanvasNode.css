@@ -85,3 +85,13 @@
 {
     box-shadow: orange 0 0 2px 3px;
 }
+
+.node_does_not_exist
+{
+    opacity: 0.1;
+}
+
+.node_may_not_exist
+{
+    opacity: 0.5;
+}

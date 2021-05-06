@@ -10,7 +10,7 @@ import { KnowledgeViewWComponentEntry, wcomponent_is_process } from "../../share
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { wcomponent_is_invalid_for_datetime } from "../utils"
+import { wcomponent_existence_for_datetimes, wcomponent_is_invalid_for_datetime } from "../utils"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/models/get_rich_text"
@@ -90,8 +90,10 @@ function _WComponentCanvasNode (props: Props)
     const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms, sim_ms)
     if (certain_is_not_valid) return null
 
-
-    const hidden = display_at_created_ms < get_created_at_ms(wcomponent)
+    const existence = wcomponent_existence_for_datetimes(wcomponent, display_at_created_ms, sim_ms)
+    const existence_class_name = (!is_current_item && !is_highlighted && !is_selected)
+        ? (existence.existence === 0 ? " node_does_not_exist " : ( existence.existence < 1 ? " node_may_not_exist " : ""))
+        : ""
 
 
     const on_pointer_down = () =>
@@ -153,6 +155,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_process(wcomponent) && wcomponent.is_action ? " node_is_action " : "")
+        + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
@@ -168,7 +171,6 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentJudgements wcomponent={wcomponent} />
             </div>
         ]}
-        hidden={hidden}
         extra_css_class={extra_css_class}
         unlimited_width={is_highlighted}
         glow={glow}
