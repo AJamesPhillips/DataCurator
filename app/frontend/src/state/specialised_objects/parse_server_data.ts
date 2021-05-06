@@ -107,7 +107,7 @@ function parse_dates <T extends { created_at: Date, custom_created_at?: Date, da
         ...o,
         created_at: new Date(o.created_at),
         custom_created_at: optional_date(o.custom_created_at),
-        datetime: optional_datetime_temporal_uncertainty(o.datetime)
+        datetime: optional_datetime_temporal_uncertainty(o.datetime || {})
     }
 }
 

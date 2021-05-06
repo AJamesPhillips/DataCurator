@@ -27,7 +27,7 @@ function get_sim_datetime_ms (item: HasDateTime)
 
 function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
 {
-    const { min, value, max } = item.datetime
+    const { min, value, max } = (item.datetime || {})
 
     const [have_min, min_ms] = min === undefined ? [false, 0] : [true, min.getTime()]
     const [have_value, value_ms] = value === undefined ? [false, 0] : [true, value.getTime()]
