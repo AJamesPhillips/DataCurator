@@ -15,8 +15,8 @@ export interface GetFieldTextArgs extends GetIdReplacedTextArgs
 export function get_title (args: GetFieldTextArgs): string
 {
     const { wcomponent, counterfactuals, created_at_ms, sim_ms } = args
-    const title = wcomponent.title
-    const text = replace_value_in_text({ text: title, wcomponent, counterfactuals, created_at_ms, sim_ms })
+    const modified_title = get_type_specific_title(wcomponent)
+    const text = replace_value_in_text({ text: modified_title, wcomponent, counterfactuals, created_at_ms, sim_ms })
 
     return replace_ids_in_text({ ...args, text })
 }
@@ -26,6 +26,15 @@ export function get_description (args: GetFieldTextArgs): string
     const text = args.wcomponent.description
 
     return replace_ids_in_text({ ...args, text })
+}
+
+
+
+function get_type_specific_title (wcomponent: WComponent)
+{
+    let { title, type } = wcomponent
+    if (type === "actor") title = "Actor: " + title
+    return title
 }
 
 
