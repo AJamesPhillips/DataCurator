@@ -2,6 +2,7 @@ import { WComponent, WComponentsById, wcomponent_is_process } from "./interfaces
 import { test } from "../utils/test"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { WComponentCounterfactuals } from "../../state/derived/State"
+import { get_new_wcomponent_object } from "../../knowledge/create_wcomponent_type"
 
 
 
@@ -75,9 +76,7 @@ export function replace_ids_in_text (args: GetIdReplacedTextArgs & { text: strin
 {
     const { text, rich_text, wcomponents_by_id, depth_limit = 3, root_url = "" } = args
 
-    if (!rich_text) return text
-
-    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, depth_limit, root_url)
+    const replaced_text = _replace_ids_in_text(text, rich_text, wcomponents_by_id, depth_limit, root_url)
 
     return replaced_text
 }
@@ -97,9 +96,9 @@ function is_supported_funktion (funktion: string): funktion is Funktion
 }
 
 
-function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, depth_limit: number, root_url: string)
+function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_id: WComponentsById, depth_limit: number, root_url: string)
 {
-    const functional_ids = get_functional_ids_from_text(text)
+    const functional_ids = rich_text ? get_functional_ids_from_text(text) : []
     functional_ids.forEach(({ id, funktion }) =>
         {
             const wcomponent = wcomponents_by_id[id]
@@ -133,15 +132,21 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
             return
         }
 
-        const sub_text = depth_limit > 0 ? replace_ids_in_text(
-            {
-                text: wcomponent.title,
-                rich_text: true,
-                wcomponents_by_id,
-                depth_limit: depth_limit - 1,
-            }) : `@@${id}`
 
-        text = text.replace(replacer, format_wcomponent_link(root_url, id) + " " + sub_text)
+        let replacement_text = rich_text ? (format_wcomponent_link(root_url, id) + " ") : ""
+
+        const sub_text = depth_limit > 0 ? _replace_ids_in_text(
+            wcomponent.title,
+            rich_text,
+            wcomponents_by_id,
+            depth_limit - 1,
+            root_url,
+        ) : `@@${id}`
+
+        replacement_text += sub_text
+
+
+        text = text.replace(replacer, replacement_text)
     })
 
     return text
@@ -177,6 +182,26 @@ function run_tests ()
 
     ids = get_ids_from_text("")
     test(ids, [])
+
+
+    const wcomponents_by_id = {
+        "123": get_new_wcomponent_object({ id: "123", title: "Was told @@456 is here" }),
+        "456": get_new_wcomponent_object({ id: "456", title: "Person A" }),
+    }
+
+    let result = replace_ids_in_text({
+        rich_text: true,
+        wcomponents_by_id,
+        text: "Person B @@123 today"
+    })
+    test(result, "Person B [□](#wcomponents/123&view=knowledge) Was told [□](#wcomponents/456&view=knowledge) Person A is here today")
+
+    result = replace_ids_in_text({
+        rich_text: false,
+        wcomponents_by_id,
+        text: "Person B @@123 today"
+    })
+    test(result, "Person B Was told Person A is here today")
 }
 
 // run_tests()
