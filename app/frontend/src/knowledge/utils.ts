@@ -47,7 +47,7 @@ function get_present_prediction (predictions: Prediction[], created_at_ms: numbe
 }
 
 
-export function wcomponent_present_existence_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
+export function wcomponent_present_existence_prediction_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
 {
     let present_existence_prediction: Prediction | undefined = undefined
 
@@ -59,13 +59,14 @@ export function wcomponent_present_existence_for_datetimes (wcomponent: WCompone
 
     return present_existence_prediction
 }
-export function wcomponent_existence_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number): number
+export function wcomponent_existence_for_datetimes (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
 {
-    const present_existence_prediction = wcomponent_present_existence_for_datetimes(wcomponent, created_at_ms, sim_ms)
+    const present_existence_prediction = wcomponent_present_existence_prediction_for_datetimes(wcomponent, created_at_ms, sim_ms)
 
     const existence = present_existence_prediction ? present_existence_prediction.probability : 1
+    const conviction = present_existence_prediction ? present_existence_prediction.conviction : 1
 
-    return existence
+    return { existence, conviction }
 }
 
 

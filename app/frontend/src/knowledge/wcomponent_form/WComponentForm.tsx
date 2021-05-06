@@ -229,7 +229,7 @@ function _WComponentForm (props: Props)
         <div>
             <p>
                 <PredictionList
-                    item_descriptor="Validity"
+                    item_descriptor="Validity prediction"
                     predictions={wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []}
                     update_predictions={new_predictions => upsert_wcomponent({ validity: new_predictions }) }
                 />
@@ -242,7 +242,7 @@ function _WComponentForm (props: Props)
         {!wcomponent_is_statev2(wcomponent) && <div>
             <p>
                 <PredictionList
-                    item_descriptor="Existence"
+                    item_descriptor="Existence prediction"
                     predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
                     update_predictions={new_predictions => upsert_wcomponent({ existence: new_predictions }) }
                 />

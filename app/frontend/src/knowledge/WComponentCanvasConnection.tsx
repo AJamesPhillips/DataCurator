@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from "react-redux"
 import { CanvasConnnection } from "../canvas/CanvasConnnection"
 import type { WComponentJudgement } from "../shared/models/interfaces/judgement"
 import {
-    KnowledgeView,
     KnowledgeViewWComponentEntry,
     WComponent,
     wcomponent_can_render_connection,
@@ -14,13 +13,15 @@ import {
     wcomponent_is_judgement,
     KnowledgeViewWComponentIdEntryMap,
 } from "../shared/models/interfaces/SpecialisedObjects"
-import { get_prob_and_conviction } from "../shared/models/uncertainty_utils"
 import { get_created_at_ms } from "../shared/models/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
-import { connection_terminal_type_to_location, wcomponent_is_invalid_for_datetime } from "./utils"
+import {
+    connection_terminal_type_to_location,
+    wcomponent_existence_for_datetimes,
+    wcomponent_is_invalid_for_datetime,
+} from "./utils"
 
 
 
@@ -39,6 +40,8 @@ const map_state = (state: RootState, props: OwnProps) =>
     const wc = get_wcomponent_from_state(state, props.id)
 
     let is_invalid = false
+    let probability = 1
+    let conviction = 1
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
 
@@ -58,15 +61,22 @@ const map_state = (state: RootState, props: OwnProps) =>
                     wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms, sim_ms)
                     || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms, sim_ms)
                 )
+
+                const ex = wcomponent_existence_for_datetimes(wc, display_at_datetime_ms, sim_ms)
+                const ex_from_con = wcomponent_existence_for_datetimes(from_wc, display_at_datetime_ms, sim_ms)
+
+                probability = Math.min(ex.existence, ex_from_con.existence)
+                conviction = Math.min(ex.conviction, ex_from_con.conviction)
             }
         }
     }
 
     return {
         current_UI_knowledge_view,
-        display_at_datetime_ms,
         wc,
         is_invalid,
+        probability,
+        conviction,
         is_current_item: state.routing.item_id === props.id,
     }
 }
@@ -85,7 +95,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentCanvasConnection (props: Props)
 {
     const {
-        id, current_UI_knowledge_view, display_at_datetime_ms, wc, is_invalid, is_current_item,
+        id, current_UI_knowledge_view, wc, is_invalid, is_current_item, probability, conviction,
         clicked_wcomponent, change_route,
     } = props
 
@@ -120,7 +130,8 @@ function _WComponentCanvasConnection (props: Props)
     const { from_node_position, to_node_position, from_connection_location, to_connection_location,
     } = get_connection_terminal_positions({ wcomponent: wc, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
 
-    const { intensity, blur, hidden } = calculate_display_params({ wcomponent: wc, display_at_datetime_ms })
+
+    const blur = 50 - ((conviction * 100) / 2)
 
 
     return <CanvasConnnection
@@ -129,8 +140,7 @@ function _WComponentCanvasConnection (props: Props)
         from_connection_location={from_connection_location}
         to_connection_location={to_connection_location}
         on_click={on_click}
-        hidden={hidden}
-        intensity={intensity}
+        intensity={probability}
         blur={blur}
         is_highlighted={is_current_item}
     />
@@ -169,34 +179,3 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
     return { from_node_position, to_node_position, from_connection_location, to_connection_location }
 }
 
-
-
-interface CalculateIntensityBlurArgs
-{
-    wcomponent: WComponentConnection | WComponentJudgement
-    display_at_datetime_ms: number
-}
-function calculate_display_params ({ wcomponent, display_at_datetime_ms }: CalculateIntensityBlurArgs)
-{
-    let intensity = 1 // out of 1
-    let blur = 0      // out of 100
-    let hidden = false
-
-    if (wcomponent_is_plain_connection(wcomponent))
-    {
-        // TODO use validity in calculation as well
-        const { validity = [], existence = [] } = wcomponent
-        const prediction_index_result = find_nearest_index_in_sorted_list(existence, p => get_created_at_ms(p), display_at_datetime_ms)
-        const prediction = existence[Math.floor(prediction_index_result.index)]
-
-
-        hidden = existence.length > 0 && !prediction
-
-        const { probability, conviction } = get_prob_and_conviction(prediction)
-
-        intensity = probability
-        blur = 50 - ((conviction * 100) / 2)
-    }
-
-    return { intensity, hidden, blur }
-}
