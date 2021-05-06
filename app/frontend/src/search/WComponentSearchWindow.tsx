@@ -25,7 +25,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentSearchWindow (props: Props)
 {
     return <SearchWindow
-        search_window_title="Search for WComponent"
+        search_window_title="Search for Component"
         placeholder="WComponent..."
         selected_option_id={""}
         allow_none={true}

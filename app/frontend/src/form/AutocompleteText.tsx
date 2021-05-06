@@ -37,7 +37,7 @@ interface State
 {
     temp_value_str: string | undefined
     editing: boolean
-    highlighted_option_index: number | undefined
+    highlighted_option_index: number
 }
 
 export class AutocompleteText <E extends AutoCompleteOption> extends Component <OwnProps<E>, State>
@@ -53,7 +53,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
             temp_value_str: undefined,
             // option_id: props.selected_option_id,
             editing: !!props.start_expanded,
-            highlighted_option_index: undefined,
+            highlighted_option_index: 0,
         }
     }
 
@@ -68,11 +68,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
 
         let { highlighted_option_index } = this.state
 
-        if (!(is_arrow_down || is_arrow_up || is_enter))
-        {
-            highlighted_option_index = undefined
-        }
-        else if (is_enter)
+        if (is_enter)
         {
             if (highlighted_option_index !== undefined)
             {
@@ -82,8 +78,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
 
             e.currentTarget.blur()
         }
-        else if (highlighted_option_index === undefined) highlighted_option_index = 0
-        else
+        else if (is_arrow_down || is_arrow_up)
         {
             highlighted_option_index += (is_arrow_down ? 1 : -1)
             highlighted_option_index = highlighted_option_index % displayed_options.length
@@ -188,9 +183,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         const is_option_wrapper_highlighted = (option: E, index: number): boolean =>
         {
             const { highlighted_option_index } = this.state
-            if (highlighted_option_index !== undefined) return index === highlighted_option_index
-
-            return !!final_value && option.id === final_value.id
+            return index === highlighted_option_index
         }
 
 
