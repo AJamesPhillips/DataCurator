@@ -37,7 +37,7 @@ function _EditableText (props: Props)
 
     if (!on_change || rich_text)
     {
-        return <RichMarkDown text={props.value} placeholder={placeholder} />
+        return <RichMarkDown text={props.value} />
     }
 
     const conditional_on_change = (new_value: string) => new_value !== props.value && on_change(new_value)

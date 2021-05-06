@@ -76,7 +76,7 @@ export function replace_ids_in_text (args: GetIdReplacedTextArgs & { text: strin
 {
     const { text, rich_text, wcomponents_by_id, depth_limit = 3, root_url = "" } = args
 
-    const replaced_text = _replace_ids_in_text(text, rich_text, wcomponents_by_id, depth_limit, root_url)
+    const replaced_text = _replace_ids_in_text(text, rich_text, wcomponents_by_id, depth_limit, root_url, true)
 
     return replaced_text
 }
@@ -96,7 +96,7 @@ function is_supported_funktion (funktion: string): funktion is Funktion
 }
 
 
-function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_id: WComponentsById, depth_limit: number, root_url: string)
+function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_id: WComponentsById, depth_limit: number, root_url: string, render_links: boolean)
 {
     const functional_ids = rich_text ? get_functional_ids_from_text(text) : []
     functional_ids.forEach(({ id, funktion }) =>
@@ -112,7 +112,8 @@ function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_
             else if (funktion === "description")
             {
                 // Add link at start
-                replacement = format_wcomponent_link(root_url, id) + wcomponent.description
+                replacement = render_links ? format_wcomponent_link(root_url, id) : ""
+                replacement += wcomponent.description
             }
             else replacement =`Function ${funktion} not implemented`
 
@@ -133,7 +134,7 @@ function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_
         }
 
 
-        let replacement_text = rich_text ? (format_wcomponent_link(root_url, id) + " ") : ""
+        let replacement_text = (rich_text && render_links) ? (format_wcomponent_link(root_url, id) + " ") : ""
 
         const sub_text = depth_limit > 0 ? _replace_ids_in_text(
             wcomponent.title,
@@ -141,6 +142,7 @@ function _replace_ids_in_text (text: string, rich_text: boolean, wcomponents_by_
             wcomponents_by_id,
             depth_limit - 1,
             root_url,
+            false,
         ) : `@@${id}`
 
         replacement_text += sub_text
@@ -194,7 +196,7 @@ function run_tests ()
         wcomponents_by_id,
         text: "Person B @@123 today"
     })
-    test(result, "Person B [□](#wcomponents/123&view=knowledge) Was told [□](#wcomponents/456&view=knowledge) Person A is here today")
+    test(result, "Person B [□](#wcomponents/123&view=knowledge) Was told Person A is here today")
 
     result = replace_ids_in_text({
         rich_text: false,
@@ -204,4 +206,4 @@ function run_tests ()
     test(result, "Person B Was told Person A is here today")
 }
 
-// run_tests()
+run_tests()
