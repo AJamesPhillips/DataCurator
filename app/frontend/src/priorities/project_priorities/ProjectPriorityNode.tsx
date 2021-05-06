@@ -40,7 +40,7 @@ function _ProjectPriorityNode (props: Props)
         on_pointer_leave={() => set_is_focused(false)}
         on_click={() => props.change_route()}
     >
-        <div className="text" style={style_inner}>
+        <div className="node_main_content" style={style_inner}>
             <span title={title}>{title}</span>
 
             <hr />

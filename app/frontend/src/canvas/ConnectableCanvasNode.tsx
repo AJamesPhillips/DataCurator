@@ -90,7 +90,7 @@ export function ConnectableCanvasNode (props: OwnProps)
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}
     >
-        <div className="text" style={text_node_styles}>
+        <div className="node_main_content" style={text_node_styles}>
             {props.text}
         </div>
         <div

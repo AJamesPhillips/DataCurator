@@ -1,4 +1,4 @@
-import type { WComponent, WComponentsById } from "./interfaces/SpecialisedObjects"
+import { WComponent, WComponentsById, wcomponent_is_process } from "./interfaces/SpecialisedObjects"
 import { test } from "../utils/test"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { WComponentCounterfactuals } from "../../state/derived/State"
@@ -33,7 +33,10 @@ export function get_description (args: GetFieldTextArgs): string
 function get_type_specific_title (wcomponent: WComponent)
 {
     let { title, type } = wcomponent
+
     if (type === "actor") title = "Actor: " + title
+    else if (wcomponent_is_process(wcomponent) && wcomponent.is_action) title = "Action: " + title
+
     return title
 }
 

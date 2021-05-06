@@ -80,3 +80,8 @@
 {
     z-index: 100;
 }
+
+.node_is_action > .node_main_content
+{
+    box-shadow: orange 0 0 2px 3px;
+}
