@@ -7,6 +7,7 @@ import { EditableList } from "../../form/editable_list/EditableList"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import { get_today_str } from "../../shared/utils/date_helpers"
+import { sort_list } from "../../shared/utils/sort"
 
 
 
@@ -31,8 +32,10 @@ export function PredictionList (props: OwnProps)
         return props2
     }, [])
 
+    const sorted_predictions = sort_list(props.predictions, p => (get_custom_created_at(p) || get_created_at(p)).getTime(), "descending")
+
     return <EditableList
-        items={props.predictions}
+        items={sorted_predictions}
         item_descriptor={`${props.item_descriptor} Prediction`}
         get_id={get_id}
         item_top_props={item_top_props}
