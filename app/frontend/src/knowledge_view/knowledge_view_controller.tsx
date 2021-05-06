@@ -38,7 +38,7 @@ const get_children = ({ sync_ready, wcomponents, current_UI_knowledge_view }: Pr
     if (!sync_ready || !current_UI_knowledge_view) return { elements: [], content_coordinates: [] }
 
     const nodes = wcomponents
-        .filter(({ type }) => type !== "causal_link")
+        .filter(({ type }) => type !== "causal_link" && type !== "counterfactual")
         .filter(({ id }) => current_UI_knowledge_view.derived_wc_id_map[id])
     const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} />)
 
