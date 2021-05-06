@@ -70,7 +70,9 @@ const get_content_controls = (props: Props, state: {}, set_state: (s: Partial<Ro
 
     if (!current_UI_knowledge_view) return []
 
-    const wcomponents_on_kv = wcomponents.filter(wc => !!current_UI_knowledge_view.derived_wc_id_map[wc.id])
+    const wcomponents_on_kv = wcomponents
+        .filter(wc => !!current_UI_knowledge_view.derived_wc_id_map[wc.id])
+        .filter(wc => wc.type !== "counterfactual")
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     const elements = [
