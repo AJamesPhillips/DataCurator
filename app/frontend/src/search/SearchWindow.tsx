@@ -2,17 +2,17 @@ import { h } from "preact"
 
 import "./SearchWindow.css"
 import { Modal } from "../modal/Modal"
-import { AutoCompleteOption, AutoCompleteProps, AutocompleteText } from "../form/AutocompleteText"
+import { AutoCompleteProps, AutocompleteText } from "../form/AutocompleteText"
 
 
 
-interface OwnProps <E extends AutoCompleteOption> extends AutoCompleteProps<E> {
+interface OwnProps extends AutoCompleteProps {
     search_window_title: string
     start_expanded?: undefined
 }
 
 
-export function SearchWindow <E extends AutoCompleteOption> (props: OwnProps<E>)
+export function SearchWindow (props: OwnProps)
 {
     return <Modal
         on_close={() => props.on_blur && props.on_blur()}
