@@ -2,10 +2,12 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentFromTo.css"
-import { AutoCompleteOption, AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteText } from "../form/AutocompleteText"
 import { ConnectionTerminalType, WComponent, wcomponent_is_plain_connection } from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
+import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
+import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 
 
 
@@ -21,6 +23,10 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    wc_id_counterfactuals_map: get_current_UI_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+    created_at_ms: state.routing.args.created_at_ms,
+    sim_ms: state.routing.args.sim_ms,
 })
 
 
@@ -53,8 +59,14 @@ function _WComponentFromTo (props: Props)
 
     const selected_option_id = wcomponent ? wcomponent.id : undefined
 
-    const options: AutoCompleteOption[] = wcomponents.filter(wc => !wcomponent_is_plain_connection(wc))
-        .map(wc => ({ id: wc.id, title: wc.title }))
+    const filtered_wcomponents = wcomponents.filter(wc => !wcomponent_is_plain_connection(wc))
+    const options = get_wcomponent_search_options({
+        wcomponents: filtered_wcomponents,
+        wcomponents_by_id: props.wcomponents_by_id,
+        wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
+        created_at_ms: props.created_at_ms,
+        sim_ms: props.sim_ms,
+    })
 
     function set_intercept (intercept: boolean)
     {

@@ -7,6 +7,7 @@ import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponent
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
 
 
+
 export interface Statement
 {
     id: string

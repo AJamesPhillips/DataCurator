@@ -1,9 +1,9 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { get_title } from "../shared/models/get_rich_text"
 
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { get_wcomponent_search_options } from "./get_wcomponent_search_options"
 import { SearchWindow } from "./SearchWindow"
 
 
@@ -29,27 +29,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentSearchWindow (props: Props)
 {
-    const { wcomponents_by_id, wc_id_counterfactuals_map: cf_map, created_at_ms, sim_ms } = props
-
-    const options = Object.values(wcomponents_by_id)
-        .map(wcomponent => {
-            const counterfactuals = cf_map && cf_map[wcomponent.id]
-
-            const title = get_title({
-                wcomponent,
-                rich_text: false,
-                wcomponents_by_id,
-                counterfactuals,
-                created_at_ms,
-                sim_ms,
-            })
-
-            return {
-                id: wcomponent.id,
-                title,
-                subtitle: wcomponent.title,
-            }
-        })
+    const options = get_wcomponent_search_options(props)
 
     return <SearchWindow
         search_window_title="Search for Component"
