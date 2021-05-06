@@ -22,8 +22,8 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
     VAP_set = { ...VAP_set, entries: VAPs }
 
     const values = get_probable_VAP_set_values(VAP_set, subtype)
-    const prob = get_VAP_set_prob(VAP_set, subtype)
-    const conv = get_VAP_set_conviction(VAP_set, subtype)
+    const prob = get_VAP_set_prob(VAP_set, subtype) + " %"
+    const conv = get_VAP_set_conviction(VAP_set, subtype) + " %"
 
     return <SummaryForPrediction
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}

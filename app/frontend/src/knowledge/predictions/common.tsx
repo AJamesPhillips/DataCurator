@@ -33,8 +33,8 @@ export function SummaryForPrediction (props: OwnProps)
                 {uncertain_date_to_string(datetime) || "-"}
             </div>
             {value && <div>Value:&nbsp;{value}</div>}
-            <div>Prob:&nbsp;{probability}&nbsp;%</div>
-            <div>Cn:&nbsp;{conviction}&nbsp;%</div>
+            <div>Prob:&nbsp;{probability}</div>
+            <div>Cn:&nbsp;{conviction}</div>
         </div>
     </div>
 }

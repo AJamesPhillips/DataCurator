@@ -3,6 +3,8 @@ import { h } from "preact"
 import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/EditableText"
 import type { Prediction } from "../../shared/models/interfaces/uncertainty"
+import { UncertainDateTime } from "../uncertainty/datetime"
+import { SummaryForPrediction } from "./common"
 
 
 
@@ -16,19 +18,21 @@ interface OwnProps_Summary
 export function PredictionViewSummary (props: OwnProps_Summary)
 {
     const { prediction, on_change } = props
-    const { probability, conviction } = prediction
+    const { datetime, probability, conviction } = prediction
 
-    return <div>
-        Prob: <EditablePercentage
+    return <SummaryForPrediction
+        datetime={datetime}
+        probability={<EditablePercentage
             placeholder="..."
             value={probability}
             on_change={on_change && (new_probability => on_change({ ...prediction, probability: new_probability }))}
-        /> &nbsp; Conviction: <EditablePercentage
+        />}
+        conviction={<EditablePercentage
             placeholder="..."
             value={conviction}
             on_change={on_change && (new_conviction => on_change({ ...prediction, conviction: new_conviction }))}
-        />
-    </div>
+        />}
+    />
 }
 
 
@@ -53,6 +57,11 @@ export function PredictionViewDetails (props: OwnProps_Details)
     }
 
     return <div>
+        <br />
+        <UncertainDateTime
+            datetime={prediction.datetime}
+            on_change={datetime => update_prediction && update_prediction({ datetime })}
+        />
         <br />
         Explanation: <EditableText
             placeholder="Explanation..."

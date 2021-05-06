@@ -72,12 +72,13 @@ function get_details (item: Prediction, on_change?: (item: Prediction) => void):
 function prepare_new_item (): Prediction
 {
     const now = new Date()
+    const custom_now = new Date(get_today_str())
 
     return {
         id: get_new_prediction_id(),
         created_at: now,
-        custom_created_at: new Date(get_today_str()),
-        datetime: { value: now },
+        custom_created_at: custom_now,
+        datetime: { min: custom_now },
         explanation: "",
         probability: 1,
         conviction: 1,
