@@ -206,4 +206,4 @@ function run_tests ()
     test(result, "Person B Was told Person A is here today")
 }
 
-run_tests()
+// run_tests()

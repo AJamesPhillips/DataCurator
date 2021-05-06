@@ -15,7 +15,13 @@ export function TabsContainer (props: TabsContainerProps)
 {
     setTimeout(() => props.content_changed(), 0) // remove hack
 
+    let routes = ALLOWED_ROUTES
+    if (!localStorage.getItem("show_all_tabs"))
+    {
+        routes = routes.filter(r => r === "objects" || r === "views" || r === "wcomponents")
+    }
+
     return <div>
-        {ALLOWED_ROUTES.map(route => <Tab id={route} />)}
+        {routes.map(route => <Tab id={route} />)}
     </div>
 }
