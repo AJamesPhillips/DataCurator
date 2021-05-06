@@ -68,7 +68,7 @@ function _JudgementFields (props: Props)
                     extra_styles={{ width: 30 }}
                     placeholder={"Operator..."}
                     selected_option_id={wcomponent.judgement_operator}
-                    get_options={() => judgement_operator_options}
+                    options={judgement_operator_options}
                     on_change={option_id => upsert_wcomponent({ judgement_operator: option_id })}
                     />
                 &nbsp; <EditableTextSingleLine
@@ -91,7 +91,7 @@ function _JudgementFields (props: Props)
                     placeholder={"Manual override..."}
                     allow_none={true}
                     selected_option_id={selected_option_id_for_manual}
-                    get_options={() => manual_options}
+                    options={manual_options}
                     on_change={option_id => {
                         const judgement_manual = option_id === undefined ? undefined : (option_id === "true" ? true : false)
                         upsert_wcomponent({ judgement_manual })

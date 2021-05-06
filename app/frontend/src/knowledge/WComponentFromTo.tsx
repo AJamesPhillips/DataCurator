@@ -67,7 +67,7 @@ function _WComponentFromTo (props: Props)
         <AutocompleteText
             placeholder={connector_type_str + "..."}
             selected_option_id={selected_option_id}
-            get_options={() => options}
+            options={options}
             allow_none={true}
             on_focus={() => set_intercept(true)}
             on_blur={() => set_intercept(false)}

@@ -118,7 +118,7 @@ function _WComponentForm (props: Props)
         <p>Type: <div style={{ width: "60%", display: "inline-block" }}><AutocompleteText
             placeholder={"Type..."}
             selected_option_id={wcomponent.type}
-            get_options={() => wcomponent_type_options}
+            options={wcomponent_type_options}
             on_change={option_id => upsert_wcomponent({ type: option_id })}
         /></div></p>
 
@@ -135,7 +135,7 @@ function _WComponentForm (props: Props)
             <AutocompleteText
                 placeholder={"Sub type..."}
                 selected_option_id={wcomponent.subtype}
-                get_options={() => wcomponent_statev2_subtype_options}
+                options={wcomponent_statev2_subtype_options}
                 on_change={option_id => upsert_wcomponent({ subtype: option_id })}
             />
         </div></p>}

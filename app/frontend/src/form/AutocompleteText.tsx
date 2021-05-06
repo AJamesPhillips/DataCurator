@@ -18,7 +18,7 @@ export interface AutoCompleteProps <E extends AutoCompleteOption>
 {
     placeholder: string
     selected_option_id: string | undefined
-    get_options: (current_value: string) => E[]
+    options: E[]
     allow_none?: boolean
     on_focus?: () => void
     on_blur?: () => void
@@ -43,9 +43,8 @@ interface State
 
 export class AutocompleteText <E extends AutoCompleteOption> extends Component <OwnProps<E>, State>
 {
-    private original_options: E[] = []
-    private options: E[] = []
     private prepared_targets: (Fuzzysort.Prepared | undefined)[] = []
+    private options: E[] = []
 
     constructor (props: OwnProps<E>)
     {
@@ -56,6 +55,10 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
             editing: !!props.start_expanded,
             highlighted_option_index: 0,
         }
+
+        const result = prepare_options_and_targets(props.options, props.allow_none)
+        this.options = result.new_options
+        this.prepared_targets = result.prepared_targets
     }
 
 
@@ -91,7 +94,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
 
     get_selected_option_title (): string
     {
-        const selected_option = this.props.get_options("").find(({ id }) => id === this.props.selected_option_id)
+        const selected_option = this.options.find(({ id }) => id === this.props.selected_option_id)
 
         return selected_option ? selected_option.title : "-"
     }
@@ -104,28 +107,8 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         return this.get_selected_option_title()
     }
 
-
     get_options_to_display ()
     {
-        const new_options = this.props.get_options(this.state.temp_value_str || "")
-
-        if (new_options !== this.original_options)
-        {
-            this.original_options = new_options
-            this.options = [...new_options]
-            if (this.props.allow_none)
-            {
-                // allow user to clear the current value / select none
-                const option_none: AutoCompleteOption = { id: undefined, title: "-" }
-                this.options.unshift(option_none as any)
-            }
-            this.prepared_targets = this.options.map(({ title, subtitle = "" }) =>
-            {
-                return fuzzysort.prepare(title + " " + subtitle)
-            })
-        }
-
-
         if (!this.state.temp_value_str)
         {
             return this.options
@@ -283,4 +266,25 @@ function Options <E extends AutoCompleteOption> (props: OptionsOwnProps<E>)
             </div>)}
         </div>
     </div>
+}
+
+
+
+function prepare_options_and_targets <E extends AutoCompleteOption> (options: E[], allow_none?: boolean)
+{
+    const new_options = [...options]
+
+    if (allow_none)
+    {
+        // allow user to clear the current value / select none
+        const option_none: AutoCompleteOption = { id: undefined, title: "-" }
+        new_options.unshift(option_none as any)
+    }
+
+    const prepared_targets = new_options.map(({ title, subtitle = "" }) =>
+    {
+        return fuzzysort.prepare(title + " " + subtitle)
+    })
+
+    return { new_options, prepared_targets}
 }

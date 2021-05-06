@@ -29,7 +29,7 @@ function _WComponentSearchWindow (props: Props)
         placeholder="WComponent..."
         selected_option_id={""}
         allow_none={true}
-        get_options={() => Object.values(props.wcomponents_by_id).map(wc => ({ id: wc.id, title: wc.title }))}
+        options={Object.values(props.wcomponents_by_id).map(wc => ({ id: wc.id, title: wc.title }))}
         on_change={option_id => props.on_change(option_id)}
         on_blur={props.on_blur}
     />

@@ -41,20 +41,16 @@ function _SelectKnowledgeView (props: Props)
     } = props
 
 
-    const get_options = () =>
-    {
-        const options: AutoCompleteOption[] = knowledge_views
-            .filter(({ id }) => !exclude_ids.has(id))
-            .map(({ id, title }) => ({ id, title }))
-            .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
+    const options: AutoCompleteOption[] = knowledge_views
+        .filter(({ id }) => !exclude_ids.has(id))
+        .map(({ id, title }) => ({ id, title }))
+        .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
 
-        return options
-    }
 
     return <AutocompleteText
         placeholder={placeholder || "Select knowledge view..."}
         selected_option_id={selected_option_id}
-        get_options={get_options}
+        options={options}
         on_change={on_change}
     />
 }

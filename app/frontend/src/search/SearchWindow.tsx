@@ -24,7 +24,7 @@ export function SearchWindow <E extends AutoCompleteOption> (props: OwnProps<E>)
             <AutocompleteText
                 placeholder={props.placeholder}
                 selected_option_id={props.selected_option_id}
-                get_options={props.get_options}
+                options={props.options}
                 allow_none={props.allow_none}
                 on_focus={props.on_focus}
                 on_blur={props.on_blur}
