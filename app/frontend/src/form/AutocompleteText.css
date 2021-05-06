@@ -38,3 +38,9 @@
     cursor: pointer;
     background-color: rgba(205, 215, 255);
 }
+
+.editable_field.autocomplete .option_subtitle
+{
+    font-size: 12px;
+    color: #aaa;
+}

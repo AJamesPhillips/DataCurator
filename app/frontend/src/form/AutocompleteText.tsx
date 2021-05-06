@@ -10,6 +10,7 @@ export interface AutoCompleteOption
 {
     id: string | undefined
     title: string
+    subtitle?: string
 }
 
 
@@ -118,7 +119,10 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
                 const option_none: AutoCompleteOption = { id: undefined, title: "-" }
                 this.options.unshift(option_none as any)
             }
-            this.prepared_targets = this.options.map(o => fuzzysort.prepare(o.title))
+            this.prepared_targets = this.options.map(({ title, subtitle = "" }) =>
+            {
+                return fuzzysort.prepare(title + " " + subtitle)
+            })
         }
 
 
@@ -272,7 +276,10 @@ function Options <E extends AutoCompleteOption> (props: OptionsOwnProps<E>)
                 }}
                 onMouseLeave={() => on_mouse_leave_option(option.id)}
             >
-                <div className="option">{option.title || option.id || "none"}</div>
+                <div className="option">
+                    {option.title || option.id || "none"}
+                    <div className="option_subtitle">{option.subtitle}</div>
+                </div>
             </div>)}
         </div>
     </div>
