@@ -20,16 +20,7 @@ function wcomponent_is_now_invalid (wcomponent: WComponent, display_at_datetime_
 {
     let invalid = false
 
-    if (wcomponent_has_existence_predictions(wcomponent))
-    {
-        const last_existence_prediction = wcomponent.existence[wcomponent.existence.length - 1]
-        invalid = (!!last_existence_prediction
-            && last_existence_prediction.conviction === 1
-            && last_existence_prediction.probability === 0
-            && display_at_datetime_ms > get_created_at_ms(last_existence_prediction))
-    }
-
-    if (!invalid && wcomponent_has_validity_predictions(wcomponent))
+    if (wcomponent_has_validity_predictions(wcomponent))
     {
         const last_validity_prediction = wcomponent.validity[wcomponent.validity.length - 1]
         invalid = invalid || (!!last_validity_prediction
@@ -46,6 +37,25 @@ function wcomponent_is_not_yet_valid (wcomponent: WComponent, display_at_datetim
 {
     return get_created_at_ms(wcomponent) > display_at_datetime_ms
 }
+
+
+
+// export function wcomponent_is_existing_for_datetime (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
+// {
+//     let nonexistent = false
+
+//     if (wcomponent_has_existence_predictions(wcomponent))
+//     {
+//         // const valid_existence_predictions = wcomponent.existence.filter(p => get_created_at_ms(p) <= created_at_ms)
+//         // valid_existence_predictions.sort(({ datetime }) => {})
+//         // nonexistent = (!!last_existence_prediction
+//         //     && last_existence_prediction.conviction === 1
+//         //     && last_existence_prediction.probability === 0
+//         //     && created_at_ms > get_created_at_ms(last_existence_prediction))
+//     }
+
+//     return !nonexistent
+// }
 
 
 

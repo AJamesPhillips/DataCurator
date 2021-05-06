@@ -33,7 +33,7 @@ export function EditableList <T> (props: EditableListProps<T>)
 
         item_top_props: props.item_top_props,
 
-        item_descriptor: props.item_descriptor,
+        debug_item_descriptor: props.item_descriptor,
     })
 
     return <ExpandableListWithAddButton

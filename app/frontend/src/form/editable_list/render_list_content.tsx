@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import { upsert_entry, remove_index, remove_from_list_by_predicate } from "../../utils/list"
+import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
 import type { ExpandableListContentProps } from "./interfaces"
 
@@ -14,7 +14,7 @@ export interface FactoryRenderListContentProps <U>
 
     item_top_props: EditableListEntryTopProps<U>
 
-    item_descriptor: string
+    debug_item_descriptor?: string
 }
 
 export function factory_render_list_content <T> (own_props: FactoryRenderListContentProps<T>)
@@ -26,7 +26,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
 
         item_top_props,
 
-        item_descriptor,
+        debug_item_descriptor = "",
     } = own_props
 
 
@@ -54,7 +54,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                     on_change={item =>
                     {
                         const predicate_by_id = (other: T) => get_id(item) === get_id(other)
-                        const new_items = upsert_entry(items, item, predicate_by_id, item_descriptor)
+                        const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
                         update_items(new_items)
                     }}
                     delete_item={() =>

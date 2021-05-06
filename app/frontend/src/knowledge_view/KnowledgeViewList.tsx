@@ -67,7 +67,7 @@ function _KnowledgeViewList (props: Props)
 
             item_top_props: { get_summary, get_details, get_details2 },
 
-            item_descriptor: "Knowledge View",
+            debug_item_descriptor: "Knowledge View",
         })}
         item_descriptor="Knowledge View"
         disable_collapsed={true}

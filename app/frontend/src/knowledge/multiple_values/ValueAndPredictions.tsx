@@ -107,7 +107,7 @@ function _ValueAndPredictions (props: Props)
             items: VAPs,
             get_id,
             item_top_props,
-            item_descriptor,
+            debug_item_descriptor: item_descriptor,
             update_items: props.update_values_and_predictions,
         })({ expanded_item_rows: true, expanded_items: true, disable_partial_collapsed: false })}
     </div>

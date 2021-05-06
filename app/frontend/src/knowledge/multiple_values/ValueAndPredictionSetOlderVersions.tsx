@@ -47,7 +47,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
             {
                 props.update_versioned_VAP_set({ ...props.versioned_VAP_set, older })
             },
-            item_descriptor,
+            debug_item_descriptor: item_descriptor,
 
             item_top_props: {
                 get_created_at,
