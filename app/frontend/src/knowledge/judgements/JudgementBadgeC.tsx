@@ -47,13 +47,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 // Refactor this file to hide JudgementBadge inside it
 function _JudgementBadgeC (props: Props)
 {
-    const { wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
+    const { judgement_id, wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
 
     if (!wcomponent || !target_wcomponent || !wcomponent_is_judgement(wcomponent)) return null
 
     const judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 
-    return <JudgementBadge judgement={judgement_value} />
+    return <JudgementBadge judgement={judgement_value} judgement_id={judgement_id} />
 }
 
 export const JudgementBadgeC = connector(_JudgementBadgeC) as FunctionalComponent<OwnProps>
