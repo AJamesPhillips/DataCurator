@@ -21,7 +21,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         // On day 1 you think it is A
         //      and you think it will be B on day 2
         {
-            id: "VAP_id1",
+            id: "VAP_set_id1",
             version: 1,
             created_at: day1,
             datetime: { value: day1 },
@@ -35,7 +35,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
             }],
         },
         {
-            id: "VAP_id2",
+            id: "VAP_set_id2",
             version: 1,
             created_at: day1,
             datetime: { value: day2 },
@@ -47,12 +47,12 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 1,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id1"],
+            previous_VAP_set_ids: ["VAP_set_id1"],
         },
         // On day 2 you realise (revise) its value from A to C
         //      and you set its new value on day 2 to be D
         {
-            id: "VAP_id1",
+            id: "VAP_set_id1",
             version: 2,
             created_at: day2,
             datetime: { value: day1 },
@@ -66,7 +66,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
             }],
         },
         {
-            id: "VAP_id2",
+            id: "VAP_set_id2",
             version: 2,
             created_at: day2,
             datetime: { value: day2 },
@@ -78,12 +78,12 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 1,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id1"],
+            previous_VAP_set_ids: ["VAP_set_id1"],
         },
         // On day 3 you think its value on day 4 will be E or F OR G or H
         //      and you think its value on day 5 will be I
         {
-            id: "VAP_id3",
+            id: "VAP_set_id3",
             version: 1,
             created_at: day3,
             datetime: { value: day4 },
@@ -103,10 +103,10 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 0.5,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id2"],
+            previous_VAP_set_ids: ["VAP_set_id2"],
         },
         {
-            id: "VAP_id4",
+            id: "VAP_set_id4",
             version: 1,
             created_at: day3,
             datetime: { value: day4 },
@@ -126,10 +126,10 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 0.5,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id2"],
+            previous_VAP_set_ids: ["VAP_set_id2"],
         },
         {
-            id: "VAP_id5",
+            id: "VAP_set_id5",
             version: 1,
             created_at: day3,
             datetime: { value: day5 },
@@ -141,12 +141,12 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 1,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id3", "VAP_id4"],
+            previous_VAP_set_ids: ["VAP_set_id3", "VAP_set_id4"],
         },
         // On day 4 you find its value was E and update both the entries for 'E or F' and 'G or H'
         //      and you revise your prediction for I to become J
         {
-            id: "VAP_id3",
+            id: "VAP_set_id3",
             version: 2,
             created_at: day4,
             datetime: { value: day4 },
@@ -166,10 +166,10 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 0,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id2"],
+            previous_VAP_set_ids: ["VAP_set_id2"],
         },
         {
-            id: "VAP_id4",
+            id: "VAP_set_id4",
             version: 2,
             created_at: day4,
             datetime: { value: day4 },
@@ -189,10 +189,10 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 0,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id2"],
+            previous_VAP_set_ids: ["VAP_set_id2"],
         },
         {
-            id: "VAP_id5",
+            id: "VAP_set_id5",
             version: 2,
             created_at: day4,
             datetime: { value: day5 },
@@ -204,7 +204,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
                 probability: 1,
                 conviction: 1,
             }],
-            previous_value_ids: ["VAP_id3", "VAP_id4"],
+            previous_VAP_set_ids: ["VAP_set_id3", "VAP_set_id4"],
         },
     ],
 

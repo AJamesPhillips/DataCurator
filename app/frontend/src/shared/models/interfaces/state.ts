@@ -88,7 +88,8 @@ interface StateValueAndPredictionsSetIncremental extends Base
     // No this is needed for potential scenarios where a value could be A or B and where it does not
     // make sense to model this as exclusive option choices.  See two_time_dimensional_trees for
     // example(s).
-    previous_value_ids?: string[]
+    // 2021-05-08 see Issue
+    previous_VAP_set_ids?: string[]
 }
 
 export interface StateValueAndPrediction extends PredictionBase

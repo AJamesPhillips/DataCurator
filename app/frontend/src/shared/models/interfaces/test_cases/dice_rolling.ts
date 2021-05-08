@@ -1,3 +1,4 @@
+import type { WComponentNodeEvent } from "../event"
 import type { WComponentNodeStateV2Incremental } from "../state"
 
 
@@ -45,9 +46,19 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
 }
 
 
+
+
+const Person_A_rolled_a_2_on_a_d3_dice: WComponentNodeEvent = {
+    id: "890",
+    created_at: d1,
+    type: "event",
+    title: "Person A rolled a 2 on a d3 dice",
+    description: "",
+}
+
 const specific_dice_roll: WComponentNodeStateV2Incremental = {
     id: "",
-    created_at: d1,
+    created_at: d0,
     type: "statev2",
     subtype: "other",
     title: "Possible value of D3 roll: ${value}", // should render ${value} as "1 or 2 or 3" as all equally probable
@@ -63,7 +74,7 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 explanation: "We think Person A will roll the dice at some point in the future but we don't know when",
             },
             entry_defaults: {
-                explanation: "see @@<possible_d3_dice_rolling.id>, probabilities copied from there",
+                explanation: `see @@${possible_d3_dice_rolling.id}, probabilities copied from there`,
                 conviction: 1,
             },
             entries: [
@@ -83,14 +94,16 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
             created_at: d1,
             datetime: { value: d1 },
             entry_defaults: {
-                explanation: "@@<Person_A_rolled_a_2_on_a_d3_dice.id>",
+                explanation: `@@${Person_A_rolled_a_2_on_a_d3_dice.id}`,
             },
             entries: [
                 { value: "1", relative_probability: 0 },
                 { value: "2", relative_probability: 1 },
                 { value: "3", relative_probability: 0 },
             ],
-            previous_value_ids: ["2"],
+            // previous_VAP_set_ids should not be needed as we default to taking the latest
+            // VAP set
+            // previous_VAP_set_ids: ["1"],
         },
     ],
 }
