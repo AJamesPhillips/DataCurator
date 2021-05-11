@@ -32,7 +32,13 @@ function _CreateNewWComponent (props: Props)
             on_pointer_down={() => create_wcomponent_type("process")}
         />
         <Button
-            value="Create Node (state)"
+            value="Create Node (statement / simple state)"
+            extra_class_names="creation_option left"
+            size="normal"
+            on_pointer_down={() => create_wcomponent_type("state")}
+        />
+        <Button
+            value="Create Node (complex state)"
             extra_class_names="creation_option left"
             size="normal"
             on_pointer_down={() => create_wcomponent_type("statev2")}
