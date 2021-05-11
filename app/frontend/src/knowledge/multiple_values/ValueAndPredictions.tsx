@@ -175,15 +175,15 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
             </div>}
         </div>
         <div className="probabilities">
-            <div className={disabled_prob ? "disabled" : ""}>
+            {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
                 Prob: &nbsp; <EditablePercentage
                     disabled={disabled_prob}
                     placeholder="..."
                     value={probability}
                     on_change={probability => on_change({ ...VAP, probability })}
                 />
-            </div>
-            <div className={disabled_rel_prob ? "disabled" : ""}>
+            </div>}
+            {!is_boolean && <div className={disabled_rel_prob ? "disabled" : ""}>
                 Rel prob: &nbsp; <EditableNumber
                     disabled={disabled_rel_prob}
                     placeholder="..."
@@ -191,7 +191,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     allow_undefined={true}
                     on_change={relative_probability => on_change({ ...VAP, relative_probability })}
                 />
-            </div>
+            </div>}
             {is_boolean && <div className={disabled_conviction ? "disabled" : ""}>
                 Cn: &nbsp; <EditablePercentage
                     disabled={disabled_conviction}
