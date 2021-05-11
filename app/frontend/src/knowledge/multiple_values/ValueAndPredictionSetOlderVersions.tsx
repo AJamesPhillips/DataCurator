@@ -10,7 +10,7 @@ import {
     create_new_VAP_set_version,
 } from "./utils"
 import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
-import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set } from "./common"
+import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set, get_details2_for_single_VAP_set } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 
 
@@ -54,6 +54,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
                 get_custom_created_at,
                 get_summary: get_summary_for_single_VAP_set(props.subtype, true, undefined),
                 get_details: get_details_for_single_VAP_set(props.subtype),
+                get_details2: get_details2_for_single_VAP_set,
                 extra_class_names: "value_and_prediction_set",
             },
         })}

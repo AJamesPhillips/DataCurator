@@ -37,6 +37,7 @@
 
 .value_and_prediction_summary .temporal_uncertainty > div {
     display: inline-flex;
+    height: 1em;
 }
 
 .value_and_prediction_summary .probabilities > div > div

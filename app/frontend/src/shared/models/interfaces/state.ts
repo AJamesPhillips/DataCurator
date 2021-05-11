@@ -72,13 +72,13 @@ interface StateValueAndPredictionsSetIncremental extends Base
     // missing will be dropped
     entries?: (Partial<StateValueAndPrediction> | null)[]
     // Allows a set of values to have default values for them.
-    // See dice_rolling.ts example for entry_defaults.explanation
+    // See dice_rolling.ts example for shared_entry_fields.explanation
     //
-    // An example for entry_defaults.conviction, we might be applying for a grant and we have
+    // An example for shared_entry_fields.conviction, we might be applying for a grant and we have
     // 3 different possible values of: fail, success: 100k, success: 500k.  The probabilities
     // will change over time but at this time point the conviction for all three values will,
     // or will likely, be the same.
-    entry_defaults?: Partial<StateValueAndPrediction>
+    shared_entry_values?: Partial<StateValueAndPrediction>
 
     // 2021-04-25 19:00
     // Not using this field yet as we will explore a simpler modeling approach, namely to use

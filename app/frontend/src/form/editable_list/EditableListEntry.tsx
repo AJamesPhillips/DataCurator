@@ -14,6 +14,7 @@ export interface EditableListEntryTopProps<U>
     get_summary: (item: U, on_change: (item: U) => void) => h.JSX.Element
     get_details: (item: U, on_change: (item: U) => void) => h.JSX.Element
     get_details2?: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    get_details3?: (item: U, on_change: (item: U) => void) => h.JSX.Element
     extra_class_names?: string
 }
 
@@ -63,6 +64,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             get_summary,
             get_details,
             get_details2,
+            get_details3,
             disable_collapsable,
             on_change,
             delete_item,
@@ -99,18 +101,25 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             <div className="details">
                 {get_details(item, on_change)}
 
-                <ConfirmatoryDeleteButton on_delete={delete_item} />
+                <div className="details2">
+                    {get_details2 && get_details2(item, on_change)}
+                </div>
 
-                {get_created_at && get_custom_created_at && <EditableCustomDateTime
-                    invariant_value={get_created_at(item)}
-                    value={custom_created_at}
-                    on_change={date_on_change}
-                />}
+                <div>
+                    <ConfirmatoryDeleteButton on_delete={delete_item} />
+
+                    {get_created_at && get_custom_created_at && <EditableCustomDateTime
+                        invariant_value={get_created_at(item)}
+                        value={custom_created_at}
+                        on_change={date_on_change}
+                    />}
+                </div>
+
+                <div className="details3">
+                    {get_details3 && get_details3(item, on_change)}
+                </div>
             </div>
 
-            <div className="details2">
-                {get_details2 && get_details2(item, on_change)}
-            </div>
         </div>
     }
 }

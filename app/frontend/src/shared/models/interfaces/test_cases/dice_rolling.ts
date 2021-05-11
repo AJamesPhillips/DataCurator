@@ -28,7 +28,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
                 { value: "2", relative_probability: 1 },
                 { value: "3", relative_probability: 1 },
             ],
-            entry_defaults: {
+            shared_entry_values: {
                 conviction: 1,
             },
         },
@@ -73,7 +73,7 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 min: d0,
                 explanation: "We think Person A will roll the dice at some point in the future but we don't know when",
             },
-            entry_defaults: {
+            shared_entry_values: {
                 explanation: `see @@${possible_d3_dice_rolling.id}, probabilities copied from there`,
                 conviction: 1,
             },
@@ -93,7 +93,7 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
             version: 1,
             created_at: d1,
             datetime: { value: d1 },
-            entry_defaults: {
+            shared_entry_values: {
                 explanation: `@@${Person_A_rolled_a_2_on_a_d3_dice.id}`,
             },
             entries: [

@@ -65,7 +65,7 @@ function _KnowledgeViewList (props: Props)
                 props.upsert_knowledge_view({ knowledge_view: changed_kv })
             },
 
-            item_top_props: { get_summary, get_details, get_details2 },
+            item_top_props: { get_summary, get_details, get_details3 },
 
             debug_item_descriptor: "Knowledge View",
         })}
@@ -149,7 +149,7 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
 
 
 
-function get_details2 ()
+function get_details3 ()
 {
     return <div><br /><br /></div>
 }

@@ -12,6 +12,7 @@ import { ValueAndPredictions } from "./ValueAndPredictions"
 import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../state/derived/State"
 import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
 import { SummaryForPrediction } from "../predictions/common"
+import { EditableText } from "../../form/EditableText"
 
 
 
@@ -63,6 +64,37 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
         <br />
     </div>
 }
+
+
+
+export const get_details2_for_single_VAP_set = (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+{
+    const shared_entry_values = VAP_set.shared_entry_values || {}
+    // Provide the explanations from exist VAPs
+    const VAP_explanations = VAP_set.entries
+        .map(({ explanation }) => explanation.trim())
+        .filter(explanation => explanation)
+        .join("\n\n")
+    const explanation = shared_entry_values.explanation || VAP_explanations || ""
+
+    return <div className="VAP_set_details">
+        Explanation:
+        <EditableText
+            placeholder="..."
+            value={explanation}
+            on_change={explanation => {
+                const shared_entry_values = {
+                    ...VAP_set.shared_entry_values,
+                    explanation,
+                }
+                on_change({ ...VAP_set, shared_entry_values })
+            }}
+        />
+
+        <br />
+    </div>
+}
+
 
 
 const get_created_at = (item: StateValueAndPredictionsSet) => item.created_at

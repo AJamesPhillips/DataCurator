@@ -49,11 +49,11 @@
     font-weight: 800;
 }
 
-.editable_list .details, .editable_list .details2
+.editable_list .details
 {
     display: none;
 }
-.editable_list.expanded > .details, .editable_list.expanded > .details2
+.editable_list.expanded > .details
 {
     display: initial;
 }

@@ -231,24 +231,14 @@ const get_details = (subtype: WComponentStateV2SubType) => (item: StateValueAndP
 {
     const is_boolean = subtype === "boolean"
 
+    if (is_boolean) return <div></div>
+
     return <div>
-        {!is_boolean && <br />}
-        {!is_boolean && <div>
-            Description:
-            <EditableText
-                placeholder="..."
-                value={item.description}
-                on_change={description => on_change({ ...item, description })}
-            />
-        </div>}
-        <br />
-        <div>
-            Explanation:
-            <EditableText
-                placeholder="..."
-                value={item.explanation}
-                on_change={explanation => on_change({ ...item, explanation })}
-            />
-        </div>
+        Description:
+        <EditableText
+            placeholder="..."
+            value={item.description}
+            on_change={description => on_change({ ...item, description })}
+        />
     </div>
 }

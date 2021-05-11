@@ -1,5 +1,6 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
+import { EditableText } from "../../form/EditableText"
 
 import { EditableListEntryTopProps, EditableListEntry } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
@@ -13,7 +14,7 @@ import { group_VAP_sets_by_version, sort_grouped_VAP_sets, ungroup_VAP_sets_by_v
 import { test } from "../../shared/utils/test"
 import type { VAP_set_id_counterfactual_map } from "../../state/derived/State"
 import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
-import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set } from "./common"
+import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set, get_details2_for_single_VAP_set } from "./common"
 import { prepare_new_VAP_set } from "./utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 
@@ -222,7 +223,8 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     set_custom_created_at={set_latest_custom_created_at}
                     get_summary={get_summary(subtype, args.VAP_set_counterfactuals_map)}
                     get_details={get_details(subtype, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
-                    get_details2={get_details2(subtype)}
+                    get_details2={get_details2}
+                    get_details3={get_details3(subtype)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
                     expanded={expanded_item_rows}
@@ -274,7 +276,17 @@ const get_details = (subtype: WComponentStateV2SubType, wcomponent_id: string, V
 }
 
 
-const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+
+const get_details2 = (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+{
+    const { latest: latest_VAP_set, older } = versioned_VAP_set
+
+    return get_details2_for_single_VAP_set(latest_VAP_set, latest => on_change({ latest, older }))
+}
+
+
+
+const get_details3 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     return <div className="VAP_set_details">
         <br />

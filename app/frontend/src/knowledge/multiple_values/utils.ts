@@ -52,15 +52,17 @@ export function create_new_VAP_set_version (versioned_VAP_set: VersionedStateVAP
 
 function clone_VAP_set (VAP_set: StateValueAndPredictionsSet): StateValueAndPredictionsSet
 {
-    const clone = {
+    const clone: StateValueAndPredictionsSet = {
         ...VAP_set,
         version: VAP_set.version + 1,
         created_at: new Date(),
-        entries: VAP_set.entries.map(e => ({ ...e, description: "", explanation: "" })),
+        custom_created_at: undefined,
+        entries: VAP_set.entries.map(e => ({ ...e, explanation: "" })),
+        shared_entry_values: {
+            ...VAP_set.shared_entry_values,
+            explanation: undefined,
+        }
     }
-
-    delete clone.custom_created_at
-    delete clone.entry_defaults
 
     return clone
 }
