@@ -4,6 +4,7 @@ import type {
     WComponentNode,
     WComponentConnection,
 } from "../shared/models/interfaces/SpecialisedObjects"
+import type { WComponentNodeStateV2 } from "../shared/models/interfaces/state"
 import type { WComponentBase } from "../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display/display"
@@ -54,6 +55,17 @@ export function get_new_wcomponent_object (args: Partial<WComponent>)
             type: args.type, // only added to remove type warning
         }
         wcomponent = judgement
+    }
+    else if (args.type === "statev2")
+    {
+        const statev2: WComponentNodeStateV2 = {
+            ...base,
+            subtype: "boolean",
+            values_and_prediction_sets: [],
+            ...args,
+            type: args.type, // only added to remove type warning
+        }
+        wcomponent = statev2
     }
     else
     {
