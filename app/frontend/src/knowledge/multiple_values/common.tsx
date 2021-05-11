@@ -69,7 +69,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details2_for_single_VAP_set = (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details2_for_single_VAP_set = (subtype: WComponentStateV2SubType) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     const shared_entry_values = VAP_set.shared_entry_values || {}
     // Provide the explanations from exist VAPs
@@ -81,30 +81,33 @@ export const get_details2_for_single_VAP_set = (VAP_set: StateValueAndPrediction
     const conviction = shared_entry_values.conviction || 1
 
 
-    const on_change_shared_entry_values = (shared_entry_values: Partial<StateValueAndPrediction>) =>
-    {
-        shared_entry_values = {
-            ...VAP_set.shared_entry_values,
-            ...shared_entry_values,
-        }
-        on_change({ ...VAP_set, shared_entry_values })
-    }
+    const is_boolean = subtype === "boolean"
 
 
     return <div className="shared_VAP_set_details">
         <div className="row_one">
             <div>Explanation:</div>
-            <div>Cn: &nbsp; <EditablePercentage
+            {!is_boolean && <div>Cn: &nbsp; <EditablePercentage
                 disabled={false}
                 placeholder="..."
                 value={conviction}
-                on_change={conviction => on_change_shared_entry_values({ conviction })}
-            /></div>
+                on_change={conviction =>
+                {
+                    const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
+                    // Overwrite all the existing convictions with this conviction
+                    const entries = VAP_set.entries.map(e => ({ ...e, conviction }))
+                    on_change({ ...VAP_set, entries, shared_entry_values })
+                }}
+            /></div>}
         </div>
         <EditableText
             placeholder="..."
             value={explanation}
-            on_change={explanation => on_change_shared_entry_values({ explanation })}
+            on_change={explanation =>
+            {
+                const shared_entry_values = { ...VAP_set.shared_entry_values, explanation }
+                on_change({ ...VAP_set, shared_entry_values })
+            }}
         />
 
         <br />

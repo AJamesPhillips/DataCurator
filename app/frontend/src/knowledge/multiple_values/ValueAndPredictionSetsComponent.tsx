@@ -223,7 +223,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     set_custom_created_at={set_latest_custom_created_at}
                     get_summary={get_summary(subtype, args.VAP_set_counterfactuals_map)}
                     get_details={get_details(subtype, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
-                    get_details2={get_details2}
+                    get_details2={get_details2(subtype)}
                     get_details3={get_details3(subtype)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
@@ -277,11 +277,11 @@ const get_details = (subtype: WComponentStateV2SubType, wcomponent_id: string, V
 
 
 
-const get_details2 = (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
 
-    return get_details2_for_single_VAP_set(latest_VAP_set, latest => on_change({ latest, older }))
+    return get_details2_for_single_VAP_set(subtype)(latest_VAP_set, latest => on_change({ latest, older }))
 }
 
 

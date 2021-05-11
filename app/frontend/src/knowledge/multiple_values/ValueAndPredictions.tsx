@@ -192,14 +192,14 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     on_change={relative_probability => on_change({ ...VAP, relative_probability })}
                 />
             </div>
-            <div className={disabled_conviction ? "disabled" : ""}>
+            {is_boolean && <div className={disabled_conviction ? "disabled" : ""}>
                 Cn: &nbsp; <EditablePercentage
                     disabled={disabled_conviction}
                     placeholder="..."
                     value={conviction}
                     on_change={conviction => on_change({ ...VAP, conviction })}
                 />
-            </div>
+            </div>}
 
             <PredictionBadge
                 disabled={disabled_setting_counterfactual}
