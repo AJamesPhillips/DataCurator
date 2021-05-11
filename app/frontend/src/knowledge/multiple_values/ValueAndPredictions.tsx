@@ -141,6 +141,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
     const { probability, conviction } = merge_counterfactual_into_VAP(VAP, counterfactual)
 
     const is_boolean = subtype === "boolean"
+    const is_number = subtype === "number"
     const has_rel_prob = VAP.relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean || counterfactual_active
     const disabled_rel_prob = !has_rel_prob || is_boolean
@@ -150,7 +151,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">
-            {!is_boolean && <div>
+            {is_number && <div>
                 min: &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.min || ""}
@@ -165,7 +166,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     on_change={value => on_change({ ...VAP, value })}
                 />
             </div>
-            {!is_boolean && <div>
+            {is_number && <div>
                 max: &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.max || ""}
