@@ -35,7 +35,7 @@ function _CreateNewWComponent (props: Props)
             value="Create Node (state)"
             extra_class_names="creation_option left"
             size="normal"
-            on_pointer_down={() => create_wcomponent_type("state")}
+            on_pointer_down={() => create_wcomponent_type("statev2")}
         />
         <Button
             value="Create Judgement"

@@ -1,4 +1,3 @@
-import type { CanvasPoint } from "../canvas/interfaces"
 import type { WComponentJudgement } from "../shared/models/interfaces/judgement"
 import type {
     WComponent,
@@ -7,7 +6,7 @@ import type {
 } from "../shared/models/interfaces/SpecialisedObjects"
 import type { WComponentBase } from "../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../state/actions"
-import { get_middle_of_screen, h_step } from "../state/display/display"
+import { get_middle_of_screen } from "../state/display/display"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import { config_store } from "../state/store"
@@ -84,21 +83,7 @@ export function create_wcomponent (args: Partial<WComponent>)
     let add_to_knowledge_view: AddToKnowledgeViewArgs | undefined = undefined
     if (current_knowledge_view)
     {
-        const currently_selected_wcomponent_id = state.meta_wcomponents.selected_wcomponent_ids_list[0]
-        const currently_selected_wcomponent_position = currently_selected_wcomponent_id
-            ? current_knowledge_view.derived_wc_id_map[currently_selected_wcomponent_id]
-            : undefined
-
-        let position: CanvasPoint
-        if (currently_selected_wcomponent_position)
-        {
-            position = {...currently_selected_wcomponent_position}
-            position.left -= h_step
-        }
-        else
-        {
-            position = get_middle_of_screen(state)
-        }
+        const position = get_middle_of_screen(state)
 
         add_to_knowledge_view = { id: current_knowledge_view.id, position }
     }
