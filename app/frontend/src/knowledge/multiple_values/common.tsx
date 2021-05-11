@@ -1,5 +1,6 @@
 import { h } from "preact"
 
+import "./common.css"
 import type {
     WComponentStateV2SubType,
     StateValueAndPredictionsSet,
@@ -13,6 +14,7 @@ import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from ".
 import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
 import { SummaryForPrediction } from "../predictions/common"
 import { EditableText } from "../../form/EditableText"
+import { EditablePercentage } from "../../form/EditablePercentage"
 
 
 
@@ -76,19 +78,33 @@ export const get_details2_for_single_VAP_set = (VAP_set: StateValueAndPrediction
         .filter(explanation => explanation)
         .join("\n\n")
     const explanation = shared_entry_values.explanation || VAP_explanations || ""
+    const conviction = shared_entry_values.conviction || 1
 
-    return <div className="VAP_set_details">
-        Explanation:
+
+    const on_change_shared_entry_values = (shared_entry_values: Partial<StateValueAndPrediction>) =>
+    {
+        shared_entry_values = {
+            ...VAP_set.shared_entry_values,
+            ...shared_entry_values,
+        }
+        on_change({ ...VAP_set, shared_entry_values })
+    }
+
+
+    return <div className="shared_VAP_set_details">
+        <div className="row_one">
+            <div>Explanation:</div>
+            <div>Cn: &nbsp; <EditablePercentage
+                disabled={false}
+                placeholder="..."
+                value={conviction}
+                on_change={conviction => on_change_shared_entry_values({ conviction })}
+            /></div>
+        </div>
         <EditableText
             placeholder="..."
             value={explanation}
-            on_change={explanation => {
-                const shared_entry_values = {
-                    ...VAP_set.shared_entry_values,
-                    explanation,
-                }
-                on_change({ ...VAP_set, shared_entry_values })
-            }}
+            on_change={explanation => on_change_shared_entry_values({ explanation })}
         />
 
         <br />
