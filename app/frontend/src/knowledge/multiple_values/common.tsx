@@ -8,7 +8,6 @@ import type {
 } from "../../shared/models/interfaces/state"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { UncertainDateTime } from "../uncertainty/datetime"
-import { set_VAP_probabilities } from "./utils"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../state/derived/State"
 import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
@@ -130,11 +129,6 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: strin
         // ensure the ValueAndPrediction component always and only receives up to a single VAP entry
         VAPs = VAPs.slice(0, 1)
     }
-
-    // double check they're set correctly.  Important for example because if the
-    // subtype has changed from other to boolean, there will still be relative
-    // probabilities that need to be removed.
-    VAPs = set_VAP_probabilities(VAPs)
 
     return VAPs
 }

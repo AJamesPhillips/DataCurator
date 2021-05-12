@@ -8,10 +8,10 @@ function Set_toJSON (key: string, value: any)
 }
 
 
-export function test <T> (got: T, expected: T)
+export function test <T> (got: T, expected: T, sort_items=true)
 {
-    const str_got = JSON.stringify(got, Set_toJSON)
-    const str_expected = JSON.stringify(expected, Set_toJSON)
+    const str_got = sort_items ? JSON.stringify(got, Set_toJSON) : JSON.stringify(got)
+    const str_expected = sort_items ? JSON.stringify(expected, Set_toJSON) : JSON.stringify(expected)
 
     const pass = str_got === str_expected
     if (pass) console. log ("pass")

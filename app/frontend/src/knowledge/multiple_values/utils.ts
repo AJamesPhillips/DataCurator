@@ -2,6 +2,7 @@ import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
+    WComponentStateV2SubType,
 } from "../../shared/models/interfaces/state"
 import { get_today_str } from "../../shared/utils/date_helpers"
 import { test } from "../../shared/utils/test"
@@ -69,8 +70,10 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet): StateValueAndPred
 
 
 
-export function set_VAP_probabilities (VAPs: StateValueAndPrediction[]): StateValueAndPrediction[]
+export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], subtype: WComponentStateV2SubType): StateValueAndPrediction[]
 {
+    const is_boolean = subtype === "boolean"
+
     const multiple = VAPs.length > 1
     let total_relative_probability = 0
 
@@ -85,7 +88,7 @@ export function set_VAP_probabilities (VAPs: StateValueAndPrediction[]): StateVa
         return { ...VAP, relative_probability }
     })
 
-    if (multiple)
+    if (multiple && !is_boolean)
     {
         total_relative_probability = total_relative_probability || 1
 
