@@ -98,6 +98,5 @@ export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VA
     const first_VAP = VAPs[0]
     if (subtype === "boolean" && first_VAP) return [first_VAP]
 
-    return VAPs.filter(e => e.probability > 0)
-        .sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
+    return VAPs.sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
 }
