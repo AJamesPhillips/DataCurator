@@ -6,7 +6,6 @@ import type { RootState } from "../state/State"
 import { CreateNewWComponent } from "./CreateNewWComponent"
 import { WComponentForm } from "./wcomponent_form/WComponentForm"
 import { WComponentMultipleForm } from "./WComponentMultipleForm"
-import { WComponentsList } from "./WComponentsList"
 import { LinkButton } from "../utils/Link"
 
 
@@ -56,11 +55,6 @@ function _WComponentsSidePanel (props: Props)
             />
         </p>}
 
-        <p>
-            Or select a component to view
-        </p>
-
-        <WComponentsList />
     </div>
 
 
