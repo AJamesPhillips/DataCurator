@@ -128,11 +128,11 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: strin
     if (subtype === "boolean" && VAPs.length !== 1)
     {
         // ensure the ValueAndPrediction component always and only receives up to a single VAP entry
-        const entries = VAPs.slice(0, 1)
-        return entries
+        VAPs = VAPs.slice(0, 1)
     }
 
-    VAPs = set_VAP_probabilities(VAP_set.entries)
+    // double check they're set correctly
+    VAPs = set_VAP_probabilities(VAPs)
 
     return VAPs
 }

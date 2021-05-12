@@ -11,7 +11,7 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { WComponentStateV2SubType, StateValueAndPrediction } from "../../shared/models/interfaces/state"
-import { prepare_new_VAP } from "./utils"
+import { prepare_new_VAP, set_VAP_probabilities } from "./utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
@@ -108,7 +108,11 @@ function _ValueAndPredictions (props: Props)
             get_id,
             item_top_props,
             debug_item_descriptor: item_descriptor,
-            update_items: props.update_values_and_predictions,
+            update_items: items =>
+            {
+                items = set_VAP_probabilities(items)
+                props.update_values_and_predictions(items)
+            },
         })({ expanded_item_rows: true, expanded_items: true, disable_partial_collapsed: false })}
     </div>
 }

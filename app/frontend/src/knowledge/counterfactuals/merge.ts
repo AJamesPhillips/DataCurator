@@ -6,13 +6,13 @@ import type { VAP_id_counterfactual_map } from "../../state/derived/State"
 
 export interface CounterfactualStateValueAndPrediction extends StateValueAndPrediction
 {
-    counterfactual: boolean
+    is_counterfactual: boolean
 }
 
 
 export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): CounterfactualStateValueAndPrediction
 {
-    if (!counterfactual) return { ...VAP, counterfactual: false }
+    if (!counterfactual) return { ...VAP, is_counterfactual: false }
 
     const cf_probability = counterfactual && counterfactual.probability
     const cf_conviction = counterfactual && counterfactual.conviction
@@ -21,7 +21,7 @@ export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, cou
     const conviction = cf_conviction !== undefined ? cf_conviction : VAP.conviction
     const cf = cf_probability !== undefined || cf_conviction !== undefined
 
-    return ({ ...VAP, probability, conviction, counterfactual: cf })
+    return ({ ...VAP, probability, conviction, is_counterfactual: cf })
 }
 
 

@@ -32,7 +32,6 @@ export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArg
     const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, wcomponent.subtype === "boolean")
     const VAP_counterfactuals_maps = Object.values(counterfactuals && counterfactuals.VAP_set || {})
     const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
-
     return get_probable_VAP_display_values(wcomponent, counterfactual_VAPs)
 }
 
@@ -55,7 +54,7 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
         // Should we return something that's neither true nor false if probability === 0.5?
         value_strings = VAPs_by_prob.map(VAP =>
         {
-            cf = cf || VAP.counterfactual
+            cf = cf || VAP.is_counterfactual
 
             return VAP.probability > 0.5
             ? (wcomponent.boolean_true_str || "True")
@@ -66,7 +65,7 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
     {
         value_strings = VAPs_by_prob.map(VAP =>
         {
-            cf = cf || VAP.counterfactual
+            cf = cf || VAP.is_counterfactual
             return VAP.value
         })
     }
@@ -103,16 +102,19 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], wc
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const VAPs = (wcomponent_is_boolean
+        const subtype_specific_VAPs = (wcomponent_is_boolean
             ? VAP_set.entries.slice(0, 1)
             : VAP_set.entries.filter(({ probability, conviction }) =>
             {
                 return !(probability === 0 && conviction === 1)
             }))
+
+        const VAPs = subtype_specific_VAPs
             .filter(({ conviction }) =>
             {
                 return conviction !== 0
             })
+
         all_VAPs = all_VAPs.concat(VAPs)
     })
 
@@ -120,7 +122,7 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], wc
 }
 
 
-/*
+
 function run_tests ()
 {
     console. log("running tests of get_probable_VAP_set_display_values")
@@ -128,7 +130,8 @@ function run_tests ()
     function get_probable_VAP_set_display_values (wcomponent: WComponentNodeStateV2, VAP_sets: StateValueAndPredictionsSet[])
     {
         const VAPs = get_all_VAPs_from_VAP_sets(VAP_sets, wcomponent.subtype === "boolean")
-        return get_probable_VAP_display_values(wcomponent, VAPs)
+        const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(VAPs, [])
+        return get_probable_VAP_display_values(wcomponent, counterfactual_VAPs)
     }
 
 
@@ -150,40 +153,51 @@ function run_tests ()
     let display_value
 
 
+    const VAP_defaults: StateValueAndPrediction = {
+        id: "VAP0", value: "", probability: 1, conviction: 1, description: "", explanation: ""
+    }
+
+
     const empty: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: []
     }
     const single: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 1, conviction: 1, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 1, conviction: 1 },
         ]
     }
     const multiple: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 0.2, conviction: 1, description: "", explanation: "" },
-            { id: "VAP2", value: "B", probability: 0.8, conviction: 1, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 0.2, conviction: 1 },
+            { ...VAP_defaults, id: "VAP2", value: "B", probability: 0.8, conviction: 1 },
+        ]
+    }
+    const multiple_with_1certain: StateValueAndPredictionsSet = {
+        id: "", version: 1, created_at: dt1, datetime: {}, entries: [
+            { ...VAP_defaults, id: "VAP1", value: "AAA", probability: 1, relative_probability: 100, conviction: 1 },
+            { ...VAP_defaults, id: "VAP2", value: "BBB", probability: 0, relative_probability: 0, conviction: 1 }
         ]
     }
 
     const no_chance: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 0, conviction: 1, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 0, conviction: 1 },
         ]
     }
 
     const uncertain_prob: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 0.5, conviction: 1, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 0.5, conviction: 1 },
         ]
     }
     const uncertain_cn: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 1, conviction: 0.5, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 1, conviction: 0.5 },
         ]
     }
     const certain_no_cn: StateValueAndPredictionsSet = {
         id: "", created_at: dt1, version: 1, datetime: {}, entries: [
-            { id: "VAP1", value: "A", probability: 1, conviction: 0, description: "", explanation: "" },
+            { ...VAP_defaults, id: "VAP1", value: "A", probability: 1, conviction: 0 },
         ]
     }
 
@@ -199,6 +213,8 @@ function run_tests ()
 
     display_value = get_probable_VAP_set_display_values(wcomponent_other, [multiple])
     test(display_value, { value: "B, A", type: "multiple" })
+    display_value = get_probable_VAP_set_display_values(wcomponent_other, [multiple_with_1certain])
+    test(display_value, { value: "AAA", type: "single" })
 
     display_value = get_probable_VAP_set_display_values(wcomponent_other, [single, single])
     test(display_value, { value: "A, A", type: "multiple" })
@@ -259,5 +275,4 @@ function run_tests ()
     test(display_value, { value: "A", type: "single" })
 }
 
-// run_tests()
-*/
+run_tests()
