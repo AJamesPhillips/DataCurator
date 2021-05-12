@@ -131,7 +131,9 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: strin
         VAPs = VAPs.slice(0, 1)
     }
 
-    // double check they're set correctly
+    // double check they're set correctly.  Important for example because if the
+    // subtype has changed from other to boolean, there will still be relative
+    // probabilities that need to be removed.
     VAPs = set_VAP_probabilities(VAPs)
 
     return VAPs
