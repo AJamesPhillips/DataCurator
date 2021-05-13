@@ -8,7 +8,7 @@ import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
-import { replace_value_in_text } from "../../shared/models/get_rich_text"
+import { get_title } from "../../shared/models/rich_text/get_rich_text"
 import { get_updated_wcomponent } from "../../shared/models/get_updated_wcomponent"
 import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
 import {
@@ -26,7 +26,7 @@ import {
 import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
 import { wcomponent_types } from "../../shared/models/interfaces/wcomponent"
 import { ACTIONS } from "../../state/actions"
-import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
+import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { DisplayValue } from "../multiple_values/DisplayValue"
@@ -56,12 +56,13 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     }
 
 
-    const counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
+    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state)
 
 
     return {
         ready: state.sync.ready,
-        counterfactuals,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        wc_id_counterfactuals_map,
         from_wcomponent,
         to_wcomponent,
         // keys: state.global_keys,
@@ -89,8 +90,9 @@ function _WComponentForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, counterfactuals, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
+    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
     const wcomponent_id = wcomponent.id
+    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
@@ -99,12 +101,12 @@ function _WComponentForm (props: Props)
     }
 
 
-    const UI_value = get_wcomponent_state_value({ wcomponent, counterfactuals, created_at_ms, sim_ms })
+    const UI_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
     return <div key={wcomponent_id}>
         <h2><EditableText
             placeholder={"Title..."}
-            value={rich_text ? replace_value_in_text({ text: wcomponent.title, wcomponent, counterfactuals, created_at_ms, sim_ms, }) : wcomponent.title}
+            value={get_title({ rich_text, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
 

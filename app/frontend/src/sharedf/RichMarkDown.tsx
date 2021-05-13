@@ -4,7 +4,8 @@ import Markdown from "markdown-to-jsx"
 
 import type { RootState } from "../state/State"
 import { add_newlines_to_markdown } from "../form/utils"
-import { replace_ids_in_text } from "../shared/models/get_rich_text"
+import { replace_ids_in_text } from "../shared/models/rich_text/get_rich_text"
+import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
 
 
 
@@ -17,6 +18,9 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     rich_text: state.display.rich_text_formatting,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
+    created_at_ms: state.routing.args.created_at_ms,
+    sim_ms: state.routing.args.sim_ms,
 })
 
 
@@ -29,9 +33,13 @@ class _RichMarkDown extends Component <Props>
 
     render ()
     {
-        const { text, rich_text, wcomponents_by_id, placeholder = "..." } = this.props
+        const { text, rich_text, wcomponents_by_id, wc_id_counterfactuals_map, placeholder = "...",
+            created_at_ms, sim_ms,
+        } = this.props
 
-        const value = replace_ids_in_text({ text, rich_text, wcomponents_by_id })
+        const value = replace_ids_in_text({
+            text, rich_text, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms
+        })
         return <Markdown>
             {(value && add_newlines_to_markdown(value)) || placeholder}
         </Markdown>

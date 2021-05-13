@@ -24,20 +24,20 @@ import { get_VAPs_ordered_by_prob } from "./utils"
 interface GetWcomponentStatev2ValueArgs
 {
     wcomponent: WComponentNodeStateV2
-    counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
 }
 export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArgs): UIStateValue
 {
-    const { wcomponent, counterfactuals, created_at_ms, sim_ms } = args
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
     const { present_items } = partition_and_prune_items_by_datetimes({
         items: wcomponent.values_and_prediction_sets, created_at_ms, sim_ms,
     })
 
     const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, wcomponent.subtype === "boolean")
-    const VAP_counterfactuals_maps = Object.values(counterfactuals && counterfactuals.VAP_set || {})
+    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
     const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
     return get_probable_VAP_display_values(wcomponent, counterfactual_VAPs)
 }
@@ -185,7 +185,7 @@ function run_tests ()
 
 
         return get_wcomponent_statev2_value({
-            wcomponent, counterfactuals, created_at_ms: dt1.getTime(), sim_ms: dt1.getTime(),
+            wcomponent, wc_counterfactuals: counterfactuals, created_at_ms: dt1.getTime(), sim_ms: dt1.getTime(),
         })
     }
 

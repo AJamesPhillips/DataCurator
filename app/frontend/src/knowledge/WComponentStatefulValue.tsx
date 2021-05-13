@@ -28,21 +28,21 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { created_at_ms, sim_ms } = state.routing.args
     const { wcomponent } = own_props
 
-    let counterfactuals: WComponentCounterfactuals | undefined
+    let wc_counterfactuals: WComponentCounterfactuals | undefined
     let target_wcomponent: WComponent | undefined = undefined
     if (wcomponent_is_judgement(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
         target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
-        counterfactuals = get_wcomponent_counterfactuals(state, target_id)
+        wc_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
     }
     else
     {
-        counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
+        wc_counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
     }
 
 
-    return { counterfactuals, created_at_ms, sim_ms, target_wcomponent }
+    return { wc_counterfactuals, created_at_ms, sim_ms, target_wcomponent }
 }
 
 
@@ -75,12 +75,12 @@ function process_props (props: Props)
     let is_judgement = false
     let is_empty = true
 
-    const { wcomponent, counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
 
 
     if (wcomponent_is_state(wcomponent))
     {
-        ui_value = get_wcomponent_state_value({ wcomponent, counterfactuals, created_at_ms, sim_ms })
+        ui_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         is_empty = ui_value.value === undefined
     }
     else if (wcomponent_is_judgement(wcomponent))
@@ -88,7 +88,7 @@ function process_props (props: Props)
         is_judgement = true
         is_empty = false
 
-        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals: counterfactuals, created_at_ms, sim_ms })
+        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals: wc_counterfactuals, created_at_ms, sim_ms })
     }
 
     return { ui_value, judgement_value, is_judgement, is_empty }

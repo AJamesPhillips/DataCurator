@@ -169,4 +169,4 @@ function run_tests ()
     test(tidied_VAPs.map(({ probability }) => probability), [0, 1], sort_list)
 }
 
-run_tests()
+// run_tests()

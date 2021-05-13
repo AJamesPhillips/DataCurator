@@ -13,11 +13,10 @@ import type { RootState } from "../../state/State"
 import { wcomponent_existence_for_datetimes, wcomponent_is_invalid_for_datetime } from "../utils"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
-import { get_title } from "../../shared/models/get_rich_text"
+import { get_title } from "../../shared/models/rich_text/get_rich_text"
 import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
-import { get_created_at_ms } from "../../shared/models/utils_datetime"
-import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
+import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 
 
 
@@ -40,7 +39,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
-        counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
+        wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
         kv_entry,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
@@ -75,7 +74,7 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState<boolean>(false)
 
-    const { id, knowledge_view_id, kv_entry, wcomponent, counterfactuals, wcomponents_by_id,
+    const { id, knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         intercept_wcomponent_click_to_edit_link, ctrl_key_is_down,
         display_at_created_ms, sim_ms, } = props
@@ -145,7 +144,7 @@ function _WComponentCanvasNode (props: Props)
     }
 
 
-    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, counterfactuals, created_at_ms: display_at_created_ms, sim_ms })
+    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms: display_at_created_ms, sim_ms })
 
 
     const extra_css_class = (

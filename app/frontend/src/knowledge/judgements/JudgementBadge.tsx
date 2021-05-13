@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./JudgementBadge.css"
 import type { JudgementValue } from "./calculate_judgement_value"
-import { format_wcomponent_url } from "../../shared/models/get_rich_text"
+import { format_wcomponent_url } from "../../shared/models/rich_text/templates"
 
 
 

@@ -12,16 +12,16 @@ const default_value: UIStateValue = { value: undefined, type: "single" }
 interface GetWcomponentStateValueArgs
 {
     wcomponent: WComponent
-    counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
 }
 export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): UIStateValue
 {
-    const { wcomponent, counterfactuals, created_at_ms, sim_ms } = args
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
     if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
-    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value({ wcomponent, counterfactuals, created_at_ms, sim_ms })
+    if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
     return default_value
 }

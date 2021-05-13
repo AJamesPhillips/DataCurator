@@ -27,7 +27,7 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
     const { value } = get_wcomponent_state_value({
         wcomponent: target_wcomponent,
-        counterfactuals: target_counterfactuals,
+        wc_counterfactuals: target_counterfactuals,
         created_at_ms,
         sim_ms,
     })

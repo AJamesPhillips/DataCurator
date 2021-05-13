@@ -2,9 +2,16 @@ import type { RootState } from "../State"
 
 
 
+export function get_wc_id_counterfactuals_map (state: RootState)
+{
+    return state.derived.current_UI_knowledge_view && state.derived.current_UI_knowledge_view.wc_id_counterfactuals_map
+}
+
+
 export function get_wcomponent_counterfactuals (state: RootState, wcomponent_id: string)
 {
-    return state.derived.current_UI_knowledge_view && state.derived.current_UI_knowledge_view.wc_id_counterfactuals_map[wcomponent_id]
+    const map = get_wc_id_counterfactuals_map(state)
+    return map && map[wcomponent_id]
 }
 
 
