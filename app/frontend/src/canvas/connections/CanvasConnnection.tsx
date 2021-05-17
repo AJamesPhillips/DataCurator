@@ -1,8 +1,10 @@
 import { h } from "preact"
 
+import "./connection.css"
 import type { ConnectionLocationType } from "../../shared/models/interfaces/SpecialisedObjects"
 import { _get_connection_point } from "../ConnectableCanvasNode"
 import type { CanvasPoint } from "../interfaces"
+import { ConnectionEnd } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
 
 
@@ -25,7 +27,7 @@ export function CanvasConnnection (props: OwnProps)
     const { from_node_position, to_node_position, from_connection_location, to_connection_location } = props
     if (!from_node_position || !to_node_position) return null
 
-    const { x1, y1, x2, y2, control_point1, control_point2, arrowhead_p1, arrowhead_p2 } = derive_coords({
+    const { x1, y1, x2, y2, control_point1, control_point2, end_angle } = derive_coords({
         from_node_position, to_node_position, from_connection_location, to_connection_location
     })
 
@@ -39,10 +41,6 @@ export function CanvasConnnection (props: OwnProps)
         strokeOpacity: opacity,
         filter: `url(#blur_filter_${Math.round(blur)})`,
     }
-    const style_arrowhead: h.JSX.CSSProperties = {
-        fillOpacity: opacity * (1 - (blur / 100)),
-        // filter: `url(#blur_filter_${blur})`,
-    }
 
     const extra_classes = (props.on_click ? " mouseable " : "") + (props.is_highlighted ? " highlighted " : "")
 
@@ -53,10 +51,13 @@ export function CanvasConnnection (props: OwnProps)
             style={style_line}
         />
 
-        <polygon
-            className={"connection_arrowhead " + extra_classes}
-            points={`${x2}, ${-y2} ${x2 + arrowhead_p1.x}, ${-y2 - arrowhead_p1.y} ${x2 + arrowhead_p2.x}, ${-y2 - arrowhead_p2.y}`}
-            style={style_arrowhead}
+        <ConnectionEnd
+            x={x2}
+            y={y2}
+            end_angle={end_angle}
+            opacity={opacity}
+            blur={blur}
+            is_highlighted={props.is_highlighted}
         />
     </g>
 }

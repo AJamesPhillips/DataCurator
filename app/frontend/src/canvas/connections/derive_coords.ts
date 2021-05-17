@@ -39,18 +39,7 @@ export function derive_coords (args: DeriveCoordsArgs )
     const control_point1 = to_vec(start_angle, control_point_magnitude)
     const control_point2 = to_vec(end_angle, control_point_magnitude)
 
-    const arrowhead_p1 = get_arrow_end_points(end_angle, 1)
-    const arrowhead_p2 = get_arrow_end_points(end_angle, -1)
-
     return {
-        x1, y1, x2, y2, control_point1, control_point2, arrowhead_p1, arrowhead_p2,
+        x1, y1, x2, y2, control_point1, control_point2, end_angle
     }
-}
-
-
-
-const arrow_angle = rads._25
-function get_arrow_end_points (angle: number, type: 1 | -1)
-{
-    return to_vec(angle + (type * arrow_angle), 10)
 }

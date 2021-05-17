@@ -70,37 +70,6 @@
     z-index: 100;
 }
 
-/* */
-.connection_line
-{
-    stroke: black;
-    fill: transparent;
-    pointer-events: none;
-}
-.connection_arrowhead
-{
-    fill: black;
-}
-.connection
-{
-    pointer-events: none;
-}
-.connection_line.mouseable, .connection_arrowhead.mouseable
-{
-    cursor: pointer;
-    pointer-events: initial;
-}
-.connection_line.mouseable:hover
-{
-    stroke-width: 3px;
-    stroke-dasharray: 6px 3px;
-    stroke-opacity: 1 !important;
-    filter: inherit !important;
-}
-.connection_arrowhead.mouseable:hover
-{
-    fill-opacity: 1 !important;
-}
 
 
 .highlighting_connection_lines .connection_line
