@@ -1,5 +1,5 @@
 import type { ConnectionLocationType } from "../../shared/models/interfaces/SpecialisedObjects"
-import { get_angle, rads } from "../../utils/angles"
+import { get_angle } from "../../utils/angles"
 import { bounded } from "../../utils/utils"
 import { get_magnitude } from "../../utils/vector"
 import { _get_connection_point } from "../ConnectableCanvasNode"

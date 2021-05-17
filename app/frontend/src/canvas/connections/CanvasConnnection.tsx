@@ -4,7 +4,7 @@ import "./connection.css"
 import type { ConnectionLocationType } from "../../shared/models/interfaces/SpecialisedObjects"
 import { _get_connection_point } from "../ConnectableCanvasNode"
 import type { CanvasPoint } from "../interfaces"
-import { ConnectionEnd } from "./ConnectionEnd"
+import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
 
 
@@ -52,6 +52,7 @@ export function CanvasConnnection (props: OwnProps)
         />
 
         <ConnectionEnd
+            type={ConnectionEndType.positive}
             x={x2}
             y={y2}
             end_angle={end_angle}

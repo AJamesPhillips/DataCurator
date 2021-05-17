@@ -2,9 +2,7 @@ import type { ConnectionLocationType } from "../../shared/models/interfaces/Spec
 import { test } from "../../shared/utils/test"
 import { get_angle, rads, normalise_angle_between_neg_Pi_and_Pi } from "../../utils/angles"
 import { bounded } from "../../utils/utils"
-import { get_magnitude } from "../../utils/vector"
 import { _get_connection_point } from "../ConnectableCanvasNode"
-import type { CanvasPoint } from "../interfaces"
 
 
 

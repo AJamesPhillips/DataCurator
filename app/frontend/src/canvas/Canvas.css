@@ -76,7 +76,7 @@
 {
     stroke: #BBB;
 }
-.highlighting_connection_lines .connection_arrowhead
+.highlighting_connection_lines .connection_end
 {
     fill: #BBB;
 }
@@ -85,7 +85,7 @@
 {
     stroke: blue;
 }
-.highlighted.connection_arrowhead
+.highlighted.connection_end
 {
     fill: blue;
 }

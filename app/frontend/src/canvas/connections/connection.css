@@ -5,7 +5,7 @@
     fill: transparent;
     pointer-events: none;
 }
-.connection_arrowhead
+.connection_end
 {
     fill: black;
 }
@@ -13,7 +13,7 @@
 {
     pointer-events: none;
 }
-.connection_line.mouseable, .connection_arrowhead.mouseable
+.connection_line.mouseable, .connection_end.mouseable
 {
     cursor: pointer;
     pointer-events: initial;
@@ -25,7 +25,13 @@
     stroke-opacity: 1 !important;
     filter: inherit !important;
 }
-.connection_arrowhead.mouseable:hover
+.connection_end.mouseable:hover
 {
     fill-opacity: 1 !important;
+    stroke-opacity: 1 !important;
+}
+
+.connection_end.noop_end
+{
+    stroke: black;
 }
