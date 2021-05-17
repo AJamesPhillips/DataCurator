@@ -1,6 +1,6 @@
 import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
 import type { WComponentJudgement } from "../../shared/models/interfaces/judgement"
-import type { WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2 } from "../../shared/models/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../state/derived/State"
 
 
@@ -42,15 +42,20 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     if (manual !== undefined) return manual
 
 
+    const is_num = wcomponent_is_statev2(target_wcomponent) && target_wcomponent.subtype === "number"
+    const coerced_value = is_num ? parseFloat(value || "") : value
+    const coerced_comparator = is_num ? parseFloat(comparator || "") : comparator
+
+
     let result = undefined
     // purposefully using abstract equality comparison to accommodate strings, numbers etc
-    if (operator === "==") result = value == comparator
-    else if (operator === "!=") result = value != comparator
-    else if (value === null) result = undefined
-    else if (operator === "<") result = value < comparator
-    else if (operator === "<=") result = value <= comparator
-    else if (operator === ">") result = value > comparator
-    else if (operator === ">=") result = value >= comparator
+    if (operator === "==") result = coerced_value == coerced_comparator
+    else if (operator === "!=") result = coerced_value != coerced_comparator
+    else if (coerced_value === null) result = undefined
+    else if (operator === "<") result = coerced_value < coerced_comparator
+    else if (operator === "<=") result = coerced_value <= coerced_comparator
+    else if (operator === ">") result = coerced_value > coerced_comparator
+    else if (operator === ">=") result = coerced_value >= coerced_comparator
 
     return result
 }
