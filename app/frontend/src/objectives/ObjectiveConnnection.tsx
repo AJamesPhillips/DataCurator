@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { CanvasConnnection } from "../canvas/CanvasConnnection"
+import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
 import type { RootState } from "../state/State"
 import { get_objective_node_position } from "./get_objective_nodes"
 import type { ObjectiveConnection } from "./interfaces"
