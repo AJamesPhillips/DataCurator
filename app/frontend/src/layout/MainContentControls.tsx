@@ -1,16 +1,16 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { RootState } from "../state/State"
+import { KnowledgeContentControls } from "../knowledge_view/KnowledgeContentControls"
+import { ObjectivesContentControls } from "../objectives/ObjectivesContentControls"
 import { PrioritiesContentControls } from "../priorities/PrioritiesContentControls"
+import type { RootState } from "../state/State"
 
 
 
-const map_state = (state: RootState) => {
-    return {
-
-    }
-}
+const map_state = (state: RootState) => ({
+    view: state.routing.args.view,
+})
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
@@ -18,8 +18,12 @@ type Props = ConnectedProps<typeof connector>
 
 function _MainContentControls (props: Props)
 {
+    const { view } = props
+
     return <div className="main_content_controls">
-        <PrioritiesContentControls />
+        {view === "knowledge" && <KnowledgeContentControls />}
+        {view === "objectives" && <ObjectivesContentControls />}
+        {view === "priorities" && <PrioritiesContentControls />}
     </div>
 }
 

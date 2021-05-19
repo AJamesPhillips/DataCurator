@@ -1,8 +1,10 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+import { Canvas } from "../canvas/Canvas"
 
 import { project_priority_y } from "../canvas/display"
-import type { CanvasPoint } from "../canvas/interfaces"
-import { ViewController } from "../layout/ViewController"
+import type { ContentCoordinate } from "../canvas/interfaces"
+import { MainArea } from "../layout/MainArea"
 import type { RootState } from "../state/State"
 import { CurrentDatetimeLine } from "./CurrentDatetimeLine"
 import { DailyActionNode } from "./daily_actions/DailyActionNode"
@@ -26,7 +28,9 @@ const map_state = (state: RootState) => {
 }
 
 
-type Props = ReturnType<typeof map_state>
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector>
+
 
 
 const get_svg_children = (props: Props) =>
@@ -54,29 +58,17 @@ const get_children = (props: Props) =>
         />),
     ]
 
-    const content_coordinates: CanvasPoint[] = []
+    const content_coordinates: ContentCoordinate[] = []
     const first_project_priority_nodes = project_priority_nodes.first()
     if (first_project_priority_nodes)
     {
         const { x: left, y: top } = first_project_priority_nodes
-        content_coordinates.push({ left, top })
+        content_coordinates.push({ left, top, zoom: 100 })
     }
 
     return { elements, content_coordinates }
 }
 
-
-
-export function PrioritiesViewController (view_needs_to_update: () => void)
-{
-    return new ViewController<Props, {}>({
-        view_needs_to_update,
-        map_state,
-        get_initial_state: () => ({}),
-        get_children,
-        get_svg_children,
-    })
-}
 
 
 function get_nodes_from_props (props: Props)
@@ -106,3 +98,22 @@ function get_nodes_from_props (props: Props)
         priorities_by_project,
     }
 }
+
+
+
+function _PrioritiesView (props: Props)
+{
+    const { elements, content_coordinates } = get_children(props)
+
+    return <MainArea
+        main_content={<Canvas
+            svg_children={get_svg_children(props)}
+            svg_upper_children={[]}
+            content_coordinates={content_coordinates}
+        >
+            {elements}
+        </Canvas>}
+    />
+}
+
+export const PrioritiesView = connector(_PrioritiesView) as FunctionalComponent<{}>

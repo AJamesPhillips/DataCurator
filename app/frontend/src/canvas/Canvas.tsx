@@ -6,7 +6,7 @@ import "./Canvas.css"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { performance_logger } from "../utils/performance"
-import type { CanvasPoint } from "./interfaces"
+import type { ContentCoordinate } from "./interfaces"
 import { lefttop_to_xy, MoveToPositionButton } from "./MoveToPositionButton"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { BoundingRect, bounding_rects_equal } from "../state/display/state"
@@ -17,7 +17,7 @@ interface OwnProps
 {
     svg_children?: preact.ComponentChildren[]
     svg_upper_children?: preact.ComponentChildren[]
-    content_coordinates?: CanvasPoint[]
+    content_coordinates?: ContentCoordinate[]
 }
 
 

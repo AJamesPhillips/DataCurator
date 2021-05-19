@@ -4,6 +4,10 @@ export interface CanvasPoint
     left: number
     top: number
 }
+export interface ContentCoordinate extends CanvasPoint
+{
+    zoom: number
+}
 
 
 export interface NodePositionAndDimensions extends CanvasPoint

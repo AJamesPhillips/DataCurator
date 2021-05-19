@@ -1,15 +1,14 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 
-import type { CanvasPoint } from "../canvas/interfaces"
+import type { ContentCoordinate } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
-import { ViewController } from "../layout/ViewController"
 import { wcomponent_can_render_connection } from "../shared/models/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
-import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
-import { TimeSlider } from "../time_control/TimeSlider"
 import { WComponentCanvasConnection } from "../knowledge/WComponentCanvasConnection"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
-import { TimeSliderV2 } from "../time_control/TimeSliderV2"
+import { Canvas } from "../canvas/Canvas"
+import { MainArea } from "../layout/MainArea"
+import { connect, ConnectedProps } from "react-redux"
 
 
 
@@ -29,8 +28,8 @@ const map_state = (state: RootState) =>
     }
 }
 
-type Props = ReturnType<typeof map_state>
-
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector>
 
 
 const get_children = ({ sync_ready, wcomponents, current_UI_knowledge_view }: Props): ChildrenRawData =>
@@ -43,7 +42,7 @@ const get_children = ({ sync_ready, wcomponents, current_UI_knowledge_view }: Pr
     const elements = nodes.map(wc => <WComponentCanvasNode id={wc.id} />)
 
     const p = Object.values(current_UI_knowledge_view.derived_wc_id_map)[0]
-    const content_coordinates: CanvasPoint[] = p ? [p] : []
+    const content_coordinates: ContentCoordinate[] = p ? [{...p, zoom: 100}] : []
 
     return {
         elements,
@@ -64,40 +63,19 @@ const get_svg_upper_children = ({ wcomponents, current_UI_knowledge_view }: Prop
 
 
 
-const get_content_controls = (props: Props, state: {}, set_state: (s: Partial<RootState>) => void) =>
+function _KnowledgeView (props: Props)
 {
-    const { wcomponents, current_UI_knowledge_view } = props
+    const { elements, content_coordinates } = get_children(props)
 
-    if (!current_UI_knowledge_view) return []
-
-    const wcomponents_on_kv = wcomponents
-        .filter(wc => !!current_UI_knowledge_view.derived_wc_id_map[wc.id])
-        .filter(wc => wc.type !== "counterfactual")
-    const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
-
-    const elements = [
-        <TimeSlider
-            events={created_events}
-            data_set_name="knowledge_created_at_datetimes"
-        />,
-        <TimeSliderV2
-            events={sim_events}
-            data_set_name="knowledge_sim_datetimes"
-        />,
-    ]
-
-    return elements
+    return <MainArea
+        main_content={<Canvas
+            svg_children={[]}
+            svg_upper_children={get_svg_upper_children(props)}
+            content_coordinates={content_coordinates}
+        >
+            {elements}
+        </Canvas>}
+    />
 }
 
-
-
-export function KnowledgeViewController (view_needs_to_update: () => void)
-{
-    return new ViewController({
-        view_needs_to_update,
-        map_state,
-        get_initial_state: () => ({}),
-        get_children,
-        get_svg_upper_children,
-    })
-}
+export const KnowledgeView = connector(_KnowledgeView) as FunctionalComponent<{}>

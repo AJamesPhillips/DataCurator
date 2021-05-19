@@ -1,12 +1,12 @@
 import type { h } from "preact"
 
-import type { CanvasPoint } from "../canvas/interfaces"
+import type { CanvasPoint, ContentCoordinate } from "../canvas/interfaces"
 
 
 export interface ChildrenRawData
 {
     elements: h.JSX.Element[]
-    content_coordinates: CanvasPoint[]
+    content_coordinates: ContentCoordinate[]
 }
 
 

@@ -6,19 +6,19 @@ import { TimeSlider } from "../time_control/TimeSlider"
 
 
 const map_state = (state: RootState) => ({
-    events: state.derived.project_priorities_meta.project_priority_events,
+    events: [], //state.derived.project_Objectives_meta.project_priority_events,
 })
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
 
 
-function _PrioritiesContentControls (props: Props)
+function _ObjectivesContentControls (props: Props)
 {
     return <TimeSlider
         events={props.events}
-        data_set_name="priorities"
+        data_set_name="objectives"
     />
 }
 
-export const PrioritiesContentControls = connector(_PrioritiesContentControls) as FunctionalComponent<{}>
+export const ObjectivesContentControls = connector(_ObjectivesContentControls) as FunctionalComponent<{}>
