@@ -1,8 +1,10 @@
 import {
     WComponent,
+    wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAPs,
 } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { TemporalUncertainty } from "../../shared/models/interfaces/uncertainty"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
 
 
@@ -42,6 +44,14 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
     }
 
 
+    function create_events_for_temporal_uncertainty (datetime: TemporalUncertainty)
+    {
+        create_event(datetime.min, "sim")
+        create_event(datetime.value, "sim")
+        create_event(datetime.max, "sim")
+    }
+
+
     wcomponents.forEach(wcomponent =>
     {
         const { created_at, custom_created_at } = wcomponent
@@ -50,9 +60,19 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
 
         if (wcomponent_has_validity_predictions(wcomponent))
         {
-            wcomponent.validity.forEach(({ created_at, custom_created_at }) =>
+            wcomponent.validity.forEach(({ created_at, custom_created_at, datetime }) =>
             {
                 create_event(custom_created_at || created_at, "created")
+                create_events_for_temporal_uncertainty(datetime)
+            })
+        }
+
+        if (wcomponent_has_existence_predictions(wcomponent))
+        {
+            wcomponent.existence.forEach(({ created_at, custom_created_at, datetime }) =>
+            {
+                create_event(custom_created_at || created_at, "created")
+                create_events_for_temporal_uncertainty(datetime)
             })
         }
 
@@ -61,9 +81,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
             wcomponent.values_and_prediction_sets.forEach(({ created_at, custom_created_at, datetime }) =>
             {
                 create_event(custom_created_at || created_at, "created")
-                create_event(datetime.min, "sim")
-                create_event(datetime.value, "sim")
-                create_event(datetime.max, "sim")
+                create_events_for_temporal_uncertainty(datetime)
             })
         }
     })
