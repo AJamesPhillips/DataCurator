@@ -21,6 +21,7 @@ import {
     wcomponent_is_event,
     wcomponent_is_causal_link,
     wcomponent_is_action,
+    wcomponent_has_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent"
@@ -236,12 +237,31 @@ function _WComponentForm (props: Props)
             <br />
         </div>
 
-        {!wcomponent_is_statev2(wcomponent) && <div>
-            <p>
+        {wcomponent_has_existence_predictions(wcomponent) && <div>
+            <p style={{ color: "red" }}>
                 <PredictionList
-                    item_descriptor="Existence prediction"
+                    item_descriptor="(Deprecated, please delete) Existence prediction"
                     predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
-                    update_predictions={new_predictions => upsert_wcomponent({ existence: new_predictions }) }
+                    update_predictions={new_predictions => upsert_wcomponent({
+                        existence: new_predictions.length ? new_predictions : undefined
+                    }) }
+                />
+            </p>
+
+            <hr />
+            <br />
+        </div>}
+
+        {!wcomponent_is_statev2(wcomponent) && wcomponent_has_VAP_sets(wcomponent) && <div>
+            <p>
+                <ValueAndPredictionSets
+                    wcomponent_id={wcomponent.id}
+                    subtype="boolean"
+                    values_and_prediction_sets={wcomponent.values_and_prediction_sets || []}
+                    update_values_and_predictions={values_and_prediction_sets =>
+                    {
+                        upsert_wcomponent({ values_and_prediction_sets })
+                    }}
                 />
             </p>
 

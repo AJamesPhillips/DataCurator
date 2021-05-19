@@ -9,11 +9,13 @@ export interface WComponentNodeState extends WComponentNodeBase
     // TODO remove once MVP reached (remove the conditionals)
     values?: StateValueString[]
 }
-export interface WComponentNodeStateV2 extends WComponentNodeStateV2Incremental
+
+export interface HasVAPSets
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[]
 }
-export interface WComponentNodeStateV2Incremental extends WComponentNodeBase
+
+export interface WComponentNodeStateV2 extends WComponentNodeBase
 {
     type: "statev2"
     subtype: WComponentStateV2SubType
@@ -21,8 +23,6 @@ export interface WComponentNodeStateV2Incremental extends WComponentNodeBase
     // boolean subtype specific explainable fields
     boolean_true_str?: string
     boolean_false_str?: string
-
-    values_and_prediction_sets: StateValueAndPredictionsSetIncremental[]
 }
 
 
@@ -56,24 +56,10 @@ export interface StateValueString extends StateValueBase
 //
 // The values from Partial<PredictionBase> will be used as the default values for these fields
 // in all the entries.
-export interface StateValueAndPredictionsSet extends StateValueAndPredictionsSetIncremental
+export interface StateValueAndPredictionsSet extends Base, HasVersion
 {
     datetime: TemporalUncertainty
     entries: StateValueAndPrediction[]
-}
-
-export interface HasVersion
-{
-    version: number
-}
-
-interface StateValueAndPredictionsSetIncremental extends Base, HasVersion
-{
-    datetime?: TemporalUncertainty
-    // If an array is provided in an incremental then it must be of the same length as "previous"
-    // arrays and be populated with empty objects otherwise, or if null the corresponing values
-    // missing will be dropped
-    entries?: (Partial<StateValueAndPrediction> | null)[]
     // Allows a set of values to have default values for them.
     // See dice_rolling.ts example for shared_entry_fields.explanation
     //
@@ -91,9 +77,16 @@ interface StateValueAndPredictionsSetIncremental extends Base, HasVersion
     // No this is needed for potential scenarios where a value could be A or B and where it does not
     // make sense to model this as exclusive option choices.  See two_time_dimensional_trees for
     // example(s).
-    // 2021-05-08 see Issue
+    // 2021-05-08 see Issue #8
     previous_VAP_set_ids?: string[]
 }
+
+export interface HasVersion
+{
+    version: number
+}
+
+
 
 export interface StateValueAndPrediction extends PredictionBase
 {

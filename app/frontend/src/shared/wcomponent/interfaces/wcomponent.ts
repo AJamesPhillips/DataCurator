@@ -1,4 +1,5 @@
 import type { Base } from "./base"
+import type { HasVAPSets } from "./state"
 import type { ExistencePredictions, ValidityPredictions } from "./uncertainty"
 
 
@@ -35,7 +36,7 @@ export interface WComponentBase extends Base
 
 
 
-export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>
+export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentNodeType
     // encompassed_by: string

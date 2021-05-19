@@ -1,15 +1,19 @@
+import { get_new_VAP_id } from "../../shared/utils/ids"
 import {
     ConnectionTerminalType,
     KnowledgeView,
     Perception,
     SpecialisedObjectsFromToServer,
     WComponent,
+    WComponentNodeAction,
+    WComponentNodeProcess,
     wcomponent_has_event_at,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
-    wcomponent_has_VAPs as wcomponent_has_VAP_sets,
+    wcomponent_has_VAP_sets as wcomponent_has_VAP_sets,
     wcomponent_is_plain_connection,
+    wcomponent_is_process,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/wcomponent/interfaces/state"
 import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
@@ -84,16 +88,19 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
 
     if (wcomponent_is_plain_connection(wcomponent))
     {
-        wcomponent.from_type = upgrade_connection_fromto_types(wcomponent.from_type)
-        wcomponent.to_type = upgrade_connection_fromto_types(wcomponent.to_type)
+        wcomponent.from_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.from_type)
+        wcomponent.to_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.to_type)
     }
+
+    wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
+    wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent)
 
     return wcomponent
 }
 
 
 // Upgrade valid as of 2021-05-19
-function upgrade_connection_fromto_types (type?: string): ConnectionTerminalType
+function upgrade_2021_05_19_connection_fromto_types (type?: string): ConnectionTerminalType
 {
     if (type === "meta-effector") return "meta"
     if (type === "meta-effected") return "meta"
@@ -101,6 +108,56 @@ function upgrade_connection_fromto_types (type?: string): ConnectionTerminalType
     if (type === "effected") return "value"
 
     return (type || "value") as ConnectionTerminalType
+}
+
+// Upgrade valid as of 2021-05-19
+function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
+{
+    if (!wcomponent_is_process(wcomponent) || !(wcomponent as any).is_action) return wcomponent
+
+    const wcomponent_action = {
+        ...wcomponent,
+        is_action: undefined,
+        type: "action"
+    }
+
+    return wcomponent_action as WComponent
+}
+
+// Upgrade valid as of 2021-05-19
+function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
+{
+    if (!wcomponent_has_existence_predictions(wcomponent)) return wcomponent
+    if (wcomponent_has_VAP_sets(wcomponent)) return wcomponent
+
+    const values_and_prediction_sets: StateValueAndPredictionsSet[] = wcomponent.existence.map(e =>
+    {
+        return {
+            id: e.id.replace("pr", "vps"),
+            created_at: e.created_at,
+            custom_created_at: e.custom_created_at,
+            datetime: e.datetime,
+            entries: [
+                {
+                    id: get_new_VAP_id(),
+                    value: "",
+                    description: "",
+                    explanation: e.explanation,
+                    probability: e.probability,
+                    conviction: e.conviction,
+                }
+            ],
+            version: 1,
+        }
+    })
+
+    const upgraded_wcomponent = {
+        ...wcomponent,
+        existence: undefined,
+        values_and_prediction_sets,
+    }
+
+    return upgraded_wcomponent as WComponent
 }
 
 

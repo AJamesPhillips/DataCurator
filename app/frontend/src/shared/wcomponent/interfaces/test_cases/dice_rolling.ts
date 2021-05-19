@@ -1,12 +1,16 @@
 import type { WComponentNodeEvent } from "../event"
-import type { WComponentNodeStateV2Incremental } from "../state"
+import type { StateValueAndPrediction, WComponentNodeStateV2 } from "../state"
 
 
 const d0 = new Date()
 const d1 = new Date()
 
 
-const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
+const default_VAP: StateValueAndPrediction = {
+    id: "", value: "", description: "", explanation: "", probability: 1, conviction: 1,
+}
+
+const possible_d3_dice_rolling: WComponentNodeStateV2 = {
     id: "",
     created_at: d0,
     type: "statev2",
@@ -24,9 +28,9 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
             // This is were the "potential" field is applicable.
 
             entries: [
-                { value: "1", relative_probability: 0.8 }, // made a mistake on purpose
-                { value: "2", relative_probability: 1 },
-                { value: "3", relative_probability: 1 },
+                { ...default_VAP, value: "1", relative_probability: 0.8 }, // made a mistake on purpose
+                { ...default_VAP, value: "2", relative_probability: 1 },
+                { ...default_VAP, value: "3", relative_probability: 1 },
             ],
             shared_entry_values: {
                 conviction: 1,
@@ -36,10 +40,11 @@ const possible_d3_dice_rolling: WComponentNodeStateV2Incremental = {
             id: "2",
             version: 2,
             created_at: d0,
+            datetime: {},
             entries: [
-                { relative_probability: 1 }, // fix error
-                {}, // nothing to change in previous entry
-                {}, // nothing to change in previous entry
+                { ...default_VAP, relative_probability: 1 }, // fix error
+                { ...default_VAP }, // nothing to change in previous entry
+                { ...default_VAP }, // nothing to change in previous entry
             ],
         },
     ],
@@ -56,7 +61,7 @@ const Person_A_rolled_a_2_on_a_d3_dice: WComponentNodeEvent = {
     description: "",
 }
 
-const specific_dice_roll: WComponentNodeStateV2Incremental = {
+const specific_dice_roll: WComponentNodeStateV2 = {
     id: "",
     created_at: d0,
     type: "statev2",
@@ -78,9 +83,9 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 conviction: 1,
             },
             entries: [
-                { value: "1", relative_probability: 1 },
-                { value: "2", relative_probability: 1 },
-                { value: "3", relative_probability: 1 },
+                { ...default_VAP, value: "1", relative_probability: 1 },
+                { ...default_VAP, value: "2", relative_probability: 1 },
+                { ...default_VAP, value: "3", relative_probability: 1 },
             ],
         },
         // For now we can model it as below but in future it would be good to
@@ -97,9 +102,9 @@ const specific_dice_roll: WComponentNodeStateV2Incremental = {
                 explanation: `@@${Person_A_rolled_a_2_on_a_d3_dice.id}`,
             },
             entries: [
-                { value: "1", relative_probability: 0 },
-                { value: "2", relative_probability: 1 },
-                { value: "3", relative_probability: 0 },
+                { ...default_VAP, value: "1", relative_probability: 0 },
+                { ...default_VAP, value: "2", relative_probability: 1 },
+                { ...default_VAP, value: "3", relative_probability: 0 },
             ],
             // previous_VAP_set_ids should not be needed as we default to taking the latest
             // VAP set

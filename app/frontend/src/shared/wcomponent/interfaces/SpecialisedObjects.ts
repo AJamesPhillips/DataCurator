@@ -2,6 +2,7 @@ import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
 import type {
+    HasVAPSets,
     StateValueAndPredictionsSet,
     StateValueString,
     WComponentNodeState,
@@ -53,7 +54,7 @@ export type WComponentNode = WComponentNodeEvent
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
 export type ConnectionTerminalType = "meta" | "validity" | "value"
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
-export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>
+export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentConnectionType
     from_id: string
@@ -146,7 +147,7 @@ export function wcomponent_has_values (wcomponent: WComponent): wcomponent is (W
     return (wcomponent as WComponentNodeState).values !== undefined
 }
 
-export function wcomponent_has_VAPs (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }

@@ -2,7 +2,7 @@ import {
     WComponent,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
-    wcomponent_has_VAPs,
+    wcomponent_has_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
@@ -74,7 +74,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
             })
         }
 
-        if (wcomponent_has_VAPs(wcomponent))
+        if (wcomponent_has_VAP_sets(wcomponent))
         {
             wcomponent.values_and_prediction_sets.forEach(({ created_at, custom_created_at, datetime }) =>
             {

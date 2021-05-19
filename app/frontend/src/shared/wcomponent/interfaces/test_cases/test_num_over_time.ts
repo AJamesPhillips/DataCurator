@@ -1,4 +1,4 @@
-import type { WComponentNodeStateV2Incremental, WComponentNodeState } from "../state"
+import type { WComponentNodeStateV2, WComponentNodeState, StateValueAndPrediction } from "../state"
 import type { WComponentConnection } from "../SpecialisedObjects"
 
 
@@ -11,6 +11,10 @@ const april21st = new Date("2000-04-21")
 const april28th = new Date("2000-04-28")
 
 
+const default_VAP: StateValueAndPrediction = {
+    id: "", value: "", description: "", explanation: "", probability: 1, conviction: 1,
+}
+
 // Claims
 // Could make 4 state nodes:
 // 1 to reference the other three and be "article in ABC on _x_ claiming Senator pressuring DPH to inflate tests"
@@ -20,7 +24,7 @@ const april28th = new Date("2000-04-28")
 
 
 
-const political_pressure_on_state_dph: WComponentNodeStateV2Incremental = {
+const political_pressure_on_state_dph: WComponentNodeStateV2 = {
     id: "a",
     created_at: april20th,
     type: "statev2",
@@ -40,6 +44,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     value: "true",
                     probability: 0.7,
                     conviction: 0.9,
@@ -58,6 +63,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     value: "true",
                     probability: 0.95,
                     conviction: 0.95,
@@ -69,7 +75,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2Incremental = {
 }
 
 
-const state_dph_mis_reporting: WComponentNodeStateV2Incremental = {
+const state_dph_mis_reporting: WComponentNodeStateV2 = {
     id: "a",
     created_at: april20th,
     type: "statev2",
@@ -90,6 +96,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     value: "true",
                     probability: 0.8,
                     conviction: 0.4,
@@ -108,6 +115,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     value: "true",
                     probability: 0.01,
                     conviction: 0.95,
@@ -179,7 +187,7 @@ const number_of_tests: WComponentNodeState = {
 // Competing values should be contained in another seperate `statev2` `continuous` e.g. :
 //    our assessment (high confidence)
 //    our assessment (low confidence) (tighter min/max values)
-const number_of_testsv2: WComponentNodeStateV2Incremental = {
+const number_of_testsv2: WComponentNodeStateV2 = {
     id: "123",
     created_at: march1st,
     type: "statev2",
@@ -197,6 +205,7 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     value: "10",
                     description: "As reported by news outlet ABC",
                     // Meta comment: this degree of explanation would only be used when it is a very important
@@ -218,6 +227,7 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     // description // will use value from above
                     explanation: "Lower probability as official numbers much higher and official numbers seem reasonable",
                     relative_probability: 0,
@@ -225,6 +235,7 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
                     conviction: 1,
                 },
                 {
+                    ...default_VAP,
                     value: "30",
                     description: "Official figure from http://...",
                     explanation: "Official figures seem trustworthy",
@@ -243,8 +254,9 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
                 value: april1st,
             },
             entries: [
-                null, // no entry from ABC news for April datetime
+                { ...default_VAP, }, // copied entry from ABC news for April datetime
                 {
+                    ...default_VAP,
                     value: "50",
                     description: "Official figure from http://...",
                     explanation: "Official figures seem trustworthy",
@@ -263,6 +275,7 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
             },
             entries: [
                 {
+                    ...default_VAP,
                     // Not updating probability because perhaps should leave as they are because
                     // no change to facts about ABC news for March datetime
                     // but then if an alternative is more probable that is closer to this value, then
@@ -270,12 +283,14 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
                     relative_probability: 0.3,
                 },
                 {
+                    ...default_VAP,
                     explanation: "Official figures are challenged as being corrupt by 3rd party watch dog who claim they are much lower",
                     relative_probability: 0.2,
                     conviction: 0.8,
                 },
                 // Adding a new entry
                 {
+                    ...default_VAP,
                     value: "15",
                     description: "3rd party watch dog seperate from ABC news.",
                     explanation: "3rd party watch dog claims the official numbers are much lower, have released all their findings, much more robust estiamtes then ABC news: http://...",
@@ -294,14 +309,16 @@ const number_of_testsv2: WComponentNodeStateV2Incremental = {
                 value: april1st,
             },
             entries: [
-                null, // no entry from ABC news for April datetime
+                { ...default_VAP }, // no entry from ABC news for April datetime
                 {
+                    ...default_VAP,
                     explanation: "Official figures are challenged as being corrupt by xyz who claim they are much lower",
                     probability: 0.2,
                     conviction: 0.8,
                 },
                 // Adding a new entry
                 {
+                    ...default_VAP,
                     value: "25",
                     explanation: "3rd party watch dog claims the official numbers are much lower, have released all their findings, much more robust estiamtes then ABC news: http://...",
                     probability: 0.9,
