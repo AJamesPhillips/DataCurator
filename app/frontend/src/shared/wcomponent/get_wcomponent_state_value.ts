@@ -6,7 +6,7 @@ import { get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
 
 
 
-const default_value: UIStateValue = { value: undefined, type: "single" }
+const default_value: UIStateValue = { value: undefined, probability: undefined, conviction: undefined, type: "single" }
 
 
 interface GetWcomponentStateValueArgs
@@ -36,5 +36,5 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_
 
     if (!state_value_entry) return default_value
 
-    return { value: state_value_entry.value, type: "single" }
+    return { value: state_value_entry.value, probability: 1, conviction: 1, type: "single" }
 }

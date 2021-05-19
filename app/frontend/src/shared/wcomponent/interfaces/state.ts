@@ -123,6 +123,8 @@ export type UIStateValueModifer = "uncertain" | "assumed" | "likely"
 export interface UIStateValue
 {
     value: string | null | undefined
+    probability: number | undefined
+    conviction: number | undefined
     type: UIStateValueType
     modifier?: UIStateValueModifer
 }
