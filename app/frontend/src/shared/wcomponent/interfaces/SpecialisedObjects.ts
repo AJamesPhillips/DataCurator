@@ -26,17 +26,27 @@ export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
 
-export interface WComponentNodeProcess extends WComponentNodeBase
+export interface WComponentNodeProcess extends WComponentNodeBase, WComponentNodeProcessBase
 {
-    is_action?: boolean
+    type: "process"
+}
+interface WComponentNodeProcessBase
+{
     // active: ProcessActiveStatus[]
     // end: TemporalUncertainty
 }
+
+export interface WComponentNodeAction extends WComponentNodeBase, WComponentNodeProcessBase
+{
+    type: "action"
+}
+
 
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeState
     | WComponentNodeStateV2
     | WComponentNodeProcess
+    | WComponentNodeAction
     | WComponentCounterfactual
 
 
@@ -80,6 +90,10 @@ export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WC
 export function wcomponent_is_process (wcomponent: WComponent): wcomponent is WComponentNodeProcess
 {
     return wcomponent.type === "process"
+}
+export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WComponentNodeAction
+{
+    return wcomponent.type === "action"
 }
 
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection

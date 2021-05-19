@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
-import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
@@ -21,7 +20,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_event,
     wcomponent_is_causal_link,
-    wcomponent_is_process,
+    wcomponent_is_action,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent"
@@ -105,7 +104,7 @@ function _WComponentForm (props: Props)
 
     return <div key={wcomponent_id}>
         <h2><EditableText
-            placeholder={"Title..."}
+            placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
             value={get_title({ rich_text, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
             on_change={title => upsert_wcomponent({ title })}
         /></h2>
@@ -114,7 +113,8 @@ function _WComponentForm (props: Props)
 
         {UI_value.value !== undefined &&
         <div style={{ cursor: "not-allowed" }}>
-            Value: <DisplayValue UI_value={UI_value} />
+            {wcomponent_is_action(wcomponent) ? "Is complete:" : "Value:"}
+            <DisplayValue UI_value={UI_value} />
         </div>}
 
         <p>Type: <div style={{ width: "60%", display: "inline-block" }}><AutocompleteText
@@ -124,13 +124,6 @@ function _WComponentForm (props: Props)
             on_change={option_id => upsert_wcomponent({ type: option_id })}
         /></div></p>
 
-        {wcomponent_is_process(wcomponent) &&
-        <p>Is action: <div style={{ width: "60%", display: "inline-block" }}>
-            <EditableCheckbox
-                value={wcomponent.is_action}
-                on_change={is_action => upsert_wcomponent({ is_action })}
-            />
-        </div></p>}
 
         {wcomponent_is_statev2(wcomponent) &&
         <p>Sub type: <div style={{ width: "60%", display: "inline-block" }}>

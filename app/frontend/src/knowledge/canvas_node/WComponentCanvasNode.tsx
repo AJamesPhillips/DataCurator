@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import type { CanvasPoint } from "../../canvas/interfaces"
-import { KnowledgeViewWComponentEntry, wcomponent_is_process } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { KnowledgeViewWComponentEntry, wcomponent_is_action } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -147,7 +147,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
-        + (wcomponent_is_process(wcomponent) && wcomponent.is_action ? " node_is_action " : "")
+        + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
         + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")

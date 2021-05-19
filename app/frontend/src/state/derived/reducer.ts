@@ -60,6 +60,7 @@ function update_wcomponent_ids_by_type (state: RootState)
         state: new Set(),
         statev2: new Set(),
         process: new Set(),
+        action: new Set(),
         actor: new Set(),
         causal_link: new Set(),
         relation_link: new Set(),
