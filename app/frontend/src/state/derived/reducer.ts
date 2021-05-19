@@ -1,3 +1,4 @@
+import { project_priorities_derived_reducer } from "../../priorities/project_priorities/project_priorities_derived_reducer"
 import { wcomponent_is_judgement } from "../../shared/models/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
@@ -44,6 +45,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 
     state = knowledge_views_derived_reducer(initial_state, state)
+    state = project_priorities_derived_reducer(initial_state, state)
 
 
     return state

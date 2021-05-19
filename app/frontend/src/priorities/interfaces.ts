@@ -15,6 +15,8 @@ export interface ProjectPriority
 export interface ProjectPrioritiesMeta
 {
     project_priorities: ProjectPriority[]
+    priorities_by_project: ProjectPrioritiesByProjectId
+    project_id_to_vertical_position: ProjectIdToVerticalPosition
     project_priority_events: TimeSliderEvent[]
     earliest_ms: number
     latest_ms: number

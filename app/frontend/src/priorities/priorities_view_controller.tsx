@@ -8,34 +8,19 @@ import { CurrentDatetimeLine } from "./CurrentDatetimeLine"
 import { DailyActionNode } from "./daily_actions/DailyActionNode"
 import { convert_daily_actions_to_nodes } from "./daily_actions/daily_actions_to_nodes"
 import { get_daily_actions_meta_c } from "./daily_actions/get_daily_actions"
-import { get_project_priorities_meta_c } from "./project_priorities/get_project_priorities"
-import {
-    group_priorities_by_project,
-    order_priorities_by_project,
-} from "./project_priorities/group_and_order"
 import { ProjectPriorityNode } from "./project_priorities/ProjectPriorityNode"
 import { convert_project_priorities_to_nodes } from "./project_priorities/project_priorities_to_nodes"
-import { get_project_id_to_vertical_position } from "./project_priorities/vertical_position"
 
 
 
 const map_state = (state: RootState) => {
     const display_at_datetime_ms = state.routing.args.created_at_ms
 
-    const {
-        earliest_ms,
-        latest_ms,
-        project_priorities,
-        project_priority_events,
-    } = get_project_priorities_meta_c(state)
     const daily_actions_meta = get_daily_actions_meta_c(state)
 
     return {
         display_at_datetime_ms,
-        earliest_ms,
-        latest_ms,
-        project_priorities,
-        project_priority_events,
+        project_priorities_meta: state.derived.project_priorities_meta,
         daily_actions_meta,
     }
 }
@@ -44,20 +29,9 @@ const map_state = (state: RootState) => {
 type Props = ReturnType<typeof map_state>
 
 
-function get_initial_state ()
+const get_svg_children = (props: Props) =>
 {
-    return {
-        action_ids_to_show: [] as string[]
-    }
-}
-
-
-type State = ReturnType<typeof get_initial_state>
-
-
-const get_svg_children = (props: Props, state: State) =>
-{
-    const { priorities_by_project } = get_derived_props(props)
+    const { priorities_by_project } = get_nodes_from_props(props)
     const project_count = Object.keys(priorities_by_project).length
     const max_y = project_priority_y(project_count)
 
@@ -66,18 +40,17 @@ const get_svg_children = (props: Props, state: State) =>
 
 
 
-const get_children = (props: Props, state: State, set_state: (s: Partial<State>) => void) =>
+const get_children = (props: Props) =>
 {
     const {
         project_priority_nodes,
         daily_action_nodes,
-    } = get_derived_props(props)
+    } = get_nodes_from_props(props)
 
     const elements = [
         ...project_priority_nodes.map(node_props => <ProjectPriorityNode {...node_props} />),
         ...daily_action_nodes.map(node_props => <DailyActionNode
             {...node_props}
-            set_action_ids_to_show={action_ids_to_show => set_state({ action_ids_to_show })}
         />),
     ]
 
@@ -96,32 +69,31 @@ const get_children = (props: Props, state: State, set_state: (s: Partial<State>)
 
 export function PrioritiesViewController (view_needs_to_update: () => void)
 {
-    return new ViewController<Props, State>({
+    return new ViewController<Props, {}>({
         view_needs_to_update,
         map_state,
-        get_initial_state,
+        get_initial_state: () => ({}),
         get_children,
         get_svg_children,
     })
 }
 
 
-function get_derived_props (props: Props)
+function get_nodes_from_props (props: Props)
 {
     const {
-        project_priorities,
+        project_priorities_meta,
         display_at_datetime_ms,
         daily_actions_meta,
     } = props
 
-    const unordered_priorities_by_project = group_priorities_by_project(project_priorities)
-    const priorities_by_project = order_priorities_by_project(unordered_priorities_by_project)
+    const { priorities_by_project, project_id_to_vertical_position } = project_priorities_meta
+
     const project_priority_nodes = convert_project_priorities_to_nodes({
         priorities_by_project,
         display_at_datetime_ms,
     })
 
-    const project_id_to_vertical_position = get_project_id_to_vertical_position(priorities_by_project)
     const daily_action_nodes = convert_daily_actions_to_nodes({
         daily_actions_meta,
         display_at_datetime_ms,

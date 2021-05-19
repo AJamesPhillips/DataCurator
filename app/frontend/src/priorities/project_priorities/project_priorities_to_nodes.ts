@@ -3,6 +3,7 @@ import { x, calc_width, project_priority_y, project_priority_height } from "../.
 import type { ProjectPrioritiesByProjectId, ProjectPriority } from "../interfaces"
 
 
+
 interface ConvertProjectPrioritiesToNodesArgs
 {
     priorities_by_project: ProjectPrioritiesByProjectId
@@ -64,6 +65,7 @@ function get_next_event (events: ProjectPriority[], project_priority_id: string)
 
     return events[index + 1]
 }
+
 
 
 export function get_extent_of_content (priorities_by_project: ProjectPrioritiesByProjectId): number

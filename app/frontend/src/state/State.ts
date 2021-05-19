@@ -109,6 +109,7 @@ export type PatternState = Pattern[]
 export type ObjectsState = ObjectWithCache[]
 export interface RootStateCore
 {
+    // TODO replace with map by id
     statements: StatementState
     patterns: PatternState
     objects: ObjectsState

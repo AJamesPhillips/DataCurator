@@ -1,44 +1,18 @@
-import { factory_filter_objects_by_pattern_id_c, get_object_by_id_c } from "../../state/objects/filter_objects"
 import type {
     CoreObjectIdAttribute,
     CoreObjectValueAttribute,
     ObjectsState,
     ObjectWithCache,
-    RootState,
 } from "../../state/State"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
-import { memoize } from "../../utils/memoize"
 import type { ProjectPrioritiesMeta, ProjectPriority } from "../interfaces"
+import { group_priorities_by_project, order_priorities_by_project } from "./group_and_order"
+import { get_project_id_to_vertical_position } from "./vertical_position"
 
 
 
-const PATTERN_PROJECT_PRIORITY = "p10"
-const filter_for_project_priorities_c = factory_filter_objects_by_pattern_id_c(PATTERN_PROJECT_PRIORITY)
-export const get_project_priorities_meta_c = (state: RootState): ProjectPrioritiesMeta => {
-
-    const raw_project_priorities = filter_for_project_priorities_c(state.objects)
-    const {
-        project_priorities,
-        project_priority_events,
-        earliest_ms,
-        latest_ms,
-    } = get_project_priorities_c(raw_project_priorities, state.objects)
-
-    return {
-        project_priorities,
-        project_priority_events,
-        earliest_ms,
-        latest_ms,
-    }
-}
-
-
-const get_project_priorities_c = memoize(_get_project_priorities)
-
-function _get_project_priorities (raw_project_priorities: ObjectWithCache[], objects: ObjectsState)
+export function get_project_priorities_meta (raw_project_priorities: ObjectWithCache[], objects: ObjectsState): ProjectPrioritiesMeta
 {
-    // Does not need to live outside of cache as it is set to earliest due to raw_project_priorities
-    // and the raw_project_priorities will bust the cache as needed
     let earliest_ms = new Date().getTime()
     let latest_ms = earliest_ms + 1
 
@@ -76,10 +50,41 @@ function _get_project_priorities (raw_project_priorities: ObjectWithCache[], obj
         })
     })
 
+
+    const unordered_priorities_by_project = group_priorities_by_project(project_priorities)
+    const priorities_by_project = order_priorities_by_project(unordered_priorities_by_project)
+    const project_id_to_vertical_position = get_project_id_to_vertical_position(priorities_by_project)
+
+
     return {
         project_priorities,
+        priorities_by_project,
+        project_id_to_vertical_position,
         project_priority_events,
         earliest_ms,
         latest_ms,
+    }
+}
+
+
+
+// TODO delete all of this once we have a map of objects by id
+const get_object_by_id_c = memoize_get_object_by_id()
+
+function memoize_get_object_by_id ()
+{
+    let cached_objects: ObjectsState
+    let objects_by_id: { [object_id: string]: ObjectWithCache | undefined } = {}
+
+    return (objects: ObjectsState, find_id: string) =>
+    {
+        if (cached_objects !== objects)
+        {
+            objects_by_id = {}
+            objects.forEach(obj => objects_by_id[obj.id] = obj)
+            cached_objects = objects
+        }
+
+        return objects_by_id[find_id]
     }
 }

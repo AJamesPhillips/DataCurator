@@ -25,5 +25,14 @@ export function get_derived_starting_state (): DerivedState
         judgement_ids_by_target_id: {},
 
         current_UI_knowledge_view: undefined,
+
+        project_priorities_meta: {
+            project_priorities: [],
+            priorities_by_project: {},
+            project_id_to_vertical_position: {},
+            project_priority_events: [],
+            earliest_ms: 0,
+            latest_ms: 0,
+        },
     }
 }

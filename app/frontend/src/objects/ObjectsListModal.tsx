@@ -4,6 +4,7 @@ import { Modal } from "../modal/Modal"
 import { ObjectsList } from "./ObjectsList"
 
 
+
 interface OwnProps
 {
     object_ids: string[]

@@ -1,3 +1,4 @@
+import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
@@ -47,4 +48,6 @@ export interface DerivedState
     judgement_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
 
     current_UI_knowledge_view: DerivedUIKnowledgeView | undefined
+
+    project_priorities_meta: ProjectPrioritiesMeta
 }
