@@ -26,8 +26,8 @@ export function get_new_wcomponent_object (args: Partial<WComponent>)
         const causal_link: WComponentConnection = {
             from_id: "",
             to_id: "",
-            from_type: undefined,
-            to_type: undefined,
+            from_type: "value",
+            to_type: "value",
             ...base,
             ...args,
             type: args.type, // only added to remove type warning
