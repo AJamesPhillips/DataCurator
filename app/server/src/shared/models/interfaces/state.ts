@@ -62,23 +62,26 @@ export interface StateValueAndPredictionsSet extends StateValueAndPredictionsSet
     entries: StateValueAndPrediction[]
 }
 
-interface StateValueAndPredictionsSetIncremental extends Base
+export interface HasVersion
 {
     version: number
+}
 
+interface StateValueAndPredictionsSetIncremental extends Base, HasVersion
+{
     datetime?: TemporalUncertainty
     // If an array is provided in an incremental then it must be of the same length as "previous"
     // arrays and be populated with empty objects otherwise, or if null the corresponing values
     // missing will be dropped
     entries?: (Partial<StateValueAndPrediction> | null)[]
     // Allows a set of values to have default values for them.
-    // See dice_rolling.ts example for entry_defaults.explanation
+    // See dice_rolling.ts example for shared_entry_fields.explanation
     //
-    // An example for entry_defaults.conviction, we might be applying for a grant and we have
+    // An example for shared_entry_fields.conviction, we might be applying for a grant and we have
     // 3 different possible values of: fail, success: 100k, success: 500k.  The probabilities
     // will change over time but at this time point the conviction for all three values will,
     // or will likely, be the same.
-    entry_defaults?: Partial<StateValueAndPrediction>
+    shared_entry_values?: Partial<StateValueAndPrediction>
 
     // 2021-04-25 19:00
     // Not using this field yet as we will explore a simpler modeling approach, namely to use
@@ -88,7 +91,8 @@ interface StateValueAndPredictionsSetIncremental extends Base
     // No this is needed for potential scenarios where a value could be A or B and where it does not
     // make sense to model this as exclusive option choices.  See two_time_dimensional_trees for
     // example(s).
-    previous_value_ids?: string[]
+    // 2021-05-08 see Issue
+    previous_VAP_set_ids?: string[]
 }
 
 export interface StateValueAndPrediction extends PredictionBase

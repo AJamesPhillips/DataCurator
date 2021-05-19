@@ -7,7 +7,7 @@ import type {
     WComponentNodeState,
     WComponentNodeStateV2,
 } from "./state"
-import type { ValidityPredictions, ExistencePredictions } from "./uncertainty"
+import type { ValidityPredictions, ExistencePredictions, WComponentCounterfactual } from "./uncertainty"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent"
 
 
@@ -28,11 +28,16 @@ export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 export interface WComponentNodeProcess extends WComponentNodeBase
 {
+    is_action?: boolean
     // active: ProcessActiveStatus[]
     // end: TemporalUncertainty
 }
 
-export type WComponentNode = WComponentNodeEvent | WComponentNodeState | WComponentNodeStateV2 | WComponentNodeProcess
+export type WComponentNode = WComponentNodeEvent
+    | WComponentNodeState
+    | WComponentNodeStateV2
+    | WComponentNodeProcess
+    | WComponentCounterfactual
 
 
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
@@ -72,6 +77,11 @@ export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WC
     return wcomponent.type === "statev2"
 }
 
+export function wcomponent_is_process (wcomponent: WComponent): wcomponent is WComponentNodeProcess
+{
+    return wcomponent.type === "process"
+}
+
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
     return wcomponent.type === "causal_link"
@@ -90,6 +100,11 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
 export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
     return wcomponent.type === "judgement"
+}
+
+export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
+{
+    return wcomponent.type === "counterfactual"
 }
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement

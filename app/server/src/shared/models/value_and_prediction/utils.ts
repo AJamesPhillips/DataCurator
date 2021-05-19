@@ -93,11 +93,10 @@ function get_VAP_datetime_sort_key (VAP: StateValueAndPredictionsSet)
 
 
 
-export function get_VAPs_ordered_by_prob (VAPs: StateValueAndPrediction[], subtype: WComponentStateV2SubType): StateValueAndPrediction[]
+export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VAPs: E[], subtype: WComponentStateV2SubType): E[]
 {
     const first_VAP = VAPs[0]
     if (subtype === "boolean" && first_VAP) return [first_VAP]
 
-    return VAPs.filter(e => e.probability > 0)
-        .sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
+    return VAPs.sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
 }
