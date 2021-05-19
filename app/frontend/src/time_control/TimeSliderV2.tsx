@@ -37,7 +37,6 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-const MSECONDS_PER_DAY = 86400000
 function _TimeSliderV2 (props: Props)
 {
     const event_start_datetimes_ms = props.events.map(event => event.datetime.getTime())

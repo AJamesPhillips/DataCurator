@@ -1,6 +1,7 @@
 import { test } from "../utils/test"
 import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
+import type { HasVersion } from "./interfaces/state"
 import type { HasDateTime } from "./interfaces/uncertainty"
 
 
@@ -122,7 +123,7 @@ function prune_present_by_temporal_and_logical_relations <U extends Base & HasDa
 
 
 
-export function partition_and_prune_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
+export function partition_and_prune_items_by_datetimes <U extends Base & HasDateTime & Partial<HasVersion>> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
 {
     const result = partition_items_by_datetimes(args)
     const pruned = prune_present_by_temporal_and_logical_relations(result.present_items)
@@ -333,7 +334,7 @@ function test_partition_and_prune_items_by_datetimes ()
 {
     console .log("running tests of partition_and_prune_items_by_datetimes")
 
-    interface Simple extends Base, HasDateTime {}
+    interface Simple extends Base, HasDateTime, Partial<HasVersion> {}
 
     function ids_partition_and_prune_items_by_datetimes (args: PartitionItemsByDatetimeFuturesArgs<Simple>): PartitionItemsByDatetimeFuturesReturn<string>
     {
@@ -394,6 +395,14 @@ function test_partition_and_prune_items_by_datetimes ()
         past_items: [c1s1.id, c1s2.id],
         present_items: [],
         future_items: [],
+    })
+
+    result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date1_ms, sim_ms: date1_ms })
+    test(result, {
+        invalid_items: [c2s1.id, c2s2.id, c2se.id],
+        past_items: [],
+        present_items: [c1s1.id],
+        future_items: [c1s2.id],
     })
 
     result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date1_ms, sim_ms: date1_ms })

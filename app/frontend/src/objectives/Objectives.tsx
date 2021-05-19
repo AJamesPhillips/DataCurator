@@ -11,6 +11,5 @@ export function Objectives ()
 
     return <MainArea
         main_content={<ObjectivesGraph />}
-        main_content_controls={[]}
     />
 }

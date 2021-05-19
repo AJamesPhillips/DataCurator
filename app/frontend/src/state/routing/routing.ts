@@ -7,7 +7,6 @@ import {
     ALLOWED_SUB_ROUTES,
     RoutingStateArgs,
     is_routing_view_types,
-    is_routing_order_types,
     is_route_string_arg_number,
     RoutingStringArgKey,
 } from "./interfaces"
@@ -145,10 +144,6 @@ function update_args_with_value (key: RoutingStringArgKey, value: string, args: 
         if (is_routing_view_types(value)) args.view = value
     }
     else if (key === "subview_id") args.subview_id = value
-    else if (key === "order")
-    {
-        if (is_routing_order_types(value)) args.order = value
-    }
     else if (is_route_string_arg_number(key)) args[key] = parseInt(value)
 }
 
@@ -171,8 +166,6 @@ function run_tests ()
             zoom: 100,
             x: 101,
             y: 158,
-            order: "normal",
-            rotation: 0,
             created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
             created_at_ms: 1603299864000,
             sim_datetime: new Date("2021-04-26T09:23:13.000Z"),

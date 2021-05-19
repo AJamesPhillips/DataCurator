@@ -28,6 +28,4 @@ export interface IViewController
     get_children: () => ChildrenData
     get_svg_upper_children: () => h.JSX.Element | null
     // get_content_coordinates: () => CanvasPoint[]
-
-    get_content_controls: () => h.JSX.Element | null
 }

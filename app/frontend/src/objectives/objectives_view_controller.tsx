@@ -67,6 +67,4 @@ export function ObjectivesViewController (view_needs_to_update: () => void)
         get_children,
         get_svg_upper_children,
     })
-
-    // get_content_controls = () => <div>Content controls </div>
 }

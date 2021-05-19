@@ -25,10 +25,9 @@ const map_state = (state: RootState) => {
     const zoom = state.routing.args.zoom
     const x = state.routing.args.x
     const y = state.routing.args.y
-    const rotation = state.routing.args.rotation
     const bounding_rect = state.display.canvas_bounding_rect
 
-    return { zoom, x, y, rotation, bounding_rect }
+    return { zoom, x, y, bounding_rect }
 }
 
 
@@ -141,7 +140,7 @@ class _Canvas extends Component<Props>
 
     render ()
     {
-        const { zoom, rotation, bounding_rect, content_coordinates = [], update_bounding_rect } = this.props
+        const { zoom, bounding_rect, content_coordinates = [], update_bounding_rect } = this.props
 
         const scale = zoom / scale_by
         performance_logger("Canvas...")
@@ -158,7 +157,7 @@ class _Canvas extends Component<Props>
         }
         const html_container_style = {
             transformOrigin: "left top",
-            transform: `scale(${scale}) rotate(${rotation}deg)`
+            transform: `scale(${scale})`
         }
 
         return (

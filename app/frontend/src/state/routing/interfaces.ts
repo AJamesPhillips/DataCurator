@@ -52,15 +52,6 @@ const routing_view_types = Object.keys(_view_types)
 export const is_routing_view_types = (str: string): str is ViewType => routing_view_types.includes(str)
 
 
-export type OrderType = "normal" | "reverse"
-const _order_types: {[k in OrderType]: true} = {
-    "normal": true,
-    "reverse": true,
-}
-const routing_order_types = Object.keys(_order_types)
-export const is_routing_order_types = (str: string): str is OrderType => routing_order_types.includes(str)
-
-
 export interface RoutingStateArgs
 {
     view: ViewType
@@ -68,8 +59,6 @@ export interface RoutingStateArgs
     zoom: number
     x: number
     y: number
-    order: OrderType
-    rotation: number
 
     created_at_datetime: Date
     created_at_ms: number

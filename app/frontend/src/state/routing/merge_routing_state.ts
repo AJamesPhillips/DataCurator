@@ -6,7 +6,6 @@ import type {
     ROUTE_TYPES,
     SUB_ROUTE_TYPES,
     ViewType,
-    OrderType,
 } from "./interfaces"
 
 
@@ -58,8 +57,6 @@ function run_tests ()
             zoom: 100,
             x: 0,
             y: 0,
-            order: "normal" as OrderType,
-            rotation: 0
         }
     }
 

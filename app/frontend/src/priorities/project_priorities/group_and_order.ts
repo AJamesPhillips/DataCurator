@@ -1,4 +1,3 @@
-import type { OrderType } from "../../state/routing/interfaces"
 import type { ProjectPriority, ProjectPrioritiesByProjectId } from "../interfaces"
 
 
@@ -22,12 +21,8 @@ export function group_priorities_by_project (project_priorities: ProjectPriority
 }
 
 
-export interface ProjectPriorityOrderArgs
-{
-    type: OrderType
-}
 
-export function order_priorities_by_project (priorities_by_project: ProjectPrioritiesByProjectId, order: ProjectPriorityOrderArgs): ProjectPrioritiesByProjectId
+export function order_priorities_by_project (priorities_by_project: ProjectPrioritiesByProjectId): ProjectPrioritiesByProjectId
 {
     const projects_by_start_ms: { project_id: string, start_ms: number }[] = []
 
@@ -59,9 +54,7 @@ export function order_priorities_by_project (priorities_by_project: ProjectPrior
 
     projects_by_start_ms.forEach(({ project_id }, index) =>
     {
-        const vertical_position = order.type === "normal"
-            ? index
-            : projects_by_start_ms.length - 1 - index
+        const vertical_position = index
 
         const priorities = priorities_by_project[project_id]
         if (!priorities) return

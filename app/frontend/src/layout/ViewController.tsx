@@ -18,7 +18,6 @@ interface ViewControllerArgs<Props, State>
     get_svg_children?: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
     get_children?: (props: Props, state: State, set_state: (s: Partial<State>) => void) => ChildrenRawData
     get_svg_upper_children?: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
-    get_content_controls?: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
 }
 
 
@@ -31,7 +30,6 @@ export class ViewController<Props, State> implements IViewController
     private _get_svg_children: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
     private _get_children: (props: Props, state: State, set_state: (s: Partial<State>) => void) => ChildrenRawData
     private _get_svg_upper_children: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
-    private _get_content_controls: (props: Props, state: State, set_state: (s: Partial<State>) => void) => h.JSX.Element[]
 
     private store: Store<RootState, Action<any>>
 
@@ -43,7 +41,6 @@ export class ViewController<Props, State> implements IViewController
         this._get_svg_children = args.get_svg_children || (() => [])
         this._get_children = args.get_children || (() => ({ elements: [], content_coordinates: [] }))
         this._get_svg_upper_children = args.get_svg_upper_children || (() => [])
-        this._get_content_controls = args.get_content_controls || (() => [])
 
         const store = config_store()
         this.store = store
@@ -86,7 +83,7 @@ export class ViewController<Props, State> implements IViewController
     private ref_svg_children: SVGElement | null = null
     private ref_children: HTMLElement | null = null
     private ref_svg_upper_children: SVGElement | null = null
-    private ref_content_controls: HTMLElement | null = null
+
     private set_ref_svg_children = (ref_svg_children: SVGElement | null) =>
     {
         this.ref_svg_children = ref_svg_children
@@ -100,11 +97,6 @@ export class ViewController<Props, State> implements IViewController
     private set_ref_svg_upper_children = (ref_svg_upper_children: SVGElement | null) =>
     {
         this.ref_svg_upper_children = ref_svg_upper_children
-        this.update_children_opacity()
-    }
-    private set_ref_content_controls = (ref_content_controls: HTMLElement | null) =>
-    {
-        this.ref_content_controls = ref_content_controls
         this.update_children_opacity()
     }
 
@@ -122,9 +114,6 @@ export class ViewController<Props, State> implements IViewController
         this.ref_svg_children?.setAttribute("style", style)
         this.ref_children?.setAttribute("style", style)
         this.ref_svg_upper_children?.setAttribute("style", style)
-
-        const content_control_style = this.should_display ? "" : `display: none;`
-        this.ref_content_controls?.setAttribute("style", content_control_style)
 
         if (!this.opacity_synced())
         {
@@ -188,18 +177,6 @@ export class ViewController<Props, State> implements IViewController
             {this._get_svg_upper_children(this.props, this.state, this.set_state)}
         </g>
     }
-
-
-    get_content_controls = () =>
-    {
-        if (this.content_invisible()) return null
-
-
-        return <div ref={ref => this.set_ref_content_controls(ref)}>
-            {this._get_content_controls(this.props, this.state, this.set_state)}
-        </div>
-    }
-
 }
 
 

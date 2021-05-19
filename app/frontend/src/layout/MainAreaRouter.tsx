@@ -128,17 +128,6 @@ class _MainAreaRouter extends Component<Props, State>
         )
     }
 
-
-    get_content_controls ()
-    {
-        return merge_lists_c(
-            this.priorities_view_controller.get_content_controls(),
-            this.knowledge_view_controller.get_content_controls(),
-            this.objectives_view_controller.get_content_controls(),
-        )
-    }
-
-
     render ()
     {
         performance_logger("MainAreaRouter...")
@@ -162,8 +151,6 @@ class _MainAreaRouter extends Component<Props, State>
             >
                 {children}
             </Canvas>}
-
-            main_content_controls={this.get_content_controls()}
         />
     }
 }

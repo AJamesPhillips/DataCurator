@@ -62,10 +62,13 @@ export interface StateValueAndPredictionsSet extends StateValueAndPredictionsSet
     entries: StateValueAndPrediction[]
 }
 
-interface StateValueAndPredictionsSetIncremental extends Base
+export interface HasVersion
 {
     version: number
+}
 
+interface StateValueAndPredictionsSetIncremental extends Base, HasVersion
+{
     datetime?: TemporalUncertainty
     // If an array is provided in an incremental then it must be of the same length as "previous"
     // arrays and be populated with empty objects otherwise, or if null the corresponing values

@@ -99,6 +99,5 @@ export function KnowledgeViewController (view_needs_to_update: () => void)
         get_initial_state: () => ({}),
         get_children,
         get_svg_upper_children,
-        get_content_controls,
     })
 }
