@@ -1,6 +1,5 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useState } from "preact/hooks"
 
 import "./time_slider.css"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
@@ -22,7 +21,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
-    datetime_ms: get_handle_ms(state),
+    handle_datetime_ms: get_handle_ms(state),
 })
 
 
@@ -37,25 +36,12 @@ function _TimeSlider (props: Props)
     const earliest_ms = event_start_datetimes_ms[0]
     const latest_ms = event_start_datetimes_ms[event_start_datetimes_ms.length - 1]
 
-    const [handle_position_ms, set_handle_position_ms] = useState(props.datetime_ms)
-    const current_index = find_nearest_index_in_sorted_list(event_start_datetimes_ms, i => i, handle_position_ms)
+    const current_index = find_nearest_index_in_sorted_list(event_start_datetimes_ms, i => i, props.handle_datetime_ms)
 
-
-    function change_datetime_ms (new_datetime_ms: number, update_route: boolean)
+    function changed_handle_position (e: h.JSX.TargetedEvent<HTMLInputElement, Event>)
     {
-        set_handle_position_ms(new_datetime_ms)
-
-        if (update_route)
-        {
-            props.change_handle_ms(new_datetime_ms)
-        }
-    }
-
-
-    function changed_handle_position (e: h.JSX.TargetedEvent<HTMLInputElement, Event>, update_route: boolean)
-    {
-        const new_handle_position_ms = parseInt(e.currentTarget.value)
-        change_datetime_ms(new_handle_position_ms, update_route)
+        const new_handle_datetime_ms = parseInt(e.currentTarget.value)
+        props.change_handle_ms(new_handle_datetime_ms)
     }
 
 
@@ -71,7 +57,7 @@ function _TimeSlider (props: Props)
             }
 
             let new_datetime_ms = event_start_datetimes_ms[next_index]
-            while (new_datetime_ms === handle_position_ms)
+            while (new_datetime_ms === props.handle_datetime_ms)
             {
                 next_index += direction
                 new_datetime_ms = event_start_datetimes_ms[next_index]
@@ -79,7 +65,7 @@ function _TimeSlider (props: Props)
 
             if (!new_datetime_ms) return
 
-            change_datetime_ms(new_datetime_ms, true)
+            props.change_handle_ms(new_datetime_ms)
         }
     }
 
@@ -100,9 +86,9 @@ function _TimeSlider (props: Props)
             />
             <input
                 type="range"
-                onChange={e => changed_handle_position(e, true)} // change to false for performance
-                onMouseUp={e => changed_handle_position(e, true)}
-                value={handle_position_ms}
+                onChange={changed_handle_position}
+                onMouseUp={changed_handle_position}
+                value={props.handle_datetime_ms}
                 min={earliest_ms}
                 max={latest_ms}
                 list={"tickmarks_timeslider_" + props.data_set_name}
@@ -117,12 +103,12 @@ function _TimeSlider (props: Props)
         <div style={{ maxWidth: 200, display: "inline-flex", float: "right" }}>
             <EditableCustomDateTime
                 invariant_value={undefined}
-                value={new Date(handle_position_ms)}
-                on_change={new_datetime => new_datetime && change_datetime_ms(new_datetime.getTime(), true)}
+                value={new Date(props.handle_datetime_ms)}
+                on_change={new_datetime => new_datetime && props.change_handle_ms(new_datetime.getTime())}
                 show_now_shortcut_button={false}
                 show_today_shortcut_button={false}
             />
-            <NowButton change_datetime_ms={datetime_ms => change_datetime_ms(datetime_ms, true)} />
+            <NowButton change_datetime_ms={datetime_ms => props.change_handle_ms(datetime_ms)} />
         </div>
 
     </div>

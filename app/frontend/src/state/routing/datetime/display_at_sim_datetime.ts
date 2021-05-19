@@ -19,6 +19,12 @@ export const display_at_sim_datetime_reducer = (state: RootState, action: AnyAct
             sim_ms: ms,
         }
 
+        if (state.controls.linked_datetime_sliders)
+        {
+            args.created_at_datetime = datetime
+            args.created_at_ms = ms
+        }
+
         state = update_substate(state, "routing", "args", args)
     }
 

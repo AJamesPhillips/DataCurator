@@ -135,7 +135,7 @@ export function get_starting_state (): RootState
     const routing = get_routing_starting_state()
 
     const starting_state: RootState = {
-        controls: { linked_datetime_sliders: true },
+        controls: { linked_datetime_sliders: false },
         statements,
         patterns,
         objects,
