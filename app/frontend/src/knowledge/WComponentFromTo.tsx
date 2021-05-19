@@ -17,7 +17,6 @@ import { get_current_UI_knowledge_view_from_state } from "../state/specialised_o
 interface OwnProps
 {
     connection_terminal_description: string
-    owner_wcomponent_id: string
     wcomponent_id: string | undefined
     connection_terminal_type: ConnectionTerminalType
 
@@ -37,7 +36,6 @@ const map_state = (state: RootState) => ({
 
 const map_dispatch = {
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
-    set_intercept_wcomponent_click_to_edit_link: ACTIONS.specialised_object.set_intercept_wcomponent_click_to_edit_link,
 }
 
 
@@ -49,7 +47,6 @@ function _WComponentFromTo (props: Props)
 {
     const {
         connection_terminal_description,
-        owner_wcomponent_id,
         wcomponent_id,
         connection_terminal_type,
         wcomponents,
@@ -57,7 +54,6 @@ function _WComponentFromTo (props: Props)
         on_update_id,
         on_update_type,
         set_highlighted_wcomponent,
-        set_intercept_wcomponent_click_to_edit_link,
     } = props
 
     const wcomponent = wcomponent_id ? wcomponents_by_id[wcomponent_id] : undefined
@@ -77,11 +73,6 @@ function _WComponentFromTo (props: Props)
         { id: "meta", title: "Meta" },
     ]
 
-    function set_intercept (intercept: boolean)
-    {
-        const edit_wcomponent_id = intercept ? owner_wcomponent_id : undefined
-        set_intercept_wcomponent_click_to_edit_link({ edit_wcomponent_id, connection_terminal_type })
-    }
 
     return <div title={wcomponent && wcomponent.title} className="wcomponent_from_to">
         <div>{connection_terminal_description + ":"} &nbsp;</div>
@@ -90,8 +81,6 @@ function _WComponentFromTo (props: Props)
             selected_option_id={wcomponent_id}
             options={wcomponent_id_options}
             allow_none={true}
-            on_focus={() => set_intercept(true)}
-            on_blur={() => set_intercept(false)}
             on_change={option_id => on_update_id(option_id)}
             on_mouse_over_option={id => set_highlighted_wcomponent({ id, highlighted: true })}
             on_mouse_leave_option={id => set_highlighted_wcomponent({ id, highlighted: false })}

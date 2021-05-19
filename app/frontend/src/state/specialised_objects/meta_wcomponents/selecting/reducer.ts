@@ -4,7 +4,12 @@ import { toggle_item_in_list } from "../../../../utils/list"
 import { toggle_item_in_set } from "../../../../utils/set"
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
-import { is_clicked_wcomponent, is_clear_selected_wcomponents, is_set_intercept_wcomponent_click_to_edit_link, is_pointerdown_on_connection_terminal, is_clear_pointerupdown_on_connection_terminal } from "./actions"
+import {
+    is_clicked_wcomponent,
+    is_clear_selected_wcomponents,
+    is_pointerdown_on_connection_terminal,
+    is_clear_pointerupdown_on_connection_terminal,
+} from "./actions"
 
 
 
@@ -58,15 +63,6 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     //         state = handle_clear_selected_wcomponents(state)
     //     }
     // }
-
-
-    if (is_set_intercept_wcomponent_click_to_edit_link(action))
-    {
-        const intercept = !action.edit_wcomponent_id
-            ? undefined
-            : { edit_wcomponent_id: action.edit_wcomponent_id, connection_terminal_type: action.connection_terminal_type }
-        state = update_substate(state, "meta_wcomponents", "intercept_wcomponent_click_to_edit_link", intercept)
-    }
 
 
     if (is_pointerdown_on_connection_terminal(action))

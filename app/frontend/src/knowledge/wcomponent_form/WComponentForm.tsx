@@ -160,7 +160,6 @@ function _WComponentForm (props: Props)
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
                 connection_terminal_description="From"
-                owner_wcomponent_id={wcomponent_id}
                 wcomponent_id={from_wcomponent && from_wcomponent.id}
                 connection_terminal_type={wcomponent.from_type}
                 on_update_id={from_id => upsert_wcomponent({ from_id })}
@@ -171,7 +170,6 @@ function _WComponentForm (props: Props)
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
                 connection_terminal_description="To"
-                owner_wcomponent_id={wcomponent_id}
                 wcomponent_id={to_wcomponent && to_wcomponent.id}
                 connection_terminal_type={wcomponent.to_type}
                 on_update_id={to_id => upsert_wcomponent({ to_id })}

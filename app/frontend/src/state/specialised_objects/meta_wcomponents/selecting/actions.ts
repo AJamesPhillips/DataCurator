@@ -41,26 +41,6 @@ export const is_clear_selected_wcomponents = (action: AnyAction): action is Acti
 
 
 
-interface SetInterceptWComponentClickToEditLinkProps
-{
-    edit_wcomponent_id: string | undefined
-    connection_terminal_type: ConnectionTerminalType
-}
-interface ActionSetInterceptWComponentClickToEditLink extends Action, SetInterceptWComponentClickToEditLinkProps {}
-
-const set_intercept_wcomponent_click_to_edit_link_type = "set_intercept_wcomponent_click_to_edit_link"
-
-const set_intercept_wcomponent_click_to_edit_link = (args: SetInterceptWComponentClickToEditLinkProps): ActionSetInterceptWComponentClickToEditLink =>
-{
-    return { type: set_intercept_wcomponent_click_to_edit_link_type, ...args }
-}
-
-export const is_set_intercept_wcomponent_click_to_edit_link = (action: AnyAction): action is ActionSetInterceptWComponentClickToEditLink => {
-    return action.type === set_intercept_wcomponent_click_to_edit_link_type
-}
-
-
-
 interface PointerUpDownOnConnectionTerminalProps
 {
     wcomponent_id: string
@@ -107,7 +87,6 @@ export const is_clear_pointerupdown_on_connection_terminal = (action: AnyAction)
 export const selecting_actions = {
     clicked_wcomponent,
     clear_selected_wcomponents,
-    set_intercept_wcomponent_click_to_edit_link,
     pointerupdown_on_connection_terminal,
     clear_pointerupdown_on_connection_terminal,
 }
