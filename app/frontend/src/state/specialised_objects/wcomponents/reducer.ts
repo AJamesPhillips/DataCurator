@@ -126,7 +126,7 @@ function run_tests ()
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
-    test(tidied.values_and_prediction_sets.map(({ id }) => id), ["vps1", "vps2"], sort_list)
+    test(tidied.values_and_prediction_sets!.map(({ id }) => id), ["vps1", "vps2"], sort_list)
 
 
 
@@ -140,7 +140,7 @@ function run_tests ()
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
-    test(tidied.values_and_prediction_sets[0]!.entries.map(({ probability }) => probability), [1, 0], sort_list)
+    test(tidied.values_and_prediction_sets![0]!.entries.map(({ probability }) => probability), [1, 0], sort_list)
 
 
 
@@ -148,7 +148,7 @@ function run_tests ()
     // Changing wcomponent to type boolean should allow probabilites to be different from relative_probability
     wcomponent = { ...wcomponent, subtype: "boolean" }
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
-    tidied_VAPs = tidied.values_and_prediction_sets[0]!.entries
+    tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
     test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], sort_list)
     test(tidied_VAPs.map(({ probability }) => probability), [1, 0], sort_list)
 
@@ -163,7 +163,7 @@ function run_tests ()
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
-    tidied_VAPs = tidied.values_and_prediction_sets[0]!.entries
+    tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
 
     test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], sort_list)
     test(tidied_VAPs.map(({ probability }) => probability), [0, 1], sort_list)

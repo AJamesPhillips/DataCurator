@@ -15,6 +15,7 @@ import {
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
+import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
@@ -44,6 +45,7 @@ const map_state = (state: RootState, props: OwnProps) =>
     let conviction = 1
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
+    const wc_counterfactuals = get_wcomponent_counterfactuals(state, props.id)
 
     if (wc)
     {
@@ -61,9 +63,10 @@ const map_state = (state: RootState, props: OwnProps) =>
                     wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms, sim_ms)
                     || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms, sim_ms)
                 )
+                const wc_from_counterfactuals = get_wcomponent_counterfactuals(state, wc.from_id)
 
-                const ex = wcomponent_existence_for_datetimes(wc, display_at_datetime_ms, sim_ms)
-                const ex_from_con = wcomponent_existence_for_datetimes(from_wc, display_at_datetime_ms, sim_ms)
+                const ex = wcomponent_existence_for_datetimes(wc, wc_counterfactuals, display_at_datetime_ms, sim_ms)
+                const ex_from_con = wcomponent_existence_for_datetimes(from_wc, wc_from_counterfactuals, display_at_datetime_ms, sim_ms)
 
                 probability = Math.min(ex.existence, ex_from_con.existence)
                 conviction = Math.min(ex.conviction, ex_from_con.conviction)

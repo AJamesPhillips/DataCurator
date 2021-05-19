@@ -3,6 +3,7 @@ import {
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
+import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
     WComponentNodeStateV2,
     UIStateValue,
@@ -22,6 +23,15 @@ import { get_VAPs_ordered_by_prob } from "./utils"
 
 
 
+const default_UI_state_value: UIStateValue = {
+    value: undefined,
+    probability: undefined,
+    conviction: undefined,
+    type: "single",
+}
+
+
+
 interface GetWcomponentStatev2ValueArgs
 {
     wcomponent: WComponentNodeStateV2
@@ -33,41 +43,95 @@ export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArg
 {
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
-    const { present_items } = partition_and_prune_items_by_datetimes({
-        items: wcomponent.values_and_prediction_sets || [], created_at_ms, sim_ms,
-    })
+    const { values_and_prediction_sets, subtype, boolean_true_str, boolean_false_str, } = wcomponent
 
-    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, wcomponent.subtype === "boolean")
-    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
-    return get_probable_VAP_display_values(wcomponent, counterfactual_VAPs)
+    const VAPs_represents_boolean = subtype === "boolean"
+
+    return get_VAP_set_value({
+        values_and_prediction_sets,
+        VAPs_represents_boolean,
+        wc_counterfactuals,
+        created_at_ms,
+        sim_ms,
+        boolean_true_str,
+        boolean_false_str,
+    })
 }
 
 
 
-function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all_VAPs: CounterfactualStateValueAndPrediction[]): UIStateValue
+interface GetWcomponentNonStatev2ValueArgs
 {
-    const { subtype } = wcomponent
-    const is_boolean = subtype === "boolean"
+    wcomponent: WComponent
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+export function get_wcomponent_non_statev2_value (args: GetWcomponentNonStatev2ValueArgs): UIStateValue
+{
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
-    if (!all_VAPs.length) return { value: undefined, probability: undefined, conviction: undefined, type: "single" }
+    if (!wcomponent_has_VAP_sets(wcomponent)) return default_UI_state_value
+
+    const { values_and_prediction_sets, } = wcomponent
+
+    return get_VAP_set_value({
+        values_and_prediction_sets,
+        VAPs_represents_boolean: true,
+        wc_counterfactuals,
+        created_at_ms,
+        sim_ms,
+    })
+}
 
 
-    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, subtype)
+interface GetVAPSetValueArgs
+{
+    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
+    VAPs_represents_boolean: boolean
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+    boolean_true_str?: string
+    boolean_false_str?: string
+}
+function get_VAP_set_value (args: GetVAPSetValueArgs): UIStateValue
+{
+    const { values_and_prediction_sets, VAPs_represents_boolean, wc_counterfactuals,
+        created_at_ms, sim_ms, boolean_true_str, boolean_false_str } = args
 
-    const subtype_specific_VAPs = is_boolean ? VAPs_by_prob : VAPs_by_prob.filter(VAP => VAP.probability > 0)
+    const { present_items } = partition_and_prune_items_by_datetimes({
+        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
+    })
+
+    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represents_boolean)
+    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
+    const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
+    return get_probable_VAP_display_values(counterfactual_VAPs, VAPs_represents_boolean, boolean_true_str, boolean_false_str)
+}
+
+
+
+function get_probable_VAP_display_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represents_boolean: boolean, boolean_true_str: string | undefined, boolean_false_str: string | undefined): UIStateValue
+{
+    if (!all_VAPs.length) return default_UI_state_value
+
+
+    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represents_boolean)
+
+    const subtype_specific_VAPs = VAPs_represents_boolean ? VAPs_by_prob : VAPs_by_prob.filter(VAP => VAP.probability > 0)
     const filtered_VAPs = subtype_specific_VAPs.filter(({ conviction }) => conviction !== 0)
 
 
     let value_strings: string[] = []
-    if (is_boolean)
+    if (VAPs_represents_boolean)
     {
         // Should we return something that's neither true nor false if probability === 0.5?
         value_strings = filtered_VAPs.map(VAP =>
         {
             return VAP.probability > 0.5
-            ? (wcomponent.boolean_true_str || "True")
-            : (wcomponent.boolean_false_str || "False")
+            ? (boolean_true_str || "True")
+            : (boolean_false_str || "False")
         })
     }
     else
@@ -115,12 +179,12 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
 
 
 
-function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], wcomponent_is_boolean: boolean)
+function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represents_boolean: boolean)
 {
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const subtype_specific_VAPs = wcomponent_is_boolean
+        const subtype_specific_VAPs = VAPs_represents_boolean
             ? VAP_set.entries.slice(0, 1)
             : VAP_set.entries
 

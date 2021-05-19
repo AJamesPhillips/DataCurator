@@ -136,7 +136,7 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
             id: e.id.replace("pr", "vps"),
             created_at: e.created_at,
             custom_created_at: e.custom_created_at,
-            datetime: e.datetime,
+            datetime: e.datetime || {},
             entries: [
                 {
                     id: get_new_VAP_id(),

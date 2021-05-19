@@ -37,14 +37,15 @@ function _WComponentLatestPrediction (props: Props)
         </p>
     }
 
+    return null
 
-    const present_existence_prediction = wcomponent_present_existence_prediction_for_datetimes(wcomponent, created_at_ms, sim_ms)
+    // const present_existence_prediction = wcomponent_present_existence_prediction_for_datetimes(wcomponent, wc_counterfactuals, created_at_ms, sim_ms)
 
-    if (!present_existence_prediction) return null
+    // if (!present_existence_prediction) return null
 
-    return <p style={{ cursor: "not-allowed" }}>
-        <PredictionViewSummary prediction={present_existence_prediction} />
-    </p>
+    // return <p style={{ cursor: "not-allowed" }}>
+    //     <PredictionViewSummary prediction={present_existence_prediction} />
+    // </p>
 }
 
 export const WComponentLatestPrediction = connector(_WComponentLatestPrediction) as FunctionalComponent<OwnProps>

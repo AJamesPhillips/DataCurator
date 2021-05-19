@@ -2,7 +2,7 @@ import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./inte
 import type { UIStateValue, WComponentNodeState } from "./interfaces/state"
 import type { WComponentCounterfactuals } from "./interfaces/uncertainty"
 import { get_created_at_ms } from "./utils_datetime"
-import { get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
+import { get_wcomponent_non_statev2_value, get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
 
 
 
@@ -22,6 +22,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
 
     if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
     if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+    else return get_wcomponent_non_statev2_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
     return default_value
 }

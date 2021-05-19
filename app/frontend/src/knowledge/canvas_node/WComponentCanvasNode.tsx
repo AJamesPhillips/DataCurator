@@ -16,7 +16,7 @@ import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
-import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
+import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 
 
 
@@ -49,6 +49,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
         display_at_created_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
+        wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
     }
 }
 
@@ -75,7 +76,7 @@ function _WComponentCanvasNode (props: Props)
     const { id, knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
-        display_at_created_ms, sim_ms, } = props
+        display_at_created_ms, sim_ms, wc_counterfactuals, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>Not current knowledge view</div>
@@ -87,7 +88,8 @@ function _WComponentCanvasNode (props: Props)
     const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms, sim_ms)
     if (certain_is_not_valid) return null
 
-    const existence = wcomponent_existence_for_datetimes(wcomponent, display_at_created_ms, sim_ms)
+
+    const existence = wcomponent_existence_for_datetimes(wcomponent, wc_counterfactuals, display_at_created_ms, sim_ms)
     const existence_class_name = (!is_current_item && !is_highlighted && !is_selected)
         ? (existence.existence === 0 ? " node_does_not_exist " : ( existence.existence < 1 ? " node_may_not_exist " : ""))
         : ""
