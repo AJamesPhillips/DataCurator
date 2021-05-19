@@ -43,7 +43,7 @@ function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
 
     if (have_max)
     {
-        if (max_ms < sim_ms) return Tense.past
+        if (max_ms <= sim_ms) return Tense.past
         return Tense.present
     }
 
@@ -104,7 +104,7 @@ function partition_items_by_datetimes <U extends Base & HasDateTime> (args: Part
 function prune_present_by_temporal_and_logical_relations <U extends Base & HasDateTime> (present_items: U[]): { present: U[], past: U[] }
 {
     let latest_present_datetime_ms = Number.NEGATIVE_INFINITY
-    const present_items_by_ms: { [index: number]: U[] } = {}
+    const present_items_by_ms: { [ms_value: number]: U[] } = {}
     present_items.forEach(item =>
     {
         const ms = get_sim_datetime_ms(item)
@@ -170,7 +170,7 @@ function test_get_tense_of_item ()
     result = get_tense_of_item({ datetime: { max: date2 } }, date1_ms)
     test(result, Tense.present)
     result = get_tense_of_item({ datetime: { max: date2 } }, date2_ms)
-    test(result, Tense.present)
+    test(result, Tense.past)
     result = get_tense_of_item({ datetime: { max: date2 } }, date3_ms)
     test(result, Tense.past)
 
@@ -180,7 +180,7 @@ function test_get_tense_of_item ()
     result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date2_ms)
     test(result, Tense.present)
     result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date3_ms)
-    test(result, Tense.present)
+    test(result, Tense.past)
     result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date4_ms)
     test(result, Tense.past)
 
@@ -191,7 +191,7 @@ function test_get_tense_of_item ()
     result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date3_ms)
     test(result, Tense.present)
     result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date4_ms)
-    test(result, Tense.present)
+    test(result, Tense.past)
     result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date5_ms)
     test(result, Tense.past)
 }
@@ -384,8 +384,8 @@ function test_partition_and_prune_items_by_datetimes ()
     result = ids_partition_and_prune_items_by_datetimes({ items, created_at_ms: date3_ms, sim_ms: date1_ms })
     test(result, {
         invalid_items: [],
-        past_items: [],
-        present_items: [c1s1.id, c2s1.id, c2se.id],
+        past_items: [c2se.id], // treat eternal as past because there are more recent present values
+        present_items: [c1s1.id, c2s1.id],
         future_items: [c1s2.id, c2s2.id],
     })
 

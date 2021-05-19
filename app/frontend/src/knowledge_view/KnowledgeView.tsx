@@ -19,7 +19,7 @@ const map_state = (state: RootState) =>
     const wcomponents = state.derived.wcomponents
     const { current_UI_knowledge_view } = state.derived
 
-    if (sync_ready && !current_UI_knowledge_view) console.log(`No current_UI_knowledge_view`)
+    if (sync_ready && !current_UI_knowledge_view) console .log(`No current_UI_knowledge_view`)
 
     return {
         sync_ready,

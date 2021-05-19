@@ -16,6 +16,7 @@ import type {
     StateValueAndPrediction,
     UIStateValueModifer,
 } from "../interfaces/state"
+import type { TemporalUncertainty } from "../interfaces/uncertainty"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
 
@@ -130,7 +131,9 @@ function run_tests ()
 {
     console. log("running tests of get_wcomponent_statev2_value")
 
+    const dt0 = new Date("2021-05-01 00:00")
     const dt1 = new Date("2021-05-01 00:01")
+    const dt2 = new Date("2021-05-01 00:02")
 
 
     interface CounterfactualData
@@ -173,10 +176,10 @@ function run_tests ()
     }
 
 
-    function statev2_value (wcomponent: WComponentNodeStateV2, VAP_sets_data: StateValueAndPrediction[][], counterfactuals_data?: CounterfactualData[][])
+    function statev2_value (wcomponent: WComponentNodeStateV2, VAP_sets_data: StateValueAndPrediction[][], counterfactuals_data?: CounterfactualData[][], datetime: TemporalUncertainty={})
     {
         const values_and_prediction_sets: StateValueAndPredictionsSet[] = VAP_sets_data.map((VAPs, i) => ({
-            id: `vps${i}`, created_at: dt1, version: 1, datetime: {}, entries: VAPs
+            id: `vps${i}`, created_at: dt1, version: 1, datetime, entries: VAPs
         }))
         wcomponent = { ...wcomponent, values_and_prediction_sets }
 
@@ -318,6 +321,28 @@ function run_tests ()
     // Counterfactuals to invalidate all options
     display_value = statev2_value(wcomponent_other, [[vap_p100, vap_p0]], [[{ probability: 0 }, { probability: 0 }]])
     test(display_value, { value: undefined, type: "single", modifier: "assumed" })
+
+    // values before, at, after a datetime.min, datetime.value, datetime.max
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt2 })
+    test(display_value, { value: undefined, type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt1 })
+    test(display_value, { value: "A100", type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt0 })
+    test(display_value, { value: "A100", type: "single" })
+
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt2 })
+    test(display_value, { value: undefined, type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt1 })
+    test(display_value, { value: "A100", type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt0 })
+    test(display_value, { value: undefined, type: "single" })
+
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt2 })
+    test(display_value, { value: "A100", type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt1 })
+    test(display_value, { value: undefined, type: "single" })
+    display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt0 })
+    test(display_value, { value: undefined, type: "single" })
 }
 
 // run_tests()
