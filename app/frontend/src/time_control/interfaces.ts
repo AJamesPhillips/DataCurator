@@ -1,6 +1,6 @@
 
 
-export type TimeSliderEventType = "now" | "created" | "sim"
+export type TimeSliderEventType = "created" | "sim"
 
 export interface TimeSliderEvent
 {

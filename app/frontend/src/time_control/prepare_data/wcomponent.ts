@@ -17,10 +17,8 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
     const sim_events_ms = new Set<number>()
 
 
-    const now = new Date()
-    let min_ms = now.getTime()
-    let max_ms = now.getTime()
-    create_event(now, "now")
+    let min_ms = Number.POSITIVE_INFINITY
+    let max_ms = Number.NEGATIVE_INFINITY
 
 
     function create_event (datetime: Date | undefined, type: TimeSliderEventType)
@@ -87,6 +85,11 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
     })
 
 
+    const now = new Date()
+    if (created_events.length === 0) create_event(now, "created")
+
+
+    // Make sure both lists of events share same min max values
     const locked_min_ms = min_ms
     const locked_max_ms = max_ms
     ;(["created", "sim"] as TimeSliderEventType[]).forEach(type => {
