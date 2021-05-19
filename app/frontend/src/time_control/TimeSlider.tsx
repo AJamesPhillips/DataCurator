@@ -3,40 +3,33 @@ import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
 
 import "./time_slider.css"
-import { ACTIONS } from "../state/actions"
-import type { RootState } from "../state/State"
-import type { TimeSliderEvent } from "./interfaces"
-import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import type { RootState } from "../state/State"
+import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
+import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
+
 
 
 
 interface OwnProps
 {
     events: TimeSliderEvent[]
+    get_handle_ms: (state: RootState) => number,
+    change_handle_ms: (new_handle_ms: number) => void,
     data_set_name: string
 }
 
 
-function map_state (state: RootState)
-{
-    return {
-        datetime_ms: state.routing.args.created_at_ms,
-    }
-}
+const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
+    datetime_ms: get_handle_ms(state),
+})
 
 
-const map_dispatch = {
-    change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime
-}
-
-
-const connector = connect(map_state, map_dispatch)
+const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-const MSECONDS_PER_DAY = 86400000
 function _TimeSlider (props: Props)
 {
     const event_start_datetimes_ms = props.events.map(event => event.datetime.getTime())
@@ -54,7 +47,7 @@ function _TimeSlider (props: Props)
 
         if (update_route)
         {
-            props.change_display_at_created_datetime({ ms: new_datetime_ms })
+            props.change_handle_ms(new_datetime_ms)
         }
     }
 

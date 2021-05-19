@@ -1,3 +1,4 @@
+import { controls_actions } from "./controls/actions"
 import { display_actions } from "./display/actions"
 import { global_keys_actions } from "./global_keys/actions"
 import { objectives_actions } from "./objectives"
@@ -13,6 +14,7 @@ import { sync_actions } from "./sync"
 
 
 export const ACTIONS = {
+    controls: controls_actions,
     display: display_actions,
     pattern: pattern_actions,
     statement: statement_actions,

@@ -1,6 +1,7 @@
 import type { Reducer } from "preact/hooks"
 import type { AnyAction } from "redux"
 
+import { controls_reducer } from "./controls/reducer"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
@@ -32,6 +33,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = display_at_sim_datetime_reducer(state, action)
     state = objectives_reducer(state, action)
     state = specialised_objects_reducer(state, action)
+    state = controls_reducer(state, action)
 
     state = { ...state, last_action: action }
 

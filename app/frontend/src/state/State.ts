@@ -1,4 +1,5 @@
 import type { AnyAction } from "redux"
+import type { ControlsState } from "./controls/state"
 
 import type { DerivedState } from "./derived/State"
 import type { DisplayState } from "./display/state"
@@ -117,12 +118,13 @@ export interface RootStateCore
 }
 export interface RootState extends RootStateCore
 {
-    last_action: AnyAction | undefined
-    display: DisplayState
-    sync: SyncState
-    routing: RoutingState
-    global_keys: GlobalKeyPress
-    objectives: ObjectivesState
-    meta_wcomponents: MetaWComponentsState
+    controls: ControlsState
     derived: DerivedState
+    display: DisplayState
+    global_keys: GlobalKeyPress
+    last_action: AnyAction | undefined
+    meta_wcomponents: MetaWComponentsState
+    objectives: ObjectivesState
+    routing: RoutingState
+    sync: SyncState
 }
