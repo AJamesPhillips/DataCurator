@@ -1,19 +1,19 @@
 import { h } from "preact"
 
 import "./common.css"
+import { EditablePercentage } from "../../form/EditablePercentage"
+import { EditableText } from "../../form/EditableText"
 import type {
     WComponentStateV2SubType,
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
-} from "../../shared/models/interfaces/state"
+} from "../../shared/wcomponent/interfaces/state"
+import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../shared/wcomponent/interfaces/uncertainty"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
+import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge"
+import { SummaryForPrediction } from "../predictions/common"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../state/derived/State"
-import { merge_counterfactuals_into_VAPs } from "../counterfactuals/merge"
-import { SummaryForPrediction } from "../predictions/common"
-import { EditableText } from "../../form/EditableText"
-import { EditablePercentage } from "../../form/EditablePercentage"
 
 
 

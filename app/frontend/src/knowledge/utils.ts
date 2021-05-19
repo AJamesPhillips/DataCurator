@@ -4,9 +4,9 @@ import {
     WComponent,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
-} from "../shared/models/interfaces/SpecialisedObjects"
-import type { Prediction } from "../shared/models/interfaces/uncertainty"
-import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/models/utils_datetime"
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { Prediction } from "../shared/wcomponent/interfaces/uncertainty"
+import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/wcomponent/utils_datetime"
 
 
 

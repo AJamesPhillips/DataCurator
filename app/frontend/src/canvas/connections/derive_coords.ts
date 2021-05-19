@@ -1,4 +1,4 @@
-import type { ConnectionLocationType } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { ConnectionLocationType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_angle } from "../../utils/angles"
 import { bounded } from "../../utils/utils"
 import { get_magnitude } from "../../utils/vector"

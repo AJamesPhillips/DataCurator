@@ -1,5 +1,5 @@
 import type { CoreObject } from "../../../state/State"
-import { get_new_object_id } from "../../../utils/utils"
+import { get_new_object_id } from "../../../shared/utils/ids"
 import type { DateString, TransformAirtableRecordArgs } from "../interfaces"
 import { EXTERNAL_ID_KEY, PATTERN_ID_PRIORITY } from "../_common"
 import { airtable_multi_field_to_single_attribute, date_string_to_string, num_to_string } from "./common"

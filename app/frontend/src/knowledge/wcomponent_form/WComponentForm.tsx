@@ -8,9 +8,9 @@ import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
-import { get_title } from "../../shared/models/rich_text/get_rich_text"
-import { get_updated_wcomponent } from "../../shared/models/get_updated_wcomponent"
-import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
+import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
+import { get_updated_wcomponent } from "../../shared/wcomponent/get_updated_wcomponent"
+import { get_wcomponent_state_value } from "../../shared/wcomponent/get_wcomponent_state_value"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -22,9 +22,9 @@ import {
     wcomponent_is_event,
     wcomponent_is_causal_link,
     wcomponent_is_process,
-} from "../../shared/models/interfaces/SpecialisedObjects"
-import { wcomponent_statev2_subtypes } from "../../shared/models/interfaces/state"
-import { wcomponent_types } from "../../shared/models/interfaces/wcomponent"
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
+import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"

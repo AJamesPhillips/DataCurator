@@ -4,14 +4,14 @@ import { lefttop_to_xy } from "../canvas/MoveToPositionButton"
 
 import { calculate_judgement_value } from "../knowledge/judgements/calculate_judgement_value"
 import { JudgementBadge } from "../knowledge/judgements/JudgementBadge"
-import { get_title } from "../shared/models/rich_text/get_rich_text"
-import { get_wcomponent_state_value } from "../shared/models/get_wcomponent_state_value"
-import type { WComponentJudgement } from "../shared/models/interfaces/judgement"
-import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
+import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
+import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
+import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
+import type { KnowledgeView } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
 import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
-import { format_wcomponent_url } from "../shared/models/rich_text/templates"
+import { format_wcomponent_url } from "../shared/wcomponent/rich_text/templates"
 
 
 

@@ -1,4 +1,4 @@
-import type { KnowledgeView, Perception, WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { KnowledgeView, Perception, WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { sort_list } from "../../shared/utils/sort"
 import type { RootState } from "../State"
 

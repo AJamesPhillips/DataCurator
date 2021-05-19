@@ -5,7 +5,7 @@ import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
-} from "../../shared/models/interfaces/state"
+} from "../../shared/wcomponent/interfaces/state"
 import {
     create_new_VAP_set_version,
 } from "./utils"

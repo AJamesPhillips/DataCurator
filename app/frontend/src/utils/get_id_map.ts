@@ -1,5 +1,5 @@
 import { RootState, Item, Objekt, is_id_attribute, CoreObjectIdAttribute } from "../state/State"
-import { is_object_id, is_statement_id, is_pattern_id } from "./utils"
+import { is_object_id, is_statement_id, is_pattern_id } from "../shared/utils/ids"
 
 
 export type ID_ITEM_MAP = {[id: string]: Item}

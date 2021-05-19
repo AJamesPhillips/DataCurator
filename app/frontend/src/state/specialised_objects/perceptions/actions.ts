@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
-import type { Perception } from "../../../shared/models/interfaces/SpecialisedObjects"
+import type { Perception } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 

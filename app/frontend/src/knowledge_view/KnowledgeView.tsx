@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 
 import type { ContentCoordinate } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
-import { wcomponent_can_render_connection } from "../shared/models/interfaces/SpecialisedObjects"
+import { wcomponent_can_render_connection } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { WComponentCanvasConnection } from "../knowledge/WComponentCanvasConnection"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"

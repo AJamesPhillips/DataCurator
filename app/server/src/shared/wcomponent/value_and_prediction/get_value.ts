@@ -1,12 +1,7 @@
 import {
     CounterfactualStateValueAndPrediction,
     merge_all_counterfactuals_into_all_VAPs,
-} from "../../../knowledge/counterfactuals/merge"
-import type {
-    VAP_id_counterfactual_map,
-    VAP_set_id_counterfactual_map,
-    WComponentCounterfactuals,
-} from "../../../state/derived/State"
+} from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
 import type {
     WComponentNodeStateV2,
@@ -16,7 +11,12 @@ import type {
     StateValueAndPrediction,
     UIStateValueModifer,
 } from "../interfaces/state"
-import type { TemporalUncertainty } from "../interfaces/uncertainty"
+import type {
+    TemporalUncertainty,
+    VAP_id_counterfactual_map,
+    VAP_set_id_counterfactual_map,
+    WComponentCounterfactuals,
+} from "../interfaces/uncertainty"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
 

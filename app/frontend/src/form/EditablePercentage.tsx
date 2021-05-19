@@ -1,7 +1,7 @@
 import { h } from "preact"
 
-import { bounded } from "../utils/utils"
 import "./Editable.css"
+import { bounded } from "../utils/utils"
 import { EditableTextSingleLine } from "./EditableTextSingleLine"
 
 

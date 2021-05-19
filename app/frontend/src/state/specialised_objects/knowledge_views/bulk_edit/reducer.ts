@@ -1,5 +1,8 @@
 import type { AnyAction } from "redux"
-import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../../shared/models/interfaces/SpecialisedObjects"
+import type {
+    KnowledgeView,
+    KnowledgeViewWComponentIdEntryMap,
+} from "../../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 import type { RootState } from "../../../State"
 import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state } from "../../accessors"

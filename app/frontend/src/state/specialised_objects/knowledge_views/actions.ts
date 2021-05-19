@@ -3,7 +3,7 @@ import type { Action, AnyAction } from "redux"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentEntry,
-} from "../../../shared/models/interfaces/SpecialisedObjects"
+} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { bulk_editing_knowledge_view_entries_actions } from "./bulk_edit/actions"
 
 

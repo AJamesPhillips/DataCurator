@@ -4,27 +4,10 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
     Perception,
     WComponent,
-} from "../../shared/models/interfaces/SpecialisedObjects"
-import type { WComponentCounterfactual } from "../../shared/models/interfaces/uncertainty"
-import type { WComponentType } from "../../shared/models/interfaces/wcomponent"
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WcIdCounterfactualsMap } from "../../shared/wcomponent/interfaces/uncertainty"
+import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent"
 
-
-
-export interface VAP_id_counterfactual_map
-{
-    [target_VAP_id: string]: WComponentCounterfactual
-}
-export interface VAP_set_id_counterfactual_map
-{
-    [target_VAP_set_id: string]: VAP_id_counterfactual_map
-}
-export interface WComponentCounterfactuals
-{
-    VAP_set: VAP_set_id_counterfactual_map
-}
-export type WcIdCounterfactualsMap = {
-    [target_wcomponent_id: string]: WComponentCounterfactuals
-}
 
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {

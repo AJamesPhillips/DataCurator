@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { WComponent } from "../shared/models/interfaces/SpecialisedObjects"
+import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { PredictionViewSummary } from "./predictions/PredictionView"
 import { wcomponent_is_invalid_for_datetime, wcomponent_present_existence_prediction_for_datetimes } from "./utils"

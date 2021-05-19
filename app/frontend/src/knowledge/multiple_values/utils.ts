@@ -3,10 +3,10 @@ import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
-} from "../../shared/models/interfaces/state"
+} from "../../shared/wcomponent/interfaces/state"
 import { get_today_str } from "../../shared/utils/date_helpers"
 import { test } from "../../shared/utils/test"
-import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../utils/utils"
+import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
 
 
 

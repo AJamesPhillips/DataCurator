@@ -1,7 +1,7 @@
 import type { AnyAction } from "redux"
 
 import type { RootState } from "../../State"
-import { get_items_by_id } from "../../../shared/models/utils"
+import { get_items_by_id } from "../../../shared/utils/get_items"
 import { is_replace_all_specialised_objects } from "./actions"
 
 

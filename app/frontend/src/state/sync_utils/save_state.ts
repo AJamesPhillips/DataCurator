@@ -9,7 +9,7 @@ import {
     RootState,
 } from "../State"
 import { ACTIONS } from "../actions"
-import type { SpecialisedObjectsFromToServer } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { supported_keys } from "./supported_keys"
 
 

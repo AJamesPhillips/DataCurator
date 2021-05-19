@@ -4,7 +4,7 @@ import "./ConnectableCanvasNode.css"
 import { CanvasNode } from "./CanvasNode"
 import { COLOURS } from "./display"
 import type { CanvasPoint } from "./interfaces"
-import type { ConnectionLocationType } from "../shared/models/interfaces/SpecialisedObjects"
+import type { ConnectionLocationType } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 

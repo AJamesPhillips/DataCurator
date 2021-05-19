@@ -1,8 +1,8 @@
 import { h } from "preact"
 import { useMemo } from "preact/hooks"
 
-import type { StateValueString } from "../../shared/models/interfaces/state"
-import { get_new_value_id } from "../../utils/utils"
+import type { StateValueString } from "../../shared/wcomponent/interfaces/state"
+import { get_new_value_id } from "../../shared/utils/ids"
 import { EditableList } from "../../form/editable_list/EditableList"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"

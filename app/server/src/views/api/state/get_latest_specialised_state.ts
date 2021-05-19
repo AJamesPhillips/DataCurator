@@ -1,6 +1,5 @@
 import { readFileSync, readdirSync } from "fs"
-import { SpecialisedObjectsFromToServer } from "../../../shared/models/interfaces/SpecialisedObjects"
-
+import { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 

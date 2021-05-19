@@ -2,10 +2,11 @@ import {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
     wcomponent_is_counterfactual,
-} from "../../../shared/models/interfaces/SpecialisedObjects"
+} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WcIdCounterfactualsMap } from "../../../shared/wcomponent/interfaces/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
-import { update_substate, update_subsubstate } from "../../../utils/update_state"
-import type { DerivedUIKnowledgeView, WcIdCounterfactualsMap } from "../../derived/State"
+import { update_substate } from "../../../utils/update_state"
+import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view } from "../accessors"
 

@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { CanvasPoint } from "../../../canvas/interfaces"
-import type { WComponent } from "../../../shared/models/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 

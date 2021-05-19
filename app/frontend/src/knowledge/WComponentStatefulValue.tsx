@@ -1,15 +1,15 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_wcomponent_state_value } from "../shared/models/get_wcomponent_state_value"
+import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
 import {
     WComponent,
     wcomponent_is_judgement,
     wcomponent_is_state,
-} from "../shared/models/interfaces/SpecialisedObjects"
-import type { UIStateValue } from "../shared/models/interfaces/state"
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
+import type { WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty"
 import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
-import type { WComponentCounterfactuals } from "../state/derived/State"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"

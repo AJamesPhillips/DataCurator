@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
-import type { WComponentJudgement } from "../shared/models/interfaces/judgement"
+import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import {
     KnowledgeViewWComponentEntry,
     WComponent,
@@ -12,8 +12,8 @@ import {
     ConnectionLocationType,
     wcomponent_is_judgement,
     KnowledgeViewWComponentIdEntryMap,
-} from "../shared/models/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/models/utils_datetime"
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"

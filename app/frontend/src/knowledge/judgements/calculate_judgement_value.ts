@@ -1,7 +1,7 @@
-import { get_wcomponent_state_value } from "../../shared/models/get_wcomponent_state_value"
-import type { WComponentJudgement } from "../../shared/models/interfaces/judgement"
-import { WComponent, wcomponent_is_statev2 } from "../../shared/models/interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "../../state/derived/State"
+import { get_wcomponent_state_value } from "../../shared/wcomponent/get_wcomponent_state_value"
+import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
+import { WComponent, wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentCounterfactuals } from "../../shared/wcomponent/interfaces/uncertainty"
 
 
 

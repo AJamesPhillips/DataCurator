@@ -1,9 +1,9 @@
-import type { WComponent, WComponentsById } from "../interfaces/SpecialisedObjects"
 import { test } from "../../utils/test"
+import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_value } from "../get_wcomponent_state_value"
-import type { WcIdCounterfactualsMap } from "../../../state/derived/State"
-import { get_new_wcomponent_object } from "../../../knowledge/create_wcomponent_type"
+import type { WComponentsById, WComponent } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
+import type { WcIdCounterfactualsMap } from "../interfaces/uncertainty"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -26,7 +26,7 @@ interface ReplaceIdsArgs
 }
 
 
-interface GetFieldTextArgs extends ReplaceIdsArgs
+export interface GetFieldTextArgs extends ReplaceIdsArgs
 {
     wcomponent: WComponent
 }

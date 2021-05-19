@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/models/interfaces/SpecialisedObjects"
+import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view, get_knowledge_view_from_state } from "../accessors"

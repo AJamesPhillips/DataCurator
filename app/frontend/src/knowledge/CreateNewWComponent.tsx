@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { WComponentType } from "../shared/models/interfaces/wcomponent"
+import type { WComponentType } from "../shared/wcomponent/interfaces/wcomponent"
 import { Button } from "../sharedf/Button"
 import type { RootState } from "../state/State"
 import "./CreateNewWComponent.css"

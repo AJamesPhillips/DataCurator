@@ -6,7 +6,7 @@ import { StatementListEntry } from "../statements/StatementListEntry"
 import type { Item, ObjectWithCache, Pattern, RootState, Statement } from "../state/State"
 import { CORE_IDS } from "../state/core_data"
 import { ObjectListEntry } from "../objects/ObjectListEntry"
-import { is_object_id, is_pattern_id, is_statement_id } from "../utils/utils"
+import { is_object_id, is_pattern_id, is_statement_id } from "../shared/utils/ids"
 
 
 export type ITEM_FILTERS = "simple_types" | "types" | "patterns" | "all_concrete"

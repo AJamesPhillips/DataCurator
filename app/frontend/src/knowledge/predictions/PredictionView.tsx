@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/EditableText"
-import type { Prediction } from "../../shared/models/interfaces/uncertainty"
+import type { Prediction } from "../../shared/wcomponent/interfaces/uncertainty"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { SummaryForPrediction } from "./common"
 

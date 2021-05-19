@@ -1,5 +1,5 @@
 import { project_priorities_derived_reducer } from "../../priorities/project_priorities/project_priorities_derived_reducer"
-import { wcomponent_is_judgement } from "../../shared/models/interfaces/SpecialisedObjects"
+import { wcomponent_is_judgement } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"

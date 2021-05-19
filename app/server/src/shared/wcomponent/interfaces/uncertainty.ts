@@ -202,3 +202,21 @@ export interface WComponentCounterfactual extends WComponentNodeBase
     probability?: number
     conviction?: number
 }
+
+
+
+export interface VAP_id_counterfactual_map
+{
+    [target_VAP_id: string]: WComponentCounterfactual
+}
+export interface VAP_set_id_counterfactual_map
+{
+    [target_VAP_set_id: string]: VAP_id_counterfactual_map
+}
+export interface WComponentCounterfactuals
+{
+    VAP_set: VAP_set_id_counterfactual_map
+}
+export type WcIdCounterfactualsMap = {
+    [target_wcomponent_id: string]: WComponentCounterfactuals
+}

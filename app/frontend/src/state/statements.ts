@@ -1,6 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
-import { get_datetime, get_new_statement_id } from "../utils/utils"
+import { get_new_statement_id } from "../shared/utils/ids"
+import { get_datetime } from "../utils/utils"
 import type { RootState, Statement } from "./State"
 
 

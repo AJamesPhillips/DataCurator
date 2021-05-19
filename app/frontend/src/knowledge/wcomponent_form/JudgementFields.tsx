@@ -6,8 +6,8 @@ import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import {
     judgement_operators,
     WComponentJudgement,
-} from "../../shared/models/interfaces/judgement"
-import type { WComponent } from "../../shared/models/interfaces/SpecialisedObjects"
+} from "../../shared/wcomponent/interfaces/judgement"
+import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"

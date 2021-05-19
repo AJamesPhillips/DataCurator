@@ -8,9 +8,9 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
     wcomponent_has_VAPs as wcomponent_has_VAP_sets,
-} from "../../shared/models/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/models/interfaces/state"
-import type { Prediction, TemporalUncertainty } from "../../shared/models/interfaces/uncertainty"
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/wcomponent/interfaces/state"
+import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
 
 
 

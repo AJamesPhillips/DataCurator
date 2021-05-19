@@ -1,15 +1,15 @@
 import type { AnyAction } from "redux"
-import { get_new_wcomponent_object } from "../../../knowledge/create_wcomponent_type"
-import { prepare_new_VAP, prepare_new_VAP_set, set_VAP_probabilities } from "../../../knowledge/multiple_values/utils"
 
+import { prepare_new_VAP, prepare_new_VAP_set, set_VAP_probabilities } from "../../../knowledge/multiple_values/utils"
+import { get_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_is_statev1,
     wcomponent_is_statev2,
-} from "../../../shared/models/interfaces/SpecialisedObjects"
-import type { StateValueAndPrediction, WComponentNodeStateV2 } from "../../../shared/models/interfaces/state"
-import { get_created_at_ms } from "../../../shared/models/utils_datetime"
+} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPrediction, WComponentNodeStateV2 } from "../../../shared/wcomponent/interfaces/state"
+import { get_created_at_ms } from "../../../shared/wcomponent/utils_datetime"
 import { sort_list } from "../../../shared/utils/sort"
 import { test } from "../../../shared/utils/test"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"

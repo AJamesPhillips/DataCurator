@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { EditableText } from "../form/EditableText"
-import type { Perception } from "../shared/models/interfaces/SpecialisedObjects"
+import type { Perception } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"

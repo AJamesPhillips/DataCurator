@@ -2,7 +2,7 @@ import { writeFileSync, readFileSync, existsSync } from "fs"
 import { Server } from "@hapi/hapi"
 
 import { LOG_TAGS } from "../../shared/constants"
-import { SpecialisedObjectsFromToServer } from "../../shared/models/interfaces/SpecialisedObjects"
+import { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { PATHS } from "../../shared/paths"
 import { get_latest_specialised_state } from "./state/get_latest_specialised_state"
 import { output_latest_specialised_state_as_markdown } from "./state/output_latest_specialised_state_as_markdown"

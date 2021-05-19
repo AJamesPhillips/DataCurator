@@ -1,4 +1,4 @@
-import { WComponentType, wcomponent_types } from "./interfaces/wcomponent"
+import { WComponentType, wcomponent_types } from "../wcomponent/interfaces/wcomponent"
 
 
 

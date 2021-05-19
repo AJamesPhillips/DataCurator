@@ -4,7 +4,7 @@ import Markdown from "markdown-to-jsx"
 
 import type { RootState } from "../state/State"
 import { add_newlines_to_markdown } from "../form/utils"
-import { replace_ids_in_text } from "../shared/models/rich_text/get_rich_text"
+import { replace_ids_in_text } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
 
 

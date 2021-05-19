@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./datetime.css"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import type { TemporalUncertainty } from "../../shared/models/interfaces/uncertainty"
+import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
 
 
 interface OwnProps

@@ -1,7 +1,7 @@
 import type { Store } from "redux"
 
 import { connection_terminal_type_is_effector } from "../../../knowledge/utils"
-import { wcomponent_is_plain_connection } from "../../../shared/models/interfaces/SpecialisedObjects"
+import { wcomponent_is_plain_connection } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import { is_clicked_wcomponent } from "../meta_wcomponents/selecting/actions"

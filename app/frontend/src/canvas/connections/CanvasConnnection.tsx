@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import "./connection.css"
-import type { ConnectionLocationType } from "../../shared/models/interfaces/SpecialisedObjects"
+import type { ConnectionLocationType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { _get_connection_point } from "../ConnectableCanvasNode"
 import type { CanvasPoint } from "../interfaces"
 import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"

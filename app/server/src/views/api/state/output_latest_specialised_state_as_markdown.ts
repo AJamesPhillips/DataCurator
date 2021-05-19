@@ -2,7 +2,6 @@ import { Server } from "@hapi/hapi"
 import { writeFileSync, existsSync, mkdirSync } from "fs"
 
 import { LOG_TAGS } from "../../../shared/constants"
-import { GetFieldTextArgs, get_title, get_description } from "../../../shared/models/get_rich_text"
 import {
     SpecialisedObjectsFromToServer,
     specialised_objects_from_to_server_expected_keys,
@@ -11,7 +10,8 @@ import {
     KnowledgeView,
     WComponentsById,
     SpecialisedObjectsFromToServerKeys,
-} from "../../../shared/models/interfaces/SpecialisedObjects"
+} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_title, get_description, GetFieldTextArgs } from "../../../shared/wcomponent/rich_text/get_rich_text"
 
 
 
@@ -103,6 +103,7 @@ function get_file_contents_str(args: GetFileContentsStrArgs) {
         const args: GetFieldTextArgs = {
             wcomponent: single_data as any,
             wcomponents_by_id,
+            wc_id_counterfactuals_map: {},
             rich_text: true,
             root_url: "http://localhost:8080/app",
             created_at_ms: ms,

@@ -1,5 +1,5 @@
-import type { KnowledgeView } from "../shared/models/interfaces/SpecialisedObjects"
-import { get_new_knowledge_view_id } from "../utils/utils"
+import type { KnowledgeView } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_new_knowledge_view_id } from "../shared/utils/ids"
 
 
 

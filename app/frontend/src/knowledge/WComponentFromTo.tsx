@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentFromTo.css"
 import { AutocompleteText } from "../form/AutocompleteText"
-import { ConnectionTerminalType, WComponent, wcomponent_is_plain_connection } from "../shared/models/interfaces/SpecialisedObjects"
+import { ConnectionTerminalType, WComponent, wcomponent_is_plain_connection } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"

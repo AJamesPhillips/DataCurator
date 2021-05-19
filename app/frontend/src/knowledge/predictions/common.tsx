@@ -3,7 +3,7 @@ import { h } from "preact"
 import "./common.css"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import type { TemporalUncertainty } from "../../shared/models/interfaces/uncertainty"
+import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
 
 
 

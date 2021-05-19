@@ -1,5 +1,5 @@
 import type { Action, AnyAction } from "redux"
-import type { SpecialisedObjectsFromToServer } from "../../../shared/models/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 

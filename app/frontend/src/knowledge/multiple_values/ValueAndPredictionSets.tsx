@@ -4,8 +4,8 @@ import "./ValueAndPredictionSets.css"
 import type {
     StateValueAndPredictionsSet,
     WComponentStateV2SubType,
-} from "../../shared/models/interfaces/state"
-import { partition_and_prune_items_by_datetimes } from "../../shared/models/utils_datetime"
+} from "../../shared/wcomponent/interfaces/state"
+import { partition_and_prune_items_by_datetimes } from "../../shared/wcomponent/utils_datetime"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"

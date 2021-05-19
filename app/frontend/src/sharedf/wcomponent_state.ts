@@ -1,6 +1,6 @@
 import { percentage_to_string } from "../form/EditablePercentage"
-import type { StateValueAndPredictionsSet, WComponentStateV2SubType } from "../shared/models/interfaces/state"
-import { get_VAPs_ordered_by_prob } from "../shared/models/value_and_prediction/utils"
+import type { StateValueAndPredictionsSet, WComponentStateV2SubType } from "../shared/wcomponent/interfaces/state"
+import { get_VAPs_ordered_by_prob } from "../shared/wcomponent/value_and_prediction/utils"
 
 
 

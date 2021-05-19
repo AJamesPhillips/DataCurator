@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import "./DisplayValue.css"
-import type { UIStateValue } from "../../shared/models/interfaces/state"
+import type { UIStateValue } from "../../shared/wcomponent/interfaces/state"
 
 
 
