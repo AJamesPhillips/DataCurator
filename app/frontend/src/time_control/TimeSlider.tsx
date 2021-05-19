@@ -77,7 +77,13 @@ function _TimeSlider (props: Props)
                 else next_index = Math.floor(current_index.index)
             }
 
-            const new_datetime_ms = event_start_datetimes_ms[next_index]
+            let new_datetime_ms = event_start_datetimes_ms[next_index]
+            while (new_datetime_ms === handle_position_ms)
+            {
+                next_index += direction
+                new_datetime_ms = event_start_datetimes_ms[next_index]
+            }
+
             if (!new_datetime_ms) return
 
             change_datetime_ms(new_datetime_ms, true)
