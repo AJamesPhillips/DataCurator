@@ -45,7 +45,7 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         if (start_is_meta || end_is_meta) {
             if (start_is_meta && end_is_meta)
             {
-                start_type = "meta-effector"
+                start_type = "meta"
                 start_is_effector = true
             }
         }

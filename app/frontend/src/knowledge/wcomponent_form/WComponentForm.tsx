@@ -159,19 +159,23 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
-                connection_terminal_type="effector"
-                parent_wcomponent_id={wcomponent_id}
-                wcomponent={from_wcomponent}
-                on_update={from_id => upsert_wcomponent({ from_id })}
+                connection_terminal_description="From"
+                owner_wcomponent_id={wcomponent_id}
+                wcomponent_id={from_wcomponent && from_wcomponent.id}
+                connection_terminal_type={wcomponent.from_type}
+                on_update_id={from_id => upsert_wcomponent({ from_id })}
+                on_update_type={from_type => upsert_wcomponent({ from_type })}
             />
         </p>}
 
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
-                connection_terminal_type="effected"
-                parent_wcomponent_id={wcomponent_id}
-                wcomponent={to_wcomponent}
-                on_update={to_id => upsert_wcomponent({ to_id })}
+                connection_terminal_description="To"
+                owner_wcomponent_id={wcomponent_id}
+                wcomponent_id={to_wcomponent && to_wcomponent.id}
+                connection_terminal_type={wcomponent.to_type}
+                on_update_id={to_id => upsert_wcomponent({ to_id })}
+                on_update_type={to_type => upsert_wcomponent({ to_type })}
             />
         </p>}
 

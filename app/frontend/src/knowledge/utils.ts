@@ -71,13 +71,13 @@ export function wcomponent_existence_for_datetimes (wcomponent: WComponent, crea
 
 
 
-export function connection_terminal_type_to_location (type: ConnectionTerminalType | undefined, defalt: ConnectionLocationType): ConnectionLocationType
+export function connection_terminal_type_to_location (fromto: "from" | "to", type: ConnectionTerminalType): ConnectionLocationType
 {
-    if (!type) return defalt
+    if (type === "meta") return "left"
+    if (fromto === "to") return "bottom"
+    if (fromto === "from") return "top"
 
-    if (type === "effector") return "top"
-    if (type === "effected") return "bottom"
-    return "left"
+    return "left" // should never be reached
 }
 
 interface ConnectionTerminalLocationToTypeReturn
@@ -90,13 +90,13 @@ export function connection_terminal_location_to_type (location: ConnectionLocati
 {
     let type: ConnectionTerminalType
 
-    if (location === "top") type = "effector"
-    else if (location === "bottom") type = "effected"
-    else if (location === "left") type = "meta-effected"
-    else type = "meta-effector"
+    if (location === "top") type = "value"
+    else if (location === "bottom") type = "value"
+    else if (location === "left") type = "meta"
+    else type = "meta" // should never be reached
 
     const is_effector = connection_terminal_type_is_effector(type)
-    const is_meta = type === "meta-effector" || type === "meta-effected"
+    const is_meta = type === "meta"
 
     return { type, is_effector, is_meta }
 }
@@ -104,5 +104,5 @@ export function connection_terminal_location_to_type (location: ConnectionLocati
 
 export function connection_terminal_type_is_effector (connection_terminal_type: ConnectionTerminalType)
 {
-    return connection_terminal_type === "effector" || connection_terminal_type === "meta-effector"
+    return connection_terminal_type === "value"
 }

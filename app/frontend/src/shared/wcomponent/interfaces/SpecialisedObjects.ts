@@ -41,15 +41,15 @@ export type WComponentNode = WComponentNodeEvent
 
 
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
-export type ConnectionTerminalType = "effector" | "effected" | "meta-effector" | "meta-effected"
+export type ConnectionTerminalType = "meta" | "validity" | "value"
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
 export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>
 {
     type: WComponentConnectionType
     from_id: string
     to_id: string
-    from_type?: ConnectionTerminalType
-    to_type?: ConnectionTerminalType
+    from_type: ConnectionTerminalType
+    to_type: ConnectionTerminalType
 }
 export interface WComponentCausalConnection extends WComponentConnection
 {

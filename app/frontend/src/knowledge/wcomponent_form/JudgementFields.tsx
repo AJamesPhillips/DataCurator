@@ -55,11 +55,11 @@ function _JudgementFields (props: Props)
 
     return <p>
         <WComponentFromTo
-            connection_terminal_type="meta-effected"
-            connection_terminal_type_str="Target"
-            parent_wcomponent_id={wcomponent.id}
-            wcomponent={target_wcomponent}
-            on_update={judgement_target_wcomponent_id => upsert_wcomponent({ judgement_target_wcomponent_id })}
+            connection_terminal_description="Target"
+            owner_wcomponent_id={wcomponent.id}
+            wcomponent_id={target_wcomponent && target_wcomponent.id}
+            connection_terminal_type="meta"
+            on_update_id={judgement_target_wcomponent_id => upsert_wcomponent({ judgement_target_wcomponent_id })}
         />
 
         <p>

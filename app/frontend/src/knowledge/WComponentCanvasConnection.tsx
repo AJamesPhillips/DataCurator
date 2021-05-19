@@ -166,8 +166,8 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
     {
         from_node_position = wc_id_map[wcomponent.from_id]
         to_node_position = wc_id_map[wcomponent.to_id]
-        from_connection_location = connection_terminal_type_to_location(wcomponent.from_type, from_connection_location)
-        to_connection_location = connection_terminal_type_to_location(wcomponent.to_type, to_connection_location)
+        from_connection_location = connection_terminal_type_to_location("from", wcomponent.from_type)
+        to_connection_location = connection_terminal_type_to_location("to", wcomponent.to_type)
     }
     else if (wcomponent_is_judgement(wcomponent))
     {

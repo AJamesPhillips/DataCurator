@@ -1,4 +1,5 @@
 import {
+    ConnectionTerminalType,
     KnowledgeView,
     Perception,
     SpecialisedObjectsFromToServer,
@@ -8,6 +9,7 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
     wcomponent_has_VAPs as wcomponent_has_VAP_sets,
+    wcomponent_is_plain_connection,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/wcomponent/interfaces/state"
 import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
@@ -80,7 +82,25 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.event_at = wcomponent.event_at.map(parse_dates)
     }
 
+    if (wcomponent_is_plain_connection(wcomponent))
+    {
+        wcomponent.from_type = upgrade_connection_fromto_types(wcomponent.from_type)
+        wcomponent.to_type = upgrade_connection_fromto_types(wcomponent.to_type)
+    }
+
     return wcomponent
+}
+
+
+// Upgrade valid as of 2021-05-19
+function upgrade_connection_fromto_types (type?: string): ConnectionTerminalType
+{
+    if (type === "meta-effector") return "meta"
+    if (type === "meta-effected") return "meta"
+    if (type === "effector") return "value"
+    if (type === "effected") return "value"
+
+    return (type || "value") as ConnectionTerminalType
 }
 
 
