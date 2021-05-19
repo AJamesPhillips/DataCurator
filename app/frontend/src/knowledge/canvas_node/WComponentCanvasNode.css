@@ -1,4 +1,16 @@
-.node_state_value {
+.wcomponent_canvas_node.connectable_canvas_node .node_main_content
+{
+    height: 49px;
+}
+
+.node_upper_title
+{
+    font-size: 11px;
+    color: grey;
+}
+
+.node_title
+{
     min-height: 18px;
     display: block;
 }

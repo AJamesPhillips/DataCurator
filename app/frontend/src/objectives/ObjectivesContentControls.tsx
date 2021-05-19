@@ -6,7 +6,7 @@ import { TimeSlider } from "../time_control/TimeSlider"
 
 
 const map_state = (state: RootState) => ({
-    events: [], //state.derived.project_Objectives_meta.project_priority_events,
+    events: [],
 })
 
 const connector = connect(map_state)

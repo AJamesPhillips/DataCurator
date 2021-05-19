@@ -61,7 +61,7 @@ function _ObjectiveNode (props: Props)
 
     return <ConnectableCanvasNode
         position={get_objective_node_position(props)}
-        text={[
+        node_main_content={[
             <div>{props.type}</div>,
             <b>{props.title}</b>
         ]}

@@ -134,7 +134,6 @@ function _WComponentCanvasNode (props: Props)
     }
 
 
-    const parent_with_position_class_name = "connectable_canvas_node"
     const children: h.JSX.Element[] = []
     if (is_highlighted || node_is_moving)
     {
@@ -148,7 +147,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const extra_css_class = (
-        ` ${parent_with_position_class_name} `
+        ` wcomponent_canvas_node `
         + (node_is_moving ? " node_is_moving " : "")
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
@@ -161,8 +160,11 @@ function _WComponentCanvasNode (props: Props)
 
     return <ConnectableCanvasNode
         position={kv_entry}
-        text={[
-            <div className="node_state_value">
+        node_main_content={[
+            <div className="node_upper_title">
+                {wcomponent.type}
+            </div>,
+            <div className="node_title">
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>,
             <div className="node_info_segments_container">
@@ -193,7 +195,7 @@ function _WComponentCanvasNode (props: Props)
                 }))
             }
         }}
-        children={children}
+        other_children={children}
     />
 }
 

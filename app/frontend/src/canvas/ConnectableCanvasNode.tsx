@@ -9,7 +9,7 @@ import type { ConnectionLocationType } from "../shared/models/interfaces/Special
 
 
 const connection_position_left = 50
-const connection_position_bottom = 53
+const connection_position_bottom = 66
 const connection_diameter = 6
 const connection_radius = connection_diameter / 2
 const connection_top = 6
@@ -21,13 +21,13 @@ interface OwnProps
 {
     get_ref?: (ref: HTMLDivElement) => void
     position: CanvasPoint
-    text: h.JSX.Element[]
+    node_main_content: h.JSX.Element[]
     hidden?: boolean
     unlimited_width?: boolean
     glow?: false | "blue" | "orange"
     color?: string
     extra_css_class?: string
-    children?: h.JSX.Element[]
+    other_children?: h.JSX.Element[]
     on_pointer_down?: () => void
     on_click?: () => void
     on_pointer_enter?: () => void
@@ -48,11 +48,10 @@ export function ConnectableCanvasNode (props: OwnProps)
     }
     if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
 
-    const text_node_styles: h.JSX.CSSProperties =
+    const main_content_styles: h.JSX.CSSProperties =
     {
         boxShadow: props.glow ? `0px 0px 5px ${props.glow}` : "",
         backgroundColor: props.color || COLOURS.white,
-        height: 36,
     }
 
     const connection_style_top: h.JSX.CSSProperties =
@@ -86,12 +85,12 @@ export function ConnectableCanvasNode (props: OwnProps)
         on_click={props.on_click}
         on_pointer_enter={props.on_pointer_enter}
         on_pointer_leave={props.on_pointer_leave}
-        extra_css_class={" max_width200 " + (props.extra_css_class || "")}
+        extra_css_class={" connectable_canvas_node max_width200 " + (props.extra_css_class || "")}
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}
     >
-        <div className="node_main_content" style={text_node_styles}>
-            {props.text}
+        <div className="node_main_content" style={main_content_styles}>
+            {props.node_main_content}
         </div>
         <div
             className="connection_terminal"
@@ -111,7 +110,7 @@ export function ConnectableCanvasNode (props: OwnProps)
             onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("left", "down") }}
             onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("left", "up") }}
         />
-        {props.children}
+        {props.other_children}
     </CanvasNode>
 }
 

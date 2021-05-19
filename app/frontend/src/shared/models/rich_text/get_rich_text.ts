@@ -1,11 +1,12 @@
-import { WComponent, WComponentsById, wcomponent_is_process } from "../interfaces/SpecialisedObjects"
+import type { WComponent, WComponentsById } from "../interfaces/SpecialisedObjects"
 import { test } from "../../utils/test"
 import { get_wcomponent_state_value } from "../get_wcomponent_state_value"
-import type { WcIdCounterfactualsMap, WComponentCounterfactuals } from "../../../state/derived/State"
+import type { WcIdCounterfactualsMap } from "../../../state/derived/State"
 import { get_new_wcomponent_object } from "../../../knowledge/create_wcomponent_type"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
+
 
 
 const DEFAULT_MAX_DEPTH_LIMIT = 3
@@ -37,8 +38,8 @@ export function get_title (args: GetFieldTextArgs): string
 
     if (!args.rich_text) return wcomponent.title
 
-    const modified_title = get_type_specific_title(wcomponent)
-    const text = replace_value_in_text({ text: modified_title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
+    const title = wcomponent.title
+    const text = replace_value_in_text({ text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
 
     return replace_ids_in_text({ ...args, text })
 }
@@ -48,18 +49,6 @@ export function get_description (args: GetFieldTextArgs): string
     const text = args.wcomponent.description
 
     return replace_ids_in_text({ ...args, text })
-}
-
-
-
-function get_type_specific_title (wcomponent: WComponent)
-{
-    let { title, type } = wcomponent
-
-    if (type === "actor") title = "Actor: " + title
-    else if (wcomponent_is_process(wcomponent) && wcomponent.is_action) title = "Action: " + title
-
-    return title
 }
 
 

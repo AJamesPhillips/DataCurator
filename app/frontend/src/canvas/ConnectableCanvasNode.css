@@ -1,4 +1,9 @@
 
+.connectable_canvas_node .node_main_content
+{
+    height: 36px;
+}
+
 .connection_terminal {
     position: absolute;
     background-color: white;
