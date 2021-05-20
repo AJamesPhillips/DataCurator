@@ -1,3 +1,4 @@
+import type { TimeResolution } from "../../shared/utils/datetime"
 
 
 export interface BoundingRect
@@ -17,8 +18,6 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 }
 
 
-
-export type TimeResolution = "minute" | "hour" | "day"
 
 export interface DisplayState
 {

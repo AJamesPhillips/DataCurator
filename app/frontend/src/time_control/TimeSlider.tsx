@@ -7,6 +7,7 @@ import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
+import { floor_mseconds } from "../shared/utils/datetime"
 
 
 
@@ -22,6 +23,7 @@ interface OwnProps
 
 const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
     handle_datetime_ms: get_handle_ms(state),
+    time_resolution: state.display.time_resolution,
 })
 
 
@@ -31,7 +33,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _TimeSlider (props: Props)
 {
-    const event_start_datetimes_ms = props.events.map(event => event.datetime.getTime())
+    const event_start_datetimes_ms = props.events.map(event =>
+    {
+        let ms = event.datetime.getTime()
+        ms = floor_mseconds(ms, props.time_resolution)
+        return ms
+    })
 
     const earliest_ms = event_start_datetimes_ms[0]
     const latest_ms = event_start_datetimes_ms[event_start_datetimes_ms.length - 1]

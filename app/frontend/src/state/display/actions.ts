@@ -1,5 +1,7 @@
 import type { Action, AnyAction } from "redux"
-import type { BoundingRect, TimeResolution } from "./state"
+
+import type { TimeResolution } from "../../shared/utils/datetime"
+import type { BoundingRect } from "./state"
 
 
 

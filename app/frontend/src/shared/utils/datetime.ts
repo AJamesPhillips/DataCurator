@@ -2,14 +2,36 @@ import type { CreationContextState } from "../interfaces"
 
 
 
-const MSECONDS_PER_HOUR = 3600000
-const MSECONDS_PER_DAY = MSECONDS_PER_HOUR * 24
-export function floor_datetime (date: Date, resolution: "hour" | "day")
-{
-    let factor = MSECONDS_PER_HOUR
-    if (resolution === "day") factor = MSECONDS_PER_DAY
+export type TimeResolution = "minute" | "hour" | "day"
 
-    return new Date(Math.floor(date.getTime() / factor) * factor)
+
+const MSECONDS_PER_MINUTE = 60000
+const MSECONDS_PER_HOUR = 60 * MSECONDS_PER_MINUTE
+const MSECONDS_PER_DAY = MSECONDS_PER_HOUR * 24
+
+function time_resolution_to_factor (time_resolution: TimeResolution): number
+{
+    let factor = MSECONDS_PER_MINUTE
+    if (time_resolution === "hour") factor = MSECONDS_PER_HOUR
+    else if (time_resolution === "day") factor = MSECONDS_PER_DAY
+
+    return factor
+}
+
+
+
+export function floor_mseconds (ms: number, time_resolution: TimeResolution): number
+{
+    const factor = time_resolution_to_factor(time_resolution)
+
+    return Math.floor(ms / factor) * factor
+}
+
+
+
+export function floor_datetime (date: Date, time_resolution: TimeResolution)
+{
+    return new Date(floor_mseconds(date.getTime(), time_resolution))
 }
 
 
