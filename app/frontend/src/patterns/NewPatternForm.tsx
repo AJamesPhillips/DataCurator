@@ -1,22 +1,28 @@
 import { h, FunctionComponent } from "preact"
 import { useState, useCallback } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ItemSelect } from "../search/ItemSelect"
 
+import { ItemSelect } from "../search/ItemSelect"
 import type { Pattern, PatternAttribute, RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { EditablePatternAttributesList } from "./EditablePatternAttributesList"
+import type { CreationContextState } from "../shared/interfaces"
+
 
 
 interface OwnProps {}
 
 
+const map_state = (state: RootState) => ({
+    creation_context: state.creation_context,
+})
+
 const map_dispatch = {
-    add_pattern: (args: { name: string, content: string, attributes: PatternAttribute[] }) => ACTIONS.pattern.add_pattern(args)
+    add_pattern: (args: { name: string, content: string, attributes: PatternAttribute[] }, creation_context: CreationContextState) => ACTIONS.pattern.add_pattern(args, creation_context)
 }
 
 
-const connector = connect(null, map_dispatch)
+const connector = connect(map_state, map_dispatch)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
@@ -56,7 +62,7 @@ function _NewPatternForm (props: Props)
 
     function add_pattern ()
     {
-        props.add_pattern({ name, content, attributes })
+        props.add_pattern({ name, content, attributes }, props.creation_context)
         set_content("")
         set_attributes([])
     }

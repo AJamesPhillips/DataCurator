@@ -72,6 +72,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         rich_text: state.display.rich_text_formatting,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
+        creation_context: state.creation_context,
     }
 }
 
@@ -90,7 +91,7 @@ function _WComponentForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms } = props
+    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms, creation_context } = props
     const wcomponent_id = wcomponent.id
     const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
@@ -274,6 +275,7 @@ function _WComponentForm (props: Props)
                 <ValueList
                     values={wcomponent.values || []}
                     update_values={new_values => upsert_wcomponent({ values: new_values }) }
+                    creation_context={creation_context}
                 />
             </p>
 

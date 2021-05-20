@@ -30,6 +30,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         VAP_set_counterfactuals_map,
+        creation_context: state.creation_context,
     }
 }
 
@@ -61,6 +62,8 @@ function _ValueAndPredictionSets (props: Props)
         past_items={past_items}
         present_items={present_items}
         future_items={future_items}
+
+        creation_context={props.creation_context}
     />
 }
 

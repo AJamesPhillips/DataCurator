@@ -16,6 +16,7 @@ import {
     get_details2_for_single_VAP_set,
 } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
@@ -24,6 +25,7 @@ interface OwnProps
     subtype: WComponentStateV2SubType
     versioned_VAP_set: VersionedStateVAPsSet
     update_versioned_VAP_set: (versioned_VAP_set: VersionedStateVAPsSet) => void
+    creation_context: CreationContextState
 }
 
 
@@ -32,7 +34,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
 {
     const make_new_version = () =>
     {
-        const new_versioned_VAP_set = create_new_VAP_set_version(props.versioned_VAP_set)
+        const new_versioned_VAP_set = create_new_VAP_set_version(props.versioned_VAP_set, props.creation_context)
         props.update_versioned_VAP_set(new_versioned_VAP_set)
     }
 

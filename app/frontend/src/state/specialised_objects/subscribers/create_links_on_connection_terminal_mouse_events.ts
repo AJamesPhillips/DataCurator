@@ -58,6 +58,6 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         const from_type = start_is_effector ? start_type : end_type
         const to_type = start_is_effector ? end_type : start_type
 
-        create_wcomponent({ type: "causal_link", from_id, to_id, from_type, to_type })
+        create_wcomponent({ type: "causal_link", from_id, to_id, from_type, to_type }, state.creation_context)
     }
 }

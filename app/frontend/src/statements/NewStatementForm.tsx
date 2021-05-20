@@ -4,18 +4,25 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { LabelsList } from "../labels/LabelsList"
 import { ItemSelect } from "../search/ItemSelect"
+import type { CreationContextState } from "../shared/interfaces"
 import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+
 
 
 interface OwnProps {}
 
 
+const map_state = (state: RootState) => ({
+    creation_context: state.creation_context,
+})
+
 const map_dispatch = {
-    add_statement: (content: string, labels: string[]) => ACTIONS.statement.add_statement({ content, labels })
+    add_statement: (content: string, labels: string[], creation_context: CreationContextState) => ACTIONS.statement.add_statement({ content, labels }, creation_context)
 }
 
 
-const connector = connect(null, map_dispatch)
+const connector = connect(map_state, map_dispatch)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & {}
@@ -38,7 +45,7 @@ function _NewStatementForm (props: Props)
 
     function add_statement ()
     {
-        props.add_statement(content, labels)
+        props.add_statement(content, labels, props.creation_context)
         set_content("")
         set_labels([])
     }

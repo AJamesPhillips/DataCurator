@@ -21,6 +21,7 @@ import type { VAP_id_counterfactual_map, WComponentCounterfactual } from "../../
 import { is_counterfactual_active } from "../../shared/counterfactuals/active"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { get_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
@@ -45,6 +46,7 @@ const map_state = (state: RootState) => {
     return {
         allows_assumptions,
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
+        creation_context: state.creation_context,
     }
 }
 
@@ -68,6 +70,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictions (props: Props)
 {
+    const { creation_context } = props
+
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (props.subtype === "boolean" && VAPs.length >= 1) ? "only_one_VAP" : ""
 
@@ -81,6 +85,7 @@ function _ValueAndPredictions (props: Props)
             knowledge_view_id: props.knowledge_view_id,
             wcomponent_id: props.wcomponent_id,
             VAP_set_id: props.VAP_set_id,
+            creation_context,
         }),
         get_details: get_details(props.subtype),
         extra_class_names: "value_and_prediction",
@@ -129,11 +134,12 @@ interface GetSummaryArgs
     wcomponent_id: string | undefined
     VAP_set_id: string | undefined
     upsert_counterfactual: (counterfactual: WComponentCounterfactual, knowledge_view_id: string) => void
+    creation_context: CreationContextState
 }
 const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const { subtype, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
-        wcomponent_id, VAP_set_id, upsert_counterfactual } = args
+        wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context } = args
 
     const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
     const counterfactual_active = is_counterfactual_active(counterfactual)
@@ -216,7 +222,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                         target_wcomponent_id: wcomponent_id,
                         target_VAP_set_id: VAP_set_id,
                         target_VAP_id: VAP.id,
-                    }) as WComponentCounterfactual)
+                    }, creation_context) as WComponentCounterfactual)
 
                     cf = { ...cf, ...args }
                     upsert_counterfactual(cf, knowledge_view_id)

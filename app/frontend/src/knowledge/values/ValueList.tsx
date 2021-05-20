@@ -8,12 +8,14 @@ import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import { get_created_ats } from "../../shared/utils/datetime"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
 interface OwnProps {
     values: StateValueString[]
     update_values: (values: StateValueString[]) => void
+    creation_context: CreationContextState
 }
 
 
@@ -36,7 +38,7 @@ export function ValueList (props: OwnProps)
         item_descriptor="Value"
         get_id={get_id}
         item_top_props={item_top_props}
-        prepare_new_item={prepare_new_item}
+        prepare_new_item={prepare_new_item(props.creation_context)}
         update_items={items => props.update_values(items)}
         disable_collapsed={true}
     />
@@ -48,9 +50,9 @@ const get_created_at = (item: StateValueString) => item.created_at
 const get_custom_created_at = (item: StateValueString) => item.custom_created_at
 
 
-function prepare_new_item (): StateValueString
+const prepare_new_item = (creation_context: CreationContextState) => (): StateValueString =>
 {
-    const created_ats = get_created_ats()
+    const created_ats = get_created_ats(creation_context)
 
     return {
         id: get_new_value_id(),

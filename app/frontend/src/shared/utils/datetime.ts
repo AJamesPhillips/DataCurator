@@ -1,3 +1,5 @@
+import type { CreationContextState } from "../interfaces"
+
 
 
 const MSECONDS_PER_HOUR = 3600000
@@ -12,10 +14,17 @@ export function floor_datetime (date: Date, resolution: "hour" | "day")
 
 
 
-export function get_created_ats (): { created_at: Date, custom_created_at: Date | undefined }
+interface GetCreatedAtsReturn
+{
+    created_at: Date
+    custom_created_at: Date | undefined
+}
+export function get_created_ats (creation_context_state: CreationContextState): GetCreatedAtsReturn
 {
     const created_at = new Date()
-    const custom_created_at = undefined
+
+    const { use_creation_context, creation_context } = creation_context_state
+    const custom_created_at = use_creation_context ? creation_context.custom_created_at : undefined
 
     return { created_at, custom_created_at }
 }

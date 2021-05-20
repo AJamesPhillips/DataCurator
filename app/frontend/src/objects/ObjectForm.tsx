@@ -9,10 +9,11 @@ import { DeleteButton } from "../sharedf/DeleteButton"
 import { ACTIONS } from "../state/actions"
 import type { AddObjectProps, UpdateObjectProps } from "../state/objects/actions"
 import { convert_from_pattern_attributes } from "../state/objects/objects"
-import type { ObjectWithCache, PatternAttribute, Pattern, ObjectAttribute } from "../state/State"
+import type { ObjectWithCache, PatternAttribute, Pattern, ObjectAttribute, RootState } from "../state/State"
 import { LinkButton } from "../utils/Link"
 import { EditableObjectAttributesList } from "./EditableObjectAttributesList"
 import { object_content } from "./object_content"
+import type { CreationContextState } from "../shared/interfaces"
 
 
 
@@ -21,9 +22,14 @@ type OwnProps = {
 }
 
 
+const map_state = (state: RootState) => ({
+    creation_context: state.creation_context,
+})
+
+
 const map_dispatch = (dispatch: Dispatch) => ({
-    add_object: (args: AddObjectProps) => {
-        const action_add_object = ACTIONS.object.add_object(args)
+    add_object: (args: AddObjectProps, creation_context: CreationContextState) => {
+        const action_add_object = ACTIONS.object.add_object(args, creation_context)
         dispatch(action_add_object)
         dispatch(ACTIONS.routing.change_route({
             route: "objects",
@@ -37,7 +43,7 @@ const map_dispatch = (dispatch: Dispatch) => ({
 })
 
 
-const connector = connect(null, map_dispatch)
+const connector = connect(map_state, map_dispatch)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
@@ -97,7 +103,7 @@ function _ObjectForm (props: Props)
 
     function upsert_object ()
     {
-        props.object ? props.update_object(object) : props.add_object(object)
+        props.object ? props.update_object(object) : props.add_object(object, props.creation_context)
     }
 
     function reset_form_data ()

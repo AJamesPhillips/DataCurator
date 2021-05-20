@@ -1,5 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
+import type { CreationContextState } from "../../shared/interfaces"
 import { get_created_ats } from "../../shared/utils/datetime"
 import { get_new_object_id } from "../../shared/utils/ids"
 import type { CoreObject, CoreObjectAttribute, ObjectWithCache } from "../State"
@@ -19,9 +20,9 @@ export interface AddObjectProps
     labels: string[]
     external_ids: { [application: string]: string },
 }
-const add_object = (args: AddObjectProps): ActionAddObject =>
+const add_object = (args: AddObjectProps, creation_context: CreationContextState): ActionAddObject =>
 {
-    const { created_at: datetime_created } = get_created_ats()
+    const { created_at: datetime_created } = get_created_ats(creation_context)
     const id = get_new_object_id()
 
     return {

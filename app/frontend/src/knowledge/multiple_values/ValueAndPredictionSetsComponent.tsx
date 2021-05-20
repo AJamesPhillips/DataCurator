@@ -16,6 +16,7 @@ import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
 import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set, get_details2_for_single_VAP_set } from "./common"
 import { prepare_new_VAP_set } from "./utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
@@ -33,6 +34,8 @@ interface OwnProps
     past_items: StateValueAndPredictionsSet[]
     present_items: StateValueAndPredictionsSet[]
     future_items: StateValueAndPredictionsSet[]
+
+    creation_context: CreationContextState
 }
 
 
@@ -60,6 +63,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.future,
+        creation_context: props.creation_context,
     })
 
     const render_present_list_content = factory_render_list_content2({
@@ -70,6 +74,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.present,
+        creation_context: props.creation_context,
     })
 
     const render_past_list_content = factory_render_list_content2({
@@ -80,6 +85,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         VAP_set_counterfactuals_map,
         subtype,
         tense: Tense.past,
+        creation_context: props.creation_context,
     })
 
 
@@ -99,7 +105,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             on_click_header={undefined}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_VAP_set())}
+                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_VAP_set(props.creation_context))}
             />}
         />
 
@@ -196,6 +202,7 @@ interface FactoryRenderListContentArgs <U, V>
     VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
     subtype: WComponentStateV2SubType
     tense: Tense
+    creation_context: CreationContextState
 }
 function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateValueAndPredictionsSet, VersionedStateVAPsSet>)
 {
@@ -224,7 +231,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     get_summary={get_summary(subtype, args.VAP_set_counterfactuals_map)}
                     get_details={get_details(subtype, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
                     get_details2={get_details2(subtype)}
-                    get_details3={get_details3(subtype)}
+                    get_details3={get_details3(subtype, args.creation_context)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
                     expanded={expanded_item_rows}
@@ -286,7 +293,7 @@ const get_details2 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: 
 
 
 
-const get_details3 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details3 = (subtype: WComponentStateV2SubType, creation_context: CreationContextState) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     return <div className="VAP_set_details">
         <br />
@@ -295,6 +302,7 @@ const get_details3 = (subtype: WComponentStateV2SubType) => (versioned_VAP_set: 
             subtype={subtype}
             versioned_VAP_set={versioned_VAP_set}
             update_versioned_VAP_set={on_change}
+            creation_context={creation_context}
         />
         <br />
 

@@ -15,6 +15,7 @@ import { test } from "../../../shared/utils/test"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
+import type { CreationContextState } from "../../../shared/interfaces"
 
 
 
@@ -113,16 +114,18 @@ function run_tests ()
     const dt1 = new Date("2021-05-12")
     const dt2 = new Date("2021-05-13")
 
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+
     let wcomponent: WComponentNodeStateV2
     let VAPs: StateValueAndPrediction[]
     let tidied: WComponentNodeStateV2
     let tidied_VAPs: StateValueAndPrediction[]
 
     // Should sort VAP sets by ascending created_at
-    wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }) as WComponentNodeStateV2
+    wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(), id: "vps2", created_at: dt2, custom_created_at: undefined },
-        { ...prepare_new_VAP_set(), id: "vps1", created_at: dt1, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -130,13 +133,13 @@ function run_tests ()
 
 
 
-    wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }) as WComponentNodeStateV2
+    wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     VAPs = [
         { ...prepare_new_VAP(), id: "VAP1", relative_probability: 5 },
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },
     ]
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(), entries: VAPs },
+        { ...prepare_new_VAP_set(creation_context), entries: VAPs },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -158,7 +161,7 @@ function run_tests ()
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0, probability: 1 },
     ]
     let values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(), entries: VAPs },
+        { ...prepare_new_VAP_set(creation_context), entries: VAPs },
     ]
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 

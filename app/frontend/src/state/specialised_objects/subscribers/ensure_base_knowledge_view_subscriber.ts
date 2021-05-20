@@ -25,7 +25,7 @@ export function ensure_base_knowledge_view_subscriber (store: Store<RootState>)
             return
         }
 
-        const knowledge_view = create_new_knowledge_view({ title: "Base", is_base: true })
+        const knowledge_view = create_new_knowledge_view({ title: "Base", is_base: true }, state.creation_context)
         store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
     }
 }

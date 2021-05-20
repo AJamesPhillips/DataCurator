@@ -21,6 +21,7 @@ const map_state = (state: RootState) => ({
     ready: state.sync.ready,
     base_knowledge_view: state.derived.base_knowledge_view,
     other_knowledge_views: state.derived.other_knowledge_views,
+    creation_context: state.creation_context,
 })
 
 const map_dispatch = {
@@ -52,7 +53,7 @@ function _KnowledgeViewList (props: Props)
         items_count={knowledge_views.length}
         on_click_new_item={() =>
         {
-            const knowledge_view = create_new_knowledge_view({ title: make_default_title() })
+            const knowledge_view = create_new_knowledge_view({ title: make_default_title() }, props.creation_context)
             props.upsert_knowledge_view({ knowledge_view })
         }}
         content={factory_render_list_content({

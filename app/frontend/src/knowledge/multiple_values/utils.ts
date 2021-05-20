@@ -7,6 +7,7 @@ import type {
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
 import { get_created_ats } from "../../shared/utils/datetime"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
@@ -24,14 +25,14 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 
 
-export function prepare_new_VAP_set (): StateValueAndPredictionsSet
+export function prepare_new_VAP_set (creation_context: CreationContextState): StateValueAndPredictionsSet
 {
     const now = new Date()
 
     return {
         id: get_new_value_and_prediction_set_id(),
         version: 1,
-        ...get_created_ats(),
+        ...get_created_ats(creation_context),
         datetime: { min: now },
         entries: [prepare_new_VAP()],
     }
@@ -39,10 +40,10 @@ export function prepare_new_VAP_set (): StateValueAndPredictionsSet
 
 
 
-export function create_new_VAP_set_version (versioned_VAP_set: VersionedStateVAPsSet)
+export function create_new_VAP_set_version (versioned_VAP_set: VersionedStateVAPsSet, creation_context: CreationContextState)
 {
     const current_latest = versioned_VAP_set.latest
-    const latest = clone_VAP_set(current_latest)
+    const latest = clone_VAP_set(current_latest, creation_context)
     const older = [current_latest, ...versioned_VAP_set.older]
     const new_versioned_VAP_set = { latest, older }
 
@@ -50,12 +51,12 @@ export function create_new_VAP_set_version (versioned_VAP_set: VersionedStateVAP
 }
 
 
-function clone_VAP_set (VAP_set: StateValueAndPredictionsSet): StateValueAndPredictionsSet
+function clone_VAP_set (VAP_set: StateValueAndPredictionsSet, creation_context: CreationContextState): StateValueAndPredictionsSet
 {
     const clone: StateValueAndPredictionsSet = {
         ...VAP_set,
         version: VAP_set.version + 1,
-        ...get_created_ats(),
+        ...get_created_ats(creation_context),
         entries: VAP_set.entries.map(e => ({ ...e, explanation: "" })),
         shared_entry_values: {
             ...VAP_set.shared_entry_values,
@@ -129,7 +130,8 @@ function run_tests ()
             }
         ],
     }
-    new_versioned_VAP_set = create_new_VAP_set_version(versioned_VAP_set)
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+    new_versioned_VAP_set = create_new_VAP_set_version(versioned_VAP_set, creation_context)
 
     let latest = new_versioned_VAP_set.latest
     test(latest.created_at.getTime() >= date1.getTime(), true)

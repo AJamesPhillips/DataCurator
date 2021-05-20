@@ -1,3 +1,4 @@
+import type { CreationContextState } from "../shared/interfaces"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
@@ -8,12 +9,12 @@ import { config_store } from "../state/store"
 
 
 
-export function create_wcomponent (args: Partial<WComponent>)
+export function create_wcomponent (args: Partial<WComponent>, creation_context: CreationContextState)
 {
     const store = config_store()
     const state = store.getState()
 
-    const wcomponent = get_new_wcomponent_object(args)
+    const wcomponent = get_new_wcomponent_object(args, creation_context)
 
     const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 

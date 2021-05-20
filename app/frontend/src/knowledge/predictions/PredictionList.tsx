@@ -14,6 +14,7 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import { floor_datetime, get_created_ats } from "../../shared/utils/datetime"
+import type { CreationContextState } from "../../shared/interfaces"
 
 
 
@@ -27,6 +28,7 @@ interface OwnProps {
 const map_state = (state: RootState) => ({
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
+    creation_context: state.creation_context,
 })
 
 const connector = connect(map_state)
@@ -91,7 +93,7 @@ function _PredictionList (props: Props)
             on_click_header={undefined}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item())}
+                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(props.creation_context))}
             />}
         />
 
@@ -176,9 +178,9 @@ function get_details (item: Prediction, on_change?: (item: Prediction) => void):
 }
 
 
-function prepare_new_item (): Prediction
+function prepare_new_item (creation_context: CreationContextState): Prediction
 {
-    const created_ats = get_created_ats()
+    const created_ats = get_created_ats(creation_context)
     const custom_now = floor_datetime(created_ats.custom_created_at || created_ats.created_at, "day")
 
     return {
