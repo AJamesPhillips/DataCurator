@@ -238,7 +238,7 @@ function _WComponentForm (props: Props)
             <br />
         </div>
 
-        {wcomponent_has_existence_predictions(wcomponent) && <div>
+        {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
             <p style={{ color: "red" }}>
                 <PredictionList
                     item_descriptor="(Deprecated, please delete) Existence prediction"
