@@ -1,11 +1,5 @@
 
 
-export function get_datetime ()
-{
-    return new Date()
-}
-
-
 
 export function bounded (num: number, min: number, max: number): number
 {

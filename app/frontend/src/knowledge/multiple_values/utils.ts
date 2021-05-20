@@ -4,9 +4,9 @@ import type {
     VersionedStateVAPsSet,
     WComponentStateV2SubType,
 } from "../../shared/wcomponent/interfaces/state"
-import { get_today_str } from "../../shared/utils/date_helpers"
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
+import { get_created_ats } from "../../shared/utils/datetime"
 
 
 
@@ -31,8 +31,7 @@ export function prepare_new_VAP_set (): StateValueAndPredictionsSet
     return {
         id: get_new_value_and_prediction_set_id(),
         version: 1,
-        created_at: now,
-        custom_created_at: new Date(get_today_str()),
+        ...get_created_ats(),
         datetime: { min: now },
         entries: [prepare_new_VAP()],
     }
@@ -56,8 +55,7 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet): StateValueAndPred
     const clone: StateValueAndPredictionsSet = {
         ...VAP_set,
         version: VAP_set.version + 1,
-        created_at: new Date(),
-        custom_created_at: undefined,
+        ...get_created_ats(),
         entries: VAP_set.entries.map(e => ({ ...e, explanation: "" })),
         shared_entry_values: {
             ...VAP_set.shared_entry_values,

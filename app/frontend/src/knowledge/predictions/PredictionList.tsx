@@ -5,7 +5,6 @@ import type { Prediction } from "../../shared/wcomponent/interfaces/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
-import { get_today_str } from "../../shared/utils/date_helpers"
 import { partition_and_prune_items_by_datetimes } from "../../shared/wcomponent/utils_datetime"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
@@ -14,6 +13,7 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
+import { floor_datetime, get_created_ats } from "../../shared/utils/datetime"
 
 
 
@@ -178,13 +178,12 @@ function get_details (item: Prediction, on_change?: (item: Prediction) => void):
 
 function prepare_new_item (): Prediction
 {
-    const now = new Date()
-    const custom_now = new Date(get_today_str())
+    const created_ats = get_created_ats()
+    const custom_now = floor_datetime(created_ats.custom_created_at || created_ats.created_at, "day")
 
     return {
         id: get_new_prediction_id(),
-        created_at: now,
-        custom_created_at: custom_now,
+        ...created_ats,
         datetime: { min: custom_now },
         explanation: "",
         probability: 1,

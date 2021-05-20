@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
+import { get_created_ats } from "../../shared/utils/datetime"
 import { get_new_object_id } from "../../shared/utils/ids"
-import { get_datetime } from "../../utils/utils"
 import type { CoreObject, CoreObjectAttribute, ObjectWithCache } from "../State"
 
 
@@ -21,7 +21,7 @@ export interface AddObjectProps
 }
 const add_object = (args: AddObjectProps): ActionAddObject =>
 {
-    const datetime_created = get_datetime()
+    const { created_at: datetime_created } = get_created_ats()
     const id = get_new_object_id()
 
     return {

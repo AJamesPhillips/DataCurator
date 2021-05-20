@@ -1,4 +1,4 @@
-import { floor_datetime } from "../utils/datetime"
+import { get_created_ats } from "../utils/datetime"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
@@ -9,11 +9,9 @@ import type { WComponentBase } from "./interfaces/wcomponent"
 
 export function get_new_wcomponent_object (args: Partial<WComponent>)
 {
-    const created_at = new Date()
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
-        created_at,
-        custom_created_at: floor_datetime(created_at, "hour"),
+        ...get_created_ats(),
         title: "",
         description: "",
         type: "process",

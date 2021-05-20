@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
+import { get_created_ats } from "../shared/utils/datetime"
 import { get_new_pattern_id } from "../shared/utils/ids"
-import { get_datetime } from "../utils/utils"
 import type { Pattern, PatternAttribute } from "./State"
 
 
@@ -21,7 +21,7 @@ interface AddPatternArgs
 const add_pattern = (args: AddPatternArgs): ActionAddPattern =>
 {
     const id = get_new_pattern_id()
-    const datetime_created = get_datetime()
+    const { created_at: datetime_created } = get_created_ats()
 
     return {
         type: add_pattern_type,

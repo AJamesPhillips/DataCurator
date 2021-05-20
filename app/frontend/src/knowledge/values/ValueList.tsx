@@ -7,7 +7,7 @@ import { EditableList } from "../../form/editable_list/EditableList"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
-import { get_today_str } from "../../shared/utils/date_helpers"
+import { get_created_ats } from "../../shared/utils/datetime"
 
 
 
@@ -50,14 +50,13 @@ const get_custom_created_at = (item: StateValueString) => item.custom_created_at
 
 function prepare_new_item (): StateValueString
 {
-    const now = new Date()
+    const created_ats = get_created_ats()
 
     return {
         id: get_new_value_id(),
-        created_at: now,
-        custom_created_at: new Date(get_today_str()),
+        ...created_ats,
         value: "",
-        start_datetime: now,
+        start_datetime: created_ats.custom_created_at || created_ats.created_at,
         description: "",
     }
 }
