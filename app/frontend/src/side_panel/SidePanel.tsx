@@ -1,10 +1,11 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
-import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
 
+import { CreationContextSidePanel } from "../creation_context/CreationContextSidePanel"
+import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
+import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
+import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
 import type { RootState } from "../state/State"
-import { ViewsSidePanel } from "../views_sidepanel/ViewsSidePanel"
 import { Objects } from "./Objects"
 import { Patterns } from "./Patterns"
 import { Statements } from "./Statements"
@@ -38,9 +39,7 @@ function _SidePanel (props: Props)
 
         {props.route === "patterns" && <Patterns />}
 
-        {props.route === "creation_context" && <div>
-            Set Creation Context:
-        </div>}
+        {props.route === "creation_context" && <CreationContextSidePanel />}
 
         {props.route === "views" && <ViewsSidePanel />}
 

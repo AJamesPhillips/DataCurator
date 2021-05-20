@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeViewList } from "../knowledge_view/KnowledgeViewList"
+import { KnowledgeViewList } from "./KnowledgeViewList"
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
