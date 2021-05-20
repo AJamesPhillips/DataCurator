@@ -4,6 +4,7 @@ import type { RootState } from "../State"
 
 const root_state_keys: {[k in keyof RootState]: true} = {
     controls: true,
+    creation_context: true,
     statements: true,
     patterns: true,
     objects: true,

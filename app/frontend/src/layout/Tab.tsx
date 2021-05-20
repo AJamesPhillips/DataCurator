@@ -5,6 +5,7 @@ import "./Tab.css"
 import type { RootState } from "../state/State"
 import { Link } from "../utils/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
+import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 
 
 interface OwnProps {
@@ -18,7 +19,7 @@ function get_title (id: ROUTE_TYPES)
     else if (id === "statements") return "Statements"
     else if (id === "objects") return "Objects"
     else if (id === "patterns") return "Patterns"
-    else if (id === "creation_context") return "Creation Context"
+    else if (id === "creation_context") return <CreationContextTabTitle />
     else if (id === "views") return "Views"
     else if (id === "perceptions") return "Perceptions"
     else if (id === "wcomponents") return "Components"
