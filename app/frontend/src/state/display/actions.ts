@@ -1,5 +1,5 @@
 import type { Action, AnyAction } from "redux"
-import type { BoundingRect } from "./state"
+import type { BoundingRect, TimeResolution } from "./state"
 
 
 
@@ -41,7 +41,27 @@ export const is_update_canvas_bounding_rect = (action: AnyAction): action is Act
 
 
 
+interface SetTimeResolutionArgs
+{
+    time_resolution: TimeResolution
+}
+interface ActionSetTimeResolution extends Action, SetTimeResolutionArgs {}
+
+const set_time_resolution_type = "set_time_resolution"
+
+const set_time_resolution = (args: SetTimeResolutionArgs): ActionSetTimeResolution =>
+{
+    return { type: set_time_resolution_type, ...args }
+}
+
+export const is_set_time_resolution = (action: AnyAction): action is ActionSetTimeResolution => {
+    return action.type === set_time_resolution_type
+}
+
+
+
 export const display_actions = {
     toggle_rich_text_formatting,
     update_canvas_bounding_rect,
+    set_time_resolution,
 }
