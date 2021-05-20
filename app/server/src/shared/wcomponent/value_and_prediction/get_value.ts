@@ -3,6 +3,7 @@ import {
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
+import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
     WComponentNodeStateV2,
     UIStateValue,
@@ -22,6 +23,15 @@ import { get_VAPs_ordered_by_prob } from "./utils"
 
 
 
+const default_UI_state_value: UIStateValue = {
+    value: undefined,
+    probability: undefined,
+    conviction: undefined,
+    type: "single",
+}
+
+
+
 interface GetWcomponentStatev2ValueArgs
 {
     wcomponent: WComponentNodeStateV2
@@ -33,41 +43,95 @@ export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArg
 {
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
-    const { present_items } = partition_and_prune_items_by_datetimes({
-        items: wcomponent.values_and_prediction_sets, created_at_ms, sim_ms,
-    })
+    const { values_and_prediction_sets, subtype, boolean_true_str, boolean_false_str, } = wcomponent
 
-    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, wcomponent.subtype === "boolean")
-    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
-    return get_probable_VAP_display_values(wcomponent, counterfactual_VAPs)
+    const VAPs_represents_boolean = subtype === "boolean"
+
+    return get_VAP_set_value({
+        values_and_prediction_sets,
+        VAPs_represents_boolean,
+        wc_counterfactuals,
+        created_at_ms,
+        sim_ms,
+        boolean_true_str,
+        boolean_false_str,
+    })
 }
 
 
 
-function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all_VAPs: CounterfactualStateValueAndPrediction[]): UIStateValue
+interface GetWcomponentNonStatev2ValueArgs
 {
-    const { subtype } = wcomponent
-    const is_boolean = subtype === "boolean"
+    wcomponent: WComponent
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+export function get_wcomponent_non_statev2_value (args: GetWcomponentNonStatev2ValueArgs): UIStateValue
+{
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
-    if (!all_VAPs.length) return { value: undefined, type: "single" }
+    if (!wcomponent_has_VAP_sets(wcomponent)) return default_UI_state_value
+
+    const { values_and_prediction_sets, } = wcomponent
+
+    return get_VAP_set_value({
+        values_and_prediction_sets,
+        VAPs_represents_boolean: true,
+        wc_counterfactuals,
+        created_at_ms,
+        sim_ms,
+    })
+}
 
 
-    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, subtype)
+interface GetVAPSetValueArgs
+{
+    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
+    VAPs_represents_boolean: boolean
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+    boolean_true_str?: string
+    boolean_false_str?: string
+}
+function get_VAP_set_value (args: GetVAPSetValueArgs): UIStateValue
+{
+    const { values_and_prediction_sets, VAPs_represents_boolean, wc_counterfactuals,
+        created_at_ms, sim_ms, boolean_true_str, boolean_false_str } = args
 
-    const subtype_specific_VAPs = is_boolean ? VAPs_by_prob : VAPs_by_prob.filter(VAP => VAP.probability > 0)
+    const { present_items } = partition_and_prune_items_by_datetimes({
+        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
+    })
+
+    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represents_boolean)
+    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
+    const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
+    return get_probable_VAP_display_values(counterfactual_VAPs, VAPs_represents_boolean, boolean_true_str, boolean_false_str)
+}
+
+
+
+function get_probable_VAP_display_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represents_boolean: boolean, boolean_true_str: string | undefined, boolean_false_str: string | undefined): UIStateValue
+{
+    if (!all_VAPs.length) return default_UI_state_value
+
+
+    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represents_boolean)
+
+    const subtype_specific_VAPs = VAPs_represents_boolean ? VAPs_by_prob : VAPs_by_prob.filter(VAP => VAP.probability > 0)
     const filtered_VAPs = subtype_specific_VAPs.filter(({ conviction }) => conviction !== 0)
 
 
     let value_strings: string[] = []
-    if (is_boolean)
+    if (VAPs_represents_boolean)
     {
         // Should we return something that's neither true nor false if probability === 0.5?
         value_strings = filtered_VAPs.map(VAP =>
         {
             return VAP.probability > 0.5
-            ? (wcomponent.boolean_true_str || "True")
-            : (wcomponent.boolean_false_str || "False")
+            ? (boolean_true_str || "True")
+            : (boolean_false_str || "False")
         })
     }
     else
@@ -77,6 +141,8 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
 
 
     let value: string | undefined
+    let probability: number | undefined = undefined
+    let conviction: number | undefined = undefined
     let type: UIStateValueType = "single"
     let modifier: UIStateValueModifer | undefined = undefined
     if (value_strings.length === 0)
@@ -91,6 +157,9 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
         {
             modifier = "uncertain"
         }
+
+        probability = single_VAP.probability
+        conviction = single_VAP.conviction
     }
     else
     {
@@ -105,17 +174,17 @@ function get_probable_VAP_display_values (wcomponent: WComponentNodeStateV2, all
     if (cf) modifier = "assumed"
 
 
-    return { value, type, modifier }
+    return { value, probability, conviction, type, modifier }
 }
 
 
 
-function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], wcomponent_is_boolean: boolean)
+function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represents_boolean: boolean)
 {
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const subtype_specific_VAPs = wcomponent_is_boolean
+        const subtype_specific_VAPs = VAPs_represents_boolean
             ? VAP_set.entries.slice(0, 1)
             : VAP_set.entries
 
@@ -234,115 +303,116 @@ function run_tests ()
 
 
     display_value = statev2_value(wcomponent_other, [])
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [empty])
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [single])
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [multiple])
-    test(display_value, { value: "A80, A20", type: "multiple" })
+    test(display_value, { value: "A80, A20", probability: undefined, conviction: undefined, type: "multiple" })
     display_value = statev2_value(wcomponent_other, [multiple_with_1certain])
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [single, single])
-    test(display_value, { value: "A100, A100", type: "multiple" })
+    test(display_value, { value: "A100, A100", probability: undefined, conviction: undefined, type: "multiple" })
 
     display_value = statev2_value(wcomponent_other, [single, single, single])
-    test(display_value, { value: "A100, A100, (1 more)", type: "multiple" })
+    test(display_value, { value: "A100, A100, (1 more)", probability: undefined, conviction: undefined, type: "multiple" })
 
     display_value = statev2_value(wcomponent_other, [multiple, multiple])
-    test(display_value, { value: "A80, A80, (2 more)", type: "multiple" })
+    test(display_value, { value: "A80, A80, (2 more)", probability: undefined, conviction: undefined, type: "multiple" })
 
     // boolean
 
     display_value = statev2_value(wcomponent_boolean, [single])
-    test(display_value, { value: "True", type: "single" })
+    test(display_value, { value: "True", probability: 1, conviction: 1, type: "single" })
 
     display_value = statev2_value({ ...wcomponent_boolean, boolean_true_str: "Yes" }, [single])
-    test(display_value, { value: "Yes", type: "single" })
+    test(display_value, { value: "Yes", probability: 1, conviction: 1, type: "single" })
 
     // no chance
 
     display_value = statev2_value(wcomponent_other, [no_chance])
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     // no chance boolean
 
     display_value = statev2_value(wcomponent_boolean, [no_chance])
-    test(display_value, { value: "False", type: "single" })
+    test(display_value, { value: "False", probability: 0, conviction: 1, type: "single" })
 
     display_value = statev2_value({ ...wcomponent_boolean, boolean_false_str: "No" }, [no_chance])
-    test(display_value, { value: "No", type: "single" })
+    test(display_value, { value: "No", probability: 0, conviction: 1, type: "single" })
 
     // uncertainty for "boolean" subtype
 
     display_value = statev2_value(wcomponent_boolean, [uncertain_prob])
-    test(display_value, { value: "False", type: "single", modifier: "uncertain" })
+    test(display_value, { value: "False", probability: 0.2, conviction: 1, type: "single", modifier: "uncertain" })
 
     display_value = statev2_value(wcomponent_boolean, [uncertain_cn])
-    test(display_value, { value: "True", type: "single", modifier: "uncertain" })
+    test(display_value, { value: "True", probability: 1, conviction: 0.5, type: "single", modifier: "uncertain" })
 
     display_value = statev2_value(wcomponent_boolean, [certain_no_cn])
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     display_value = statev2_value(wcomponent_boolean, [single, certain_no_cn])
-    test(display_value, { value: "True", type: "single" })
+    test(display_value, { value: "True", probability: 1, conviction: 1, type: "single" })
 
     // uncertainty for "other" subtype
 
     display_value = statev2_value(wcomponent_other, [uncertain_prob])
-    test(display_value, { value: "A20", type: "single", modifier: "uncertain" })
+    test(display_value, { value: "A20", probability: 0.2, conviction: 1, type: "single", modifier: "uncertain" })
 
     display_value = statev2_value(wcomponent_other, [uncertain_cn])
-    test(display_value, { value: "A100c50", type: "single", modifier: "uncertain" })
+    test(display_value, { value: "A100c50", probability: 1, conviction: 0.5, type: "single", modifier: "uncertain" })
 
     display_value = statev2_value(wcomponent_other, [certain_no_cn])
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [single, certain_no_cn])
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
 
     // counterfactuals
 
     display_value = statev2_value(wcomponent_other, [single], [[{ probability: 0 }]])
-    test(display_value, { value: undefined, type: "single", modifier: "assumed" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single", modifier: "assumed" })
 
     // Single counterfactual with uncertainty
     display_value = statev2_value(wcomponent_other, [[vap_p80, vap_p20]], [[{ probability: 0 }, {}]])
-    test(display_value, { value: "A20", type: "single", modifier: "assumed" })
+    test(display_value, { value: "A20", probability: 0.2, conviction: 1, type: "single", modifier: "assumed" })
 
     // Counterfactuals to reverse option possibilities
     display_value = statev2_value(wcomponent_other, [[vap_p100, vap_p0]], [[{ probability: 0 }, { probability: 1 }]])
-    test(display_value, { value: vap_p0.value, type: "single", modifier: "assumed" })
+    test(display_value, { value: vap_p0.value, probability: 1, conviction: 1, type: "single", modifier: "assumed" })
 
     // Counterfactuals to invalidate all options
     display_value = statev2_value(wcomponent_other, [[vap_p100, vap_p0]], [[{ probability: 0 }, { probability: 0 }]])
-    test(display_value, { value: undefined, type: "single", modifier: "assumed" })
+    // might change this to probability: 0, conviction: 1, but needs more thought/examples first
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single", modifier: "assumed" })
 
     // values before, at, after a datetime.min, datetime.value, datetime.max
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt2 })
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt1 })
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt0 })
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt2 })
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt1 })
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt0 })
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt2 })
-    test(display_value, { value: "A100", type: "single" })
+    test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt1 })
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
     display_value = statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt0 })
-    test(display_value, { value: undefined, type: "single" })
+    test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
 }
 
 // run_tests()

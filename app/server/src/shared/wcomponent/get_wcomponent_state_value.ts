@@ -2,11 +2,11 @@ import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./inte
 import type { UIStateValue, WComponentNodeState } from "./interfaces/state"
 import type { WComponentCounterfactuals } from "./interfaces/uncertainty"
 import { get_created_at_ms } from "./utils_datetime"
-import { get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
+import { get_wcomponent_non_statev2_value, get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
 
 
 
-const default_value: UIStateValue = { value: undefined, type: "single" }
+const default_value: UIStateValue = { value: undefined, probability: undefined, conviction: undefined, type: "single" }
 
 
 interface GetWcomponentStateValueArgs
@@ -22,6 +22,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
 
     if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
     if (wcomponent_is_statev2(wcomponent)) return get_wcomponent_statev2_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+    else return get_wcomponent_non_statev2_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
     return default_value
 }
@@ -36,5 +37,5 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_
 
     if (!state_value_entry) return default_value
 
-    return { value: state_value_entry.value, type: "single" }
+    return { value: state_value_entry.value, probability: 1, conviction: 1, type: "single" }
 }

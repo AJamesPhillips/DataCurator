@@ -2,6 +2,7 @@ import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
 import type {
+    HasVAPSets,
     StateValueAndPredictionsSet,
     StateValueString,
     WComponentNodeState,
@@ -26,24 +27,34 @@ export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
 
-export interface WComponentNodeProcess extends WComponentNodeBase
+export interface WComponentNodeProcess extends WComponentNodeBase, WComponentNodeProcessBase
 {
-    is_action?: boolean
+    type: "process"
+}
+interface WComponentNodeProcessBase
+{
     // active: ProcessActiveStatus[]
     // end: TemporalUncertainty
 }
+
+export interface WComponentNodeAction extends WComponentNodeBase, WComponentNodeProcessBase
+{
+    type: "action"
+}
+
 
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeState
     | WComponentNodeStateV2
     | WComponentNodeProcess
+    | WComponentNodeAction
     | WComponentCounterfactual
 
 
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
 export type ConnectionTerminalType = "meta" | "validity" | "value"
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
-export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>
+export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentConnectionType
     from_id: string
@@ -80,6 +91,10 @@ export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WC
 export function wcomponent_is_process (wcomponent: WComponent): wcomponent is WComponentNodeProcess
 {
     return wcomponent.type === "process"
+}
+export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WComponentNodeAction
+{
+    return wcomponent.type === "action"
 }
 
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
@@ -132,7 +147,7 @@ export function wcomponent_has_values (wcomponent: WComponent): wcomponent is (W
     return (wcomponent as WComponentNodeState).values !== undefined
 }
 
-export function wcomponent_has_VAPs (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }

@@ -1,3 +1,4 @@
+import type { CreationContextState } from "../../interfaces"
 import { test } from "../../utils/test"
 import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_value } from "../get_wcomponent_state_value"
@@ -144,9 +145,11 @@ function test_replace_ids_in_text ()
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+
     const wcomponents_by_id = {
-        "123": get_new_wcomponent_object({ id: "123", title: "Was told @@456 is here" }),
-        "456": get_new_wcomponent_object({ id: "456", title: "Person A" }),
+        "123": get_new_wcomponent_object({ id: "123", title: "Was told @@456 is here" }, creation_context),
+        "456": get_new_wcomponent_object({ id: "456", title: "Person A" }, creation_context),
     }
 
     let result: string
@@ -191,6 +194,8 @@ function test_rendering_title ()
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+
     const get_statev2 = (args: { id: string, title: string }) =>
     {
         const VAP_set: StateValueAndPredictionsSet = {
@@ -213,7 +218,7 @@ function test_rendering_title ()
             type: "statev2",
             subtype: "boolean",
             values_and_prediction_sets: [VAP_set]
-        }) as WComponentNodeStateV2
+        }, creation_context) as WComponentNodeStateV2
     }
 
     const wcomponent1 = get_statev2({ id: "111", title: "aaa" })
