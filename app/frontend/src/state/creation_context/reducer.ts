@@ -19,6 +19,8 @@ export const creation_context_reducer = (state: RootState, action: AnyAction): R
     if (is_set_custom_created_at(action))
     {
         state = update_subsubstate(state, "creation_context", "creation_context", "custom_created_at", action.custom_created_at)
+
+        state = update_substate(state, "creation_context", "use_creation_context", true)
     }
 
 
