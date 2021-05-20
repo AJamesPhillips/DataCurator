@@ -27,3 +27,11 @@ export interface DisplayState
     canvas_bounding_rect: BoundingRect | undefined
     time_resolution: TimeResolution
 }
+
+
+const _time_resolution_types: {[P in TimeResolution]: true} = {
+    minute: true,
+    hour: true,
+    day: true,
+}
+export const time_resolution_types: TimeResolution[] = Object.keys(_time_resolution_types) as any
