@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { ACTIONS } from "../state/actions"
 
+import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 
 

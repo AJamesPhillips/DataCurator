@@ -46,3 +46,8 @@
 {
     text-align: right;
 }
+
+.no_entry
+{
+    border: thin solid grey;
+}

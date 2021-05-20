@@ -29,9 +29,10 @@ export function EditableCustomDateTime (props: OwnProps)
     // Ensure that if the props change, the working_value is updated
     useEffect(() => set_working_value_str(working_value_str_from_props), [working_value_str_from_props])
 
+    const no_entry_class_name = working_value_str ? "" : " no_entry "
 
     const { on_change } = props
-    if (!on_change) return <div>{working_value_str}</div>
+    if (!on_change) return <div className={no_entry_class_name}>{working_value_str}</div>
 
 
     const { invariant_value, value, show_now_shortcut_button = false, show_today_shortcut_button = true } = props
@@ -41,7 +42,7 @@ export function EditableCustomDateTime (props: OwnProps)
     const valid = !!(working_value_str && valid_date(working_value_date))
 
 
-    const class_name = "editable_field " + (valid ? "" : "invalid ")
+    const class_name = "editable_field " + (valid ? "" : "invalid ") + no_entry_class_name
     const title = "Created at " + (props.value ? "(custom)" : "")
 
     return <div className={class_name} title={title}>
