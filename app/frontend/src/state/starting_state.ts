@@ -136,6 +136,7 @@ export function get_starting_state (): RootState
 
     const starting_state: RootState = {
         controls: { linked_datetime_sliders: true },
+        creation_context: { use_creation_context: false, creation_context: {} },
         statements,
         patterns,
         objects,

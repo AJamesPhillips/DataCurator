@@ -1,5 +1,6 @@
 import type { AnyAction } from "redux"
 import type { ControlsState } from "./controls/state"
+import type { CreationContextState } from "./creation_context/state"
 
 import type { DerivedState } from "./derived/State"
 import type { DisplayState } from "./display/state"
@@ -119,6 +120,7 @@ export interface RootStateCore
 export interface RootState extends RootStateCore
 {
     controls: ControlsState
+    creation_context: CreationContextState
     derived: DerivedState
     display: DisplayState
     global_keys: GlobalKeyPress
