@@ -50,7 +50,7 @@ export function config_store (args: ConfigStoreArgs = {})
         ;(window as any).debug_state = state
 
         // for now, very simple logic for when to save
-        if (!state.sync.ready) return
+        if (!state.sync.ready || !load_state_from_server) return
 
         save_state(store.dispatch, state)
     }

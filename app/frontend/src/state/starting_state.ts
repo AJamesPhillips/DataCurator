@@ -146,7 +146,7 @@ export function get_starting_state (): RootState
             last_toggle_rich_text_formatting_time_stamp: undefined,
             rich_text_formatting: false,
             canvas_bounding_rect: undefined,
-            time_resolution: "day",
+            time_resolution: "hour",
         },
         sync: { ready: false, saving: false, status: "LOADING" },
         routing,

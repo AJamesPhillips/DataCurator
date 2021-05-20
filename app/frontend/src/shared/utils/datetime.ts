@@ -20,7 +20,7 @@ function time_resolution_to_factor (time_resolution: TimeResolution): number
 
 
 
-export function floor_mseconds (ms: number, time_resolution: TimeResolution): number
+export function floor_mseconds_to_resolution (ms: number, time_resolution: TimeResolution): number
 {
     const factor = time_resolution_to_factor(time_resolution)
 
@@ -29,9 +29,9 @@ export function floor_mseconds (ms: number, time_resolution: TimeResolution): nu
 
 
 
-export function floor_datetime (date: Date, time_resolution: TimeResolution)
+export function floor_datetime_to_resolution (date: Date, time_resolution: TimeResolution)
 {
-    return new Date(floor_mseconds(date.getTime(), time_resolution))
+    return new Date(floor_mseconds_to_resolution(date.getTime(), time_resolution))
 }
 
 

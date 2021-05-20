@@ -1,11 +1,13 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 
 import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"
-import { useEffect, useState } from "preact/hooks"
+import { useState } from "preact/hooks"
 import { Button } from "../sharedf/Button"
 import { date2str, get_today_str } from "../shared/utils/date_helpers"
-import { test } from "../shared/utils/test"
+import { connect, ConnectedProps } from "react-redux"
+import type { RootState } from "../state/State"
+import { floor_datetime_to_resolution, TimeResolution } from "../shared/utils/datetime"
 
 
 
@@ -19,27 +21,31 @@ interface OwnProps
 }
 
 
+const map_state = (state: RootState) => ({
+    time_resolution: state.display.time_resolution,
+})
+
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
 const shorten_if_only_days = true
 
-export function EditableCustomDateTime (props: OwnProps)
+function _EditableCustomDateTime (props: Props)
 {
-    const working_value_str_from_props = props_to_str_value(props)
-    const [working_value_str, set_working_value_str] = useState(working_value_str_from_props)
+    const display_value = props_to_str_value(props)
     const [editing, set_editing] = useState(false)
-    // Ensure that if the props change, the working_value is updated
-    useEffect(() => set_working_value_str(working_value_str_from_props), [working_value_str_from_props])
 
-    const no_entry_class_name = working_value_str ? "" : " no_entry "
+    const no_entry_class_name = display_value ? "" : " no_entry "
 
     const { on_change } = props
-    if (!on_change) return <div className={no_entry_class_name}>{working_value_str}</div>
+    if (!on_change) return <div className={no_entry_class_name}>{display_value}</div>
 
 
-    const { invariant_value, value, show_now_shortcut_button = false, show_today_shortcut_button = true } = props
+    const { invariant_value, show_now_shortcut_button = false, show_today_shortcut_button = true } = props
 
 
-    const working_value_date = correct_datetime_for_local_time_zone(working_value_str)
-    const valid = !!(working_value_str && valid_date(working_value_date))
+    const valid = is_value_valid(display_value)
 
 
     const class_name = "editable_field " + (valid ? "" : "invalid ") + no_entry_class_name
@@ -48,41 +54,59 @@ export function EditableCustomDateTime (props: OwnProps)
     return <div className={class_name} title={title}>
         <input
             type="text"
-            value={working_value_str}
-            onFocus={e => {
-                const { new_working_value } = handle_on_focus(e, props_value(props))
-                set_working_value_str(new_working_value)
-                set_editing(true)
-            }}
-            onChange={e => set_working_value_str(e.currentTarget.value)}
-            onBlur={() => {
-                const { new_value, new_working_value } = handle_on_blur({ valid, working_value_date, invariant_value, value })
+            value={display_value}
+            onFocus={() => set_editing(true)}
+            ref={r =>
+            {
+                if (!r || !editing) return
+                // Because we do not dispatch any state changes to react on changing the value
+                // this code block should only be run **once** on the render cycle immediately
+                // after focusing the input element
+                const new_working_value = date_to_string(props_value(props), false)
+                r.value = new_working_value
 
-                set_working_value_str(new_working_value)
-                if (new_value !== false) on_change(new_value)
+                r.setSelectionRange(0, r.value.length)
+            }}
+            onChange={e =>
+            {
+                const valid = is_value_valid(e.currentTarget.value)
+                if (valid) e.currentTarget.classList.remove("invalid")
+                else e.currentTarget.classList.add("invalid")
+            }}
+            onBlur={e => {
+                const working_value = e.currentTarget.value
+                const new_value = handle_on_blur({ working_value, invariant_value })
+
+                if (new_value) on_change(new_value)
                 set_editing(false)
             }}
         />
         {editing && show_now_shortcut_button && <NowButton
-            set_working_value_str={set_working_value_str}
             on_change={on_change}
         />}
         {editing && show_today_shortcut_button && <Button
             value="Today"
             on_pointer_down={() => {
                 const today_dt_str = get_today_str()
-                set_working_value_str(today_dt_str)
                 on_change(new Date(today_dt_str))
             }}
         />}
     </div>
 }
 
+export const EditableCustomDateTime = connector(_EditableCustomDateTime) as FunctionalComponent<OwnProps>
+
+
+
+function is_value_valid (str: string)
+{
+    const working_value_date = correct_datetime_for_local_time_zone(str)
+    return valid_date(working_value_date)
+}
 
 
 interface NowButtonProps
 {
-    set_working_value_str: (s: string) => void
     on_change: (new_date: Date | undefined) => void
 }
 function NowButton (props: NowButtonProps)
@@ -94,7 +118,6 @@ function NowButton (props: NowButtonProps)
             const datetime = new Date(new Date().getTime() + 30000)
 
             const new_working_value = date2str(datetime, "yyyy-MM-dd hh:mm")
-            props.set_working_value_str(new_working_value)
             props.on_change(new Date(new_working_value))
         }}
     />
@@ -102,110 +125,88 @@ function NowButton (props: NowButtonProps)
 
 
 
-function props_value (props: OwnProps)
+function props_value (args: { invariant_value: Date | undefined, value: Date | undefined })
 {
-    const value = props.value || props.invariant_value
+    const value = args.value || args.invariant_value
     return value
 }
 
 
 
-function props_to_str_value (props: OwnProps)
+interface PropsToStrValueArgs
 {
-    const value = props_value(props)
-    const working_value = date_to_string(value, shorten_if_only_days)
-    return working_value
+    invariant_value: Date | undefined
+    value: Date | undefined
+    time_resolution: TimeResolution
 }
-
-
-
-function handle_on_focus (e: h.JSX.TargetedFocusEvent<HTMLInputElement>, value: Date | undefined)
+function props_to_str_value (args: PropsToStrValueArgs)
 {
-    const new_working_value = date_to_string(value, false)
-    e.currentTarget.value = new_working_value
-    // Disabled for _?_ product reasoin
-    // Enabled because when you want to clear a whole date it is alot easier to do. -- 2021-04-26 12:11
-    e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-    return { new_working_value }
+    const value = props_value(args)
+    const value_to_resolution = value ? floor_datetime_to_resolution(value, args.time_resolution) : value
+    const working_value = date_to_string(value_to_resolution, shorten_if_only_days)
+    return working_value
 }
 
 
 
 interface HandleOnBlurArgs
 {
-    valid: boolean
-    working_value_date: Date
     invariant_value: Date | undefined
-    value: Date | undefined
+    working_value: string
 }
-interface HandleOnBlurReturn
+function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
 {
-    new_value: Date | undefined | false
-    new_working_value: string
-}
-function handle_on_blur (args: HandleOnBlurArgs): HandleOnBlurReturn
-{
-    const { valid, working_value_date, invariant_value, value } = args
+    const { working_value, invariant_value } = args
 
-    let new_value: Date | undefined | false
-    let new_working_value = date_to_string(value || invariant_value, shorten_if_only_days)
+    let new_value: Date | undefined = correct_datetime_for_local_time_zone(working_value)
 
-    if (!valid)
+    if (!is_value_valid(working_value))
     {
         // Custom date is not valid
         new_value = undefined
     }
-    else if (working_value_date.getTime() === (invariant_value && invariant_value.getTime()))
+    else if (new_value.getTime() === (invariant_value && invariant_value.getTime()))
     {
         // Custom date is not needed
         new_value = undefined
     }
-    else
-    {
-        const date_value_str = date_to_string(working_value_date, shorten_if_only_days)
-        // Still need to set this in case it was a date with only days for the user's timezone,
-        // i.e. if it was "2021-04-16 00:00", this needs to be re-rendered as "2021-04-16"
-        new_working_value = date_value_str
 
-        if (working_value_date.getTime() === value?.getTime()) new_value = false
-        else new_value = working_value_date
-    }
-
-    return { new_value, new_working_value }
+    return new_value
 }
 
 
 
-function run_tests ()
-{
-    console. log("running tests of handle_on_blur")
 
-    let valid: boolean
-    let invariant_value: Date | undefined
-    let value: Date | undefined
-    let working_value_date: Date
-    let result: HandleOnBlurReturn
+// function run_tests ()
+// {
+//     console. log("running tests of handle_on_blur")
 
-
-    valid = true
-    working_value_date = new Date("2020-01-01")
-    invariant_value = undefined
-    value = new Date("2020-01-01")
-    result = handle_on_blur({ valid, working_value_date, invariant_value, value })
-    test(result.new_value, false)
-    test(result.new_working_value, "2020-01-01")
+//     let valid: boolean
+//     let invariant_value: Date | undefined
+//     let value: Date | undefined
+//     let working_value_date: Date
+//     let result: HandleOnBlurReturn
 
 
-    valid = true
-    invariant_value = undefined
-    value = new Date("2021-04-25 08:37:41")
-    working_value_date = new Date("2021-04-25 08:37")
-    result = handle_on_blur({ valid, working_value_date, invariant_value, value })
+//     valid = true
+//     working_value_date = new Date("2020-01-01")
+//     invariant_value = undefined
+//     value = new Date("2020-01-01")
+//     result = handle_on_blur({ valid, working_value_date, invariant_value, value })
+//     test(result.new_value, false)
+//     test(result.new_working_value, "2020-01-01")
 
-    // Note no seconds
-    const new_str_datetime = "2021-04-25 08:37"
-    test(result.new_value, new Date(new_str_datetime))
-    test(result.new_working_value, new_str_datetime)
-}
+
+//     valid = true
+//     invariant_value = undefined
+//     value = new Date("2021-04-25 08:37:41")
+//     working_value_date = new Date("2021-04-25 08:37")
+//     result = handle_on_blur({ valid, working_value_date, invariant_value, value })
+
+//     // Note no seconds
+//     const new_str_datetime = "2021-04-25 08:37"
+//     test(result.new_value, new Date(new_str_datetime))
+//     test(result.new_working_value, new_str_datetime)
+// }
 
 // run_tests()

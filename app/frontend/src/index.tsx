@@ -55,7 +55,7 @@ if (root) {
   }
   else if (document.location.pathname === "/sandbox/editable_custom_datetime")
   {
-    render(<SandboxEditableCustomDateTime />, root)
+    render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
   }
   else if (document.location.pathname === "/sandbox")
   {

@@ -7,7 +7,7 @@ import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
-import { floor_mseconds } from "../shared/utils/datetime"
+import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
 
 
 
@@ -36,7 +36,7 @@ function _TimeSlider (props: Props)
     const event_start_datetimes_ms = props.events.map(event =>
     {
         let ms = event.datetime.getTime()
-        ms = floor_mseconds(ms, props.time_resolution)
+        ms = floor_mseconds_to_resolution(ms, props.time_resolution)
         return ms
     })
 

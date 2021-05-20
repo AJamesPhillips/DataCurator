@@ -13,7 +13,7 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import { floor_datetime, get_created_ats } from "../../shared/utils/datetime"
+import { floor_datetime_to_resolution, get_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/interfaces"
 
 
@@ -181,7 +181,7 @@ function get_details (item: Prediction, on_change?: (item: Prediction) => void):
 function prepare_new_item (creation_context: CreationContextState): Prediction
 {
     const created_ats = get_created_ats(creation_context)
-    const custom_now = floor_datetime(created_ats.custom_created_at || created_ats.created_at, "day")
+    const custom_now = floor_datetime_to_resolution(created_ats.custom_created_at || created_ats.created_at, "day")
 
     return {
         id: get_new_prediction_id(),
