@@ -1,35 +1,57 @@
 
-.connection_line
+.connection_container
 {
-    stroke: black;
-    fill: transparent;
     pointer-events: none;
 }
+
+.connection_line_background
+{
+    fill: transparent;
+    stroke: transparent;
+    stroke-width: 10px;
+}
+
+.connection_line
+{
+    fill: transparent;
+    stroke: black;
+}
+
 .connection_end
 {
     fill: black;
 }
-.connection
-{
-    pointer-events: none;
-}
-.connection_line.mouseable, .connection_end.mouseable
+
+
+
+.connection_line_background.mouseable, .connection_end.mouseable
 {
     cursor: pointer;
-    pointer-events: initial;
+    pointer-events: stroke;
 }
-.connection_line.mouseable:hover
+
+
+
+.connection_line_background.hovered
+{
+    stroke: rgba(0,0,0,0.2);
+}
+
+.connection_line.hovered
 {
     stroke-width: 3px;
     stroke-dasharray: 6px 3px;
     stroke-opacity: 1 !important;
     filter: inherit !important;
 }
-.connection_end.mouseable:hover
+
+.connection_end.hovered
 {
     fill-opacity: 1 !important;
     stroke-opacity: 1 !important;
 }
+
+
 
 .connection_end.noop_end
 {

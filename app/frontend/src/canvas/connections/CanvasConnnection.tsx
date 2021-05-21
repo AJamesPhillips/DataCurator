@@ -5,6 +5,7 @@ import type { ConnectionLocationType } from "../../shared/wcomponent/interfaces/
 import type { CanvasPoint } from "../interfaces"
 import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
+import { useState } from "preact/hooks"
 
 
 
@@ -23,6 +24,8 @@ interface OwnProps {
 
 export function CanvasConnnection (props: OwnProps)
 {
+    const [hovered, set_hovered] = useState(false)
+
     const { from_node_position, to_node_position, from_connection_location, to_connection_location } = props
     if (!from_node_position || !to_node_position) return null
 
@@ -41,12 +44,19 @@ export function CanvasConnnection (props: OwnProps)
         filter: `url(#blur_filter_${Math.round(blur)})`,
     }
 
-    const extra_classes = (props.on_click ? " mouseable " : "") + (props.is_highlighted ? " highlighted " : "")
+    const extra_line_classes = `${props.is_highlighted ? "highlighted" : ""} ${hovered ? "hovered" : ""}`
+    const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
-    return <g className="connection" onClick={props.on_click} style={{ display: props.hidden ? "none" : "" }}>
+    return <g className="connection_container" onClick={props.on_click} style={{ display: props.hidden ? "none" : "" }}>
         <path
-            className={"connection_line " + extra_classes}
-            d={`M ${x1} ${-y1} C ${x1 + control_point1.x} ${-y1 - control_point1.y}, ${x2 + control_point2.x} ${-y2 - control_point2.y}, ${x2} ${-y2}`}
+            className={"connection_line_background " + extra_background_classes}
+            d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}
+            onPointerOver={() => set_hovered(true)}
+            onPointerOut={() => set_hovered(false)}
+        />
+        <path
+            className={"connection_line " + extra_line_classes}
+            d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}
             style={style_line}
         />
 
