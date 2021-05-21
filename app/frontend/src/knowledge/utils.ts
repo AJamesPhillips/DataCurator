@@ -82,7 +82,7 @@ export function connection_terminal_type_to_location (fromto: "from" | "to", typ
 {
     if (type === "meta") return "left"
     if (fromto === "to") return "bottom"
-    if (fromto === "from") return "top"
+    if (fromto === "from") return "right"
 
     return "left" // should never be reached
 }
@@ -100,6 +100,7 @@ export function connection_terminal_location_to_type (location: ConnectionLocati
     if (location === "top") type = "value"
     else if (location === "bottom") type = "value"
     else if (location === "left") type = "meta"
+    else if (location === "right") type = "value"
     else type = "meta" // should never be reached
 
     const is_effector = connection_terminal_type_is_effector(type)

@@ -15,6 +15,8 @@ const connection_radius = connection_diameter / 2
 const connection_top = 6
 const connection_left_left = 6
 const connection_left_top = connection_position_bottom / 2
+const connection_right_right = 150
+const connection_right_top = connection_position_bottom / 2
 
 
 interface OwnProps
@@ -73,6 +75,12 @@ export function ConnectableCanvasNode (props: OwnProps)
         left: connection_left_left,
         top: connection_left_top,
     }
+    const connection_style_right: h.JSX.CSSProperties =
+    {
+        ...connection_style_top,
+        left: connection_right_right,
+        top: connection_right_top,
+    }
 
     const {
         pointerupdown_on_connection_terminal = () => {},
@@ -110,6 +118,12 @@ export function ConnectableCanvasNode (props: OwnProps)
             onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("left", "down") }}
             onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("left", "up") }}
         />
+        <div
+            className="connection_terminal"
+            style={connection_style_right}
+            onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("right", "down") }}
+            onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("right", "up") }}
+        />
         {props.other_children}
     </CanvasNode>
 }
@@ -119,11 +133,12 @@ export function ConnectableCanvasNode (props: OwnProps)
 export function _get_connection_point (objective_node_position: CanvasPoint, location: ConnectionLocationType): CanvasPoint
 {
     const top_offset = location === "top" ? connection_top : (
-        location === "bottom" ? connection_position_bottom : (connection_left_top + connection_radius))
+        location === "bottom" ? connection_position_bottom : (
+        location === "left" ? connection_left_top + connection_radius : connection_right_top + connection_radius ))
 
-    const left_offset = location === "left"
-        ? connection_left_left + connection_radius
-        : connection_position_left + connection_radius + 1
+    const left_offset = location === "left" ? connection_left_left + connection_radius : (
+        location === "right" ? connection_right_right + connection_radius
+        : connection_position_left + connection_radius + 1)
 
     return {
         left: objective_node_position.left + left_offset + 1,
