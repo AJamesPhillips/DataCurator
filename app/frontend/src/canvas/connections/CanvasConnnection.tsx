@@ -67,6 +67,7 @@ export function CanvasConnnection (props: OwnProps)
             end_angle={end_angle}
             opacity={opacity}
             blur={blur}
+            is_hovered={hovered}
             is_highlighted={props.is_highlighted}
         />
     </g>

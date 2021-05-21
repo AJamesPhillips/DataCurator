@@ -21,13 +21,14 @@ interface OwnProps
     end_angle: number
     opacity: number
     blur: number
+    is_hovered: boolean
     is_highlighted: boolean | undefined
 }
 
 export function ConnectionEnd (props: OwnProps)
 {
-    const { type, x, y, end_angle, opacity, blur } = props
-    let extra_classes = props.is_highlighted ? " highlighted " : ""
+    const { type, x, y, end_angle, opacity, blur, is_hovered, is_highlighted } = props
+    let extra_classes = `${is_highlighted ? "highlighted" : ""} ${is_hovered ? "hovered" : ""}`
 
     const style_opacity = opacity * (1 - (blur / 100))
     const style: h.JSX.CSSProperties = {
