@@ -238,6 +238,8 @@ class _Canvas extends Component<Props>
                 onPointerDown={this.on_pointer_down}
                 onPointerMove={this.on_pointer_move}
                 onPointerUp={this.on_pointer_up}
+                // When pointer leaves the screen or canvas cancel the pointer being down
+                onPointerLeave={this.on_pointer_up}
                 onWheel={this.on_wheel}
                 onDragOver={e =>
                 {
