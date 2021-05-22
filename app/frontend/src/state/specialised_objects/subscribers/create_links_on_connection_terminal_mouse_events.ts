@@ -2,6 +2,7 @@ import type { Store } from "redux"
 
 import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
 import { connection_terminal_location_to_type } from "../../../knowledge/utils"
+import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import { is_pointerup_on_connection_terminal } from "../meta_wcomponents/selecting/actions"
@@ -58,6 +59,7 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         const from_type = start_is_effector ? start_type : end_type
         const to_type = start_is_effector ? end_type : start_type
 
-        create_wcomponent({ type: "causal_link", from_id, to_id, from_type, to_type }, state.creation_context)
+        const wcomponent: Partial<WComponent> = { type: "causal_link", from_id, to_id, from_type, to_type }
+        create_wcomponent({ wcomponent, creation_context: state.creation_context })
     }
 }

@@ -21,7 +21,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _CreateNewWComponent (props: Props)
 {
-    const { creation_context } = props
+    const { a_selected_wcomponent_id: judgement_target_wcomponent_id, creation_context } = props
 
     return <div class="create_mew_wcomponent">
         <p>
@@ -52,9 +52,9 @@ function _CreateNewWComponent (props: Props)
             extra_class_names="creation_option left"
             size="normal"
             on_pointer_down={() => create_wcomponent({
-                type: "judgement",
-                judgement_target_wcomponent_id: props.a_selected_wcomponent_id,
-            }, creation_context)}
+                wcomponent: { type: "judgement", judgement_target_wcomponent_id },
+                creation_context,
+            })}
         />
         <Button
             value="Create Connection (causal link)"
@@ -71,5 +71,5 @@ export const CreateNewWComponent = connector(_CreateNewWComponent) as Functional
 
 function create_wcomponent_type (type: WComponentType, creation_context: CreationContextState)
 {
-    create_wcomponent({ type }, creation_context)
+    create_wcomponent({ wcomponent: { type }, creation_context })
 }

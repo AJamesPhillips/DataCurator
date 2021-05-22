@@ -9,12 +9,18 @@ import { config_store } from "../state/store"
 
 
 
-export function create_wcomponent (args: Partial<WComponent>, creation_context: CreationContextState)
+interface CreateWComponentArgs
+{
+    wcomponent: Partial<WComponent>
+    creation_context: CreationContextState
+}
+
+export function create_wcomponent (args: CreateWComponentArgs)
 {
     const store = config_store()
     const state = store.getState()
 
-    const wcomponent = get_new_wcomponent_object(args, creation_context)
+    const wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)
 
     const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
