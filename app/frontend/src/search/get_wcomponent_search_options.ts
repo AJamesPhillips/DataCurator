@@ -36,7 +36,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
             return {
                 id: wcomponent.id,
                 title,
-                subtitle: wcomponent.title,
+                subtitle: `${wcomponent.title} -- @@${wcomponent.id}`,
             }
         })
 
