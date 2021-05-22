@@ -53,7 +53,7 @@ function _EditableText (props: Props)
                 {
                     setTimeout(() => {
                         el.focus()
-                        el.setSelectionRange(0, value.length)
+                        // el.setSelectionRange(0, value.length)
                     }, 0)
                 }
             }}
