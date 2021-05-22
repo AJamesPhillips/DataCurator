@@ -1,6 +1,5 @@
 import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { Dispatch } from "redux"
 
 import "./Canvas.css"
 import type { RootState } from "../state/State"
@@ -10,6 +9,7 @@ import type { ContentCoordinate } from "./interfaces"
 import { lefttop_to_xy, MoveToPositionButton } from "./MoveToPositionButton"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { BoundingRect, bounding_rects_equal } from "../state/display/state"
+import { pub_sub } from "../state/pub_sub/pub_sub"
 
 
 
@@ -53,8 +53,6 @@ const map_dispatch = {
 
         return ACTIONS.display.update_canvas_bounding_rect({ bounding_rect })
     },
-    canvas_right_clicked: ACTIONS.canvas.canvas_right_clicked,
-    canvas_double_tapped: ACTIONS.canvas.canvas_double_tapped,
 }
 
 
@@ -178,7 +176,7 @@ class _Canvas extends Component<Props>
         const x = this.client_to_canvas_x(e.clientX)
         const y = this.client_to_canvas_y(e.clientY)
 
-        this.props.canvas_right_clicked({ x, y, ms: new Date().getTime() })
+        pub_sub.canvas.pub("canvas_right_click", { x, y })
     }
 
 
@@ -201,7 +199,7 @@ class _Canvas extends Component<Props>
         const x = this.client_to_canvas_x(current_x)
         const y = this.client_to_canvas_y(current_y)
 
-        this.props.canvas_double_tapped({ x, y, ms: new Date().getTime() })
+        pub_sub.canvas.pub("canvas_double_tap", { x, y })
     }
 
 

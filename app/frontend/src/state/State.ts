@@ -1,7 +1,6 @@
 import type { AnyAction } from "redux"
 
 import type { CreationContextState } from "../shared/interfaces"
-import type { CanvasState } from "./canvas/state"
 import type { ControlsState } from "./controls/state"
 import type { DerivedState } from "./derived/State"
 import type { DisplayState } from "./display/state"
@@ -120,7 +119,6 @@ export interface RootStateCore
 }
 export interface RootState extends RootStateCore
 {
-    canvas: CanvasState
     controls: ControlsState
     creation_context: CreationContextState
     derived: DerivedState

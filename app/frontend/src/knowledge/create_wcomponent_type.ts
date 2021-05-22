@@ -1,3 +1,5 @@
+import type { Store } from "redux"
+
 import type { CreationContextState } from "../shared/interfaces"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -5,6 +7,7 @@ import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display/display"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
+import type { RootState } from "../state/State"
 import { config_store } from "../state/store"
 
 
@@ -13,19 +16,21 @@ interface CreateWComponentArgs
 {
     wcomponent: Partial<WComponent>
     creation_context: CreationContextState
+    add_to_knowledge_view?: AddToKnowledgeViewArgs
+    store?: Store<RootState>
 }
 
 export function create_wcomponent (args: CreateWComponentArgs)
 {
-    const store = config_store()
+    const store = args.store || config_store()
     const state = store.getState()
 
     const wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)
 
     const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
-    let add_to_knowledge_view: AddToKnowledgeViewArgs | undefined = undefined
-    if (current_knowledge_view)
+    let { add_to_knowledge_view } = args
+    if (!add_to_knowledge_view && current_knowledge_view)
     {
         const position = get_middle_of_screen(state)
 

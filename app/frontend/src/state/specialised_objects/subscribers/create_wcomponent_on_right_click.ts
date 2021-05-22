@@ -1,35 +1,38 @@
 import type { Store } from "redux"
-import { ACTIONS } from "../../actions"
 
-import type { CanvasPointerEvent } from "../../canvas/state"
+import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
+import type { CanvasPointerEvent } from "../../canvas/pub_sub"
+import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"
+import { get_current_knowledge_view_from_state } from "../accessors"
+import type { AddToKnowledgeViewArgs } from "../wcomponents/actions"
 
 
 
-export function create_wcomponent_on_right_click (store: Store<RootState>)//, pubsub: PubSub)
+export function create_wcomponent_on_right_click (store: Store<RootState>)
 {
-    // pubsub.on_canvas_right_click((right_click: CanvasPointerEvent) =>
-    // {
-    //     store.dispatch(ACTIONS.specialised_object.wcom)
-    // })
-
-    let processed_last_right_click: CanvasPointerEvent | undefined = undefined
-
-    return () =>
+    pub_sub.canvas.sub("canvas_right_click", (right_click: CanvasPointerEvent) =>
     {
         const state = store.getState()
-        const { last_right_click } = state.canvas
 
-        // no right click event to process
-        if (!last_right_click) return
-
-        if (processed_last_right_click && last_right_click.ms === processed_last_right_click.ms)
+        const current_knowledge_view = get_current_knowledge_view_from_state(state)
+        if (!current_knowledge_view)
         {
-            // already processed
-            return
+            console.error("No current_knowledge_view despite canvas right_click")
+            return // should never happen
         }
-        processed_last_right_click = last_right_click
+
+        const add_to_knowledge_view: AddToKnowledgeViewArgs = {
+            id: current_knowledge_view.id,
+            position: { left: right_click.x, top: -right_click.y }
+        }
 
 
-    }
+        create_wcomponent({
+            wcomponent: { type: "state" },
+            creation_context: state.creation_context,
+            add_to_knowledge_view,
+            store,
+        })
+    })
 }
