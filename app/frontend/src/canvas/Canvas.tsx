@@ -178,7 +178,7 @@ class _Canvas extends Component<Props>
         const x = this.client_to_canvas_x(e.clientX)
         const y = this.client_to_canvas_y(e.clientY)
 
-        this.props.canvas_right_clicked({ x, y })
+        this.props.canvas_right_clicked({ x, y, ms: new Date().getTime() })
     }
 
 
@@ -201,7 +201,7 @@ class _Canvas extends Component<Props>
         const x = this.client_to_canvas_x(current_x)
         const y = this.client_to_canvas_y(current_y)
 
-        this.props.canvas_double_tapped({ x, y })
+        this.props.canvas_double_tapped({ x, y, ms: new Date().getTime() })
     }
 
 

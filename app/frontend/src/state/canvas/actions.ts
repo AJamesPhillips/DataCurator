@@ -4,6 +4,7 @@ import type { Action, AnyAction } from "redux"
 
 interface CanvasRightClickedArgs
 {
+    ms: number
     x: number
     y: number
 }
@@ -24,6 +25,7 @@ export const is_canvas_right_clicked = (action: AnyAction): action is ActionCanv
 
 interface CanvasDoubleTappedArgs
 {
+    ms: number
     x: number
     y: number
 }

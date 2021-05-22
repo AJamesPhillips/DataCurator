@@ -135,6 +135,7 @@ export function get_starting_state (): RootState
     const routing = get_routing_starting_state()
 
     const starting_state: RootState = {
+        canvas: { last_double_tap: undefined, last_right_click: undefined },
         controls: { linked_datetime_sliders: true },
         creation_context: { use_creation_context: false, creation_context: {} },
         statements,
