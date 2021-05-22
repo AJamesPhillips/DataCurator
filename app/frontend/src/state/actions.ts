@@ -1,3 +1,4 @@
+import { canvas_actions } from "./canvas/actions"
 import { controls_actions } from "./controls/actions"
 import { creation_context_actions } from "./creation_context/actions"
 import { display_actions } from "./display/actions"
@@ -15,6 +16,9 @@ import { sync_actions } from "./sync"
 
 
 export const ACTIONS = {
+    noop: () => ({ type: "noop" }),
+
+    canvas: canvas_actions,
     controls: controls_actions,
     creation_context: creation_context_actions,
     display: display_actions,

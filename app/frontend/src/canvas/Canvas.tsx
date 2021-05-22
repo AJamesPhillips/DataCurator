@@ -13,6 +13,10 @@ import { BoundingRect, bounding_rects_equal } from "../state/display/state"
 
 
 
+const MAX_DOUBLE_TAP_DELAY_MS = 900
+const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10
+
+
 interface OwnProps
 {
     svg_children?: preact.ComponentChildren[]
@@ -32,24 +36,26 @@ const map_state = (state: RootState) => {
 
 
 interface ChangeRoutingArgsArgs { x?: number, y?: number, zoom?: number }
-const map_dispatch = (dispatch: Dispatch) => ({
+const map_dispatch = {
     change_routing_args: (args: ChangeRoutingArgsArgs) => {
         let new_args: ChangeRoutingArgsArgs = {}
         if (args.zoom !== undefined) new_args.zoom = Math.round(bound_zoom(args.zoom))
         if (args.x !== undefined) new_args.x = Math.round(args.x)
         if (args.y !== undefined) new_args.y = Math.round(args.y)
 
-        dispatch(ACTIONS.routing.change_route({ args: new_args }))
+        return ACTIONS.routing.change_route({ args: new_args })
     },
     update_bounding_rect: (bounding_rect: BoundingRect | null, current_br: BoundingRect | undefined) =>
     {
-        if (!bounding_rect) return
+        if (!bounding_rect) return ACTIONS.noop()
 
-        if (bounding_rects_equal(bounding_rect, current_br)) return
+        if (bounding_rects_equal(bounding_rect, current_br)) return ACTIONS.noop()
 
-        dispatch(ACTIONS.display.update_canvas_bounding_rect({ bounding_rect }))
-    }
-})
+        return ACTIONS.display.update_canvas_bounding_rect({ bounding_rect })
+    },
+    canvas_right_clicked: ACTIONS.canvas.canvas_right_clicked,
+    canvas_double_tapped: ACTIONS.canvas.canvas_double_tapped,
+}
 
 
 
@@ -60,12 +66,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 type PointerState =
 {
     down: false
+    last_pointer_down_ms: number | undefined
     client_start_x: null
     client_start_y: null
-    canvas_start_x: null
-    canvas_start_y: null
+    canvas_start_x: number
+    canvas_start_y: number
 } | {
     down: true
+    last_pointer_down_ms: number | undefined
     client_start_x: number
     client_start_y: number
     canvas_start_x: number
@@ -75,23 +83,49 @@ type PointerState =
 
 class _Canvas extends Component<Props>
 {
+
+    // zoom aware values
+    client_to_canvas = (client_xy: number) => client_xy * (scale_by / this.props.zoom)
+    client_to_canvas_x = (client_x: number) =>
+    {
+        const canvas_x = this.pointer_state.canvas_start_x
+        return canvas_x + this.client_to_canvas(client_x)
+    }
+    client_to_canvas_y = (client_y: number) =>
+    {
+        const canvas_y = this.pointer_state.canvas_start_y
+        return canvas_y - this.client_to_canvas(client_y)
+    }
+
+
     private pointer_state: PointerState = {
         down: false,
+        last_pointer_down_ms: undefined,
         client_start_x: null,
         client_start_y: null,
-        canvas_start_x: null,
-        canvas_start_y: null,
+        canvas_start_x: 0,
+        canvas_start_y: 0,
     }
+
 
     on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
-        this.pointer_state.down = true
-        this.pointer_state.client_start_x = e.clientX
-        this.pointer_state.client_start_y = e.clientY
-        this.pointer_state.canvas_start_x = this.props.x
-        this.pointer_state.canvas_start_y = this.props.y
+        const new_pointer_state: PointerState =
+        {
+            down: true,
+            last_pointer_down_ms: new Date().getTime(),
+            client_start_x: e.clientX,
+            client_start_y: e.clientY,
+            canvas_start_x: this.props.x,
+            canvas_start_y: this.props.y,
+        }
+
+        this.handle_if_double_tap(this.pointer_state, new_pointer_state)
+        this.pointer_state = new_pointer_state
     }
 
+
     on_pointer_up = () => { this.pointer_state.down = false }
+
 
     on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
 
@@ -107,19 +141,16 @@ class _Canvas extends Component<Props>
         if (this.pointer_state.down)
         {
             // Values are independent of zoom
-            const change_in_x = e.clientX - this.pointer_state.client_start_x
-            const change_in_y = e.clientY - this.pointer_state.client_start_y
+            const change_in_client_x = this.pointer_state.client_start_x - e.clientX
+            const change_in_client_y = this.pointer_state.client_start_y - e.clientY
 
-            // zoom aware values
-            const dx = change_in_x * (scale_by / this.props.zoom )
-            const dy = change_in_y * (scale_by / this.props.zoom )
-
-            const x = this.pointer_state.canvas_start_x - dx
-            const y = this.pointer_state.canvas_start_y + dy
+            const x = this.client_to_canvas_x(change_in_client_x)
+            const y = this.client_to_canvas_y(change_in_client_y)
 
             this.props.change_routing_args({ x, y })
         }
     }
+
 
     on_wheel = (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent>) =>
     {
@@ -137,6 +168,42 @@ class _Canvas extends Component<Props>
 
         this.props.change_routing_args({ zoom: new_zoom, x: result.x, y: result.y })
     }
+
+
+    on_context_menu = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+    {
+        e.stopPropagation()
+        e.preventDefault()
+
+        const x = this.client_to_canvas_x(e.clientX)
+        const y = this.client_to_canvas_y(e.clientY)
+
+        this.props.canvas_right_clicked({ x, y })
+    }
+
+
+    // We could access current_pointer_state using this.pointer_state but prefer purer functions where possible
+    handle_if_double_tap = (current_pointer_state: PointerState, new_pointer_state: PointerState) =>
+    {
+        // first click
+        if (!current_pointer_state.last_pointer_down_ms || !new_pointer_state.last_pointer_down_ms) return
+
+        // too slow
+        if ((new_pointer_state.last_pointer_down_ms - current_pointer_state.last_pointer_down_ms) > MAX_DOUBLE_TAP_DELAY_MS) return
+
+        const { client_start_x: current_x, client_start_y: current_y } = current_pointer_state
+        const { client_start_x: new_x, client_start_y: new_y } = new_pointer_state
+        if (current_x === null || current_y === null || new_x === null || new_y === null) return
+
+        if (Math.abs(current_x - new_x) > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
+        if (Math.abs(current_y - new_y) > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
+
+        const x = this.client_to_canvas_x(current_x)
+        const y = this.client_to_canvas_y(current_y)
+
+        this.props.canvas_double_tapped({ x, y })
+    }
+
 
     render ()
     {
@@ -173,14 +240,15 @@ class _Canvas extends Component<Props>
                 onPointerUp={this.on_pointer_up}
                 onWheel={this.on_wheel}
                 onDragOver={e =>
-                    {
-                        // Prevent drag end animation
-                        // https://stackoverflow.com/a/51697038/539490
-                        e.preventDefault()
-                        // Prevent green circle with white cross "copy / add" cursor icon
-                        // https://stackoverflow.com/a/56699962/539490
-                        e.dataTransfer!.dropEffect = "move"
-                    }}
+                {
+                    // Prevent drag end animation
+                    // https://stackoverflow.com/a/51697038/539490
+                    e.preventDefault()
+                    // Prevent green circle with white cross "copy / add" cursor icon
+                    // https://stackoverflow.com/a/56699962/539490
+                    e.dataTransfer!.dropEffect = "move"
+                }}
+                onContextMenu={this.on_context_menu}
             >
                 <div id="graph_visuals_container" style={html_translation_container_style}>
                     <div style={html_container_style}>
