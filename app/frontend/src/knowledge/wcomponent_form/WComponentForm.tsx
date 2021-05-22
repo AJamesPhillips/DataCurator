@@ -329,5 +329,5 @@ function _WComponentForm (props: Props)
 export const WComponentForm = connector(_WComponentForm) as FunctionComponent<OwnProps>
 
 
-const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: type }))
+const wcomponent_type_options = wcomponent_types.sort().map(type => ({ id: type, title: type }))
 const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map(type => ({ id: type, title: type }))
