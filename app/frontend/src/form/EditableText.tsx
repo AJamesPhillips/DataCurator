@@ -15,6 +15,7 @@ interface OwnProps
     placeholder: string
     value: string
     on_change?: (new_value: string) => void
+    force_focus?: boolean
 }
 
 
@@ -42,9 +43,20 @@ function _EditableText (props: Props)
 
     const conditional_on_change = (new_value: string) => new_value !== props.value && on_change(new_value)
 
+
     return <div class={"editable_field " + (!value ? " placeholder " : "")}>
         <textarea
-            ref={el => adjust_height(el)}
+            ref={el =>
+            {
+                adjust_height(el)
+                if (props.force_focus && el)
+                {
+                    setTimeout(() => {
+                        el.focus()
+                        el.setSelectionRange(0, value.length)
+                    }, 0)
+                }
+            }}
             placeholder={placeholder}
             value={value}
             style={{ height: "auto" }}

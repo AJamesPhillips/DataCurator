@@ -38,6 +38,7 @@ import { WComponentFromTo } from "../WComponentFromTo"
 import { WComponentKnowledgeView } from "../WComponentKnowledgeView"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFields } from "./JudgementFields"
+import { useEffect, useRef } from "preact/hooks"
 
 
 
@@ -95,6 +96,11 @@ function _WComponentForm (props: Props)
     const wcomponent_id = wcomponent.id
     const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
+
+    const previous_id = useRef<undefined | string>(undefined)
+    useEffect(() => { previous_id.current = wcomponent_id }, [wcomponent_id])
+
+
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
         const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent
@@ -104,11 +110,13 @@ function _WComponentForm (props: Props)
 
     const UI_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
+
     return <div key={wcomponent_id}>
         <h2><EditableText
             placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
             value={get_title({ rich_text, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
             on_change={title => upsert_wcomponent({ title })}
+            force_focus={previous_id.current !== wcomponent_id}
         /></h2>
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
