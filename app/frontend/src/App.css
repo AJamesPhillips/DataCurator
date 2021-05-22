@@ -76,3 +76,8 @@ table.list
 {
   color: #999;
 }
+
+a
+{
+  text-decoration: none;
+}

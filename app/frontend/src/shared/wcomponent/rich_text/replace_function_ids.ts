@@ -22,7 +22,6 @@ export function replace_function_ids_in_text (text: string, wcomponents_by_id: W
             replacement = render_links ? format_wcomponent_link(root_url, id) : ""
             replacement += referenced_wcomponent.description
         }
-        else replacement =`Function ${funktion} not implemented`
 
         const replacer = new RegExp(`@@${id}\.${funktion}`, "g")
         text = text.replace(replacer, replacement)
