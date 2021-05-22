@@ -95,8 +95,10 @@ function _WComponentCanvasNode (props: Props)
         : ""
 
 
-    const on_pointer_down = () =>
+    const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
+        e.stopImmediatePropagation()
+
         clicked_wcomponent({ id })
 
         if (ctrl_key_is_down)

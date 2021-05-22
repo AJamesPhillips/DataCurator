@@ -30,7 +30,7 @@ interface OwnProps
     color?: string
     extra_css_class?: string
     other_children?: h.JSX.Element[]
-    on_pointer_down?: () => void
+    on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_click?: () => void
     on_pointer_enter?: () => void
     on_pointer_leave?: () => void
