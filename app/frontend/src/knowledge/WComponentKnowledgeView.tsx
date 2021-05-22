@@ -3,8 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { lefttop_to_xy, MoveToPositionButton } from "../canvas/MoveToPositionButton"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
-import { EditablePosition } from "../form/EditablePosition"
-import { KnowledgeViewWComponentEntry, wcomponent_is_plain_connection } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { KnowledgeViewWComponentEntry } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
@@ -78,10 +77,6 @@ function _WComponentKnowledgeView (props: Props)
 
 
     return <div>
-        Current Knowledge View: <br />
-        {knowledge_view_title} <br />
-        <br />
-
         {!knowledge_view_entry && <div>
             Not present in this knowledge view
             {UI_knowledge_view_entry && " but is present in a foundational knowledge view"}
@@ -95,21 +90,24 @@ function _WComponentKnowledgeView (props: Props)
         </div>}
 
 
-        {knowledge_view_entry && !wcomponent_is_plain_connection(wcomponent) && <div>
-            Position:
+        {knowledge_view_entry && <div>
             <MoveToPositionButton
                 description="Show node"
                 move_to_xy={lefttop_to_xy({ ...knowledge_view_entry, zoom: 100 }, true)}
             />
-            <EditablePosition point={knowledge_view_entry} on_update={update} />
-            <br />
         </div>}
 
+        {/* {knowledge_view_entry && !wcomponent_is_plain_connection(wcomponent) && <div>
+            Position:
+            <EditablePosition point={knowledge_view_entry} on_update={update} />
+        </div>} */}
+
         {knowledge_view_entry && <div>
+            <br />
             <ConfirmatoryDeleteButton
                 on_delete={() => delete_entry()}
             />
-            Remove from current knowledge view
+            Remove from current knowledge view ({knowledge_view_title})
         </div>}
     </div>
 }

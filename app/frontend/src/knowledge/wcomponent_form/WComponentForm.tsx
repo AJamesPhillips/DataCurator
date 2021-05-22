@@ -304,19 +304,17 @@ function _WComponentForm (props: Props)
             <WComponentKnowledgeView wcomponent_id={wcomponent_id} />
         </p>
 
+
+        {/*
         <hr />
 
         <ConfirmatoryDeleteButton
             // on_delete={() => props.delete_wcomponent({ wcomponent_id })}
             on_delete={() => alert("Deleting disabled: need to implement tombstones.  Either remove node from this view or use for something useful.")}
         />
-        <div style={{ float: "right" }}>(Disabled)&nbsp;</div>
+        <div style={{ float: "right" }}>(Disabled)&nbsp;</div> */}
 
         <br />
-
-        {/* <hr />
-        {Array.from(props.keys.keys_down).join(", ")} */}
-
     </div>
 }
 
