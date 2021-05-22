@@ -3,6 +3,7 @@ import type { Store } from "redux"
 import type { CreationContextState } from "../shared/interfaces"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display/display"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
@@ -37,8 +38,13 @@ export function create_wcomponent (args: CreateWComponentArgs)
         add_to_knowledge_view = { id: current_knowledge_view.id, position }
     }
 
+
+    const created_at_ms = get_created_at_ms(wcomponent) + 60000
+    const datetime = new Date(created_at_ms)
+
+
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view }))
     store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
-    store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({ datetime: wcomponent.created_at }))
+    store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({ datetime }))
     store.dispatch(ACTIONS.routing.change_route({ item_id: wcomponent.id }))
 }
