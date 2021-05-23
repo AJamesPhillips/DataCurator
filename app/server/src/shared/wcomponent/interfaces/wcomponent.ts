@@ -19,7 +19,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     judgement: true,
     counterfactual: true,
 }
-export const wcomponent_types: WComponentType[] = Object.keys(_wcomponent_types) as any
+export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()
 
 
 

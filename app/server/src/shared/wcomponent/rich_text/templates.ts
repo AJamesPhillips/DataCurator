@@ -9,4 +9,4 @@ export const format_wcomponent_url = (root_url: string, id: string) => `${root_u
 
 // \uD83D\uDD17 --> 🔗 aka the very ugly link (chain) character
 // \u25A1 --> □
-export const format_wcomponent_link = (root_url: string, id: string) => `[\u25A1](${format_wcomponent_url(root_url, id)})`
+export const format_wcomponent_link = (root_url: string, id: string, content: string = "\u25A1") => `[${content}](${format_wcomponent_url(root_url, id)})`

@@ -148,8 +148,9 @@ function test_replace_ids_in_text ()
     const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
 
     const wcomponents_by_id = {
-        "123": get_new_wcomponent_object({ id: "123", title: "Was told @@456 is here" }, creation_context),
+        "123": get_new_wcomponent_object({ id: "123", title: "@@789 was told @@456 is here" }, creation_context),
         "456": get_new_wcomponent_object({ id: "456", title: "Person A" }, creation_context),
+        "789": get_new_wcomponent_object({ id: "789", title: "Person B" }, creation_context),
     }
 
     let result: string
@@ -165,24 +166,24 @@ function test_replace_ids_in_text ()
     result = replace_ids_in_text({
         ...args,
         rich_text: false,
-        text: "Person B @@123 today"
+        text: "Yesterday @@123 today"
     })
-    test(result, "Person B @@123 today")
+    test(result, "Yesterday @@123 today")
 
     result = replace_ids_in_text({
         ...args,
         rich_text: true,
-        text: "Person B @@123 today"
+        text: "Yesterday @@123 today"
     })
-    test(result, "Person B [□](#wcomponents/123&view=knowledge) Was told Person A is here today")
+    test(result, "Yesterday [Person B was told Person A is here](#wcomponents/123&view=knowledge) today")
 
     result = replace_ids_in_text({
         ...args,
         rich_text: true,
         render_links: false,
-        text: "Person B @@123 today"
+        text: "Yesterday @@123 today"
     })
-    test(result, "Person B Was told Person A is here today")
+    test(result, "Yesterday Person B was told Person A is here today")
 }
 
 
@@ -249,10 +250,10 @@ function test_rendering_title ()
     }
     const expected_rich_text = {
         [wcomponent1.id]: "aaa",
-        [wcomponent2.id]: "bbb [□](#wcomponents/111&view=knowledge) aaa",
+        [wcomponent2.id]: "bbb [aaa](#wcomponents/111&view=knowledge)",
         [wcomponent3.id]: "ccc True",
-        [wcomponent4.id]: "ddd [□](#wcomponents/333&view=knowledge) ccc True",
-        [wcomponent5.id]: "eee True [□](#wcomponents/444&view=knowledge) ddd ccc True",
+        [wcomponent4.id]: "ddd [ccc True](#wcomponents/333&view=knowledge)",
+        [wcomponent5.id]: "eee True [ddd ccc True](#wcomponents/444&view=knowledge)",
     }
     const expected_rich_text_no_links = {
         [wcomponent1.id]: "aaa",
@@ -263,8 +264,8 @@ function test_rendering_title ()
     }
     const expected_rich_text_counterfactual = {
         [wcomponent3.id]: "ccc False",
-        [wcomponent4.id]: "ddd [□](#wcomponents/333&view=knowledge) ccc False",
-        [wcomponent5.id]: "eee True [□](#wcomponents/444&view=knowledge) ddd ccc False",
+        [wcomponent4.id]: "ddd [ccc False](#wcomponents/333&view=knowledge)",
+        [wcomponent5.id]: "eee True [ddd ccc False](#wcomponents/444&view=knowledge)",
     }
 
 
@@ -312,7 +313,7 @@ function test_rendering_title ()
 
     // Test depth limit
     const result = get_title_for_id({ id: wcomponent7.id, rich_text: true })
-    test(result, "ggg [□](#wcomponents/666&view=knowledge) fff eee True ddd [□](#wcomponents/333&view=knowledge) @@333")
+    test(result, "ggg [fff eee True ddd @@333](#wcomponents/666&view=knowledge)")
 
 
     const wc_id_counterfactuals_map: WcIdCounterfactualsMap = {

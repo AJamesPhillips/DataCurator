@@ -1,3 +1,6 @@
+import type { TimeResolution } from "./datetime"
+
+
 
 // Copied from: https://github.com/AJamesPhillips/utils-ts/blob/0.3.0/ts/stored.ts#L4
 export function parse_date(value: Date | string): Date;
@@ -241,14 +244,23 @@ export function date2str (date: Date, format: string)
 }
 
 
-export function date2str_auto (date: Date, shorten_if_only_days: boolean = true)
-{
-    // `date` should be timezone aware here so this behaviour may "be strange" for
-    // users of the same date who are in different timezones
-    const only_days = date.getHours() === 0  // if locale hours is 0 then just render days
-    const format = (shorten_if_only_days && only_days) ? "yyyy-MM-dd" : "yyyy-MM-dd hh:mm"
 
-    return date2str(date, format)
+interface Date2strAutoArgs
+{
+    date: Date
+    time_resolution?: TimeResolution
+}
+
+export function date2str_auto (args: Date2strAutoArgs)
+{
+    const { date, time_resolution = "minute" } = args
+
+    const format = time_resolution === "day" ? "yyyy-MM-dd" : (
+        time_resolution === "hour" ? "yyyy-MM-dd hh:00" : "yyyy-MM-dd hh:mm"
+    )
+
+    const datetime_string = date2str(date, format)
+    return datetime_string.replace(" 00:00", "")
 }
 
 

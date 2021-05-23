@@ -1,16 +1,16 @@
 
-
+type KeyValue = number | string
 interface KeyedItem <E>
 {
     item: E
-    key_value: number
+    key_value: KeyValue
 }
 
 
 type Direction = "ascending" | "descending"
 
 
-export function sort_list <E> (items: E[], key: (item: E, index: number) => number, direction: Direction): E[]
+export function sort_list <E> (items: E[], key: (item: E, index: number) => KeyValue, direction: Direction): E[]
 {
     const sort_function = get_sort_function<E>(direction)
 

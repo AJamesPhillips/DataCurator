@@ -20,22 +20,12 @@ export function replace_normal_ids (text: string, wcomponents_by_id: WComponents
         }
 
 
-        let sub_text = ""
-        if (current_depth < depth_limit)
-        {
-            sub_text = get_title(referenced_wcomponent)
-        }
-        else
-        {
-            // Provide a link to the ids which are too deep
-            const link_to_deep_id = format_wcomponent_link(root_url, id)
-            sub_text = `${link_to_deep_id} @@${id}`
-        }
+        const replacement_content = current_depth < depth_limit
+            ? get_title(referenced_wcomponent)
+            // Return id for ids which are too deep
+            : `@@${id}`
 
-
-        const link = render_links ? (format_wcomponent_link(root_url, id) + " ") : ""
-        const replacement_text = link + sub_text
-
+        const replacement_text = render_links ? format_wcomponent_link(root_url, id, replacement_content) : replacement_content
 
         text = text.replace(replacer, replacement_text)
     })
@@ -52,7 +42,7 @@ function get_ids_from_text (text: string): string[]
 
 
 
-function run_tests ()
+function test_get_ids_from_text ()
 {
     console. log("running tests of get_ids_from_text")
 
@@ -61,6 +51,13 @@ function run_tests ()
 
     ids = get_ids_from_text("")
     test(ids, [])
+}
+
+
+
+function run_tests ()
+{
+    test_get_ids_from_text()
 }
 
 // run_tests()
