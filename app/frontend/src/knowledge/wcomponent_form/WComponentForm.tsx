@@ -24,7 +24,7 @@ import {
     wcomponent_has_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
-import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent"
+import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"

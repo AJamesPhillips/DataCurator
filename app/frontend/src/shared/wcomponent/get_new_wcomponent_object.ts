@@ -4,7 +4,7 @@ import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "./interfaces/state"
-import type { WComponentBase } from "./interfaces/wcomponent"
+import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 

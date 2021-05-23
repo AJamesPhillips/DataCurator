@@ -9,7 +9,7 @@ import type {
     WComponentNodeStateV2,
 } from "./state"
 import type { ValidityPredictions, ExistencePredictions, WComponentCounterfactual } from "./uncertainty"
-import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent"
+import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
 
 
 

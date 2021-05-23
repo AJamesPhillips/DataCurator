@@ -6,7 +6,7 @@ import type {
     WComponent,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../shared/wcomponent/interfaces/uncertainty"
-import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent"
+import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent_base"
 
 
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
