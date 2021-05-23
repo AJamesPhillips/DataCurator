@@ -20,7 +20,7 @@ const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
 
 if (root) {
-  if (document.location.pathname === "/")
+  if (window.location.pathname === "/")
   {
     root.innerHTML = `<ul>
     <li><a href="/app">app</a></li>
@@ -33,31 +33,31 @@ if (root) {
     <li><a href="/sandbox">Sandbox</a></li>
     </ul>`
   }
-  else if (document.location.pathname === "/project_dashboard")
+  else if (window.location.pathname === "/project_dashboard")
   {
     render(<Provider store={config_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
   }
-  else if (document.location.pathname === "/prob_graph")
+  else if (window.location.pathname === "/prob_graph")
   {
     render(<DemoPredictionsGraph />, root)
   }
-  else if (document.location.pathname === "/prob_badge")
+  else if (window.location.pathname === "/prob_badge")
   {
     render(<DemoPredictionsBadge />, root)
   }
-  else if (document.location.pathname === "/statement_probability")
+  else if (window.location.pathname === "/statement_probability")
   {
     render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
   }
-  else if (document.location.pathname === "/statement_probability_explorer")
+  else if (window.location.pathname === "/statement_probability_explorer")
   {
     render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
   }
-  else if (document.location.pathname === "/sandbox/editable_custom_datetime")
+  else if (window.location.pathname === "/sandbox/editable_custom_datetime")
   {
     render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
   }
-  else if (document.location.pathname === "/sandbox")
+  else if (window.location.pathname === "/sandbox")
   {
     render(<SandBox />, root)
   }

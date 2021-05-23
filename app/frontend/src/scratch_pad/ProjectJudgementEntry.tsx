@@ -55,7 +55,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             {
                 const wcomponent_id = target_wcomponent.id
                 const url = get_url_for_wcomponent({ knowledge_view, wcomponent_id })
-                document.location.href = url
+                window.location.href = url
             }}
         >
             <RichMarkDown

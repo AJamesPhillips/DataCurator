@@ -75,31 +75,35 @@ function record_location_hash_change (store: Store<RootState>)
      * editing the url, or by pressing the navigation buttons.
      * Or from when the page first loads and the route changes then.
      */
-    let promise_state_ready: Promise<void>
-    window.onhashchange = () =>
+    // let promise_state_ready: Promise<void>
+    window.onhashchange = (e: HashChangeEvent) =>
     {
         const state = store.getState()
         if (!state.sync.ready)
         {
-            if (promise_state_ready) return
-            promise_state_ready = new Promise<void>(resolve =>
-            {
-                const unsubscribe = store.subscribe(() => {
-                    // if (!state.sync.ready) return // TODO, do we need this?  Do we need any of this?
-                    unsubscribe()
-                    resolve()
-                })
-            })
-            .then(() =>
-            {
-                const routing_params = get_current_route_params(store.getState().routing)
-                store.dispatch(ACTIONS.routing.change_route(routing_params))
-            })
-
+            // if (promise_state_ready) return
+            // promise_state_ready = new Promise<void>(resolve =>
+            // {
+            //     const unsubscribe = store.subscribe(() => {
+            //         // if (!state.sync.ready) return // TODO, do we need this?  Do we need any of this?
+            //         unsubscribe()
+            //         resolve()
+            //     })
+            // })
+            // .then(() =>
+            // {
+            //     const routing_params = get_current_route_params(store.getState().routing)
+            //     store.dispatch(ACTIONS.routing.change_route(routing_params))
+            // })
         }
         else
         {
             const routing_params = get_current_route_params(state.routing)
+
+            const new_route = routing_state_to_string(routing_params)
+            const no_change = new_route === window.location.hash.toString()
+            if (no_change) return
+
             store.dispatch(ACTIONS.routing.change_route(routing_params))
         }
     }
