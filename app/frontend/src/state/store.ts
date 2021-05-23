@@ -11,6 +11,7 @@ import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
 import { load_state } from "./sync_utils/load_state"
 import { save_state } from "./sync_utils/save_state"
+import { persist_all_state } from "./utils/persistence"
 
 
 
@@ -47,6 +48,7 @@ export function config_store (args: ConfigStoreArgs = {})
     const save = () =>
     {
         const state = store.getState()
+        persist_all_state(state)
         ;(window as any).debug_state = state
 
         // for now, very simple logic for when to save
