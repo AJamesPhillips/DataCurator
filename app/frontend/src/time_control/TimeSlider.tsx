@@ -109,7 +109,6 @@ function _TimeSlider (props: Props)
 
         <div style={{ maxWidth: 200, display: "inline-flex", float: "right" }}>
             <EditableCustomDateTime
-                invariant_value={undefined}
                 value={new Date(props.handle_datetime_ms)}
                 on_change={new_datetime => new_datetime && props.change_handle_ms(new_datetime.getTime())}
                 show_now_shortcut_button={false}

@@ -37,7 +37,6 @@ function _CreationContextSidePanel (props: Props)
 
         <p>
             Custom created at datetime: <EditableCustomDateTime
-                invariant_value={undefined}
                 value={props.custom_created_at}
                 on_change={custom_created_at => props.set_custom_created_at({ custom_created_at })}
             />

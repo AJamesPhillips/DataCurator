@@ -1,6 +1,6 @@
 import type { CoreObject } from "../../../state/State"
 import { get_new_object_id } from "../../../shared/utils/ids"
-import type { DateString, TransformAirtableRecordArgs } from "../interfaces"
+import type { TransformAirtableRecordArgs } from "../interfaces"
 import { EXTERNAL_ID_KEY, PATTERN_ID_ACTION_V2 } from "../_common"
 import { airtable_multi_field_to_multi_attributes, airtable_multi_field_to_single_attribute, num_to_string, date_string_to_string } from "./common"
 
@@ -19,10 +19,10 @@ export interface AirtableAction
         depends_on_actions: string[]  // 0+ values
         why: string
         time_h: number
-        start_datetime: DateString
-        stop_datetime: DateString
+        start_datetime: string
+        stop_datetime: string
         "Action Type": "Is Spike" | "Is Conditional"
-        deadline_review_datetime: DateString
+        deadline_review_datetime: string
         is_project: true
     }>
 }

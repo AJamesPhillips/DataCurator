@@ -1,5 +1,5 @@
 import { date2str_auto } from "../../../shared/utils/date_helpers"
-import type { TempIdFunc, DateString } from "../interfaces"
+import type { TempIdFunc } from "../interfaces"
 
 
 interface AirtableMultiFieldToSingleAttributeArgs
@@ -36,13 +36,13 @@ export function airtable_multi_field_to_multi_attributes (args: AirtableMultiFie
 }
 
 
-export function date_string_to_string (v: DateString | undefined): string {
+export function date_string_to_string (v: string | undefined): string {
     if (!v) return ""
 
     const d = new Date(v)
     if (isNaN(d as any)) return ""
 
-    return date2str_auto(d)
+    return date2str_auto({ date: d })
 }
 export const num_to_string = (v: number | undefined): string => v === undefined ? "" : `${v}`
 export const bool_to_string = (v: Boolean | undefined): string => v ? "Yes" : "No"

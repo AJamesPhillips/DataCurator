@@ -1,6 +1,6 @@
 import type { CoreObject } from "../../../state/State"
 import { get_new_object_id } from "../../../shared/utils/ids"
-import type { DateString, TransformAirtableRecordArgs } from "../interfaces"
+import type { TransformAirtableRecordArgs } from "../interfaces"
 import { EXTERNAL_ID_KEY, PATTERN_ID_PRIORITY } from "../_common"
 import { airtable_multi_field_to_single_attribute, date_string_to_string, num_to_string } from "./common"
 
@@ -12,7 +12,7 @@ export interface AirtablePriority
     createdTime: string
     fields: Partial<{
         project: string[]  // 0 or 1 value
-        start_datetime: DateString
+        start_datetime: string
         effort: number
         why: string
     }>

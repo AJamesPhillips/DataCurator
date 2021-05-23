@@ -7,13 +7,13 @@ import { Button } from "../sharedf/Button"
 import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../state/State"
-import { floor_datetime_to_resolution, TimeResolution } from "../shared/utils/datetime"
+import type { TimeResolution } from "../shared/utils/datetime"
 
 
 
 interface OwnProps
 {
-    invariant_value: Date | undefined
+    invariant_value?: Date | undefined
     value: Date | undefined
     on_change?: (new_value: Date | undefined) => void
     show_now_shortcut_button?: boolean
@@ -62,7 +62,7 @@ function _EditableCustomDateTime (props: Props)
                 // Because we do not dispatch any state changes to react on changing the value
                 // this code block should only be run **once** on the render cycle immediately
                 // after focusing the input element
-                const new_working_value = date_to_string(props_value(props), false)
+                const new_working_value = date_to_string(props_value(props), "minute")
                 r.value = new_working_value
 
                 r.setSelectionRange(0, r.value.length)
@@ -76,8 +76,7 @@ function _EditableCustomDateTime (props: Props)
             onBlur={e => {
                 const working_value = e.currentTarget.value
                 const new_value = handle_on_blur({ working_value, invariant_value })
-
-                if (new_value) on_change(new_value)
+                on_change(new_value)
                 set_editing(false)
             }}
         />
@@ -101,7 +100,7 @@ export const EditableCustomDateTime = connector(_EditableCustomDateTime) as Func
 function is_value_valid (str: string)
 {
     const working_value_date = correct_datetime_for_local_time_zone(str)
-    return valid_date(working_value_date)
+    return !!working_value_date && valid_date(working_value_date)
 }
 
 
@@ -125,7 +124,7 @@ function NowButton (props: NowButtonProps)
 
 
 
-function props_value (args: { invariant_value: Date | undefined, value: Date | undefined })
+function props_value (args: { invariant_value?: Date | undefined, value: Date | undefined })
 {
     const value = args.value || args.invariant_value
     return value
@@ -135,15 +134,14 @@ function props_value (args: { invariant_value: Date | undefined, value: Date | u
 
 interface PropsToStrValueArgs
 {
-    invariant_value: Date | undefined
+    invariant_value?: Date | undefined
     value: Date | undefined
     time_resolution: TimeResolution
 }
 function props_to_str_value (args: PropsToStrValueArgs)
 {
     const value = props_value(args)
-    const value_to_resolution = value ? floor_datetime_to_resolution(value, args.time_resolution) : value
-    const working_value = date_to_string(value_to_resolution, shorten_if_only_days)
+    const working_value = date_to_string(value, args.time_resolution)
     return working_value
 }
 
@@ -151,7 +149,7 @@ function props_to_str_value (args: PropsToStrValueArgs)
 
 interface HandleOnBlurArgs
 {
-    invariant_value: Date | undefined
+    invariant_value?: Date | undefined
     working_value: string
 }
 function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
@@ -160,12 +158,7 @@ function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
 
     let new_value: Date | undefined = correct_datetime_for_local_time_zone(working_value)
 
-    if (!is_value_valid(working_value))
-    {
-        // Custom date is not valid
-        new_value = undefined
-    }
-    else if (new_value.getTime() === (invariant_value && invariant_value.getTime()))
+    if (new_value && new_value.getTime() === (invariant_value && invariant_value.getTime()))
     {
         // Custom date is not needed
         new_value = undefined

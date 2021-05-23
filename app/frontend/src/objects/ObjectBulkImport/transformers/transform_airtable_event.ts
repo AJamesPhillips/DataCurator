@@ -1,6 +1,6 @@
 import type { CoreObject } from "../../../state/State"
 import { get_new_object_id } from "../../../shared/utils/ids"
-import type { DateString, TransformAirtableRecordArgs } from "../interfaces"
+import type { TransformAirtableRecordArgs } from "../interfaces"
 import { EXTERNAL_ID_KEY, PATTERN_ID_EVENT } from "../_common"
 import { date_string_to_string, airtable_multi_field_to_multi_attributes } from "./common"
 
@@ -12,7 +12,7 @@ export interface AirtableEvent
     createdTime: string
     fields: Partial<{
         title: string
-        date: DateString
+        date: string
         description: string
         related_actions: string[]
     }>

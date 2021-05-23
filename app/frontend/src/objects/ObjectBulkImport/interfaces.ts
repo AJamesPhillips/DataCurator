@@ -17,9 +17,6 @@ export interface AirtableToTempIdsMap
 }
 
 
-export type DateString = string
-
-
 export interface TempIdFunc {
     (id: string | undefined): string
 }

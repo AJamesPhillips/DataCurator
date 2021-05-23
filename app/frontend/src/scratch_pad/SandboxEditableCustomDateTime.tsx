@@ -22,7 +22,6 @@ export function SandboxEditableCustomDateTime ()
         /> */}
 
         <EditableCustomDateTime
-            invariant_value={undefined}
             value={custom_date}
             on_change={custom_date => custom_date && set_custom_date(custom_date)}
         />

@@ -20,7 +20,6 @@ export function UncertainDateTime (props: OwnProps)
         <div className="datetime_section">
             <div className="datetime_title">min:</div>
             <div className="datetime_value"><EditableCustomDateTime
-                invariant_value={undefined}
                 value={datetime.min}
                 on_change={min => on_change({ ...datetime, min })}
             /></div>
@@ -28,7 +27,6 @@ export function UncertainDateTime (props: OwnProps)
         <div className="datetime_section">
             <div className="datetime_title">DateTime:</div>
             <div className="datetime_value"><EditableCustomDateTime
-                invariant_value={undefined}
                 value={datetime.value}
                 on_change={value => on_change({ ...datetime, value })}
             /></div>
@@ -36,7 +34,6 @@ export function UncertainDateTime (props: OwnProps)
         <div className="datetime_section">
             <div className="datetime_title">max:</div>
             <div className="datetime_value"><EditableCustomDateTime
-                invariant_value={undefined}
                 value={datetime.max}
                 on_change={max => on_change({ ...datetime, max })}
             /></div>
