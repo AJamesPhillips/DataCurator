@@ -1,37 +1,26 @@
 import type { CreationContextState } from "../interfaces"
+import { date2str_auto } from "./date_helpers"
 
 
 
 export type TimeResolution = "minute" | "hour" | "day"
 
 
-const MSECONDS_PER_MINUTE = 60000
-const MSECONDS_PER_HOUR = 60 * MSECONDS_PER_MINUTE
-const MSECONDS_PER_DAY = MSECONDS_PER_HOUR * 24
-
-function time_resolution_to_factor (time_resolution: TimeResolution): number
-{
-    let factor = MSECONDS_PER_MINUTE
-    if (time_resolution === "hour") factor = MSECONDS_PER_HOUR
-    else if (time_resolution === "day") factor = MSECONDS_PER_DAY
-
-    return factor
-}
-
-
 
 export function floor_mseconds_to_resolution (ms: number, time_resolution: TimeResolution): number
 {
-    const factor = time_resolution_to_factor(time_resolution)
+    const date = floor_datetime_to_resolution(new Date(ms), time_resolution)
 
-    return Math.floor(ms / factor) * factor
+    return date.getTime()
 }
 
 
 
 export function floor_datetime_to_resolution (date: Date, time_resolution: TimeResolution)
 {
-    return new Date(floor_mseconds_to_resolution(date.getTime(), time_resolution))
+    const str = date2str_auto({ date, time_resolution })
+
+    return new Date(str)
 }
 
 
