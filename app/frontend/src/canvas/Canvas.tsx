@@ -10,6 +10,7 @@ import { lefttop_to_xy, MoveToPositionButton } from "./MoveToPositionButton"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { BoundingRect, bounding_rects_equal } from "../state/display/state"
 import { pub_sub } from "../state/pub_sub/pub_sub"
+import { grid_small_step } from "./position_utils"
 
 
 
@@ -212,9 +213,10 @@ class _Canvas extends Component<Props>
         const x = -1 * this.props.x * scale
         const y = this.props.y * scale
 
+        const backgroundSize = grid_small_step * scale
         const background_style = {
             backgroundPosition: `${x}px ${y}px`,
-            backgroundSize: `${20 * scale}px ${20 * scale}px`,
+            backgroundSize: `${backgroundSize}px ${backgroundSize}px`,
             height: "100%",
         }
         const html_translation_container_style = {

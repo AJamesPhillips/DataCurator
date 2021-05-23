@@ -1,9 +1,24 @@
 import { test } from "../shared/utils/test"
-import { round_coordinate20 } from "../state/display/display"
 import type { BoundingRect } from "../state/display/state"
 import { bounded } from "../utils/utils"
 import type { CanvasPoint, Position } from "./interfaces"
 import { scale_by } from "./zoom_utils"
+
+
+export const grid_small_step = 20
+export const grid_large_step = grid_small_step * 10
+
+
+export function round_coordinate (num: number, round_to: number): number
+{
+    return Math.round(num / round_to) * round_to
+}
+
+
+export function round_coordinate_small_step (num: number): number
+{
+    return round_coordinate(num, grid_small_step)
+}
 
 
 
@@ -16,7 +31,7 @@ export function position_to_point (position: Position): CanvasPoint
 
 export function round_canvas_point (point: CanvasPoint): CanvasPoint
 {
-    return { left: round_coordinate20(point.left), top: round_coordinate20(point.top) }
+    return { left: round_coordinate_small_step(point.left), top: round_coordinate_small_step(point.top) }
 }
 
 

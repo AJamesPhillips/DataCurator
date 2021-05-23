@@ -1,4 +1,5 @@
 import type { Store } from "redux"
+import { round_coordinate } from "../../canvas/position_utils"
 
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
@@ -54,17 +55,4 @@ export function calculate_xy_for_put_middle (args: { x: number, y: number, zoom:
     const y = args.y + ((half_screen_height * (100 / args.zoom)) - (v_step / 2))
 
     return { x, y }
-}
-
-
-
-function round_coordinate (num: number, round_to: number): number
-{
-    return Math.round(num / round_to) * round_to
-}
-
-
-export function round_coordinate20 (num: number): number
-{
-    return round_coordinate(num, 20)
 }
