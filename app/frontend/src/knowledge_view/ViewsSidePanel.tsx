@@ -43,10 +43,7 @@ function _ViewsSidePanel (props: Props)
     }))
 
     return <div className="views_side_panel">
-        <b>Views</b>
-
-        <br />
-        <br />
+        <h3>Views</h3>
 
         {views.map(({ view, name }) => {
             const subview_id = view === "knowledge" ? props.base_knowledge_view_id : undefined

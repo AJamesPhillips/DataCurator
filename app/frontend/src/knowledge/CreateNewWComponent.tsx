@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { CreationContextState } from "../shared/interfaces"
 
-import type { WComponentType } from "../shared/wcomponent/interfaces/wcomponent"
+import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent"
 import { Button } from "../sharedf/Button"
 import type { RootState } from "../state/State"
 import "./CreateNewWComponent.css"
@@ -11,7 +11,7 @@ import { create_wcomponent } from "./create_wcomponent_type"
 
 
 const map_state = (state: RootState) => ({
-    a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
+    // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
     creation_context: state.creation_context,
 })
 
@@ -21,47 +21,25 @@ type Props = ConnectedProps<typeof connector>
 
 function _CreateNewWComponent (props: Props)
 {
-    const { a_selected_wcomponent_id: judgement_target_wcomponent_id, creation_context } = props
+    const {
+        // a_selected_wcomponent_id: judgement_target_wcomponent_id,
+        creation_context,
+    } = props
+
+    const exclude: Set<WComponentType> = new Set(["counterfactual"])
+    const types = wcomponent_types.filter(t => !exclude.has(t))
 
     return <div class="create_mew_wcomponent">
-        <p>
+        <h3>
             Create new component
-        </p>
-        <i>(Will also add to current knowledge view)</i>
+        </h3>
 
-        <Button
-            value="Create Node (process)"
+        {types.map(type => <Button
+            value={type}
             extra_class_names="creation_option left"
             size="normal"
-            on_pointer_down={() => create_wcomponent_type("process", creation_context)}
-        />
-        <Button
-            value="Create Node (statement / simple state)"
-            extra_class_names="creation_option left"
-            size="normal"
-            on_pointer_down={() => create_wcomponent_type("state", creation_context)}
-        />
-        <Button
-            value="Create Node (complex state)"
-            extra_class_names="creation_option left"
-            size="normal"
-            on_pointer_down={() => create_wcomponent_type("statev2", creation_context)}
-        />
-        <Button
-            value="Create Judgement"
-            extra_class_names="creation_option left"
-            size="normal"
-            on_pointer_down={() => create_wcomponent({
-                wcomponent: { type: "judgement", judgement_target_wcomponent_id },
-                creation_context,
-            })}
-        />
-        <Button
-            value="Create Connection (causal link)"
-            extra_class_names="creation_option left"
-            size="normal"
-            on_pointer_down={() => create_wcomponent_type("causal_link", creation_context)}
-        />
+            on_pointer_down={() => create_wcomponent_type(type, creation_context)}
+        />)}
     </div>
 }
 
