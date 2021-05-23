@@ -8,6 +8,7 @@ import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { Link } from "../utils/Link"
 
 
 
@@ -19,17 +20,21 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const knowledge_view = get_current_knowledge_view_from_state(state)
-    const knowledge_view_entry = knowledge_view && knowledge_view.wc_id_map[own_props.wcomponent_id]
+    const { wcomponent_id } = own_props
+
+    const current_knowledge_view = get_current_knowledge_view_from_state(state)
+    const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id]
     const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
-    const UI_knowledge_view_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.wcomponent_id]
+    const UI_knowledge_view_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[wcomponent_id]
+    const all_knowledge_views = state.derived.knowledge_views
 
     return {
-        wcomponent: get_wcomponent_from_state(state, own_props.wcomponent_id),
-        knowledge_view_id: knowledge_view && knowledge_view.id,
-        knowledge_view_title: knowledge_view && knowledge_view.title,
+        wcomponent: get_wcomponent_from_state(state, wcomponent_id),
+        knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
+        knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
         UI_knowledge_view_entry,
         knowledge_view_entry,
+        all_knowledge_views,
     }
 }
 
@@ -46,11 +51,16 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeView (props: Props)
 {
-    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry, knowledge_view_entry } = props
+    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry, knowledge_view_entry, all_knowledge_views } = props
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
 
     if (!knowledge_view_id) return <div>No current knowledge view selected</div>
+
+
+    const other_knowledge_views = all_knowledge_views
+        .filter(({ id }) => id !== knowledge_view_id)
+        .filter(({ wc_id_map }) => wc_id_map[wcomponent_id])
 
 
     function update (arg: Partial<KnowledgeViewWComponentEntry>)
@@ -108,6 +118,16 @@ function _WComponentKnowledgeView (props: Props)
                 on_delete={() => delete_entry()}
             />
             Remove from current knowledge view ({knowledge_view_title})
+        </div>}
+
+        {other_knowledge_views.length > 0 && <div>
+            <br />
+            Also in:
+            {other_knowledge_views.map(kv => <div>
+                <Link route={undefined} sub_route={undefined} item_id={undefined} args={{ subview_id: kv.id }}>
+                    {kv.title}
+                </Link>
+            </div>)}
         </div>}
     </div>
 }
