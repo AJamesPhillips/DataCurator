@@ -10,6 +10,7 @@ import { SearchWindow } from "./SearchWindow"
 
 interface OwnProps
 {
+    initial_search_term?: string
     on_change: (option_id: string | undefined) => void
     on_blur: () => void
 }
@@ -35,6 +36,7 @@ function _WComponentSearchWindow (props: Props)
         search_window_title="Search for Component"
         placeholder="WComponent..."
         selected_option_id={""}
+        initial_search_term={props.initial_search_term}
         allow_none={true}
         options={options}
         on_change={option_id => props.on_change(option_id)}

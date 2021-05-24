@@ -24,6 +24,7 @@ export function SearchWindow (props: OwnProps)
             <AutocompleteText
                 placeholder={props.placeholder}
                 selected_option_id={props.selected_option_id}
+                initial_search_term={props.initial_search_term}
                 options={props.options}
                 allow_none={props.allow_none}
                 on_focus={props.on_focus}

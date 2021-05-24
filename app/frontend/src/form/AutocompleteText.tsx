@@ -22,6 +22,7 @@ export interface AutoCompleteProps <E extends AutoCompleteOption = AutoCompleteO
 {
     placeholder: string
     selected_option_id: string | undefined
+    initial_search_term?: string
     options: E[]
     allow_none?: boolean
     on_focus?: () => void
@@ -54,8 +55,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
     {
         super(props)
         this.state = {
-            temp_value_str: undefined,
-            // option_id: props.selected_option_id,
+            temp_value_str: props.initial_search_term,
             editing: !!props.start_expanded,
             highlighted_option_index: 0,
         }

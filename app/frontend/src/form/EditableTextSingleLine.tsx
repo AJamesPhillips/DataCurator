@@ -150,13 +150,15 @@ export function ConditionalWComponentSearchWindow (props: ConditionalWComponentS
         conditional_on_change, set_id_insertion_point,
     } = props
 
-    console.log("rendering ConditionalWComponentSearchWindow")
+
+    const initial_search_term = get_initial_search_term({ value, id_insertion_point })
+
 
     return <WComponentSearchWindow
+        initial_search_term={initial_search_term}
         on_change={_id_to_insert => id_to_insert.current = _id_to_insert}
         on_blur={() =>
         {
-            console.log("bluring ConditionalWComponentSearchWindow")
             const new_value = insert_id_into_text({
                 value,
                 id_to_insert: id_to_insert.current,
@@ -170,6 +172,22 @@ export function ConditionalWComponentSearchWindow (props: ConditionalWComponentS
             conditional_on_change(new_value)
         }}
     />
+}
+
+
+
+interface GetInitialSearchTermArgs
+{
+    value: string
+    id_insertion_point: number
+}
+function get_initial_search_term (args: GetInitialSearchTermArgs)
+{
+    const text_after_insertion_point = args.value.slice(args.id_insertion_point)
+
+    const search_term_match = text_after_insertion_point.match(/\s*(\w+)/)
+
+    return search_term_match ? search_term_match[1] : ""
 }
 
 
