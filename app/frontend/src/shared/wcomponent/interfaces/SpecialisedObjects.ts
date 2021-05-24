@@ -112,9 +112,9 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
 
-export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is WComponentJudgement
+export function wcomponent_is_judgement_or_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
-    return wcomponent.type === "judgement"
+    return wcomponent.type === "judgement" || wcomponent.type === "objective"
 }
 
 export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
@@ -124,7 +124,7 @@ export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponen
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
-    return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement(wcomponent)
+    return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent)
 }
 
 export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)

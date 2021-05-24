@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WComponent, wcomponent_is_judgement } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../shared/wcomponent/interfaces/uncertainty"
 import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import type { RootState } from "../../state/State"
@@ -22,7 +22,7 @@ const map_state = (state: RootState, own_props: OwnProps) => {
 
     let target_wcomponent: WComponent | undefined = undefined
     let target_counterfactuals: WComponentCounterfactuals | undefined = undefined
-    if (wcomponent && wcomponent_is_judgement(wcomponent))
+    if (wcomponent && wcomponent_is_judgement_or_objective(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
         target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
@@ -49,7 +49,7 @@ function _JudgementBadgeC (props: Props)
 {
     const { judgement_id, wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
 
-    if (!wcomponent || !target_wcomponent || !wcomponent_is_judgement(wcomponent)) return null
+    if (!wcomponent || !target_wcomponent || !wcomponent_is_judgement_or_objective(wcomponent)) return null
 
     const judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 

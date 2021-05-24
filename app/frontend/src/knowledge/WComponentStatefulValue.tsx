@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
 import {
     WComponent,
-    wcomponent_is_judgement,
+    wcomponent_is_judgement_or_objective,
     wcomponent_is_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
@@ -30,7 +30,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     let wc_counterfactuals: WComponentCounterfactuals | undefined
     let target_wcomponent: WComponent | undefined = undefined
-    if (wcomponent_is_judgement(wcomponent))
+    if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
         target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
@@ -83,7 +83,7 @@ function process_props (props: Props)
         ui_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         is_empty = ui_value.value === undefined
     }
-    else if (wcomponent_is_judgement(wcomponent))
+    else if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         is_judgement = true
         is_empty = false

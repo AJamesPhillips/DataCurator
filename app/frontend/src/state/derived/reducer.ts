@@ -1,5 +1,5 @@
 import { project_priorities_derived_reducer } from "../../priorities/project_priorities/project_priorities_derived_reducer"
-import { wcomponent_is_judgement } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
@@ -65,6 +65,7 @@ function update_wcomponent_ids_by_type (state: RootState)
         causal_link: new Set(),
         relation_link: new Set(),
         judgement: new Set(),
+        objective: new Set(),
         counterfactual: new Set(),
     }
 
@@ -89,7 +90,7 @@ function update_judgement_ids_by_target_id (state: RootState)
         return state.specialised_objects.wcomponents_by_id[judgement_id]
     })
     .filter(is_defined)
-    .filter(wcomponent_is_judgement)
+    .filter(wcomponent_is_judgement_or_objective)
     // .sort () // some kind of sort so that front end display is stable and predictable
     .forEach(judgement =>
     {

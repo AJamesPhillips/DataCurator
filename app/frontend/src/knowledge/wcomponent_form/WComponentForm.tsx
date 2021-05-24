@@ -14,7 +14,7 @@ import {
     WComponent,
     wcomponent_is_plain_connection,
     wcomponent_is_statev1,
-    wcomponent_is_judgement,
+    wcomponent_is_judgement_or_objective,
     wcomponent_is_statev2,
     wcomponent_has_validity_predictions,
     wcomponent_has_existence_predictions,
@@ -198,7 +198,7 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
-        {wcomponent_is_judgement(wcomponent) && <JudgementFields { ...{ wcomponent, upsert_wcomponent }} /> }
+        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
         <p>
             <EditableText

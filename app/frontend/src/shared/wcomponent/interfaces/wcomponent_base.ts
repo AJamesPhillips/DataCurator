@@ -6,7 +6,7 @@ import type { ExistencePredictions, ValidityPredictions } from "./uncertainty"
 
 export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual"
 export type WComponentConnectionType = "causal_link" | "relation_link"
-export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement"
+export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective"
 const _wcomponent_types: {[P in WComponentType]: true} = {
     event: true,
     state: true,
@@ -17,6 +17,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     causal_link: true,
     relation_link: true,
     judgement: true,
+    objective: true,
     counterfactual: true,
 }
 export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()

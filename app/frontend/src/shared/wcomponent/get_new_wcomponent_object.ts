@@ -33,7 +33,7 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
         }
         wcomponent = causal_link
     }
-    else if (args.type === "judgement")
+    else if (args.type === "judgement" || args.type === "objective")
     {
         const judgement: WComponentJudgement = {
             judgement_target_wcomponent_id: "",

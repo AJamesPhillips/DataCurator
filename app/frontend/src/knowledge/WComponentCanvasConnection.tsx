@@ -10,7 +10,7 @@ import {
     WComponentConnection,
     wcomponent_is_plain_connection,
     ConnectionLocationType,
-    wcomponent_is_judgement,
+    wcomponent_is_judgement_or_objective,
     KnowledgeViewWComponentIdEntryMap,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
@@ -172,7 +172,7 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
         from_connection_location = connection_terminal_type_to_location("from", wcomponent.from_type)
         to_connection_location = connection_terminal_type_to_location("to", wcomponent.to_type)
     }
-    else if (wcomponent_is_judgement(wcomponent))
+    else if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         from_node_position = wc_id_map[wcomponent.id]
         to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
