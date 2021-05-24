@@ -24,7 +24,7 @@ interface OwnProps
 export function EditableTextSingleLine (props: OwnProps)
 {
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
-    const on_focus_set_cursor_position = useRef<number | undefined>(undefined)
+    const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
     const { on_change, disabled } = props
@@ -48,15 +48,15 @@ export function EditableTextSingleLine (props: OwnProps)
                 // focus this input box now
                 if (id_insertion_point !== undefined) return
 
-                const position = on_focus_set_cursor_position.current
-                on_focus_set_cursor_position.current = undefined
+                const position = on_focus_set_selection.current
+                on_focus_set_selection.current = undefined
 
                 if (el && position !== undefined)
                 {
                     setTimeout(() => {
                         el.focus()
                         // el.setSelectionRange(0, value.length)
-                        el.setSelectionRange(position, position)
+                        el.setSelectionRange(position[0], position[1])
                     }, 0)
                 }
             }}
@@ -79,7 +79,7 @@ export function EditableTextSingleLine (props: OwnProps)
             value={props.value}
             id_insertion_point={id_insertion_point}
             set_id_insertion_point={set_id_insertion_point}
-            on_focus_set_cursor_position={on_focus_set_cursor_position}
+            on_focus_set_selection={on_focus_set_selection}
             conditional_on_change={conditional_on_change}
         />}
     </div>
@@ -138,7 +138,7 @@ interface ConditionalWComponentSearchWindowProps
     value: string
     id_insertion_point: number
     set_id_insertion_point: (id_insertion_point: number | undefined) => void
-    on_focus_set_cursor_position: Ref<number | undefined>
+    on_focus_set_selection: Ref<[number, number] | undefined>
     conditional_on_change: (new_value: string) => void
 }
 export function ConditionalWComponentSearchWindow (props: ConditionalWComponentSearchWindowProps)
@@ -146,7 +146,7 @@ export function ConditionalWComponentSearchWindow (props: ConditionalWComponentS
     const id_to_insert = useRef<string | undefined>(undefined)
 
     const {
-        value, id_insertion_point, on_focus_set_cursor_position,
+        value, id_insertion_point, on_focus_set_selection,
         conditional_on_change, set_id_insertion_point,
     } = props
 
@@ -165,9 +165,10 @@ export function ConditionalWComponentSearchWindow (props: ConditionalWComponentS
                 id_insertion_point,
             })
 
-            const cursor_position_at_end_of_inserted_id = id_insertion_point + (id_to_insert.current !== undefined ? id_to_insert.current.length : 0)
+            const end_of_inserted_id = id_insertion_point + (id_to_insert.current !== undefined ? id_to_insert.current.length : 0)
+            const end_of_search_term = end_of_inserted_id + (initial_search_term !== undefined ? initial_search_term.length : 0)
 
-            on_focus_set_cursor_position.current = cursor_position_at_end_of_inserted_id
+            on_focus_set_selection.current = [end_of_inserted_id, end_of_search_term]
             set_id_insertion_point(undefined)
             conditional_on_change(new_value)
         }}
@@ -185,7 +186,7 @@ function get_initial_search_term (args: GetInitialSearchTermArgs)
 {
     const text_after_insertion_point = args.value.slice(args.id_insertion_point)
 
-    const search_term_match = text_after_insertion_point.match(/\s*(\w+)/)
+    const search_term_match = text_after_insertion_point.match(/^(\w+)/)
 
     return search_term_match ? search_term_match[1] : ""
 }

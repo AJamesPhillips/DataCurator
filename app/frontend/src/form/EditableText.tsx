@@ -33,7 +33,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _EditableText (props: Props)
 {
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
-    const on_focus_set_cursor_position = useRef<number | undefined>(undefined)
+    const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
     const { placeholder, value, on_change, rich_text } = props
@@ -56,15 +56,15 @@ function _EditableText (props: Props)
                 // focus this input box now
                 if (id_insertion_point !== undefined) return
 
-                const position = on_focus_set_cursor_position.current
-                on_focus_set_cursor_position.current = undefined
+                const position = on_focus_set_selection.current
+                on_focus_set_selection.current = undefined
 
                 if (el && position !== undefined)
                 {
                     setTimeout(() => {
                         el.focus()
                         // el.setSelectionRange(0, value.length)
-                        el.setSelectionRange(position, position)
+                        el.setSelectionRange(position[0], position[1])
                     }, 0)
                 } else if (props.force_focus && el)
                 {
@@ -100,7 +100,7 @@ function _EditableText (props: Props)
             value={props.value}
             id_insertion_point={id_insertion_point}
             set_id_insertion_point={set_id_insertion_point}
-            on_focus_set_cursor_position={on_focus_set_cursor_position}
+            on_focus_set_selection={on_focus_set_selection}
             conditional_on_change={conditional_on_change}
         />}
     </div>
