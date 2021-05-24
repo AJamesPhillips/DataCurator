@@ -1,5 +1,7 @@
+import type { WComponentNodeAction } from "./action"
 import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
+import type { WComponentGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"
 import type { KnowledgeView } from "./knowledge_view"
 import type {
@@ -38,11 +40,6 @@ interface WComponentNodeProcessBase
     // end: TemporalUncertainty
 }
 
-export interface WComponentNodeAction extends WComponentNodeBase, WComponentNodeProcessBase
-{
-    type: "action"
-}
-
 
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeState
@@ -50,10 +47,11 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentNodeProcess
     | WComponentNodeAction
     | WComponentCounterfactual
+    | WComponentGoal
 
 
 export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
-export type ConnectionTerminalType = "meta" | "validity" | "value"
+export type ConnectionTerminalType = "meta" | "validity" | "value" // | "existence"
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
 export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {

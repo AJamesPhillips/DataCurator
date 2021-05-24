@@ -1,4 +1,4 @@
-import type { Base } from "./base"
+import type { Base, HasVersion } from "./base"
 import type { TemporalUncertainty, PredictionBase } from "./uncertainty"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
@@ -79,11 +79,6 @@ export interface StateValueAndPredictionsSet extends Base, HasVersion
     // example(s).
     // 2021-05-08 see Issue #8
     previous_VAP_set_ids?: string[]
-}
-
-export interface HasVersion
-{
-    version: number
 }
 
 

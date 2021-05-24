@@ -13,6 +13,7 @@ export function create_new_knowledge_view (args: Partial<KnowledgeView> = {}, cr
         title: "",
         description: "",
         wc_id_map: {},
+        goal_ids: [],
         ...args,
     }
 

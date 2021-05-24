@@ -19,6 +19,7 @@ export function get_derived_starting_state (): DerivedState
             judgement: new Set(),
             objective: new Set(),
             counterfactual: new Set(),
+            goal: new Set(),
         },
         knowledge_views: [],
 

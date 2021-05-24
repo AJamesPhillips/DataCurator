@@ -4,7 +4,7 @@ import type { ExistencePredictions, ValidityPredictions } from "./uncertainty"
 
 
 
-export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual"
+export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual" | "goal"
 export type WComponentConnectionType = "causal_link" | "relation_link"
 export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective"
 const _wcomponent_types: {[P in WComponentType]: true} = {
@@ -19,6 +19,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     judgement: true,
     objective: true,
     counterfactual: true,
+    goal: true,
 }
 export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()
 
@@ -27,8 +28,6 @@ export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types
 export interface WComponentBase extends Base
 {
     type: WComponentType
-    // previous_versions: WComponentID[] // could be formed from more than one previous WComponent
-    // next_versions: WComponentID[] // more than one next WComponent could be formed from this
 
     // Explainable
     title: string
@@ -36,7 +35,8 @@ export interface WComponentBase extends Base
 }
 
 
-
+// TODO: Judgments are also nodes on the canvas so we should rename `WComponentNodeBase` to
+// something else.
 export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentNodeType

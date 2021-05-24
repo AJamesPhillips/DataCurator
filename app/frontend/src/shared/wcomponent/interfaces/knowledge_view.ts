@@ -1,11 +1,13 @@
+import type { Base } from "./base";
+import type { Project } from "./project"
 
 
 
-export interface KnowledgeView {
-    id: string;
-    created_at: Date;
+export interface KnowledgeView extends Base, Project {
+    // Explainable
     title: string;
     description: string;
+
     wc_id_map: KnowledgeViewWComponentIdEntryMap;
     is_base?: true;
     allows_assumptions?: true;

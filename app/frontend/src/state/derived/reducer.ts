@@ -67,6 +67,7 @@ function update_wcomponent_ids_by_type (state: RootState)
         judgement: new Set(),
         objective: new Set(),
         counterfactual: new Set(),
+        goal: new Set(),
     }
 
     state.derived.wcomponents.forEach(wcomponent =>

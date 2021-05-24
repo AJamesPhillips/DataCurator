@@ -9,6 +9,7 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
     wcomponent_has_VAP_sets as wcomponent_has_VAP_sets,
+    wcomponent_is_action,
     wcomponent_is_plain_connection,
     wcomponent_is_process,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -92,6 +93,7 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
 
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
     wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent)
+    wcomponent = upgrade_2021_05_24_action(wcomponent)
 
     return wcomponent
 }
@@ -108,6 +110,7 @@ function upgrade_2021_05_19_connection_fromto_types (type?: string): ConnectionT
     return (type || "value") as ConnectionTerminalType
 }
 
+
 // Upgrade valid as of 2021-05-19
 function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
 {
@@ -121,6 +124,7 @@ function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
 
     return wcomponent_action as WComponent
 }
+
 
 // Upgrade valid as of 2021-05-19
 function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
@@ -159,6 +163,18 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
 }
 
 
+function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent
+{
+    if (wcomponent_is_action(wcomponent))
+    {
+        const depends_on_action_ids = wcomponent.depends_on_action_ids || []
+        wcomponent = { ...wcomponent, depends_on_action_ids }
+    }
+
+    return wcomponent
+}
+
+
 
 const parse_prediction = (prediction: Prediction) => parse_dates(prediction)
 const parse_values = (value: StateValueString) => parse_dates(value)
@@ -168,10 +184,21 @@ const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) 
 
 function parse_knowledge_view (knowledge_view: KnowledgeView): KnowledgeView
 {
-    return {
+    knowledge_view = {
         ...knowledge_view,
         created_at: new Date(knowledge_view.created_at),
     }
+
+    return upgrade_2021_05_24_knowledge_view(knowledge_view)
+}
+
+
+function upgrade_2021_05_24_knowledge_view (knowledge_view: KnowledgeView): KnowledgeView
+{
+    // data migrate to ensure goal_ids array is always present
+    // TODO remove once MVP1.0
+    const goal_ids = knowledge_view.goal_ids || []
+    return { ...knowledge_view, goal_ids }
 }
 
 

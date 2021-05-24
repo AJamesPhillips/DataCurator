@@ -1,13 +1,25 @@
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
+// potential == you have no yet made a decision to prioritise / reject this goal.
+// prioritised == neither potential, active nor inactive
+// active == you are actively pursuing this goal
+export type GoalStatuses = "potential" | "prioritised" | "active" | GoalInactiveStatuses
+// completed == completed
+//
+// invalid == it does not make sense any more, i,e,. it does not make
+//    sense any more, e.g. you want to help company X but they are fine
+//    now so don't need any help
+//
+// rejected === it is not what you want to do, e.g. because it's actually
+//    not going to help, or because there are higher priorities
+export type GoalInactiveStatuses = "completed" | "invalid" | "rejected"
 
-// export interface WComponentGoal extends WComponentNodeBase
-// {
-//     type: "goal"
-//     active: boolean
-//     // for now treat as a doubly linked list instead of as a DAG but allow for the
-//     // DAG more easily in the future with this data structured.
-//     prioritised_lower_than_ids: string[]
-//     prioritised_higher_than_ids: string[]
-// }
+
+export interface WComponentGoal extends WComponentNodeBase
+{
+    type: "goal"
+    status: GoalStatuses
+    status_reason: string
+    objective_ids: string[] // ids from WComponentJudgement
+}
