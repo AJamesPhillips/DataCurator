@@ -1,6 +1,4 @@
 import {
-    KnowledgeView,
-    KnowledgeViewWComponentIdEntryMap,
     wcomponent_is_counterfactual,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../../shared/wcomponent/interfaces/uncertainty"
@@ -9,6 +7,10 @@ import { update_substate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view } from "../accessors"
+import type {
+    KnowledgeView,
+    KnowledgeViewWComponentIdEntryMap,
+} from "../../../shared/wcomponent/interfaces/knowledge_view"
 
 
 

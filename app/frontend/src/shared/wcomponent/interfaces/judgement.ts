@@ -23,6 +23,7 @@ export interface WComponentJudgement extends WComponentBase
     judgement_comparator_value: string
     judgement_manual?: boolean
     // judgements: Judgement[]
+    // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
 }
 type JudgementOperator = "==" | "!=" | "<" | "<=" | ">" | ">="
 const _judgement_operators: {[P in JudgementOperator]: true} = {

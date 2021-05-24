@@ -1,9 +1,9 @@
 import type { Action, AnyAction } from "redux"
 
 import type {
-    KnowledgeView,
     KnowledgeViewWComponentEntry,
-} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+    KnowledgeView,
+} from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { bulk_editing_knowledge_view_entries_actions } from "./bulk_edit/actions"
 
 

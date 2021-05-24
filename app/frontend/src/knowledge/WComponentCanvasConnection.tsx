@@ -3,15 +3,17 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
-import {
+import type {
+    KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
+} from "../shared/wcomponent/interfaces/knowledge_view"
+import {
     WComponent,
+    wcomponent_is_plain_connection,
     wcomponent_can_render_connection,
     WComponentConnection,
-    wcomponent_is_plain_connection,
     ConnectionLocationType,
     wcomponent_is_judgement_or_objective,
-    KnowledgeViewWComponentIdEntryMap,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
@@ -19,9 +21,9 @@ import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
-    connection_terminal_type_to_location,
-    wcomponent_existence_for_datetimes,
     wcomponent_is_invalid_for_datetime,
+    wcomponent_existence_for_datetimes,
+    connection_terminal_type_to_location,
 } from "./utils"
 
 

@@ -1,4 +1,4 @@
-import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 

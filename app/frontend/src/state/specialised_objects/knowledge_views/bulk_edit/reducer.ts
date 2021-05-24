@@ -1,11 +1,14 @@
 import type { AnyAction } from "redux"
-import type {
-    KnowledgeView,
-    KnowledgeViewWComponentIdEntryMap,
-} from "../../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
+import type {
+    KnowledgeViewWComponentIdEntryMap,
+    KnowledgeView,
+} from "../../../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../../../State"
-import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state } from "../../accessors"
+import {
+    get_current_knowledge_view_from_state,
+    get_current_UI_knowledge_view_from_state,
+} from "../../accessors"
 import { handle_upsert_knowledge_view } from "../utils"
 import { is_bulk_add_to_knowledge_view, is_bulk_edit_knowledge_view_entries } from "./actions"
 

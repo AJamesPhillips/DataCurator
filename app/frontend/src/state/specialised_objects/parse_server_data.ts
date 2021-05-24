@@ -1,12 +1,9 @@
 import { get_new_VAP_id } from "../../shared/utils/ids"
 import {
     ConnectionTerminalType,
-    KnowledgeView,
     Perception,
     SpecialisedObjectsFromToServer,
     WComponent,
-    WComponentNodeAction,
-    WComponentNodeProcess,
     wcomponent_has_event_at,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
@@ -15,6 +12,7 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_process,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/wcomponent/interfaces/state"
 import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
 

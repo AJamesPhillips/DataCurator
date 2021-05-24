@@ -2,6 +2,8 @@ import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
+} from "../../shared/wcomponent/interfaces/knowledge_view"
+import type {
     Perception,
     WComponent,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"

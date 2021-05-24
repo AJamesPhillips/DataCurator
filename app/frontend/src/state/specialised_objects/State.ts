@@ -1,8 +1,8 @@
 import type {
-    KnowledgeViewsById,
     Perception,
     WComponentsById,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { KnowledgeViewsById } from "../../shared/wcomponent/interfaces/knowledge_view"
 
 
 

@@ -1,6 +1,7 @@
 import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
+import type { KnowledgeView } from "./knowledge_view"
 import type {
     HasVAPSets,
     StateValueAndPredictionsSet,
@@ -151,47 +152,6 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }
-
-
-// interface ProcessActiveStatus extends StateValueBase
-// {
-//     active: boolean | null
-// }
-
-
-// export interface Judgement extends StateValueBase
-// {
-//     value: boolean | null
-//     // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
-// }
-
-export interface KnowledgeViewWComponentIdEntryMap
-{
-    [world_component_id: string]: KnowledgeViewWComponentEntry
-}
-
-export interface KnowledgeView
-{
-    id: string
-    created_at: Date
-    title: string
-    description: string
-    wc_id_map: KnowledgeViewWComponentIdEntryMap
-    is_base?: true
-    allows_assumptions?: true
-    foundation_knowledge_view_ids?: string[]
-}
-export type KnowledgeViewsById = { [id: string]: KnowledgeView /*| undefined*/ }
-
-export interface KnowledgeViewWComponentEntry
-{
-    // TODO remove left and top and abstract over the upside down browser coordinate system by using x and y
-    left: number
-    top: number
-    // x: number
-    // y: number
-}
-
 
 
 // export interface JudgementView
