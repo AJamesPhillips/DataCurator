@@ -25,8 +25,7 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
 
 
         const position = round_canvas_point({ left: double_tap.x - 20, top: -double_tap.y - 20 })
-
-        const add_to_knowledge_view: AddToKnowledgeViewArgs = { id: current_knowledge_view.id, position}
+        const add_to_knowledge_view: AddToKnowledgeViewArgs = { id: current_knowledge_view.id, position }
 
 
         create_wcomponent({

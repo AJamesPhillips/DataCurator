@@ -18,6 +18,7 @@ interface CreateWComponentArgs
     wcomponent: Partial<WComponent>
     creation_context: CreationContextState
     add_to_knowledge_view?: AddToKnowledgeViewArgs
+    must_add_to_knowledge_view?: boolean
     store?: Store<RootState>
 }
 
@@ -39,6 +40,14 @@ export function create_wcomponent (args: CreateWComponentArgs)
     }
 
 
+    const { must_add_to_knowledge_view=true } = args
+    if (must_add_to_knowledge_view && !add_to_knowledge_view)
+    {
+        console.error("No knowledge view to add new wcomponent too")
+        return false
+    }
+
+
     const created_at_ms = get_created_at_ms(wcomponent) + 60000
     const datetime = new Date(created_at_ms)
 
@@ -47,4 +56,5 @@ export function create_wcomponent (args: CreateWComponentArgs)
     store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
     store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({ datetime }))
     store.dispatch(ACTIONS.routing.change_route({ item_id: wcomponent.id }))
+    return true
 }
