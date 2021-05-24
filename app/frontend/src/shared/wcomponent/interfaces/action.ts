@@ -1,11 +1,18 @@
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
+export interface StartedStoppedAt
+{
+    // started_at and stopped_at are not necessary if WComponentBase or Base are versioned
+    started_at?: Date
+    stopped_at?: Date
+}
+
 
 // prioritised == actions which are 'to do'
 type ActionStatus = "potential" | "icebox" | "prioritised" | "in progress" | "completed" | "rejected"
 
-export interface WComponentNodeAction extends WComponentNodeBase
+export interface WComponentNodeAction extends WComponentNodeBase, StartedStoppedAt
 {
     type: "action"
     // +++ 2021-05-24
@@ -28,10 +35,6 @@ export interface WComponentNodeAction extends WComponentNodeBase
 
     status?: ActionStatus
     reason_for_status: string
-
-    // started_at and stopped_at are not necessary if WComponentBase or Base are versioned
-    started_at?: Date
-    stopped_at?: Date
 
     encompassing_action_id?: string
     depends_on_action_ids: string[]

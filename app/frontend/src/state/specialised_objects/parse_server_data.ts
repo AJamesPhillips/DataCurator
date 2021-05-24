@@ -6,6 +6,7 @@ import {
     WComponent,
     wcomponent_has_event_at,
     wcomponent_has_existence_predictions,
+    wcomponent_has_started_stopped_at,
     wcomponent_has_validity_predictions,
     wcomponent_has_values,
     wcomponent_has_VAP_sets as wcomponent_has_VAP_sets,
@@ -89,6 +90,12 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
     {
         wcomponent.from_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.from_type)
         wcomponent.to_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.to_type)
+    }
+
+    if (wcomponent_has_started_stopped_at(wcomponent))
+    {
+        wcomponent.started_at = optional_date(wcomponent.started_at)
+        wcomponent.stopped_at = optional_date(wcomponent.stopped_at)
     }
 
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)

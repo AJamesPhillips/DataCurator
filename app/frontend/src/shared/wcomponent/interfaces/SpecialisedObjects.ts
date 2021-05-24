@@ -1,4 +1,4 @@
-import type { WComponentNodeAction } from "./action"
+import type { StartedStoppedAt, WComponentNodeAction } from "./action"
 import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentGoal } from "./goal"
@@ -149,6 +149,12 @@ export function wcomponent_has_values (wcomponent: WComponent): wcomponent is (W
 export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
+}
+
+
+export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
+{
+    return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
 }
 
 
