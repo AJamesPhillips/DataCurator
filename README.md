@@ -28,3 +28,10 @@
     npm start
 
 Then visit [http://localhost:8080/app#wcomponents/&view=knowledge](http://localhost:8080/app#wcomponents/&view=knowledge)
+
+
+## Output data to Obsidian / Markdown
+
+1. Start the server
+2. Find the new file: app/server/config.json
+3. edit the entry for `output_markdown_directory` to be an absolute path to the directory to output the data.  For example: `"output_markdown_directory": "/Users/user_name/data_curator_info"` where `user_name` is replaced with your username and `data_curator_info` is a directory.
