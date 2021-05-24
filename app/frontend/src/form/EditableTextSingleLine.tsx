@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { useState } from "preact/hooks"
+import { Ref, useRef, useState } from "preact/hooks"
 import type { Store } from "redux"
 
 import "./Editable.css"
@@ -24,6 +24,8 @@ interface OwnProps
 export function EditableTextSingleLine (props: OwnProps)
 {
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
+    const on_focus_set_cursor_position = useRef<number | undefined>(undefined)
+
 
     const { on_change, disabled } = props
     if (!on_change || disabled)
@@ -40,6 +42,24 @@ export function EditableTextSingleLine (props: OwnProps)
             type="text"
             placeholder={props.placeholder}
             value={props.value}
+            ref={el =>
+            {
+                // We have initiated a searchWindow to populate an id insertiong so we do not want to
+                // focus this input box now
+                if (id_insertion_point !== undefined) return
+
+                const position = on_focus_set_cursor_position.current
+                on_focus_set_cursor_position.current = undefined
+
+                if (el && position !== undefined)
+                {
+                    setTimeout(() => {
+                        el.focus()
+                        // el.setSelectionRange(0, value.length)
+                        el.setSelectionRange(position, position)
+                    }, 0)
+                }
+            }}
             onFocus={e => {
                 // Hide the placeholder
                 if (!e.currentTarget.value) e.currentTarget.placeholder = ""
@@ -55,12 +75,13 @@ export function EditableTextSingleLine (props: OwnProps)
             }}
         />
 
-        <ConditionalWComponentSearchWindow
+        {id_insertion_point !== undefined && <ConditionalWComponentSearchWindow
             value={props.value}
             id_insertion_point={id_insertion_point}
-            conditional_on_change={conditional_on_change}
             set_id_insertion_point={set_id_insertion_point}
-        />
+            on_focus_set_cursor_position={on_focus_set_cursor_position}
+            conditional_on_change={conditional_on_change}
+        />}
     </div>
 }
 
@@ -74,7 +95,7 @@ interface HandleTextFieldChangeArgs
 export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
     update_parent_placeholder_css_class(args.e)
-    get_caret_position(args)
+    optionally_set_id_insertion_point(args)
 }
 
 
@@ -87,7 +108,7 @@ function update_parent_placeholder_css_class (e: h.JSX.TargetedEvent<HTMLInputEl
 }
 
 
-function get_caret_position (args: HandleTextFieldChangeArgs)
+function optionally_set_id_insertion_point (args: HandleTextFieldChangeArgs)
 {
 
     // Protect against IE
@@ -115,32 +136,38 @@ function get_caret_position (args: HandleTextFieldChangeArgs)
 interface ConditionalWComponentSearchWindowProps
 {
     value: string
-    id_insertion_point: number | undefined
-    conditional_on_change: (new_value: string) => void
+    id_insertion_point: number
     set_id_insertion_point: (id_insertion_point: number | undefined) => void
+    on_focus_set_cursor_position: Ref<number | undefined>
+    conditional_on_change: (new_value: string) => void
 }
 export function ConditionalWComponentSearchWindow (props: ConditionalWComponentSearchWindowProps)
 {
-    const [id_to_insert, set_id_to_insert] = useState<string | undefined>(undefined)
+    const id_to_insert = useRef<string | undefined>(undefined)
 
-    const { id_insertion_point } = props
-    if (id_insertion_point === undefined) return null
+    const {
+        value, id_insertion_point, on_focus_set_cursor_position,
+        conditional_on_change, set_id_insertion_point,
+    } = props
 
-
-    const { value, conditional_on_change, set_id_insertion_point } = props
+    console.log("rendering ConditionalWComponentSearchWindow")
 
     return <WComponentSearchWindow
-        on_change={wcomponent_id => set_id_to_insert(wcomponent_id)}
+        on_change={_id_to_insert => id_to_insert.current = _id_to_insert}
         on_blur={() =>
         {
+            console.log("bluring ConditionalWComponentSearchWindow")
             const new_value = insert_id_into_text({
-                value: props.value,
-                id_to_insert,
+                value,
+                id_to_insert: id_to_insert.current,
                 id_insertion_point,
             })
-            conditional_on_change(new_value)
+
+            const cursor_position_at_end_of_inserted_id = id_insertion_point + (id_to_insert.current !== undefined ? id_to_insert.current.length : 0)
+
+            on_focus_set_cursor_position.current = cursor_position_at_end_of_inserted_id
             set_id_insertion_point(undefined)
-            set_id_to_insert(undefined)
+            conditional_on_change(new_value)
         }}
     />
 }
