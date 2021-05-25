@@ -1,5 +1,6 @@
 import {
     WComponent,
+    wcomponent_has_event_at,
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
@@ -74,9 +75,9 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
             })
         }
 
-        if (wcomponent_has_VAP_sets(wcomponent))
+        if (wcomponent_has_event_at(wcomponent))
         {
-            wcomponent.values_and_prediction_sets.forEach(({ created_at, custom_created_at, datetime }) =>
+            wcomponent.event_at.forEach(({ created_at, custom_created_at, datetime }) =>
             {
                 create_event(custom_created_at || created_at, "created")
                 create_events_for_temporal_uncertainty(datetime)

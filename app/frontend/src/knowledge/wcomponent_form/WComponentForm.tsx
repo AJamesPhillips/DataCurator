@@ -2,7 +2,6 @@ import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/AutocompleteText"
-import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/EditableText"
@@ -32,13 +31,13 @@ import type { RootState } from "../../state/State"
 import { DisplayValue } from "../multiple_values/DisplayValue"
 import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSets"
 import { PredictionList } from "../predictions/PredictionList"
-import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
 import { WComponentKnowledgeView } from "../WComponentKnowledgeView"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFields } from "./JudgementFields"
 import { useEffect, useRef } from "preact/hooks"
+import { WComponentEventFormFields } from "./WComponentEventFormFields"
 
 
 
@@ -208,20 +207,10 @@ function _WComponentForm (props: Props)
             />
         </p>
 
-        {wcomponent_is_event(wcomponent) && <p>
-            <UncertainDateTime
-                // Get a hacky implementation of event datetime
-                datetime={(wcomponent.event_at && wcomponent.event_at[0]) ? wcomponent.event_at[0].datetime : {}}
-                on_change={datetime => upsert_wcomponent({ event_at: [{
-                    ...((wcomponent.event_at && wcomponent.event_at[0]) || { created_at: new Date() }),
-                    id: "",
-                    explanation: "",
-                    probability: 1,
-                    conviction: 1,
-                    datetime,
-                }] })}
-            />
-        </p>}
+        {wcomponent_is_event(wcomponent) && <WComponentEventFormFields
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
 
         <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"}>
             <EditableCustomDateTime
