@@ -28,6 +28,13 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
     {
         const initial_kv_id = initial_state.routing.args.subview_id
         const current_kv_id = state.routing.args.subview_id
+        const kv_object_id_changed = initial_kv_id !== current_kv_id
+        if (kv_object_id_changed)
+        {
+            state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
+        }
+
+
         const initial_kv = get_knowledge_view(initial_state, initial_kv_id)
         const current_kv = get_knowledge_view(state, current_kv_id)
         const kv_object_changed = initial_kv !== current_kv
@@ -35,6 +42,7 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
         const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
         const need_update = kv_object_changed || one_or_more_wcomponents_changed
+
 
         if (need_update)
         {
