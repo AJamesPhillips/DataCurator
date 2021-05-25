@@ -17,37 +17,28 @@ import type {
 export const knowledge_views_derived_reducer = (initial_state: RootState, state: RootState): RootState =>
 {
 
-    if (initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id)
+    const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id
+    if (one_or_more_knowledge_views_changed)
     {
         state = update_derived_knowledge_view_state(state)
     }
 
 
-    if (state.routing.args.view === "knowledge")
+    if (initial_state.routing.args.view === "knowledge" || state.routing.args.view === "knowledge")
     {
+        const initial_kv_id = initial_state.routing.args.subview_id
         const current_kv_id = state.routing.args.subview_id
-        let need_update = false
-        if (initial_state.routing.args.subview_id !== current_kv_id)
-        {
-            need_update = true
-            state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
-        }
-
-        const initial_kv = get_knowledge_view(initial_state, current_kv_id)
+        const initial_kv = get_knowledge_view(initial_state, initial_kv_id)
         const current_kv = get_knowledge_view(state, current_kv_id)
-        need_update = need_update || initial_kv !== current_kv
+        const kv_object_changed = initial_kv !== current_kv
 
-        if (need_update && current_kv)
+        const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
+
+        const need_update = kv_object_changed || one_or_more_wcomponents_changed
+
+        if (need_update)
         {
-            state = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
-        }
-        else if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id && current_kv)
-        {
-            const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
-            const current_UI_knowledge_view = {
-                ...state.derived.current_UI_knowledge_view!,
-                wc_id_counterfactuals_map,
-            }
+            const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
             state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
         }
     }
@@ -94,9 +85,11 @@ function get_knowledge_view (state: RootState, id: string)
 
 
 
-function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv: KnowledgeView): RootState
+function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv?: KnowledgeView)
 {
     const { current_UI_knowledge_view: current_UI_kv } = state.derived
+
+    if (!current_kv) return undefined
 
     const derived_wc_id_map = get_derived_wc_id_map(current_UI_kv, current_kv, intial_state, state)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
@@ -109,9 +102,7 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
     // do not need to do this but helps reduce confusion when debugging
     delete (current_UI_knowledge_view as any).wc_id_map
 
-    state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
-
-    return state
+    return current_UI_knowledge_view
 }
 
 
