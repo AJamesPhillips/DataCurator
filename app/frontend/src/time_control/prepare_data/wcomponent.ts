@@ -53,9 +53,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
 
     wcomponents.forEach(wcomponent =>
     {
-        const { created_at, custom_created_at } = wcomponent
-
-        create_event(custom_created_at || created_at, "created")
+        create_event(wcomponent.custom_created_at || wcomponent.created_at, "created")
 
         if (wcomponent_has_validity_predictions(wcomponent))
         {
@@ -77,9 +75,9 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
 
         if (wcomponent_has_event_at(wcomponent))
         {
-            wcomponent.event_at.forEach(({ created_at, custom_created_at, datetime }) =>
+            wcomponent.event_at.forEach(({ /*created_at, custom_created_at,*/ datetime }) =>
             {
-                create_event(custom_created_at || created_at, "created")
+                // create_event(custom_created_at || created_at, "created")
                 create_events_for_temporal_uncertainty(datetime)
             })
         }
