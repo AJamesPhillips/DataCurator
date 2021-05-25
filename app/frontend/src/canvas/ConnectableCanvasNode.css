@@ -1,7 +1,14 @@
 
-.connectable_canvas_node .node_main_content
+.connectable_canvas_node
 {
-    height: 36px;
+    width: 250px;
+    padding: 6px 10px;
+}
+
+.connectable_canvas_node.graph_node .node_main_content
+{
+    min-height: 36px;
+    white-space: normal;
 }
 
 .connection_terminal {

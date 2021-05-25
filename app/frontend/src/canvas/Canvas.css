@@ -43,7 +43,7 @@
 }
 .graph_node .node_main_content
 {
-    padding: 5px;
+    padding: 5px 12px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;

@@ -10,12 +10,12 @@ import type { ConnectionLocationType } from "../shared/wcomponent/interfaces/Spe
 
 const connection_position_left = 50
 const connection_position_bottom = 66
-const connection_diameter = 6
+const connection_diameter = 12
 const connection_radius = connection_diameter / 2
 const connection_top = 6
-const connection_left_left = 6
+const connection_left_left = 3
 const connection_left_top = connection_position_bottom / 2
-const connection_right_right = 150
+const connection_right_right = 250 + 3
 const connection_right_top = connection_position_bottom / 2
 
 
@@ -44,8 +44,6 @@ export function ConnectableCanvasNode (props: OwnProps)
 {
     const extra_node_styles: h.JSX.CSSProperties =
     {
-        minWidth: 100,
-        padding: "6px 10px",
         display: props.hidden ? "none": ""
     }
     if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
@@ -56,28 +54,33 @@ export function ConnectableCanvasNode (props: OwnProps)
         backgroundColor: props.color || COLOURS.white,
     }
 
-    const connection_style_top: h.JSX.CSSProperties =
+    const connection_style_common: h.JSX.CSSProperties =
     {
-        left: connection_position_left,
-        top: connection_top - connection_radius,
         width: connection_diameter,
         height: connection_diameter,
         borderRadius: connection_radius + 1,
     }
-    const connection_style_bottom: h.JSX.CSSProperties =
-    {
-        ...connection_style_top,
-        top: connection_position_bottom - connection_radius,
-    }
+    // const connection_style_top: h.JSX.CSSProperties =
+    // {
+    //     ...connection_style_common,
+    //     left: connection_position_left,
+    //     top: connection_top - connection_radius,
+    // }
+    // const connection_style_bottom: h.JSX.CSSProperties =
+    // {
+    //     ...connection_style_common,
+    //     left: connection_position_left,
+    //     top: connection_position_bottom - connection_radius,
+    // }
     const connection_style_left: h.JSX.CSSProperties =
     {
-        ...connection_style_top,
+        ...connection_style_common,
         left: connection_left_left,
         top: connection_left_top,
     }
     const connection_style_right: h.JSX.CSSProperties =
     {
-        ...connection_style_top,
+        ...connection_style_common,
         left: connection_right_right,
         top: connection_right_top,
     }
@@ -93,14 +96,14 @@ export function ConnectableCanvasNode (props: OwnProps)
         on_click={props.on_click}
         on_pointer_enter={props.on_pointer_enter}
         on_pointer_leave={props.on_pointer_leave}
-        extra_css_class={" connectable_canvas_node max_width200 " + (props.extra_css_class || "")}
+        extra_css_class={" connectable_canvas_node " + (props.extra_css_class || "")}
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}
     >
         <div className="node_main_content" style={main_content_styles}>
             {props.node_main_content}
         </div>
-        <div
+        {/* <div
             className="connection_terminal"
             style={connection_style_top}
             onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("top", "down") }}
@@ -111,7 +114,7 @@ export function ConnectableCanvasNode (props: OwnProps)
             style={connection_style_bottom}
             onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("bottom", "down") }}
             onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal("bottom", "up") }}
-        />
+        /> */}
         <div
             className="connection_terminal"
             style={connection_style_left}

@@ -15,6 +15,7 @@ import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { SandBox } from "./scratch_pad/SandBox"
 import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCustomDateTime"
 import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
+import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -30,6 +31,7 @@ if (root) {
     <li><a href="/statement_probability">Statement probability</a></li>
     <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
     <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
+    <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
     <li><a href="/sandbox">Sandbox</a></li>
     </ul>`
   }
@@ -56,6 +58,10 @@ if (root) {
   else if (window.location.pathname === "/sandbox/editable_custom_datetime")
   {
     render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
+  }
+  else if (window.location.pathname === "/sandbox/canvas_nodes")
+  {
+    render(<SandboxWComponentCanvasNode />, root)
   }
   else if (window.location.pathname === "/sandbox")
   {

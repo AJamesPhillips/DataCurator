@@ -80,7 +80,7 @@ function _WComponentCanvasNode (props: Props)
         display_at_created_ms, sim_ms, wc_counterfactuals, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
-    if (!knowledge_view_id) return <div>Not current knowledge view</div>
+    if (!knowledge_view_id) return <div>No current knowledge view</div>
     if (!wcomponent) return <div>Could not find component of id {id}</div>
     if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
 
@@ -173,7 +173,7 @@ function _WComponentCanvasNode (props: Props)
             </div>
         ]}
         extra_css_class={extra_css_class}
-        unlimited_width={is_highlighted}
+        unlimited_width={false}
         glow={glow}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}

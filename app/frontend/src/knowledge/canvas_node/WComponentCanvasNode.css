@@ -1,6 +1,7 @@
 .wcomponent_canvas_node.connectable_canvas_node .node_main_content
 {
-    height: 49px;
+    height: initial;
+    min-height: 49px;
 }
 
 .node_upper_title
@@ -28,7 +29,7 @@
     border-right: thin solid black;
     margin-left: -5px;
     padding-left: 5px;
-    min-width: 20px;
+    width: 200px;
     height: 18px;
     /* text-align: center; does seem to work */
 }
