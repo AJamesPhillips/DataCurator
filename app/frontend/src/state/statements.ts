@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 import type { CreationContextState } from "../shared/interfaces"
 
-import { get_created_ats } from "../shared/utils/datetime"
+import { get_new_created_ats } from "../shared/utils/datetime"
 import { get_new_statement_id } from "../shared/utils/ids"
 import type { RootState, Statement } from "./State"
 
@@ -58,7 +58,7 @@ interface AddStatementProps
 }
 const add_statement = (args: AddStatementProps, creation_context: CreationContextState): ActionAddStatement =>
 {
-    const { created_at: datetime_created } = get_created_ats(creation_context)
+    const { created_at: datetime_created } = get_new_created_ats(creation_context)
     const id = get_new_statement_id()
 
     return {

@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_created_ats } from "../../shared/utils/datetime"
+import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { WComponentNodeEvent } from "../../shared/wcomponent/interfaces/event"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
@@ -41,7 +41,7 @@ function _WComponentEventFormFields (props: Props)
                 const partial_wcomponent: Partial<WComponentNodeEvent> =
                 {
                     event_at: [{
-                        ...(event_at || { ...get_created_ats(creation_context_state) }),
+                        ...(event_at || { ...get_new_created_ats(creation_context_state) }),
                         id: "",
                         explanation: "",
                         probability: 1,

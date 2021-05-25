@@ -7,7 +7,7 @@ import { EditableList } from "../../form/editable_list/EditableList"
 import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
-import { get_created_ats } from "../../shared/utils/datetime"
+import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/interfaces"
 
 
@@ -52,7 +52,7 @@ const get_custom_created_at = (item: StateValueString) => item.custom_created_at
 
 const prepare_new_item = (creation_context: CreationContextState) => (): StateValueString =>
 {
-    const created_ats = get_created_ats(creation_context)
+    const created_ats = get_new_created_ats(creation_context)
 
     return {
         id: get_new_value_id(),

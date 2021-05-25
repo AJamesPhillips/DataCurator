@@ -6,7 +6,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/state"
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
-import { get_created_ats } from "../../shared/utils/datetime"
+import { get_new_created_ats, get_new_custom_created_at } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/interfaces"
 
 
@@ -27,12 +27,12 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 export function prepare_new_VAP_set (creation_context: CreationContextState): StateValueAndPredictionsSet
 {
-    const now = new Date()
+    const now = get_new_custom_created_at(creation_context) || new Date()
 
     return {
         id: get_new_value_and_prediction_set_id(),
         version: 1,
-        ...get_created_ats(creation_context),
+        ...get_new_created_ats(creation_context),
         datetime: { min: now },
         entries: [prepare_new_VAP()],
     }
@@ -56,7 +56,7 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet, creation_context: 
     const clone: StateValueAndPredictionsSet = {
         ...VAP_set,
         version: VAP_set.version + 1,
-        ...get_created_ats(creation_context),
+        ...get_new_created_ats(creation_context),
         entries: VAP_set.entries.map(e => ({ ...e, explanation: "" })),
         shared_entry_values: {
             ...VAP_set.shared_entry_values,

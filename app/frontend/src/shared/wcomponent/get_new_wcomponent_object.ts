@@ -1,5 +1,5 @@
 import type { CreationContextState } from "../interfaces"
-import { get_created_ats } from "../utils/datetime"
+import { get_new_created_ats } from "../utils/datetime"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
@@ -12,7 +12,7 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
-        ...get_created_ats(creation_context),
+        ...get_new_created_ats(creation_context),
         title: "",
         description: "",
         type: "process",

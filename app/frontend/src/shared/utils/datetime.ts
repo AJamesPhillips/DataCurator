@@ -25,17 +25,25 @@ export function floor_datetime_to_resolution (date: Date, time_resolution: TimeR
 
 
 
+export function get_new_custom_created_at (creation_context_state: CreationContextState)
+{
+    const { use_creation_context, creation_context } = creation_context_state
+    const custom_created_at = use_creation_context ? creation_context.custom_created_at : undefined
+
+    return custom_created_at
+}
+
+
+
 interface GetCreatedAtsReturn
 {
     created_at: Date
     custom_created_at: Date | undefined
 }
-export function get_created_ats (creation_context_state: CreationContextState): GetCreatedAtsReturn
+export function get_new_created_ats (creation_context_state: CreationContextState): GetCreatedAtsReturn
 {
     const created_at = new Date()
-
-    const { use_creation_context, creation_context } = creation_context_state
-    const custom_created_at = use_creation_context ? creation_context.custom_created_at : undefined
+    const custom_created_at = get_new_custom_created_at(creation_context_state)
 
     return { created_at, custom_created_at }
 }
