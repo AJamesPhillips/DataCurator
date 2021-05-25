@@ -3,6 +3,7 @@ import type { Store } from "redux"
 import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
 import { connection_terminal_location_to_type } from "../../../knowledge/utils"
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentConnectionType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import { is_pointerup_on_connection_terminal } from "../meta_wcomponents/selecting/actions"
@@ -43,7 +44,8 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         } = connection_terminal_location_to_type(end_connection_location)
 
         // this is temporary until we get distinct "meta" nodes
-        if (start_is_meta || end_is_meta) {
+        const either_meta = start_is_meta || end_is_meta
+        if (either_meta) {
             if (start_is_meta && end_is_meta)
             {
                 start_type = "meta"
@@ -59,7 +61,9 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         const from_type = start_is_effector ? start_type : end_type
         const to_type = start_is_effector ? end_type : start_type
 
-        const wcomponent: Partial<WComponent> = { type: "causal_link", from_id, to_id, from_type, to_type }
+        const connection_type: WComponentConnectionType = either_meta ? "relation_link" : "causal_link"
+
+        const wcomponent: Partial<WComponent> = { type: connection_type, from_id, to_id, from_type, to_type }
         create_wcomponent({ wcomponent, creation_context: state.creation_context })
     }
 }
