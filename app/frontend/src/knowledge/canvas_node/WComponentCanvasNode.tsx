@@ -53,6 +53,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
         rich_text_formatting: state.display.rich_text_formatting,
+        node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
     }
 }
 
@@ -79,6 +80,7 @@ function _WComponentCanvasNode (props: Props)
     const { id, knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
+        node_allowed_to_move,
         display_at_created_ms, sim_ms, wc_counterfactuals, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
@@ -189,6 +191,7 @@ function _WComponentCanvasNode (props: Props)
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
         pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
         extra_args={{
+            // draggable: node_allowed_to_move && node_is_moving,
             draggable: node_is_moving,
             onDragStart: e =>
             {
