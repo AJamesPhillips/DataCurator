@@ -47,8 +47,8 @@ function _ObjectiveConnnection (props: Props)
     return <CanvasConnnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
-        from_connection_location="top"
-        to_connection_location="bottom"
+        from_connection_type={{ attribute: "meta", direction: "from" }}
+        to_connection_type={{ attribute: "meta", direction: "to" }}
         is_highlighted={props.is_highlighted}
     />
 }

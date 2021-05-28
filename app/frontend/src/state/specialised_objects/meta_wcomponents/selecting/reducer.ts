@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
-import { toggle_item_in_list } from "../../../../utils/list"
 
+import { toggle_item_in_list } from "../../../../utils/list"
 import { toggle_item_in_set } from "../../../../utils/set"
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
@@ -67,8 +67,8 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
     if (is_pointerdown_on_connection_terminal(action))
     {
-        const { wcomponent_id, connection_location } = action
-        const value = { wcomponent_id, connection_location }
+        const { wcomponent_id, terminal_type } = action
+        const value = { wcomponent_id, terminal_type }
         state = update_substate(state, "meta_wcomponents", "last_pointer_down_connection_terminal", value)
     }
 

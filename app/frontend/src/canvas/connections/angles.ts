@@ -1,13 +1,14 @@
-import type { ConnectionLocationType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionTerminalDirectionType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { test } from "../../shared/utils/test"
 import { get_angle, rads, normalise_angle_between_neg_Pi_and_Pi } from "../../utils/angles"
 import { bounded } from "../../utils/utils"
+import type { ConnectionTerminalLocationType } from "../../shared/wcomponent/interfaces/connection"
 
 
 
-export function get_angle_from_start_connector (connection_angle: number, connection_location: ConnectionLocationType)
+export function get_angle_from_start_connector (connection_angle: number, direction: ConnectionTerminalDirectionType)
 {
-    const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_location[connection_location]
+    const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction]
 
     return get_angle_from_connector({
         connection_angle: connection_angle,
@@ -16,9 +17,9 @@ export function get_angle_from_start_connector (connection_angle: number, connec
     })
 }
 
-export function get_angle_from_end_connector (connection_angle: number, connection_location: ConnectionLocationType)
+export function get_angle_from_end_connector (connection_angle: number, direction: ConnectionTerminalDirectionType)
 {
-    const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_location[connection_location]
+    const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction]
 
     return get_angle_from_connector({
         connection_angle: connection_angle + Math.PI, // Add PI because we need the opposite angle for the control point
@@ -27,12 +28,18 @@ export function get_angle_from_end_connector (connection_angle: number, connecti
     })
 }
 
-const angle_of_normal_to_connection_location: {[l in ConnectionLocationType]: number} =
+
+const angle_of_normal_to_connection_location: {[l in ConnectionTerminalLocationType]: number} =
 {
     left: rads._180,
     top: rads._90,
     right: 0,
     bottom: -rads._90,
+}
+const angle_of_normal_to_connection_with_direction: {[l in ConnectionTerminalDirectionType]: number} =
+{
+    from: angle_of_normal_to_connection_location.right,
+    to: angle_of_normal_to_connection_location.left,
 }
 
 
@@ -94,35 +101,25 @@ function run_tests ()
 
 
     const expected_start_angles = [
-        "0.70",
-        "0.70",
-        "1.66",
-        "1.66",
-        "1.66",
-        "1.57",
-        "0.79",
-        "0.70",
+        "-0.79",
+        "-0.87",
+        "-0.87",
+        "-0.87",
+        "0.09",
+        "0.09",
+        "0.09",
+        "0.00",
     ]
 
     coords.forEach(({ ex, ey }, index) =>
     {
         const angle = get_angle(cx, cy, ex, ey)
-        const start_angle = get_angle_from_start_connector(angle, "top").toFixed(2)
+        const start_angle = get_angle_from_start_connector(angle, "from").toFixed(2)
         test(start_angle, expected_start_angles[index])
     })
 
 
-    const expected_end_angles_to_bottom = [
-        "-1.66",
-        "-1.66",
-        "-0.70",
-        "-0.70",
-        "-0.70",
-        "-0.70",
-        "-0.79",
-        "-1.57",
-    ]
-    const expected_end_angles_to_meta = [
+    const expected_end_angles_to_receiving = [
         // TODO none of these angles should be > Pi or < -Pi
         "3.93",
         "3.14",
@@ -137,10 +134,8 @@ function run_tests ()
     coords.forEach(({ ex, ey }, index) =>
     {
         const angle = get_angle(cx, cy, ex, ey)
-        const end_angle_to_bottom = get_angle_from_end_connector(angle, "bottom").toFixed(2)
-        const end_angle_to_meta = get_angle_from_end_connector(angle, "left").toFixed(2)
-        test(end_angle_to_bottom, expected_end_angles_to_bottom[index])
-        test(end_angle_to_meta, expected_end_angles_to_meta[index])
+        const end_angle_to_receiving_terminal = get_angle_from_end_connector(angle, "to").toFixed(2)
+        test(end_angle_to_receiving_terminal, expected_end_angles_to_receiving[index])
     })
 }
 

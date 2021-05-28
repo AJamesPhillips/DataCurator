@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentFromTo.css"
 import { AutocompleteText } from "../form/AutocompleteText"
 import {
-    ConnectionTerminalType,
+    ConnectionTerminalAttributeType,
     wcomponent_is_plain_connection,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
@@ -18,10 +18,10 @@ interface OwnProps
 {
     connection_terminal_description: string
     wcomponent_id: string | undefined
-    connection_terminal_type: ConnectionTerminalType
+    connection_terminal_type: ConnectionTerminalAttributeType
 
     on_update_id: (id: string | undefined) => void
-    on_update_type?: (type: ConnectionTerminalType | undefined) => void
+    on_update_type?: (type: ConnectionTerminalAttributeType | undefined) => void
 }
 
 
@@ -67,7 +67,7 @@ function _WComponentFromTo (props: Props)
         sim_ms: props.sim_ms,
     })
 
-    const wcomponent_terminal_type_options: { id: ConnectionTerminalType, title: string }[] = [
+    const wcomponent_terminal_type_options: { id: ConnectionTerminalAttributeType, title: string }[] = [
         { id: "validity", title: "Validity" },
         { id: "value", title: "Value" },
         { id: "meta", title: "Meta" },

@@ -1,6 +1,5 @@
 import type { Action, AnyAction } from "redux"
 import type {
-    ConnectionLocationType,
     ConnectionTerminalType,
 } from "../../../../shared/wcomponent/interfaces/SpecialisedObjects"
 
@@ -44,7 +43,7 @@ export const is_clear_selected_wcomponents = (action: AnyAction): action is Acti
 interface PointerUpDownOnConnectionTerminalProps
 {
     wcomponent_id: string
-    connection_location: ConnectionLocationType
+    terminal_type: ConnectionTerminalType
     up_down: "up" | "down"
 }
 interface ActionPointerUpDownOnConnectionTerminal extends Action, PointerUpDownOnConnectionTerminalProps {}

@@ -52,16 +52,26 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentGoal
 
 
-export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
-export type ConnectionTerminalType = "meta" | "validity" | "value" // | "existence"
+
+export type ConnectionTerminalAttributeType = "meta" | "validity" | "value" // | "existence"
+export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "value"]
+export type ConnectionTerminalDirectionType = "from" | "to"
+export const connection_terminal_directions: ConnectionTerminalDirectionType[] = ["from", "to"]
+export interface ConnectionTerminalType
+{
+    attribute: ConnectionTerminalAttributeType
+    direction: ConnectionTerminalDirectionType
+}
+
+
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
 export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentConnectionType
     from_id: string
     to_id: string
-    from_type: ConnectionTerminalType
-    to_type: ConnectionTerminalType
+    from_type: ConnectionTerminalAttributeType
+    to_type: ConnectionTerminalAttributeType
 }
 export interface WComponentCausalConnection extends WComponentConnection
 {

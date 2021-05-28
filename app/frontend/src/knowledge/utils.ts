@@ -1,9 +1,6 @@
 import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
 import {
-    ConnectionLocationType,
-    ConnectionTerminalType,
     WComponent,
-    wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -74,43 +71,4 @@ export function wcomponent_existence_for_datetimes (wcomponent: WComponent, wc_c
     const conviction = pep && pep.conviction !== undefined ? pep.conviction : 1
 
     return { existence, conviction }
-}
-
-
-
-export function connection_terminal_type_to_location (fromto: "from" | "to", type: ConnectionTerminalType): ConnectionLocationType
-{
-    if (type === "meta") return "left"
-    if (fromto === "to") return "bottom"
-    if (fromto === "from") return "right"
-
-    return "left" // should never be reached
-}
-
-interface ConnectionTerminalLocationToTypeReturn
-{
-    type: ConnectionTerminalType
-    is_effector: boolean
-    is_meta: boolean
-}
-export function connection_terminal_location_to_type (location: ConnectionLocationType): ConnectionTerminalLocationToTypeReturn
-{
-    let type: ConnectionTerminalType
-
-    if (location === "top") type = "value"
-    else if (location === "bottom") type = "value"
-    else if (location === "left") type = "meta"
-    else if (location === "right") type = "value"
-    else type = "meta" // should never be reached
-
-    const is_effector = connection_terminal_type_is_effector(type)
-    const is_meta = type === "meta"
-
-    return { type, is_effector, is_meta }
-}
-
-
-export function connection_terminal_type_is_effector (connection_terminal_type: ConnectionTerminalType)
-{
-    return connection_terminal_type === "value"
 }

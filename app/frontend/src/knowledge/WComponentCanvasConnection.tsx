@@ -12,8 +12,7 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_can_render_connection,
     WComponentConnection,
-    ConnectionLocationType,
-    wcomponent_is_judgement_or_objective,
+    ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
@@ -23,7 +22,6 @@ import type { RootState } from "../state/State"
 import {
     wcomponent_is_invalid_for_datetime,
     wcomponent_existence_for_datetimes,
-    connection_terminal_type_to_location,
 } from "./utils"
 
 
@@ -132,7 +130,7 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const { from_node_position, to_node_position, from_connection_location, to_connection_location,
+    const { from_node_position, to_node_position, from_connection_type, to_connection_type,
     } = get_connection_terminal_positions({ wcomponent: wc, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
 
 
@@ -142,8 +140,8 @@ function _WComponentCanvasConnection (props: Props)
     return <CanvasConnnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
-        from_connection_location={from_connection_location}
-        to_connection_location={to_connection_location}
+        from_connection_type={from_connection_type}
+        to_connection_type={to_connection_type}
         on_click={on_click}
         intensity={probability}
         blur={blur}
@@ -164,23 +162,24 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
 {
     let from_node_position: KnowledgeViewWComponentEntry | undefined = undefined
     let to_node_position: KnowledgeViewWComponentEntry | undefined = undefined
-    let from_connection_location: ConnectionLocationType = "top"
-    let to_connection_location: ConnectionLocationType = "bottom"
+    let from_connection_type: ConnectionTerminalType // = "top"
+    let to_connection_type: ConnectionTerminalType // = "bottom"
 
     if (wcomponent_is_plain_connection(wcomponent))
     {
         from_node_position = wc_id_map[wcomponent.from_id]
         to_node_position = wc_id_map[wcomponent.to_id]
-        from_connection_location = connection_terminal_type_to_location("from", wcomponent.from_type)
-        to_connection_location = connection_terminal_type_to_location("to", wcomponent.to_type)
+        from_connection_type = { direction: "from", attribute: wcomponent.from_type }
+        to_connection_type = { direction: "to", attribute: wcomponent.to_type }
     }
-    else if (wcomponent_is_judgement_or_objective(wcomponent))
+    else
     {
         from_node_position = wc_id_map[wcomponent.id]
         to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
-        to_connection_location = "left"
+        from_connection_type = { direction: "from", attribute: "meta" }
+        to_connection_type = { direction: "to", attribute: "value" }
     }
 
-    return { from_node_position, to_node_position, from_connection_location, to_connection_location }
+    return { from_node_position, to_node_position, from_connection_type, to_connection_type }
 }
 

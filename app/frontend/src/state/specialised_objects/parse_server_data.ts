@@ -1,6 +1,6 @@
 import { get_new_VAP_id } from "../../shared/utils/ids"
 import {
-    ConnectionTerminalType,
+    ConnectionTerminalAttributeType,
     Perception,
     SpecialisedObjectsFromToServer,
     WComponent,
@@ -107,14 +107,14 @@ function parse_wcomponent (wcomponent: WComponent): WComponent
 
 
 // Upgrade valid as of 2021-05-19
-function upgrade_2021_05_19_connection_fromto_types (type?: string): ConnectionTerminalType
+function upgrade_2021_05_19_connection_fromto_types (type?: string): ConnectionTerminalAttributeType
 {
     if (type === "meta-effector") return "meta"
     if (type === "meta-effected") return "meta"
     if (type === "effector") return "value"
     if (type === "effected") return "value"
 
-    return (type || "value") as ConnectionTerminalType
+    return (type || "value") as ConnectionTerminalAttributeType
 }
 
 
