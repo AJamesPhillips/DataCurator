@@ -1,5 +1,5 @@
 import type { Store } from "redux"
-import { round_coordinate } from "../../canvas/position_utils"
+import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
 
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
@@ -39,7 +39,7 @@ export function get_middle_of_screen (state: RootState)
 
 const half_screen_width = 1000 / 2
 const half_screen_height = 600 / 2
-export const h_step = 300
+export const h_step = grid_small_step * 18
 export const v_step = 100
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
