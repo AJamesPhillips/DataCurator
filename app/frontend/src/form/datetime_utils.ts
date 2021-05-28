@@ -1,6 +1,6 @@
 // import { DateTime } from "luxon"
 
-import type { TemporalUncertainty } from "../shared/wcomponent/interfaces/uncertainty"
+import type { TemporalUncertainty } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import { test } from "../shared/utils/test"
 import type { TimeResolution } from "../shared/utils/datetime"

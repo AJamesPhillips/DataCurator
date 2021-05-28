@@ -1,5 +1,5 @@
-import type { Base } from "./base"
-import type { WComponentNodeBase } from "./wcomponent_base"
+import type { Base } from "../base"
+import type { WComponentNodeBase } from "../wcomponent_base"
 
 
 
@@ -96,6 +96,13 @@ export interface TemporalUncertainty extends Partial<PredictionBase>
     max?: Date
 }
 
+// export interface TemporalUncertaintyIncremental extends Partial<TemporalUncertainty>
+// {
+//     id: string
+//     created_at: Date
+// }
+
+
 
 export interface HasDateTime
 {
@@ -109,73 +116,8 @@ export interface HasDateTime
     datetime: TemporalUncertainty
 }
 
-
 export interface Prediction extends Base, PredictionBase, HasDateTime {}
 
-
-
-// export interface TemporalUncertaintyIncremental extends Partial<TemporalUncertainty>
-// {
-//     id: string
-//     created_at: Date
-// }
-
-
-// Have called this `ExistencePredictions` before but changed because it's use is about
-// "is this node valid".
-// Example: The colour of the car used in the bank robbery
-//    Initially this field has no entry, but it could be changed to have an entry with
-//    probability of 0 if:
-//        * the bank robbery was shown to not have even occured.
-//        * the bank robbery did occur but a horse was used as the get away mode of transport.
-// But it was also used for how true is this node, i.e. existence.  And it was renamed and removed without
-// considering this alternative use case. e.g. for wc4.json it was capturing beliefs about
-// how likely it was that person A could effect a change in organisation B.
-//
-// See "Justification for not having single predictions" field below
-//
-// Not making optional, interfaces extending this can use Partial<ValidityPredictions>
-export interface ValidityPredictions
-{
-    // This used to be TemporalUncertainty but a prediction needs to have its own uncertainty
-    // plus the datetime when it is active from **and the uncertainty around that datetime**
-    validity: Prediction[]
-}
-
-
-// This is used for how true is this node, i.e. existence.  And it was renamed and removed without
-// considering this alternative use case. e.g. for wc4.json it was capturing beliefs about
-// how likely it was that person A could effect a change in organisation B.
-//
-// See "Justification for not having single predictions" field below
-//
-// Not making optional, interfaces extending this can use Partial<ExistencePredictions>
-//
-// +++ 2021-04-15
-// The existence prediction is the ?same? as the boolean state subtype?  Use this instead?
-// --- 2021-04-15
-// +++ 2021-05-04
-// Perhaps this should only exist on non state components e.g. causal connections like wc4?
-// --- 2021-05-04
-// +++ 2021-05-19
-// Existence is different from trueness, for example with wc4.json it is true that person A
-// will have some ability to cause change in organisation B, i.e. that causality exists 100%.
-// What the "existence prediction" was actually capturing was how likely it was that
-// "person A could effect the change in organisation B that we were looking to achieve" was true.
-// As such existence prediction should be renamed to truthiness or likelyness
-//
-// To argue the first point more fully that "it is true that person A will have some ability to
-// cause change in organisation B, i.e. that causality exists 100%" ... person A is alive, as such
-// any person who is alive has some ability to cause a change in organisation B.  If the person
-// was dead then that causality would not exist, but then it might be more straightforward and
-// sensible to say it is invalid, as use the validity prediction.
-// --- 2021-05-19
-export interface ExistencePredictions
-{
-    // This used to be TemporalUncertainty but a prediction needs to have its own uncertainty
-    // plus the datetime when it is active from **and the uncertainty around that datetime**
-    existence: Prediction[]
-}
 
 
 // +++ 2021-04-10

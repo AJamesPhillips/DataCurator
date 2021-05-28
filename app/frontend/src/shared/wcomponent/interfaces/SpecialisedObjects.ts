@@ -11,7 +11,9 @@ import type {
     WComponentNodeState,
     WComponentNodeStateV2,
 } from "./state"
-import type { ValidityPredictions, ExistencePredictions, WComponentCounterfactual } from "./uncertainty"
+import type { ExistencePredictions } from "./uncertainty/existence"
+import type { WComponentCounterfactual } from "./uncertainty/uncertainty"
+import type { ValidityPredictions } from "./uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
 
 

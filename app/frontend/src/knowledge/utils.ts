@@ -8,7 +8,7 @@ import {
     wcomponent_has_VAP_sets,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
-import type { Prediction, WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty"
+import type { Prediction, WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/wcomponent/utils_datetime"
 
 

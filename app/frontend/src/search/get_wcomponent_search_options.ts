@@ -1,7 +1,7 @@
 import type { AutoCompleteOption } from "../form/AutocompleteText"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import type { WComponent, WComponentsById } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../shared/wcomponent/interfaces/uncertainty"
+import type { WcIdCounterfactualsMap } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 
 
 

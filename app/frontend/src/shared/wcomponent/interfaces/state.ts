@@ -1,5 +1,5 @@
 import type { Base, HasVersion } from "./base"
-import type { TemporalUncertainty, PredictionBase } from "./uncertainty"
+import type { TemporalUncertainty, PredictionBase } from "./uncertainty/uncertainty"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
@@ -113,6 +113,7 @@ export interface VersionedStateVAPsSet
 
 
 
+// TODO upgrade UIStateValue to use UIValue interfaces instead
 export type UIStateValueType = "single" | "multiple" // | "multi-multiple"
 export type UIStateValueModifer = "uncertain" | "assumed" | "likely"
 export interface UIStateValue

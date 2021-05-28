@@ -1,4 +1,4 @@
-import type { PredictionBase } from "./interfaces/uncertainty"
+import type { PredictionBase } from "./interfaces/uncertainty/uncertainty"
 
 
 

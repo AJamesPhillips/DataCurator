@@ -5,7 +5,7 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
+import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
 
 

@@ -16,7 +16,7 @@ import {
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet, StateValueString } from "../../shared/wcomponent/interfaces/state"
-import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty"
+import type { Prediction, TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
 
 
 

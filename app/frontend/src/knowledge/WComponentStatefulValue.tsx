@@ -8,7 +8,7 @@ import {
     wcomponent_is_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
-import type { WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty"
+import type { WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
@@ -54,14 +54,17 @@ function _WComponentStatefulValue (props: Props)
 {
     const { ui_value, judgement_value, is_judgement, is_empty } = process_props(props)
 
-    const state_value_container_class_name = "node_state_value_container " + (is_empty ? "empty" : "")
-
     const value_to_render = is_judgement
         // Refactor this to use JudgementBadgeC
         ? <JudgementBadge judgement={judgement_value} />
         : ui_value && <DisplayValue UI_value={ui_value} />
 
-    return <div className={state_value_container_class_name}>{value_to_render}</div>
+    return <div
+        className="node_state_value"
+        style={{ display: is_empty ? "none" : "" }}
+    >
+        {value_to_render}
+    </div>
 }
 
 export const WComponentStatefulValue = connector(_WComponentStatefulValue) as FunctionalComponent<OwnProps>

@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { useMemo, useState } from "preact/hooks"
 
-import type { Prediction } from "../../shared/wcomponent/interfaces/uncertainty"
+import type { Prediction } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"

@@ -18,6 +18,7 @@ import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
 import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
+import { WComponentValidityValue } from "../WComponentValidityValue"
 
 
 
@@ -164,13 +165,18 @@ function _WComponentCanvasNode (props: Props)
     return <ConnectableCanvasNode
         position={kv_entry}
         node_main_content={[
-            <div className="node_upper_title">
+            <div className="description">
                 {wcomponent.type}
             </div>,
             <div className="node_title">
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>,
-            <div className="node_info_segments_container">
+            <div className="node_validity_container">
+                {props.rich_text_formatting ? null : <div className="description">validity</div>}
+                <WComponentValidityValue wcomponent={wcomponent} />
+            </div>,
+            <div className="node_state_container">
+                {props.rich_text_formatting ? null : <div className="description">state</div>}
                 <WComponentStatefulValue wcomponent={wcomponent} />
                 <WComponentJudgements wcomponent={wcomponent} />
             </div>

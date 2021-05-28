@@ -2,9 +2,12 @@
 {
     height: initial;
     min-height: 49px;
+    text-overflow: initial;
+    white-space: initial;
+    overflow: initial;
 }
 
-.node_upper_title
+.wcomponent_canvas_node.connectable_canvas_node .node_main_content .description
 {
     font-size: 11px;
     color: grey;
@@ -16,34 +19,13 @@
     display: block;
 }
 
-.node_info_segments_container > div
+.node_validity_container, .node_state_container
 {
     display: inline-flex;
-    border-top: thin solid black;
+    border-top: thin solid #CCC;
     padding: 2px;
-}
-
-
-.node_info_segments_container .node_state_value_container
-{
-    border-right: thin solid black;
-    margin-left: -5px;
-    padding-left: 5px;
-    width: 200px;
-    height: 18px;
-    /* text-align: center; does seem to work */
-}
-
-.node_info_segments_container .node_judgements_container
-{
-    /* margin-right: -6px; /* Looks nicer when judgements container is adding the max width */
-    padding-right: 5px;
-    /* border-right: thin solid black; */
-}
-
-.node_info_segments_container .empty
-{
-    display: none;
+    width: 100%;
+    align-items: center;
 }
 
 
@@ -87,7 +69,7 @@
 }
 
 /* compact / presentation / consumption */
-.wcomponent_canvas_node.connectable_canvas_node.compact_display.graph_node .node_main_content
+.wcomponent_canvas_node.compact_display .node_main_content .node_title
 {
     white-space: nowrap;
     overflow: hidden;

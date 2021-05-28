@@ -17,7 +17,7 @@ import type {
     VAP_id_counterfactual_map,
     VAP_set_id_counterfactual_map,
     WComponentCounterfactuals,
-} from "../interfaces/uncertainty"
+} from "../interfaces/uncertainty/uncertainty"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
 
@@ -95,7 +95,7 @@ interface GetVAPSetValueArgs
     boolean_true_str?: string
     boolean_false_str?: string
 }
-function get_VAP_set_value (args: GetVAPSetValueArgs): UIStateValue
+export function get_VAP_set_value (args: GetVAPSetValueArgs): UIStateValue
 {
     const { values_and_prediction_sets, VAPs_represents_boolean, wc_counterfactuals,
         created_at_ms, sim_ms, boolean_true_str, boolean_false_str } = args

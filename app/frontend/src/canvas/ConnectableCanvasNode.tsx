@@ -14,7 +14,7 @@ const connection_radius = connection_diameter / 2
 const connection_left = 3
 const connection_right = 250 + 3
 const connection_top = 27
-const connection_top_increment = connection_diameter * 2
+const connection_top_increment = 22
 
 
 
@@ -78,10 +78,13 @@ export function ConnectableCanvasNode (props: OwnProps)
     }
     const connection_style_left_2nd: h.JSX.CSSProperties =
     {
-        ...connection_style_common,
-        left: connection_left,
+        ...connection_style_left,
         top: connection_top + (connection_top_increment * 1),
-        // top: connection_position_bottom - connection_radius,
+    }
+    const connection_style_left_3: h.JSX.CSSProperties =
+    {
+        ...connection_style_left,
+        top: connection_top + (connection_top_increment * 2),
     }
     const connection_style_right: h.JSX.CSSProperties =
     {
@@ -133,6 +136,12 @@ export function ConnectableCanvasNode (props: OwnProps)
         <div
             className="connection_terminal"
             style={connection_style_left_2nd}
+            onPointerDown={e => {}}
+            onPointerUp={e => {}}
+        />
+        <div
+            className="connection_terminal"
+            style={connection_style_left_3}
             onPointerDown={e => {}}
             onPointerUp={e => {}}
         />

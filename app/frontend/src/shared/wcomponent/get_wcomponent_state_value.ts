@@ -1,6 +1,6 @@
 import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { UIStateValue, WComponentNodeState } from "./interfaces/state"
-import type { WComponentCounterfactuals } from "./interfaces/uncertainty"
+import type { WComponentCounterfactuals } from "./interfaces/uncertainty/uncertainty"
 import { get_created_at_ms } from "./utils_datetime"
 import { get_wcomponent_non_statev2_value, get_wcomponent_statev2_value } from "./value_and_prediction/get_value"
 
