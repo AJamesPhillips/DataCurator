@@ -1,5 +1,5 @@
-import { h } from "preact"
-import { Provider } from "react-redux"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps, Provider } from "react-redux"
 
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { prepare_new_VAP_set } from "../knowledge/multiple_values/utils"
@@ -60,7 +60,21 @@ const wc13_judgement: WComponentJudgement = {
     judgement_operator: "!=",
 }
 
-const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement]
+
+const VAP_set2 = prepare_new_VAP_set(creation_context)
+VAP_set2.entries[0]!.probability = 0
+const wc14: WComponentNodeStateV2 = {
+    ...wc11,
+    id: "wc14",
+    created_at,
+    title: "wc14 title ${value}",
+    description: "wc14 description",
+    values_and_prediction_sets: [
+        VAP_set2,
+    ]
+}
+
+const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement, wc14]
 
 const kv10: KnowledgeView = {
     id: "kv10",
@@ -69,6 +83,7 @@ const kv10: KnowledgeView = {
     wc_id_map: {
         [wc10.id]: { left: 100, top: 100 },
         [wc11.id]: { left: 400, top: 100 },
+        [wc14.id]: { left: 700, top: 100 },
     },
     created_at,
     goal_ids: [],
@@ -106,11 +121,25 @@ export function SandboxWComponentCanvasNode ()
 
 
     return <Provider store={store}>
-        <div>
-            WComponentCanvasNodes
-
-            {/* <WComponentCanvasNode id={wc10.id} /> */}
-            <WComponentCanvasNode id={wc11.id} />
-        </div>
+        <WComponentCanvasNodes />
     </Provider>
 }
+
+
+
+const map_state = (state: RootState) => ({
+    rich_text_formatting: state.display.rich_text_formatting,
+})
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector>
+
+function _WComponentCanvasNodes (props: Props)
+{
+    return <div>
+        WComponentCanvasNodes {"" + props.rich_text_formatting}
+
+        {wcomponents.map(({ id }) => <WComponentCanvasNode id={id} />)}
+    </div>
+}
+
+const WComponentCanvasNodes = connector(_WComponentCanvasNodes) as FunctionalComponent<{}>
