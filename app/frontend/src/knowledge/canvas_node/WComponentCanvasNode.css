@@ -47,33 +47,6 @@
 }
 
 
-.node_handle
-{
-    position: absolute;
-    background-color: initial;
-    left: -5px;
-    top: 0px;
-    border: none;
-    font-size: 15px;
-    color: rgba(0,0,0,0.3);
-}
-.node_handle:hover
-{
-    color: rgba(0,0,0,1);
-}
-
-.node_handle.movement
-{
-    left: -4px;
-}
-
-.node_handle.explore
-{
-    top: 20px;
-    font-size: 13px;
-}
-
-
 .node_is_selected
 {
     z-index: 97;
@@ -101,10 +74,22 @@
 
 .node_does_not_exist
 {
-    opacity: 0.1;
+    /* opacity: 0.5; */
+}
+.node_does_not_exist .node_main_content
+{
+    border: thin solid red;
 }
 
 .node_may_not_exist
 {
     opacity: 0.5;
+}
+
+/* compact / presentation / consumption */
+.wcomponent_canvas_node.connectable_canvas_node.compact_display.graph_node .node_main_content
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

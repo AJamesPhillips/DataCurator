@@ -51,6 +51,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         display_at_created_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
+        rich_text_formatting: state.display.rich_text_formatting,
     }
 }
 
@@ -99,6 +100,7 @@ function _WComponentCanvasNode (props: Props)
     const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
         e.stopImmediatePropagation()
+        e.preventDefault()
 
         clicked_wcomponent({ id })
 
@@ -153,6 +155,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
+        + (props.rich_text_formatting ? " compact_display " : "")
         + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
