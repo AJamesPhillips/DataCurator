@@ -1,14 +1,14 @@
 import { h } from "preact"
 
+import "./Handles.css"
+
 
 
 interface HandlesProps extends HandleForMovingProps {}
 export function Handles (props: HandlesProps)
 {
-    return <div style={{ border: "none", backgroundColor: "initial" }}>
-        <HandleForMoving
-            set_node_is_moving={props.set_node_is_moving}
-        />
+    return <div className="handles">
+        <HandleForMoving set_node_is_moving={props.set_node_is_moving} />
         <ExploreButton />
     </div>
 }

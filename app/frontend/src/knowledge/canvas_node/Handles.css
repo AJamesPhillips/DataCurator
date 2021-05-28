@@ -1,0 +1,32 @@
+
+.wcomponent_canvas_node .handles
+{
+    border: none;
+    background-color: initial;
+    user-select: none;
+    position: absolute;
+    left: -12px;
+    top: 0px;
+    font-size: 15px;
+}
+
+
+.node_handle
+{
+    color: rgba(0,0,0,0.3);
+}
+.node_handle:hover
+{
+    color: rgba(0,0,0,1);
+}
+
+.node_handle.movement
+{
+    left: -11px;
+}
+
+.node_handle.explore
+{
+    top: 20px;
+    font-size: 13px;
+}
