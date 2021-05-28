@@ -182,4 +182,3 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
 
     return { from_node_position, to_node_position, from_connection_type, to_connection_type }
 }
-

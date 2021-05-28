@@ -1,0 +1,9 @@
+
+.node_judgements_container
+{
+    /*
+    Some change in last 12 hours means this is the only
+    way I have found to display the JudgementBages
+    */
+    display: contents;
+}

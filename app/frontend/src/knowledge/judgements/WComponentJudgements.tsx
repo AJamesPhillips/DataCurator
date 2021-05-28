@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import "./WComponentJudgements.css"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
 import { JudgementBadgeC } from "./JudgementBadgeC"
