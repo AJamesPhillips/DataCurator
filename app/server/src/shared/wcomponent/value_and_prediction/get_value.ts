@@ -3,188 +3,77 @@ import {
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
+import type { CurrentValue, CurrentValuePossibility, VAPsRepresent } from "../interfaces/generic_value"
 import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
     WComponentNodeStateV2,
-    UIStateValue,
     StateValueAndPredictionsSet,
-    UIStateValueType,
     StateValueAndPrediction,
-    UIStateValueModifer,
 } from "../interfaces/state"
 import type {
     TemporalUncertainty,
     VAP_id_counterfactual_map,
     VAP_set_id_counterfactual_map,
     WComponentCounterfactuals,
-} from "../interfaces/uncertainty"
+} from "../interfaces/uncertainty/uncertainty"
+import { calc_uncertainty } from "../uncertainty_utils"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
 
 
 
-const default_UI_state_value: UIStateValue = {
-    value: undefined,
-    probability: undefined,
-    conviction: undefined,
-    type: "single",
-}
-
-
-
-interface GetWcomponentStatev2ValueArgs
+export function get_current_value (possibilities: CurrentValuePossibility[]): CurrentValue
 {
-    wcomponent: WComponentNodeStateV2
-    wc_counterfactuals: WComponentCounterfactuals | undefined
-    created_at_ms: number
-    sim_ms: number
-}
-export function get_wcomponent_statev2_value (args: GetWcomponentStatev2ValueArgs): UIStateValue
-{
-    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
+    let value: CurrentValue = {
+        possibilities,
+        value: undefined,
+        probability: undefined,
+        conviction: undefined,
+        uncertain: undefined,
+        assumed: undefined,
+    }
 
-    const { values_and_prediction_sets, subtype, boolean_true_str, boolean_false_str, } = wcomponent
+    if (possibilities.length === 1)
+    {
+        value = { ...value, ...possibilities[0], possibilities }
+    }
 
-    const VAPs_represents_boolean = subtype === "boolean"
-
-    return get_VAP_set_value({
-        values_and_prediction_sets,
-        VAPs_represents_boolean,
-        wc_counterfactuals,
-        created_at_ms,
-        sim_ms,
-        boolean_true_str,
-        boolean_false_str,
-    })
+    return value
 }
 
-
-
-interface GetWcomponentNonStatev2ValueArgs
-{
-    wcomponent: WComponent
-    wc_counterfactuals: WComponentCounterfactuals | undefined
-    created_at_ms: number
-    sim_ms: number
-}
-export function get_wcomponent_non_statev2_value (args: GetWcomponentNonStatev2ValueArgs): UIStateValue
-{
-    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
-
-    if (!wcomponent_has_VAP_sets(wcomponent)) return default_UI_state_value
-
-    const { values_and_prediction_sets, } = wcomponent
-
-    return get_VAP_set_value({
-        values_and_prediction_sets,
-        VAPs_represents_boolean: true,
-        wc_counterfactuals,
-        created_at_ms,
-        sim_ms,
-    })
-}
 
 
 interface GetVAPSetValueArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represents_boolean: boolean
+    VAPs_represent: VAPsRepresent
     wc_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
-    boolean_true_str?: string
-    boolean_false_str?: string
 }
-function get_VAP_set_value (args: GetVAPSetValueArgs): UIStateValue
+export function get_VAP_set_possible_values (args: GetVAPSetValueArgs): CurrentValuePossibility[]
 {
-    const { values_and_prediction_sets, VAPs_represents_boolean, wc_counterfactuals,
-        created_at_ms, sim_ms, boolean_true_str, boolean_false_str } = args
+    const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
+        created_at_ms, sim_ms } = args
 
     const { present_items } = partition_and_prune_items_by_datetimes({
         items: values_and_prediction_sets || [], created_at_ms, sim_ms,
     })
 
-    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represents_boolean)
+    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
     const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
     const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
-    return get_probable_VAP_display_values(counterfactual_VAPs, VAPs_represents_boolean, boolean_true_str, boolean_false_str)
+    return get_probable_VAP_values(counterfactual_VAPs, VAPs_represent)
 }
 
 
 
-function get_probable_VAP_display_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represents_boolean: boolean, boolean_true_str: string | undefined, boolean_false_str: string | undefined): UIStateValue
-{
-    if (!all_VAPs.length) return default_UI_state_value
-
-
-    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represents_boolean)
-
-    const subtype_specific_VAPs = VAPs_represents_boolean ? VAPs_by_prob : VAPs_by_prob.filter(VAP => VAP.probability > 0)
-    const filtered_VAPs = subtype_specific_VAPs.filter(({ conviction }) => conviction !== 0)
-
-
-    let value_strings: string[] = []
-    if (VAPs_represents_boolean)
-    {
-        // Should we return something that's neither true nor false if probability === 0.5?
-        value_strings = filtered_VAPs.map(VAP =>
-        {
-            return VAP.probability > 0.5
-            ? (boolean_true_str || "True")
-            : (boolean_false_str || "False")
-        })
-    }
-    else
-    {
-        value_strings = filtered_VAPs.map(VAP => VAP.value)
-    }
-
-
-    let value: string | undefined
-    let probability: number | undefined = undefined
-    let conviction: number | undefined = undefined
-    let type: UIStateValueType = "single"
-    let modifier: UIStateValueModifer | undefined = undefined
-    if (value_strings.length === 0)
-    {
-        value = undefined
-    }
-    else if (value_strings.length === 1)
-    {
-        value = value_strings.join("")
-        const single_VAP = VAPs_by_prob[0]!
-        if ((single_VAP.probability > 0 && single_VAP.probability < 1) || single_VAP.conviction !== 1)
-        {
-            modifier = "uncertain"
-        }
-
-        probability = single_VAP.probability
-        conviction = single_VAP.conviction
-    }
-    else
-    {
-        type = "multiple"
-        value = value_strings.slice(0, 2).join(", ")
-        if (value_strings.length > 2) value += `, (${value_strings.length - 2} more)`
-    }
-
-
-    let cf = false
-    VAPs_by_prob.forEach(VAP => cf = cf || VAP.is_counterfactual)
-    if (cf) modifier = "assumed"
-
-
-    return { value, probability, conviction, type, modifier }
-}
-
-
-
-function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represents_boolean: boolean)
+function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsRepresent)
 {
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const subtype_specific_VAPs = VAPs_represents_boolean
+        const subtype_specific_VAPs = VAPs_represent.boolean
             ? VAP_set.entries.slice(0, 1)
             : VAP_set.entries
 
@@ -195,6 +84,40 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VA
 }
 
 
+
+function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsRepresent): CurrentValuePossibility[]
+{
+    if (!all_VAPs.length) return []
+
+
+    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represent)
+
+
+    const possibilities: CurrentValuePossibility[] = VAPs_by_prob.map(VAP =>
+    {
+        // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
+        const value = VAPs_represent.boolean ? VAP.probability > 0.5
+            : (VAPs_represent.number ? parseFloat(VAP.value)
+            : VAP.value)
+
+        return {
+            ...VAP,
+            uncertain: calc_uncertainty(VAP),
+            assumed: VAP.is_counterfactual,
+            value,
+        }
+    })
+    .filter(possibility =>
+    {
+        return VAPs_represent.boolean || possibility.uncertain || possibility.probability > 0
+    })
+
+    return possibilities
+}
+
+
+
+/*
 
 function run_tests ()
 {
@@ -416,3 +339,4 @@ function run_tests ()
 }
 
 // run_tests()
+*/

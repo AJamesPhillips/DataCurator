@@ -1,6 +1,9 @@
+import type { StartedStoppedAt, WComponentNodeAction } from "./action"
 import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
+import type { WComponentGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"
+import type { KnowledgeView } from "./knowledge_view"
 import type {
     HasVAPSets,
     StateValueAndPredictionsSet,
@@ -8,8 +11,10 @@ import type {
     WComponentNodeState,
     WComponentNodeStateV2,
 } from "./state"
-import type { ValidityPredictions, ExistencePredictions, WComponentCounterfactual } from "./uncertainty"
-import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent"
+import type { ExistencePredictions } from "./uncertainty/existence"
+import type { WComponentCounterfactual } from "./uncertainty/uncertainty"
+import type { ValidityPredictions } from "./uncertainty/validity"
+import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
 
 
 
@@ -37,11 +42,6 @@ interface WComponentNodeProcessBase
     // end: TemporalUncertainty
 }
 
-export interface WComponentNodeAction extends WComponentNodeBase, WComponentNodeProcessBase
-{
-    type: "action"
-}
-
 
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeState
@@ -49,18 +49,29 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentNodeProcess
     | WComponentNodeAction
     | WComponentCounterfactual
+    | WComponentGoal
 
 
-export type ConnectionLocationType = "top" | "bottom" | "left" | "right"
-export type ConnectionTerminalType = "meta" | "validity" | "value"
+
+export type ConnectionTerminalAttributeType = "meta" | "validity" | "value" // | "existence"
+export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "value"]
+export type ConnectionTerminalDirectionType = "from" | "to"
+export const connection_terminal_directions: ConnectionTerminalDirectionType[] = ["from", "to"]
+export interface ConnectionTerminalType
+{
+    attribute: ConnectionTerminalAttributeType
+    direction: ConnectionTerminalDirectionType
+}
+
+
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
 export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
 {
     type: WComponentConnectionType
     from_id: string
     to_id: string
-    from_type: ConnectionTerminalType
-    to_type: ConnectionTerminalType
+    from_type: ConnectionTerminalAttributeType
+    to_type: ConnectionTerminalAttributeType
 }
 export interface WComponentCausalConnection extends WComponentConnection
 {
@@ -112,9 +123,9 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
 
-export function wcomponent_is_judgement (wcomponent: WComponent): wcomponent is WComponentJudgement
+export function wcomponent_is_judgement_or_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
-    return wcomponent.type === "judgement"
+    return wcomponent.type === "judgement" || wcomponent.type === "objective"
 }
 
 export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
@@ -124,7 +135,7 @@ export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponen
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
-    return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement(wcomponent)
+    return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent)
 }
 
 export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
@@ -153,45 +164,10 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 }
 
 
-// interface ProcessActiveStatus extends StateValueBase
-// {
-//     active: boolean | null
-// }
-
-
-// export interface Judgement extends StateValueBase
-// {
-//     value: boolean | null
-//     // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
-// }
-
-export interface KnowledgeViewWComponentIdEntryMap
+export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
 {
-    [world_component_id: string]: KnowledgeViewWComponentEntry
+    return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
 }
-
-export interface KnowledgeView
-{
-    id: string
-    created_at: Date
-    title: string
-    description: string
-    wc_id_map: KnowledgeViewWComponentIdEntryMap
-    is_base?: true
-    allows_assumptions?: true
-    foundation_knowledge_view_ids?: string[]
-}
-export type KnowledgeViewsById = { [id: string]: KnowledgeView /*| undefined*/ }
-
-export interface KnowledgeViewWComponentEntry
-{
-    // TODO remove left and top and abstract over the upside down browser coordinate system by using x and y
-    left: number
-    top: number
-    // x: number
-    // y: number
-}
-
 
 
 // export interface JudgementView

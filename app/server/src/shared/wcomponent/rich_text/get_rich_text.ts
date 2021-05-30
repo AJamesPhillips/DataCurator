@@ -1,10 +1,10 @@
 import type { CreationContextState } from "../../interfaces"
 import { test } from "../../utils/test"
 import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
-import { get_wcomponent_state_value } from "../get_wcomponent_state_value"
+import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import type { WComponentsById, WComponent } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
-import type { WcIdCounterfactualsMap } from "../interfaces/uncertainty"
+import type { WcIdCounterfactualsMap } from "../interfaces/uncertainty/uncertainty"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -70,14 +70,14 @@ export function replace_value_in_text (args: ReplaceValueInTextArgs)
 
     const wc_counterfactuals = wc_id_counterfactuals_map[wcomponent.id]
 
-    const value = get_wcomponent_state_value({
+    const value = get_wcomponent_state_UI_value({
         wcomponent,
         wc_counterfactuals,
         created_at_ms: args.created_at_ms,
         sim_ms: args.sim_ms,
-    }).value
+    })
 
-    text = text.replace(/\$\{value\}/g, `${value}`)
+    text = text.replace(/\$\{value\}/g, `${value.values_string}`)
     return text
 }
 

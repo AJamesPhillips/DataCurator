@@ -1,5 +1,5 @@
-import type { Prediction } from "./uncertainty"
-import type { WComponentNodeBase } from "./wcomponent"
+import type { Prediction } from "./uncertainty/uncertainty"
+import type { WComponentNodeBase } from "./wcomponent_base"
 
 
 

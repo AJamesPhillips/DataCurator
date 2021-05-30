@@ -1,9 +1,9 @@
 import { make_graph, find_leaf_groups } from "../../utils/graph"
 import { sort_list } from "../../utils/sort"
+import type { VAPsRepresent } from "../interfaces/generic_value"
 import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
-    WComponentStateV2SubType,
     StateValueAndPrediction,
 } from "../interfaces/state"
 import { get_created_at_ms, get_sim_datetime } from "../utils_datetime"
@@ -93,10 +93,10 @@ function get_VAP_datetime_sort_key (VAP: StateValueAndPredictionsSet)
 
 
 
-export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VAPs: E[], VAPs_represents_boolean: boolean): E[]
+export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VAPs: E[], VAPs_represents: VAPsRepresent): E[]
 {
     const first_VAP = VAPs[0]
-    if (VAPs_represents_boolean && first_VAP) return [first_VAP]
+    if (VAPs_represents.boolean && first_VAP) return [first_VAP]
 
     return VAPs.sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
 }

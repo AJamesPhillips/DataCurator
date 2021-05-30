@@ -1,8 +1,8 @@
 import { test } from "../utils/test"
 import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
-import type { HasVersion } from "./interfaces/state"
-import type { HasDateTime } from "./interfaces/uncertainty"
+import type { HasVersion } from "./interfaces/base"
+import type { HasDateTime } from "./interfaces/uncertainty/uncertainty"
 
 
 

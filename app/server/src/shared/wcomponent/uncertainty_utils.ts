@@ -1,4 +1,4 @@
-import type { PredictionBase } from "./interfaces/uncertainty"
+import type { PredictionBase } from "./interfaces/uncertainty/uncertainty"
 
 
 
@@ -20,4 +20,11 @@ export function get_prob_and_conviction (prediction: Partial<PredictionBase> | u
     }
 
     return { probability, conviction }
+}
+
+
+
+export function calc_uncertainty ({ probability, conviction }: { probability: number, conviction: number })
+{
+    return (probability > 0 && probability < 1) || conviction !== 1
 }

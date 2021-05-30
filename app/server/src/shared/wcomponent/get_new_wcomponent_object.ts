@@ -1,10 +1,10 @@
 import type { CreationContextState } from "../interfaces"
-import { get_created_ats } from "../utils/datetime"
+import { get_new_created_ats } from "../utils/datetime"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "./interfaces/state"
-import type { WComponentBase } from "./interfaces/wcomponent"
+import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 
@@ -12,7 +12,7 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
-        ...get_created_ats(creation_context),
+        ...get_new_created_ats(creation_context),
         title: "",
         description: "",
         type: "process",
@@ -33,7 +33,7 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
         }
         wcomponent = causal_link
     }
-    else if (args.type === "judgement")
+    else if (args.type === "judgement" || args.type === "objective")
     {
         const judgement: WComponentJudgement = {
             judgement_target_wcomponent_id: "",

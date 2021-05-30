@@ -1,6 +1,6 @@
-import type { Base } from "./base"
-import type { TemporalUncertainty, PredictionBase } from "./uncertainty"
-import type { WComponentNodeBase } from "./wcomponent"
+import type { Base, HasVersion } from "./base"
+import type { TemporalUncertainty, PredictionBase } from "./uncertainty/uncertainty"
+import type { WComponentNodeBase } from "./wcomponent_base"
 
 
 
@@ -46,7 +46,7 @@ interface StateValueBase extends Base
 
 export interface StateValueString extends StateValueBase
 {
-    value: string | null
+    value: string
 }
 
 
@@ -81,11 +81,6 @@ export interface StateValueAndPredictionsSet extends Base, HasVersion
     previous_VAP_set_ids?: string[]
 }
 
-export interface HasVersion
-{
-    version: number
-}
-
 
 
 export interface StateValueAndPrediction extends PredictionBase
@@ -114,17 +109,4 @@ export interface VersionedStateVAPsSet
 {
     latest: StateValueAndPredictionsSet
     older: StateValueAndPredictionsSet[]
-}
-
-
-
-export type UIStateValueType = "single" | "multiple" // | "multi-multiple"
-export type UIStateValueModifer = "uncertain" | "assumed" | "likely"
-export interface UIStateValue
-{
-    value: string | null | undefined
-    probability: number | undefined
-    conviction: number | undefined
-    type: UIStateValueType
-    modifier?: UIStateValueModifer
 }
