@@ -72,7 +72,7 @@ function get_summary (item: StateValueString, on_change?: (item: StateValueStrin
             value={item.value || ""}
             on_change={new_value =>
             {
-                const value = (new_value && new_value.trim()) || null
+                const value = new_value && new_value.trim()
                 if (on_change) on_change({ ...item, value })
             }}
         />

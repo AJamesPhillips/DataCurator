@@ -1,6 +1,6 @@
 import { test } from "../shared/utils/test"
 import type { BoundingRect } from "../state/display/state"
-import { bounded } from "../utils/utils"
+import { bounded } from "../shared/utils/bounded"
 
 
 

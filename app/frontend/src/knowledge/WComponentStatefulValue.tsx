@@ -1,13 +1,13 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
+import { get_wcomponent_state_UI_value } from "../shared/wcomponent/get_wcomponent_state_UI_value"
+import type { UIValue } from "../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
 import type { WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
@@ -73,25 +73,27 @@ export const WComponentStatefulValue = connector(_WComponentStatefulValue) as Fu
 
 function process_props (props: Props)
 {
-    let ui_value: UIStateValue | undefined = undefined
+    let ui_value: UIValue | undefined = undefined
     let judgement_value = undefined
     let is_judgement = false
-    let is_empty = true
+    let is_empty = false
 
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
 
 
     if (wcomponent_is_state(wcomponent))
     {
-        ui_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
-        is_empty = ui_value.value === undefined
+        ui_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
     }
     else if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         is_judgement = true
-        is_empty = false
 
         judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals: wc_counterfactuals, created_at_ms, sim_ms })
+    }
+    else
+    {
+        is_empty = true
     }
 
     return { ui_value, judgement_value, is_judgement, is_empty }

@@ -8,7 +8,7 @@ import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { get_updated_wcomponent } from "../../shared/wcomponent/get_updated_wcomponent"
-import { get_wcomponent_state_value } from "../../shared/wcomponent/get_wcomponent_state_value"
+import { get_wcomponent_state_UI_value } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -107,7 +107,7 @@ function _WComponentForm (props: Props)
     }
 
 
-    const UI_value = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+    const UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
 
 
     return <div key={wcomponent_id}>
@@ -120,7 +120,7 @@ function _WComponentForm (props: Props)
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
 
-        {UI_value.value !== undefined &&
+        {UI_value.values_string &&
         <div style={{ cursor: "not-allowed" }}>
             {wcomponent_is_action(wcomponent) ? "Is complete:" : "Value:"}
             <DisplayValue UI_value={UI_value} />

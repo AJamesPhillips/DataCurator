@@ -1,12 +1,13 @@
-import { get_wcomponent_state_value } from "../shared/wcomponent/get_wcomponent_state_value"
+import type { CurrentValuePossibility } from "../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
+    wcomponent_is_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { UIStateValue } from "../shared/wcomponent/interfaces/state"
 import type { Prediction, WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/wcomponent/utils_datetime"
+import { get_VAP_set_possible_values } from "../shared/wcomponent/value_and_prediction/get_value"
 
 
 
@@ -47,28 +48,35 @@ function get_present_prediction (predictions: Prediction[], created_at_ms: numbe
 }
 
 
-export function wcomponent_present_existence_prediction_for_datetimes (wcomponent: WComponent, wc_counterfactuals: WComponentCounterfactuals | undefined, created_at_ms: number, sim_ms: number)
+
+interface WcomponentExistenceForDatetimesReturn
 {
-    // let present_existence_prediction: Prediction | undefined = undefined
-    let present_existence_prediction: UIStateValue | undefined = undefined
+    existence: number
+    conviction: number
+}
+// Uses the same state data attribute as the Statev2 components
+export function wcomponent_existence_for_datetimes (wcomponent: WComponent, wc_counterfactuals: WComponentCounterfactuals | undefined, created_at_ms: number, sim_ms: number): WcomponentExistenceForDatetimesReturn
+{
+    if (wcomponent_is_state(wcomponent)) return { existence: 1, conviction: 1 }
+
+    let present_existence_prediction: CurrentValuePossibility | undefined = undefined
 
     const invalid = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
     if (!invalid && wcomponent_has_VAP_sets(wcomponent))
     {
-        present_existence_prediction = get_wcomponent_state_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
-
-        // present_existence_prediction = get_present_prediction([], created_at_ms, sim_ms)
+        const possibilities = get_VAP_set_possible_values({
+            values_and_prediction_sets: wcomponent.values_and_prediction_sets,
+            VAPs_represent: { boolean: true },
+            wc_counterfactuals,
+            created_at_ms,
+            sim_ms,
+        })
+        present_existence_prediction = possibilities.length === 1 ? possibilities[0] : undefined
     }
 
-    return present_existence_prediction
-}
-export function wcomponent_existence_for_datetimes (wcomponent: WComponent, wc_counterfactuals: WComponentCounterfactuals | undefined, created_at_ms: number, sim_ms: number)
-{
-    const present_existence_prediction = wcomponent_present_existence_prediction_for_datetimes(wcomponent, wc_counterfactuals, created_at_ms, sim_ms)
     const pep = present_existence_prediction
-
-    const existence = pep && pep.probability !== undefined ? pep.probability : 1
-    const conviction = pep && pep.conviction !== undefined ? pep.conviction : 1
+    const existence = pep ? pep.probability : 1
+    const conviction = pep ? pep.conviction : 1
 
     return { existence, conviction }
 }

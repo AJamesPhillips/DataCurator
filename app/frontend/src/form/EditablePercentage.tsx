@@ -1,8 +1,9 @@
 import { h } from "preact"
 
 import "./Editable.css"
-import { bounded } from "../utils/utils"
+import { bounded } from "../shared/utils/bounded"
 import { EditableTextSingleLine } from "./EditableTextSingleLine"
+import { percentage_to_string } from "../shared/UI/percentages"
 
 
 
@@ -49,14 +50,4 @@ function string_to_percentage (value: string): number | undefined
     if (Number.isNaN(num_value)) return 0
 
     return bounded(num_value, 0, 100) / 100
-}
-
-
-export function percentage_to_string (value: number | undefined): string
-{
-    if (value === undefined) return ""
-
-    const percent = bounded(value, 0, 1) * 100
-
-    return (percent).toPrecision(percent < 98 ? 2 : 3)
 }

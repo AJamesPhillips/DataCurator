@@ -25,14 +25,17 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     if (!target_wcomponent) return undefined
 
 
-    const { value } = get_wcomponent_state_value({
+    const possibilities = get_wcomponent_state_value({
         wcomponent: target_wcomponent,
         wc_counterfactuals: target_counterfactuals,
         created_at_ms,
         sim_ms,
     })
-    if (value === undefined) return undefined
 
+
+    if (possibilities.length !== 1) return undefined
+    const current_value = possibilities[0]
+    const value = current_value!.value
 
     const {
         judgement_operator: operator,
@@ -43,19 +46,18 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
 
     const is_num = wcomponent_is_statev2(target_wcomponent) && target_wcomponent.subtype === "number"
-    const coerced_value = is_num ? parseFloat(value || "") : value
     const coerced_comparator = is_num ? parseFloat(comparator || "") : comparator
 
 
     let result = undefined
     // purposefully using abstract equality comparison to accommodate strings, numbers etc
-    if (operator === "==") result = coerced_value == coerced_comparator
-    else if (operator === "!=") result = coerced_value != coerced_comparator
-    else if (coerced_value === null) result = undefined
-    else if (operator === "<") result = coerced_value < coerced_comparator
-    else if (operator === "<=") result = coerced_value <= coerced_comparator
-    else if (operator === ">") result = coerced_value > coerced_comparator
-    else if (operator === ">=") result = coerced_value >= coerced_comparator
+    if (operator === "==") result = value == coerced_comparator
+    else if (operator === "!=") result = value != coerced_comparator
+    else if (value === null) result = undefined
+    else if (operator === "<") result = value < coerced_comparator
+    else if (operator === "<=") result = value <= coerced_comparator
+    else if (operator === ">") result = value > coerced_comparator
+    else if (operator === ">=") result = value >= coerced_comparator
 
     return result
 }

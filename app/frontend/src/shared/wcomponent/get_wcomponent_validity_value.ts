@@ -4,7 +4,20 @@ import { get_created_at_ms } from "./utils_datetime"
 
 
 
-const default_value: CurrentValue = { possibilities: [], value: undefined, probability: undefined, conviction: undefined, uncertain: undefined }
+interface CurrentValidityValue extends CurrentValue
+{
+    value: boolean
+}
+
+
+const default_value = (): CurrentValidityValue => ({
+    possibilities: [],
+    value: true,
+    probability: 1,
+    conviction: 1,
+    uncertain: false,
+    assumed: false,
+})
 
 
 interface GetWcomponentStateValueArgs
@@ -13,11 +26,11 @@ interface GetWcomponentStateValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): CurrentValue
+export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): CurrentValidityValue
 {
     const { wcomponent, created_at_ms, sim_ms } = args
 
-    if (!wcomponent_has_validity_predictions(wcomponent)) return default_value
+    if (!wcomponent_has_validity_predictions(wcomponent)) return default_value()
 
     // TODO upgrade validities from simple predictions to VAP_sets
     // get_VAP_set_value({
@@ -33,11 +46,11 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
     // .values are sorted created_at ascending
     const active_validity = wcomponent.validity.find_last(v => get_created_at_ms(v) <= created_at_ms)
 
-    if (!active_validity) return default_value
+    if (!active_validity) return default_value()
 
     const { probability, conviction } = active_validity
     const valid = probability > 0.5
     const uncertain = (probability > 0 && probability < 1) || conviction !== 1
 
-    return { value: valid, uncertain, probability, conviction, possibilities: [] }
+    return { value: valid, uncertain, probability, conviction, assumed: false, possibilities: [] }
 }

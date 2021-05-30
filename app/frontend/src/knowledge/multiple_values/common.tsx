@@ -14,18 +14,21 @@ import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/me
 import { SummaryForPrediction } from "../predictions/common"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
+import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { subtype_to_VAPsRepresent } from "../../shared/wcomponent/get_wcomponent_state_value"
 
 
 
 export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    let VAPs = get_VAPs_from_set(VAP_set, subtype)
+    const VAPs_represent = subtype_to_VAPsRepresent(subtype)
+    let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
     VAP_set = { ...VAP_set, entries: VAPs }
 
-    const values = get_probable_VAP_set_values(VAP_set, subtype)
-    const prob = get_VAP_set_prob(VAP_set, subtype) + " %"
-    const conv = get_VAP_set_conviction(VAP_set, subtype) + " %"
+    const values = get_probable_VAP_set_values(VAP_set, VAPs_represent)
+    const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + " %"
+    const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + " %"
 
     return <SummaryForPrediction
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
@@ -40,7 +43,8 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    const VAPs = get_VAPs_from_set(VAP_set, subtype)
+    const VAPs_represent = subtype_to_VAPsRepresent(subtype)
+    const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
 
     return <div className="VAP_set_details">
@@ -58,7 +62,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
                 subtype={subtype}
                 values_and_predictions={VAPs}
                 VAP_counterfactuals_map={VAP_counterfactuals_map}
-                update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, subtype))}
+                update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, VAPs_represent))}
             />
         </div>
         <br />
@@ -120,11 +124,11 @@ const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom
 
 
 
-function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: string)
+function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent)
 {
     let VAPs = VAP_set.entries
 
-    if (subtype === "boolean" && VAPs.length !== 1)
+    if (VAPs_represent.boolean && VAPs.length !== 1)
     {
         // ensure the ValueAndPrediction component always and only receives up to a single VAP entry
         VAPs = VAPs.slice(0, 1)
@@ -135,9 +139,9 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, subtype: strin
 
 
 
-function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, subtype: string): StateValueAndPredictionsSet
+function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent): StateValueAndPredictionsSet
 {
-    if (subtype === "boolean")
+    if (VAPs_represent.boolean)
     {
         // For now we'll save any other values that were already here from other subtypes
         VAPs = VAPs.concat(VAP_set.entries.slice(1))

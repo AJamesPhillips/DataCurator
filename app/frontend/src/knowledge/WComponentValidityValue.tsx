@@ -48,8 +48,7 @@ function get_wcomponent_validity_value_from_props (props: Props): UIValue
 
     const { value, uncertain, probability, conviction } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
 
-    const value_str = value === undefined ? undefined : (
-        typeof value === "boolean" ? (value ? "Valid" : "Invalid") : undefined)
+    const value_str = value ? "Valid" : "Invalid"
 
-    return { value: value_str, probability, conviction, uncertain }
+    return { values_string: value_str, probabilities_string: "", convictions_string: "" }
 }

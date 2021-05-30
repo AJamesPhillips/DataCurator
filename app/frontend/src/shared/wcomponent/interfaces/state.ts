@@ -46,7 +46,7 @@ interface StateValueBase extends Base
 
 export interface StateValueString extends StateValueBase
 {
-    value: string | null
+    value: string
 }
 
 
@@ -109,18 +109,4 @@ export interface VersionedStateVAPsSet
 {
     latest: StateValueAndPredictionsSet
     older: StateValueAndPredictionsSet[]
-}
-
-
-
-// TODO upgrade UIStateValue to use UIValue interfaces instead
-export type UIStateValueType = "single" | "multiple" // | "multi-multiple"
-export type UIStateValueModifer = "uncertain" | "assumed" | "likely"
-export interface UIStateValue
-{
-    value: string | null | undefined
-    probability: number | undefined
-    conviction: number | undefined
-    type: UIStateValueType
-    modifier?: UIStateValueModifer
 }

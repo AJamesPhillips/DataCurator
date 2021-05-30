@@ -157,6 +157,8 @@ export interface VAP_set_id_counterfactual_map
 }
 export interface WComponentCounterfactuals
 {
+    // validity_VAP_set: VAP_set_id_counterfactual_map
+    // TODO rename to state_VAP_set
     VAP_set: VAP_set_id_counterfactual_map
 }
 export type WcIdCounterfactualsMap = {

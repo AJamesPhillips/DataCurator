@@ -1,6 +1,6 @@
 import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_angle } from "../../utils/angles"
-import { bounded } from "../../utils/utils"
+import { bounded } from "../../shared/utils/bounded"
 import { get_magnitude } from "../../utils/vector"
 import type { CanvasPoint } from "../interfaces"
 import { get_angle_from_start_connector, get_angle_from_end_connector } from "./angles"
