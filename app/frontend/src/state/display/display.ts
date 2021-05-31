@@ -1,6 +1,6 @@
 import type { Store } from "redux"
-import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
 
+import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
 
