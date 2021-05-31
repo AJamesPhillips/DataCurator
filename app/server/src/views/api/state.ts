@@ -8,6 +8,7 @@ import { get_latest_specialised_state } from "./state/get_latest_specialised_sta
 import { output_latest_specialised_state_as_markdown } from "./state/output_latest_specialised_state_as_markdown"
 import { save_latest_specialised_state } from "./state/save_latest_specialised_state"
 import { config } from "../../private_server_config"
+import { parse_specialised_objects_fromto_server } from "../../shared/wcomponent/parse_json/parse_specialised_objects"
 
 
 
@@ -95,11 +96,12 @@ export function state_routes (server: Server)
 
             server.log(LOG_TAGS.INFO, "Got specialised state to save")
 
-            const to_save = JSON.parse(request.payload.toString()) as SpecialisedObjectsFromToServer
+            const raw_data = JSON.parse(request.payload.toString()) as SpecialisedObjectsFromToServer
 
-            save_latest_specialised_state(to_save, server)
+            save_latest_specialised_state(raw_data, server)
             if (config.output_markdown_directory)
             {
+                const to_save = parse_specialised_objects_fromto_server(raw_data)
                 output_latest_specialised_state_as_markdown({
                     data: to_save,
                     output_markdown_directory: config.output_markdown_directory,

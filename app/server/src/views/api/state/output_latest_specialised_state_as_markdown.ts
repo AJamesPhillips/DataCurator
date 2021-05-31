@@ -2,12 +2,12 @@ import { Server } from "@hapi/hapi"
 import { writeFileSync, existsSync, mkdirSync } from "fs"
 
 import { LOG_TAGS } from "../../../shared/constants"
+import { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import {
     SpecialisedObjectsFromToServer,
     specialised_objects_from_to_server_expected_keys,
     Perception,
     WComponent,
-    KnowledgeView,
     WComponentsById,
     SpecialisedObjectsFromToServerKeys,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
