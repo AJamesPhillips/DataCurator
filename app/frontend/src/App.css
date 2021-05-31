@@ -81,3 +81,9 @@ a
 {
   text-decoration: none;
 }
+
+.description_label
+{
+    font-size: 11px;
+    color: grey;
+}

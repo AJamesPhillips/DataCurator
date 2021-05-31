@@ -35,6 +35,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         UI_knowledge_view_entry,
         knowledge_view_entry,
         all_knowledge_views,
+        consumption_formatting: state.display.consumption_formatting,
     }
 }
 
@@ -51,7 +52,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeView (props: Props)
 {
-    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry, knowledge_view_entry, all_knowledge_views } = props
+    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry,
+        knowledge_view_entry, all_knowledge_views, consumption_formatting } = props
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
 
@@ -112,7 +114,7 @@ function _WComponentKnowledgeView (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {knowledge_view_entry && <div>
+        {(!consumption_formatting && knowledge_view_entry) && <div>
             <br />
             <ConfirmatoryDeleteButton
                 on_delete={() => delete_entry()}

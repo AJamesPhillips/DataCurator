@@ -62,7 +62,10 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
     })
 
 
-    let values_string = value_strings.length ? value_strings.slice(0, 2).join(", ") : "not defined"
+    const is_defined = value_strings.length > 0
+
+
+    let values_string = is_defined ? value_strings.slice(0, 2).join(", ") : "not defined"
     if (value_strings.length > 2) values_string += `, (${value_strings.length - 2} more)`
 
     let probabilities_string = probability_strings.length ? (probability_strings.slice(0, 2).join(", ") + "%") : ""
@@ -72,7 +75,7 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
     if (conviction_strings.length > 2) convictions_string += `, (${conviction_strings.length - 2} more)`
 
 
-    return { values_string, probabilities_string, convictions_string }
+    return { is_defined, values_string, probabilities_string, convictions_string }
 }
 
 

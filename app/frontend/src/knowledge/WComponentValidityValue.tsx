@@ -46,9 +46,9 @@ function get_wcomponent_validity_value_from_props (props: Props): UIValue
 {
     const { wcomponent, created_at_ms, sim_ms } = props
 
-    const { value, uncertain, probability, conviction } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
+    const { is_defined, value, uncertain, probability, conviction } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
 
     const value_str = value ? "Valid" : "Invalid"
 
-    return { values_string: value_str, probabilities_string: "", convictions_string: "" }
+    return { is_defined, values_string: value_str, probabilities_string: "", convictions_string: "" }
 }

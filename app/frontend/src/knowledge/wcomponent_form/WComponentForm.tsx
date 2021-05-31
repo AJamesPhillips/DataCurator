@@ -21,8 +21,9 @@ import {
     wcomponent_is_causal_link,
     wcomponent_is_action,
     wcomponent_has_VAP_sets,
+    wcomponent_should_have_state_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
+import { StateValueAndPredictionsSet, WComponentStateV2SubType, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
@@ -38,6 +39,7 @@ import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFields } from "./JudgementFields"
 import { useEffect, useRef } from "preact/hooks"
 import { WComponentEventFormFields } from "./WComponentEventFormFields"
+import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -69,7 +71,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         x: state.routing.args.x,
         y: state.routing.args.y,
         zoom: state.routing.args.zoom,
-        rich_text: state.display.consumption_formatting,
+        editing: !state.display.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
@@ -91,7 +93,7 @@ function _WComponentForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, rich_text, created_at_ms, sim_ms, creation_context } = props
+    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, editing, created_at_ms, sim_ms, creation_context } = props
     const wcomponent_id = wcomponent.id
     const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
@@ -107,57 +109,79 @@ function _WComponentForm (props: Props)
     }
 
 
-    const UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+    const orig_validity_predictions = wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []
+
+    let UI_value: UIValue | undefined = undefined
+    let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
+    let statev2_subtype: WComponentStateV2SubType = "boolean"
+    if (wcomponent_should_have_state_VAP_sets(wcomponent))
+    {
+        UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+        orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
+        statev2_subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
+    }
 
 
     return <div key={wcomponent_id}>
         <h2><EditableText
             placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
-            value={get_title({ rich_text, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
+            value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
             on_change={title => upsert_wcomponent({ title })}
             force_focus={previous_id.current !== wcomponent_id}
         /></h2>
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
 
-        {UI_value.values_string &&
+        {UI_value && (editing || UI_value.is_defined) &&
         <div style={{ cursor: "not-allowed" }}>
-            {wcomponent_is_action(wcomponent) ? "Is complete:" : "Value:"}
+            <span className="description_label">
+                {wcomponent_is_action(wcomponent) ? "Is complete" : "Value"}
+            </span>
             <DisplayValue UI_value={UI_value} />
         </div>}
 
-        <p>Type: <div style={{ width: "60%", display: "inline-block" }}><AutocompleteText
-            placeholder={"Type..."}
-            selected_option_id={wcomponent.type}
-            options={wcomponent_type_options}
-            on_change={option_id => upsert_wcomponent({ type: option_id })}
-        /></div></p>
+        <p>
+            <span className="description_label">Type</span>&nbsp;
+            <div style={{ width: "60%", display: "inline-block" }}>
+                <AutocompleteText
+                    placeholder={"Type..."}
+                    selected_option_id={wcomponent.type}
+                    options={wcomponent_type_options}
+                    on_change={option_id => upsert_wcomponent({ type: option_id })}
+                />
+            </div>
+        </p>
 
 
         {wcomponent_is_statev2(wcomponent) &&
-        <p>Sub type: <div style={{ width: "60%", display: "inline-block" }}>
-            <AutocompleteText
-                placeholder={"Sub type..."}
-                selected_option_id={wcomponent.subtype}
-                options={wcomponent_statev2_subtype_options}
-                on_change={option_id => upsert_wcomponent({ subtype: option_id })}
-            />
-        </div></p>}
+        <p>
+            <span className="description_label">Sub type</span>&nbsp;
+            <div style={{ width: "60%", display: "inline-block" }}>
+                <AutocompleteText
+                    placeholder={"Sub type..."}
+                    selected_option_id={wcomponent.subtype}
+                    options={wcomponent_statev2_subtype_options}
+                    on_change={option_id => upsert_wcomponent({ subtype: option_id })}
+                />
+            </div>
+        </p>}
 
-        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" &&
-        <p><div style={{ display: "inline-flex" }}>
-            <div>Boolean representation:</div>
-            <EditableTextSingleLine
-                placeholder="True..."
-                value={wcomponent.boolean_true_str || ""}
-                on_change={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
-            />
-            <EditableTextSingleLine
-                placeholder="False..."
-                value={wcomponent.boolean_false_str || ""}
-                on_change={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
-            />
-        </div></p>}
+        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) &&
+        <p>
+            <div style={{ display: "inline-flex" }}>
+                <span className="description_label">Boolean representation</span>&nbsp;
+                <EditableTextSingleLine
+                    placeholder="True..."
+                    value={wcomponent.boolean_true_str || ""}
+                    on_change={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
+                />
+                <EditableTextSingleLine
+                    placeholder="False..."
+                    value={wcomponent.boolean_false_str || ""}
+                    on_change={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
+                />
+            </div>
+        </p>}
 
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
@@ -199,41 +223,41 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
-        <p>
+        {(editing || wcomponent.description) && <p>
             <EditableText
                 placeholder={"Description..."}
                 value={wcomponent.description}
                 on_change={description => upsert_wcomponent({ description })}
             />
-        </p>
+        </p>}
 
         {wcomponent_is_event(wcomponent) && <WComponentEventFormFields
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
         />}
 
-        <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"}>
-            <EditableCustomDateTime
+        <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
+            <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
                 on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
             />
         </p>
 
-        <br />
+        {(editing || orig_validity_predictions.length > 0) && <div>
+            <br />
 
-        <div>
             <p>
                 <PredictionList
                     item_descriptor="Validity prediction"
-                    predictions={wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []}
+                    predictions={orig_validity_predictions}
                     update_predictions={new_predictions => upsert_wcomponent({ validity: new_predictions }) }
                 />
             </p>
 
             <hr />
             <br />
-        </div>
+        </div>}
 
         {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
             <p style={{ color: "red" }}>
@@ -250,12 +274,13 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
-        {!wcomponent_is_statev2(wcomponent) && wcomponent_has_VAP_sets(wcomponent) && <div>
+
+        {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
                 <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
-                    subtype="boolean"
-                    values_and_prediction_sets={wcomponent.values_and_prediction_sets || []}
+                    subtype={statev2_subtype}
+                    values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_values_and_predictions={values_and_prediction_sets =>
                     {
                         upsert_wcomponent({ values_and_prediction_sets })
@@ -266,6 +291,7 @@ function _WComponentForm (props: Props)
             <hr />
             <br />
         </div>}
+
 
         {wcomponent_is_statev1(wcomponent) && <div>
             <p>
@@ -280,22 +306,6 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
-        {wcomponent_is_statev2(wcomponent) && <div>
-            <p>
-                <ValueAndPredictionSets
-                    wcomponent_id={wcomponent.id}
-                    subtype={wcomponent.subtype}
-                    values_and_prediction_sets={wcomponent.values_and_prediction_sets || []}
-                    update_values_and_predictions={values_and_prediction_sets =>
-                    {
-                        upsert_wcomponent({ values_and_prediction_sets })
-                    }}
-                />
-            </p>
-
-            <hr />
-            <br />
-        </div>}
 
         <p>
             <WComponentKnowledgeView wcomponent_id={wcomponent_id} />

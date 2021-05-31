@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import type { CanvasPoint } from "../../canvas/interfaces"
-import { wcomponent_is_action } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_has_legitimate_non_empty_VAP_sets, wcomponent_is_action, wcomponent_should_have_state_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
@@ -52,7 +52,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         display_at_created_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
-        consumption_formatting: state.display.consumption_formatting,
+        editing: !state.display.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
     }
 }
@@ -158,7 +158,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
-        + (props.consumption_formatting ? " compact_display " : "")
+        + (props.editing ? " compact_display " : "")
         + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
@@ -168,23 +168,26 @@ function _WComponentCanvasNode (props: Props)
     return <ConnectableCanvasNode
         position={kv_entry}
         node_main_content={<div>
-            <div className="description">
+            <div className="description_label">
                 {wcomponent.type}
             </div>
             <div className="node_title">
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
 
-            {!props.consumption_formatting && <div className="node_validity_container">
-                <div className="description">validity</div>
+            {props.editing && <div className="node_validity_container">
+                <div className="description_label">validity</div>
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            <div className="node_state_container">
-                <div className="description">state</div>
-                <WComponentStatefulValue wcomponent={wcomponent} />
-                <WComponentJudgements wcomponent={wcomponent} />
-            </div>
+            {((props.editing && wcomponent_should_have_state_VAP_sets(wcomponent))
+                || wcomponent_has_legitimate_non_empty_VAP_sets(wcomponent)) &&
+                <div className="node_state_container">
+                    <div className="description_label">state</div>
+                    <WComponentStatefulValue wcomponent={wcomponent} />
+                    <WComponentJudgements wcomponent={wcomponent} />
+                </div>
+            }
         </div>}
         extra_css_class={extra_css_class}
         unlimited_width={false}

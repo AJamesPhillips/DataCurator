@@ -163,10 +163,21 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }
 
+export function wcomponent_has_legitimate_non_empty_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+{
+    return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_should_have_state_VAP_sets(wcomponent)
+}
+
 
 export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
 {
     return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
+}
+
+
+export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+{
+    return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)
 }
 
 

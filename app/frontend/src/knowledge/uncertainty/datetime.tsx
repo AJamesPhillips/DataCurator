@@ -1,8 +1,10 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 
 import "./datetime.css"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { RootState } from "../../state/State"
+import { connect, ConnectedProps } from "react-redux"
 
 
 interface OwnProps
@@ -12,31 +14,45 @@ interface OwnProps
 }
 
 
-export function UncertainDateTime (props: OwnProps)
+
+const map_state = (state: RootState) => ({
+    show_unused_fields: !state.display.consumption_formatting,
+})
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _UncertainDateTime (props: Props)
 {
-    const { datetime, on_change } = props
+    const { datetime, on_change, show_unused_fields } = props
 
     return <div className="datetimes">
-        <div className="datetime_section">
+
+        {(show_unused_fields || datetime.min) && <div className="datetime_section">
             <div className="datetime_title">min:</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.min}
                 on_change={min => on_change({ ...datetime, min })}
             /></div>
-        </div>
-        <div className="datetime_section">
+        </div>}
+
+        {(show_unused_fields || datetime.value) && <div className="datetime_section">
             <div className="datetime_title">DateTime:</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.value}
                 on_change={value => on_change({ ...datetime, value })}
             /></div>
-        </div>
-        <div className="datetime_section">
+        </div>}
+
+        {(show_unused_fields || datetime.max) && <div className="datetime_section">
             <div className="datetime_title">max:</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.max}
                 on_change={max => on_change({ ...datetime, max })}
             /></div>
-        </div>
+        </div>}
     </div>
 }
+
+export const UncertainDateTime = connector(_UncertainDateTime) as FunctionalComponent<OwnProps>
