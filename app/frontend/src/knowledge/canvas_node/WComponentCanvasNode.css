@@ -1,7 +1,7 @@
-.wcomponent_canvas_node.connectable_canvas_node .node_main_content
+.wcomponent_canvas_node.connectable_canvas_node.graph_node .node_main_content
 {
     height: initial;
-    min-height: 49px;
+    min-height: 80px;
     text-overflow: initial;
     white-space: initial;
     overflow: initial;
@@ -45,7 +45,7 @@
 
 .node_is_action > .node_main_content
 {
-    box-shadow: orange 0 0 2px 3px;
+    box-shadow: inset orange 0px 0px 5px 3px;
 }
 
 .node_does_not_exist

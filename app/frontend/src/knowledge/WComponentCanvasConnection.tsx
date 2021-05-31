@@ -177,7 +177,7 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
         from_node_position = wc_id_map[wcomponent.id]
         to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
         from_connection_type = { direction: "from", attribute: "meta" }
-        to_connection_type = { direction: "to", attribute: "value" }
+        to_connection_type = { direction: "to", attribute: "state" }
     }
 
     return { from_node_position, to_node_position, from_connection_type, to_connection_type }

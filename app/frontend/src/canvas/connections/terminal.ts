@@ -9,6 +9,7 @@ export interface Terminal
 {
     type: ConnectionTerminalType
     style: h.JSX.CSSProperties
+    label: string
 }
 
 
@@ -24,12 +25,13 @@ const connection_top_increment = 22
 const attribute_type_to_ordinal: { [k in ConnectionTerminalAttributeType]: number } = {
     meta: 0,
     validity: 1,
-    value: 2,
+    state: 2,
 }
 
 export function get_top_left_for_terminal_type (type: ConnectionTerminalType)
 {
     const ordinal = attribute_type_to_ordinal[type.attribute]
+
     const top_offset = connection_top + (ordinal * connection_top_increment)
 
     const left_offset = (type.direction === "from" ? connection_right : connection_left)
@@ -41,10 +43,10 @@ export function get_top_left_for_terminal_type (type: ConnectionTerminalType)
 
 export function get_connection_point (objective_node_position: CanvasPoint, type: ConnectionTerminalType): CanvasPoint
 {
-    const { left, top } = get_top_left_for_terminal_type(type)
+    let { left, top } = get_top_left_for_terminal_type(type)
 
-    return {
-        left: objective_node_position.left + left + connection_radius,
-        top: objective_node_position.top + top + connection_radius,
-    }
+    left += objective_node_position.left + connection_radius
+    top += objective_node_position.top + connection_radius
+
+    return { left, top }
 }

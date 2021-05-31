@@ -6,7 +6,13 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import type { CanvasPoint } from "../../canvas/interfaces"
-import { wcomponent_has_legitimate_non_empty_VAP_sets, wcomponent_is_action, wcomponent_should_have_state_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    connection_terminal_attributes,
+    connection_terminal_directions,
+    wcomponent_has_legitimate_non_empty_state,
+    wcomponent_is_action,
+    wcomponent_should_have_state,
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
@@ -19,6 +25,7 @@ import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
 import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
+import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 
 
 
@@ -164,6 +171,9 @@ function _WComponentCanvasNode (props: Props)
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
 
+    const show_state_value = (props.editing && wcomponent_should_have_state(wcomponent))
+        || wcomponent_has_legitimate_non_empty_state(wcomponent)
+
 
     return <ConnectableCanvasNode
         position={kv_entry}
@@ -180,21 +190,20 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {((props.editing && wcomponent_should_have_state_VAP_sets(wcomponent))
-                || wcomponent_has_legitimate_non_empty_VAP_sets(wcomponent)) &&
-                <div className="node_state_container">
-                    <div className="description_label">state</div>
-                    <WComponentStatefulValue wcomponent={wcomponent} />
-                    <WComponentJudgements wcomponent={wcomponent} />
-                </div>
-            }
+            {show_state_value && <div className="node_state_container">
+                <div className="description_label">state</div>
+                <WComponentStatefulValue wcomponent={wcomponent} />
+                <WComponentJudgements wcomponent={wcomponent} />
+            </div>}
         </div>}
         extra_css_class={extra_css_class}
         unlimited_width={false}
         glow={glow}
+        color={wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)" : ""}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
+        terminals={(is_highlighted || props.editing) ? terminals_with_label : terminals_without_label}
         pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
         extra_args={{
             // draggable: node_allowed_to_move && node_is_moving,
@@ -218,3 +227,21 @@ function _WComponentCanvasNode (props: Props)
 }
 
 export const WComponentCanvasNode = connector(_WComponentCanvasNode) as FunctionalComponent<OwnProps>
+
+
+
+const terminals_with_label: Terminal[] = []
+const terminals_without_label: Terminal[] = []
+
+connection_terminal_attributes.forEach(attribute =>
+{
+    connection_terminal_directions.forEach(direction =>
+    {
+        const type = { attribute, direction }
+        const connection_style: h.JSX.CSSProperties = get_top_left_for_terminal_type(type)
+        const label = type.attribute.slice(0, 1).toUpperCase()
+
+        terminals_with_label.push({ type, style: connection_style, label })
+        terminals_without_label.push({ type, style: connection_style, label: "" })
+    })
+})

@@ -47,6 +47,7 @@ export function CanvasConnnection (props: OwnProps)
     const extra_line_classes = `${props.is_highlighted ? "highlighted" : ""} ${hovered ? "hovered" : ""}`
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
+
     return <g className="connection_container" onClick={props.on_click} style={{ display: props.hidden ? "none" : "" }}>
         <path
             className={"connection_line_background " + extra_background_classes}

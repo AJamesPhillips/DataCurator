@@ -46,6 +46,7 @@ export interface CurrentValue
 
 export interface UIValue
 {
+    is_defined: boolean
     values_string: string
     probabilities_string: string
     convictions_string: string

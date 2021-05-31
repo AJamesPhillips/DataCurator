@@ -3,7 +3,7 @@ import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_has_existence_predictions,
-    wcomponent_has_values,
+    wcomponent_has_statev1_values,
     wcomponent_has_VAP_sets,
     wcomponent_has_event_at,
     wcomponent_is_plain_connection,
@@ -34,7 +34,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.existence = wcomponent.existence.map(parse_prediction)
     }
 
-    if (wcomponent_has_values(wcomponent))
+    if (wcomponent_has_statev1_values(wcomponent))
     {
         wcomponent.values = wcomponent.values && wcomponent.values.map(parse_values)
     }
@@ -53,6 +53,9 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
     {
         wcomponent.from_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.from_type)
         wcomponent.to_type = upgrade_2021_05_19_connection_fromto_types(wcomponent.to_type)
+
+        wcomponent.from_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.from_type)
+        wcomponent.to_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.to_type)
     }
 
     if (wcomponent_has_started_stopped_at(wcomponent))
@@ -74,11 +77,21 @@ function upgrade_2021_05_19_connection_fromto_types (type?: string): ConnectionT
 {
     if (type === "meta-effector") return "meta"
     if (type === "meta-effected") return "meta"
-    if (type === "effector") return "value"
-    if (type === "effected") return "value"
+    if (type === "effector") return "state"
+    if (type === "effected") return "state"
 
-    return (type || "value") as ConnectionTerminalAttributeType
+    return (type || "state") as ConnectionTerminalAttributeType
 }
+
+
+// Upgrade valid as of 2021-05-31
+function upgrade_2021_05_31_connection_fromto_types (type?: string): ConnectionTerminalAttributeType
+{
+    if (type === "value") return "state"
+
+    return (type || "state") as ConnectionTerminalAttributeType
+}
+
 
 
 // Upgrade valid as of 2021-05-19

@@ -69,7 +69,7 @@ function _WComponentFromTo (props: Props)
 
     const wcomponent_terminal_type_options: { id: ConnectionTerminalAttributeType, title: string }[] = [
         { id: "validity", title: "Validity" },
-        { id: "value", title: "Value" },
+        { id: "state", title: "State" },
         { id: "meta", title: "Meta" },
     ]
 

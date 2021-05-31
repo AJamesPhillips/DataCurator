@@ -4,13 +4,10 @@ import "./ConnectableCanvasNode.css"
 import { CanvasNode } from "./CanvasNode"
 import { COLOURS } from "./display"
 import type { CanvasPoint } from "./interfaces"
-import {
+import type {
     ConnectionTerminalType,
-    connection_terminal_attributes,
-    connection_terminal_directions,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { connection_radius, get_top_left_for_terminal_type, Terminal } from "./connections/terminal"
-
+import { connection_radius, Terminal } from "./connections/terminal"
 
 
 
@@ -29,6 +26,7 @@ interface OwnProps
     on_click?: () => void
     on_pointer_enter?: () => void
     on_pointer_leave?: () => void
+    terminals: Terminal[]
     pointerupdown_on_connection_terminal?: (type: ConnectionTerminalType, up_down: "up" | "down") => void
     extra_args?: h.JSX.HTMLAttributes<HTMLDivElement>
 }
@@ -44,7 +42,7 @@ export function ConnectableCanvasNode (props: OwnProps)
 
     const main_content_styles: h.JSX.CSSProperties =
     {
-        boxShadow: props.glow ? `0px 0px 5px ${props.glow}` : "",
+        boxShadow: props.glow ? `${props.glow} 0px 0px 5px` : "",
         backgroundColor: props.color || COLOURS.white,
     }
 
@@ -71,14 +69,14 @@ export function ConnectableCanvasNode (props: OwnProps)
             {props.node_main_content}
         </div>
 
-        {terminals.map(({ type, style }) =>
+        {props.terminals.map(({ type, style, label }) =>
         {
             return <div
                 className="connection_terminal"
-                style={style}
+                style={{ ...connection_style_common, ...style }}
                 onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal(type, "down") }}
                 onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal(type, "up") }}
-            />
+            >{label}</div>
         })}
 
         {props.other_children}
@@ -94,21 +92,3 @@ const connection_style_common: h.JSX.CSSProperties =
     height: connection_diameter,
     borderRadius: connection_radius + 1,
 }
-
-const terminals: Terminal[] = []
-
-connection_terminal_attributes.forEach(attribute =>
-{
-    connection_terminal_directions.forEach(direction =>
-    {
-        const type = { attribute, direction }
-
-        const connection_style: h.JSX.CSSProperties =
-        {
-            ...connection_style_common,
-            ...get_top_left_for_terminal_type(type),
-        }
-
-        terminals.push({ type, style: connection_style })
-    })
-})

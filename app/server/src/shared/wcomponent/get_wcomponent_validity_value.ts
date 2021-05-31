@@ -6,12 +6,14 @@ import { get_created_at_ms } from "./utils_datetime"
 
 interface CurrentValidityValue extends CurrentValue
 {
+    is_defined: boolean,
     value: boolean
 }
 
 
 const default_value = (): CurrentValidityValue => ({
     possibilities: [],
+    is_defined: false,
     value: true,
     probability: 1,
     conviction: 1,
@@ -52,5 +54,5 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
     const valid = probability > 0.5
     const uncertain = (probability > 0 && probability < 1) || conviction !== 1
 
-    return { value: valid, uncertain, probability, conviction, assumed: false, possibilities: [] }
+    return { is_defined: true, value: valid, uncertain, probability, conviction, assumed: false, possibilities: [] }
 }

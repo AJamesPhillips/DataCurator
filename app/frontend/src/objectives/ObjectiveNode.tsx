@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ConnectableCanvasNode } from "../canvas/ConnectableCanvasNode"
+import type { Terminal } from "../canvas/connections/terminal"
 import { COLOURS } from "../canvas/display"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
@@ -71,8 +72,16 @@ function _ObjectiveNode (props: Props)
         on_click={on_click}
         on_pointer_enter={() => props.select_priority_objectives([props.id])}
         on_pointer_leave={() => props.select_priority_objectives([])}
+        terminals={terminals}
     />
 }
 
 
 export const ObjectiveNode = connector(_ObjectiveNode) as FunctionalComponent<ObjectiveNodeOwnProps>
+
+
+
+const terminals: Terminal[] = [
+    { type: { attribute: "meta", direction: "to" }, style: {}, label: "" },
+    { type: { attribute: "meta", direction: "from" }, style: {}, label: "" },
+]

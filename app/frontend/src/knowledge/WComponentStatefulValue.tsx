@@ -6,7 +6,7 @@ import type { UIValue } from "../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_state,
+    wcomponent_should_have_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
 import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
@@ -81,7 +81,7 @@ function process_props (props: Props)
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
 
 
-    if (wcomponent_is_state(wcomponent))
+    if (wcomponent_should_have_state(wcomponent))
     {
         ui_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
     }

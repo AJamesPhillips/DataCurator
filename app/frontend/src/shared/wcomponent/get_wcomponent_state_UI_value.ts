@@ -1,7 +1,7 @@
 import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValuePossibility, UIValue } from "./interfaces/generic_value"
-import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "./interfaces/uncertainty/uncertainty"
 
 
@@ -88,6 +88,11 @@ function get_boolean_representation (wcomponent: WComponent)
     {
         boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
         boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
+    }
+    else if (wcomponent_is_action(wcomponent))
+    {
+        boolean_true_str = "Completed"
+        boolean_false_str = "Incomplete"
     }
 
     return { true: boolean_true_str, false: boolean_false_str }

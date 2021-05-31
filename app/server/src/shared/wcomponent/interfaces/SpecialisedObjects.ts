@@ -53,8 +53,8 @@ export type WComponentNode = WComponentNodeEvent
 
 
 
-export type ConnectionTerminalAttributeType = "meta" | "validity" | "value" // | "existence"
-export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "value"]
+export type ConnectionTerminalAttributeType = "meta" | "validity" | "state" // | "existence"
+export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "state"]
 export type ConnectionTerminalDirectionType = "from" | "to"
 export const connection_terminal_directions: ConnectionTerminalDirectionType[] = ["from", "to"]
 export interface ConnectionTerminalType
@@ -153,7 +153,7 @@ export function wcomponent_has_existence_predictions (wcomponent: WComponent): w
     return (wcomponent as ExistencePredictions).existence !== undefined
 }
 
-export function wcomponent_has_values (wcomponent: WComponent): wcomponent is (WComponent & { values: StateValueString[] })
+export function wcomponent_has_statev1_values (wcomponent: WComponent): wcomponent is (WComponent & { values: StateValueString[] })
 {
     return (wcomponent as WComponentNodeState).values !== undefined
 }
@@ -169,6 +169,35 @@ export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcom
     return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
 }
 
+
+export function wcomponent_should_have_state (wcomponent: WComponent)
+{
+    return wcomponent_is_state(wcomponent) || wcomponent_should_have_state_VAP_sets(wcomponent)
+}
+
+
+export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+{
+    return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)
+}
+
+
+
+export function wcomponent_has_legitimate_non_empty_statev1 (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+{
+    return wcomponent_has_statev1_values(wcomponent) && wcomponent.values.length > 0 && wcomponent_is_statev1(wcomponent)
+}
+
+
+export function wcomponent_has_legitimate_non_empty_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+{
+    return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_should_have_state_VAP_sets(wcomponent)
+}
+
+export function wcomponent_has_legitimate_non_empty_state (wcomponent: WComponent)
+{
+    return wcomponent_has_legitimate_non_empty_VAP_sets(wcomponent)
+}
 
 // export interface JudgementView
 // {

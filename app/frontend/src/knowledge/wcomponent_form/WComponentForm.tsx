@@ -134,9 +134,7 @@ function _WComponentForm (props: Props)
 
         {UI_value && (editing || UI_value.is_defined) &&
         <div style={{ cursor: "not-allowed" }}>
-            <span className="description_label">
-                {wcomponent_is_action(wcomponent) ? "Is complete" : "Value"}
-            </span>
+            <span className="description_label">Value</span>
             <DisplayValue UI_value={UI_value} />
         </div>}
 
