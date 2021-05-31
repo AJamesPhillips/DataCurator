@@ -21,8 +21,8 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 
 export interface DisplayState
 {
-    last_toggle_rich_text_formatting_time_stamp: number | undefined
-    rich_text_formatting: boolean
+    last_toggle_consumption_formatting_time_stamp: number | undefined
+    consumption_formatting: boolean
     canvas_bounding_rect: BoundingRect | undefined
     time_resolution: TimeResolution
 }

@@ -52,7 +52,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         display_at_created_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
-        rich_text_formatting: state.display.rich_text_formatting,
+        consumption_formatting: state.display.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
     }
 }
@@ -158,7 +158,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
-        + (props.rich_text_formatting ? " compact_display " : "")
+        + (props.consumption_formatting ? " compact_display " : "")
         + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
@@ -175,7 +175,7 @@ function _WComponentCanvasNode (props: Props)
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
 
-            {!props.rich_text_formatting && <div className="node_validity_container">
+            {!props.consumption_formatting && <div className="node_validity_container">
                 <div className="description">validity</div>
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}

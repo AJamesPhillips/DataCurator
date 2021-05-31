@@ -128,7 +128,7 @@ export function SandboxWComponentCanvasNode ()
 
 
 const map_state = (state: RootState) => ({
-    rich_text_formatting: state.display.rich_text_formatting,
+    rich_text_formatting: state.display.consumption_formatting,
 })
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>

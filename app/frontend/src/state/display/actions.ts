@@ -5,21 +5,21 @@ import type { BoundingRect } from "./state"
 
 
 
-interface ToggleRichTextFormattingArgs
+interface ToggleConsumptionFormattingArgs
 {
-    last_toggle_rich_text_formatting_time_stamp: number
+    time_stamp: number
 }
-interface ActionToggleRichTextFormatting extends Action, ToggleRichTextFormattingArgs {}
+interface ActionToggleConsumptionFormatting extends Action, ToggleConsumptionFormattingArgs {}
 
-const toggle_rich_text_formatting_type = "toggle_rich_text_formatting"
+const toggle_consumption_formatting_type = "toggle_consumption_formatting"
 
-const toggle_rich_text_formatting = (args: ToggleRichTextFormattingArgs): ActionToggleRichTextFormatting =>
+const toggle_consumption_formatting = (args: ToggleConsumptionFormattingArgs): ActionToggleConsumptionFormatting =>
 {
-    return { type: toggle_rich_text_formatting_type, ...args }
+    return { type: toggle_consumption_formatting_type, ...args }
 }
 
-export const is_toggle_rich_text_formatting = (action: AnyAction): action is ActionToggleRichTextFormatting => {
-    return action.type === toggle_rich_text_formatting_type
+export const is_toggle_consumption_formatting = (action: AnyAction): action is ActionToggleConsumptionFormatting => {
+    return action.type === toggle_consumption_formatting_type
 }
 
 
@@ -63,7 +63,7 @@ export const is_set_time_resolution = (action: AnyAction): action is ActionSetTi
 
 
 export const display_actions = {
-    toggle_rich_text_formatting,
+    toggle_consumption_formatting,
     update_canvas_bounding_rect,
     set_time_resolution,
 }

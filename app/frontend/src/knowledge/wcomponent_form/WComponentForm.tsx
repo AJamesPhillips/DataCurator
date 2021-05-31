@@ -69,7 +69,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         x: state.routing.args.x,
         y: state.routing.args.y,
         zoom: state.routing.args.zoom,
-        rich_text: state.display.rich_text_formatting,
+        rich_text: state.display.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,

@@ -21,7 +21,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    rich_text: state.display.rich_text_formatting,
+    rich_text: state.display.consumption_formatting,
 })
 
 
