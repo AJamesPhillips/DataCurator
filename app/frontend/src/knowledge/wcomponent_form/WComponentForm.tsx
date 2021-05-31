@@ -113,12 +113,12 @@ function _WComponentForm (props: Props)
 
     let UI_value: UIValue | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
-    let statev2_subtype: WComponentStateV2SubType = "boolean"
+    let values_and_prediction_sets_subtype: WComponentStateV2SubType = "boolean"
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
-        statev2_subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
+        values_and_prediction_sets_subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
     }
 
 
@@ -277,7 +277,7 @@ function _WComponentForm (props: Props)
             <p>
                 <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
-                    subtype={statev2_subtype}
+                    subtype={values_and_prediction_sets_subtype}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_values_and_predictions={values_and_prediction_sets =>
                     {

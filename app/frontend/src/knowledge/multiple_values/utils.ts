@@ -87,13 +87,13 @@ export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], subtype:
         return { ...VAP, relative_probability }
     })
 
-    if (multiple && !is_boolean)
+    if (!is_boolean)
     {
         total_relative_probability = total_relative_probability || 1
 
         VAPs = VAPs.map(VAP =>
         {
-            const probability = VAP.relative_probability! / total_relative_probability
+            const probability = (VAP.relative_probability || 1) / total_relative_probability
 
             return { ...VAP, probability }
         })
