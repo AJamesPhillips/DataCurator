@@ -61,10 +61,10 @@ function _ObjectiveNode (props: Props)
 
     return <ConnectableCanvasNode
         position={get_objective_node_position(props)}
-        node_main_content={[
-            <div>{props.type}</div>,
+        node_main_content={<div>
+            <div>{props.type}</div>
             <b>{props.title}</b>
-        ]}
+        </div>}
         unlimited_width={(props.is_selected || props.is_priority_selected)}
         glow={(props.is_selected || props.is_priority_selected) && "blue"}
         color={get_colour(props.type)}

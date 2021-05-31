@@ -164,25 +164,28 @@ function _WComponentCanvasNode (props: Props)
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
 
+
     return <ConnectableCanvasNode
         position={kv_entry}
-        node_main_content={[
+        node_main_content={<div>
             <div className="description">
                 {wcomponent.type}
-            </div>,
+            </div>
             <div className="node_title">
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
-            </div>,
-            <div className="node_validity_container">
-                {props.rich_text_formatting ? null : <div className="description">validity</div>}
+            </div>
+
+            {!props.rich_text_formatting && <div className="node_validity_container">
+                <div className="description">validity</div>
                 <WComponentValidityValue wcomponent={wcomponent} />
-            </div>,
+            </div>}
+
             <div className="node_state_container">
-                {props.rich_text_formatting ? null : <div className="description">state</div>}
+                <div className="description">state</div>
                 <WComponentStatefulValue wcomponent={wcomponent} />
                 <WComponentJudgements wcomponent={wcomponent} />
             </div>
-        ]}
+        </div>}
         extra_css_class={extra_css_class}
         unlimited_width={false}
         glow={glow}

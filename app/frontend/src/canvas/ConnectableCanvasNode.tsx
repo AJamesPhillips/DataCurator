@@ -18,7 +18,7 @@ interface OwnProps
 {
     get_ref?: (ref: HTMLDivElement) => void
     position: CanvasPoint
-    node_main_content: h.JSX.Element[]
+    node_main_content: h.JSX.Element
     hidden?: boolean
     unlimited_width?: boolean
     glow?: false | "blue" | "orange"
