@@ -5,15 +5,11 @@ import type { BoundingRect } from "./state"
 
 
 
-interface ToggleConsumptionFormattingArgs
-{
-    time_stamp: number
-}
-interface ActionToggleConsumptionFormatting extends Action, ToggleConsumptionFormattingArgs {}
+interface ActionToggleConsumptionFormatting extends Action {}
 
 const toggle_consumption_formatting_type = "toggle_consumption_formatting"
 
-const toggle_consumption_formatting = (args: ToggleConsumptionFormattingArgs): ActionToggleConsumptionFormatting =>
+const toggle_consumption_formatting = (args: {}): ActionToggleConsumptionFormatting =>
 {
     return { type: toggle_consumption_formatting_type, ...args }
 }

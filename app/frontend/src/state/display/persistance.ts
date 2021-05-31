@@ -19,7 +19,6 @@ export function display_starting_state (): DisplayState
     const obj = get_persisted_state_object<DisplayState>("display")
 
     return {
-        last_toggle_consumption_formatting_time_stamp: undefined,
         consumption_formatting: false,
         canvas_bounding_rect: undefined,
         time_resolution: "hour",

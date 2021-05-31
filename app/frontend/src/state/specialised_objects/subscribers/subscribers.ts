@@ -11,9 +11,10 @@ import { ensure_base_knowledge_view_subscriber } from "./ensure_base_knowledge_v
 
 export function specialised_objects_subscribers (store: Store<RootState>)
 {
+    dispatchers(store)
+
     const c = create_links_on_connection_terminal_mouse_events(store)
     const ensure_base_knowledge_view = ensure_base_knowledge_view_subscriber(store)
-    dispatchers(store)
 
     return () =>
     {
