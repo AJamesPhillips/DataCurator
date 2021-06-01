@@ -1,7 +1,9 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 
 import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 import { Button } from "../sharedf/Button"
+import type { RootState } from "../state/State"
 
 
 
@@ -11,9 +13,20 @@ interface OwnProps
 }
 
 
-export function ConfirmatoryDeleteButton (props: OwnProps)
+
+const map_state = (state: RootState) => ({
+    consumption_formatting: state.display.consumption_formatting,
+})
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _ConfirmatoryDeleteButton (props: Props)
 {
     const [deleting, set_deleting] = useState(false)
+
+    if (props.consumption_formatting) return null
 
     return <div className="button_container_confirmatory_delete">
         <Button
@@ -31,3 +44,5 @@ export function ConfirmatoryDeleteButton (props: OwnProps)
         />
     </div>
 }
+
+export const ConfirmatoryDeleteButton = connector(_ConfirmatoryDeleteButton) as FunctionalComponent<OwnProps>

@@ -108,11 +108,16 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                 <div>
                     <ConfirmatoryDeleteButton on_delete={delete_item} />
 
-                    {get_created_at && get_custom_created_at && <EditableCustomDateTime
-                        invariant_value={get_created_at(item)}
-                        value={custom_created_at}
-                        on_change={date_on_change}
-                    />}
+                    {(get_created_at || get_custom_created_at) && <div
+                        style={{ display: "inline-flex" }}
+                    >
+                        <span className="description_label">Created at</span> &nbsp;
+                        <EditableCustomDateTime
+                            invariant_value={get_created_at && get_created_at(item)}
+                            value={custom_created_at}
+                            on_change={date_on_change}
+                        />
+                    </div>}
                 </div>
 
                 <div className="details3">

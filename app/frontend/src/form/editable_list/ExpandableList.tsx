@@ -1,6 +1,8 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
+import type { RootState } from "../../state/State"
 import type { ExpandableListContentProps } from "./interfaces"
 import { ListHeader } from "./ListHeader"
 
@@ -17,7 +19,17 @@ export interface ExpandableList2Props {
 }
 
 
-export function ExpandableList (props: ExpandableList2Props)
+
+const map_state = (state: RootState) => ({
+    editing: !state.display.consumption_formatting,
+})
+
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & ExpandableList2Props
+
+
+function _ExpandableList (props: Props)
 {
     const expanded_initial_state = props.disable_collapsed
         ? (props.disable_partial_collapsed ? ExpandedListStates.expanded : ExpandedListStates.partial_expansion)
@@ -31,7 +43,7 @@ export function ExpandableList (props: ExpandableList2Props)
         content,
         items_count,
         item_descriptor,
-        items_descriptor = get_items_descriptor(item_descriptor, items_count),
+        items_descriptor = get_items_descriptor(item_descriptor, items_count, props.editing),
         disable_partial_collapsed = false,
     } = props
 
@@ -56,6 +68,9 @@ export function ExpandableList (props: ExpandableList2Props)
     </div>
 }
 
+export const ExpandableList = connector(_ExpandableList) as FunctionalComponent<ExpandableList2Props>
+
+
 
 enum ExpandedListStates {
     collapsed = 0,
@@ -65,7 +80,12 @@ enum ExpandedListStates {
 
 
 
-export function get_items_descriptor (item_descriptor: string, items_count: number | undefined)
+export function get_items_descriptor (item_descriptor: string, items_count: number | undefined, editing: boolean = true)
 {
-    return `${item_descriptor}s ${ items_count === undefined ? "" : `(${items_count})` }`
+    if (editing || (items_count !== undefined && items_count !== 0))
+    {
+        item_descriptor += ` (${items_count})`
+    }
+
+    return item_descriptor
 }

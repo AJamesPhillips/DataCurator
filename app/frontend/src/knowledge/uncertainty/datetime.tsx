@@ -30,7 +30,7 @@ function _UncertainDateTime (props: Props)
     return <div className="datetimes">
 
         {(show_unused_fields || datetime.min) && <div className="datetime_section">
-            <div className="datetime_title">min:</div>
+            <div className="datetime_title description_label">min</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.min}
                 on_change={min => on_change({ ...datetime, min })}
@@ -38,7 +38,7 @@ function _UncertainDateTime (props: Props)
         </div>}
 
         {(show_unused_fields || datetime.value) && <div className="datetime_section">
-            <div className="datetime_title">DateTime:</div>
+            <div className="datetime_title description_label">DateTime</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.value}
                 on_change={value => on_change({ ...datetime, value })}
@@ -46,7 +46,7 @@ function _UncertainDateTime (props: Props)
         </div>}
 
         {(show_unused_fields || datetime.max) && <div className="datetime_section">
-            <div className="datetime_title">max:</div>
+            <div className="datetime_title description_label">max</div>
             <div className="datetime_value"><EditableCustomDateTime
                 value={datetime.max}
                 on_change={max => on_change({ ...datetime, max })}

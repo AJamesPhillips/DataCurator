@@ -47,6 +47,7 @@ const map_state = (state: RootState) => {
         allows_assumptions,
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
         creation_context: state.creation_context,
+        editing: !state.display.consumption_formatting,
     }
 }
 
@@ -70,7 +71,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictions (props: Props)
 {
-    const { creation_context } = props
+    const { creation_context, editing } = props
 
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (props.subtype === "boolean" && VAPs.length >= 1) ? "only_one_VAP" : ""
@@ -86,8 +87,9 @@ function _ValueAndPredictions (props: Props)
             wcomponent_id: props.wcomponent_id,
             VAP_set_id: props.VAP_set_id,
             creation_context,
+            editing,
         }),
-        get_details: get_details(props.subtype),
+        get_details: get_details(props.subtype, editing),
         extra_class_names: "value_and_prediction",
     }
 
@@ -97,7 +99,7 @@ function _ValueAndPredictions (props: Props)
     return <div className={`value_and_predictions ${class_name_only_one_VAP}`}>
         <ListHeader
             items_descriptor={get_items_descriptor(item_descriptor, VAPs.length)}
-            other_content={() => <ListHeaderAddButton
+            other_content={() => !editing ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() => {
                     props.update_values_and_predictions([
@@ -135,11 +137,12 @@ interface GetSummaryArgs
     VAP_set_id: string | undefined
     upsert_counterfactual: (counterfactual: WComponentCounterfactual, knowledge_view_id: string) => void
     creation_context: CreationContextState
+    editing: boolean
 }
 const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const { subtype, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
-        wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context } = args
+        wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context, editing } = args
 
     const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
     const counterfactual_active = is_counterfactual_active(counterfactual)
@@ -156,23 +159,23 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">
-            {is_number && <div>
-                min: &nbsp; <EditableTextSingleLine
+            {is_number && (editing || VAP.min) && <div>
+                <div className="description_label">min</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.min || ""}
                     on_change={min => on_change({ ...VAP, min })}
                 />
             </div>}
-            <div>
-                value: &nbsp; <EditableTextSingleLine
+            {(editing || VAP.value) && <div>
+                <div className="description_label">value</div> &nbsp; <EditableTextSingleLine
                     disabled={is_boolean}
                     placeholder="..."
                     value={is_boolean ? "True" : VAP.value}
                     on_change={value => on_change({ ...VAP, value })}
                 />
-            </div>
-            {is_number && <div>
-                max: &nbsp; <EditableTextSingleLine
+            </div>}
+            {is_number && (editing || VAP.max) && <div>
+                <div className="description_label">max</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.max || ""}
                     on_change={max => on_change({ ...VAP, max })}
@@ -181,15 +184,15 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
         </div>
         <div className="probabilities">
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
-                Prob: &nbsp; <EditablePercentage
+                <div className="description_label">Prob</div> &nbsp; <EditablePercentage
                     disabled={disabled_prob}
                     placeholder="..."
                     value={probability}
                     on_change={probability => on_change({ ...VAP, probability })}
                 />
             </div>}
-            {!is_boolean && <div className={disabled_rel_prob ? "disabled" : ""}>
-                Rel prob: &nbsp; <EditableNumber
+            {!is_boolean && VAP.relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
+                <div className="description_label">Rel prob</div> &nbsp; <EditableNumber
                     disabled={disabled_rel_prob}
                     placeholder="..."
                     value={is_boolean ? undefined : VAP.relative_probability}
@@ -198,7 +201,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                 />
             </div>}
             {is_boolean && <div className={disabled_conviction ? "disabled" : ""}>
-                Cn: &nbsp; <EditablePercentage
+                <div className="description_label">Cn</div> &nbsp; <EditablePercentage
                     disabled={disabled_conviction}
                     placeholder="..."
                     value={conviction}
@@ -233,14 +236,16 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 }
 
 
-const get_details = (subtype: WComponentStateV2SubType) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_details = (subtype: WComponentStateV2SubType, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
     const is_boolean = subtype === "boolean"
 
     if (is_boolean) return <div></div>
 
+    if (!editing && !item.description) return <div></div>
+
     return <div>
-        Description:
+        <div className="description_label">Description:</div>
         <EditableText
             placeholder="..."
             value={item.description}

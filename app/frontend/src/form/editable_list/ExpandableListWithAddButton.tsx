@@ -1,4 +1,6 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+import type { RootState } from "../../state/State"
 
 import { ExpandableList } from "./ExpandableList"
 import type { ExpandableListContentProps } from "./interfaces"
@@ -18,16 +20,26 @@ export interface ExpandableListProps {
 }
 
 
-export function ExpandableListWithAddButton (props: ExpandableListProps)
+
+const map_state = (state: RootState) => ({
+    consumption_formatting: state.display.consumption_formatting,
+})
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & ExpandableListProps
+
+
+
+function _ExpandableListWithAddButton (props: Props)
 {
     const {
         items_count,
         item_descriptor,
         new_item_descriptor = item_descriptor,
+        consumption_formatting,
     } = props
 
     return <ExpandableList
-        header_content={() => <ListHeaderAddButton
+        header_content={() => consumption_formatting ? null : <ListHeaderAddButton
             new_item_descriptor={new_item_descriptor}
             on_pointer_down_new_list_entry={props.on_click_new_item}
         />}
@@ -39,3 +51,5 @@ export function ExpandableListWithAddButton (props: ExpandableListProps)
         disable_partial_collapsed={props.disable_partial_collapsed}
     />
 }
+
+export const ExpandableListWithAddButton = connector(_ExpandableListWithAddButton) as FunctionalComponent<ExpandableListProps>

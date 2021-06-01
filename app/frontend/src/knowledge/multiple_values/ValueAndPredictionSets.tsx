@@ -31,6 +31,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         VAP_set_counterfactuals_map,
         creation_context: state.creation_context,
+        editing: !state.display.consumption_formatting,
     }
 }
 
@@ -64,6 +65,7 @@ function _ValueAndPredictionSets (props: Props)
         future_items={future_items}
 
         creation_context={props.creation_context}
+        editing={props.editing}
     />
 }
 

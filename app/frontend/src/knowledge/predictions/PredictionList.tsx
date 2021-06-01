@@ -29,6 +29,7 @@ const map_state = (state: RootState) => ({
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
+    editing: !state.display.consumption_formatting,
 })
 
 const connector = connect(map_state)
@@ -51,7 +52,7 @@ function _PredictionList (props: Props)
     }, [])
 
 
-    const { item_descriptor, predictions, created_at_ms, sim_ms } = props
+    const { item_descriptor, predictions, created_at_ms, sim_ms, editing } = props
     const {
         invalid_items, future_items, present_items, past_items,
     } = partition_and_prune_items_by_datetimes({ items: predictions, created_at_ms, sim_ms })
@@ -89,7 +90,7 @@ function _PredictionList (props: Props)
 
     return <div>
         <ListHeader
-            items_descriptor={get_items_descriptor(item_descriptor, predictions.length)}
+            items_descriptor={get_items_descriptor(item_descriptor, predictions.length, editing)}
             on_click_header={undefined}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
@@ -117,7 +118,7 @@ function _PredictionList (props: Props)
             <ExpandableList
                 content={render_future_list_content}
                 item_descriptor=""
-                items_descriptor={`Future (${future_items.length})`}
+                items_descriptor={get_items_descriptor("Future", future_items.length, editing)}
                 disable_collapsed={true}
             />
 
@@ -126,7 +127,7 @@ function _PredictionList (props: Props)
             <ExpandableList
                 content={render_present_list_content}
                 item_descriptor=""
-                items_descriptor={`Present (${present_items.length})`}
+                items_descriptor={get_items_descriptor("Present", present_items.length, editing)}
                 disable_collapsed={true}
             />
 
@@ -135,7 +136,7 @@ function _PredictionList (props: Props)
             <ExpandableList
                 content={render_past_list_content}
                 item_descriptor=""
-                items_descriptor={`Past (${past_items.length})`}
+                items_descriptor={get_items_descriptor("Past", past_items.length, editing)}
                 disable_collapsed={true}
             />
         </div>}

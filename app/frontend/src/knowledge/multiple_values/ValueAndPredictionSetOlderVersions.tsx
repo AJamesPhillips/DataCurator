@@ -26,6 +26,7 @@ interface OwnProps
     versioned_VAP_set: VersionedStateVAPsSet
     update_versioned_VAP_set: (versioned_VAP_set: VersionedStateVAPsSet) => void
     creation_context: CreationContextState
+    editing: boolean
 }
 
 
@@ -60,7 +61,7 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
                 get_custom_created_at,
                 get_summary: get_summary_for_single_VAP_set(props.subtype, true, undefined),
                 get_details: get_details_for_single_VAP_set(props.subtype),
-                get_details2: get_details2_for_single_VAP_set(props.subtype),
+                get_details2: get_details2_for_single_VAP_set(props.subtype, props.editing),
                 extra_class_names: "value_and_prediction_set",
             },
         })}
