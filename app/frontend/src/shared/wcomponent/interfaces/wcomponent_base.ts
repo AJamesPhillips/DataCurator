@@ -1,7 +1,7 @@
 import type { Base } from "./base"
 import type { HasVAPSets } from "./state"
-import type { ExistencePredictions } from "./uncertainty/existence"
-import type { ValidityPredictions } from "./uncertainty/validity"
+import type { ExistencePredictions } from "../../uncertainty/existence"
+import type { ValidityPredictions } from "../../uncertainty/validity"
 
 
 

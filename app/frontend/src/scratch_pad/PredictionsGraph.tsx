@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { ProbablitySelection } from "../probability/ProbabililtySelection"
-import { get_probability_option } from "../probability/probabilities"
+import { get_probability_option } from "../shared/uncertainty/probabilities"
 import { ProbabilityGraph } from "../probability/ProbabilityGraph"
 import { factory_scaled_weibull } from "../probability/weibulll"
 

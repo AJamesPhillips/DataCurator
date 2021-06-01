@@ -39,7 +39,7 @@ interface OwnProps
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
-    const { canvas_bounding_rect: cbr } = state.display
+    const { canvas_bounding_rect: cbr } = state.display_options
 
     const { current_UI_knowledge_view } = state.derived
     const kv_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.id]
@@ -59,7 +59,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         display_at_created_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
-        editing: !state.display.consumption_formatting,
+        editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
     }
 }

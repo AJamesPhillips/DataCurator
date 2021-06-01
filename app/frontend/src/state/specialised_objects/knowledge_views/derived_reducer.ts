@@ -1,7 +1,7 @@
 import {
     wcomponent_is_counterfactual,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"

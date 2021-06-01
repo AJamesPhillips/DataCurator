@@ -9,7 +9,7 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { Tense } from "../../shared/wcomponent/interfaces/datetime"
 import type { StateValueAndPredictionsSet, VersionedStateVAPsSet } from "../../shared/wcomponent/interfaces/state"
-import type { VAP_set_id_counterfactual_map } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { group_VAP_sets_by_version, sort_grouped_VAP_sets, ungroup_VAP_sets_by_version } from "../../shared/wcomponent/value_and_prediction/utils"
 import { test } from "../../shared/utils/test"
 import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"

@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { useMemo, useState } from "preact/hooks"
 
-import type { Prediction } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
@@ -29,7 +29,7 @@ const map_state = (state: RootState) => ({
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
-    editing: !state.display.consumption_formatting,
+    editing: !state.display_options.consumption_formatting,
 })
 
 const connector = connect(map_state)

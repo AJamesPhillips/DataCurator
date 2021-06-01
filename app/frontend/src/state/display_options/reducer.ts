@@ -10,19 +10,19 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
 {
     if (is_toggle_consumption_formatting(action))
     {
-        state = update_substate(state, "display", "consumption_formatting", !state.display.consumption_formatting)
+        state = update_substate(state, "display_options", "consumption_formatting", !state.display_options.consumption_formatting)
     }
 
 
     if (is_update_canvas_bounding_rect(action))
     {
-        state = update_substate(state, "display", "canvas_bounding_rect", action.bounding_rect)
+        state = update_substate(state, "display_options", "canvas_bounding_rect", action.bounding_rect)
     }
 
 
     if (is_set_time_resolution(action))
     {
-        state = update_substate(state, "display", "time_resolution", action.time_resolution)
+        state = update_substate(state, "display_options", "time_resolution", action.time_resolution)
     }
 
 

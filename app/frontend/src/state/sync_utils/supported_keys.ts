@@ -10,7 +10,7 @@ const root_state_keys: {[k in keyof RootState]: true} = {
     objects: true,
     specialised_objects: true,
     last_action: true,
-    display: true,
+    display_options: true,
     sync: true,
     routing: true,
     global_keys: true,

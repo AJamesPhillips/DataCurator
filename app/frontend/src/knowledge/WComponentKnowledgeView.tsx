@@ -35,7 +35,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         UI_knowledge_view_entry,
         knowledge_view_entry,
         all_knowledge_views,
-        consumption_formatting: state.display.consumption_formatting,
+        consumption_formatting: state.display_options.consumption_formatting,
     }
 }
 

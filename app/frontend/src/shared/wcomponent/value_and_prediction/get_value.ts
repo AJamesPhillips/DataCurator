@@ -15,7 +15,7 @@ import type {
     VAP_id_counterfactual_map,
     VAP_set_id_counterfactual_map,
     WComponentCounterfactuals,
-} from "../interfaces/uncertainty/uncertainty"
+} from "../../uncertainty/uncertainty"
 import { calc_uncertainty } from "../uncertainty_utils"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"

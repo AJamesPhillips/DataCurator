@@ -1,6 +1,6 @@
 
 
-type SupportedPersistenceKeys = "display"
+type SupportedPersistenceKeys = "display_options"
 
 
 export function persist_state_object (key: SupportedPersistenceKeys, obj: object)

@@ -5,7 +5,7 @@ import {
     wcomponent_has_VAP_sets,
     wcomponent_is_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { Prediction, WComponentCounterfactuals } from "../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { Prediction, WComponentCounterfactuals } from "../shared/uncertainty/uncertainty"
 import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/wcomponent/utils_datetime"
 import { get_VAP_set_possible_values } from "../shared/wcomponent/value_and_prediction/get_value"
 

@@ -22,7 +22,7 @@ export interface ExpandableListProps {
 
 
 const map_state = (state: RootState) => ({
-    consumption_formatting: state.display.consumption_formatting,
+    consumption_formatting: state.display_options.consumption_formatting,
 })
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & ExpandableListProps

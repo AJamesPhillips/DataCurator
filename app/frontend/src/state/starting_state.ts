@@ -1,6 +1,6 @@
 import { CORE_IDS, STATEMENT_IDS } from "./core_data"
 import { get_derived_starting_state } from "./derived/starting_state"
-import { display_starting_state } from "./display_options/persistance"
+import { display_options_starting_state } from "./display_options/persistance"
 import { get_routing_starting_state } from "./routing/starting_state"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
@@ -143,7 +143,7 @@ export function get_starting_state (): RootState
         objects,
         specialised_objects: get_specialised_objects_starting_state(),
         last_action: undefined,
-        display: display_starting_state(),
+        display_options: display_options_starting_state(),
         sync: { ready: false, saving: false, status: "LOADING" },
         routing,
         global_keys: { last_key: undefined, last_key_time_stamp: undefined, keys_down: new Set(), },

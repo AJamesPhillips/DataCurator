@@ -1,27 +1,30 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../utils/persistence_utils"
-import type { DisplayState } from "./state"
+import type { DisplayOptionsState } from "./state"
 
 
 
-export function display_persist (state: RootState)
+export function display_options_persist (state: RootState)
 {
-    const to_persist = pick(["consumption_formatting", "time_resolution"], state.display)
+    const to_persist = pick(["consumption_formatting", "time_resolution", "validity_to_certainty"], state.display_options)
 
-    persist_state_object("display", to_persist)
+    persist_state_object("display_options", to_persist)
 }
 
 
 
-export function display_starting_state (): DisplayState
+export function display_options_starting_state (): DisplayOptionsState
 {
-    const obj = get_persisted_state_object<DisplayState>("display")
+    const obj = get_persisted_state_object<DisplayOptionsState>("display_options")
 
     return {
         consumption_formatting: false,
-        canvas_bounding_rect: undefined,
         time_resolution: "hour",
+
+        validity_to_certainty: "show_invalid",
+
+        canvas_bounding_rect: undefined,
         ...obj,
     }
 }

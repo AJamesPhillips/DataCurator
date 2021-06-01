@@ -7,7 +7,7 @@ import type {
     Perception,
     WComponent,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { WcIdCounterfactualsMap } from "../../shared/uncertainty/uncertainty"
 import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent_base"
 
 

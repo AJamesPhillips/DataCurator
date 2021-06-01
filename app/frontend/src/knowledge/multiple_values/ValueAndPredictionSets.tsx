@@ -31,7 +31,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         VAP_set_counterfactuals_map,
         creation_context: state.creation_context,
-        editing: !state.display.consumption_formatting,
+        editing: !state.display_options.consumption_formatting,
     }
 }
 

@@ -23,7 +23,7 @@ interface OwnProps
 
 const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
     handle_datetime_ms: get_handle_ms(state),
-    time_resolution: state.display.time_resolution,
+    time_resolution: state.display_options.time_resolution,
 })
 
 

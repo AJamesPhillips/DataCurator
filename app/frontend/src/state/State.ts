@@ -3,7 +3,7 @@ import type { AnyAction } from "redux"
 import type { CreationContextState } from "../shared/interfaces"
 import type { ControlsState } from "./controls/state"
 import type { DerivedState } from "./derived/State"
-import type { DisplayState } from "./display_options/state"
+import type { DisplayOptionsState } from "./display_options/state"
 import type { RoutingState } from "./routing/interfaces"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
@@ -122,7 +122,7 @@ export interface RootState extends RootStateCore
     controls: ControlsState
     creation_context: CreationContextState
     derived: DerivedState
-    display: DisplayState
+    display_options: DisplayOptionsState
     global_keys: GlobalKeyPress
     last_action: AnyAction | undefined
     meta_wcomponents: MetaWComponentsState

@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { WComponent, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
 import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "./calculate_judgement_value"

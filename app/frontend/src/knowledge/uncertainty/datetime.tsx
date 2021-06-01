@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 
 import "./datetime.css"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import type { TemporalUncertainty } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { TemporalUncertainty } from "../../shared/uncertainty/uncertainty"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -16,7 +16,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    show_unused_fields: !state.display.consumption_formatting,
+    show_unused_fields: !state.display_options.consumption_formatting,
 })
 
 const connector = connect(map_state)

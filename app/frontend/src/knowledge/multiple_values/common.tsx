@@ -7,7 +7,7 @@ import type {
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
-import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../shared/wcomponent/interfaces/uncertainty/uncertainty"
+import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge"
 import { SummaryForPrediction } from "../predictions/common"

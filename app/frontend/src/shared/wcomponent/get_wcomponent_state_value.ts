@@ -1,7 +1,7 @@
 import type { CurrentValuePossibility } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_statev1, wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeState } from "./interfaces/state"
-import type { WComponentCounterfactuals } from "./interfaces/uncertainty/uncertainty"
+import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 import { get_created_at_ms } from "./utils_datetime"
 import { get_VAP_set_possible_values } from "./value_and_prediction/get_value"
 import { subtype_to_VAPsRepresent } from "./value_and_prediction/utils"

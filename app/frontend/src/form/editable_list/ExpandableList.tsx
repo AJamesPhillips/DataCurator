@@ -21,7 +21,7 @@ export interface ExpandableList2Props {
 
 
 const map_state = (state: RootState) => ({
-    editing: !state.display.consumption_formatting,
+    editing: !state.display_options.consumption_formatting,
 })
 
 

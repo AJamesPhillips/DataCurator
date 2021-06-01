@@ -17,7 +17,7 @@ const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
     current_UI_knowledge_view: get_current_UI_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
-    time_resolution: state.display.time_resolution,
+    time_resolution: state.display_options.time_resolution,
 })
 
 

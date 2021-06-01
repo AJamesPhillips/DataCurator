@@ -1,5 +1,5 @@
 import type { Base, HasVersion } from "./base"
-import type { TemporalUncertainty, PredictionBase } from "./uncertainty/uncertainty"
+import type { TemporalUncertainty, PredictionBase } from "../../uncertainty/uncertainty"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 

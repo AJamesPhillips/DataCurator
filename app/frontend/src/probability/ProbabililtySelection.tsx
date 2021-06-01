@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import { probabilities, probabilities_plus_anchors, probability_is_in_range } from "./probabilities"
+import { probabilities, probabilities_plus_anchors, probability_is_in_range } from "../shared/uncertainty/probabilities"
 
 
 

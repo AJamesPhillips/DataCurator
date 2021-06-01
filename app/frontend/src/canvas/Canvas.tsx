@@ -30,7 +30,7 @@ const map_state = (state: RootState) => {
     const zoom = state.routing.args.zoom
     const x = state.routing.args.x
     const y = state.routing.args.y
-    const bounding_rect = state.display.canvas_bounding_rect
+    const bounding_rect = state.display_options.canvas_bounding_rect
 
     return { zoom, x, y, bounding_rect }
 }

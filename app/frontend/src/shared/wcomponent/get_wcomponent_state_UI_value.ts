@@ -2,7 +2,7 @@ import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValuePossibility, UIValue } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "./interfaces/uncertainty/uncertainty"
+import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 
 
 

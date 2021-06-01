@@ -22,7 +22,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    time_resolution: state.display.time_resolution,
+    time_resolution: state.display_options.time_resolution,
 })
 
 
