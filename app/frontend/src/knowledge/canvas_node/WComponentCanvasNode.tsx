@@ -165,14 +165,16 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
-        + (props.editing ? " compact_display " : "")
+        + ((props.editing || is_highlighted || is_current_item) ? " compact_display " : "")
         + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
 
+    const show_validity_value = props.editing || is_highlighted || is_current_item
     const show_state_value = (props.editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
+        || is_highlighted || is_current_item
 
 
     return <ConnectableCanvasNode
@@ -185,7 +187,7 @@ function _WComponentCanvasNode (props: Props)
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
 
-            {props.editing && <div className="node_validity_container">
+            {show_validity_value && <div className="node_validity_container">
                 <div className="description_label">validity</div>
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
