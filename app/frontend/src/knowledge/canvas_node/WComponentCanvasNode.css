@@ -48,19 +48,6 @@
     box-shadow: inset orange 0px 0px 5px 3px;
 }
 
-.node_does_not_exist
-{
-    /* opacity: 0.5; */
-}
-.node_does_not_exist .node_main_content
-{
-    border: thin solid red;
-}
-
-.node_may_not_exist
-{
-    opacity: 0.5;
-}
 
 /* compact / presentation / consumption */
 .wcomponent_canvas_node.compact_display .node_main_content .node_title

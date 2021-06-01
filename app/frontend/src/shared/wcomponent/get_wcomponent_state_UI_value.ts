@@ -16,9 +16,12 @@ interface GetWcomponentStateUIValueArgs
 export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): UIValue
 {
     const possibilities = get_wcomponent_state_value(args)
-    const { wcomponent } = args
 
-    const display_strings = get_display_strings(wcomponent, possibilities)
+    const is_defined = possibilities.length > 0
+
+
+    const display_string_values = get_display_strings(args.wcomponent, possibilities)
+    const display_strings = reduce_display_string_values(display_string_values)
 
 
     let assumed = false
@@ -32,6 +35,7 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
 
     return {
         ...display_strings,
+        is_defined,
         assumed,
         uncertain,
     }
@@ -56,26 +60,11 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
         else value_string = `${value}`
 
         value_strings.push(value_string)
-
         probability_strings.push(percentage_to_string(probability))
         conviction_strings.push(percentage_to_string(conviction))
     })
 
-
-    const is_defined = value_strings.length > 0
-
-
-    let values_string = is_defined ? value_strings.slice(0, 2).join(", ") : "not defined"
-    if (value_strings.length > 2) values_string += `, (${value_strings.length - 2} more)`
-
-    let probabilities_string = probability_strings.length ? (probability_strings.slice(0, 2).join(", ") + "%") : ""
-    if (probability_strings.length > 2) probabilities_string += `, (${probability_strings.length - 2} more)`
-
-    let convictions_string = conviction_strings.length ? (conviction_strings.slice(0, 2).join(", ") + "%") : ""
-    if (conviction_strings.length > 2) convictions_string += `, (${conviction_strings.length - 2} more)`
-
-
-    return { is_defined, values_string, probabilities_string, convictions_string }
+    return { value_strings, probability_strings, conviction_strings }
 }
 
 
@@ -96,6 +85,32 @@ function get_boolean_representation (wcomponent: WComponent)
     }
 
     return { true: boolean_true_str, false: boolean_false_str }
+}
+
+
+
+interface ReduceDisplayStringValuesArgs
+{
+    value_strings: string[]
+    probability_strings: string[]
+    conviction_strings: string[]
+}
+function reduce_display_string_values (args: ReduceDisplayStringValuesArgs)
+{
+    const { value_strings, probability_strings, conviction_strings } = args
+
+
+    let values_string = value_strings.length ? value_strings.slice(0, 2).join(", ") : "not defined"
+    if (value_strings.length > 2) values_string += `, (${value_strings.length - 2} more)`
+
+    let probabilities_string = probability_strings.length ? (probability_strings.slice(0, 2).join(", ") + "%") : ""
+    if (probability_strings.length > 2) probabilities_string += `, (${probability_strings.length - 2} more)`
+
+    let convictions_string = conviction_strings.length ? (conviction_strings.slice(0, 2).join(", ") + "%") : ""
+    if (conviction_strings.length > 2) convictions_string += `, (${conviction_strings.length - 2} more)`
+
+
+    return { values_string, probabilities_string, convictions_string }
 }
 
 

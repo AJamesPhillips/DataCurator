@@ -21,6 +21,7 @@ interface OwnProps
     glow?: false | "blue" | "orange"
     color?: string
     extra_css_class?: string
+    extra_node_styles?: h.JSX.CSSProperties
     other_children?: h.JSX.Element[]
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_click?: () => void
@@ -36,7 +37,8 @@ export function ConnectableCanvasNode (props: OwnProps)
 {
     const extra_node_styles: h.JSX.CSSProperties =
     {
-        display: props.hidden ? "none": ""
+        display: props.hidden ? "none": "",
+        ...props.extra_node_styles,
     }
     if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
 

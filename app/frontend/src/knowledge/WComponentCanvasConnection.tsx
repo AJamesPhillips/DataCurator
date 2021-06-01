@@ -20,7 +20,7 @@ import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
-    wcomponent_existence_for_datetimes, wcomponent_is_not_yet_created,
+    wcomponent_is_not_yet_created,
 } from "./utils"
 
 
@@ -65,11 +65,11 @@ const map_state = (state: RootState, props: OwnProps) =>
                 )
                 const wc_from_counterfactuals = get_wcomponent_counterfactuals(state, wc.from_id)
 
-                const ex = wcomponent_existence_for_datetimes(wc, wc_counterfactuals, display_at_datetime_ms, sim_ms)
-                const ex_from_con = wcomponent_existence_for_datetimes(from_wc, wc_from_counterfactuals, display_at_datetime_ms, sim_ms)
+                const ex = wcomponent_is_not_yet_created(wc, display_at_datetime_ms)
+                const ex_from_con = wcomponent_is_not_yet_created(from_wc, display_at_datetime_ms)
 
-                probability = Math.min(ex.existence, ex_from_con.existence)
-                conviction = Math.min(ex.conviction, ex_from_con.conviction)
+                probability = 1 // Math.min(ex.existence, ex_from_con.existence)
+                conviction = 1 // Math.min(ex.conviction, ex_from_con.conviction)
             }
         }
     }

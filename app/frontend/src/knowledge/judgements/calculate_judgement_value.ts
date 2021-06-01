@@ -33,7 +33,12 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     })
 
 
-    if (possibilities.length !== 1) return undefined
+    if (possibilities.length !== 1)
+    {
+        // TODO perhaps if multiple values we will want to check if all the values are the same
+        // (and probabilities >0.5) and then we can form a judgement based on all of these
+        return undefined
+    }
     const current_value = possibilities[0]
     const value = current_value!.value
 

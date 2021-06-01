@@ -17,7 +17,7 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/inter
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { get_wcomponent_is_invalid_for_display, wcomponent_existence_for_datetimes, wcomponent_is_not_yet_created } from "../utils"
+import { get_wcomponent_is_invalid_for_display, wcomponent_is_not_yet_created } from "../utils"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
@@ -27,6 +27,7 @@ import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from ".
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 import { get_wcomponent_validity_value } from "../../shared/wcomponent/get_wcomponent_validity_value"
+import { bounded, rescale } from "../../shared/utils/bounded"
 
 
 
@@ -109,10 +110,8 @@ function _WComponentCanvasNode (props: Props)
     if (is_invalid_for_display) return null
 
 
-    const existence = wcomponent_existence_for_datetimes(wcomponent, wc_counterfactuals, created_at_ms, sim_ms)
-    const existence_class_name = (!is_current_item && !is_highlighted && !is_selected)
-        ? (existence.existence === 0 ? " node_does_not_exist " : ( existence.existence < 1 ? " node_may_not_exist " : ""))
-        : ""
+    const validity_opacity: number = (is_highlighted || is_selected || is_current_item) ? 1
+        : (validity_value.certainty === 1 ? 1 : rescale(validity_value.certainty, 0.1, 0.5))
 
 
     const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
@@ -174,7 +173,6 @@ function _WComponentCanvasNode (props: Props)
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
         + ((props.editing || is_highlighted || is_current_item) ? " compact_display " : "")
-        + existence_class_name
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
@@ -207,6 +205,7 @@ function _WComponentCanvasNode (props: Props)
             </div>}
         </div>}
         extra_css_class={extra_css_class}
+        extra_node_styles={{ opacity: validity_opacity }}
         unlimited_width={false}
         glow={glow}
         color={wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)" : ""}

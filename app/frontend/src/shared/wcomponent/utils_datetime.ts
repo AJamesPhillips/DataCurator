@@ -67,6 +67,7 @@ interface PartitionItemsByDatetimeFuturesArgs<U>
 }
 interface PartitionItemsByDatetimeFuturesReturn<U>
 {
+    // TODO find a different more explicit name than "invalid" for this
     invalid_items: U[]
     past_items: U[]
     present_items: U[]
@@ -101,6 +102,13 @@ function partition_items_by_datetimes <U extends Base & HasDateTime> (args: Part
 
 
 
+// TODO check we have a test and decide what we want to do if we have two items
+// one with a min time of 0 and max of time 100 and another with a min time of 50.
+// Between 50 and 100, the first will be the "present" and the second will be in the past
+// before being catapulted ahead of the first and brought from the past to the present...
+// which seems very strange, assuming I have got my logic correct.
+// Instead both items should be treated as present and the downstream code can decide what to do,
+// likely it will be to calculate that the value is uncertain due to conflicting predictions
 function prune_present_by_temporal_and_logical_relations <U extends Base & HasDateTime> (present_items: U[]): { present: U[], past: U[] }
 {
     let latest_present_datetime_ms = Number.NEGATIVE_INFINITY

@@ -16,7 +16,7 @@ import type {
     VAP_set_id_counterfactual_map,
     WComponentCounterfactuals,
 } from "../../uncertainty/uncertainty"
-import { calc_uncertainty } from "../uncertainty_utils"
+import { calc_is_uncertain } from "../uncertainty_utils"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
 
@@ -26,11 +26,13 @@ export function get_current_value (possibilities: CurrentValuePossibility[]): Cu
 {
     let value: CurrentValue = {
         possibilities,
+        is_defined: possibilities.length > 0,
         value: undefined,
-        probability: undefined,
-        conviction: undefined,
-        uncertain: undefined,
-        assumed: undefined,
+        probability: 1,
+        conviction: 1,
+        certainty: 1,
+        uncertain: possibilities.length > 1,
+        assumed: false,
     }
 
     if (possibilities.length === 1)
@@ -100,9 +102,12 @@ function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPredictio
             : (VAPs_represent.number ? parseFloat(VAP.value)
             : VAP.value)
 
+        const certainty = Math.min(VAP.probability, VAP.conviction)
+
         return {
             ...VAP,
-            uncertain: calc_uncertainty(VAP),
+            certainty,
+            uncertain: calc_is_uncertain(VAP),
             assumed: VAP.is_counterfactual,
             value,
         }
