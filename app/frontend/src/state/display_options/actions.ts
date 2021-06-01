@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { BoundingRect } from "./state"
+import type { BoundingRect, ValidityToCertaintyTypes } from "./state"
 
 
 
@@ -58,8 +58,28 @@ export const is_set_time_resolution = (action: AnyAction): action is ActionSetTi
 
 
 
+interface SetValidityToCertaintyArgs
+{
+    validity_to_certainty: ValidityToCertaintyTypes
+}
+interface ActionSetValidityToCertainty extends Action, SetValidityToCertaintyArgs {}
+
+const set_validity_to_certainty_type = "set_validity_to_certainty"
+
+const set_validity_to_certainty = (args: SetValidityToCertaintyArgs): ActionSetValidityToCertainty =>
+{
+    return { type: set_validity_to_certainty_type, ...args }
+}
+
+export const is_set_validity_to_certainty = (action: AnyAction): action is ActionSetValidityToCertainty => {
+    return action.type === set_validity_to_certainty_type
+}
+
+
+
 export const display_actions = {
     toggle_consumption_formatting,
     update_canvas_bounding_rect,
     set_time_resolution,
+    set_validity_to_certainty,
 }

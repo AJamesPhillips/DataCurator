@@ -1,5 +1,5 @@
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { Certainty } from "../../shared/uncertainty/quantified_language"
+// import type { Certainty } from "../../shared/uncertainty/quantified_language"
 
 
 
@@ -21,15 +21,15 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 
 
 
-export type ValidityToCertainty = {[k in Certainty] : ValidityDisplayOptions }
-interface ValidityDisplayOptions
-{
-    display: boolean
-    opacity: number
-}
+// export type ValidityToCertainty = {[k in Certainty] : ValidityDisplayOptions }
+// interface ValidityDisplayOptions
+// {
+//     display: boolean
+//     opacity: number
+// }
 
 export type ValidityToCertaintyTypes = "hide_invalid" | "show_invalid"
-export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
+// export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
 
 
 export interface DisplayOptionsState

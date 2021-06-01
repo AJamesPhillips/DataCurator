@@ -15,6 +15,8 @@ interface ProbabilityOption
 // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/955239/NERVTAG_paper_on_variant_of_concern__VOC__B.1.1.7.pdf
 // https://www.reddit.com/r/coolguides/comments/ethzeg/the_phia_probability_yardstick_used_by_the_uk/
 // https://www.reddit.com/r/coolguides/comments/etcbqz/perceptions_of_probability/
+//
+// Simplified version in quantified_language
 export const probabilities: ProbabilityOption[] = [
     { min: 0,  max: 0,    lambda: 0.2, k: 0.4, reverse: false, text: "No chance" },
     { min: 0,  max: 5,    lambda: 0.2, k: 0.4, reverse: false, text: "Remote chance" },

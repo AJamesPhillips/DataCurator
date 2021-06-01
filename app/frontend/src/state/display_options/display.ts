@@ -1,7 +1,7 @@
 import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
-import { Certainty } from "../../shared/uncertainty/quantified_language"
+// import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
-import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
+// import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
 
 
 
@@ -34,25 +34,25 @@ export function calculate_xy_for_put_middle (args: { x: number, y: number, zoom:
 
 
 
-export function get_validity_to_certainty_map (validity_to_certainty_type: ValidityToCertaintyTypes)
-{
-    return validity_to_certainty_type_to_map[validity_to_certainty_type]
-}
+// export function get_validity_to_certainty_map (validity_to_certainty_type: ValidityToCertaintyTypes)
+// {
+//     return validity_to_certainty_type_to_map[validity_to_certainty_type]
+// }
 
-const show_invalid: ValidityToCertainty = {
-    [Certainty.yes]: { display: true, opacity: 1 },
-    [Certainty.likely]: { display: true, opacity: 0.7 },
-    [Certainty.maybe]: { display: true, opacity: 0.4 },
-    [Certainty.unlikely]: { display: true, opacity: 0.1 },
-    [Certainty.no]: { display: true, opacity: 0.1 },
-}
+// const show_invalid: ValidityToCertainty = {
+//     [Certainty.yes]: { display: true, opacity: 1 },
+//     [Certainty.likely]: { display: true, opacity: 0.7 },
+//     [Certainty.maybe]: { display: true, opacity: 0.4 },
+//     [Certainty.unlikely]: { display: true, opacity: 0.1 },
+//     [Certainty.no]: { display: true, opacity: 0.1 },
+// }
 
-const hide_invalid: ValidityToCertainty = {
-    ...show_invalid,
-    [Certainty.no]: { display: false, opacity: 0 },
-}
+// const hide_invalid: ValidityToCertainty = {
+//     ...show_invalid,
+//     [Certainty.no]: { display: false, opacity: 0 },
+// }
 
-const validity_to_certainty_type_to_map: ValidityToCertainty_TypeToMap = {
-    show_invalid,
-    hide_invalid,
-}
+// const validity_to_certainty_type_to_map: ValidityToCertainty_TypeToMap = {
+//     show_invalid,
+//     hide_invalid,
+// }
