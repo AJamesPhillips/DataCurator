@@ -1,6 +1,6 @@
 import { createStore, Action, Store } from "redux"
 
-import { toggle_consumption_formatting_on_key_press } from "./display/subscriber"
+import { toggle_consumption_formatting_on_key_press } from "./display_options/subscriber"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
 import { render_all_objects, render_all_objects_and_update_store } from "./objects/rendering"
 import { root_reducer } from "./reducer"

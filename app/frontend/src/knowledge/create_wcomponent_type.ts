@@ -5,7 +5,7 @@ import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcompone
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
-import { get_middle_of_screen } from "../state/display/display"
+import { get_middle_of_screen } from "../state/display_options/display"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import type { RootState } from "../state/State"

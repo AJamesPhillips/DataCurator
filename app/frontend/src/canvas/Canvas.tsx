@@ -8,7 +8,7 @@ import { performance_logger } from "../utils/performance"
 import type { ContentCoordinate } from "./interfaces"
 import { lefttop_to_xy, MoveToPositionButton } from "./MoveToPositionButton"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
-import { BoundingRect, bounding_rects_equal } from "../state/display/state"
+import { BoundingRect, bounding_rects_equal } from "../state/display_options/state"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import { grid_small_step } from "./position_utils"
 

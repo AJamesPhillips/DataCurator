@@ -9,7 +9,7 @@ import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { TimeSlider } from "../time_control/TimeSlider"
 import { AutocompleteText } from "../form/AutocompleteText"
-import { time_resolution_types } from "../state/display/state"
+import { time_resolution_types } from "../state/display_options/state"
 
 
 

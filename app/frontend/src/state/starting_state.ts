@@ -1,6 +1,6 @@
 import { CORE_IDS, STATEMENT_IDS } from "./core_data"
 import { get_derived_starting_state } from "./derived/starting_state"
-import { display_starting_state } from "./display/persistance"
+import { display_starting_state } from "./display_options/persistance"
 import { get_routing_starting_state } from "./routing/starting_state"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"

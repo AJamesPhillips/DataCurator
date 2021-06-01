@@ -1,6 +1,6 @@
 import { controls_actions } from "./controls/actions"
 import { creation_context_actions } from "./creation_context/actions"
-import { display_actions } from "./display/actions"
+import { display_actions } from "./display_options/actions"
 import { global_keys_actions } from "./global_keys/actions"
 import { objectives_actions } from "./objectives"
 import { object_actions } from "./objects/actions"

@@ -1,5 +1,5 @@
 import { test } from "../shared/utils/test"
-import type { BoundingRect } from "../state/display/state"
+import type { BoundingRect } from "../state/display_options/state"
 import { bounded } from "../shared/utils/bounded"
 import type { CanvasPoint, Position } from "./interfaces"
 import { scale_by } from "./zoom_utils"

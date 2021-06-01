@@ -1,6 +1,7 @@
 import type { TimeResolution } from "../../shared/utils/datetime"
 
 
+
 export interface BoundingRect
 {
     width: number
@@ -22,8 +23,10 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 export interface DisplayState
 {
     consumption_formatting: boolean
-    canvas_bounding_rect: BoundingRect | undefined
     time_resolution: TimeResolution
+
+    // not an option.  Move to a different state.
+    canvas_bounding_rect: BoundingRect | undefined
 }
 
 

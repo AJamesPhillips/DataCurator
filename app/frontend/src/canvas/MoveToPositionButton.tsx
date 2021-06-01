@@ -2,7 +2,7 @@ import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
-import { calculate_xy_for_put_middle } from "../state/display/display"
+import { calculate_xy_for_put_middle } from "../state/display_options/display"
 import type { Position } from "./interfaces"
 
 

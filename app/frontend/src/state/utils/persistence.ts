@@ -1,4 +1,4 @@
-import { display_persist } from "../display/persistance"
+import { display_persist } from "../display_options/persistance"
 import type { RootState } from "../State"
 
 
