@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
-import { wcomponent_is_invalid_for_datetime } from "./utils"
 
 
 
@@ -26,7 +25,7 @@ function _WComponentLatestPrediction (props: Props)
 {
     const { wcomponent, created_at_ms, sim_ms } = props
 
-    const invalid = wcomponent_is_invalid_for_datetime(wcomponent, created_at_ms, sim_ms)
+    const invalid = false //wcomponent_is_invalid_for_datetime(wcomponent, created_at_ms, sim_ms)
 
 
     if (invalid)

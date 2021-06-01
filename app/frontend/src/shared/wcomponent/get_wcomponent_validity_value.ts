@@ -4,7 +4,7 @@ import { get_created_at_ms } from "./utils_datetime"
 
 
 
-interface CurrentValidityValue extends CurrentValue
+export interface CurrentValidityValue extends CurrentValue
 {
     is_defined: boolean,
     value: boolean

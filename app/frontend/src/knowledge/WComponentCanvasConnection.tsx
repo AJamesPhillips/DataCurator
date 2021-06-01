@@ -20,8 +20,7 @@ import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
-    wcomponent_is_invalid_for_datetime,
-    wcomponent_existence_for_datetimes,
+    wcomponent_existence_for_datetimes, wcomponent_is_not_yet_created,
 } from "./utils"
 
 
@@ -40,6 +39,7 @@ const map_state = (state: RootState, props: OwnProps) =>
     const sim_ms = state.routing.args.sim_ms
     const wc = get_wcomponent_from_state(state, props.id)
 
+    let is_not_created = false
     let is_invalid = false
     let probability = 1
     let conviction = 1
@@ -59,9 +59,9 @@ const map_state = (state: RootState, props: OwnProps) =>
             if (!from_wc || !to_wc) is_invalid = true
             else
             {
-                is_invalid = (
-                    wcomponent_is_invalid_for_datetime(from_wc, display_at_datetime_ms, sim_ms)
-                    || wcomponent_is_invalid_for_datetime(to_wc, display_at_datetime_ms, sim_ms)
+                is_not_created = (
+                    wcomponent_is_not_yet_created(from_wc, display_at_datetime_ms)
+                    || wcomponent_is_not_yet_created(to_wc, display_at_datetime_ms)
                 )
                 const wc_from_counterfactuals = get_wcomponent_counterfactuals(state, wc.from_id)
 

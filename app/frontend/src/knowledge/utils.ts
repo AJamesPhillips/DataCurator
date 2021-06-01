@@ -1,24 +1,43 @@
+import type { Prediction, WComponentCounterfactuals } from "../shared/uncertainty/uncertainty"
+import type { CurrentValidityValue } from "../shared/wcomponent/get_wcomponent_validity_value"
 import type { CurrentValuePossibility } from "../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
-    wcomponent_has_VAP_sets,
     wcomponent_is_state,
+    wcomponent_has_VAP_sets,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { Prediction, WComponentCounterfactuals } from "../shared/uncertainty/uncertainty"
 import { get_created_at_ms, partition_and_prune_items_by_datetimes } from "../shared/wcomponent/utils_datetime"
 import { get_VAP_set_possible_values } from "../shared/wcomponent/value_and_prediction/get_value"
+import type { ValidityToCertaintyTypes } from "../state/display_options/state"
 
 
 
-export function wcomponent_is_invalid_for_datetime (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
+
+export function wcomponent_is_not_yet_created (wcomponent: WComponent, display_at_datetime_ms: number)
 {
-    return wcomponent_is_not_yet_created(wcomponent, created_at_ms)
-        || wcomponent_is_now_invalid(wcomponent, created_at_ms, sim_ms)
+    return get_created_at_ms(wcomponent) > display_at_datetime_ms
 }
 
 
-function wcomponent_is_now_invalid (wcomponent: WComponent, created_at_ms: number, sim_ms: number)
+
+interface GetWcomponentIsInvalidForDisplayArgs
+{
+    validity_value: CurrentValidityValue
+    validity_to_certainty: ValidityToCertaintyTypes
+}
+export function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInvalidForDisplayArgs)
+{
+    let is_invalid = false
+
+    if (!args.validity_value.value && args.validity_to_certainty === "hide_invalid") is_invalid = true
+
+    return is_invalid
+}
+
+
+
+function wcomponent_is_invalid (wcomponent: WComponent, created_at_ms: number, sim_ms: number, )
 {
     let invalid = false
 
@@ -33,11 +52,6 @@ function wcomponent_is_now_invalid (wcomponent: WComponent, created_at_ms: numbe
     return invalid
 }
 
-
-function wcomponent_is_not_yet_created (wcomponent: WComponent, display_at_datetime_ms: number)
-{
-    return get_created_at_ms(wcomponent) > display_at_datetime_ms
-}
 
 
 function get_present_prediction (predictions: Prediction[], created_at_ms: number, sim_ms: number)

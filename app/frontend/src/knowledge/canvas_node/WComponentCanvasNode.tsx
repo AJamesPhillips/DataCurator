@@ -17,7 +17,7 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/inter
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { wcomponent_existence_for_datetimes, wcomponent_is_invalid_for_datetime } from "../utils"
+import { get_wcomponent_is_invalid_for_display, wcomponent_existence_for_datetimes, wcomponent_is_not_yet_created } from "../utils"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
@@ -26,6 +26,7 @@ import { Handles } from "./Handles"
 import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
+import { get_wcomponent_validity_value } from "../../shared/wcomponent/get_wcomponent_validity_value"
 
 
 
@@ -56,11 +57,12 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         ctrl_key_is_down,
         canvas_bounding_rect_left: cbr ? cbr.left : 0,
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
-        display_at_created_ms: state.routing.args.created_at_ms,
+        created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
         editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
+        validity_to_certainty: state.display_options.validity_to_certainty,
     }
 }
 
@@ -88,7 +90,7 @@ function _WComponentCanvasNode (props: Props)
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
         node_allowed_to_move,
-        display_at_created_ms, sim_ms, wc_counterfactuals, } = props
+        created_at_ms, sim_ms, wc_counterfactuals, validity_to_certainty, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -96,12 +98,18 @@ function _WComponentCanvasNode (props: Props)
     if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
 
 
-    // Do not show nodes if certain they are not valid / existing / likely
-    const certain_is_not_valid = wcomponent_is_invalid_for_datetime(wcomponent, display_at_created_ms, sim_ms)
-    if (certain_is_not_valid) return null
+    // Do not show nodes if they do no exist yet
+    const is_not_created = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
+    if (is_not_created) return null
 
 
-    const existence = wcomponent_existence_for_datetimes(wcomponent, wc_counterfactuals, display_at_created_ms, sim_ms)
+    // Do not show nodes if they are invalid
+    const validity_value = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
+    const is_invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_to_certainty })
+    if (is_invalid_for_display) return null
+
+
+    const existence = wcomponent_existence_for_datetimes(wcomponent, wc_counterfactuals, created_at_ms, sim_ms)
     const existence_class_name = (!is_current_item && !is_highlighted && !is_selected)
         ? (existence.existence === 0 ? " node_does_not_exist " : ( existence.existence < 1 ? " node_may_not_exist " : ""))
         : ""
@@ -155,7 +163,7 @@ function _WComponentCanvasNode (props: Props)
     }
 
 
-    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms: display_at_created_ms, sim_ms })
+    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })
 
 
     const extra_css_class = (

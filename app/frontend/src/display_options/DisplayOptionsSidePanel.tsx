@@ -5,6 +5,7 @@ import { AutocompleteText } from "../form/AutocompleteText"
 import { ACTIONS } from "../state/actions"
 import type { ValidityToCertaintyTypes } from "../state/display_options/state"
 import type { RootState } from "../state/State"
+import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
 
 
@@ -44,6 +45,12 @@ function _DisplayOptionsSidePanel (props: Props)
                     props.set_validity_to_certainty({ validity_to_certainty })
                 }}
             />
+        </p>
+
+        <p>
+            <b>Time resolution</b>
+
+            <TimeResolutionOptions />
         </p>
     </div>
 }
