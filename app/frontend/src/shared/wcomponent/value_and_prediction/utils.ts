@@ -5,6 +5,7 @@ import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
     StateValueAndPrediction,
+    WComponentStateV2SubType,
 } from "../interfaces/state"
 import { get_created_at_ms, get_sim_datetime } from "../utils_datetime"
 
@@ -99,4 +100,12 @@ export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VA
     if (VAPs_represents.boolean && first_VAP) return [first_VAP]
 
     return VAPs.sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
+}
+
+
+
+export function subtype_to_VAPsRepresent (subtype: WComponentStateV2SubType): VAPsRepresent
+{
+    return subtype === "boolean" ? { boolean: true }
+    : (subtype === "number" ? { number: true } : { other: true })
 }

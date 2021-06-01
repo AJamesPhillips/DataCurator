@@ -4,7 +4,6 @@ import "./ValueAndPredictionSets.css"
 import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
-    WComponentStateV2SubType,
 } from "../../shared/wcomponent/interfaces/state"
 import {
     create_new_VAP_set_version,
@@ -17,12 +16,13 @@ import {
 } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { CreationContextState } from "../../shared/interfaces"
+import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
 interface OwnProps
 {
-    subtype: WComponentStateV2SubType
+    VAPs_represent: VAPsRepresent
     versioned_VAP_set: VersionedStateVAPsSet
     update_versioned_VAP_set: (versioned_VAP_set: VersionedStateVAPsSet) => void
     creation_context: CreationContextState
@@ -59,9 +59,9 @@ export function ValueAndPredictionSetOlderVersions (props: OwnProps)
             item_top_props: {
                 get_created_at,
                 get_custom_created_at,
-                get_summary: get_summary_for_single_VAP_set(props.subtype, true, undefined),
-                get_details: get_details_for_single_VAP_set(props.subtype),
-                get_details2: get_details2_for_single_VAP_set(props.subtype, props.editing),
+                get_summary: get_summary_for_single_VAP_set(props.VAPs_represent, true, undefined),
+                get_details: get_details_for_single_VAP_set(props.VAPs_represent),
+                get_details2: get_details2_for_single_VAP_set(props.VAPs_represent, props.editing),
                 extra_class_names: "value_and_prediction_set",
             },
         })}

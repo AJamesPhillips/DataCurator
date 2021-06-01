@@ -4,7 +4,6 @@ import "./common.css"
 import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/EditableText"
 import type {
-    WComponentStateV2SubType,
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
@@ -15,13 +14,11 @@ import { SummaryForPrediction } from "../predictions/common"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
-import { subtype_to_VAPsRepresent } from "../../shared/wcomponent/get_wcomponent_state_value"
 
 
 
-export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsRepresent, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    const VAPs_represent = subtype_to_VAPsRepresent(subtype)
     let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
     VAP_set = { ...VAP_set, entries: VAPs }
@@ -32,7 +29,7 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
     return <SummaryForPrediction
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
-        value={subtype !== "boolean" ? values : ""}
+        value={VAPs_represent.boolean ? values : ""}
         datetime={VAP_set.datetime}
         probability={prob}
         conviction={conv}
@@ -41,9 +38,8 @@ export const get_summary_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (VAPs_represent: VAPsRepresent, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
-    const VAPs_represent = subtype_to_VAPsRepresent(subtype)
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
 
@@ -59,7 +55,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
                 wcomponent_id={wcomponent_id}
                 VAP_set_id={VAP_set.id}
                 created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
-                subtype={subtype}
+                VAPs_represent={VAPs_represent}
                 values_and_predictions={VAPs}
                 VAP_counterfactuals_map={VAP_counterfactuals_map}
                 update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, VAPs_represent))}
@@ -72,7 +68,7 @@ export const get_details_for_single_VAP_set = (subtype: WComponentStateV2SubType
 
 
 
-export const get_details2_for_single_VAP_set = (subtype: WComponentStateV2SubType, editing: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsRepresent, editing: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     const shared_entry_values = VAP_set.shared_entry_values || {}
     // Provide the explanations from exist VAPs
@@ -83,15 +79,12 @@ export const get_details2_for_single_VAP_set = (subtype: WComponentStateV2SubTyp
     const explanation = shared_entry_values.explanation || VAP_explanations || ""
     const conviction = shared_entry_values.conviction || 1
 
-
-    const is_boolean = subtype === "boolean"
-
     const display_explanation = !!(editing || explanation)
 
     return <div className="shared_VAP_set_details">
         <div className="row_one">
             <div className="description_label">{display_explanation && "Explanation:"}</div>
-            {!is_boolean && <div>
+            {!VAPs_represent.boolean && <div>
                 <div className="description_label" style={{ display: "inline"}}>Cn:</div> &nbsp;
                 <EditablePercentage
                     disabled={false}

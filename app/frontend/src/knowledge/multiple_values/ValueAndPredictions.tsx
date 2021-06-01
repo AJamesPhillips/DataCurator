@@ -10,7 +10,7 @@ import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { WComponentStateV2SubType, StateValueAndPrediction } from "../../shared/wcomponent/interfaces/state"
+import type { StateValueAndPrediction } from "../../shared/wcomponent/interfaces/state"
 import { prepare_new_VAP } from "./utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
@@ -22,6 +22,7 @@ import { is_counterfactual_active } from "../../shared/counterfactuals/active"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { get_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 import type { CreationContextState } from "../../shared/interfaces"
+import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -30,7 +31,7 @@ interface OwnProps
     wcomponent_id?: string
     VAP_set_id?: string
     created_at: Date
-    subtype: WComponentStateV2SubType
+    VAPs_represent: VAPsRepresent
     values_and_predictions: StateValueAndPrediction[]
     VAP_counterfactuals_map?: VAP_id_counterfactual_map
     update_values_and_predictions: (values_and_predictions: StateValueAndPrediction[]) => void
@@ -74,12 +75,12 @@ function _ValueAndPredictions (props: Props)
     const { creation_context, editing } = props
 
     const VAPs = props.values_and_predictions
-    const class_name_only_one_VAP = (props.subtype === "boolean" && VAPs.length >= 1) ? "only_one_VAP" : ""
+    const class_name_only_one_VAP = (props.VAPs_represent.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
 
     const item_top_props: EditableListEntryTopProps<StateValueAndPrediction> = {
         get_created_at: () => props.created_at,
         get_summary: get_summary({
-            subtype: props.subtype,
+            VAPs_represent: props.VAPs_represent,
             allows_assumptions: props.allows_assumptions,
             VAP_counterfactuals_map: props.VAP_counterfactuals_map,
             upsert_counterfactual: props.upsert_counterfactual,
@@ -89,7 +90,7 @@ function _ValueAndPredictions (props: Props)
             creation_context,
             editing,
         }),
-        get_details: get_details(props.subtype, editing),
+        get_details: get_details(props.VAPs_represent, editing),
         extra_class_names: "value_and_prediction",
     }
 
@@ -129,7 +130,7 @@ const get_id = (item: StateValueAndPrediction) => item.id
 
 interface GetSummaryArgs
 {
-    subtype: WComponentStateV2SubType
+    VAPs_represent: VAPsRepresent
     allows_assumptions: boolean
     VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined
     knowledge_view_id: string | undefined
@@ -141,15 +142,16 @@ interface GetSummaryArgs
 }
 const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
-    const { subtype, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
+    const { VAPs_represent, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
         wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context, editing } = args
 
     const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
     const counterfactual_active = is_counterfactual_active(counterfactual)
     const { probability, conviction } = merge_counterfactual_into_VAP(VAP, counterfactual)
 
-    const is_boolean = subtype === "boolean"
-    const is_number = subtype === "number"
+    const is_boolean = VAPs_represent.boolean
+    const is_number = VAPs_represent.number
+
     const has_rel_prob = VAP.relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean || counterfactual_active
     const disabled_rel_prob = !has_rel_prob || is_boolean
@@ -236,11 +238,9 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 }
 
 
-const get_details = (subtype: WComponentStateV2SubType, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_details = (VAPs_represent: VAPsRepresent, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
-    const is_boolean = subtype === "boolean"
-
-    if (is_boolean) return <div></div>
+    if (VAPs_represent.boolean) return <div></div>
 
     if (!editing && !item.description) return <div></div>
 

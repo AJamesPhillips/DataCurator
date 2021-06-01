@@ -8,6 +8,7 @@ import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
 import { get_new_created_ats, get_new_custom_created_at } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/interfaces"
+import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -69,10 +70,8 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet, creation_context: 
 
 
 
-export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], subtype: WComponentStateV2SubType): StateValueAndPrediction[]
+export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], VAPs_represent: VAPsRepresent): StateValueAndPrediction[]
 {
-    const is_boolean = subtype === "boolean"
-
     const multiple = VAPs.length > 1
     let total_relative_probability = 0
 
@@ -87,7 +86,7 @@ export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], subtype:
         return { ...VAP, relative_probability }
     })
 
-    if (!is_boolean)
+    if (!VAPs_represent.boolean)
     {
         total_relative_probability = total_relative_probability || 1
 

@@ -19,11 +19,9 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_event,
     wcomponent_is_causal_link,
-    wcomponent_is_action,
-    wcomponent_has_VAP_sets,
     wcomponent_should_have_state_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { StateValueAndPredictionsSet, WComponentStateV2SubType, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
+import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
@@ -39,7 +37,8 @@ import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFields } from "./JudgementFields"
 import { useEffect, useRef } from "preact/hooks"
 import { WComponentEventFormFields } from "./WComponentEventFormFields"
-import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
+import type { UIValue, VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { subtype_to_VAPsRepresent } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -113,12 +112,12 @@ function _WComponentForm (props: Props)
 
     let UI_value: UIValue | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
-    let values_and_prediction_sets_subtype: WComponentStateV2SubType = "boolean"
+    let VAPs_represent: VAPsRepresent = { boolean: true }
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
-        values_and_prediction_sets_subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
+        if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
     }
 
 
@@ -277,7 +276,7 @@ function _WComponentForm (props: Props)
             <p>
                 <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
-                    subtype={values_and_prediction_sets_subtype}
+                    VAPs_represent={VAPs_represent}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_values_and_predictions={values_and_prediction_sets =>
                     {

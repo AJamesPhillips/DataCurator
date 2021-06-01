@@ -16,6 +16,7 @@ import { update_substate, update_subsubstate } from "../../../utils/update_state
 import type { RootState } from "../../State"
 import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
 import type { CreationContextState } from "../../../shared/interfaces"
+import { subtype_to_VAPsRepresent } from "../../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -92,9 +93,11 @@ function tidy_wcomponent (wcomponent: WComponent): WComponent
     {
         const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
 
+        const VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
+
         const corrected_VAPs_in_VAP_sets = sorted_VAP_sets.map(VAP_set => ({
             ...VAP_set,
-            entries: set_VAP_probabilities(VAP_set.entries, wcomponent.subtype),
+            entries: set_VAP_probabilities(VAP_set.entries, VAPs_represent),
         }))
 
         wcomponent.values_and_prediction_sets = corrected_VAPs_in_VAP_sets
