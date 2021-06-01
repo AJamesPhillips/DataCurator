@@ -2,6 +2,8 @@ import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { CreationContextSidePanel } from "../creation_context/CreationContextSidePanel"
+import { DisplayOptionsSidePanel } from "../display_options/DisplayOptionsSidePanel"
+import { FiltersSidePanel } from "../filters/FiltersSidePanel"
 import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
 import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
@@ -29,9 +31,9 @@ type Props = PropsFromRedux & OwnProps
 function _SidePanel (props: Props)
 {
     return <div>
-        {props.route === "filter" && <div>
-            Filter
-        </div>}
+        {props.route === "filter" && <FiltersSidePanel />}
+
+        {props.route === "display" && <DisplayOptionsSidePanel />}
 
         {props.route === "statements" && <Statements />}
 
