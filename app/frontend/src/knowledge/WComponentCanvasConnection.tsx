@@ -153,7 +153,7 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_click = (e: h.JSX.TargetedMouseEvent<SVGGElement>) =>
+    const on_pointer_down = (e: h.JSX.TargetedMouseEvent<SVGGElement>) =>
     {
         e.stopImmediatePropagation()
         e.preventDefault()
@@ -179,7 +179,7 @@ function _WComponentCanvasConnection (props: Props)
         to_node_position={to_node_position}
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
-        on_click={on_click}
+        on_pointer_down={on_pointer_down}
         intensity={certainty}
         is_highlighted={is_current_item}
     />
