@@ -20,6 +20,7 @@ export function derive_validity_formatting (validity_formatting: ValidityFormatt
 {
     const derived_validity_formatting: ValidityFormattingOption = {
         render_certainty_as_opacity: validity_formatting === "render_certainty_as_opacity",
+        render_certainty_as_easier_opacity: validity_formatting === "render_certainty_as_easier_opacity",
         render_100_opacity: validity_formatting === "render_100_opacity",
     }
 

@@ -31,7 +31,7 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 export type ValidityFilterTypes = "only_certain_valid" | "only_maybe_valid" | "maybe_invalid" | "show_invalid"
 export type ValidityFilterOption = {[type in ValidityFilterTypes]: boolean}
 
-export type ValidityFormattingTypes = "render_certainty_as_opacity" | "render_100_opacity"
+export type ValidityFormattingTypes = "render_certainty_as_opacity" | "render_certainty_as_easier_opacity" | "render_100_opacity"
 export type ValidityFormattingOption = {[type in ValidityFormattingTypes]: boolean}
 // export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
 

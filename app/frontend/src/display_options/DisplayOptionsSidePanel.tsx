@@ -57,7 +57,7 @@ function _DisplayOptionsSidePanel (props: Props)
             <br />
 
             <div className="description">
-                Show only nodes and connections with validity <i>
+                Show only nodes and connections with validity <br/><i>
                 certainty {validity_filter_descriptions[props.validity_filter]}</i> {description_of_certainty}.
             </div>
         </p>
@@ -128,10 +128,12 @@ const validity_filter_descriptions: { [type in ValidityFilterTypes]: string } = 
 
 const validity_formatting_display_options: { id: ValidityFormattingTypes, title: string }[] = [
     { id: "render_certainty_as_opacity", title: "Use certainty" },
+    { id: "render_certainty_as_easier_opacity", title: "Use certainty (opacity >= 50%)" },
     { id: "render_100_opacity", title: "Always 100%" },
 ]
 
 const validity_formatting_descriptions: { [type in ValidityFormattingTypes]: string } = {
     render_certainty_as_opacity: "proportional to certainty",
+    render_certainty_as_easier_opacity: "proportional to certainty but no lower than 50% (easier to see)",
     render_100_opacity: "always 100% (no transparency)",
 }

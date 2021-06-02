@@ -16,6 +16,6 @@
 
 .display_options_side_panel .description i
 {
-    white-space: nowrap;
+    /* white-space: nowrap; */
     font-weight: 900;
 }

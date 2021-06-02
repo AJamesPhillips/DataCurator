@@ -117,5 +117,8 @@ export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 {
     if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item || args.validity_formatting.render_100_opacity) return 1
 
-    return args.certainty === 1 ? 1 : rescale(args.certainty, 0.1, 0.5)
+    const min50 = args.validity_formatting.render_certainty_as_easier_opacity
+
+    return args.certainty === 1 ? 1 :
+        (min50 ? rescale(args.certainty, 0.4, 0.7) : rescale(args.certainty, 0.1, 0.5))
 }
