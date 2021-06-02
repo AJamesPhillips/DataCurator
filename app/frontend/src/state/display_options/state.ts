@@ -32,6 +32,7 @@ export type ValidityFilterTypes = "only_certain_valid" | "only_maybe_valid" | "m
 export type ValidityFilterOption = {[type in ValidityFilterTypes]: boolean}
 
 export type ValidityFormattingTypes = "render_certainty_as_opacity" | "render_100_opacity"
+export type ValidityFormattingOption = {[type in ValidityFormattingTypes]: boolean}
 // export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
 
 
@@ -44,6 +45,7 @@ export interface DisplayOptionsState
     validity_filter: ValidityFilterTypes
     validity_formatting: ValidityFormattingTypes
     derived_validity_filter: ValidityFilterOption
+    derived_validity_formatting: ValidityFormattingOption
 
     // not an option.  Move to a different state.
     canvas_bounding_rect: BoundingRect | undefined

@@ -1,4 +1,4 @@
-import type { ValidityFilterOption, ValidityFilterTypes } from "./state"
+import type { ValidityFilterOption, ValidityFilterTypes, ValidityFormattingOption, ValidityFormattingTypes } from "./state"
 
 
 
@@ -12,4 +12,16 @@ export function derive_validity_filter (validity_filter: ValidityFilterTypes)
     }
 
     return derived_validity_filter
+}
+
+
+
+export function derive_validity_formatting (validity_formatting: ValidityFormattingTypes)
+{
+    const derived_validity_formatting: ValidityFormattingOption = {
+        render_certainty_as_opacity: validity_formatting === "render_certainty_as_opacity",
+        render_100_opacity: validity_formatting === "render_100_opacity",
+    }
+
+    return derived_validity_formatting
 }
