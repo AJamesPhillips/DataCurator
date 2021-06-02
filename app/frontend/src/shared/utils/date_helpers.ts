@@ -249,18 +249,20 @@ interface Date2strAutoArgs
 {
     date: Date
     time_resolution?: TimeResolution
+    // Allows the datetime to be viewed as just a date so that `2021-05-05 00:00` renders as `2021-05-05`
+    trim_midnight?: boolean
 }
 
 export function date2str_auto (args: Date2strAutoArgs)
 {
-    const { date, time_resolution = "minute" } = args
+    const { date, time_resolution = "minute", trim_midnight = true } = args
 
     const format = time_resolution === "day" ? "yyyy-MM-dd" : (
         time_resolution === "hour" ? "yyyy-MM-dd hh:00" : "yyyy-MM-dd hh:mm"
     )
 
     const datetime_string = date2str(date, format)
-    return datetime_string.replace(" 00:00", "")
+    return trim_midnight ? datetime_string.replace(" 00:00", "") : datetime_string
 }
 
 

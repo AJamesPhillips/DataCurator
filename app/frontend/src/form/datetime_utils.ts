@@ -19,9 +19,9 @@ export function valid_date_str (date_str: string)
 }
 
 
-export function date_to_string (date: Date | undefined, time_resolution: TimeResolution)
+export function date_to_string (date: Date | undefined, time_resolution: TimeResolution, trim_midnight: boolean = true)
 {
-    const as_string = (date && valid_date(date)) ? date2str_auto({ date, time_resolution }) : ""
+    const as_string = (date && valid_date(date)) ? date2str_auto({ date, time_resolution, trim_midnight }) : ""
     return as_string
 }
 
