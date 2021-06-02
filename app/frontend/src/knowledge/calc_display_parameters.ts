@@ -1,9 +1,11 @@
+import type { Prediction } from "../shared/uncertainty/uncertainty"
 import { rescale } from "../shared/utils/bounded"
 import { CurrentValidityValue, get_wcomponent_validity_value } from "../shared/wcomponent/get_wcomponent_validity_value"
-import type {
-    WComponent, WComponentConnection,
+import { Tense } from "../shared/wcomponent/interfaces/datetime"
+import {
+    WComponent, WComponentConnection, wcomponent_has_event_at,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+import { get_created_at_ms, get_tense_of_item } from "../shared/wcomponent/utils_datetime"
 import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
 
 
@@ -17,8 +19,10 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | CurrentValidityValue
 {
+    const { wcomponent, sim_ms } = args
+
     // Do not show nodes if they do no exist yet
-    const is_not_created = wcomponent_is_not_yet_created(args.wcomponent, args.created_at_ms)
+    const is_not_created = wcomponent_is_not_yet_created(wcomponent, args.created_at_ms)
     if (is_not_created) return false
 
 
@@ -29,7 +33,16 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     })
     if (is_invalid_for_display) return false
 
-    return validity_value
+
+    let certainty = validity_value.certainty
+    if (wcomponent_has_event_at(wcomponent))
+    {
+        const event_certainty = get_certainty_for_wcomponent_event_at({ event_at: wcomponent.event_at, sim_ms })
+        if (event_certainty !== undefined) certainty = Math.min(certainty, event_certainty)
+    }
+
+
+    return { ...validity_value, certainty }
 }
 
 
@@ -60,6 +73,25 @@ function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInvalidForD
     else console.error("Unsupported validity_filter: " + JSON.stringify(filter))
 
     return !should_display
+}
+
+
+
+interface GetCertaintyForWcomponentEventAtArgs
+{
+    event_at: Prediction[]
+    sim_ms: number
+}
+function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentEventAtArgs)
+{
+    const { event_at, sim_ms } = args
+
+    const event_prediction = event_at[0]
+    if (!event_prediction) return undefined
+
+    const tense = get_tense_of_item(event_prediction, sim_ms)
+
+    return (tense === Tense.future) ? 0 : 1
 }
 
 
