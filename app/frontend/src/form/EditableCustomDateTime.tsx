@@ -62,7 +62,8 @@ function _EditableCustomDateTime (props: Props)
                 // Because we do not dispatch any state changes to react on changing the value
                 // this code block should only be run **once** on the render cycle immediately
                 // after focusing the input element
-                const new_working_value = date_to_string(props_value(props), "minute", false)
+                const date = props_value(props)
+                const new_working_value = date_to_string({ date, time_resolution: "minute", trim_midnight: false })
                 r.value = new_working_value
 
                 r.setSelectionRange(0, r.value.length)
@@ -140,8 +141,8 @@ interface PropsToStrValueArgs
 }
 function props_to_str_value (args: PropsToStrValueArgs)
 {
-    const value = props_value(args)
-    const working_value = date_to_string(value, args.time_resolution)
+    const date = props_value(args)
+    const working_value = date_to_string({ date, time_resolution: args.time_resolution })
     return working_value
 }
 

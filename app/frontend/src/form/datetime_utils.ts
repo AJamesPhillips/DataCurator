@@ -19,8 +19,16 @@ export function valid_date_str (date_str: string)
 }
 
 
-export function date_to_string (date: Date | undefined, time_resolution: TimeResolution, trim_midnight: boolean = true)
+
+interface DateToStringArgs
 {
+    date: Date | undefined
+    time_resolution: TimeResolution
+    trim_midnight?: boolean
+}
+export function date_to_string (args: DateToStringArgs)
+{
+    const { date, time_resolution, trim_midnight } = args
     const as_string = (date && valid_date(date)) ? date2str_auto({ date, time_resolution, trim_midnight }) : ""
     return as_string
 }
@@ -32,9 +40,9 @@ export function uncertain_date_to_string (datetime: TemporalUncertainty, time_re
 
     if (datetime.min || datetime.value || datetime.max)
     {
-        const min = date_to_string(datetime.min, time_resolution)
-        const value = date_to_string(datetime.value, time_resolution)
-        const max = date_to_string(datetime.max, time_resolution)
+        const min = date_to_string({ date: datetime.min, time_resolution })
+        const value = date_to_string({ date: datetime.value, time_resolution })
+        const max = date_to_string({ date: datetime.max, time_resolution })
 
         const strs: string[] = [
             min,
