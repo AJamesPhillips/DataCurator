@@ -7,6 +7,8 @@ import { CreateNewWComponent } from "./CreateNewWComponent"
 import { WComponentForm } from "./wcomponent_form/WComponentForm"
 import { WComponentMultipleForm } from "./WComponentMultipleForm"
 import { LinkButton } from "../utils/Link"
+import { Button } from "../sharedf/Button"
+import { ACTIONS } from "../state/actions"
 
 
 
@@ -24,7 +26,12 @@ const map_state = (state: RootState) =>
 }
 
 
-const connector = connect(map_state)
+const map_dispatch = {
+    clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+}
+
+
+const connector = connect(map_state, map_dispatch)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
 type Props = PropsFromRedux & OwnProps
@@ -41,19 +48,32 @@ function _WComponentsSidePanel (props: Props)
 
 
     if (!props.id) return <div>
-        <CreateNewWComponent />
-
-        <hr />
 
         {props.selected_ids.length > 0 && <p>
-            <LinkButton
-                name={`View ${props.selected_ids.length} component(s) already selected`}
-                route="wcomponents"
-                sub_route={props.selected_ids.length > 1 ? "wcomponents_edit_multiple" : undefined}
-                item_id={props.selected_ids.length === 1 ? props.selected_ids[0] : undefined}
-                args={undefined}
-            />
+            <div style={{ display: "inline-flex" }}>
+                <LinkButton
+                    name={`View ${props.selected_ids.length} component(s) already selected`}
+                    route="wcomponents"
+                    sub_route={props.selected_ids.length > 1 ? "wcomponents_edit_multiple" : undefined}
+                    item_id={props.selected_ids.length === 1 ? props.selected_ids[0] : undefined}
+                    args={undefined}
+                />
+
+                &nbsp;
+
+                <Button
+                    value={`Clear selection`}
+                    on_pointer_down={() => props.clear_selected_wcomponents({})}
+                    is_left={true}
+                />
+            </div>
+
+            <br /><br />
+
+            <hr />
         </p>}
+
+        <CreateNewWComponent />
 
     </div>
 
