@@ -4,7 +4,7 @@ import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import type { WComponentsById, WComponent } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
-import type { WcIdCounterfactualsMap } from "../interfaces/uncertainty/uncertainty"
+import type { WcIdCounterfactualsMap } from "../../uncertainty/uncertainty"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 

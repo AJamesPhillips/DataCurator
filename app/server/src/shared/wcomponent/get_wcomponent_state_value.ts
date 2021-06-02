@@ -1,7 +1,12 @@
+import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 import type { CurrentValuePossibility, VAPsRepresent } from "./interfaces/generic_value"
-import { WComponent, WComponentNode, wcomponent_has_VAP_sets, wcomponent_is_statev1, wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "./interfaces/SpecialisedObjects"
-import type { HasVAPSets, WComponentNodeState, WComponentNodeStateV2, WComponentStateV2SubType } from "./interfaces/state"
-import type { WComponentCounterfactuals } from "./interfaces/uncertainty/uncertainty"
+import {
+    WComponent,
+    wcomponent_is_statev1,
+    wcomponent_is_statev2,
+    wcomponent_should_have_state_VAP_sets,
+} from "./interfaces/SpecialisedObjects"
+import type { WComponentNodeState, WComponentStateV2SubType } from "./interfaces/state"
 import { get_created_at_ms } from "./utils_datetime"
 import { get_VAP_set_possible_values } from "./value_and_prediction/get_value"
 
@@ -50,6 +55,7 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_
         value: state_value_entry.value,
         probability: 1,
         conviction: 1,
+        certainty: 1,
         uncertain: false,
         assumed: false,
     }

@@ -13,7 +13,7 @@ import {
     wcomponent_is_action,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../interfaces/state"
-import type { Prediction } from "../interfaces/uncertainty/uncertainty"
+import type { Prediction } from "../../uncertainty/uncertainty"
 import { parse_dates, optional_date } from "./parse_dates"
 
 

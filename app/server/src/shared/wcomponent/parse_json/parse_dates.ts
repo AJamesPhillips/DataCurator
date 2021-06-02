@@ -1,4 +1,4 @@
-import type { TemporalUncertainty } from "../interfaces/uncertainty/uncertainty"
+import type { TemporalUncertainty } from "../../uncertainty/uncertainty"
 
 
 

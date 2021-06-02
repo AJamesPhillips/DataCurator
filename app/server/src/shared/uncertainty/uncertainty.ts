@@ -1,5 +1,5 @@
-import type { Base } from "../base"
-import type { WComponentNodeBase } from "../wcomponent_base"
+import type { Base } from "../wcomponent/interfaces/base"
+import type { WComponentNodeBase } from "../wcomponent/interfaces/wcomponent_base"
 
 
 

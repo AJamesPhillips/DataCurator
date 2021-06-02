@@ -25,6 +25,7 @@ export interface CurrentValuePossibility
     value: string | number | boolean
     probability: number
     conviction: number
+    certainty: number
     uncertain: boolean
     assumed: boolean
     // likey?: boolean
@@ -35,11 +36,13 @@ export interface CurrentValue
 {
     possibilities: CurrentValuePossibility[]
 
+    is_defined: boolean
     value: undefined | string | number | boolean
-    probability: undefined | number
-    conviction: undefined | number
-    uncertain: undefined | boolean
-    assumed: undefined | boolean
+    probability: number
+    conviction: number
+    certainty: number
+    uncertain: boolean
+    assumed: boolean
 }
 
 
