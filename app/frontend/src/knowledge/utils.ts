@@ -3,7 +3,7 @@ import type {
     WComponent,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import type { ValidityFilterTypes } from "../state/display_options/state"
+import type { ValidityFilterOption } from "../state/display_options/state"
 
 
 
@@ -18,13 +18,20 @@ export function wcomponent_is_not_yet_created (wcomponent: WComponent, display_a
 interface GetWcomponentIsInvalidForDisplayArgs
 {
     validity_value: CurrentValidityValue
-    validity_filter: ValidityFilterTypes
+    validity_filter: ValidityFilterOption
 }
 export function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInvalidForDisplayArgs)
 {
-    let is_invalid = false
+    let should_display = false
 
-    if (!args.validity_value.value && args.validity_filter === "hide_invalid") is_invalid = true
+    const { validity_filter: filter } = args
+    const { certainty } = args.validity_value
 
-    return is_invalid
+    if (filter.show_invalid) should_display = true
+    else if (filter.maybe_invalid && certainty > 0) should_display = true
+    else if (filter.only_maybe_valid && certainty > 0.5) should_display = true
+    else if (filter.only_certain_valid && certainty === 1) should_display = true
+    else console.error("Unsupporting validity_filter: " + filter)
+
+    return !should_display
 }

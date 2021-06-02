@@ -63,7 +63,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
         editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
-        validity_filter: state.display_options.validity_filter,
+        validity_filter: state.display_options.derived_validity_filter,
     }
 }
 

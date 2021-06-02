@@ -16,7 +16,7 @@ import {
     ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
-import type { ValidityFilterTypes } from "../state/display_options/state"
+import type { ValidityFilterOption, ValidityFilterTypes } from "../state/display_options/state"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
@@ -38,7 +38,7 @@ const map_state = (state: RootState, props: OwnProps) =>
 
     const { current_UI_knowledge_view } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
-    const { validity_filter: validity_filter } = state.display_options
+    const { derived_validity_filter: validity_filter } = state.display_options
 
     let certainty = 1
     let from_wc: WComponent | undefined = undefined
@@ -68,7 +68,7 @@ const map_state = (state: RootState, props: OwnProps) =>
 interface CalculateConnectionCertaintyArgs
 {
     wcomponent: WComponentConnection
-    validity_filter: ValidityFilterTypes
+    validity_filter: ValidityFilterOption
     from_wc: WComponent | undefined
     to_wc: WComponent | undefined
     created_at_ms: number

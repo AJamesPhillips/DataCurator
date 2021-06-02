@@ -23,6 +23,9 @@ export function display_options_starting_state (): DisplayOptionsState
         time_resolution: "hour",
 
         validity_filter: "show_invalid",
+        derived_validity_filter: {
+            show_invalid: true, maybe_invalid: false, only_maybe_valid: false, only_certain_valid: false,
+        },
 
         canvas_bounding_rect: undefined,
         ...obj,
