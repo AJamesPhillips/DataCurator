@@ -116,6 +116,7 @@ function calc_connection_certainty (args: CalculateConnectionCertaintyArgs)
 
 const map_dispatch = {
     clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
+    clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
     change_route: ACTIONS.routing.change_route,
 }
 
@@ -128,7 +129,7 @@ function _WComponentCanvasConnection (props: Props)
 {
     const {
         id, current_UI_knowledge_view, wcomponent, is_current_item, certainty,
-        clicked_wcomponent, change_route,
+        change_route,
     } = props
 
     if (!wcomponent)
@@ -152,10 +153,20 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_click = () =>
+    const on_click = (e: h.JSX.TargetedMouseEvent<SVGGElement>) =>
     {
-        clicked_wcomponent({ id })
-        change_route({ route: "wcomponents", item_id: id })
+        e.stopImmediatePropagation()
+        e.preventDefault()
+
+        props.clicked_wcomponent({ id })
+
+        // Copied from Node
+        if (is_current_item)
+        {
+            change_route({ route: "wcomponents", sub_route: null, item_id: null })
+            props.clear_selected_wcomponents({})
+        }
+        else change_route({ route: "wcomponents", sub_route: null, item_id: id })
     }
 
 

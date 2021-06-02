@@ -93,7 +93,7 @@ function _WComponentCanvasNode (props: Props)
         ctrl_key_is_down,
         node_allowed_to_move,
         created_at_ms, sim_ms, wc_counterfactuals, validity_filter, validity_formatting, } = props
-    const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
+    const { change_route, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
     if (!wcomponent) return <div>Could not find component of id {id}</div>
@@ -123,7 +123,7 @@ function _WComponentCanvasNode (props: Props)
         e.stopImmediatePropagation()
         e.preventDefault()
 
-        clicked_wcomponent({ id })
+        props.clicked_wcomponent({ id })
 
         if (ctrl_key_is_down)
         {
@@ -131,10 +131,11 @@ function _WComponentCanvasNode (props: Props)
         }
         else
         {
+            // Copied to connection
             if (is_current_item)
             {
                 change_route({ route: "wcomponents", sub_route: null, item_id: null })
-                clear_selected_wcomponents({})
+                props.clear_selected_wcomponents({})
             }
             else change_route({ route: "wcomponents", sub_route: null, item_id: id })
         }
