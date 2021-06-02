@@ -41,7 +41,5 @@ export function display_options_starting_state (): DisplayOptionsState
         ...obj,
     }
 
-    return {
-        ...state,
-    }
+    return state
 }

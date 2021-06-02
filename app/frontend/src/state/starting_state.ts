@@ -1,4 +1,5 @@
 import { CORE_IDS, STATEMENT_IDS } from "./core_data"
+import { creation_context_starting_state } from "./creation_context/persistance"
 import { get_derived_starting_state } from "./derived/starting_state"
 import { display_options_starting_state } from "./display_options/persistance"
 import { get_routing_starting_state } from "./routing/starting_state"
@@ -137,7 +138,7 @@ export function get_starting_state (): RootState
 
     const starting_state: RootState = {
         controls: { linked_datetime_sliders: true },
-        creation_context: { use_creation_context: false, creation_context: {} },
+        creation_context: creation_context_starting_state(),
         statements,
         patterns,
         objects,
