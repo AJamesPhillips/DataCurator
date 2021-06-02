@@ -34,9 +34,9 @@ export function calculate_xy_for_put_middle (args: { x: number, y: number, zoom:
 
 
 
-// export function get_validity_to_certainty_map (validity_to_certainty_type: ValidityToCertaintyTypes)
+// export function get_validity_filter_map (validity_filter_type: ValidityToCertaintyTypes)
 // {
-//     return validity_to_certainty_type_to_map[validity_to_certainty_type]
+//     return validity_filter_type_to_map[validity_filter_type]
 // }
 
 // const show_invalid: ValidityToCertainty = {
@@ -52,7 +52,7 @@ export function calculate_xy_for_put_middle (args: { x: number, y: number, zoom:
 //     [Certainty.no]: { display: false, opacity: 0 },
 // }
 
-// const validity_to_certainty_type_to_map: ValidityToCertainty_TypeToMap = {
+// const validity_filter_type_to_map: ValidityToCertainty_TypeToMap = {
 //     show_invalid,
 //     hide_invalid,
 // }

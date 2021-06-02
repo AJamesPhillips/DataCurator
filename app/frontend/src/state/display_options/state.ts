@@ -28,7 +28,7 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 //     opacity: number
 // }
 
-export type ValidityToCertaintyTypes = "hide_invalid" | "show_invalid"
+export type ValidityFilterTypes = "hide_invalid" | "show_invalid"
 // export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
 
 
@@ -38,7 +38,7 @@ export interface DisplayOptionsState
     time_resolution: TimeResolution
 
     // Validity
-    validity_to_certainty: ValidityToCertaintyTypes
+    validity_filter: ValidityFilterTypes
 
     // not an option.  Move to a different state.
     canvas_bounding_rect: BoundingRect | undefined

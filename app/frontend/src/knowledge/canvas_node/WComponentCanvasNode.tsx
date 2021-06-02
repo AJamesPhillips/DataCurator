@@ -63,7 +63,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
         editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
-        validity_to_certainty: state.display_options.validity_to_certainty,
+        validity_filter: state.display_options.validity_filter,
     }
 }
 
@@ -91,7 +91,7 @@ function _WComponentCanvasNode (props: Props)
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
         node_allowed_to_move,
-        created_at_ms, sim_ms, wc_counterfactuals, validity_to_certainty, } = props
+        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -106,13 +106,13 @@ function _WComponentCanvasNode (props: Props)
 
     // Do not show nodes if they are invalid
     const validity_value = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
-    const is_invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_to_certainty })
+    const is_invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_filter })
     if (is_invalid_for_display) return null
 
 
     // TODO next:
     // * extract this to a function to be used by connection
-    // * Add another `validity_to_certainty` option of hide_maybe_invalid
+    // * Add another `validity_filter` option of hide_maybe_invalid
     const validity_opacity: number = (is_highlighted || is_selected || is_current_item) ? 1
         : (validity_value.certainty === 1 ? 1 : rescale(validity_value.certainty, 0.1, 0.5))
 

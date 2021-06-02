@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { BoundingRect, ValidityToCertaintyTypes } from "./state"
+import type { BoundingRect, ValidityFilterTypes } from "./state"
 
 
 
@@ -58,21 +58,21 @@ export const is_set_time_resolution = (action: AnyAction): action is ActionSetTi
 
 
 
-interface SetValidityToCertaintyArgs
+interface SetValidityFilterArgs
 {
-    validity_to_certainty: ValidityToCertaintyTypes
+    validity_filter: ValidityFilterTypes
 }
-interface ActionSetValidityToCertainty extends Action, SetValidityToCertaintyArgs {}
+interface ActionSetValidityFilter extends Action, SetValidityFilterArgs {}
 
-const set_validity_to_certainty_type = "set_validity_to_certainty"
+const set_validity_filter_type = "set_validity_filter"
 
-const set_validity_to_certainty = (args: SetValidityToCertaintyArgs): ActionSetValidityToCertainty =>
+const set_validity_filter = (args: SetValidityFilterArgs): ActionSetValidityFilter =>
 {
-    return { type: set_validity_to_certainty_type, ...args }
+    return { type: set_validity_filter_type, ...args }
 }
 
-export const is_set_validity_to_certainty = (action: AnyAction): action is ActionSetValidityToCertainty => {
-    return action.type === set_validity_to_certainty_type
+export const is_set_validity_filter = (action: AnyAction): action is ActionSetValidityFilter => {
+    return action.type === set_validity_filter_type
 }
 
 
@@ -81,5 +81,5 @@ export const display_actions = {
     toggle_consumption_formatting,
     update_canvas_bounding_rect,
     set_time_resolution,
-    set_validity_to_certainty,
+    set_validity_filter,
 }

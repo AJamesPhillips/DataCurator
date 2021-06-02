@@ -16,7 +16,7 @@ import {
     ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
-import type { ValidityToCertaintyTypes } from "../state/display_options/state"
+import type { ValidityFilterTypes } from "../state/display_options/state"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
@@ -38,7 +38,7 @@ const map_state = (state: RootState, props: OwnProps) =>
 
     const { current_UI_knowledge_view } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
-    const { validity_to_certainty } = state.display_options
+    const { validity_filter: validity_filter } = state.display_options
 
     let certainty = 1
     let from_wc: WComponent | undefined = undefined
@@ -51,7 +51,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
         certainty = calc_connection_certainty({
-            wcomponent, validity_to_certainty, from_wc, to_wc, created_at_ms, sim_ms,
+            wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms,
         })
     }
 
@@ -68,7 +68,7 @@ const map_state = (state: RootState, props: OwnProps) =>
 interface CalculateConnectionCertaintyArgs
 {
     wcomponent: WComponentConnection
-    validity_to_certainty: ValidityToCertaintyTypes
+    validity_filter: ValidityFilterTypes
     from_wc: WComponent | undefined
     to_wc: WComponent | undefined
     created_at_ms: number
@@ -76,7 +76,7 @@ interface CalculateConnectionCertaintyArgs
 }
 function calc_connection_certainty (args: CalculateConnectionCertaintyArgs)
 {
-    const { wcomponent, validity_to_certainty, from_wc, to_wc, created_at_ms, sim_ms } = args
+    const { wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms } = args
 
     if (!from_wc || !to_wc) return 0
 
@@ -86,7 +86,7 @@ function calc_connection_certainty (args: CalculateConnectionCertaintyArgs)
 
 
     const validity_value = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
-    const invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_to_certainty })
+    const invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_filter })
     if (invalid_for_display) return 0
 
 
@@ -101,8 +101,8 @@ function calc_connection_certainty (args: CalculateConnectionCertaintyArgs)
     const to_validity_value = get_wcomponent_validity_value({ wcomponent: to_wc, created_at_ms, sim_ms })
 
     const target_or_source_invalid = (
-        get_wcomponent_is_invalid_for_display({ validity_value: from_validity_value, validity_to_certainty })
-        || get_wcomponent_is_invalid_for_display({ validity_value: to_validity_value, validity_to_certainty })
+        get_wcomponent_is_invalid_for_display({ validity_value: from_validity_value, validity_filter })
+        || get_wcomponent_is_invalid_for_display({ validity_value: to_validity_value, validity_filter })
     )
     if (target_or_source_invalid) return 0
 

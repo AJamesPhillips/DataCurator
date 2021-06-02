@@ -3,7 +3,7 @@ import type {
     WComponent,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import type { ValidityToCertaintyTypes } from "../state/display_options/state"
+import type { ValidityFilterTypes } from "../state/display_options/state"
 
 
 
@@ -18,13 +18,13 @@ export function wcomponent_is_not_yet_created (wcomponent: WComponent, display_a
 interface GetWcomponentIsInvalidForDisplayArgs
 {
     validity_value: CurrentValidityValue
-    validity_to_certainty: ValidityToCertaintyTypes
+    validity_filter: ValidityFilterTypes
 }
 export function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInvalidForDisplayArgs)
 {
     let is_invalid = false
 
-    if (!args.validity_value.value && args.validity_to_certainty === "hide_invalid") is_invalid = true
+    if (!args.validity_value.value && args.validity_filter === "hide_invalid") is_invalid = true
 
     return is_invalid
 }

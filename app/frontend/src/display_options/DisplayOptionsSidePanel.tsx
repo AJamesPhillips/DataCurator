@@ -3,19 +3,19 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/AutocompleteText"
 import { ACTIONS } from "../state/actions"
-import type { ValidityToCertaintyTypes } from "../state/display_options/state"
+import type { ValidityFilterTypes } from "../state/display_options/state"
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
 
 
 const map_state = (state: RootState) => ({
-    validity_to_certainty: state.display_options.validity_to_certainty,
+    validity_filter: state.display_options.validity_filter,
 })
 
 
 const map_dispatch = {
-    set_validity_to_certainty: ACTIONS.display.set_validity_to_certainty,
+    set_validity_filter: ACTIONS.display.set_validity_filter,
 }
 
 
@@ -36,13 +36,13 @@ function _DisplayOptionsSidePanel (props: Props)
             <AutocompleteText
                 placeholder=""
                 options={validity_display_options}
-                selected_option_id={props.validity_to_certainty}
+                selected_option_id={props.validity_filter}
                 allow_none={false}
-                on_change={validity_to_certainty =>
+                on_change={validity_filter =>
                 {
-                    if (!validity_to_certainty) return
+                    if (!validity_filter) return
 
-                    props.set_validity_to_certainty({ validity_to_certainty })
+                    props.set_validity_filter({ validity_filter })
                 }}
             />
         </p>
@@ -59,7 +59,7 @@ export const DisplayOptionsSidePanel = connector(_DisplayOptionsSidePanel) as Fu
 
 
 
-const validity_display_options: { id: ValidityToCertaintyTypes, title: string }[] = [
+const validity_display_options: { id: ValidityFilterTypes, title: string }[] = [
     { id: "hide_invalid", title: "Hide Invalid" },
     { id: "show_invalid", title: "Show Invalid" },
 ]
