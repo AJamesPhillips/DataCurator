@@ -47,7 +47,7 @@ export interface DisplayOptionsState
     derived_validity_filter: ValidityFilterOption
     derived_validity_formatting: ValidityFormattingOption
 
-    // not an option.  Move to a different state.
+    // not an option.  Move to a different part of the state object?
     canvas_bounding_rect: BoundingRect | undefined
 }
 

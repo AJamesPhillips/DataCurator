@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { BoundingRect, ValidityFilterTypes } from "./state"
+import type { BoundingRect, ValidityFilterTypes, ValidityFormattingTypes } from "./state"
 
 
 
@@ -77,9 +77,29 @@ export const is_set_validity_filter = (action: AnyAction): action is ActionSetVa
 
 
 
+interface SetValidityFormattingArgs
+{
+    validity_formatting: ValidityFormattingTypes
+}
+interface ActionSetValidityFormatting extends Action, SetValidityFormattingArgs {}
+
+const set_validity_formatting_type = "set_validity_formatting"
+
+const set_validity_formatting = (args: SetValidityFormattingArgs): ActionSetValidityFormatting =>
+{
+    return { type: set_validity_formatting_type, ...args }
+}
+
+export const is_set_validity_formatting = (action: AnyAction): action is ActionSetValidityFormatting => {
+    return action.type === set_validity_formatting_type
+}
+
+
+
 export const display_actions = {
     toggle_consumption_formatting,
     update_canvas_bounding_rect,
     set_time_resolution,
     set_validity_filter,
+    set_validity_formatting,
 }
