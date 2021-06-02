@@ -107,6 +107,7 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 interface CalcDisplayOpacityArgs
 {
     certainty: number
+    is_editing: boolean
     is_highlighted?: boolean
     is_selected?: boolean
     is_current_item: boolean
@@ -114,7 +115,7 @@ interface CalcDisplayOpacityArgs
 }
 export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 {
-    if (args.is_highlighted || args.is_selected || args.is_current_item || args.validity_formatting.render_100_opacity) return 1
+    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item || args.validity_formatting.render_100_opacity) return 1
 
     return args.certainty === 1 ? 1 : rescale(args.certainty, 0.1, 0.5)
 }

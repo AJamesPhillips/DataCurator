@@ -59,7 +59,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
-        editing: !state.display_options.consumption_formatting,
+        is_editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
         validity_filter: state.display_options.derived_validity_filter,
         validity_formatting: state.display_options.derived_validity_formatting,
@@ -105,6 +105,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const validity_opacity = calc_display_opacity({
+        is_editing: props.is_editing,
         certainty: validity_value.certainty,
         is_highlighted,
         is_selected,
@@ -172,13 +173,13 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
-        + ((props.editing || is_highlighted || is_current_item) ? " compact_display " : "")
+        + ((props.is_editing || is_highlighted || is_current_item) ? " compact_display " : "")
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 
 
-    const show_validity_value = props.editing || is_highlighted || is_current_item
-    const show_state_value = (props.editing && wcomponent_should_have_state(wcomponent))
+    const show_validity_value = props.is_editing || is_highlighted || is_current_item
+    const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || is_highlighted || is_current_item
 
@@ -212,7 +213,7 @@ function _WComponentCanvasNode (props: Props)
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
-        terminals={(is_highlighted || props.editing) ? terminals_with_label : terminals_without_label}
+        terminals={(is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label}
         pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
         extra_args={{
             // draggable: node_allowed_to_move && node_is_moving,
