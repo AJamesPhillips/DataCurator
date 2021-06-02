@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 import type { ControlsState } from "./controls/state"
 import type { DerivedState } from "./derived/State"
 import type { DisplayOptionsState } from "./display_options/state"

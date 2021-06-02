@@ -1,4 +1,4 @@
-import type { CreationContextState } from "../interfaces"
+import type { CreationContextState } from "../creation_context/state"
 import { get_new_created_ats } from "../utils/datetime"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"

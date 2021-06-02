@@ -8,7 +8,7 @@ import { EditableText } from "../../form/EditableText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import { get_new_created_ats } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 
 
 

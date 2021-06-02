@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
 import { Button } from "../sharedf/Button"

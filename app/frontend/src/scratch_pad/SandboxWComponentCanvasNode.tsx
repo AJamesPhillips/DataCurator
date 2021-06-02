@@ -3,7 +3,7 @@ import { connect, ConnectedProps, Provider } from "react-redux"
 
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { prepare_new_VAP_set } from "../knowledge/multiple_values/utils"
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
 import type { WComponentNodeState, WComponentNodeStateV2 } from "../shared/wcomponent/interfaces/state"

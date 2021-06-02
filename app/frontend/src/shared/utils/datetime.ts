@@ -1,4 +1,4 @@
-import type { CreationContextState } from "../interfaces"
+import type { CreationContextState } from "../creation_context/state"
 import { date2str_auto } from "./date_helpers"
 
 

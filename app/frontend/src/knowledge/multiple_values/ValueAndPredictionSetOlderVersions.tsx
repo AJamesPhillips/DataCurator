@@ -15,7 +15,7 @@ import {
     get_details2_for_single_VAP_set,
 } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 

@@ -21,7 +21,7 @@ import type { VAP_id_counterfactual_map, WComponentCounterfactual } from "../../
 import { is_counterfactual_active } from "../../shared/counterfactuals/active"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { get_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 

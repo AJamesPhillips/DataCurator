@@ -16,7 +16,7 @@ import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
 import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set, get_details2_for_single_VAP_set } from "./common"
 import { prepare_new_VAP_set } from "./utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 

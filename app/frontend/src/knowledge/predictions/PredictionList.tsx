@@ -14,7 +14,7 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 
 
 

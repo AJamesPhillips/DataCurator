@@ -15,7 +15,7 @@ import { test } from "../../../shared/utils/test"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
-import type { CreationContextState } from "../../../shared/interfaces"
+import type { CreationContextState } from "../../../shared/creation_context/state"
 import { subtype_to_VAPsRepresent } from "../../../shared/wcomponent/value_and_prediction/utils"
 
 

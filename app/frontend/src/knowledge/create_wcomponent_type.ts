@@ -1,6 +1,6 @@
 import type { Store } from "redux"
 
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"

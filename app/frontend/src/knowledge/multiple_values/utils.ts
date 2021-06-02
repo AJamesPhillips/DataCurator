@@ -2,12 +2,11 @@ import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
-    WComponentStateV2SubType,
 } from "../../shared/wcomponent/interfaces/state"
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
 import { get_new_created_ats, get_new_custom_created_at } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../shared/interfaces"
+import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
 
 

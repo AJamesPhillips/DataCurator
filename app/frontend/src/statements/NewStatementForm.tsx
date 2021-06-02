@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { LabelsList } from "../labels/LabelsList"
 import { ItemSelect } from "../search/ItemSelect"
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 

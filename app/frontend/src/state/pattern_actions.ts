@@ -1,5 +1,5 @@
 import type { Action, AnyAction } from "redux"
-import type { CreationContextState } from "../shared/interfaces"
+import type { CreationContextState } from "../shared/creation_context/state"
 
 import { get_new_created_ats } from "../shared/utils/datetime"
 import { get_new_pattern_id } from "../shared/utils/ids"
