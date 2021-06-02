@@ -110,6 +110,9 @@ function _WComponentCanvasNode (props: Props)
     if (is_invalid_for_display) return null
 
 
+    // TODO next:
+    // * extract this to a function to be used by connection
+    // * Add another `validity_to_certainty` option of hide_maybe_invalid
     const validity_opacity: number = (is_highlighted || is_selected || is_current_item) ? 1
         : (validity_value.certainty === 1 ? 1 : rescale(validity_value.certainty, 0.1, 0.5))
 

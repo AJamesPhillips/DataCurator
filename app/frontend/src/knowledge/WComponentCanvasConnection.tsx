@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
+import { get_wcomponent_validity_value } from "../shared/wcomponent/get_wcomponent_validity_value"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type {
     KnowledgeViewWComponentIdEntryMap,
@@ -14,12 +15,12 @@ import {
     WComponentConnection,
     ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
-import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
+import type { ValidityToCertaintyTypes } from "../state/display_options/state"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
+    get_wcomponent_is_invalid_for_display,
     wcomponent_is_not_yet_created,
 } from "./utils"
 
@@ -33,56 +34,84 @@ interface OwnProps
 
 const map_state = (state: RootState, props: OwnProps) =>
 {
+    const wcomponent = get_wcomponent_from_state(state, props.id)
+
     const { current_UI_knowledge_view } = state.derived
+    const { created_at_ms, sim_ms } = state.routing.args
+    const { validity_to_certainty } = state.display_options
 
-    const display_at_datetime_ms = state.routing.args.created_at_ms
-    const sim_ms = state.routing.args.sim_ms
-    const wc = get_wcomponent_from_state(state, props.id)
-
-    let is_not_created = false
-    let is_invalid = false
-    let probability = 1
-    let conviction = 1
+    let certainty = 1
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
-    const wc_counterfactuals = get_wcomponent_counterfactuals(state, props.id)
 
-    if (wc)
+
+    if (wcomponent && wcomponent_is_plain_connection(wcomponent))
     {
-        is_invalid = get_created_at_ms(wc) > display_at_datetime_ms
+        from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
+        to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
-        if (!is_invalid && wcomponent_is_plain_connection(wc))
-        {
-            from_wc = get_wcomponent_from_state(state, wc.from_id)
-            to_wc = get_wcomponent_from_state(state, wc.to_id)
-
-            if (!from_wc || !to_wc) is_invalid = true
-            else
-            {
-                is_not_created = (
-                    wcomponent_is_not_yet_created(from_wc, display_at_datetime_ms)
-                    || wcomponent_is_not_yet_created(to_wc, display_at_datetime_ms)
-                )
-                const wc_from_counterfactuals = get_wcomponent_counterfactuals(state, wc.from_id)
-
-                const ex = wcomponent_is_not_yet_created(wc, display_at_datetime_ms)
-                const ex_from_con = wcomponent_is_not_yet_created(from_wc, display_at_datetime_ms)
-
-                probability = 1 // Math.min(ex.existence, ex_from_con.existence)
-                conviction = 1 // Math.min(ex.conviction, ex_from_con.conviction)
-            }
-        }
+        certainty = calc_connection_certainty({
+            wcomponent, validity_to_certainty, from_wc, to_wc, created_at_ms, sim_ms,
+        })
     }
 
     return {
         current_UI_knowledge_view,
-        wc,
-        is_invalid,
-        probability,
-        conviction,
+        wcomponent,
+        certainty,
         is_current_item: state.routing.item_id === props.id,
     }
 }
+
+
+
+interface CalculateConnectionCertaintyArgs
+{
+    wcomponent: WComponentConnection
+    validity_to_certainty: ValidityToCertaintyTypes
+    from_wc: WComponent | undefined
+    to_wc: WComponent | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+function calc_connection_certainty (args: CalculateConnectionCertaintyArgs)
+{
+    const { wcomponent, validity_to_certainty, from_wc, to_wc, created_at_ms, sim_ms } = args
+
+    if (!from_wc || !to_wc) return 0
+
+
+    const not_yet_created = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
+    if (not_yet_created) return 0
+
+
+    const validity_value = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
+    const invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_to_certainty })
+    if (invalid_for_display) return 0
+
+
+    const target_or_source_not_yet_created = (
+        wcomponent_is_not_yet_created(from_wc, created_at_ms)
+        || wcomponent_is_not_yet_created(to_wc, created_at_ms)
+    )
+    if (target_or_source_not_yet_created) return 0
+
+
+    const from_validity_value = get_wcomponent_validity_value({ wcomponent: from_wc, created_at_ms, sim_ms })
+    const to_validity_value = get_wcomponent_validity_value({ wcomponent: to_wc, created_at_ms, sim_ms })
+
+    const target_or_source_invalid = (
+        get_wcomponent_is_invalid_for_display({ validity_value: from_validity_value, validity_to_certainty })
+        || get_wcomponent_is_invalid_for_display({ validity_value: to_validity_value, validity_to_certainty })
+    )
+    if (target_or_source_invalid) return 0
+
+
+    const connection_certainty = Math.min(from_validity_value.certainty, to_validity_value.certainty)
+
+    return connection_certainty
+}
+
 
 
 const map_dispatch = {
@@ -98,23 +127,23 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentCanvasConnection (props: Props)
 {
     const {
-        id, current_UI_knowledge_view, wc, is_invalid, is_current_item, probability, conviction,
+        id, current_UI_knowledge_view, wcomponent, is_current_item, certainty,
         clicked_wcomponent, change_route,
     } = props
 
-    if (!wc)
+    if (!wcomponent)
     {
         console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but could not find it`)
         return null
     }
 
-    if (!wcomponent_can_render_connection(wc))
+    if (!wcomponent_can_render_connection(wcomponent))
     {
         console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but was not a causal link`)
         return null
     }
 
-    if (is_invalid) return null
+    if (certainty === 0) return null
 
     if (!current_UI_knowledge_view)
     {
@@ -131,10 +160,7 @@ function _WComponentCanvasConnection (props: Props)
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type,
-    } = get_connection_terminal_positions({ wcomponent: wc, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
-
-
-    const blur = 50 - ((conviction * 100) / 2)
+    } = get_connection_terminal_positions({ wcomponent, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
 
 
     return <CanvasConnnection
@@ -143,8 +169,7 @@ function _WComponentCanvasConnection (props: Props)
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
         on_click={on_click}
-        intensity={probability}
-        blur={blur}
+        intensity={certainty}
         is_highlighted={is_current_item}
     />
 }
