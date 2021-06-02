@@ -20,6 +20,7 @@ import type { ValidityFilterOption, ValidityFilterTypes } from "../state/display
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
+    calc_display_opacity,
     get_wcomponent_is_invalid_for_display,
     wcomponent_is_not_yet_created,
 } from "./utils"
@@ -60,6 +61,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         wcomponent,
         certainty,
         is_current_item: state.routing.item_id === props.id,
+        validity_formatting: state.display_options.derived_validity_formatting,
     }
 }
 
@@ -174,13 +176,20 @@ function _WComponentCanvasConnection (props: Props)
     } = get_connection_terminal_positions({ wcomponent, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
 
 
+    const validity_opacity = calc_display_opacity({
+        certainty,
+        is_current_item,
+        validity_formatting: props.validity_formatting,
+    })
+
+
     return <CanvasConnnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
         on_pointer_down={on_pointer_down}
-        intensity={certainty}
+        intensity={validity_opacity}
         is_highlighted={is_current_item}
     />
 }

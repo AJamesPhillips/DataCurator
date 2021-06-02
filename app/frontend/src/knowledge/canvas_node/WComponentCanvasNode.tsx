@@ -17,7 +17,7 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/inter
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { get_wcomponent_is_invalid_for_display, wcomponent_is_not_yet_created } from "../utils"
+import { calc_display_opacity, get_wcomponent_is_invalid_for_display, wcomponent_is_not_yet_created } from "../utils"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
@@ -111,11 +111,13 @@ function _WComponentCanvasNode (props: Props)
     if (is_invalid_for_display) return null
 
 
-    // TODO next:
-    // * extract this to a function to be used by connection
-    // * Add another `validity_filter` option of hide_maybe_invalid
-    const validity_opacity: number = (is_highlighted || is_selected || is_current_item || validity_formatting.render_100_opacity) ? 1
-        : (validity_value.certainty === 1 ? 1 : rescale(validity_value.certainty, 0.1, 0.5))
+    const validity_opacity = calc_display_opacity({
+        certainty: validity_value.certainty,
+        is_highlighted,
+        is_selected,
+        is_current_item,
+        validity_formatting,
+    })
 
 
     const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>

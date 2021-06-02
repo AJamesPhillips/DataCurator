@@ -1,9 +1,10 @@
+import { rescale } from "../shared/utils/bounded"
 import type { CurrentValidityValue } from "../shared/wcomponent/get_wcomponent_validity_value"
 import type {
     WComponent,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import type { ValidityFilterOption } from "../state/display_options/state"
+import type { ValidityFilterOption, ValidityFormattingOption } from "../state/display_options/state"
 
 
 
@@ -34,4 +35,21 @@ export function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInva
     else console.error("Unsupporting validity_filter: " + filter)
 
     return !should_display
+}
+
+
+
+interface CalcDisplayOpacityArgs
+{
+    certainty: number
+    is_highlighted?: boolean
+    is_selected?: boolean
+    is_current_item: boolean
+    validity_formatting: ValidityFormattingOption
+}
+export function calc_display_opacity (args: CalcDisplayOpacityArgs)
+{
+    if (args.is_highlighted || args.is_selected || args.is_current_item || args.validity_formatting.render_100_opacity) return 1
+
+    return args.certainty === 1 ? 1 : rescale(args.certainty, 0.1, 0.5)
 }
