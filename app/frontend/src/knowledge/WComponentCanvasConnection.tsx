@@ -14,6 +14,7 @@ import {
     wcomponent_can_render_connection,
     WComponentConnection,
     ConnectionTerminalType,
+    wcomponent_is_judgement_or_objective,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
@@ -21,6 +22,7 @@ import type { RootState } from "../state/State"
 import {
     calc_connection_wcomponent_should_display,
     calc_display_opacity,
+    calc_judgement_connection_wcomponent_should_display,
 } from "./calc_display_parameters"
 
 
@@ -44,13 +46,22 @@ const map_state = (state: RootState, props: OwnProps) =>
     let to_wc: WComponent | undefined = undefined
 
 
-    if (wcomponent && wcomponent_is_plain_connection(wcomponent))
+    if (!wcomponent) ""
+    else if (wcomponent_is_plain_connection(wcomponent))
     {
         from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
         to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
         validity_value = calc_connection_wcomponent_should_display({
             wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms,
+        })
+    }
+    else if (wcomponent_is_judgement_or_objective(wcomponent))
+    {
+        const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
+
+        validity_value = calc_judgement_connection_wcomponent_should_display({
+            wcomponent, validity_filter, target_wc, created_at_ms, sim_ms
         })
     }
 
@@ -173,7 +184,7 @@ function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnec
         from_node_position = wc_id_map[wcomponent.id]
         to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
         from_connection_type = { direction: "from", attribute: "meta" }
-        to_connection_type = { direction: "to", attribute: "state" }
+        to_connection_type = { direction: "to", attribute: "meta" }
     }
 
     return { from_node_position, to_node_position, from_connection_type, to_connection_type }

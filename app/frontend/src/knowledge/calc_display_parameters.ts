@@ -2,6 +2,7 @@ import type { Prediction } from "../shared/uncertainty/uncertainty"
 import { rescale } from "../shared/utils/bounded"
 import { CurrentValidityValue, get_wcomponent_validity_value } from "../shared/wcomponent/get_wcomponent_validity_value"
 import { Tense } from "../shared/wcomponent/interfaces/datetime"
+import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import {
     WComponent, WComponentConnection, wcomponent_has_event_at,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -133,6 +134,41 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
         certainty: connection_certainty,
     }
 }
+
+
+
+
+interface CalculateJudgementCertaintyArgs
+{
+    wcomponent: WComponentJudgement
+    validity_filter: ValidityFilterOption
+    target_wc: WComponent | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+export function calc_judgement_connection_wcomponent_should_display (args: CalculateJudgementCertaintyArgs): false | CurrentValidityValue
+{
+    const { wcomponent, validity_filter, target_wc, created_at_ms, sim_ms } = args
+
+    if (!target_wc) return false
+
+
+    const judgement_connection_validity_value = calc_wcomponent_should_display({ wcomponent, created_at_ms, sim_ms, validity_filter })
+    if (!judgement_connection_validity_value) return false
+
+    const target_node_validity_value = calc_wcomponent_should_display({ wcomponent: target_wc, created_at_ms, sim_ms, validity_filter })
+    if (!target_node_validity_value) return false
+
+    const judgement_connection_certainty = Math.min(
+        judgement_connection_validity_value.certainty, target_node_validity_value.certainty
+    )
+
+    return {
+        ...judgement_connection_validity_value,
+        certainty: judgement_connection_certainty,
+    }
+}
+
 
 
 
