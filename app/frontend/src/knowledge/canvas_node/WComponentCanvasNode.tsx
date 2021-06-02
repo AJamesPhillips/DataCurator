@@ -17,7 +17,7 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/inter
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { calc_display_opacity, get_wcomponent_is_invalid_for_display, wcomponent_is_not_yet_created } from "../utils"
+import { calc_display_opacity, calc_wcomponent_should_display } from "../calc_display_parameters"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
@@ -26,8 +26,6 @@ import { Handles } from "./Handles"
 import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
-import { get_wcomponent_validity_value } from "../../shared/wcomponent/get_wcomponent_validity_value"
-import { rescale } from "../../shared/utils/bounded"
 
 
 
@@ -100,15 +98,10 @@ function _WComponentCanvasNode (props: Props)
     if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
 
 
-    // Do not show nodes if they do no exist yet
-    const is_not_created = wcomponent_is_not_yet_created(wcomponent, created_at_ms)
-    if (is_not_created) return null
-
-
-    // Do not show nodes if they are invalid
-    const validity_value = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
-    const is_invalid_for_display = get_wcomponent_is_invalid_for_display({ validity_value, validity_filter })
-    if (is_invalid_for_display) return null
+    const validity_value = calc_wcomponent_should_display({
+        wcomponent, created_at_ms, sim_ms, validity_filter
+    })
+    if (!validity_value) return null
 
 
     const validity_opacity = calc_display_opacity({

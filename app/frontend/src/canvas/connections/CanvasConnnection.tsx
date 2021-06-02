@@ -33,9 +33,7 @@ export function CanvasConnnection (props: OwnProps)
         from_node_position, to_node_position, from_connection_type, to_connection_type
     })
 
-    const intensity_weighting = 0.8
-    const intensity = props.intensity === undefined ? 1 : props.intensity
-    const opacity = (intensity * intensity_weighting) + (1 - intensity_weighting)
+    const opacity = props.intensity === undefined ? 1 : props.intensity
 
     const blur = props.blur || 0
 

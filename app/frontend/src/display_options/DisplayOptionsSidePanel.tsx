@@ -49,7 +49,6 @@ function _DisplayOptionsSidePanel (props: Props)
                     on_change={validity_filter =>
                     {
                         if (!validity_filter) return
-
                         props.set_validity_filter({ validity_filter })
                     }}
                 />
