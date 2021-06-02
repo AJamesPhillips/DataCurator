@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./DisplayOptionsSidePanel.css"
 import { AutocompleteText } from "../form/AutocompleteText"
 import { ACTIONS } from "../state/actions"
-import type { ValidityFilterTypes, ValidityFormattingTypes } from "../state/display_options/state"
+import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/display_options/state"
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
@@ -12,13 +12,13 @@ import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
 const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
-    validity_formatting: state.display_options.validity_formatting,
+    certainty_formatting: state.display_options.certainty_formatting,
 })
 
 
 const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
-    set_validity_formatting: ACTIONS.display.set_validity_formatting,
+    set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
 }
 
 
@@ -72,14 +72,14 @@ function _DisplayOptionsSidePanel (props: Props)
             <div style={{ display: "inline-flex" }}>
                 Opacity: <AutocompleteText
                     placeholder=""
-                    options={validity_formatting_display_options}
-                    selected_option_id={props.validity_formatting}
+                    options={certainty_formatting_display_options}
+                    selected_option_id={props.certainty_formatting}
                     allow_none={false}
-                    on_change={validity_formatting =>
+                    on_change={certainty_formatting =>
                     {
-                        if (!validity_formatting) return
+                        if (!certainty_formatting) return
 
-                        props.set_validity_formatting({ validity_formatting })
+                        props.set_certainty_formatting({ certainty_formatting })
                     }}
                 />
             </div>
@@ -88,7 +88,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
             <div className="description">
                 Show nodes and connection opacity as <i>
-                {validity_formatting_descriptions[props.validity_formatting]}</i> {description_of_certainty}.
+                {certainty_formatting_descriptions[props.certainty_formatting]}</i> {description_of_certainty}.
             </div>
         </p>
 
@@ -126,13 +126,13 @@ const validity_filter_descriptions: { [type in ValidityFilterTypes]: string } = 
 
 
 
-const validity_formatting_display_options: { id: ValidityFormattingTypes, title: string }[] = [
+const certainty_formatting_display_options: { id: CertaintyFormattingTypes, title: string }[] = [
     { id: "render_certainty_as_opacity", title: "Use certainty" },
     { id: "render_certainty_as_easier_opacity", title: "Use certainty (opacity >= 50%)" },
     { id: "render_100_opacity", title: "Always 100%" },
 ]
 
-const validity_formatting_descriptions: { [type in ValidityFormattingTypes]: string } = {
+const certainty_formatting_descriptions: { [type in CertaintyFormattingTypes]: string } = {
     render_certainty_as_opacity: "proportional to certainty",
     render_certainty_as_easier_opacity: "proportional to certainty but no lower than 50% (easier to see)",
     render_100_opacity: "always 100% (no transparency)",

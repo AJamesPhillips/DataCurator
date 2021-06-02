@@ -4,7 +4,7 @@ import type {
     WComponent, WComponentConnection,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import type { ValidityFilterOption, ValidityFormattingOption } from "../state/display_options/state"
+import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
 
 
 
@@ -111,13 +111,13 @@ interface CalcDisplayOpacityArgs
     is_highlighted?: boolean
     is_selected?: boolean
     is_current_item: boolean
-    validity_formatting: ValidityFormattingOption
+    certainty_formatting: CertaintyFormattingOption
 }
 export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 {
-    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item || args.validity_formatting.render_100_opacity) return 1
+    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item || args.certainty_formatting.render_100_opacity) return 1
 
-    const min50 = args.validity_formatting.render_certainty_as_easier_opacity
+    const min50 = args.certainty_formatting.render_certainty_as_easier_opacity
 
     return args.certainty === 1 ? 1 :
         (min50 ? rescale(args.certainty, 0.4, 0.7) : rescale(args.certainty, 0.1, 0.5))

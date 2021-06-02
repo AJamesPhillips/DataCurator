@@ -60,7 +60,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         validity_value,
         is_current_item: state.routing.item_id === props.id,
         is_editing: !state.display_options.consumption_formatting,
-        validity_formatting: state.display_options.derived_validity_formatting,
+        certainty_formatting: state.display_options.derived_certainty_formatting,
     }
 }
 
@@ -130,7 +130,7 @@ function _WComponentCanvasConnection (props: Props)
         is_editing: props.is_editing,
         certainty: validity_value.certainty,
         is_current_item,
-        validity_formatting: props.validity_formatting,
+        certainty_formatting: props.certainty_formatting,
     })
 
 

@@ -62,7 +62,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
         validity_filter: state.display_options.derived_validity_filter,
-        validity_formatting: state.display_options.derived_validity_formatting,
+        certainty_formatting: state.display_options.derived_certainty_formatting,
     }
 }
 
@@ -90,7 +90,7 @@ function _WComponentCanvasNode (props: Props)
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
         node_allowed_to_move,
-        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, validity_formatting, } = props
+        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, certainty_formatting, } = props
     const { change_route, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -110,7 +110,7 @@ function _WComponentCanvasNode (props: Props)
         is_highlighted,
         is_selected,
         is_current_item,
-        validity_formatting,
+        certainty_formatting: certainty_formatting,
     })
 
 

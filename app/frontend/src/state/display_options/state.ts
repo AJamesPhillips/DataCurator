@@ -31,8 +31,8 @@ export function bounding_rects_equal (br1: BoundingRect | undefined, br2: Boundi
 export type ValidityFilterTypes = "only_certain_valid" | "only_maybe_valid" | "maybe_invalid" | "show_invalid"
 export type ValidityFilterOption = {[type in ValidityFilterTypes]: boolean}
 
-export type ValidityFormattingTypes = "render_certainty_as_opacity" | "render_certainty_as_easier_opacity" | "render_100_opacity"
-export type ValidityFormattingOption = {[type in ValidityFormattingTypes]: boolean}
+export type CertaintyFormattingTypes = "render_certainty_as_opacity" | "render_certainty_as_easier_opacity" | "render_100_opacity"
+export type CertaintyFormattingOption = {[type in CertaintyFormattingTypes]: boolean}
 // export type ValidityToCertainty_TypeToMap = {[k in ValidityToCertaintyTypes] : ValidityToCertainty }
 
 
@@ -43,9 +43,9 @@ export interface DisplayOptionsState
 
     // Validity
     validity_filter: ValidityFilterTypes
-    validity_formatting: ValidityFormattingTypes
+    certainty_formatting: CertaintyFormattingTypes
     derived_validity_filter: ValidityFilterOption
-    derived_validity_formatting: ValidityFormattingOption
+    derived_certainty_formatting: CertaintyFormattingOption
 
     // not an option.  Move to a different part of the state object?
     canvas_bounding_rect: BoundingRect | undefined

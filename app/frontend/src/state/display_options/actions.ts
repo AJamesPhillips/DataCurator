@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { BoundingRect, ValidityFilterTypes, ValidityFormattingTypes } from "./state"
+import type { BoundingRect, ValidityFilterTypes, CertaintyFormattingTypes } from "./state"
 
 
 
@@ -77,21 +77,21 @@ export const is_set_validity_filter = (action: AnyAction): action is ActionSetVa
 
 
 
-interface SetValidityFormattingArgs
+interface SetCertaintyFormattingArgs
 {
-    validity_formatting: ValidityFormattingTypes
+    certainty_formatting: CertaintyFormattingTypes
 }
-interface ActionSetValidityFormatting extends Action, SetValidityFormattingArgs {}
+interface ActionSetCertaintyFormatting extends Action, SetCertaintyFormattingArgs {}
 
-const set_validity_formatting_type = "set_validity_formatting"
+const set_certainty_formatting_type = "set_certainty_formatting"
 
-const set_validity_formatting = (args: SetValidityFormattingArgs): ActionSetValidityFormatting =>
+const set_certainty_formatting = (args: SetCertaintyFormattingArgs): ActionSetCertaintyFormatting =>
 {
-    return { type: set_validity_formatting_type, ...args }
+    return { type: set_certainty_formatting_type, ...args }
 }
 
-export const is_set_validity_formatting = (action: AnyAction): action is ActionSetValidityFormatting => {
-    return action.type === set_validity_formatting_type
+export const is_set_certainty_formatting = (action: AnyAction): action is ActionSetCertaintyFormatting => {
+    return action.type === set_certainty_formatting_type
 }
 
 
@@ -101,5 +101,5 @@ export const display_actions = {
     update_canvas_bounding_rect,
     set_time_resolution,
     set_validity_filter,
-    set_validity_formatting,
+    set_certainty_formatting,
 }
