@@ -27,7 +27,7 @@ import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from ".
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 import { get_wcomponent_validity_value } from "../../shared/wcomponent/get_wcomponent_validity_value"
-import { bounded, rescale } from "../../shared/utils/bounded"
+import { rescale } from "../../shared/utils/bounded"
 
 
 
@@ -64,6 +64,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         editing: !state.display_options.consumption_formatting,
         node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
         validity_filter: state.display_options.derived_validity_filter,
+        validity_formatting: state.display_options.derived_validity_formatting,
     }
 }
 
@@ -91,7 +92,7 @@ function _WComponentCanvasNode (props: Props)
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
         node_allowed_to_move,
-        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, } = props
+        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, validity_formatting, } = props
     const { clicked_wcomponent, change_route, clear_selected_wcomponents, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -113,7 +114,7 @@ function _WComponentCanvasNode (props: Props)
     // TODO next:
     // * extract this to a function to be used by connection
     // * Add another `validity_filter` option of hide_maybe_invalid
-    const validity_opacity: number = (is_highlighted || is_selected || is_current_item) ? 1
+    const validity_opacity: number = (is_highlighted || is_selected || is_current_item || validity_formatting.render_100_opacity) ? 1
         : (validity_value.certainty === 1 ? 1 : rescale(validity_value.certainty, 0.1, 0.5))
 
 
