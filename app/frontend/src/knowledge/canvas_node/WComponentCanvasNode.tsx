@@ -11,6 +11,7 @@ import {
     connection_terminal_directions,
     wcomponent_has_legitimate_non_empty_state,
     wcomponent_is_action,
+    wcomponent_is_judgement_or_objective,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
@@ -180,7 +181,7 @@ function _WComponentCanvasNode (props: Props)
 
     const show_validity_value = props.is_editing || is_highlighted || is_current_item
     const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
-        || wcomponent_has_legitimate_non_empty_state(wcomponent)
+        || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent)
         || is_highlighted || is_current_item
 
 
