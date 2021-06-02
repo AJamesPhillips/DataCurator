@@ -18,6 +18,7 @@ interface OwnProps
     get_handle_ms: (state: RootState) => number,
     change_handle_ms: (new_handle_ms: number) => void,
     data_set_name: string
+    title: string
 }
 
 
@@ -77,7 +78,7 @@ function _TimeSlider (props: Props)
     }
 
 
-    return <div className="time_slider">
+    return <div className="time_slider" title={props.title}>
         <div className="slider_container">
             <input
                 type="button"

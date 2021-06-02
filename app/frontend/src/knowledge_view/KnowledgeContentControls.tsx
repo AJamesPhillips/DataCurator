@@ -42,10 +42,11 @@ function _KnowledgeContentControls (props: Props)
 
     return <div>
         <TimeSlider
-            events={created_events}
-            get_handle_ms={state => state.routing.args.created_at_ms}
-            change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
-            data_set_name="knowledge_created_at_datetimes"
+            events={sim_events}
+            get_handle_ms={state => state.routing.args.sim_ms}
+            change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
+            data_set_name="knowledge_sim_datetimes"
+            title="Simulation datetimes"
         />
         <Button
             is_left={true}
@@ -59,10 +60,11 @@ function _KnowledgeContentControls (props: Props)
         <TimeResolutionOptions extra_styles={{ display: "inline-block", width: 100 }} />
 
         <TimeSlider
-            events={sim_events}
-            get_handle_ms={state => state.routing.args.sim_ms}
-            change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
-            data_set_name="knowledge_sim_datetimes"
+            events={created_events}
+            get_handle_ms={state => state.routing.args.created_at_ms}
+            change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
+            data_set_name="knowledge_created_at_datetimes"
+            title="Created at datetimes"
         />
     </div>
 }
