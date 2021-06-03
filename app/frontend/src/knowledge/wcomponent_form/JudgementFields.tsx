@@ -1,8 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteText } from "../../form/AutocompleteText"
+import { AutoCompleteOption, AutocompleteText } from "../../form/AutocompleteText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
+import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {
     judgement_operators,
     WComponentJudgement,
@@ -56,6 +57,16 @@ function _JudgementFields (props: Props)
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    let boolean_options: AutoCompleteOption[] = []
+    if (target_VAPs_represent.boolean)
+    {
+        const result = get_boolean_representation({ wcomponent: target_wcomponent, append_boolean: true })
+
+        boolean_options = [
+            { id: "True", title: result.true },
+            { id: "False", title: result.false }
+        ]
+    }
 
 
     return <p>
@@ -92,7 +103,7 @@ function _JudgementFields (props: Props)
                 {target_VAPs_represent.boolean && <AutocompleteText
                     placeholder="Value..."
                     selected_option_id={wcomponent.judgement_comparator_value}
-                    options={[{ id: "True", title: "True" }, { id: "False", title: "False" }]}
+                    options={boolean_options}
                     on_change={judgement_comparator_value =>
                         {
                         if (!judgement_comparator_value) return

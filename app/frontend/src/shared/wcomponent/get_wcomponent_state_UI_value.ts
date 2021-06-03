@@ -44,7 +44,7 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
 
 function get_display_strings (wcomponent: WComponent, possibilities: CurrentValuePossibility[])
 {
-    const boolean_representation = get_boolean_representation(wcomponent)
+    const boolean_representation = get_boolean_representation({ wcomponent })
 
     const value_strings: string[] = []
     const probability_strings: string[] = []
@@ -69,11 +69,17 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
 
 
 
-function get_boolean_representation (wcomponent: WComponent)
+export function get_boolean_representation (args: { wcomponent: WComponent | undefined, append_boolean?: boolean })
 {
-    let boolean_true_str = "True"
-    let boolean_false_str = "False"
-    if (wcomponent_is_statev2(wcomponent))
+    const { wcomponent, append_boolean } = args
+
+
+    let boolean_true_str = ""
+    let boolean_false_str = ""
+
+
+    if (!wcomponent) ""
+    else if (wcomponent_is_statev2(wcomponent))
     {
         boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
         boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
@@ -83,6 +89,11 @@ function get_boolean_representation (wcomponent: WComponent)
         boolean_true_str = "Completed"
         boolean_false_str = "Incomplete"
     }
+
+
+    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)": boolean_true_str) : "True"
+    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)": boolean_false_str) : "False"
+
 
     return { true: boolean_true_str, false: boolean_false_str }
 }
