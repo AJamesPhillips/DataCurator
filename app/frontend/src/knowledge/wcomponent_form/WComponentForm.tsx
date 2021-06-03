@@ -274,7 +274,10 @@ function _WComponentForm (props: Props)
 
         {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
-                <ValueAndPredictionSets
+                {VAPs_represent.undefined && <div>
+                    Set subtype
+                </div>}
+                {!VAPs_represent.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
                     VAPs_represent={VAPs_represent}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
@@ -282,7 +285,7 @@ function _WComponentForm (props: Props)
                     {
                         upsert_wcomponent({ values_and_prediction_sets })
                     }}
-                />
+                />}
             </p>
 
             <hr />

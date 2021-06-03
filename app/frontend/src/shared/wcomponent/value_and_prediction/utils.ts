@@ -107,5 +107,6 @@ export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VA
 export function subtype_to_VAPsRepresent (subtype: WComponentStateV2SubType): VAPsRepresent
 {
     return subtype === "boolean" ? { boolean: true }
-    : (subtype === "number" ? { number: true } : { other: true })
+    : (subtype === "number" ? { number: true }
+        : (subtype === "other" ? { other: true } : { undefined: true }))
 }

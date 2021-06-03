@@ -6,16 +6,24 @@ export type VAPsRepresent =
     boolean: true
     number?: false
     other?: false
+    undefined?: false
 } |
 {
     boolean?: false
     number: true
     other?: false
+    undefined?: false
 } |
 {
     boolean?: false
     number?: false
     other: true
+    undefined?: false
+} | {
+    boolean?: false
+    number?: false
+    other?: false
+    undefined?: true
 }
 
 
