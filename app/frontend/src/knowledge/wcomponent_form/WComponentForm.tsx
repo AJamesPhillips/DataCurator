@@ -275,7 +275,7 @@ function _WComponentForm (props: Props)
         {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
                 {VAPs_represent.undefined && <div>
-                    Set subtype
+                    Values: Set subtype to view
                 </div>}
                 {!VAPs_represent.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
