@@ -175,6 +175,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
         + ((props.is_editing || is_highlighted || is_current_item) ? " compact_display " : "")
+        // + " border_color_red "
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
 

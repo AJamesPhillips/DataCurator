@@ -6,6 +6,11 @@
     white-space: initial;
     overflow: initial;
 }
+.wcomponent_canvas_node.connectable_canvas_node.graph_node.border_color_red .node_main_content
+{
+    border-color: red;
+}
+
 
 .node_title
 {
