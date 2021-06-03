@@ -78,7 +78,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
         const class_name__not_collapsable = disable_collapsable ? "not_collapsable" : ""
         const class_name__expanded = internal__expanded ? "expanded" : ""
         const extra_class_names = this.props.extra_class_names || ""
-        const class_name = `editable_list ${class_name__not_collapsable} ${class_name__expanded} ${extra_class_names}`
+        const class_name = `editable_list_entry ${class_name__not_collapsable} ${class_name__expanded} ${extra_class_names}`
 
 
         const date_on_change = (new_custom_created_at: Date | undefined) =>

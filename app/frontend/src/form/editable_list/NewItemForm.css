@@ -15,7 +15,7 @@
     100% { color: initial; }
 }
 
-.new_item_form > .editable_list {
+.new_item_form > .editable_list_entry {
     animation: morph_border_color 1s linear;
     animation-iteration-count: infinite;
 }
