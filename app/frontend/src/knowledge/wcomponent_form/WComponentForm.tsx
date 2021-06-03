@@ -38,7 +38,7 @@ import { JudgementFields } from "./JudgementFields"
 import { useEffect, useRef } from "preact/hooks"
 import { WComponentEventFormFields } from "./WComponentEventFormFields"
 import type { UIValue, VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
-import { subtype_to_VAPsRepresent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { subtype_to_VAPsRepresent, wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -110,14 +110,14 @@ function _WComponentForm (props: Props)
 
     const orig_validity_predictions = wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []
 
+
+    const VAPs_represent = wcomponent_VAPs_represent(wcomponent)
     let UI_value: UIValue | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
-    let VAPs_represent: VAPsRepresent = { boolean: true }
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
-        if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
     }
 
 

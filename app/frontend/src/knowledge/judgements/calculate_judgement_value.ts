@@ -1,7 +1,8 @@
 import { get_wcomponent_state_value } from "../../shared/wcomponent/get_wcomponent_state_value"
 import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
-import { WComponent, wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
+import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -50,8 +51,8 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     if (manual !== undefined) return manual
 
 
-    const is_num = wcomponent_is_statev2(target_wcomponent) && target_wcomponent.subtype === "number"
-    const coerced_comparator = is_num ? parseFloat(comparator || "") : comparator
+    const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    const coerced_comparator = target_VAPs_represent.number ? parseFloat(comparator || "") : comparator
 
 
     let result = undefined
