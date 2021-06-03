@@ -23,6 +23,14 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 {
     const { wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = args
 
+    const {
+        judgement_operator: operator,
+        judgement_comparator_value: comparator,
+        judgement_manual: manual,
+    } = wcomponent
+    if (manual !== undefined) return manual
+
+
     if (!target_wcomponent) return undefined
 
 
@@ -42,13 +50,6 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     }
     const current_value = possibilities[0]
     const value = current_value!.value
-
-    const {
-        judgement_operator: operator,
-        judgement_comparator_value: comparator,
-        judgement_manual: manual,
-    } = wcomponent
-    if (manual !== undefined) return manual
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
