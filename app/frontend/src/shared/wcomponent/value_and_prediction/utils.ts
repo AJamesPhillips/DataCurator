@@ -114,9 +114,15 @@ export function subtype_to_VAPsRepresent (subtype: WComponentStateV2SubType): VA
 
 
 
-export function wcomponent_VAPs_represent (wcomponent: WComponent)
+export function wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
 {
-    let VAPs_represent: VAPsRepresent = { boolean: true }
-    if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
+    let VAPs_represent: VAPsRepresent = { undefined: true }
+
+    if (wcomponent)
+    {
+        VAPs_represent = { boolean: true }
+        if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
+    }
+
     return VAPs_represent
 }

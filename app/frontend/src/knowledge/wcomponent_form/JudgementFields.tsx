@@ -8,6 +8,7 @@ import {
     WComponentJudgement,
 } from "../../shared/wcomponent/interfaces/judgement"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -53,6 +54,10 @@ function _JudgementFields (props: Props)
 
     const judgement = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 
+
+    const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+
+
     return <p>
         <WComponentFromTo
             connection_terminal_description="Target"
@@ -70,7 +75,9 @@ function _JudgementFields (props: Props)
                     options={judgement_operator_options}
                     on_change={option_id => upsert_wcomponent({ judgement_operator: option_id })}
                     />
-                &nbsp; <EditableTextSingleLine
+                &nbsp;
+
+                {!target_VAPs_represent.boolean && <EditableTextSingleLine
                     placeholder="Value..."
                     value={wcomponent.judgement_comparator_value || ""}
                     on_change={new_value =>
@@ -80,7 +87,20 @@ function _JudgementFields (props: Props)
                         if (judgement_comparator_value === wcomponent.judgement_comparator_value) return
                         upsert_wcomponent({ judgement_comparator_value })
                     }}
-                />
+                />}
+
+                {target_VAPs_represent.boolean && <AutocompleteText
+                    placeholder="Value..."
+                    selected_option_id={wcomponent.judgement_comparator_value}
+                    options={[{ id: "True", title: "True" }, { id: "False", title: "False" }]}
+                    on_change={judgement_comparator_value =>
+                        {
+                        if (!judgement_comparator_value) return
+
+                        if (judgement_comparator_value === wcomponent.judgement_comparator_value) return
+                        upsert_wcomponent({ judgement_comparator_value })
+                    }}
+                />}
             </div>
         </p>
 
