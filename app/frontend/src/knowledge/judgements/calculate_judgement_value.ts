@@ -52,14 +52,16 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-    const coerced_comparator = target_VAPs_represent.number ? parseFloat(comparator || "") : comparator
+    const coerced_comparator = target_VAPs_represent.number ? parseFloat(comparator || "")
+        : (target_VAPs_represent.boolean ? comparator === "True" || (comparator === "False" ? false : undefined)
+        : comparator)
 
 
     let result = undefined
     // purposefully using abstract equality comparison to accommodate strings, numbers etc
     if (operator === "==") result = value == coerced_comparator
     else if (operator === "!=") result = value != coerced_comparator
-    else if (value === null) result = undefined
+    else if (value === null || coerced_comparator === undefined) result = undefined
     else if (operator === "<") result = value < coerced_comparator
     else if (operator === "<=") result = value <= coerced_comparator
     else if (operator === ">") result = value > coerced_comparator
