@@ -88,9 +88,19 @@ function _PredictionList (props: Props)
     })
 
 
+    const title = editing
+        ? get_items_descriptor(item_descriptor, predictions.length, editing)
+        : item_descriptor
+
+
+    const show_futures = editing || future_items.length > 0
+    const show_presents = editing || present_items.length > 0
+    const show_pasts = editing || past_items.length > 0
+
+
     return <div>
         <ListHeader
-            items_descriptor={get_items_descriptor(item_descriptor, predictions.length, editing)}
+            items_descriptor={title}
             on_click_header={undefined}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
@@ -115,30 +125,30 @@ function _PredictionList (props: Props)
         </div> : null}
 
         {predictions.length > 0 && <div>
-            <ExpandableList
+            {show_futures && <ExpandableList
                 content={render_future_list_content}
                 item_descriptor=""
                 items_descriptor={get_items_descriptor("Future", future_items.length, editing)}
                 disable_collapsed={true}
-            />
+            />}
 
-            <hr />
+            {(show_futures || show_presents) && <hr />}
 
-            <ExpandableList
+            {show_presents && <ExpandableList
                 content={render_present_list_content}
                 item_descriptor=""
                 items_descriptor={get_items_descriptor("Present", present_items.length, editing)}
                 disable_collapsed={true}
-            />
+            />}
 
-            <hr />
+            {show_presents && show_pasts && <hr />}
 
-            <ExpandableList
+            {show_pasts && <ExpandableList
                 content={render_past_list_content}
                 item_descriptor=""
                 items_descriptor={get_items_descriptor("Past", past_items.length, editing)}
                 disable_collapsed={true}
-            />
+            />}
         </div>}
     </div>
 

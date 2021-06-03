@@ -104,9 +104,19 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     }
 
 
+    const title = editing
+        ? get_items_descriptor(item_descriptor, values_and_prediction_sets.length, editing)
+        : item_descriptor
+
+
+    const show_futures = editing || future_items.length > 0
+    const show_presents = editing || present_items.length > 0
+    const show_pasts = editing || past_items.length > 0
+
+
     return <div className="value_and_prediction_sets">
         <ListHeader
-            items_descriptor={get_items_descriptor(item_descriptor, values_and_prediction_sets.length, editing)}
+            items_descriptor={title}
             on_click_header={undefined}
             other_content={() => !editing ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
@@ -130,30 +140,30 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             Hidden ({invalid_items.length})
         </div> : null}
 
-        <ExpandableList
+        {show_futures && <ExpandableList
             content={render_future_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Future", sorted_grouped_future_versioned_VAP_sets, future_items, editing)}
             disable_collapsed={true}
-        />
+        />}
 
-        <hr />
+        {(show_futures || show_presents) && <hr />}
 
-        <ExpandableList
+        {show_presents && <ExpandableList
             content={render_present_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Present", sorted_grouped_present_versioned_VAP_sets, present_items, editing)}
             disable_collapsed={true}
-        />
+        />}
 
-        <hr />
+        {show_presents && show_pasts && <hr />}
 
-        <ExpandableList
+        {show_pasts && <ExpandableList
             content={render_past_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Past", sorted_grouped_past_versioned_VAP_sets, past_items, editing)}
             disable_collapsed={true}
-        />
+        />}
     </div>
 }
 
@@ -191,6 +201,8 @@ function validate_VAP_sets_for_VAPs_represent (VAP_sets: StateValueAndPrediction
 
 function count_and_versions (title: string, grouped_items: {}[], all_versions: {}[], editing: boolean)
 {
+    if (!editing) return title
+
     if (grouped_items.length === all_versions.length)
     {
         return get_items_descriptor(title, grouped_items.length, editing)
