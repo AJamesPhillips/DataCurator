@@ -22,6 +22,7 @@ type Props = ConnectedProps<typeof connector>
 function _ObjectivesContentControls (props: Props)
 {
     return <TimeSlider
+        title="Created at datetimes"
         get_handle_ms={state => state.routing.args.created_at_ms}
         change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
         events={props.events}
