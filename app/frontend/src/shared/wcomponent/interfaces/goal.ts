@@ -16,7 +16,7 @@ export type GoalStatuses = "potential" | "prioritised" | "active" | GoalInactive
 export type GoalInactiveStatuses = "completed" | "invalid" | "rejected"
 
 
-export interface WComponentGoal extends WComponentNodeBase
+export interface WComponentNodeGoal extends WComponentNodeBase
 {
     type: "goal"
     status: GoalStatuses

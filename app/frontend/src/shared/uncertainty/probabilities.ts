@@ -15,6 +15,8 @@ interface ProbabilityOption
 // https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/955239/NERVTAG_paper_on_variant_of_concern__VOC__B.1.1.7.pdf
 // https://www.reddit.com/r/coolguides/comments/ethzeg/the_phia_probability_yardstick_used_by_the_uk/
 // https://www.reddit.com/r/coolguides/comments/etcbqz/perceptions_of_probability/
+// https://github.com/zonination/perceptions
+// https://web.archive.org/web/20120128092004/https://www.cia.gov/library/center-for-the-study-of-intelligence/csi-publications/books-and-monographs/psychology-of-intelligence-analysis/art15.html
 //
 // Simplified version in quantified_language
 export const probabilities: ProbabilityOption[] = [

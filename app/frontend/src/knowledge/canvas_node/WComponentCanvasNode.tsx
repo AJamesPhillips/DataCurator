@@ -9,9 +9,12 @@ import type { CanvasPoint } from "../../canvas/interfaces"
 import {
     connection_terminal_attributes,
     connection_terminal_directions,
+    WComponent,
     wcomponent_has_legitimate_non_empty_state,
     wcomponent_is_action,
+    wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_objective,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
@@ -173,11 +176,12 @@ function _WComponentCanvasNode (props: Props)
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
-        + (wcomponent_is_action(wcomponent) ? " node_is_action " : "")
+        + ` node_is_type_${wcomponent.type} `
         + ((props.is_editing || is_highlighted || is_current_item) ? " compact_display " : "")
         // + " border_color_red "
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
+    const color = get_wcomponent_color(wcomponent)
 
 
     const show_validity_value = props.is_editing || is_highlighted || is_current_item
@@ -211,7 +215,7 @@ function _WComponentCanvasNode (props: Props)
         extra_node_styles={{ opacity: validity_opacity }}
         unlimited_width={false}
         glow={glow}
-        color={wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)" : ""}
+        color={color}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
@@ -257,3 +261,11 @@ connection_terminal_attributes.forEach(attribute =>
         terminals_without_label.push({ type, style: connection_style, label: "" })
     })
 })
+
+
+
+function get_wcomponent_color (wcomponent: WComponent)
+{
+    return wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)"
+        : ((wcomponent_is_goal(wcomponent) /* || wcomponent_is_objective(wcomponent) */) ? "rgb(207, 255, 198)" : "")
+}

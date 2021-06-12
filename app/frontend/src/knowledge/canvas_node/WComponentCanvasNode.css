@@ -48,9 +48,13 @@
     z-index: 100;
 }
 
-.node_is_action > .node_main_content
+.node_is_type_action > .node_main_content
 {
     box-shadow: inset orange 0px 0px 5px 3px;
+}
+.node_is_type_goal > .node_main_content/*, .node_is_type_objective > .node_main_content*/
+{
+    box-shadow: inset #67c767 0px 0px 5px 3px;
 }
 
 
