@@ -20,6 +20,7 @@ export function get_derived_starting_state (): DerivedState
             objective: new Set(),
             counterfactual: new Set(),
             goal: new Set(),
+            prioritisation: new Set(),
         },
         knowledge_views: [],
 

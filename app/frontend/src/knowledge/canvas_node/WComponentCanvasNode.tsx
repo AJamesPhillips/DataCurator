@@ -14,7 +14,6 @@ import {
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_objective,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"

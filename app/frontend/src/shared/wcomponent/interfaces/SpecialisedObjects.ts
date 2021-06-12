@@ -15,6 +15,7 @@ import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentPrioritisation } from "./priorities"
 
 
 
@@ -27,7 +28,7 @@ export interface Perception extends Base
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement | WComponentPrioritisation
 export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 

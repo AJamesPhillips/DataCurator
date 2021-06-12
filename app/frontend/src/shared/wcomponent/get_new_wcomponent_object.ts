@@ -2,6 +2,7 @@ import type { CreationContextState } from "../creation_context/state"
 import { get_new_created_ats } from "../utils/datetime"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
+import type { WComponentPrioritisation } from "./interfaces/priorities"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "./interfaces/state"
 import type { WComponentBase } from "./interfaces/wcomponent_base"
@@ -56,6 +57,18 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
             type: args.type, // only added to remove type warning
         }
         wcomponent = statev2
+    }
+    else if (args.type === "prioritisation")
+    {
+        const prioritisation: WComponentPrioritisation = {
+            ...base,
+            goals: {},
+            explanation: "",
+            datetime: { min: base.custom_created_at || base.created_at },
+            ...args,
+            type: args.type, // only added to remove type warning
+        }
+        wcomponent = prioritisation
     }
     else
     {
