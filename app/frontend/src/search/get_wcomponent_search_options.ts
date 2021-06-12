@@ -1,4 +1,4 @@
-import type { AutoCompleteOption } from "../form/AutocompleteText"
+import type { AutocompleteOption } from "../form/AutocompleteText"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import type { WComponent, WComponentsById } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
@@ -15,7 +15,7 @@ interface GetWcomponentSearchOptionsArgs
 }
 
 
-export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutoCompleteOption[]
+export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutocompleteOption[]
 {
     const { wcomponents: wcs, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms } = args
 

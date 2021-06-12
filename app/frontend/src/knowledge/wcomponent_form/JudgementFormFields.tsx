@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutoCompleteOption, AutocompleteText } from "../../form/AutocompleteText"
+import { AutocompleteOption, AutocompleteText } from "../../form/AutocompleteText"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {
@@ -57,7 +57,7 @@ function _JudgementFormFields (props: Props)
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-    let boolean_options: AutoCompleteOption[] = []
+    let boolean_options: AutocompleteOption[] = []
     if (target_VAPs_represent.boolean)
     {
         const result = get_boolean_representation({ wcomponent: target_wcomponent, append_boolean: true })

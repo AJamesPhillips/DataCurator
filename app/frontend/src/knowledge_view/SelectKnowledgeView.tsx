@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutoCompleteOption, AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteOption, AutocompleteText } from "../form/AutocompleteText"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 
@@ -41,7 +41,7 @@ function _SelectKnowledgeView (props: Props)
     } = props
 
 
-    const options: AutoCompleteOption[] = knowledge_views
+    const options: AutocompleteOption[] = knowledge_views
         .filter(({ id }) => !exclude_ids.has(id))
         .map(({ id, title }) => ({ id, title }))
         .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)

@@ -2,11 +2,11 @@ import { h } from "preact"
 
 import "./SearchWindow.css"
 import { Modal } from "../modal/Modal"
-import { AutoCompleteProps, AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteProps, AutocompleteText } from "../form/AutocompleteText"
 
 
 
-interface OwnProps extends AutoCompleteProps {
+interface OwnProps extends AutocompleteProps {
     search_window_title: string
     start_expanded?: undefined
 }

@@ -6,19 +6,19 @@ import { sort_list } from "../shared/utils/sort"
 
 
 
-export interface AutoCompleteOption
+export interface AutocompleteOption
 {
     id: string | undefined
     title: string
     subtitle?: string
 }
-interface InternalAutoCompleteOption extends AutoCompleteOption
+interface InternalAutocompleteOption extends AutocompleteOption
 {
     total_text: string
 }
 
 
-export interface AutoCompleteProps <E extends AutoCompleteOption = AutoCompleteOption>
+export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
 {
     placeholder: string
     selected_option_id: string | undefined
@@ -36,7 +36,7 @@ export interface AutoCompleteProps <E extends AutoCompleteOption = AutoCompleteO
 
 
 
-interface OwnProps <E extends AutoCompleteOption> extends AutoCompleteProps <E> {}
+interface OwnProps <E extends AutocompleteOption> extends AutocompleteProps <E> {}
 
 
 interface State
@@ -46,10 +46,10 @@ interface State
     highlighted_option_index: number
 }
 
-export class AutocompleteText <E extends AutoCompleteOption> extends Component <OwnProps<E>, State>
+export class AutocompleteText <E extends AutocompleteOption> extends Component <OwnProps<E>, State>
 {
     private prepared_targets: (Fuzzysort.Prepared | undefined)[] = []
-    private options: InternalAutoCompleteOption[] = []
+    private options: InternalAutocompleteOption[] = []
 
     constructor (props: OwnProps<E>)
     {
@@ -66,7 +66,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
     }
 
 
-    async handle_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutoCompleteOption[])
+    async handle_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[])
     {
         const key = e.key
 
@@ -129,7 +129,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         const map_target_to_score: { [target: string]: number } = {}
         results.forEach(({ target, score }) => map_target_to_score[target] = score)
 
-        const options_to_display: InternalAutoCompleteOption[] = sort_list(this.options, o =>
+        const options_to_display: InternalAutocompleteOption[] = sort_list(this.options, o =>
             {
                 const score = map_target_to_score[o.total_text]
                 return score === undefined ? -10000 : score
@@ -171,7 +171,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
         } = this.props
 
 
-        const is_option_wrapper_highlighted = (option: InternalAutoCompleteOption, index: number): boolean =>
+        const is_option_wrapper_highlighted = (option: InternalAutocompleteOption, index: number): boolean =>
         {
             const { highlighted_option_index } = this.state
             return index === highlighted_option_index
@@ -223,7 +223,7 @@ export class AutocompleteText <E extends AutoCompleteOption> extends Component <
 }
 
 
-function get_valid_value (options: InternalAutoCompleteOption[], value_str: string): InternalAutoCompleteOption | undefined
+function get_valid_value (options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined
 {
     const lower_value_str = value_str.toLowerCase()
 
@@ -238,8 +238,8 @@ function get_valid_value (options: InternalAutoCompleteOption[], value_str: stri
 interface OptionsOwnProps
 {
     editing: boolean
-    options_to_display: InternalAutoCompleteOption[]
-    is_option_wrapper_highlighted: (option: InternalAutoCompleteOption, index: number) => boolean
+    options_to_display: InternalAutocompleteOption[]
+    is_option_wrapper_highlighted: (option: InternalAutocompleteOption, index: number) => boolean
     conditional_on_change: (option_id: string | undefined) => void
     set_highlighted_option_index: (index: number) => void
     on_mouse_over_option: (option_id: string | undefined) => void
@@ -274,18 +274,18 @@ function Options (props: OptionsOwnProps)
 
 
 
-function prepare_options_and_targets (options: AutoCompleteOption[], allow_none?: boolean)
+function prepare_options_and_targets (options: AutocompleteOption[], allow_none?: boolean)
 {
     const new_options = [...options]
 
     if (allow_none)
     {
         // allow user to clear the current value / select none
-        const option_none: AutoCompleteOption = { id: undefined, title: "-" }
+        const option_none: AutocompleteOption = { id: undefined, title: "-" }
         new_options.unshift(option_none as any)
     }
 
-    const new_internal_options: InternalAutoCompleteOption[] = new_options.map(o => ({
+    const new_internal_options: InternalAutocompleteOption[] = new_options.map(o => ({
         ...o, total_text: o.title + " " + o.subtitle
     }))
 
