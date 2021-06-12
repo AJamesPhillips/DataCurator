@@ -1,3 +1,4 @@
+import { get_empty_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import type { DerivedState } from "./State"
 
 
@@ -7,21 +8,7 @@ export function get_derived_starting_state (): DerivedState
     return {
         perceptions: [],
         wcomponents: [],
-        wcomponent_ids_by_type: {
-            event: new Set(),
-            state: new Set(),
-            statev2: new Set(),
-            process: new Set(),
-            action: new Set(),
-            actor: new Set(),
-            causal_link: new Set(),
-            relation_link: new Set(),
-            judgement: new Set(),
-            objective: new Set(),
-            counterfactual: new Set(),
-            goal: new Set(),
-            prioritisation: new Set(),
-        },
+        wcomponent_ids_by_type: get_empty_wcomponent_ids_by_type(),
         knowledge_views: [],
 
         base_knowledge_view: undefined,

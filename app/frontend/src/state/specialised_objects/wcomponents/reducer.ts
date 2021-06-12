@@ -17,6 +17,11 @@ import type { RootState } from "../../State"
 import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
 import type { CreationContextState } from "../../../shared/creation_context/state"
 import { subtype_to_VAPsRepresent } from "../../../shared/wcomponent/value_and_prediction/utils"
+// Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
+// import {
+//     update_wcomponent_ids_by_type_on_upserting_wcomponent,
+//     update_wcomponent_ids_by_type_on_deleting_wcomponent,
+// } from "../../derived/update_wcomponent_ids_by_type"
 
 
 
@@ -30,24 +35,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
 
         state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent_id, wcomponent)
-
-
-        const existing = state.specialised_objects.wcomponents_by_id[wcomponent_id]
-        if (existing && existing.type !== wcomponent.type)
-        {
-            const existing_set = new Set(state.derived.wcomponent_ids_by_type[existing.type])
-            existing_set.delete(wcomponent_id)
-            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", existing.type, existing_set)
-        }
-
-
-        const set = new Set(state.derived.wcomponent_ids_by_type[wcomponent.type])
-        // id may already be in this set if it is an update rather than an insert, and if they update is of a different field
-        if (!set.has(wcomponent_id))
-        {
-            set.add(wcomponent_id)
-            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", wcomponent.type, set)
-        }
+        // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
+        // state = update_wcomponent_ids_by_type_on_upserting_wcomponent(state, wcomponent)
     }
 
 
@@ -63,10 +52,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
             delete map[wcomponent_id]
             state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
 
-
-            const set = new Set(state.derived.wcomponent_ids_by_type[existing.type])
-            set.delete(wcomponent_id)
-            state = update_subsubstate(state, "derived", "wcomponent_ids_by_type", existing.type, set)
+            // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
+            // state = update_wcomponent_ids_by_type_on_deleting_wcomponent(state, existing)
         }
     }
 

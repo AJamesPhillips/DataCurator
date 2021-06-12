@@ -5,7 +5,7 @@ import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
 import { knowledge_views_derived_reducer } from "../specialised_objects/knowledge_views/derived_reducer"
 import type { RootState } from "../State"
-import type { WComponentIdsByType } from "./State"
+import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 
 
 
@@ -33,10 +33,16 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         state = update_substate(state, "derived", "wcomponents", wcomponents)
 
 
-        if (Object.keys(initial_state.specialised_objects.wcomponents_by_id).length === 0)
-        {
-            state = update_wcomponent_ids_by_type(state)
-        }
+        // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
+        // if (Object.keys(initial_state.specialised_objects.wcomponents_by_id).length === 0)
+        // {
+        //     // This will only run the first time 1 or more wcomponents is added, usually this means on the
+        //     // first loading of the application data when the `replace_all_specialised_objects` action
+        //     // is fired.
+        const ids = Object.keys(state.specialised_objects.wcomponents_by_id)
+        const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state, ids)
+        state = update_substate(state, "derived", "wcomponent_ids_by_type", wcomponent_ids_by_type)
+        // }
 
 
         const judgement_ids_by_target_id = update_judgement_ids_by_target_id(state)
@@ -49,34 +55,6 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 
     return state
-}
-
-
-
-function update_wcomponent_ids_by_type (state: RootState)
-{
-    const wcomponent_ids_by_type: WComponentIdsByType = {
-        event: new Set(),
-        state: new Set(),
-        statev2: new Set(),
-        process: new Set(),
-        action: new Set(),
-        actor: new Set(),
-        causal_link: new Set(),
-        relation_link: new Set(),
-        judgement: new Set(),
-        objective: new Set(),
-        counterfactual: new Set(),
-        goal: new Set(),
-        prioritisation: new Set(),
-    }
-
-    state.derived.wcomponents.forEach(wcomponent =>
-    {
-        wcomponent_ids_by_type[wcomponent.type].add(wcomponent.id)
-    })
-
-    return update_substate(state, "derived", "wcomponent_ids_by_type", wcomponent_ids_by_type)
 }
 
 

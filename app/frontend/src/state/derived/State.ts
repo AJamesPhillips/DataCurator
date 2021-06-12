@@ -15,6 +15,7 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
     derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wc_id_counterfactuals_map: WcIdCounterfactualsMap
+    wc_ids_by_type: WComponentIdsByType
 }
 
 

@@ -11,6 +11,7 @@ import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/wcomponent/interfaces/knowledge_view"
+import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 
 
 
@@ -95,17 +96,17 @@ function get_knowledge_view (state: RootState, id: string)
 
 function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv?: KnowledgeView)
 {
-    const { current_UI_knowledge_view: current_UI_kv } = state.derived
-
     if (!current_kv) return undefined
 
-    const derived_wc_id_map = get_derived_wc_id_map(current_UI_kv, current_kv, intial_state, state)
+    const derived_wc_id_map = get_derived_wc_id_map(current_kv, intial_state, state)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
+    const wc_ids_by_type = get_wcomponent_ids_by_type(state, Object.keys(derived_wc_id_map))
 
     const current_UI_knowledge_view: DerivedUIKnowledgeView = {
         ...current_kv,
         derived_wc_id_map,
         wc_id_counterfactuals_map,
+        wc_ids_by_type,
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_UI_knowledge_view as any).wc_id_map
@@ -115,28 +116,17 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
 
 
 
-function get_derived_wc_id_map (current_UI_kv: DerivedUIKnowledgeView | undefined, current_kv: KnowledgeView, intial_state: RootState, state: RootState)
+function get_derived_wc_id_map (current_kv: KnowledgeView, intial_state: RootState, state: RootState)
 {
     const to_compose: KnowledgeViewWComponentIdEntryMap[] = []
-    let previous_update = false
-
-
-    if (current_UI_kv) to_compose.push(current_UI_kv.derived_wc_id_map)
-    else previous_update = true
-
 
     const foundation_knowledge_view_ids = current_kv.foundation_knowledge_view_ids || []
 
     foundation_knowledge_view_ids.forEach(id =>
     {
-        const initial_kv = get_knowledge_view(intial_state, id)
         const new_kv = get_knowledge_view(state, id)
 
-        if (new_kv && (previous_update || !initial_kv || initial_kv.wc_id_map !== new_kv.wc_id_map))
-        {
-            to_compose.push(new_kv.wc_id_map)
-            previous_update = true
-        }
+        if (new_kv) to_compose.push(new_kv.wc_id_map)
     })
 
 
