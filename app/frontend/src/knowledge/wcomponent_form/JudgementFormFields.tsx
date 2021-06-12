@@ -46,7 +46,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _JudgementFields (props: Props)
+function _JudgementFormFields (props: Props)
 {
     const { wcomponent, upsert_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
 
@@ -138,7 +138,7 @@ function _JudgementFields (props: Props)
     </p>
 }
 
-export const JudgementFields = connector(_JudgementFields) as FunctionalComponent<OwnProps>
+export const JudgementFormFields = connector(_JudgementFormFields) as FunctionalComponent<OwnProps>
 
 
 const judgement_operator_options = judgement_operators.map(op => ({ id: op, title: op }))

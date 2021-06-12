@@ -86,7 +86,7 @@ function _WComponentFromTo (props: Props)
             on_mouse_leave_option={id => set_highlighted_wcomponent({ id, highlighted: false })}
         />
         {on_update_type && <AutocompleteText
-            placeholder={"attribute..."}
+            placeholder="attribute..."
             selected_option_id={connection_terminal_type}
             options={wcomponent_terminal_type_options}
             allow_none={false}

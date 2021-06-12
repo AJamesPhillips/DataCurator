@@ -20,6 +20,7 @@ import {
     wcomponent_is_event,
     wcomponent_is_causal_link,
     wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_goal,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
@@ -34,11 +35,12 @@ import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
 import { WComponentKnowledgeView } from "../WComponentKnowledgeView"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
-import { JudgementFields } from "./JudgementFields"
+import { JudgementFormFields } from "./JudgementFormFields"
 import { useEffect, useRef } from "preact/hooks"
 import { WComponentEventFormFields } from "./WComponentEventFormFields"
-import type { UIValue, VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
-import { subtype_to_VAPsRepresent, wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
+import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { GoalFormFields } from "./GoalFormFields"
 
 
 
@@ -218,7 +220,7 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
-        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFields { ...{ wcomponent, upsert_wcomponent }} /> }
+        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
         {(editing || wcomponent.description) && <p>
             <EditableText
@@ -305,6 +307,9 @@ function _WComponentForm (props: Props)
             <hr />
             <br />
         </div>}
+
+
+        {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
 
         <p>
