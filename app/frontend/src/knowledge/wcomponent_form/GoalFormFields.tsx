@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteText } from "../../form/AutocompleteText"
+import { MultiAutocompleteText } from "../../form/MultiAutoCompleteText"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
 import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
@@ -88,12 +88,12 @@ function _GoalFormFields (props: Props)
         <p>
             Objectives
 
-            <AutocompleteText
+            <MultiAutocompleteText
                 placeholder="Objectives..."
-                selected_option_id={""}
+                selected_option_ids={props.wcomponent.objective_ids}
                 options={wcomponent_id_options}
                 allow_none={true}
-                on_change={option_id => {}}
+                on_change={objective_ids => props.upsert_wcomponent({ objective_ids })}
                 on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
                 on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
             />

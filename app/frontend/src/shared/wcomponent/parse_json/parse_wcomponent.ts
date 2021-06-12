@@ -11,6 +11,7 @@ import {
     ConnectionTerminalAttributeType,
     wcomponent_is_process,
     wcomponent_is_action,
+    wcomponent_is_goal,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../interfaces/state"
 import type { Prediction } from "../../uncertainty/uncertainty"
@@ -67,6 +68,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
     wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent)
     wcomponent = upgrade_2021_05_24_action(wcomponent)
+    wcomponent = upgrade_2021_06_12_goal(wcomponent)
 
     return wcomponent
 }
@@ -152,6 +154,19 @@ function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent
     {
         const depends_on_action_ids = wcomponent.depends_on_action_ids || []
         wcomponent = { ...wcomponent, depends_on_action_ids }
+    }
+
+    return wcomponent
+}
+
+
+
+function upgrade_2021_06_12_goal (wcomponent: WComponent): WComponent
+{
+    if (wcomponent_is_goal(wcomponent))
+    {
+        const objective_ids = wcomponent.objective_ids || []
+        wcomponent = { ...wcomponent, objective_ids }
     }
 
     return wcomponent
