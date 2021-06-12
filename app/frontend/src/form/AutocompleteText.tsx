@@ -5,17 +5,21 @@ import "./AutocompleteText.css"
 import { sort_list } from "../shared/utils/sort"
 
 
-
-export interface AutocompleteOption
+interface BaseAutocompleteOption
 {
     id: string | undefined
     title: string
     subtitle?: string
 }
-interface InternalAutocompleteOption extends AutocompleteOption
+interface InternalAutocompleteOption extends BaseAutocompleteOption
 {
     total_text: string
 }
+export interface AutocompleteOption extends BaseAutocompleteOption
+{
+    id: string
+}
+
 
 
 export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
@@ -281,12 +285,12 @@ function prepare_options_and_targets (options: AutocompleteOption[], allow_none?
     if (allow_none)
     {
         // allow user to clear the current value / select none
-        const option_none: AutocompleteOption = { id: undefined, title: "-" }
+        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
         new_options.unshift(option_none as any)
     }
 
     const new_internal_options: InternalAutocompleteOption[] = new_options.map(o => ({
-        ...o, total_text: o.title + " " + o.subtitle
+        ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
     }))
 
     const prepared_targets = new_internal_options.map(({ total_text }) =>
