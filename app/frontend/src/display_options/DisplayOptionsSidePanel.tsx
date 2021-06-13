@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./DisplayOptionsSidePanel.css"
-import { AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { ACTIONS } from "../state/actions"
 import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/display_options/state"
 import type { RootState } from "../state/State"

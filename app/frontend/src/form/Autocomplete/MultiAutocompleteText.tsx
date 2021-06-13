@@ -34,6 +34,9 @@ export class MultiAutocompleteText <E extends AutocompleteOption> extends Compon
 
         const options = this.props.options.filter(({ id }) => !selected_option_ids.includes(id))
 
+        const option_by_id: { [id: string]: E } = {}
+        options.forEach(option => option_by_id[option.id] = option)
+
         return <div>
             <AutocompleteText
                 {...this.props}
@@ -45,7 +48,16 @@ export class MultiAutocompleteText <E extends AutocompleteOption> extends Compon
                     this.props.on_change([...selected_option_ids, id])
                 }}
             />
-            {selected_option_ids.join(" , ")}
+
+            {/* {selected_option_ids.map(id => <SelectedOption
+                option={option_by_id[id]}
+                on_remove_option={removed_id =>
+                {
+                    this.props.on_change(selected_option_ids.filter(id => id !== removed_id))
+                }}
+                on_mouse_over_option={this.props.on_mouse_over_option}
+                on_mouse_leave_option={this.props.on_mouse_leave_option}
+            />)} */}
         </div>
     }
 }

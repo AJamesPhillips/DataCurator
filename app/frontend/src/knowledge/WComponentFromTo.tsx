@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentFromTo.css"
-import { AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import {
     ConnectionTerminalAttributeType,
     wcomponent_is_plain_connection,

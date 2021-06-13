@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./SearchWindow.css"
 import { Modal } from "../modal/Modal"
-import { AutocompleteProps, AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 
 
 

@@ -2,7 +2,7 @@ import { Component, h, Options } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
-import { sort_list } from "../shared/utils/sort"
+import { sort_list } from "../../shared/utils/sort"
 
 
 interface BaseAutocompleteOption

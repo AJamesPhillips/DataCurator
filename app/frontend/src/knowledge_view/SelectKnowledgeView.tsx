@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteOption, AutocompleteText } from "../form/AutocompleteText"
+import { AutocompleteOption, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 

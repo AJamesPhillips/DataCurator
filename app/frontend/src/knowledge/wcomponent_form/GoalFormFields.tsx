@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { MultiAutocompleteText } from "../../form/MultiAutoCompleteText"
+import { MultiAutocompleteText } from "../../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
 import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"

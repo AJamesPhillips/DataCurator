@@ -1,4 +1,4 @@
-import type { AutocompleteOption } from "../form/AutocompleteText"
+import type { AutocompleteOption } from "../form/Autocomplete/AutocompleteText"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import type { WComponent, WComponentsById } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
