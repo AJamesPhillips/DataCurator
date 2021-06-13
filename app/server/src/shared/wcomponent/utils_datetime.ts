@@ -26,7 +26,7 @@ function get_sim_datetime_ms (item: HasDateTime)
 
 
 
-function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
+export function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
 {
     const { min, value, max } = (item.datetime || {})
 

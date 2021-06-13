@@ -1,4 +1,4 @@
-import type { CreationContextState } from "../../interfaces"
+import type { CreationContextState } from "../../creation_context/state"
 import { test } from "../../utils/test"
 import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"

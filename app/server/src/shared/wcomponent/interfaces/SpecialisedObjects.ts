@@ -1,7 +1,7 @@
 import type { StartedStoppedAt, WComponentNodeAction } from "./action"
 import type { Base } from "./base"
 import type { EventAt, WComponentNodeEvent } from "./event"
-import type { WComponentGoal } from "./goal"
+import type { WComponentNodeGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"
 import type { KnowledgeView } from "./knowledge_view"
 import type {
@@ -15,6 +15,7 @@ import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentPrioritisation } from "./priorities"
 
 
 
@@ -27,7 +28,7 @@ export interface Perception extends Base
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement | WComponentPrioritisation
 export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
@@ -49,7 +50,7 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentNodeProcess
     | WComponentNodeAction
     | WComponentCounterfactual
-    | WComponentGoal
+    | WComponentNodeGoal
 
 
 
@@ -108,6 +109,11 @@ export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WCo
     return wcomponent.type === "action"
 }
 
+export function wcomponent_is_goal (wcomponent: WComponent): wcomponent is WComponentNodeGoal
+{
+    return wcomponent.type === "goal"
+}
+
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
     return wcomponent.type === "causal_link"
@@ -126,6 +132,10 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
 export function wcomponent_is_judgement_or_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
     return wcomponent.type === "judgement" || wcomponent.type === "objective"
+}
+export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
+{
+    return wcomponent.type === "objective"
 }
 
 export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual

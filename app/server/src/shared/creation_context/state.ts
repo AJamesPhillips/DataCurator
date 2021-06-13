@@ -1,10 +1,11 @@
 
 
 
-export interface CreationContext
+interface CreationContext
 {
     custom_created_at?: Date
 }
+
 
 
 export interface CreationContextState

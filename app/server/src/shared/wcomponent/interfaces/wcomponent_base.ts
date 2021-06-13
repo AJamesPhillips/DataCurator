@@ -7,7 +7,7 @@ import type { ValidityPredictions } from "../../uncertainty/validity"
 
 export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual" | "goal"
 export type WComponentConnectionType = "causal_link" | "relation_link"
-export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective"
+export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective" | "prioritisation"
 const _wcomponent_types: {[P in WComponentType]: true} = {
     event: true,
     state: true,
@@ -21,6 +21,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     objective: true,
     counterfactual: true,
     goal: true,
+    prioritisation: true,
 }
 export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()
 
