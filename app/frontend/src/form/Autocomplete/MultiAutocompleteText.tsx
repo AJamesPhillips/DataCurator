@@ -1,10 +1,14 @@
-import { Component, h } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+import { ACTIONS } from "../../state/actions"
+import type { RootState } from "../../state/State"
 
 import { AutocompleteOption, AutocompleteText } from "./AutocompleteText"
+import { SelectedOption } from "./SelectedOption"
 
 
 
-export interface MultiAutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
+interface OwnProps <E extends AutocompleteOption = AutocompleteOption>
 {
     placeholder: string
     selected_option_ids: string[]
@@ -22,42 +26,55 @@ export interface MultiAutocompleteProps <E extends AutocompleteOption = Autocomp
 
 
 
-interface OwnProps <E extends AutocompleteOption> extends MultiAutocompleteProps <E> {}
+const map_state = (state: RootState) => ({
+    editing: !state.display_options.consumption_formatting,
+})
 
-
-
-export class MultiAutocompleteText <E extends AutocompleteOption> extends Component <OwnProps<E>>
-{
-    render ()
-    {
-        const { selected_option_ids } = this.props
-
-        const options = this.props.options.filter(({ id }) => !selected_option_ids.includes(id))
-
-        const option_by_id: { [id: string]: E } = {}
-        options.forEach(option => option_by_id[option.id] = option)
-
-        return <div>
-            <AutocompleteText
-                {...this.props}
-                selected_option_id={undefined}
-                options={options}
-                on_change={id =>
-                {
-                    if (id === undefined) return
-                    this.props.on_change([...selected_option_ids, id])
-                }}
-            />
-
-            {/* {selected_option_ids.map(id => <SelectedOption
-                option={option_by_id[id]}
-                on_remove_option={removed_id =>
-                {
-                    this.props.on_change(selected_option_ids.filter(id => id !== removed_id))
-                }}
-                on_mouse_over_option={this.props.on_mouse_over_option}
-                on_mouse_leave_option={this.props.on_mouse_leave_option}
-            />)} */}
-        </div>
-    }
+const map_dispatch = {
+    change_route: ACTIONS.routing.change_route,
 }
+
+const connector = connect(map_state, map_dispatch)
+type Props<E extends AutocompleteOption> = ConnectedProps<typeof connector> & OwnProps<E>
+
+
+function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
+{
+    const { editing, options, selected_option_ids } = props
+
+    const filtered_options = options.filter(({ id }) => !selected_option_ids.includes(id))
+
+    const option_by_id: { [id: string]: E } = {}
+    options.forEach(option => option_by_id[option.id] = option)
+
+
+    return <div className="multi_autocomplete">
+        {editing && <AutocompleteText
+            {...props}
+            selected_option_id={undefined}
+            options={filtered_options}
+            on_change={id =>
+            {
+                if (id === undefined) return
+                props.on_change([...selected_option_ids, id])
+            }}
+        />}
+
+        {selected_option_ids.map(id => <SelectedOption
+            editing={editing}
+            option={option_by_id[id]}
+            on_remove_option={removed_id =>
+            {
+                props.on_change(selected_option_ids.filter(id => id !== removed_id))
+            }}
+            on_mouse_over_option={props.on_mouse_over_option}
+            on_mouse_leave_option={props.on_mouse_leave_option}
+            on_pointer_down_selected_option={(e, id) =>
+            {
+                props.change_route({ item_id: id })
+            }}
+        />)}
+    </div>
+}
+
+export const MultiAutocompleteText = connector(_MultiAutocompleteText) as FunctionalComponent<OwnProps>
