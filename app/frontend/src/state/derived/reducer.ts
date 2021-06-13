@@ -1,5 +1,5 @@
 import { project_priorities_derived_reducer } from "../../priorities/project_priorities/project_priorities_derived_reducer"
-import { wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
@@ -47,6 +47,10 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
         const judgement_ids_by_target_id = update_judgement_ids_by_target_id(state)
         state = update_substate(state, "derived", "judgement_ids_by_target_id", judgement_ids_by_target_id)
+
+
+        const judgement_ids_by_goal_id = update_judgement_ids_by_goal_id(state)
+        state = update_substate(state, "derived", "judgement_ids_by_goal_id", judgement_ids_by_goal_id)
     }
 
 
@@ -61,7 +65,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 function update_judgement_ids_by_target_id (state: RootState)
 {
-    const judgement_ids_by_target_id: {[target_id: string]: string[]} = {}
+    const judgement_ids_by_target_id: { [target_id: string]: string[] } = {}
 
     const judgement_ids = state.derived.wcomponent_ids_by_type.judgement
 
@@ -80,4 +84,27 @@ function update_judgement_ids_by_target_id (state: RootState)
     })
 
     return judgement_ids_by_target_id
+}
+
+
+
+function update_judgement_ids_by_goal_id (state: RootState)
+{
+    const judgement_ids_by_goal_id: { [goal_id: string]: string[] } = {}
+
+    const goal_ids = state.derived.wcomponent_ids_by_type.goal
+
+    Array.from(goal_ids).map(goal_id =>
+    {
+        return state.specialised_objects.wcomponents_by_id[goal_id]
+    })
+    .filter(is_defined)
+    .filter(wcomponent_is_goal)
+    // .sort () // some kind of sort so that front end display is stable and predictable
+    .forEach(({ id: goal_id, objective_ids }) =>
+    {
+        judgement_ids_by_goal_id[goal_id] = objective_ids
+    })
+
+    return judgement_ids_by_goal_id
 }

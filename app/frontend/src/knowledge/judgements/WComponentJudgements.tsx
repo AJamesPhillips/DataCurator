@@ -16,7 +16,10 @@ interface OwnProps
 
 
 const map_state = (state: RootState, own_props: OwnProps) => {
-    const judgement_ids = state.derived.judgement_ids_by_target_id[own_props.wcomponent.id]
+    const judgement_ids = [
+        ...(state.derived.judgement_ids_by_target_id[own_props.wcomponent.id] || []),
+        ...(state.derived.judgement_ids_by_goal_id[own_props.wcomponent.id] || []),
+    ]
 
     return {
         judgement_ids: judgement_ids as string[] | undefined

@@ -14,6 +14,7 @@ export function get_derived_starting_state (): DerivedState
         base_knowledge_view: undefined,
         other_knowledge_views: [],
         judgement_ids_by_target_id: {},
+        judgement_ids_by_goal_id: {},
 
         current_UI_knowledge_view: undefined,
 

@@ -32,6 +32,7 @@ export interface DerivedState
     base_knowledge_view: KnowledgeView | undefined
     other_knowledge_views: KnowledgeView[]
     judgement_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
+    judgement_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
 
     current_UI_knowledge_view: DerivedUIKnowledgeView | undefined
 

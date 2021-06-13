@@ -185,7 +185,9 @@ function _WComponentCanvasNode (props: Props)
 
     const show_validity_value = props.is_editing || is_highlighted || is_current_item
     const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
-        || wcomponent_has_legitimate_non_empty_state(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent)
+        || wcomponent_has_legitimate_non_empty_state(wcomponent)
+        || wcomponent_is_judgement_or_objective(wcomponent)
+        || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
         || is_highlighted || is_current_item
 
 
