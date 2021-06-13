@@ -53,6 +53,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 
 
     return {
+        consumption_formatting: state.display_options.consumption_formatting,
         filtered_wcomponents,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_id_counterfactuals_map,
@@ -76,6 +77,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _GoalFormFields (props: Props)
 {
+    if (props.consumption_formatting && props.wcomponent.objective_ids.length === 0) return null
+
+
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: props.filtered_wcomponents,
         wcomponents_by_id: props.wcomponents_by_id,
