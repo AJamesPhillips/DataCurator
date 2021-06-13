@@ -1,7 +1,10 @@
+import { h } from "preact"
+
 import type { AutocompleteOption } from "../form/Autocomplete/AutocompleteText"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
-import type { WComponent, WComponentsById } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, WComponentsById, wcomponent_is_judgement_or_objective } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
+import { JudgementBadgeC } from "../knowledge/judgements/JudgementBadgeC"
 
 
 
@@ -33,9 +36,19 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 sim_ms,
             })
 
+            let jsx: h.JSX.Element | undefined = undefined
+            if (wcomponent_is_judgement_or_objective(wcomponent))
+            {
+                jsx = <div>
+                    <JudgementBadgeC judgement_id={wcomponent.id} />
+                    {title}
+                </div>
+            }
+
             return {
                 id: wcomponent.id,
                 title,
+                jsx,
                 subtitle: `${wcomponent.title} -- @@${wcomponent.id}`,
             }
         })

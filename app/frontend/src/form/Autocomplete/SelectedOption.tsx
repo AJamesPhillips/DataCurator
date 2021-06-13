@@ -41,6 +41,6 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
             }}
         />}
 
-        {option.title}
+        {option.jsx || option.title}
     </div>
 }

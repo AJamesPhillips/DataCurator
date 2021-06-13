@@ -9,6 +9,7 @@ interface BaseAutocompleteOption
 {
     id: string | undefined
     title: string
+    jsx?: h.JSX.Element
     subtitle?: string
 }
 interface InternalAutocompleteOption extends BaseAutocompleteOption
@@ -100,9 +101,15 @@ export class AutocompleteText <E extends AutocompleteOption> extends Component <
     }
 
 
-    get_selected_option_title (): string
+    get_selected_option (): InternalAutocompleteOption | undefined
     {
-        const selected_option = this.options.find(({ id }) => id === this.props.selected_option_id)
+        return this.options.find(({ id }) => id === this.props.selected_option_id)
+    }
+
+
+    get_selected_option_title_str (): string
+    {
+        const selected_option = this.get_selected_option()
 
         return selected_option ? selected_option.title : "-"
     }
@@ -112,7 +119,7 @@ export class AutocompleteText <E extends AutocompleteOption> extends Component <
     {
         if (this.state.temp_value_str !== undefined) return this.state.temp_value_str
 
-        return this.get_selected_option_title()
+        return this.get_selected_option_title_str()
     }
 
     get_options_to_display ()
@@ -268,7 +275,7 @@ function Options (props: OptionsOwnProps)
                 onMouseLeave={() => on_mouse_leave_option(option.id)}
             >
                 <div className="option">
-                    {option.title || option.id || "none"}
+                    {option.jsx || option.title || option.id || "none"}
                     <div className="option_subtitle">{option.subtitle}</div>
                 </div>
             </div>)}
