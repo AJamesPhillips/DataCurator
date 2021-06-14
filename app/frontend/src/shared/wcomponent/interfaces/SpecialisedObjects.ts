@@ -14,7 +14,7 @@ import type {
 import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
-import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
 
 
@@ -109,15 +109,34 @@ export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WCo
     return wcomponent.type === "action"
 }
 
-export function wcomponent_is_goal (wcomponent: WComponent): wcomponent is WComponentNodeGoal
+
+function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefined, log_error_id = "")
 {
-    return wcomponent.type === "goal"
+    let yes = false
+
+    if (!wcomponent)
+    {
+        log_error_id && console.error(`wcomponent with id "${log_error_id}" does not exist`)
+    }
+    else if (wcomponent.type !== type)
+    {
+        log_error_id && console.error(`wcomponent with id "${log_error_id}" is not a ${type}`)
+    }
+    else yes = true
+
+    return yes
 }
 
 
-export function wcomponent_is_prioritisation (wcomponent: WComponent): wcomponent is WComponentPrioritisation
+export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentNodeGoal
 {
-    return wcomponent.type === "prioritisation"
+    return wcomponent_is_a("goal", wcomponent, log_error_id)
+}
+
+
+export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentPrioritisation
+{
+    return wcomponent_is_a("prioritisation", wcomponent, log_error_id)
 }
 
 
@@ -145,10 +164,12 @@ export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is 
     return wcomponent.type === "objective"
 }
 
-export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
+
+export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactual
 {
-    return wcomponent.type === "counterfactual"
+    return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
 }
+
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {

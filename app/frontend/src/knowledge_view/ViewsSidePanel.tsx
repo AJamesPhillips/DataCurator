@@ -31,7 +31,7 @@ const map_state = (state: RootState) =>
         kv.wc_ids_by_type.prioritisation.forEach(id =>
         {
             const p = state.specialised_objects.wcomponents_by_id[id]
-            if (!p || !wcomponent_is_prioritisation(p)) return
+            if (!wcomponent_is_prioritisation(p, id)) return
 
             const p_latest_created_at_ms = get_created_at_ms(p)
             if (p_latest_created_at_ms > latest_created_at_ms)
