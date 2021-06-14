@@ -11,6 +11,8 @@ import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { ExternalLinkIcon } from "../sharedf/ExternalLinkIcon"
+import { Link } from "../utils/Link"
 
 
 
@@ -85,6 +87,14 @@ function _WComponentFromTo (props: Props)
             on_mouse_over_option={id => set_highlighted_wcomponent({ id, highlighted: true })}
             on_mouse_leave_option={id => set_highlighted_wcomponent({ id, highlighted: false })}
         />
+
+        {wcomponent_id && <Link
+            route={undefined}
+            sub_route={undefined}
+            item_id={wcomponent_id}
+            args={undefined}
+        ><ExternalLinkIcon /></Link>}
+
         {on_update_type && <AutocompleteText
             placeholder="attribute..."
             selected_option_id={connection_terminal_type}
