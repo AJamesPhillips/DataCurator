@@ -18,8 +18,6 @@ const map_state = (state: RootState) =>
     const base_knowledge_view_id = base_kv && base_kv.id
 
     return {
-        view: state.routing.args.view,
-        subview_id: state.routing.args.subview_id,
         base_knowledge_view_id,
     }
 }
@@ -48,9 +46,7 @@ function _ViewsSidePanel (props: Props)
 
         <hr />
 
-        {props.view === "knowledge" && <div>
-            <KnowledgeViewList />
-        </div>}
+        <KnowledgeViewList />
 
     </div>
 }
