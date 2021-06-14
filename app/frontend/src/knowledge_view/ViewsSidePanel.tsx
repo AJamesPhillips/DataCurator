@@ -37,31 +37,15 @@ type Props = PropsFromRedux & OwnProps
 
 function _ViewsSidePanel (props: Props)
 {
-    const view_types: ViewType[] = ["priorities", "knowledge", "objectives"]
-    const views: { view: ViewType, name: string }[] = view_types.map(view => ({
-        view, name: view[0]!.toUpperCase() + view.slice(1)
-    }))
-
     return <div className="views_side_panel">
         <h3>Views</h3>
 
-        {views.map(({ view, name }) => {
-            const subview_id = view === "knowledge" ? props.base_knowledge_view_id : undefined
-
-            return [
-                <LinkButton
-                    name={name}
-                    route={undefined}
-                    sub_route={undefined}
-                    item_id={undefined}
-                    args={{ view, subview_id }}
-                    selected_on={new Set(["args.view"])}
-                />,
-                <br/>
-            ]
-        })}
-
+        <ViewLinkButton view="priorities" />
+        <ViewLinkButton view="priorities_list" name="List" />
         <br />
+        <ViewLinkButton view="knowledge" subview_id={props.base_knowledge_view_id} />
+        <br />
+
         <hr />
 
         {props.view === "knowledge" && <div>
@@ -73,3 +57,25 @@ function _ViewsSidePanel (props: Props)
 
 
 export const ViewsSidePanel = connector(_ViewsSidePanel) as FunctionComponent<OwnProps>
+
+
+
+interface ViewLinkButtonProps
+{
+    view: ViewType
+    name?: string
+    subview_id?: string
+}
+function ViewLinkButton (props: ViewLinkButtonProps)
+{
+    const name = props.name || (props.view[0]!.toUpperCase() + props.view.slice(1))
+
+    return <LinkButton
+        name={name}
+        route={undefined}
+        sub_route={undefined}
+        item_id={undefined}
+        args={{ view: props.view, subview_id: props.subview_id }}
+        selected_on={new Set(["args.view"])}
+    />
+}
