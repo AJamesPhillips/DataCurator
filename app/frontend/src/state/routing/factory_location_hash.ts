@@ -98,12 +98,12 @@ function record_location_hash_change (store: Store<RootState>)
         }
         else
         {
-            const routing_params = get_current_route_params(state.routing)
-
-            const new_route = routing_state_to_string(routing_params)
+            const new_route = routing_state_to_string(state.routing)
             const no_change = new_route === window.location.hash.toString()
             if (no_change) return
 
+            store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
+            const routing_params = get_current_route_params(state.routing)
             store.dispatch(ACTIONS.routing.change_route(routing_params))
         }
     }
