@@ -12,6 +12,7 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
+import { is_knowledge_view_id } from "../../../shared/utils/ids"
 
 
 
@@ -25,31 +26,31 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
     }
 
 
-    if (initial_state.routing.args.view === "knowledge" || state.routing.args.view === "knowledge")
+
+    let initial_kv_id = initial_state.routing.args.subview_id
+    initial_kv_id = is_knowledge_view_id(initial_kv_id) ? initial_kv_id : ""
+    let current_kv_id = state.routing.args.subview_id
+    current_kv_id = is_knowledge_view_id(current_kv_id) ? current_kv_id : ""
+    const kv_object_id_changed = initial_kv_id !== current_kv_id
+    if (kv_object_id_changed)
     {
-        const initial_kv_id = initial_state.routing.args.subview_id
-        const current_kv_id = state.routing.args.subview_id
-        const kv_object_id_changed = initial_kv_id !== current_kv_id
-        if (kv_object_id_changed)
-        {
-            state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
-        }
+        state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
+    }
 
 
-        const initial_kv = get_knowledge_view(initial_state, initial_kv_id)
-        const current_kv = get_knowledge_view(state, current_kv_id)
-        const kv_object_changed = initial_kv !== current_kv
+    const initial_kv = get_knowledge_view(initial_state, initial_kv_id)
+    const current_kv = get_knowledge_view(state, current_kv_id)
+    const kv_object_changed = initial_kv !== current_kv
 
-        const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
+    const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
-        const need_update = kv_object_changed || one_or_more_wcomponents_changed
+    const need_update = kv_object_changed || one_or_more_wcomponents_changed
 
 
-        if (need_update)
-        {
-            const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
-            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
-        }
+    if (need_update && current_kv)
+    {
+        const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
+        state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
     }
 
 
@@ -94,10 +95,8 @@ function get_knowledge_view (state: RootState, id: string)
 
 
 
-function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv?: KnowledgeView)
+function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv: KnowledgeView)
 {
-    if (!current_kv) return undefined
-
     const derived_wc_id_map = get_derived_wc_id_map(current_kv, intial_state, state)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, Object.keys(derived_wc_id_map))
