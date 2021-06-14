@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { KnowledgeView } from "../knowledge_view/KnowledgeView"
 import { ObjectivesView } from "../objectives/ObjectivesView"
+import { PrioritiesListView } from "../priorities/PrioritiesListView"
 import { PrioritiesView } from "../priorities/PrioritiesView"
 import type { RootState } from "../state/State"
 
@@ -27,6 +28,7 @@ function _MainAreaRouter (props: Props)
     if (props.view === "knowledge") return <KnowledgeView />
     if (props.view === "objectives") return <ObjectivesView />
     if (props.view === "priorities") return <PrioritiesView />
+    if (props.view === "priorities_list") return <PrioritiesListView />
     return <div>Unsupported view: {props.view}</div>
 }
 
