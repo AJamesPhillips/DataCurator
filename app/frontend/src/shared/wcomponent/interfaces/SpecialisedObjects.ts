@@ -114,6 +114,13 @@ export function wcomponent_is_goal (wcomponent: WComponent): wcomponent is WComp
     return wcomponent.type === "goal"
 }
 
+
+export function wcomponent_is_prioritisation (wcomponent: WComponent): wcomponent is WComponentPrioritisation
+{
+    return wcomponent.type === "prioritisation"
+}
+
+
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
     return wcomponent.type === "causal_link"

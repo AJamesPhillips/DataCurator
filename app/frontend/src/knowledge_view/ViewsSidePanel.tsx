@@ -6,6 +6,9 @@ import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import { LinkButton } from "../utils/Link"
+import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { wcomponent_is_prioritisation } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 
 
 
@@ -17,8 +20,32 @@ const map_state = (state: RootState) =>
     const base_kv = state.derived.base_knowledge_view
     const base_knowledge_view_id = base_kv && base_kv.id
 
+
+    const kv = get_current_UI_knowledge_view_from_state(state)
+
+    let prioritisation_id: string | undefined = undefined
+    if (kv)
+    {
+        let latest_created_at_ms = Number.NEGATIVE_INFINITY
+
+        kv.wc_ids_by_type.prioritisation.forEach(id =>
+        {
+            const p = state.specialised_objects.wcomponents_by_id[id]
+            if (!p || !wcomponent_is_prioritisation(p)) return
+
+            const p_latest_created_at_ms = get_created_at_ms(p)
+            if (p_latest_created_at_ms > latest_created_at_ms)
+            {
+                latest_created_at_ms = p_latest_created_at_ms
+                prioritisation_id = id
+            }
+        })
+    }
+
+
     return {
         base_knowledge_view_id,
+        prioritisation_id,
     }
 }
 
@@ -39,7 +66,7 @@ function _ViewsSidePanel (props: Props)
         <h3>Views</h3>
 
         <ViewLinkButton view="priorities" />
-        <ViewLinkButton view="priorities_list" name="List" />
+        <ViewLinkButton view="priorities_list" name="List" subview_id={props.prioritisation_id} />
         <br />
         <ViewLinkButton view="knowledge" subview_id={props.base_knowledge_view_id} />
         <br />

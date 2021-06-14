@@ -19,8 +19,17 @@ type Props = ConnectedProps<typeof connector>
 function _PrioritiesListView (props: Props)
 {
     return <MainArea
-        main_content={<div>PrioritiesListView</div>}
+        main_content={<PrioritiesListViewContent />}
     />
 }
 
 export const PrioritiesListView = connector(_PrioritiesListView) as FunctionalComponent<{}>
+
+
+
+function PrioritiesListViewContent ()
+{
+    return <div>
+        PrioritiesListViewContent
+    </div>
+}
