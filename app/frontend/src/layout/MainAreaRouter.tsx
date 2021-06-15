@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { KnowledgeView } from "../knowledge_view/KnowledgeView"
 import { ObjectivesView } from "../objectives/ObjectivesView"
-import { PrioritiesListView } from "../priorities/PrioritiesListView"
+import { PrioritiesListView } from "../priorities_list_view/PrioritiesListView"
 import { PrioritiesView } from "../priorities/PrioritiesView"
 import type { RootState } from "../state/State"
 

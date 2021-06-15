@@ -144,7 +144,7 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
     Object.keys(knowledge_view.wc_id_map).forEach(wcomponent_id =>
     {
         const counterfactual = state.specialised_objects.wcomponents_by_id[wcomponent_id]
-        if (!wcomponent_is_counterfactual(counterfactual, wcomponent_id)) return
+        if (!wcomponent_is_counterfactual(counterfactual)) return
 
         const { target_wcomponent_id, target_VAP_set_id, target_VAP_id } = counterfactual
 

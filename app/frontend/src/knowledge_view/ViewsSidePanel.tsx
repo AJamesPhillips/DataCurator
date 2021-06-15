@@ -7,7 +7,7 @@ import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import { LinkButton } from "../utils/Link"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { wcomponent_is_prioritisation } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { alert_wcomponent_is_prioritisation } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 
 
@@ -31,7 +31,7 @@ const map_state = (state: RootState) =>
         kv.wc_ids_by_type.prioritisation.forEach(id =>
         {
             const p = state.specialised_objects.wcomponents_by_id[id]
-            if (!wcomponent_is_prioritisation(p, id)) return
+            if (!alert_wcomponent_is_prioritisation(p, id)) return
 
             const p_latest_created_at_ms = get_created_at_ms(p)
             if (p_latest_created_at_ms > latest_created_at_ms)

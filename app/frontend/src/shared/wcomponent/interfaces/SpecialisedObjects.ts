@@ -116,11 +116,17 @@ function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefin
 
     if (!wcomponent)
     {
-        log_error_id && console.error(`wcomponent with id "${log_error_id}" does not exist`)
+        if (log_error_id)
+        {
+            console.error(`wcomponent with id "${log_error_id}" does not exist`)
+        }
     }
     else if (wcomponent.type !== type)
     {
-        log_error_id && console.error(`wcomponent with id "${log_error_id}" is not a ${type}`)
+        if (log_error_id)
+        {
+            console.error(`wcomponent with id "${log_error_id}" is not a ${type}`)
+        }
     }
     else yes = true
 
@@ -128,13 +134,21 @@ function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefin
 }
 
 
-export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentNodeGoal
+export function wcomponent_is_goal (wcomponent: WComponent | undefined): wcomponent is WComponentNodeGoal
+{
+    return wcomponent_is_a("goal", wcomponent)
+}
+export function alert_wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentNodeGoal
 {
     return wcomponent_is_a("goal", wcomponent, log_error_id)
 }
 
 
-export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentPrioritisation
+export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined): wcomponent is WComponentPrioritisation
+{
+    return wcomponent_is_a("prioritisation", wcomponent)
+}
+export function alert_wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentPrioritisation
 {
     return wcomponent_is_a("prioritisation", wcomponent, log_error_id)
 }
