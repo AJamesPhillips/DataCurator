@@ -2,7 +2,6 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./PrioritiesListView.css"
-import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
 import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
 import {
@@ -10,7 +9,6 @@ import {
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { EditableNumber } from "../form/EditableNumber"
 import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
@@ -38,9 +36,15 @@ const map_state = (state: RootState) =>
     const knowledge_view = get_current_UI_knowledge_view_from_state(state)
     const goals: WComponentNodeGoal[] = []
     let prioritisations: WComponentPrioritisation[] = []
+    let selected_prioritisation: WComponentPrioritisation | undefined = undefined
 
     if (knowledge_view)
     {
+        prioritisations = knowledge_view.prioritisations
+
+        const { item_id } = state.routing
+        selected_prioritisation = prioritisations.find(({ id }) => id === item_id)
+
         knowledge_view.wc_ids_by_type.goal.forEach(id =>
         {
             const goal = wcomponents_by_id[id]
@@ -50,12 +54,22 @@ const map_state = (state: RootState) =>
             goals.push(goal)
         })
 
-        prioritisations = knowledge_view.prioritisations
+
+        if (selected_prioritisation)
+        {
+            Object.keys(selected_prioritisation.goals).forEach(id =>
+            {
+                if (knowledge_view.wc_ids_by_type.goal.has(id)) return
+
+                const goal = wcomponents_by_id[id]
+
+                if (!alert_wcomponent_is_goal(goal, id)) return
+
+                goals.push(goal)
+            })
+        }
     }
 
-
-    const { item_id } = state.routing
-    const selected_prioritisation = prioritisations.find(({ id }) => id === item_id)
 
     return {
         knowledge_view_id: knowledge_view && knowledge_view.id,

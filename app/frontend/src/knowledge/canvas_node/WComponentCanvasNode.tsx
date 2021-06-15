@@ -30,6 +30,7 @@ import { Handles } from "./Handles"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
 
 
 
@@ -47,13 +48,13 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { canvas_bounding_rect: cbr } = state.display_options
 
     const { current_UI_knowledge_view } = state.derived
-    const kv_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.id]
+    const kv_entry_maybe = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.id]
 
     return {
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
         wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
-        kv_entry,
+        kv_entry_maybe,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
         is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
@@ -91,7 +92,7 @@ function _WComponentCanvasNode (props: Props)
 
     const {
         id, on_graph = true,
-        knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
+        knowledge_view_id, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
         created_at_ms, sim_ms, validity_filter, certainty_formatting, } = props
@@ -99,7 +100,11 @@ function _WComponentCanvasNode (props: Props)
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
     if (!wcomponent) return <div>Could not find component of id {id}</div>
-    if (!kv_entry) return <div>Could not find knowledge view entry for id {id}</div>
+
+
+    let { kv_entry_maybe } = props
+    if (!kv_entry_maybe && on_graph) return <div>Could not find knowledge view entry for id {id}</div>
+    const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
 
 
     const validity_value = calc_wcomponent_should_display({
@@ -201,6 +206,10 @@ function _WComponentCanvasNode (props: Props)
                 {wcomponent.type}
             </div>
             <div className="node_title">
+                {kv_entry_maybe === undefined && <span>
+                    <WarningTriangle message="Missing from this knowledge view" />
+                    &nbsp;
+                </span>}
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
 
