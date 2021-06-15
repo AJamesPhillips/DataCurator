@@ -18,7 +18,8 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const base_kv = state.derived.base_knowledge_view
-    const base_knowledge_view_id = base_kv && base_kv.id
+    const current_kv = get_current_UI_knowledge_view_from_state(state)
+    const knowledge_view_id = current_kv ? current_kv.id : (base_kv && base_kv.id)
 
 
     const kv = get_current_UI_knowledge_view_from_state(state)
@@ -44,7 +45,7 @@ const map_state = (state: RootState) =>
 
 
     return {
-        base_knowledge_view_id,
+        knowledge_view_id,
         prioritisation_id,
     }
 }
@@ -68,7 +69,7 @@ function _ViewsSidePanel (props: Props)
         <ViewLinkButton view="priorities" />
         <ViewLinkButton view="priorities_list" name="List" subview_id={props.prioritisation_id} />
         <br />
-        <ViewLinkButton view="knowledge" subview_id={props.base_knowledge_view_id} />
+        <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
         <br />
 
         <hr />

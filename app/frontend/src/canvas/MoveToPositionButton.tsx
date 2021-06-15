@@ -20,7 +20,7 @@ interface OwnProps
 }
 
 const map_dispatch = {
-    move: (position: PositionAndZoom) => ACTIONS.routing.change_route({ args: position })
+    move: (position: PositionAndZoom) => ACTIONS.routing.change_route({ args: { view: "knowledge", ...position } })
 }
 const connector = connect(null, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
