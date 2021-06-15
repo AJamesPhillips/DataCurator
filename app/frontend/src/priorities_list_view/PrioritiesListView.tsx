@@ -9,10 +9,10 @@ import { alert_wcomponent_is_goal, alert_wcomponent_is_prioritisation } from "..
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { EditableNumber } from "../form/EditableNumber"
-import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import type { WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
+import { create_wcomponent } from "../knowledge/create_wcomponent_type"
 
 
 
@@ -29,13 +29,13 @@ const map_state = (state: RootState) =>
 {
     const wcomponents_by_id = state.specialised_objects.wcomponents_by_id
 
-    const kv = get_current_UI_knowledge_view_from_state(state)
+    const knowledge_view = get_current_UI_knowledge_view_from_state(state)
     const goals: WComponentNodeGoal[] = []
     const prioritisations: WComponentPrioritisation[] = []
 
-    if (kv)
+    if (knowledge_view)
     {
-        kv.wc_ids_by_type.goal.forEach(id =>
+        knowledge_view.wc_ids_by_type.goal.forEach(id =>
         {
             const goal = wcomponents_by_id[id]
 
@@ -44,7 +44,7 @@ const map_state = (state: RootState) =>
             goals.push(goal)
         })
 
-        kv.wc_ids_by_type.prioritisation.forEach(id =>
+        knowledge_view.wc_ids_by_type.prioritisation.forEach(id =>
         {
             const prioritisation = wcomponents_by_id[id]
 
@@ -55,9 +55,11 @@ const map_state = (state: RootState) =>
     }
 
     return {
+        knowledge_view_id: knowledge_view && knowledge_view.id,
         goals,
         prioritisations,
         editing: !state.display_options.consumption_formatting,
+        creation_context: state.creation_context,
     }
 }
 
@@ -69,7 +71,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _PrioritiesListViewContent (props: Props)
 {
-    const { goals, prioritisations, editing } = props
+    const { goals, prioritisations, editing, knowledge_view_id } = props
 
     return <div className="priorities_list_view_content">
         <div className="goals">
@@ -96,11 +98,22 @@ function _PrioritiesListViewContent (props: Props)
             <div className="prioritisations_header">
                 <h1>Prioritisations</h1>
 
-                {editing && <ListHeaderAddButton
+                {editing && knowledge_view_id && <ListHeaderAddButton
                     new_item_descriptor="Prioritisation"
-                    on_pointer_down_new_list_entry={() => {}}
+                    on_pointer_down_new_list_entry={() =>
+                    {
+                        create_wcomponent({
+                            wcomponent: { type: "prioritisation" },
+                            creation_context: props.creation_context,
+                            add_to_knowledge_view: {
+                                id: knowledge_view_id,
+                                position: { left: 0, top: 0 },
+                            }
+                        })
+                    }}
                 />}
             </div>
+
 
             {factory_render_list_content({
                 items: prioritisations, get_id: p => p.id, update_items: () => {}, item_top_props: {

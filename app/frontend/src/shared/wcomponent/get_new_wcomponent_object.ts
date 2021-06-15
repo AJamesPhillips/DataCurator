@@ -1,5 +1,6 @@
 import type { CreationContextState } from "../creation_context/state"
 import { get_new_created_ats } from "../utils/datetime"
+import { date2str_auto } from "../utils/date_helpers"
 import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponentPrioritisation } from "./interfaces/priorities"
@@ -60,11 +61,14 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
     }
     else if (args.type === "prioritisation")
     {
+        const when = base.custom_created_at || base.created_at
+
         const prioritisation: WComponentPrioritisation = {
             ...base,
+            title: date2str_auto({ date: when, time_resolution: "day" }),
             goals: {},
             explanation: "",
-            datetime: { min: base.custom_created_at || base.created_at },
+            datetime: { min: when },
             ...args,
             type: args.type, // only added to remove type warning
         }
