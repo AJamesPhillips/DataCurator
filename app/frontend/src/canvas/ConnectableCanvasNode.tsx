@@ -14,7 +14,7 @@ import { connection_radius, Terminal } from "./connections/terminal"
 interface OwnProps
 {
     get_ref?: (ref: HTMLDivElement) => void
-    position: CanvasPoint
+    position?: CanvasPoint
     node_main_content: h.JSX.Element
     hidden?: boolean
     unlimited_width?: boolean

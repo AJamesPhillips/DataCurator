@@ -1,14 +1,10 @@
-.wcomponent_canvas_node.connectable_canvas_node.graph_node .node_main_content
+.wcomponent_canvas_node.connectable_canvas_node.node .node_main_content
 {
     height: initial;
     min-height: 80px;
     text-overflow: initial;
     white-space: initial;
     overflow: initial;
-}
-.wcomponent_canvas_node.connectable_canvas_node.graph_node.border_color_red .node_main_content
-{
-    border-color: red;
 }
 
 

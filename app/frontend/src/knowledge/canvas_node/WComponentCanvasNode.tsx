@@ -26,7 +26,7 @@ import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { round_canvas_point } from "../../canvas/position_utils"
 import { Handles } from "./Handles"
-import { get_wcomponent_counterfactuals, get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
+import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 
@@ -35,6 +35,7 @@ import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connectio
 interface OwnProps
 {
     id: string
+    on_graph?: boolean
 }
 
 
@@ -61,9 +62,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
-        wc_counterfactuals: get_wcomponent_counterfactuals(state, own_props.id),
         is_editing: !state.display_options.consumption_formatting,
-        node_allowed_to_move: state.meta_wcomponents.last_pointer_down_connection_terminal === undefined,
         validity_filter: state.display_options.derived_validity_filter,
         certainty_formatting: state.display_options.derived_certainty_formatting,
     }
@@ -89,11 +88,12 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState<boolean>(false)
 
-    const { id, knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
+    const {
+        id, on_graph = true,
+        knowledge_view_id, kv_entry, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
-        node_allowed_to_move,
-        created_at_ms, sim_ms, wc_counterfactuals, validity_filter, certainty_formatting, } = props
+        created_at_ms, sim_ms, validity_filter, certainty_formatting, } = props
     const { change_route, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -161,7 +161,7 @@ function _WComponentCanvasNode (props: Props)
     if (is_highlighted || node_is_moving)
     {
         children.push(<Handles
-            set_node_is_moving={() => set_node_is_moving(true)}
+            set_node_is_moving={!on_graph ? undefined : (() => set_node_is_moving(true))}
         />)
     }
 
@@ -177,7 +177,6 @@ function _WComponentCanvasNode (props: Props)
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
         + ((props.is_editing || is_highlighted || is_current_item) ? " compact_display " : "")
-        // + " border_color_red "
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color(wcomponent)
@@ -191,8 +190,11 @@ function _WComponentCanvasNode (props: Props)
         || is_highlighted || is_current_item
 
 
+    const terminals = !on_graph ? [] : ((is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label)
+
+
     return <ConnectableCanvasNode
-        position={kv_entry}
+        position={on_graph ? kv_entry : undefined}
         node_main_content={<div>
             <div className="description_label">
                 {wcomponent.type}
@@ -220,7 +222,7 @@ function _WComponentCanvasNode (props: Props)
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
-        terminals={(is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label}
+        terminals={terminals}
         pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
         extra_args={{
             // draggable: node_allowed_to_move && node_is_moving,

@@ -17,14 +17,19 @@ export function Handles (props: HandlesProps)
 
 interface HandleForMovingProps
 {
-    set_node_is_moving: () => void
+    set_node_is_moving?: () => void
 }
 function HandleForMoving (props: HandleForMovingProps)
 {
+    const { set_node_is_moving } = props
+
+    if (!set_node_is_moving) return null
+
+
     const handle_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
         e.stopPropagation() // stop propagation otherwise ConnectionNode will become deselected / selected
-        props.set_node_is_moving()
+        set_node_is_moving()
     }
 
     return <div

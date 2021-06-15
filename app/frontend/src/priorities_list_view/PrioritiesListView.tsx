@@ -61,7 +61,7 @@ function _PrioritiesListViewContent (props: Props)
 
     return <div className="priorities_list_view_content">
         <h1>Potential</h1>
-        {props.goals.map(goal => <WComponentCanvasNode id={goal.id} />)}
+        {props.goals.map(goal => <WComponentCanvasNode id={goal.id} on_graph={false} />)}
 
         <h1>Prioritised</h1>
         <h1>Deprioritised</h1>

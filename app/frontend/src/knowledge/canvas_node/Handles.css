@@ -1,12 +1,10 @@
 
 .wcomponent_canvas_node .handles
 {
-    border: none;
-    background-color: initial;
     user-select: none;
     position: absolute;
     left: -12px;
-    top: 0px;
+    top: 3px;
     font-size: 15px;
 }
 

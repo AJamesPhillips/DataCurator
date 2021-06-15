@@ -7,7 +7,7 @@ import type { NodePositionAndDimensions } from "./interfaces"
 interface CanvasNodeProps
 {
     get_ref?: (ref: HTMLDivElement) => void
-    position: NodePositionAndDimensions
+    position?: NodePositionAndDimensions
     extra_styles?: h.JSX.CSSProperties
     display?: boolean
     extra_css_class?: string
@@ -30,13 +30,14 @@ export class CanvasNode extends Component<CanvasNodeProps>
 
         const style_outer: h.JSX.CSSProperties = {
             ...position,
+            position: position ? "absolute" : "relative",
             display: display === undefined ? "" : (display ? "" : "none"),
             ...extra_styles,
         }
 
-        const mouseable = (on_pointer_down || on_click || on_pointer_enter || on_pointer_leave) ? " mouseable " : ""
+        const mouseable = (on_pointer_down || on_click || on_pointer_enter || on_pointer_leave) ? "mouseable" : ""
 
-        const css_class_names = "graph_node " + mouseable + (extra_css_class || "")
+        const css_class_names = `node ${mouseable} ${extra_css_class || ""}`
 
         return <div
             {...(this.props.extra_args || {})}
