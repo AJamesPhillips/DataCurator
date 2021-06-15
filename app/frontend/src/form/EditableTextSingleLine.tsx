@@ -114,7 +114,15 @@ interface HandleTextFieldChangeArgs
 export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
     update_parent_placeholder_css_class(args.e)
-    optionally_set_id_insertion_point(args)
+    const id_insertion_point = get_id_insertion_point(args)
+
+    args.conditional_on_change(args.e.currentTarget.value)
+
+    if (id_insertion_point !== undefined)
+    {
+        // note: will cause search modal to open
+        args.set_id_insertion_point(id_insertion_point)
+    }
 }
 
 
@@ -127,25 +135,26 @@ function update_parent_placeholder_css_class (e: h.JSX.TargetedEvent<HTMLInputEl
 }
 
 
-function optionally_set_id_insertion_point (args: HandleTextFieldChangeArgs)
+function get_id_insertion_point (args: HandleTextFieldChangeArgs)
 {
 
     // Protect against IE
     const { selectionStart, value } = args.e.currentTarget
-    if (typeof selectionStart !== "number") return
+    if (typeof selectionStart === "number")
+    {
+        const char1 = value[selectionStart - 2]
+        const char2 = value[selectionStart - 1]
 
-    const char1 = value[selectionStart - 2]
-    const char2 = value[selectionStart - 1]
+        if (char1 === "@" && char2 === "@")
+        {
+            if (!store) store = config_store()
 
-    if (char1 !== "@" || char2 !== "@") return
-
-    if (!store) store = config_store()
-
-    if (store.getState().global_keys.last_key !== "@") return
-
-    args.conditional_on_change(value)
-    // Open search modal
-    args.set_id_insertion_point(selectionStart)
+            if (store.getState().global_keys.last_key === "@")
+            {
+                return selectionStart
+            }
+        }
+    }
 }
 
 
