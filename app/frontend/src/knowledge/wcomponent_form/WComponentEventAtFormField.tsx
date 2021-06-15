@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { get_new_created_ats } from "../../shared/utils/datetime"
-import type { WComponentNodeEvent } from "../../shared/wcomponent/interfaces/event"
+import type { EventAt } from "../../shared/wcomponent/interfaces/event"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
 import { UncertainDateTime } from "../uncertainty/datetime"
@@ -11,7 +11,7 @@ import { UncertainDateTime } from "../uncertainty/datetime"
 
 interface OwnProps
 {
-    wcomponent: WComponentNodeEvent
+    wcomponent: Partial<EventAt>
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
@@ -26,7 +26,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _WComponentEventFormFields (props: Props)
+function _WComponentEventAtFormField (props: Props)
 {
     const { wcomponent, creation_context_state, upsert_wcomponent } = props
     const event_at = wcomponent.event_at && wcomponent.event_at[0]
@@ -38,7 +38,7 @@ function _WComponentEventFormFields (props: Props)
             datetime={event_at ? event_at.datetime : {}}
             on_change={datetime =>
             {
-                const partial_wcomponent: Partial<WComponentNodeEvent> =
+                const partial_wcomponent: EventAt =
                 {
                     event_at: [{
                         ...(event_at || { ...get_new_created_ats(creation_context_state) }),
@@ -55,4 +55,4 @@ function _WComponentEventFormFields (props: Props)
     </p>
 }
 
-export const WComponentEventFormFields = connector(_WComponentEventFormFields) as FunctionalComponent<OwnProps>
+export const WComponentEventAtFormField = connector(_WComponentEventAtFormField) as FunctionalComponent<OwnProps>

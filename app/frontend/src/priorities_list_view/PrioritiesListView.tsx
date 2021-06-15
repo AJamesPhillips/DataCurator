@@ -34,7 +34,7 @@ const map_state = (state: RootState) =>
 
     const knowledge_view = get_current_UI_knowledge_view_from_state(state)
     const goals: WComponentNodeGoal[] = []
-    const prioritisations: WComponentPrioritisation[] = []
+    let prioritisations: WComponentPrioritisation[] = []
 
     if (knowledge_view)
     {
@@ -47,14 +47,7 @@ const map_state = (state: RootState) =>
             goals.push(goal)
         })
 
-        knowledge_view.wc_ids_by_type.prioritisation.forEach(id =>
-        {
-            const prioritisation = wcomponents_by_id[id]
-
-            if (!alert_wcomponent_is_prioritisation(prioritisation, id)) return
-
-            prioritisations.push(prioritisation)
-        })
+        prioritisations = knowledge_view.prioritisations
     }
 
     return {
