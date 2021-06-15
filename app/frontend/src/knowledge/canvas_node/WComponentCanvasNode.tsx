@@ -10,6 +10,7 @@ import {
     connection_terminal_attributes,
     connection_terminal_directions,
     WComponent,
+    wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state,
     wcomponent_is_action,
     wcomponent_is_goal,
@@ -182,7 +183,7 @@ function _WComponentCanvasNode (props: Props)
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = props.is_editing || is_highlighted || is_current_item
+    const show_validity_value = (props.is_editing || is_highlighted || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
     const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)

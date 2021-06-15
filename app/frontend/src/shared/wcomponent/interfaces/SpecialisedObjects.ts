@@ -214,14 +214,13 @@ export function wcomponent_has_validity_predictions (wcomponent: WComponent): wc
 {
     return (wcomponent as ValidityPredictions).validity !== undefined
 }
+const types_without_validity: Set<WComponentType> = new Set([
+    "prioritisation",
+    "counterfactual",
+])
 export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
-    const not_types: Set<WComponentType> = new Set([
-        "prioritisation",
-        "counterfactual",
-    ])
-
-    return !not_types.has(wcomponent.type)
+    return !types_without_validity.has(wcomponent.type)
 }
 
 
