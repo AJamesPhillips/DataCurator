@@ -11,10 +11,11 @@ import {
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { EditableNumber } from "../form/EditableNumber"
-import type { WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
+import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"
+import { ACTIONS } from "../state/actions"
 
 
 
@@ -51,7 +52,7 @@ const map_state = (state: RootState) =>
 
 
     const { item_id } = state.routing
-    const selected_prioritisation_id = prioritisations.find(({ id }) => id === item_id) ? item_id : undefined
+    const selected_prioritisation = prioritisations.find(({ id }) => id === item_id)
 
     return {
         knowledge_view_id: knowledge_view && knowledge_view.id,
@@ -59,19 +60,26 @@ const map_state = (state: RootState) =>
         prioritisations,
         editing: !state.display_options.consumption_formatting,
         creation_context: state.creation_context,
-        selected_prioritisation_id,
+        selected_prioritisation,
     }
 }
 
 
-const connector = connect(map_state)
+const map_dispatch = {
+    upsert_wcomponent: ACTIONS.specialised_object.upsert_wcomponent,
+}
+
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
 
 function _PrioritiesListViewContent (props: Props)
 {
-    const { goals, prioritisations, editing, knowledge_view_id } = props
+    const { goals, prioritisations, editing, knowledge_view_id, selected_prioritisation } = props
+
+    const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals || {}
 
     return <div className="priorities_list_view_content">
         <div className="goals">
@@ -80,17 +88,25 @@ function _PrioritiesListViewContent (props: Props)
             {goals.map(goal => <div style={{ display: "flex" }}>
                 <WComponentCanvasNode id={goal.id} on_graph={false} />
 
-                <div>
+                {selected_prioritisation && editing && <div>
                     <br />
                     <span class="description_label">Effort</span> &nbsp;
                     <EditableNumber
                         placeholder="..."
-                        allow_undefined={false}
-                        value={0}
-                        disabled={props.selected_prioritisation_id === undefined}
-                        on_change={new_effort => {}}
+                        allow_undefined={true}
+                        value={goal_prioritisation_attributes[goal.id]?.effort}
+                        on_change={new_effort =>
+                        {
+
+                            const goals_attributes: PrioritisedGoalAttributes = { ...goal_prioritisation_attributes }
+                            if (new_effort === undefined) delete goals_attributes[goal.id]
+                            else goals_attributes[goal.id] = { effort: new_effort }
+
+                            const new_selected_prioritisation = { ...selected_prioritisation, goals: goals_attributes }
+                            props.upsert_wcomponent({ wcomponent: new_selected_prioritisation })
+                        }}
                     />
-                </div>
+                </div>}
 
             </div>)}
 
