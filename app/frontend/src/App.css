@@ -76,6 +76,10 @@ table.list
 {
   color: #999;
 }
+.not_editable
+{
+  cursor: not-allowed;
+}
 
 a
 {

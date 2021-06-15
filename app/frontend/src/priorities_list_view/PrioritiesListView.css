@@ -19,3 +19,10 @@
     flex: 1;
     padding: 20px;
 }
+
+.prioritisations_header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

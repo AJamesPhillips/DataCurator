@@ -1,6 +1,9 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import "./Editable.css"
+import "./EditableNumber.css"
+import type { RootState } from "../state/State"
 import { EditableTextSingleLine } from "./EditableTextSingleLine"
 
 
@@ -22,19 +25,34 @@ type OwnProps =
 }
 
 
-export function EditableNumber (props: OwnProps)
+
+const map_state = (state: RootState) => ({
+    editing: !state.display_options.consumption_formatting,
+})
+
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+
+function _EditableNumber (props: Props)
 {
     const value = props.value !== undefined ? props.value.toString() : ""
 
-    const { allow_undefined, on_change, disabled } = props
-    if (!on_change || disabled)
+    const { allow_undefined, on_change, disabled, editing } = props
+
+
+    let class_name = "editable_number"
+
+    if (!editing || !on_change || disabled)
     {
-        const class_name = (disabled ? "disabled" : "")
-        return <div className={class_name}>{props.value || props.placeholder}</div>
+        class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "")
+        return <div className={class_name}>{props.value === undefined ? props.placeholder : props.value}</div>
     }
 
 
-    return <div style={{ width: 50, display: "inline-flex" }}>
+    return <div className={class_name}>
         <EditableTextSingleLine
             placeholder={props.placeholder}
             value={value}
@@ -46,6 +64,8 @@ export function EditableNumber (props: OwnProps)
         />
     </div>
 }
+
+export const EditableNumber = connector(_EditableNumber) as FunctionalComponent<OwnProps>
 
 
 
