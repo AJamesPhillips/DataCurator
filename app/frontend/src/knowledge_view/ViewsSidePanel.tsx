@@ -67,7 +67,11 @@ function _ViewsSidePanel (props: Props)
         <h3>Views</h3>
 
         <ViewLinkButton view="priorities" />
-        <ViewLinkButton view="priorities_list" name="List" subview_id={props.prioritisation_id} />
+        <ViewLinkButton
+            view="priorities_list" name="List"
+            subview_id={props.knowledge_view_id}
+            item_id={props.prioritisation_id}
+        />
         <br />
         <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
         <br />
@@ -89,6 +93,7 @@ interface ViewLinkButtonProps
     view: ViewType
     name?: string
     subview_id?: string
+    item_id?: string
 }
 function ViewLinkButton (props: ViewLinkButtonProps)
 {
@@ -98,7 +103,7 @@ function ViewLinkButton (props: ViewLinkButtonProps)
         name={name}
         route={undefined}
         sub_route={undefined}
-        item_id={undefined}
+        item_id={props.item_id}
         args={{ view: props.view, subview_id: props.subview_id }}
         selected_on={new Set(["args.view"])}
     />
