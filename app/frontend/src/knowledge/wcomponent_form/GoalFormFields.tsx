@@ -5,7 +5,10 @@ import { MultiAutocompleteText } from "../../form/Autocomplete/MultiAutocomplete
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
 import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
-import { WComponent, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    alert_wcomponent_is_judgement_or_objective,
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
 import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -32,17 +35,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         ids.forEach(id =>
         {
             const wc = state.specialised_objects.wcomponents_by_id[id]
-            if (!wc)
-            {
-                console.error(`Unable to find wcomponent for id: "${id}"`)
-                return
-            }
-
-            if (!wcomponent_is_judgement_or_objective(wc))
-            {
-                console.error(`wcomponent with id: "${id}" should be of type judgement or objective but is of type: "${wc.type}"`)
-                return
-            }
+            if (!alert_wcomponent_is_judgement_or_objective(wc, id)) return
 
             filtered_wcomponents.push(wc)
         })

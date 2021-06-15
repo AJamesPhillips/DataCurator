@@ -169,9 +169,23 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
 
-export function wcomponent_is_judgement_or_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
+
+
+export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined): wcomponent is WComponentJudgement
 {
-    return wcomponent.type === "judgement" || wcomponent.type === "objective"
+    return wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
+}
+export function alert_wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentJudgement
+{
+    const result = wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
+
+    if (!result && log_error_id)
+    {
+        if (!wcomponent) console.error(`wcomponent with id "${log_error_id}" does not exist`)
+        else console.error(`wcomponent with id "${log_error_id}" is not a judgement or objective`)
+    }
+
+    return result
 }
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
