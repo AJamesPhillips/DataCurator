@@ -7,7 +7,6 @@ import { MainArea } from "../layout/MainArea"
 import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
 import {
     alert_wcomponent_is_goal,
-    alert_wcomponent_is_prioritisation,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
@@ -50,12 +49,17 @@ const map_state = (state: RootState) =>
         prioritisations = knowledge_view.prioritisations
     }
 
+
+    const { item_id } = state.routing
+    const selected_prioritisation_id = prioritisations.find(({ id }) => id === item_id) ? item_id : undefined
+
     return {
         knowledge_view_id: knowledge_view && knowledge_view.id,
         goals,
         prioritisations,
         editing: !state.display_options.consumption_formatting,
         creation_context: state.creation_context,
+        selected_prioritisation_id,
     }
 }
 
@@ -79,7 +83,13 @@ function _PrioritiesListViewContent (props: Props)
                 <div>
                     <br />
                     <span class="description_label">Effort</span> &nbsp;
-                    <EditableNumber placeholder="..." allow_undefined={false} value={0} on_change={new_effort => {}} />
+                    <EditableNumber
+                        placeholder="..."
+                        allow_undefined={false}
+                        value={0}
+                        disabled={props.selected_prioritisation_id === undefined}
+                        on_change={new_effort => {}}
+                    />
                 </div>
 
             </div>)}
