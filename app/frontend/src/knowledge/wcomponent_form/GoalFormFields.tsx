@@ -10,7 +10,7 @@ import {
     alert_wcomponent_is_judgement_or_objective,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
-import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_UI_knowledge_view_from_state, get_wcomponents_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 
 
@@ -32,12 +32,10 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         const { judgement, objective } = kv.wc_ids_by_type
 
         const ids = Array.from(judgement).concat(Array.from(objective))
-        ids.forEach(id =>
+        get_wcomponents_from_state(state, ids)
+        .forEach((wc, index) =>
         {
-            const wc = state.specialised_objects.wcomponents_by_id[id]
-            if (!alert_wcomponent_is_judgement_or_objective(wc, id)) return
-
-            filtered_wcomponents.push(wc)
+            if (alert_wcomponent_is_judgement_or_objective(wc, ids[index]!)) filtered_wcomponents.push(wc)
         })
     }
 

@@ -7,6 +7,7 @@ import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "./calculate_judgement_value"
 import { JudgementBadge } from "./JudgementBadge"
+import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 
 
 
@@ -18,14 +19,14 @@ interface OwnProps
 
 
 const map_state = (state: RootState, own_props: OwnProps) => {
-    const wcomponent = state.specialised_objects.wcomponents_by_id[own_props.judgement_id]
+    const wcomponent = get_wcomponent_from_state(state, own_props.judgement_id)
 
     let target_wcomponent: WComponent | undefined = undefined
     let target_counterfactuals: WComponentCounterfactuals | undefined = undefined
     if (wcomponent && wcomponent_is_judgement_or_objective(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
-        target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
+        target_wcomponent = get_wcomponent_from_state(state, target_id)
         target_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
     }
 

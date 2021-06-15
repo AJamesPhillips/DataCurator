@@ -6,6 +6,7 @@ import { update_substate } from "../../utils/update_state"
 import { knowledge_views_derived_reducer } from "../specialised_objects/knowledge_views/derived_reducer"
 import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
+import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 
 
 
@@ -69,10 +70,7 @@ function update_judgement_ids_by_target_id (state: RootState)
 
     const judgement_ids = state.derived.wcomponent_ids_by_type.judgement
 
-    Array.from(judgement_ids).map(judgement_id =>
-    {
-        return state.specialised_objects.wcomponents_by_id[judgement_id]
-    })
+    get_wcomponents_from_state(state, Array.from(judgement_ids))
     .filter(is_defined)
     .filter(wcomponent_is_judgement_or_objective)
     // .sort () // some kind of sort so that front end display is stable and predictable
@@ -94,10 +92,7 @@ function update_judgement_ids_by_goal_id (state: RootState)
 
     const goal_ids = state.derived.wcomponent_ids_by_type.goal
 
-    Array.from(goal_ids).map(goal_id =>
-    {
-        return state.specialised_objects.wcomponents_by_id[goal_id]
-    })
+    get_wcomponents_from_state(state, Array.from(goal_ids))
     .filter(is_defined)
     .filter(wcomponent_is_goal)
     // .sort () // some kind of sort so that front end display is stable and predictable

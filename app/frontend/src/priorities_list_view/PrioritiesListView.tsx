@@ -13,7 +13,6 @@ import { get_current_UI_knowledge_view_from_state } from "../state/specialised_o
 import type { RootState } from "../state/State"
 import { EditableNumber } from "../form/EditableNumber"
 import type { WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
-import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"

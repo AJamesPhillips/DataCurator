@@ -14,6 +14,7 @@ import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
 import { DisplayValue } from "./multiple_values/DisplayValue"
+import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 
 
 
@@ -33,7 +34,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
-        target_wcomponent = state.specialised_objects.wcomponents_by_id[target_id]
+        target_wcomponent = get_wcomponent_from_state(state, target_id)
         wc_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
     }
     else

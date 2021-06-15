@@ -9,6 +9,10 @@ export function get_wcomponent_from_state (state: RootState, id: string | null):
 {
     return id ? state.specialised_objects.wcomponents_by_id[id] : undefined
 }
+export function get_wcomponents_from_state (state: RootState, ids: string[]): (WComponent | undefined)[]
+{
+    return ids.map(id => get_wcomponent_from_state(state, id))
+}
 
 
 export function get_perception_from_state (state: RootState, id: string | null): Perception | undefined

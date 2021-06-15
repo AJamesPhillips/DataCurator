@@ -3,7 +3,7 @@ import { update_substate } from "../../utils/update_state"
 import { get_project_priorities_meta } from "./get_project_priorities_meta"
 
 
-
+// TODO remove this file once prioritisations is in derived current UI Knowledge View
 export function project_priorities_derived_reducer (initial_state: RootState, state: RootState): RootState
 {
     const should_update_project_priorities_meta = initial_state.objects !== state.objects

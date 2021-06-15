@@ -1,18 +1,20 @@
 import {
-    wcomponent_is_counterfactual,
+    wcomponent_is_counterfactual, wcomponent_is_prioritisation,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
-import { get_base_knowledge_view } from "../accessors"
+import { get_base_knowledge_view, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 import { is_knowledge_view_id } from "../../../shared/utils/ids"
+import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
+import { get_sim_datetime_ms } from "../../../shared/wcomponent/utils_datetime"
 
 
 
@@ -100,12 +102,14 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
     const derived_wc_id_map = get_derived_wc_id_map(current_kv, intial_state, state)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, Object.keys(derived_wc_id_map))
+    const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
     const current_UI_knowledge_view: DerivedUIKnowledgeView = {
         ...current_kv,
         derived_wc_id_map,
         wc_id_counterfactuals_map,
         wc_ids_by_type,
+        prioritisations,
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_UI_knowledge_view as any).wc_id_map
@@ -143,7 +147,7 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
 
     Object.keys(knowledge_view.wc_id_map).forEach(wcomponent_id =>
     {
-        const counterfactual = state.specialised_objects.wcomponents_by_id[wcomponent_id]
+        const counterfactual = get_wcomponent_from_state(state, wcomponent_id)
         if (!wcomponent_is_counterfactual(counterfactual)) return
 
         const { target_wcomponent_id, target_VAP_set_id, target_VAP_id } = counterfactual
@@ -163,4 +167,14 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
     })
 
     return map
+}
+
+
+
+function get_prioritisations (state: RootState, prioritisation_ids: Set<string>): WComponentPrioritisation[]
+{
+    const prioritisations = get_wcomponents_from_state(state, Array.from(prioritisation_ids))
+        .filter(wcomponent_is_prioritisation)
+
+    return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")
 }

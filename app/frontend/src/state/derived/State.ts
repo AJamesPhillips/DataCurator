@@ -9,6 +9,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../shared/uncertainty/uncertainty"
 import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent_base"
+import type { WComponentPrioritisation } from "../../shared/wcomponent/interfaces/priorities"
 
 
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
@@ -16,6 +17,7 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wc_id_counterfactuals_map: WcIdCounterfactualsMap
     wc_ids_by_type: WComponentIdsByType
+    prioritisations: WComponentPrioritisation[]
 }
 
 
