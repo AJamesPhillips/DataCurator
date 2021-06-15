@@ -1,4 +1,4 @@
-import { h } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { Ref, useRef, useState } from "preact/hooks"
 import type { Store } from "redux"
 
@@ -6,6 +6,7 @@ import "./Editable.css"
 import { config_store } from "../state/store"
 import type { RootState } from "../state/State"
 import { WComponentSearchWindow } from "../search/WComponentSearchWindow"
+import { connect, ConnectedProps } from "react-redux"
 
 
 
@@ -21,14 +22,25 @@ interface OwnProps
 }
 
 
-export function EditableTextSingleLine (props: OwnProps)
+
+const map_state = (state: RootState) => ({
+    presenting: state.display_options.consumption_formatting,
+})
+
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+
+function _EditableTextSingleLine (props: Props)
 {
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { on_change, disabled } = props
-    if (!on_change || disabled)
+    const { on_change, disabled, presenting } = props
+    if (!on_change || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
         return <div className={class_name}>{props.value || props.placeholder}</div>
@@ -37,7 +49,11 @@ export function EditableTextSingleLine (props: OwnProps)
 
     const conditional_on_change = (new_value: string) => new_value !== props.value && on_change(new_value)
 
-    return <div class={"editable_field " + (!props.value ? " placeholder " : "")}>
+
+    const class_name = `editable_field ${props.value ? "" : "placeholder"}`
+
+
+    return <div className={class_name}>
         <input
             type="text"
             placeholder={props.placeholder}
@@ -84,6 +100,9 @@ export function EditableTextSingleLine (props: OwnProps)
         />}
     </div>
 }
+
+export const EditableTextSingleLine = connector(_EditableTextSingleLine) as FunctionalComponent<OwnProps>
+
 
 
 interface HandleTextFieldChangeArgs

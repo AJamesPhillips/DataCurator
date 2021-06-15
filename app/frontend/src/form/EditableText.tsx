@@ -21,7 +21,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    rich_text: state.display_options.consumption_formatting,
+    presenting: state.display_options.consumption_formatting,
 })
 
 
@@ -36,9 +36,9 @@ function _EditableText (props: Props)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { placeholder, value, on_change, rich_text } = props
+    const { placeholder, value, on_change, presenting } = props
 
-    if (!on_change || rich_text)
+    if (!on_change || presenting)
     {
         return <RichMarkDown text={props.value} />
     }

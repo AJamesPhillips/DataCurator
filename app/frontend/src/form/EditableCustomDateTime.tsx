@@ -23,20 +23,20 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     time_resolution: state.display_options.time_resolution,
+    presenting: state.display_options.consumption_formatting,
 })
 
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
-const shorten_if_only_days = true
 
 function _EditableCustomDateTime (props: Props)
 {
     const display_value = props_to_str_value(props)
     const [editing, set_editing] = useState(false)
 
-    const no_entry_class_name = display_value ? "" : " no_entry "
+    const no_entry_class_name = display_value ? "" : "no_entry"
 
     const { on_change } = props
     if (!on_change) return <div className={no_entry_class_name}>{display_value}</div>
@@ -48,11 +48,12 @@ function _EditableCustomDateTime (props: Props)
     const valid = is_value_valid(display_value)
 
 
-    const class_name = "editable_field " + (valid ? "" : "invalid ") + no_entry_class_name
+    const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${props.presenting ? "not_editable" : "" }`
     const title = "Created at " + (props.value ? "(custom)" : "")
 
     return <div className={class_name} title={title}>
         <input
+            disabled={props.presenting}
             type="text"
             value={display_value}
             onFocus={() => set_editing(true)}

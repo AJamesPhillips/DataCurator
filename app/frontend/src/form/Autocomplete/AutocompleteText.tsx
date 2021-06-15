@@ -1,8 +1,10 @@
-import { Component, h, Options } from "preact"
+import { Component, FunctionalComponent, h, Options } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
 import { sort_list } from "../../shared/utils/sort"
+import { connect, ConnectedProps } from "react-redux"
+import type { RootState } from "../../state/State"
 
 
 interface BaseAutocompleteOption
@@ -51,12 +53,24 @@ interface State
     highlighted_option_index: number
 }
 
-export class AutocompleteText <E extends AutocompleteOption> extends Component <OwnProps<E>, State>
+
+
+const map_state = (state: RootState) => ({
+    presenting: state.display_options.consumption_formatting,
+})
+
+
+const connector = connect(map_state)
+type Props <E extends AutocompleteOption> = ConnectedProps<typeof connector> & OwnProps<E>
+
+
+
+class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<E>, State>
 {
     private prepared_targets: (Fuzzysort.Prepared | undefined)[] = []
     private options: InternalAutocompleteOption[] = []
 
-    constructor (props: OwnProps<E>)
+    constructor (props: Props<E>)
     {
         super(props)
         this.state = {
@@ -188,12 +202,12 @@ export class AutocompleteText <E extends AutocompleteOption> extends Component <
             return index === highlighted_option_index
         }
 
-
         return <div
             class={"editable_field autocomplete " + (valid ? "" : "invalid ")}
             style={this.props.extra_styles}
         >
             <input
+                disabled={this.props.presenting}
                 ref={r =>
                 {
                     if (!r || !this.state.editing) return
@@ -232,6 +246,13 @@ export class AutocompleteText <E extends AutocompleteOption> extends Component <
         </div>
     }
 }
+
+export function AutocompleteText <E extends AutocompleteOption> (props: OwnProps<E>)
+{
+    const Wrapped = connector(_AutocompleteText)
+    return <Wrapped {...props} />
+}
+
 
 
 function get_valid_value (options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined

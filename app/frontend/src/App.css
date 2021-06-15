@@ -76,7 +76,7 @@ table.list
 {
   color: #999;
 }
-.not_editable
+.not_editable, .not_editable input
 {
   cursor: not-allowed;
 }
