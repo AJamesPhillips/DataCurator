@@ -6,9 +6,9 @@ import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasN
 import { MainArea } from "../layout/MainArea"
 import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
 import { alert_wcomponent_is_goal } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { EditableNumber } from "../form/EditableNumber"
 
 
 
@@ -61,7 +61,17 @@ function _PrioritiesListViewContent (props: Props)
 
     return <div className="priorities_list_view_content">
         <h1>Potential</h1>
-        {props.goals.map(goal => <WComponentCanvasNode id={goal.id} on_graph={false} />)}
+
+        {props.goals.map(goal => <div style={{ display: "flex" }}>
+            <WComponentCanvasNode id={goal.id} on_graph={false} />
+
+            <div>
+                <br />
+                <span class="description_label">Effort</span> &nbsp;
+                <EditableNumber placeholder="..." allow_undefined={false} value={0} on_change={new_effort => {}} />
+            </div>
+
+        </div>)}
 
         <h1>Prioritised</h1>
         <h1>Deprioritised</h1>
