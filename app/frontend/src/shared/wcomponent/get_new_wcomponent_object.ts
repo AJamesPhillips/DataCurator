@@ -67,7 +67,6 @@ export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponen
             ...base,
             title: date2str_auto({ date: when, time_resolution: "day" }),
             goals: {},
-            explanation: "",
             datetime: { min: when },
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
