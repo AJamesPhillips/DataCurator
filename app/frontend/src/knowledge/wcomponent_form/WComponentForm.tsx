@@ -43,6 +43,7 @@ import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { GoalFormFields } from "./GoalFormFields"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
+import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 
 
 
@@ -148,7 +149,16 @@ function _WComponentForm (props: Props)
                     placeholder={"Type..."}
                     selected_option_id={wcomponent.type}
                     options={wcomponent_type_options}
-                    on_change={option_id => upsert_wcomponent({ type: option_id })}
+                    on_change={type =>
+                    {
+                        if (!type) return
+
+                        // This ensures it will always have the fields it is expected to have
+                        const vanilla = get_contextless_new_wcomponent_object({ type }) as WComponent
+                        const new_wcomponent = { ...vanilla, ...wcomponent }
+                        new_wcomponent.type = type
+                        upsert_wcomponent(new_wcomponent)
+                    }}
                 />
             </div>
         </p>

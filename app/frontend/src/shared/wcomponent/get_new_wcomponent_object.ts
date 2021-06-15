@@ -2,6 +2,7 @@ import type { CreationContextState } from "../creation_context/state"
 import { get_new_created_ats } from "../utils/datetime"
 import { date2str_auto } from "../utils/date_helpers"
 import { get_new_wcomponent_id } from "../utils/ids"
+import type { WComponentNodeGoal } from "./interfaces/goal"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponentPrioritisation } from "./interfaces/priorities"
 import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
@@ -10,11 +11,11 @@ import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 
-export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent>, creation_context: CreationContextState)
+export function get_contextless_new_wcomponent_object (partial_wcomponent: Partial<WComponent>)
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
-        ...get_new_created_ats(creation_context),
+        created_at: new Date(),
         title: "",
         description: "",
         type: "process",
@@ -73,6 +74,18 @@ export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponen
         }
         wcomponent = prioritisation
     }
+    else if (partial_wcomponent.type === "goal")
+    {
+        const when = base.custom_created_at || base.created_at
+
+        const goal: WComponentNodeGoal = {
+            ...base,
+            ...partial_wcomponent,
+            objective_ids: [],
+            type: partial_wcomponent.type, // only added to remove type warning
+        }
+        wcomponent = goal
+    }
     else
     {
         const node: WComponentNode = {
@@ -82,6 +95,18 @@ export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponen
             type: partial_wcomponent.type || "process", // only added to remove type warning
         }
         wcomponent = node
+    }
+
+    return wcomponent
+}
+
+
+
+export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent>, creation_context: CreationContextState)
+{
+    const wcomponent: WComponent = {
+        ...get_contextless_new_wcomponent_object(partial_wcomponent),
+        ...get_new_created_ats(creation_context),
     }
 
     return wcomponent
