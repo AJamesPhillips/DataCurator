@@ -16,6 +16,7 @@ import type { WComponentPrioritisation } from "../shared/wcomponent/interfaces/p
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
+import { Prioritisation } from "./Prioritisation"
 
 
 
@@ -118,11 +119,7 @@ function _PrioritiesListViewContent (props: Props)
             </div>
 
 
-            {factory_render_list_content({
-                items: prioritisations, get_id: p => p.id, update_items: () => {}, item_top_props: {
-                    get_summary: p => <div>{p.title}</div>, get_details: p => <div></div>
-                },
-            })({ disable_partial_collapsed: true, expanded_items: false, expanded_item_rows: false })}
+            {prioritisations.map(p => <Prioritisation prioritisation={p}/>)}
         </div>
     </div>
 }
