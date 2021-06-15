@@ -35,7 +35,6 @@
 .graph_node
 {
     position: absolute;
-    /* overflow: hidden; */
 }
 .graph_node.mouseable
 {
@@ -48,14 +47,6 @@
     white-space: nowrap;
     overflow: hidden;
     user-select: none;
-}
-.graph_node.max_width200
-{
-    max-width: 200px;
-}
-.graph_node:hover
-{
-    max-width: initial;
 }
 
 .graph_node > div
