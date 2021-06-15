@@ -97,7 +97,8 @@ function _PrioritiesListViewContent (props: Props)
     const { goals, prioritisations, editing, knowledge_view_id, selected_prioritisation } = props
 
 
-    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals, selected_prioritisation && selected_prioritisation.goals)
+    const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals
+    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals, goal_prioritisation_attributes)
 
 
     return <div className="priorities_list_view_content">
@@ -126,7 +127,7 @@ function _PrioritiesListViewContent (props: Props)
                     on_pointer_down_new_list_entry={() =>
                     {
                         create_wcomponent({
-                            wcomponent: { type: "prioritisation" },
+                            wcomponent: { type: "prioritisation", goals: goal_prioritisation_attributes || {} },
                             creation_context: props.creation_context,
                             add_to_knowledge_view: {
                                 id: knowledge_view_id,
