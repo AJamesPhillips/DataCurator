@@ -39,17 +39,18 @@ function _PrioritisableGoal (props: Props)
     const { goal, selected_prioritisation, editing } = props
 
     const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals || {}
+    const effort = goal_prioritisation_attributes[goal.id]?.effort
 
     return <div style={{ display: "flex" }}>
         <WComponentCanvasNode id={goal.id} on_graph={false} />
 
-        {selected_prioritisation && editing && <div>
+        {selected_prioritisation && (editing || !!effort) && <div>
             <br />
             <span class="description_label">Effort</span> &nbsp;
             <EditableNumber
                 placeholder="..."
                 allow_undefined={true}
-                value={goal_prioritisation_attributes[goal.id]?.effort}
+                value={effort}
                 on_blur={new_effort =>
                 {
                     const goals_attributes: PrioritisedGoalAttributes = { ...goal_prioritisation_attributes }
