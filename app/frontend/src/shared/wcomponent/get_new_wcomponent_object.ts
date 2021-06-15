@@ -10,7 +10,7 @@ import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 
-export function get_new_wcomponent_object (args: Partial<WComponent>, creation_context: CreationContextState)
+export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent>, creation_context: CreationContextState)
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
@@ -22,7 +22,7 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
 
     let wcomponent: WComponent
 
-    if (args.type === "causal_link" || args.type === "relation_link")
+    if (partial_wcomponent.type === "causal_link" || partial_wcomponent.type === "relation_link")
     {
         const causal_link: WComponentConnection = {
             from_id: "",
@@ -30,12 +30,12 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
             from_type: "state",
             to_type: "state",
             ...base,
-            ...args,
-            type: args.type, // only added to remove type warning
+            ...partial_wcomponent,
+            type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = causal_link
     }
-    else if (args.type === "judgement" || args.type === "objective")
+    else if (partial_wcomponent.type === "judgement" || partial_wcomponent.type === "objective")
     {
         const judgement: WComponentJudgement = {
             judgement_target_wcomponent_id: "",
@@ -43,23 +43,23 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
             judgement_comparator_value: "",
             judgement_manual: undefined,
             ...base,
-            ...args,
-            type: args.type, // only added to remove type warning
+            ...partial_wcomponent,
+            type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = judgement
     }
-    else if (args.type === "statev2")
+    else if (partial_wcomponent.type === "statev2")
     {
         const statev2: WComponentNodeStateV2 = {
             ...base,
             subtype: "boolean",
             values_and_prediction_sets: [],
-            ...args,
-            type: args.type, // only added to remove type warning
+            ...partial_wcomponent,
+            type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = statev2
     }
-    else if (args.type === "prioritisation")
+    else if (partial_wcomponent.type === "prioritisation")
     {
         const when = base.custom_created_at || base.created_at
 
@@ -69,8 +69,8 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
             goals: {},
             explanation: "",
             datetime: { min: when },
-            ...args,
-            type: args.type, // only added to remove type warning
+            ...partial_wcomponent,
+            type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = prioritisation
     }
@@ -79,8 +79,8 @@ export function get_new_wcomponent_object (args: Partial<WComponent>, creation_c
         const node: WComponentNode = {
             // encompassed_by: "",
             ...base,
-            ...args,
-            type: args.type || "process", // only added to remove type warning
+            ...partial_wcomponent,
+            type: partial_wcomponent.type || "process", // only added to remove type warning
         }
         wcomponent = node
     }

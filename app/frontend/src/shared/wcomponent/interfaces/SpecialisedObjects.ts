@@ -209,10 +209,21 @@ export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is 
     return (wcomponent as EventAt).event_at !== undefined
 }
 
+
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
     return (wcomponent as ValidityPredictions).validity !== undefined
 }
+export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
+{
+    const not_types: Set<WComponentType> = new Set([
+        "prioritisation",
+        "counterfactual",
+    ])
+
+    return !not_types.has(wcomponent.type)
+}
+
 
 export function wcomponent_has_existence_predictions (wcomponent: WComponent): wcomponent is (WComponent & ExistencePredictions)
 {

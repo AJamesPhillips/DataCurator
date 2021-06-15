@@ -5,7 +5,10 @@ import "./PrioritiesListView.css"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
 import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
-import { alert_wcomponent_is_goal, alert_wcomponent_is_prioritisation } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    alert_wcomponent_is_goal,
+    alert_wcomponent_is_prioritisation,
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { EditableNumber } from "../form/EditableNumber"

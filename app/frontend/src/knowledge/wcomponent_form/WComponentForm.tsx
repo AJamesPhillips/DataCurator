@@ -15,12 +15,12 @@ import {
     wcomponent_is_statev1,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_statev2,
-    wcomponent_has_validity_predictions,
     wcomponent_has_existence_predictions,
     wcomponent_is_event,
     wcomponent_is_causal_link,
     wcomponent_should_have_state_VAP_sets,
     wcomponent_is_goal,
+    wcomponent_can_have_validity_predictions,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
@@ -110,7 +110,7 @@ function _WComponentForm (props: Props)
     }
 
 
-    const orig_validity_predictions = wcomponent_has_validity_predictions(wcomponent) ? wcomponent.validity : []
+    const orig_validity_predictions = wcomponent_can_have_validity_predictions(wcomponent) ? (wcomponent.validity || []) : undefined
 
 
     const VAPs_represent = wcomponent_VAPs_represent(wcomponent)
@@ -243,7 +243,7 @@ function _WComponentForm (props: Props)
             />
         </p>
 
-        {(editing || orig_validity_predictions.length > 0) && <div>
+        {orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && <div>
             <br />
 
             <p>
