@@ -16,6 +16,9 @@ import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"
 import { ACTIONS } from "../state/actions"
+import { PrioritisableGoal } from "./PrioritisableGoal"
+import { sort_list } from "../shared/utils/sort"
+import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 
 
 
@@ -79,39 +82,23 @@ function _PrioritiesListViewContent (props: Props)
 {
     const { goals, prioritisations, editing, knowledge_view_id, selected_prioritisation } = props
 
-    const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals || {}
+
+    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals, selected_prioritisation && selected_prioritisation.goals)
+
 
     return <div className="priorities_list_view_content">
         <div className="goals">
             <h1>Potential</h1>
 
-            {goals.map(goal => <div style={{ display: "flex" }}>
-                <WComponentCanvasNode id={goal.id} on_graph={false} />
-
-                {selected_prioritisation && editing && <div>
-                    <br />
-                    <span class="description_label">Effort</span> &nbsp;
-                    <EditableNumber
-                        placeholder="..."
-                        allow_undefined={true}
-                        value={goal_prioritisation_attributes[goal.id]?.effort}
-                        on_change={new_effort =>
-                        {
-
-                            const goals_attributes: PrioritisedGoalAttributes = { ...goal_prioritisation_attributes }
-                            if (new_effort === undefined) delete goals_attributes[goal.id]
-                            else goals_attributes[goal.id] = { effort: new_effort }
-
-                            const new_selected_prioritisation = { ...selected_prioritisation, goals: goals_attributes }
-                            props.upsert_wcomponent({ wcomponent: new_selected_prioritisation })
-                        }}
-                    />
-                </div>}
-
-            </div>)}
+            {potential_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
 
             <h1>Prioritised</h1>
+
+            {prioritised_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
+
             <h1>Deprioritised</h1>
+
+            {deprioritised_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
         </div>
 
 
@@ -143,3 +130,50 @@ function _PrioritiesListViewContent (props: Props)
 }
 
 const PrioritiesListViewContent = connector(_PrioritiesListViewContent) as FunctionalComponent<{}>
+
+
+
+interface PartitionAndSortGoalsReturn
+{
+    potential_goals: WComponentNodeGoal[]
+    prioritised_goals: WComponentNodeGoal[]
+    deprioritised_goals: WComponentNodeGoal[]
+}
+function partition_and_sort_goals (goals: WComponentNodeGoal[], goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined): PartitionAndSortGoalsReturn
+{
+    let potential_goals: WComponentNodeGoal[] = []
+    let prioritised_goals: WComponentNodeGoal[] = []
+    let deprioritised_goals: WComponentNodeGoal[] = []
+
+
+    if (!goal_prioritisation_attributes)
+    {
+        potential_goals = goals
+    }
+    else
+    {
+        goals.forEach(goal =>
+        {
+            const goal_prioritisation_attribute = goal_prioritisation_attributes[goal.id]
+
+            if (!goal_prioritisation_attribute) potential_goals.push(goal)
+            else if (goal_prioritisation_attribute.effort > 0) prioritised_goals.push(goal)
+            else deprioritised_goals.push(goal)
+        })
+    }
+
+
+    potential_goals = sort_list(potential_goals, get_created_at_ms, "descending")
+    prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), "descending")
+    deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, "descending")
+
+
+    return { potential_goals, prioritised_goals, deprioritised_goals }
+}
+
+
+
+function factory_get_effort (goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined)
+{
+    return (goal: WComponentNodeGoal) => ((goal_prioritisation_attributes || {})[goal.id]?.effort) || 0
+}
