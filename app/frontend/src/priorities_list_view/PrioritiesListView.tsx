@@ -60,21 +60,29 @@ function _PrioritiesListViewContent (props: Props)
     const { wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms } = props
 
     return <div className="priorities_list_view_content">
-        <h1>Potential</h1>
+        <div className="goals">
+            <h1>Potential</h1>
 
-        {props.goals.map(goal => <div style={{ display: "flex" }}>
-            <WComponentCanvasNode id={goal.id} on_graph={false} />
+            {props.goals.map(goal => <div style={{ display: "flex" }}>
+                <WComponentCanvasNode id={goal.id} on_graph={false} />
 
-            <div>
-                <br />
-                <span class="description_label">Effort</span> &nbsp;
-                <EditableNumber placeholder="..." allow_undefined={false} value={0} on_change={new_effort => {}} />
-            </div>
+                <div>
+                    <br />
+                    <span class="description_label">Effort</span> &nbsp;
+                    <EditableNumber placeholder="..." allow_undefined={false} value={0} on_change={new_effort => {}} />
+                </div>
 
-        </div>)}
+            </div>)}
 
-        <h1>Prioritised</h1>
-        <h1>Deprioritised</h1>
+            <h1>Prioritised</h1>
+            <h1>Deprioritised</h1>
+        </div>
+
+
+
+        <div className="prioritisations">
+            <h1>Prioritisations</h1>
+        </div>
     </div>
 }
 

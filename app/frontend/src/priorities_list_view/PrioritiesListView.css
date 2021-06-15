@@ -2,4 +2,20 @@
 .priorities_list_view_content
 {
     padding: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.priorities_list_view_content .goals
+{
+    flex: 1;
+    margin: 20px;
+    border-right: thin solid #aaa;
+}
+
+.priorities_list_view_content .prioritisations
+{
+    flex: 1;
+    padding: 20px;
 }
