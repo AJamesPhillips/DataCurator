@@ -15,6 +15,7 @@ type OwnProps =
     value: number
     allow_undefined: false
     on_change?: (new_value: number) => void
+    on_blur?: (value: number) => void
 } |
 {
     disabled?: boolean
@@ -22,6 +23,7 @@ type OwnProps =
     value: number | undefined
     allow_undefined: true
     on_change?: (new_value: number | undefined) => void
+    on_blur?: (value: number | undefined) => void
 }
 
 
@@ -40,12 +42,12 @@ function _EditableNumber (props: Props)
 {
     const value = props.value !== undefined ? props.value.toString() : ""
 
-    const { allow_undefined, on_change, disabled, editing } = props
+    const { allow_undefined, on_change, on_blur, disabled, editing } = props
 
 
     let class_name = "editable_number"
 
-    if (!editing || !on_change || disabled)
+    if (!editing || (!on_change && !on_blur) || disabled)
     {
         class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "")
         return <div className={class_name}>{props.value === undefined ? props.placeholder : props.value}</div>
@@ -56,10 +58,21 @@ function _EditableNumber (props: Props)
         <EditableTextSingleLine
             placeholder={props.placeholder}
             value={value}
-            on_change={new_value => {
+            on_change={new_value =>
+            {
+                if (!on_change) return
+
                 const valid_value = string_to_number(new_value)
-                if (on_change_accepts_undefined(on_change, allow_undefined)) on_change(valid_value)
+                if (on_event_handler_accepts_undefined(on_change, allow_undefined)) on_change(valid_value)
                 else if (valid_value !== undefined) on_change(valid_value)
+            }}
+            on_blur={value =>
+            {
+                if (!on_blur) return
+
+                const valid_value = string_to_number(value)
+                if (on_event_handler_accepts_undefined(on_blur, allow_undefined)) on_blur(valid_value)
+                else if (valid_value !== undefined) on_blur(valid_value)
             }}
         />
     </div>
@@ -81,7 +94,7 @@ function string_to_number (value: string): number | undefined
 
 
 
-function on_change_accepts_undefined (on_change: (v: number) => void, allow_undefined?: boolean): on_change is (v: number | undefined) => void
+function on_event_handler_accepts_undefined (on_change: (v: number) => void, allow_undefined?: boolean): on_change is (v: number | undefined) => void
 {
     return !!allow_undefined
 }

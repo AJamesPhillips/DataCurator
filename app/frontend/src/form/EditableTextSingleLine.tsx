@@ -19,6 +19,7 @@ interface OwnProps
     placeholder: string
     value: string
     on_change?: (new_value: string) => void
+    on_blur?: (value: string) => void
 }
 
 
@@ -39,7 +40,7 @@ function _EditableTextSingleLine (props: Props)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { on_change, disabled, presenting } = props
+    const { on_change, on_blur, disabled, presenting } = props
     if (!on_change || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
@@ -88,6 +89,7 @@ function _EditableTextSingleLine (props: Props)
                 if (!e.currentTarget.value) e.currentTarget.placeholder = props.placeholder
 
                 conditional_on_change(e.currentTarget.value)
+                on_blur && on_blur(e.currentTarget.value)
             }}
         />
 
