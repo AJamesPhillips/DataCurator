@@ -43,7 +43,8 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
     if (wcomponent_has_VAP_sets(wcomponent))
     {
-        wcomponent.values_and_prediction_sets = wcomponent.values_and_prediction_sets && wcomponent.values_and_prediction_sets.map(parse_values_and_predictions_set)
+        const VAP_sets = wcomponent.values_and_prediction_sets
+        wcomponent.values_and_prediction_sets = VAP_sets && VAP_sets.map(parse_values_and_predictions_set)
     }
 
     if (wcomponent_has_event_at(wcomponent))
@@ -68,6 +69,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
     return wcomponent
 }
+
 
 
 // Upgrade valid as of 2021-05-19
@@ -144,6 +146,7 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
 
     return upgraded_wcomponent as WComponent
 }
+
 
 
 function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent

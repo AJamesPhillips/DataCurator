@@ -18,7 +18,7 @@ export function get_sim_datetime (item: HasDateTime)
     return (item.datetime.min || item.datetime.value || item.datetime.max)
 }
 
-function get_sim_datetime_ms (item: HasDateTime)
+export function get_sim_datetime_ms (item: HasDateTime)
 {
     const dt = get_sim_datetime(item)
     return dt === undefined ? undefined : dt.getTime()

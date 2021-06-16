@@ -14,7 +14,7 @@ import type {
 import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
-import type { WComponentBase, WComponentConnectionType, WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
 
 
@@ -109,10 +109,50 @@ export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WCo
     return wcomponent.type === "action"
 }
 
-export function wcomponent_is_goal (wcomponent: WComponent): wcomponent is WComponentNodeGoal
+
+function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefined, log_error_id = "")
 {
-    return wcomponent.type === "goal"
+    let yes = false
+
+    if (!wcomponent)
+    {
+        if (log_error_id)
+        {
+            console.error(`wcomponent with id "${log_error_id}" does not exist`)
+        }
+    }
+    else if (wcomponent.type !== type)
+    {
+        if (log_error_id)
+        {
+            console.error(`wcomponent with id "${log_error_id}" is not a ${type}`)
+        }
+    }
+    else yes = true
+
+    return yes
 }
+
+
+export function wcomponent_is_goal (wcomponent: WComponent | undefined): wcomponent is WComponentNodeGoal
+{
+    return wcomponent_is_a("goal", wcomponent)
+}
+export function alert_wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentNodeGoal
+{
+    return wcomponent_is_a("goal", wcomponent, log_error_id)
+}
+
+
+export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined): wcomponent is WComponentPrioritisation
+{
+    return wcomponent_is_a("prioritisation", wcomponent)
+}
+export function alert_wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentPrioritisation
+{
+    return wcomponent_is_a("prioritisation", wcomponent, log_error_id)
+}
+
 
 export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
 {
@@ -129,19 +169,35 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent): wcompon
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
 
-export function wcomponent_is_judgement_or_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
+
+
+export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined): wcomponent is WComponentJudgement
 {
-    return wcomponent.type === "judgement" || wcomponent.type === "objective"
+    return wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
+}
+export function alert_wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentJudgement
+{
+    const result = wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
+
+    if (!result && log_error_id)
+    {
+        if (!wcomponent) console.error(`wcomponent with id "${log_error_id}" does not exist`)
+        else console.error(`wcomponent with id "${log_error_id}" is not a judgement or objective`)
+    }
+
+    return result
 }
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
     return wcomponent.type === "objective"
 }
 
-export function wcomponent_is_counterfactual (wcomponent: WComponent): wcomponent is WComponentCounterfactual
+
+export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactual
 {
-    return wcomponent.type === "counterfactual"
+    return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
 }
+
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
@@ -153,10 +209,20 @@ export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is 
     return (wcomponent as EventAt).event_at !== undefined
 }
 
+
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
     return (wcomponent as ValidityPredictions).validity !== undefined
 }
+const types_without_validity: Set<WComponentType> = new Set([
+    "prioritisation",
+    "counterfactual",
+])
+export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
+{
+    return !types_without_validity.has(wcomponent.type)
+}
+
 
 export function wcomponent_has_existence_predictions (wcomponent: WComponent): wcomponent is (WComponent & ExistencePredictions)
 {

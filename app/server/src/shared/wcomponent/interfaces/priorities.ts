@@ -21,5 +21,4 @@ export interface WComponentPrioritisation extends WComponentBase, HasDateTime
 {
     type: "prioritisation"
     goals: PrioritisedGoalAttributes
-    explanation: string
 }
