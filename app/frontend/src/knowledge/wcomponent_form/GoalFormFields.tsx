@@ -12,6 +12,7 @@ import {
 import { ACTIONS } from "../../state/actions"
 import { get_current_UI_knowledge_view_from_state, get_wcomponents_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import { set_union } from "../../utils/set"
 
 
 
@@ -31,7 +32,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     {
         const { judgement, objective } = kv.wc_ids_by_type
 
-        const ids = Array.from(judgement).concat(Array.from(objective))
+        const ids = Array.from(set_union(judgement, objective))
         get_wcomponents_from_state(state, ids)
         .forEach((wc, index) =>
         {

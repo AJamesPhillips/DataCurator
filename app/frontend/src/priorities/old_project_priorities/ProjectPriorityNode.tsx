@@ -7,6 +7,8 @@ import type { ProjectPriorityNodeProps } from "../../canvas/interfaces"
 import { ACTIONS } from "../../state/actions"
 import { CanvasNode } from "../../canvas/CanvasNode"
 
+
+
 type OwnProps = ProjectPriorityNodeProps
 
 

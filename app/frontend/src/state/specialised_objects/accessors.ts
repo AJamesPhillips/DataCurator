@@ -9,8 +9,11 @@ export function get_wcomponent_from_state (state: RootState, id: string | null):
 {
     return id ? state.specialised_objects.wcomponents_by_id[id] : undefined
 }
-export function get_wcomponents_from_state (state: RootState, ids: string[]): (WComponent | undefined)[]
+export function get_wcomponents_from_state (state: RootState, ids: string[] | Set<string> | undefined): (WComponent | undefined)[]
 {
+    ids = ids || []
+    ids = ids instanceof Set ? Array.from(ids): ids
+
     return ids.map(id => get_wcomponent_from_state(state, id))
 }
 

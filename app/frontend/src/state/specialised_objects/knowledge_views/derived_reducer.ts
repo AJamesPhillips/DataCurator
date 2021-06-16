@@ -173,7 +173,7 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
 
 function get_prioritisations (state: RootState, prioritisation_ids: Set<string>): WComponentPrioritisation[]
 {
-    const prioritisations = get_wcomponents_from_state(state, Array.from(prioritisation_ids))
+    const prioritisations = get_wcomponents_from_state(state, prioritisation_ids)
         .filter(wcomponent_is_prioritisation)
 
     return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")

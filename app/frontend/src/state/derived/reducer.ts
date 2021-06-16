@@ -1,4 +1,4 @@
-import { project_priorities_derived_reducer } from "../../priorities/project_priorities/project_priorities_derived_reducer"
+import { project_priorities_derived_reducer } from "../../priorities/old_project_priorities/project_priorities_derived_reducer"
 import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
@@ -70,7 +70,7 @@ function update_judgement_or_objective_ids_by_target_id (state: RootState)
 
     const judgement_or_objective_ids = state.derived.wcomponent_ids_by_type.judgement_or_objective
 
-    get_wcomponents_from_state(state, Array.from(judgement_or_objective_ids))
+    get_wcomponents_from_state(state, judgement_or_objective_ids)
     .filter(is_defined)
     .filter(wcomponent_is_judgement_or_objective)
     // .sort () // some kind of sort so that front end display is stable and predictable
@@ -94,7 +94,7 @@ function update_judgement_or_objective_ids_by_goal_id (state: RootState)
 
     const goal_ids = state.derived.wcomponent_ids_by_type.goal
 
-    get_wcomponents_from_state(state, Array.from(goal_ids))
+    get_wcomponents_from_state(state, goal_ids)
     .filter(is_defined)
     .filter(wcomponent_is_goal)
     // .sort () // some kind of sort so that front end display is stable and predictable
