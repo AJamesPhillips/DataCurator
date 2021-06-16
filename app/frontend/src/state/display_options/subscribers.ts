@@ -6,7 +6,13 @@ import type { RootState } from "../State"
 
 
 
-export function toggle_consumption_formatting_on_key_press (store: Store<RootState>)
+export function display_options_subscribers (store: Store<RootState>)
+{
+    toggle_consumption_formatting_on_key_press(store)
+}
+
+
+function toggle_consumption_formatting_on_key_press (store: Store<RootState>)
 {
     pub_sub.global_keys.sub("key_down", e =>
     {

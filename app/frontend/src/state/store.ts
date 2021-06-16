@@ -1,11 +1,12 @@
 import { createStore, Action, Store } from "redux"
 
-import { toggle_consumption_formatting_on_key_press } from "./display_options/subscriber"
+import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
 import { render_all_objects, render_all_objects_and_update_store } from "./objects/rendering"
 import { root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
+import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/meta_wcomponents/selecting/subscribers"
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
@@ -64,9 +65,11 @@ export function config_store (args: ConfigStoreArgs = {})
 
     store.subscribe(factory_location_hash(store))
 
-    store.subscribe(specialised_objects_subscribers(store))
 
-    toggle_consumption_formatting_on_key_press(store)
+    store.subscribe(specialised_objects_subscribers(store))
+    display_options_subscribers(store)
+    meta_wcomponents_selecting_subscribers(store)
+
 
     periodically_change_display_at_created_datetime(store)
 

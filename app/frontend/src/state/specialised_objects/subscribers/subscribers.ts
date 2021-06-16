@@ -19,6 +19,7 @@ export function specialised_objects_subscribers (store: Store<RootState>)
     return () =>
     {
         c()
+        // TODO move to one off call after data is first loaded?
         ensure_base_knowledge_view()
     }
 }

@@ -19,21 +19,20 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_clicked_wcomponent(action))
     {
         const { id } = action
-        let selected_wcomponent_ids_list = [...state.meta_wcomponents.selected_wcomponent_ids_list]
         let selected_wcomponent_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids)
 
-        const meta_key_down = state.global_keys.keys_down.has("Control")
+        const ctrl_key_down = state.global_keys.keys_down.has("Control")
 
-        if (meta_key_down)
+        if (ctrl_key_down)
         {
-            selected_wcomponent_ids_list = toggle_item_in_list(selected_wcomponent_ids_list, id2 => id2 === id, id)
             toggle_item_in_set(selected_wcomponent_ids, id)
         }
         else
         {
-            selected_wcomponent_ids_list = [id]
-            selected_wcomponent_ids = new Set(selected_wcomponent_ids_list)
+            selected_wcomponent_ids = new Set([id])
         }
+
+        const selected_wcomponent_ids_list = Array.from(selected_wcomponent_ids)
 
         const meta_wcomponents = {
             ...state.meta_wcomponents,
