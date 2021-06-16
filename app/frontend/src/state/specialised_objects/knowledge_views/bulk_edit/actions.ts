@@ -4,11 +4,11 @@ import type { Action, AnyAction } from "redux"
 
 interface BulkEditKnowledgeViewEntriesProps
 {
-    wcomponent_ids: string[],
-    change_left: number,
-    change_top: number,
+    wcomponent_ids: string[]
+    change_left: number
+    change_top: number
 }
-interface ActionBulkEditKnowledgeViewEntries extends Action, BulkEditKnowledgeViewEntriesProps {}
+export interface ActionBulkEditKnowledgeViewEntries extends Action, BulkEditKnowledgeViewEntriesProps {}
 
 const bulk_edit_knowledge_view_entries_type = "bulk_edit_knowledge_view_entries"
 
@@ -23,12 +23,31 @@ export const is_bulk_edit_knowledge_view_entries = (action: AnyAction): action i
 
 
 
+interface SnapToGridKnowledgeViewEntriesProps
+{
+    wcomponent_ids: string[]
+}
+export interface ActionSnapToGridKnowledgeViewEntries extends Action, SnapToGridKnowledgeViewEntriesProps {}
+
+const snap_to_grid_knowledge_view_entries_type = "snap_to_grid_knowledge_view_entries"
+
+const snap_to_grid_knowledge_view_entries = (args: SnapToGridKnowledgeViewEntriesProps): ActionSnapToGridKnowledgeViewEntries =>
+{
+    return { type: snap_to_grid_knowledge_view_entries_type, ...args }
+}
+
+export const is_snap_to_grid_knowledge_view_entries = (action: AnyAction): action is ActionSnapToGridKnowledgeViewEntries => {
+    return action.type === snap_to_grid_knowledge_view_entries_type
+}
+
+
+
 interface BulkAddToKnowledgeViewProps
 {
     knowledge_view_id: string
     wcomponent_ids: string[],
 }
-interface ActionBulkAddToKnowledgeView extends Action, BulkAddToKnowledgeViewProps {}
+export interface ActionBulkAddToKnowledgeView extends Action, BulkAddToKnowledgeViewProps {}
 
 const bulk_add_to_knowledge_view_type = "bulk_add_to_knowledge_view"
 
@@ -45,4 +64,5 @@ export const is_bulk_add_to_knowledge_view = (action: AnyAction): action is Acti
 export const bulk_editing_knowledge_view_entries_actions = {
     bulk_edit_knowledge_view_entries,
     bulk_add_to_knowledge_view,
+    snap_to_grid_knowledge_view_entries,
 }
