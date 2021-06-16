@@ -15,6 +15,7 @@ interface OwnProps
     placeholder: string
     value: string
     on_change?: (new_value: string) => void
+    on_blur?: (value: string) => void
     force_focus?: boolean
 }
 
@@ -36,20 +37,22 @@ function _EditableText (props: Props)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { placeholder, value, on_change, presenting } = props
+    const { placeholder, value, on_change, on_blur, presenting } = props
 
-    if (!on_change || presenting)
+    if ((!on_change && !on_blur) || presenting)
     {
         return <RichMarkDown text={props.value} />
     }
 
-    const conditional_on_change = (new_value: string) => new_value !== props.value && on_change(new_value)
+    const conditional_on_change = (new_value: string) => on_change && new_value !== props.value && on_change(new_value)
 
 
     return <div class={"editable_field " + (!value ? " placeholder " : "")}>
         <textarea
             ref={el =>
             {
+                if (!el) return
+
                 adjust_height(el)
 
                 // We have initiated a searchWindow to populate an id insertiong so we do not want to
@@ -59,17 +62,12 @@ function _EditableText (props: Props)
                 const position = on_focus_set_selection.current
                 on_focus_set_selection.current = undefined
 
-                if (el && position !== undefined)
+                const should_gain_focus = position || props.force_focus
+                if (should_gain_focus)
                 {
                     setTimeout(() => {
                         el.focus()
-                        // el.setSelectionRange(0, value.length)
-                        el.setSelectionRange(position[0], position[1])
-                    }, 0)
-                } else if (props.force_focus && el)
-                {
-                    setTimeout(() => {
-                        el.focus()
+                        if (position) el.setSelectionRange(position[0], position[1])
                     }, 0)
                 }
             }}
@@ -92,6 +90,7 @@ function _EditableText (props: Props)
                 if (!e.currentTarget.value) e.currentTarget.placeholder = props.placeholder
 
                 conditional_on_change(e.currentTarget.value)
+                on_blur && on_blur(e.currentTarget.value)
             }}
         />
 

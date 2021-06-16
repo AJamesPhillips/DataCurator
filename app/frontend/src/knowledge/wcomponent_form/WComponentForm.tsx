@@ -130,7 +130,7 @@ function _WComponentForm (props: Props)
         <h2><EditableText
             placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
             value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
-            on_change={title => upsert_wcomponent({ title })}
+            on_blur={title => upsert_wcomponent({ title })}
             force_focus={previous_id.current !== wcomponent_id}
         /></h2>
 
