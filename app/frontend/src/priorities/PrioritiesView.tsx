@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Canvas } from "../canvas/Canvas"
 
+import { Canvas } from "../canvas/Canvas"
 import { project_priority_y } from "../canvas/display"
 import type { ContentCoordinate } from "../canvas/interfaces"
 import { MainArea } from "../layout/MainArea"

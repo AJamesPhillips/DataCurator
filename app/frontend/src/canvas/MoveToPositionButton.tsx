@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
+import { optional_view_type } from "../state/routing/utils"
 import type { RootState } from "../state/State"
 import type { PositionAndZoom } from "./interfaces"
 
@@ -32,8 +33,7 @@ function _MoveToPositionButton (props: Props)
 
     if (!move_to_position) return null
 
-    const view_types_to_maintain: Set<ViewType> = new Set(["knowledge", "priorities"])
-    const view: ViewType = view_types_to_maintain.has(props.view) ? props.view : "knowledge"
+    const view = optional_view_type(props.view)
 
     return <input
         type="button"

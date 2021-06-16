@@ -12,6 +12,8 @@ import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import { sort_list } from "../shared/utils/sort"
+import { optional_view_type } from "../state/routing/utils"
+import type { ViewType } from "../state/routing/interfaces"
 
 
 
@@ -23,6 +25,7 @@ const map_state = (state: RootState) => ({
     base_knowledge_view: state.derived.base_knowledge_view,
     other_knowledge_views: state.derived.other_knowledge_views,
     creation_context: state.creation_context,
+    current_view: state.routing.args.view,
 })
 
 const map_dispatch = {
@@ -37,7 +40,7 @@ type Props = PropsFromRedux & OwnProps
 
 function _KnowledgeViewList (props: Props)
 {
-    const { ready, base_knowledge_view, other_knowledge_views } = props
+    const { ready, base_knowledge_view, other_knowledge_views, current_view } = props
 
     if (!base_knowledge_view)
     {
@@ -68,7 +71,7 @@ function _KnowledgeViewList (props: Props)
                 props.upsert_knowledge_view({ knowledge_view: changed_kv })
             },
 
-            item_top_props: { get_summary, get_details, get_details3 },
+            item_top_props: { get_summary: factory_get_summary(current_view), get_details, get_details3 },
 
             debug_item_descriptor: "Knowledge View",
         })}
@@ -81,13 +84,15 @@ export const KnowledgeViewList = connector(_KnowledgeViewList) as FunctionCompon
 
 
 
-function get_summary (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
+function factory_get_summary (current_view: ViewType)
 {
-    return <Link
+    const view = optional_view_type(current_view)
+
+    return (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) => <Link
         route={undefined}
         sub_route={undefined}
         item_id={undefined}
-        args={{ view: "knowledge", subview_id: knowledge_view.id }}
+        args={{ view, subview_id: knowledge_view.id }}
         selected_on={new Set(["route", "args.subview_id"])}
     >
         {get_knowledge_view_title(knowledge_view)}
