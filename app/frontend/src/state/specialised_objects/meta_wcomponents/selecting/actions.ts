@@ -24,18 +24,36 @@ export const is_clicked_wcomponent = (action: AnyAction): action is ActionClicke
 
 
 
-interface ClearSelectedWComponentsProps {}
-interface ActionClearSelectedWComponents extends Action, ClearSelectedWComponentsProps {}
+interface ActionClearSelectedWComponents extends Action {}
 
 const clear_selected_wcomponents_type = "clear_selected_wcomponents"
 
-const clear_selected_wcomponents = (args: ClearSelectedWComponentsProps): ActionClearSelectedWComponents =>
+const clear_selected_wcomponents = (args: {}): ActionClearSelectedWComponents =>
 {
     return { type: clear_selected_wcomponents_type, ...args }
 }
 
 export const is_clear_selected_wcomponents = (action: AnyAction): action is ActionClearSelectedWComponents => {
     return action.type === clear_selected_wcomponents_type
+}
+
+
+
+interface SetSelectedWcomponentsProps
+{
+    ids: string[]
+}
+export interface ActionSetSelectedWcomponents extends Action, SetSelectedWcomponentsProps {}
+
+const set_selected_wcomponents_type = "set_selected_wcomponents"
+
+const set_selected_wcomponents = (args: SetSelectedWcomponentsProps): ActionSetSelectedWcomponents =>
+{
+    return { type: set_selected_wcomponents_type, ...args }
+}
+
+export const is_set_selected_wcomponents = (action: AnyAction): action is ActionSetSelectedWcomponents => {
+    return action.type === set_selected_wcomponents_type
 }
 
 
@@ -86,6 +104,7 @@ export const is_clear_pointerupdown_on_connection_terminal = (action: AnyAction)
 export const selecting_actions = {
     clicked_wcomponent,
     clear_selected_wcomponents,
+    set_selected_wcomponents,
     pointerupdown_on_connection_terminal,
     clear_pointerupdown_on_connection_terminal,
 }
