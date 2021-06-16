@@ -1,8 +1,7 @@
 import { h } from "preact"
-import type { CanvasPoint } from "../canvas/interfaces"
-import { grid_small_step, round_coordinate_small_step } from "../canvas/position_utils"
-import { h_step, v_step } from "../state/display_options/display"
 
+import type { CanvasPoint } from "../canvas/interfaces"
+import { grid_small_step, h_step, round_coordinate_small_step, v_step } from "../canvas/position_utils"
 import { EditableNumber } from "./EditableNumber"
 
 

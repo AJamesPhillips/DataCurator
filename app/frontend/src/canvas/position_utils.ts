@@ -5,9 +5,10 @@ import type { CanvasPoint, Position } from "./interfaces"
 import { scale_by } from "./zoom_utils"
 
 
-export const grid_small_step = 20
-export const grid_large_step = grid_small_step * 10
 
+export const grid_small_step = 20
+export const h_step = grid_small_step * 18
+export const v_step = grid_small_step * 6
 
 export function round_coordinate (num: number, round_to: number): number
 {
@@ -29,9 +30,16 @@ export function position_to_point (position: Position): CanvasPoint
 
 
 
-export function round_canvas_point (point: CanvasPoint): CanvasPoint
+export function round_canvas_point (point: CanvasPoint, step: "small" | "large" = "small"): CanvasPoint
 {
-    return { left: round_coordinate_small_step(point.left), top: round_coordinate_small_step(point.top) }
+    if (step === "small")
+    {
+        return { left: round_coordinate_small_step(point.left), top: round_coordinate_small_step(point.top) }
+    }
+    else
+    {
+        return { left: round_coordinate(point.left, h_step), top: round_coordinate(point.top, v_step) }
+    }
 }
 
 

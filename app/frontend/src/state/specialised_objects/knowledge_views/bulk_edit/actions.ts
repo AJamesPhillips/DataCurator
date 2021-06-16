@@ -26,6 +26,7 @@ export const is_bulk_edit_knowledge_view_entries = (action: AnyAction): action i
 interface SnapToGridKnowledgeViewEntriesProps
 {
     wcomponent_ids: string[]
+    knowledge_view_id: string
 }
 export interface ActionSnapToGridKnowledgeViewEntries extends Action, SnapToGridKnowledgeViewEntriesProps {}
 

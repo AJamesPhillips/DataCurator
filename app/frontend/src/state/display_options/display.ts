@@ -1,5 +1,5 @@
 import type { PositionAndZoom } from "../../canvas/interfaces"
-import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
+import { h_step, round_coordinate, v_step } from "../../canvas/position_utils"
 // import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
 // import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
@@ -8,8 +8,6 @@ import type { RootState } from "../State"
 
 const half_screen_width = 1000 / 2
 const half_screen_height = 600 / 2
-export const h_step = grid_small_step * 15
-export const v_step = grid_small_step * 6
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
     const x = round_coordinate(args.x + (half_screen_width * (100 / args.zoom)), h_step)

@@ -6,6 +6,7 @@ import type { RootState } from "../state/State"
 import { EditablePosition } from "../form/EditablePosition"
 import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
 import { Button } from "../sharedf/Button"
+import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 
 
 
@@ -13,9 +14,12 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
+    const kv = get_current_UI_knowledge_view_from_state(state)
+
     return {
         ready: state.sync.ready,
         wcomponent_ids: state.meta_wcomponents.selected_wcomponent_ids,
+        knowledge_view_id: kv && kv.id,
     }
 }
 
@@ -37,7 +41,13 @@ function _WComponentMultipleForm (props: Props)
 {
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent_ids: ids, bulk_edit_knowledge_view_entries, bulk_add_to_knowledge_view } = props
+    const {
+        wcomponent_ids: ids,
+        knowledge_view_id,
+        bulk_edit_knowledge_view_entries,
+        bulk_add_to_knowledge_view,
+        snap_to_grid_knowledge_view_entries,
+    } = props
     const wcomponent_ids = Array.from(ids)
 
     return <div>
@@ -59,8 +69,13 @@ function _WComponentMultipleForm (props: Props)
 
         <p>
             <Button
+                disabled={!knowledge_view_id}
                 value="Snap to grid"
-                on_pointer_down={() => props.snap_to_grid_knowledge_view_entries({ wcomponent_ids })}
+                on_pointer_down={() =>
+                {
+                    if (!knowledge_view_id) return
+                    snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })
+                }}
                 is_left={true}
             />
         </p>

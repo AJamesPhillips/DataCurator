@@ -1,5 +1,6 @@
 import type { AnyAction } from "redux"
 
+import { round_canvas_point } from "../../../../canvas/position_utils"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
@@ -10,7 +11,14 @@ import {
     get_current_UI_knowledge_view_from_state,
 } from "../../accessors"
 import { handle_upsert_knowledge_view } from "../utils"
-import { ActionBulkAddToKnowledgeView, ActionBulkEditKnowledgeViewEntries, ActionSnapToGridKnowledgeViewEntries, is_bulk_add_to_knowledge_view, is_bulk_edit_knowledge_view_entries, is_snap_to_grid_knowledge_view_entries } from "./actions"
+import {
+    ActionBulkAddToKnowledgeView,
+    ActionBulkEditKnowledgeViewEntries,
+    ActionSnapToGridKnowledgeViewEntries,
+    is_bulk_add_to_knowledge_view,
+    is_bulk_edit_knowledge_view_entries,
+    is_snap_to_grid_knowledge_view_entries,
+} from "./actions"
 
 
 
@@ -83,6 +91,26 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
 
 function handle_snap_to_grid_knowledge_view_entries (state: RootState, action: ActionSnapToGridKnowledgeViewEntries)
 {
+    const { wcomponent_ids, knowledge_view_id } = action
+    const kv = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
+
+    if (kv)
+    {
+        const new_wc_id_map = { ...kv.wc_id_map }
+
+        wcomponent_ids.forEach(wcomponent_id =>
+        {
+            const entry = kv.wc_id_map[wcomponent_id]
+            if (!entry) return
+
+            const new_entry = round_canvas_point(entry, "large")
+            new_wc_id_map[wcomponent_id] = new_entry
+        })
+
+        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
+        state = handle_upsert_knowledge_view(state, new_kv)
+    }
+
     return state
 }
 
@@ -108,7 +136,7 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
             new_wc_id_map[id] = new_entry
         })
 
-        const new_kv = { ...kv, wc_id_map: new_wc_id_map }
+        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
 
         state = handle_upsert_knowledge_view(state, new_kv)
     }
