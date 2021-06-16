@@ -31,6 +31,7 @@ import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import { LabelsListV2 } from "../../labels/LabelsListV2"
 
 
 
@@ -212,6 +213,8 @@ function _WComponentCanvasNode (props: Props)
                 </span>}
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
+
+            {!props.is_editing && <LabelsListV2 label_ids={wcomponent.label_ids} />}
 
             {show_validity_value && <div className="node_validity_container">
                 <div className="description_label">validity</div>

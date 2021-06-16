@@ -1,0 +1,16 @@
+
+
+
+.label_v2
+{
+    border: thin solid #aaa;
+    border-radius: 3px;
+    padding: 3px 2px;
+    margin: 2px;
+    font-size: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* But is not respected */
+    max-width: 100px;
+}

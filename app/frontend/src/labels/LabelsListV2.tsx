@@ -1,0 +1,18 @@
+import { h } from "preact"
+
+import { LabelV2 } from "./LabelV2"
+
+
+
+interface OwnProps
+{
+    label_ids: string[] | undefined
+}
+
+
+export function LabelsListV2 (props: OwnProps)
+{
+    return <div style={{ display: "flex" }}>
+        {(props.label_ids || []).map(id => <LabelV2 wcomponent_id={id} />)}
+    </div>
+}
