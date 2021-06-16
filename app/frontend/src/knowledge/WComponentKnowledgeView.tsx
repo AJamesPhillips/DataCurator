@@ -1,14 +1,19 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { lefttop_to_xy, MoveToPositionButton } from "../canvas/MoveToPositionButton"
+import { MoveToPositionButton } from "../canvas/MoveToPositionButton"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentEntry } from "../shared/wcomponent/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"
-import { ACTIONS } from "../state/actions"
-import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
 import { Link } from "../sharedf/Link"
+import { ACTIONS } from "../state/actions"
+import { lefttop_to_xy } from "../state/display_options/display"
+import {
+    get_current_knowledge_view_from_state,
+    get_current_UI_knowledge_view_from_state,
+    get_wcomponent_from_state,
+} from "../state/specialised_objects/accessors"
+import type { RootState } from "../state/State"
 
 
 

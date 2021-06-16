@@ -1,16 +1,10 @@
+import type { PositionAndZoom } from "../../canvas/interfaces"
 import { grid_small_step, round_coordinate } from "../../canvas/position_utils"
 // import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
 // import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
 
 
-
-export function get_middle_of_screen (state: RootState)
-{
-    const result = calculate_xy_for_middle(state.routing.args)
-
-    return { left: result.x, top: -result.y }
-}
 
 const half_screen_width = 1000 / 2
 const half_screen_height = 600 / 2
@@ -24,13 +18,40 @@ function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }):
     return { x, y }
 }
 
-export function calculate_xy_for_put_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
+function calculate_xy_for_put_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
     const x = args.x - ((half_screen_width * (100 / args.zoom)) - (h_step / 2))
     const y = args.y + ((half_screen_height * (100 / args.zoom)) - (v_step / 2))
 
     return { x, y }
 }
+
+
+
+export function get_middle_of_screen (state: RootState)
+{
+    const result = calculate_xy_for_middle(state.routing.args)
+
+    return { left: result.x, top: -result.y }
+}
+
+
+export function lefttop_to_xy (position?: { left?: number, top?: number, zoom?: number}, middle?: boolean): PositionAndZoom | undefined
+{
+    if (!position) return undefined
+
+    const { left: x, top, zoom } = position
+    const y = top !== undefined ? -1 * top : undefined
+
+    if (middle && x !== undefined && y  !== undefined && zoom !== undefined)
+    {
+        const middle = calculate_xy_for_put_middle({ x, y, zoom })
+        return { ...middle, zoom }
+    }
+
+    return { x, y, zoom }
+}
+
 
 
 

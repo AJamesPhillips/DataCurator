@@ -22,6 +22,11 @@ export interface Position
     x: number
     y: number
 }
+export interface PositionAndZoom extends Partial<Position>
+{
+    zoom?: number
+}
+
 
 
 export interface NodeField

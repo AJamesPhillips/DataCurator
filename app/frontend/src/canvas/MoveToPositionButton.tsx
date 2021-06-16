@@ -2,15 +2,8 @@ import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
-import { calculate_xy_for_put_middle } from "../state/display_options/display"
-import type { Position } from "./interfaces"
+import type { PositionAndZoom } from "./interfaces"
 
-
-
-interface PositionAndZoom extends Partial<Position>
-{
-    zoom?: number
-}
 
 
 interface OwnProps
@@ -39,21 +32,3 @@ function _MoveToPositionButton (props: Props)
 }
 
 export const MoveToPositionButton = connector(_MoveToPositionButton) as FunctionalComponent<OwnProps>
-
-
-
-export function lefttop_to_xy (position?: { left?: number, top?: number, zoom?: number}, middle?: boolean): PositionAndZoom | undefined
-{
-    if (!position) return undefined
-
-    const { left: x, top, zoom } = position
-    const y = top !== undefined ? -1 * top : undefined
-
-    if (middle && x !== undefined && y  !== undefined && zoom !== undefined)
-    {
-        const middle = calculate_xy_for_put_middle({ x, y, zoom })
-        return { ...middle, zoom }
-    }
-
-    return { x, y, zoom }
-}

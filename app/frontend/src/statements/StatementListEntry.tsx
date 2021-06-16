@@ -20,7 +20,7 @@ export function StatementListEntry (props: OwnProps)
                 sub_route={null}
                 item_id={props.statement.id}
                 args={undefined}
-                on_click={props.on_click}
+                on_pointer_down={props.on_click}
             >
                 {props.statement.content}
             </Link>

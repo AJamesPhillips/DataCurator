@@ -16,8 +16,9 @@ interface OwnProps {
     sub_route: SUB_ROUTE_TYPES | undefined
     item_id: string | null | undefined
     args: Partial<RoutingStateArgs> | undefined
-    on_click?: () => void
+    on_pointer_down?: () => void
     selected_on?: Set<"route" | "args.view" | "args.subview_id">
+    extra_class_name?: string
 }
 
 
@@ -91,15 +92,17 @@ class _Link extends Component<Props, State>
     {
         const partial_routing_args: Partial<RoutingStateArgs> = this.props.args || {}
 
-        const on_click = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
+        const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
             e.preventDefault()
+            e.stopImmediatePropagation()
+
             if (this.props.selected) return // no-op
 
             this.setState({ clicked: true })
 
-            if (this.props.on_click)
+            if (this.props.on_pointer_down)
             {
-                this.props.on_click()
+                this.props.on_pointer_down()
             }
             else
             {
@@ -111,12 +114,14 @@ class _Link extends Component<Props, State>
         const full_routing_args = { ...this.props.current_routing_state.args, ...partial_routing_args }
         full_routing_state.args = full_routing_args
 
-        const class_name = ("link " +
-            (this.state.clicked ? " clicked_animate " : "") +
-            (this.props.selected ? " selected " : ""))
+        const class_name = ("link "
+            + (this.state.clicked ? " clicked_animate " : "")
+            + (this.props.selected ? " selected " : "")
+            + (this.props.extra_class_name || "")
+        )
 
         return <a
-            onClick={on_click}
+            onPointerDown={on_pointer_down}
             href={routing_state_to_string({ ...full_routing_state })}
             className={class_name}
         >
@@ -142,10 +147,10 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     const on_click = (e: h.JSX.TargetedEvent<HTMLInputElement, MouseEvent>) => {
         if (props.selected) return // no-op
 
-        if (props.on_click)
+        if (props.on_pointer_down)
         {
             e.preventDefault()
-            props.on_click()
+            props.on_pointer_down()
         }
         else
         {

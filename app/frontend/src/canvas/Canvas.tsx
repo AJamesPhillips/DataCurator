@@ -2,15 +2,16 @@ import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./Canvas.css"
-import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
-import { performance_logger } from "../utils/performance"
-import type { ContentCoordinate } from "./interfaces"
-import { lefttop_to_xy, MoveToPositionButton } from "./MoveToPositionButton"
-import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
+import { lefttop_to_xy } from "../state/display_options/display"
 import { BoundingRect, bounding_rects_equal } from "../state/display_options/state"
 import { pub_sub } from "../state/pub_sub/pub_sub"
+import type { RootState } from "../state/State"
+import { performance_logger } from "../utils/performance"
+import type { ContentCoordinate } from "./interfaces"
+import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
+import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 
 
 

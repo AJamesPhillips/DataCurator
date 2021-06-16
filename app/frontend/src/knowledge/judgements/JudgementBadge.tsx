@@ -2,8 +2,10 @@ import { h } from "preact"
 
 import "./JudgementBadge.css"
 import type { JudgementValue } from "./calculate_judgement_value"
-import { format_wcomponent_url } from "../../shared/wcomponent/rich_text/templates"
 import type { CanvasPoint } from "../../canvas/interfaces"
+import { Link } from "../../sharedf/Link"
+import type { RoutingStateArgs } from "../../state/routing/interfaces"
+import { lefttop_to_xy } from "../../state/display_options/display"
 
 
 
@@ -22,16 +24,16 @@ export function JudgementBadge (props: OwnProps)
 
     if (!props.judgement_or_objective_id) return <div className={class_name}></div>
 
-    const href = format_wcomponent_url("", props.judgement_or_objective_id, props.position)
 
-    return <a
-        className={class_name}
-        href={href}
-        disabled={!href}
-        onPointerDown={e =>
-        {
-            e.preventDefault()
-            e.stopImmediatePropagation()
-        }}
-    ></a>
+    let args: Partial<RoutingStateArgs> | undefined = undefined
+    if (props.position) args = lefttop_to_xy({ ...props.position, zoom: 100 }, true)
+
+
+    return <Link
+        route={undefined}
+        sub_route={undefined}
+        item_id={props.judgement_or_objective_id}
+        args={args}
+        extra_class_name={class_name}
+    ><span/></Link>
 }

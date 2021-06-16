@@ -19,7 +19,7 @@ export function PatternListEntry (props: OwnProps)
             sub_route={null}
             item_id={props.pattern.id}
             args={undefined}
-            on_click={props.on_click}
+            on_pointer_down={props.on_click}
         >
             {props.pattern.name}
         </Link>
