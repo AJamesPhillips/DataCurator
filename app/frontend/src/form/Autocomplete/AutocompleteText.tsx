@@ -1,28 +1,12 @@
-import { Component, FunctionalComponent, h, Options } from "preact"
+import { Component, h } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
 import { sort_list } from "../../shared/utils/sort"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-
-
-
-interface BaseAutocompleteOption
-{
-    id: string | undefined
-    title: string
-    jsx?: h.JSX.Element
-    subtitle?: string
-}
-interface InternalAutocompleteOption extends BaseAutocompleteOption
-{
-    total_text: string
-}
-export interface AutocompleteOption extends BaseAutocompleteOption
-{
-    id: string
-}
+import { Options } from "./Options"
+import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
 
 
 
@@ -95,7 +79,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         const is_arrow_up = key === "ArrowUp"
         const is_enter = key === "Enter"
 
-        let { highlighted_option_index } = this.state
+        const { highlighted_option_index } = this.state
 
         if (is_enter)
         {
@@ -109,11 +93,10 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         }
         else if (is_arrow_down || is_arrow_up)
         {
-            highlighted_option_index += (is_arrow_down ? 1 : -1)
-            highlighted_option_index = highlighted_option_index % displayed_options.length
+            let new_highlighted_option_index = highlighted_option_index + (is_arrow_down ? 1 : -1)
+            new_highlighted_option_index = new_highlighted_option_index % displayed_options.length
+            this.setState({ highlighted_option_index: new_highlighted_option_index })
         }
-
-        this.setState({ highlighted_option_index })
     }
 
 
@@ -227,10 +210,11 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                 onChange={e => this.setState({ temp_value_str: e.currentTarget.value })}
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
-                    if (this.state.editing)
-                    {
-                        this.conditional_on_change(final_value ? final_value.id : undefined)
-                    }
+                    this.setState({ editing: false, temp_value_str: undefined })
+                    // if (this.state.editing)
+                    // {
+                    //     this.conditional_on_change(final_value ? final_value.id : undefined)
+                    // }
 
                     on_blur()
                 }}
@@ -248,11 +232,12 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         </div>
     }
 }
+const ConnectedAutocompleteText = connector(_AutocompleteText)
+
 
 export function AutocompleteText <E extends AutocompleteOption> (props: OwnProps<E>)
 {
-    const Wrapped = connector(_AutocompleteText)
-    return <Wrapped {...props} />
+    return <ConnectedAutocompleteText {...props} />
 }
 
 
@@ -265,45 +250,6 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
     if (match) return match
 
     return options[0]
-}
-
-
-
-interface OptionsOwnProps
-{
-    editing: boolean
-    options_to_display: InternalAutocompleteOption[]
-    is_option_wrapper_highlighted: (option: InternalAutocompleteOption, index: number) => boolean
-    conditional_on_change: (option_id: string | undefined) => void
-    set_highlighted_option_index: (index: number) => void
-    on_mouse_over_option: (option_id: string | undefined) => void
-    on_mouse_leave_option: (option_id: string | undefined) => void
-}
-function Options (props: OptionsOwnProps)
-{
-    const { editing, options_to_display, is_option_wrapper_highlighted, conditional_on_change,
-        set_highlighted_option_index, on_mouse_over_option, on_mouse_leave_option, } = props
-
-    if (options_to_display.length === 0) return null
-
-    return <div className="options_outer" style={{ display: editing ? "" : "none" }}>
-        <div className="options_inner">
-            {options_to_display.map((option, index) => <div
-                className={"option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : "")}
-                onMouseDown={() => conditional_on_change(option.id)}
-                onMouseOver={() => {
-                    set_highlighted_option_index(index)
-                    on_mouse_over_option(option.id)
-                }}
-                onMouseLeave={() => on_mouse_leave_option(option.id)}
-            >
-                <div className="option">
-                    {option.jsx || option.title || option.id || "none"}
-                    <div className="option_subtitle">{option.subtitle}</div>
-                </div>
-            </div>)}
-        </div>
-    </div>
 }
 
 

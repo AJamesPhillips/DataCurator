@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteOption, AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
 import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {

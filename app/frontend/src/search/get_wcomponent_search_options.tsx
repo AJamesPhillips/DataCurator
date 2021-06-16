@@ -1,10 +1,10 @@
 import { h } from "preact"
 
-import type { AutocompleteOption } from "../form/Autocomplete/AutocompleteText"
-import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
-import { WComponent, WComponentsById, wcomponent_is_judgement_or_objective } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
+import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { JudgementBadgeC } from "../knowledge/judgements/JudgementBadgeC"
+import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
+import { WComponent, WComponentsById, wcomponent_is_judgement_or_objective } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 
 
 

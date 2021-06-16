@@ -2,7 +2,8 @@ import { h } from "preact"
 
 import "./SelectedOption.css"
 import { Button } from "../../sharedf/Button"
-import type { AutocompleteOption } from "./AutocompleteText"
+import type { AutocompleteOption } from "./interfaces"
+
 
 
 

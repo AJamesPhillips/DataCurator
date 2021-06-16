@@ -4,7 +4,8 @@ import { connect, ConnectedProps } from "react-redux"
 import "./MultiAutocompleteText.css"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import { AutocompleteOption, AutocompleteText } from "./AutocompleteText"
+import { AutocompleteText } from "./AutocompleteText"
+import type { AutocompleteOption } from "./interfaces"
 import { SelectedOption } from "./SelectedOption"
 
 
