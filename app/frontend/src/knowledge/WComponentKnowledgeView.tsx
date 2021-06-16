@@ -8,7 +8,7 @@ import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_current_knowledge_view_from_state, get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 
 
 

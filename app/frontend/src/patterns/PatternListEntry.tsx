@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import type { Pattern } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 
 
 interface OwnProps {

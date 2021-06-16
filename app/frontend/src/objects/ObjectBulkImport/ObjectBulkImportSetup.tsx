@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
-import { LinkButton } from "../../utils/Link"
+import { LinkButton } from "../../sharedf/Link"
 import { remove_index } from "../../utils/list"
 import type { BulkImportSettings, Model } from "./interfaces"
 import { ObjectBulkImportModel } from "./ObjectBulkImportModel"

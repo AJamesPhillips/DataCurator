@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import type { ObjectWithCache } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 import { ObjectLabels } from "./ObjectLabels"
 import { object_content } from "./object_content"
 

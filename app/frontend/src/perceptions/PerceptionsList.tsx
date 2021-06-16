@@ -2,7 +2,7 @@ import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 
 
 

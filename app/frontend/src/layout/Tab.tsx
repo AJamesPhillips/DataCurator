@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./Tab.css"
 import type { RootState } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 

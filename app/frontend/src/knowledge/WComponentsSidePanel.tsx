@@ -6,7 +6,7 @@ import type { RootState } from "../state/State"
 import { CreateNewWComponent } from "./CreateNewWComponent"
 import { WComponentForm } from "./wcomponent_form/WComponentForm"
 import { WComponentMultipleForm } from "./WComponentMultipleForm"
-import { LinkButton } from "../utils/Link"
+import { LinkButton } from "../sharedf/Link"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 

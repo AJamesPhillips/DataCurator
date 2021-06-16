@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { LabelsList } from "../labels/LabelsList"
 import type { Statement } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 
 
 interface OwnProps {

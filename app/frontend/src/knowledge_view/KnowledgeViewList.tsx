@@ -8,7 +8,7 @@ import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_vi
 import { date2str } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { Link } from "../utils/Link"
+import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import { sort_list } from "../shared/utils/sort"
