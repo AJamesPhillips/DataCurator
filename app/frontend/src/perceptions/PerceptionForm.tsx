@@ -47,13 +47,13 @@ function _PerceptionForm (props: Props)
 
     return <div key={perception_id}>
         <h2><EditableText
-            placeholder={"Title..."}
+            placeholder="Title..."
             value={perception.title}
             on_change={title => upsert_perception({ title })}
         /></h2>
 
         <p><EditableText
-            placeholder={"Description..."}
+            placeholder="Description..."
             value={perception.description}
             on_change={description => upsert_perception({ description })}
         /></p>

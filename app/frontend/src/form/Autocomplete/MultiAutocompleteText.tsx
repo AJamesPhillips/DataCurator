@@ -1,8 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+
+import "./MultiAutocompleteText.css"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-
 import { AutocompleteOption, AutocompleteText } from "./AutocompleteText"
 import { SelectedOption } from "./SelectedOption"
 
@@ -60,20 +61,22 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             }}
         />}
 
-        {selected_option_ids.map(id => <SelectedOption
-            editing={editing}
-            option={option_by_id[id]}
-            on_remove_option={removed_id =>
-            {
-                props.on_change(selected_option_ids.filter(id => id !== removed_id))
-            }}
-            on_mouse_over_option={props.on_mouse_over_option}
-            on_mouse_leave_option={props.on_mouse_leave_option}
-            on_pointer_down_selected_option={(e, id) =>
-            {
-                props.change_route({ item_id: id })
-            }}
-        />)}
+        <div className={`selected_options ${editing ? "editing" : ""}`}>
+            {selected_option_ids.map(id => <SelectedOption
+                editing={editing}
+                option={option_by_id[id]}
+                on_remove_option={removed_id =>
+                {
+                    props.on_change(selected_option_ids.filter(id => id !== removed_id))
+                }}
+                on_mouse_over_option={props.on_mouse_over_option}
+                on_mouse_leave_option={props.on_mouse_leave_option}
+                on_pointer_down_selected_option={(e, id) =>
+                {
+                    props.change_route({ item_id: id })
+                }}
+            />)}
+        </div>
     </div>
 }
 

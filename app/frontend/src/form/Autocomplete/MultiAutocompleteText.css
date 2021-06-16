@@ -1,0 +1,17 @@
+
+
+
+.multi_autocomplete
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.multi_autocomplete .selected_options
+{
+    display: flex;
+}
+.multi_autocomplete .selected_options.editing
+{
+    flex-direction: column;
+}

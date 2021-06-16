@@ -44,6 +44,7 @@ import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_pre
 import { GoalFormFields } from "./GoalFormFields"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
+import { LabelsEditor } from "./LabelsEditor"
 
 
 
@@ -236,9 +237,16 @@ function _WComponentForm (props: Props)
 
         {(editing || wcomponent.description) && <p>
             <EditableText
-                placeholder={"Description..."}
+                placeholder="Description..."
                 value={wcomponent.description}
                 on_change={description => upsert_wcomponent({ description })}
+            />
+        </p>}
+
+        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <p>
+            <LabelsEditor
+                label_ids={wcomponent.label_ids}
+                on_change={label_ids => upsert_wcomponent({ label_ids })}
             />
         </p>}
 
