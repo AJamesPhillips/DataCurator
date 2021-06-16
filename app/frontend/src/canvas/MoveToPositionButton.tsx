@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
-import { optional_view_type } from "../state/routing/utils"
+import { optional_view_type } from "../views/optional_view_type"
 import type { RootState } from "../state/State"
 import type { PositionAndZoom } from "./interfaces"
 

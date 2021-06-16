@@ -6,6 +6,7 @@ import type { RootState } from "../state/State"
 import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
+import { ViewsTabTitle } from "../views/ViewsTabTitle"
 
 
 interface OwnProps {
@@ -21,7 +22,7 @@ function get_title (id: ROUTE_TYPES)
     else if (id === "objects") return "Objects"
     else if (id === "patterns") return "Patterns"
     else if (id === "creation_context") return <CreationContextTabTitle />
-    else if (id === "views") return "Views"
+    else if (id === "views") return <ViewsTabTitle />
     else if (id === "perceptions") return "Perceptions"
     else if (id === "wcomponents") return "Components"
 
@@ -30,7 +31,7 @@ function get_title (id: ROUTE_TYPES)
 
 
 const map_state = (state: RootState) => ({
-    current_route: state.routing.route
+    current_route: state.routing.route,
 })
 
 const connector = connect(map_state)

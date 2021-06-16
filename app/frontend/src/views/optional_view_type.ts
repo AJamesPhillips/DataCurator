@@ -1,4 +1,4 @@
-import type { ViewType } from "./interfaces"
+import type { ViewType } from "../state/routing/interfaces"
 
 
 

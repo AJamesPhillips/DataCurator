@@ -12,7 +12,7 @@ import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import { sort_list } from "../shared/utils/sort"
-import { optional_view_type } from "../state/routing/utils"
+import { optional_view_type } from "../views/optional_view_type"
 import type { ViewType } from "../state/routing/interfaces"
 
 
