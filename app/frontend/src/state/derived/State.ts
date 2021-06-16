@@ -21,7 +21,8 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 }
 
 
-export type WComponentIdsByType = { [t in WComponentType]: Set<string> }
+type ExtendedWComponentType = WComponentType | "judgement_or_objective"
+export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 
 export interface DerivedState
@@ -33,8 +34,8 @@ export interface DerivedState
 
     base_knowledge_view: KnowledgeView | undefined
     other_knowledge_views: KnowledgeView[]
-    judgement_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
-    judgement_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
+    judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
+    judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
 
     current_UI_knowledge_view: DerivedUIKnowledgeView | undefined
 

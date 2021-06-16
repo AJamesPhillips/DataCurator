@@ -40,7 +40,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
             if (wcomponent_is_judgement_or_objective(wcomponent))
             {
                 jsx = <div>
-                    <JudgementBadgeC judgement_id={wcomponent.id} />
+                    <JudgementBadgeC judgement_or_objective_id={wcomponent.id} />
                     {title}
                 </div>
             }
