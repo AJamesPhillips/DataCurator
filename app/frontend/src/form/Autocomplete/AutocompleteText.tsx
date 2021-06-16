@@ -40,6 +40,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
+    always_allow_editing?: boolean
 }
 
 
@@ -208,7 +209,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
             style={this.props.extra_styles}
         >
             <input
-                disabled={this.props.presenting}
+                disabled={this.props.always_allow_editing ? false : this.props.presenting}
                 ref={r =>
                 {
                     if (!r || !this.state.editing) return

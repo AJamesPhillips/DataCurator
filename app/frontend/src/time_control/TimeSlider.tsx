@@ -114,6 +114,7 @@ function _TimeSlider (props: Props)
                 on_change={new_datetime => new_datetime && props.change_handle_ms(new_datetime.getTime())}
                 show_now_shortcut_button={false}
                 show_today_shortcut_button={false}
+                always_allow_editing={true}
             />
             <NowButton change_datetime_ms={datetime_ms => props.change_handle_ms(datetime_ms)} />
         </div>

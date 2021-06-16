@@ -36,6 +36,7 @@ function _TimeResolutionOptions (props: Props)
         allow_none={false}
         on_change={time_resolution => time_resolution && props.set_time_resolution({ time_resolution })}
         extra_styles={props.extra_styles}
+        always_allow_editing={true}
     />
 }
 

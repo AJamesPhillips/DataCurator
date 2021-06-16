@@ -18,6 +18,7 @@ interface OwnProps
     on_change?: (new_value: Date | undefined) => void
     show_now_shortcut_button?: boolean
     show_today_shortcut_button?: boolean
+    always_allow_editing?: boolean
 }
 
 
@@ -47,13 +48,13 @@ function _EditableCustomDateTime (props: Props)
 
     const valid = is_value_valid(display_value)
 
-
-    const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${props.presenting ? "not_editable" : "" }`
+    const not_editable = props.always_allow_editing ? false : props.presenting
+    const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
     const title = "Created at " + (props.value ? "(custom)" : "")
 
     return <div className={class_name} title={title}>
         <input
-            disabled={props.presenting}
+            disabled={not_editable}
             type="text"
             value={display_value}
             onFocus={() => set_editing(true)}
