@@ -1,12 +1,14 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { useRef, useState } from "preact/hooks"
 
 import "./Editable.css"
-import type { RootState } from "../state/State"
-import { adjust_height } from "./utils"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
-import { ConditionalWComponentSearchWindow, handle_text_field_blur, handle_text_field_change, handle_text_field_render, update_parent_placeholder_css_class } from "./EditableTextSingleLine"
-import { useRef, useState } from "preact/hooks"
+import type { RootState } from "../state/State"
+import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
+import { handle_text_field_render, handle_text_field_change, handle_text_field_blur } from "./editable_text_common"
+import { adjust_height } from "./utils"
+
 
 
 
