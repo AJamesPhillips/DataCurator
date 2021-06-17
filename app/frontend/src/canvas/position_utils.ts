@@ -8,7 +8,7 @@ import { scale_by } from "./zoom_utils"
 
 export const grid_small_step = 20
 export const h_step = grid_small_step * 18
-export const v_step = grid_small_step * 6
+export const v_step = grid_small_step * 8
 
 export function round_coordinate (num: number, round_to: number): number
 {
