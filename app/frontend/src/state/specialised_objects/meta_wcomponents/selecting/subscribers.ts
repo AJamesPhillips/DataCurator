@@ -31,5 +31,6 @@ function handle_ctrl_a (store: Store<RootState>)
         const ids = Object.keys(kv.derived_wc_id_map)
 
         store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
+        store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple" }))
     })
 }
