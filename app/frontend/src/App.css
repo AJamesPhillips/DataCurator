@@ -88,6 +88,13 @@ a
 
 .description_label
 {
-    font-size: 11px;
-    color: grey;
+  font-size: 11px;
+  color: grey;
+}
+
+
+/* Styles markdown quotes */
+blockquote p {
+  border-left: thin solid #aaa;
+  padding-left: 4px;
 }
