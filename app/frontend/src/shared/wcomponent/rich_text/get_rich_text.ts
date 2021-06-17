@@ -62,7 +62,7 @@ interface ReplaceValueInTextArgs
     created_at_ms: number
     sim_ms: number
 }
-export function replace_value_in_text (args: ReplaceValueInTextArgs)
+function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
     let { text, wcomponent, wc_id_counterfactuals_map = {} } = args
 
