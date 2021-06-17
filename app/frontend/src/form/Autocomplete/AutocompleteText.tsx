@@ -17,8 +17,6 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     initial_search_term?: string
     options: E[]
     allow_none?: boolean
-    on_focus?: () => void
-    on_blur?: () => void
     on_change: (id: E["id"] | undefined) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
@@ -78,15 +76,20 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         const is_arrow_down = key === "ArrowDown"
         const is_arrow_up = key === "ArrowUp"
         const is_enter = key === "Enter"
+        const is_escape = key === "Escape"
 
         const { highlighted_option_index } = this.state
 
-        if (is_enter)
+        if (is_enter || is_escape)
         {
-            if (highlighted_option_index !== undefined)
+            if (is_enter && highlighted_option_index !== undefined)
             {
                 const selected_option = displayed_options[highlighted_option_index]
                 if (selected_option) await this.conditional_on_change(selected_option.id)
+            }
+            else if (is_escape)
+            {
+                await this.conditional_on_change(undefined)
             }
 
             e.currentTarget.blur()
@@ -174,8 +177,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
 
         const {
             placeholder,
-            on_focus = () => {},
-            on_blur = () => {},
+            // on_focus = () => {},
             on_mouse_over_option = () => {},
             on_mouse_leave_option = () => {},
         } = this.props
@@ -186,6 +188,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
             const { highlighted_option_index } = this.state
             return index === highlighted_option_index
         }
+
 
         return <div
             class={"editable_field autocomplete " + (valid ? "" : "invalid ")}
@@ -203,7 +206,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                 value={value_str}
                 onFocus={e => {
                     this.setState({ editing: true })
-                    on_focus()
+
                     // select all text
                     e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
                 }}
@@ -211,12 +214,6 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
                     this.setState({ editing: false, temp_value_str: undefined })
-                    // if (this.state.editing)
-                    // {
-                    //     this.conditional_on_change(final_value ? final_value.id : undefined)
-                    // }
-
-                    on_blur()
                 }}
             />
 

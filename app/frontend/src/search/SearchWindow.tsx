@@ -9,6 +9,7 @@ import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/Autoco
 interface OwnProps extends AutocompleteProps {
     search_window_title: string
     start_expanded?: undefined
+    on_blur: () => void
 }
 
 
@@ -27,9 +28,11 @@ export function SearchWindow (props: OwnProps)
                 initial_search_term={props.initial_search_term}
                 options={props.options}
                 allow_none={props.allow_none}
-                on_focus={props.on_focus}
-                on_blur={props.on_blur}
-                on_change={props.on_change}
+                on_change={option_id =>
+                {
+                    props.on_change(option_id)
+                    props.on_blur && props.on_blur()
+                }}
                 on_mouse_over_option={props.on_mouse_over_option}
                 on_mouse_leave_option={props.on_mouse_leave_option}
                 extra_styles={props.extra_styles}

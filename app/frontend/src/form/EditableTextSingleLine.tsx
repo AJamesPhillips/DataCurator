@@ -20,6 +20,7 @@ interface OwnProps
     value: string
     on_change?: (new_value: string) => void
     on_blur?: (value: string) => void
+    force_focus?: boolean
 }
 
 
@@ -36,66 +37,44 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _EditableTextSingleLine (props: Props)
 {
+    const [value, set_value] = useState<string>(props.value)
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { on_change, on_blur, disabled, presenting } = props
-    if (!on_change || disabled || presenting)
+    const { placeholder, on_change, on_blur, disabled, presenting, force_focus } = props
+    if ((!on_change && !on_blur) || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
-        return <div className={class_name}>{props.value || props.placeholder}</div>
+        return <div className={class_name}>{props.value || placeholder}</div>
     }
 
 
-    const conditional_on_change = (new_value: string) => new_value !== props.value && on_change(new_value)
+    const conditional_on_change = (new_value: string) =>
+    {
+        on_change && on_change(new_value)
+        set_value(new_value)
+    }
 
 
-    const class_name = `editable_field ${props.value ? "" : "placeholder"}`
+    const class_name = `editable_field ${value ? "" : "placeholder"}`
 
 
     return <div className={class_name}>
         <input
             type="text"
-            placeholder={props.placeholder}
+            placeholder={placeholder}
             value={props.value}
             ref={el =>
             {
-                // This is useful when the value is deleted and this component's on_blur fires.
-                // The on_blur correctly assigns the placeholder css class name.
-                // If a downstream on_blur validation fires and sets a default, non-placeholder value,
-                // then this line removes the erroneous placeholder css class name.
-                el && update_parent_placeholder_css_class(el)
-
-                // We have initiated a searchWindow to populate an id insertiong so we do not want to
-                // focus this input box now
-                if (id_insertion_point !== undefined) return
-
-                const position = on_focus_set_selection.current
-                on_focus_set_selection.current = undefined
-
-                if (el && position !== undefined)
-                {
-                    setTimeout(() => {
-                        el.focus()
-                        // el.setSelectionRange(0, value.length)
-                        el.setSelectionRange(position[0], position[1])
-                    }, 0)
-                }
-            }}
-            onFocus={e => {
-                // Hide the placeholder
-                if (!e.currentTarget.value) e.currentTarget.placeholder = ""
+                if (!el) return
+                handle_text_field_render({ id_insertion_point, on_focus_set_selection, el, force_focus })
             }}
             onChange={e => {
                 handle_text_field_change({ e, set_id_insertion_point, conditional_on_change })
             }}
             onBlur={e => {
-                // re-display the placeholder
-                if (!e.currentTarget.value) e.currentTarget.placeholder = props.placeholder
-
-                conditional_on_change(e.currentTarget.value)
-                on_blur && on_blur(e.currentTarget.value)
+                handle_text_field_blur({ e, conditional_on_change, on_blur })
             }}
         />
 
@@ -113,6 +92,34 @@ export const EditableTextSingleLine = connector(_EditableTextSingleLine) as Func
 
 
 
+interface HandleTextFieldRenderArgs
+{
+    id_insertion_point: number | undefined
+    on_focus_set_selection: Ref<[number, number] | undefined>
+    el: HTMLInputElement | HTMLTextAreaElement
+    force_focus: boolean | undefined
+}
+export function handle_text_field_render (args: HandleTextFieldRenderArgs)
+{
+    // We have initiated a searchWindow to populate an id insertiong so we do not want to
+    // focus this input box now
+    if (args.id_insertion_point !== undefined) return
+
+    const position = args.on_focus_set_selection.current
+    args.on_focus_set_selection.current = undefined
+
+    const should_gain_focus = position || args.force_focus
+    if (should_gain_focus)
+    {
+        setTimeout(() => {
+            args.el.focus()
+            if (position) args.el.setSelectionRange(position[0], position[1])
+        }, 0)
+    }
+}
+
+
+
 interface HandleTextFieldChangeArgs
 {
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
@@ -122,7 +129,7 @@ interface HandleTextFieldChangeArgs
 export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
     update_parent_placeholder_css_class(args.e.currentTarget)
-    const id_insertion_point = get_id_insertion_point(args)
+    const id_insertion_point = get_id_insertion_point(args.e.currentTarget)
 
     args.conditional_on_change(args.e.currentTarget.value)
 
@@ -135,7 +142,22 @@ export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 
 
 
-function update_parent_placeholder_css_class (el: HTMLInputElement | HTMLTextAreaElement)
+interface HandleTextFieldBlurArgs
+{
+    e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
+    conditional_on_change: (value: string) => void
+    on_blur?: (value: string) => void
+}
+export function handle_text_field_blur (args: HandleTextFieldBlurArgs)
+{
+    const { value } = args.e.currentTarget
+    args.conditional_on_change(value)
+    args.on_blur && args.on_blur(value)
+}
+
+
+
+export function update_parent_placeholder_css_class (el: HTMLInputElement | HTMLTextAreaElement)
 {
     const parent = el.parentElement!
     const command = el.value ? "remove" : "add"
@@ -143,11 +165,9 @@ function update_parent_placeholder_css_class (el: HTMLInputElement | HTMLTextAre
 }
 
 
-function get_id_insertion_point (args: HandleTextFieldChangeArgs)
-{
 
-    // Protect against IE
-    const { selectionStart, value } = args.e.currentTarget
+function get_id_insertion_point ({ selectionStart, value }: { selectionStart: number | null, value: string })
+{
     if (typeof selectionStart === "number")
     {
         const char1 = value[selectionStart - 2]
