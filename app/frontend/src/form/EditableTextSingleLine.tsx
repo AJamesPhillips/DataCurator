@@ -42,7 +42,7 @@ function _EditableTextSingleLine (props: Props)
     if ((!on_change && !on_blur) || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
-        return <div className={class_name}>{props.value || placeholder}</div>
+        return <div className={class_name}>{value || placeholder}</div>
     }
 
 
@@ -60,7 +60,7 @@ function _EditableTextSingleLine (props: Props)
         <input
             type="text"
             placeholder={placeholder}
-            value={props.value}
+            value={value}
             ref={el =>
             {
                 if (!el) return
@@ -75,7 +75,7 @@ function _EditableTextSingleLine (props: Props)
         />
 
         {id_insertion_point !== undefined && <ConditionalWComponentSearchWindow
-            value={props.value}
+            value={value}
             id_insertion_point={id_insertion_point}
             set_id_insertion_point={set_id_insertion_point}
             on_focus_set_selection={on_focus_set_selection}

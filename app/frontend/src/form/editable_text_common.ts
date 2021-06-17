@@ -47,7 +47,6 @@ interface HandleTextFieldChangeArgs
 }
 export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
-    update_parent_placeholder_css_class(args.e.currentTarget)
     const id_insertion_point = get_id_insertion_point(args.e.currentTarget)
 
     args.conditional_on_change(args.e.currentTarget.value)
@@ -72,15 +71,6 @@ export function handle_text_field_blur (args: HandleTextFieldBlurArgs)
     const { value } = args.e.currentTarget
     args.conditional_on_change(value)
     args.on_blur && args.on_blur(value)
-}
-
-
-
-export function update_parent_placeholder_css_class (el: HTMLInputElement | HTMLTextAreaElement)
-{
-    const parent = el.parentElement!
-    const command = el.value ? "remove" : "add"
-    parent.classList[command]("placeholder")
 }
 
 
