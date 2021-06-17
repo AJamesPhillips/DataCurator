@@ -13,6 +13,7 @@ type OwnProps =
     disabled?: boolean
     placeholder: string
     value: number
+    default_value_when_invalid?: number
     allow_undefined: false
     on_change?: (new_value: number) => void
     on_blur?: (value: number) => void
@@ -21,6 +22,7 @@ type OwnProps =
     disabled?: boolean
     placeholder: string
     value: number | undefined
+    default_value_when_invalid?: number
     allow_undefined: true
     on_change?: (new_value: number | undefined) => void
     on_blur?: (value: number | undefined) => void
@@ -42,7 +44,7 @@ function _EditableNumber (props: Props)
 {
     const value = props.value !== undefined ? props.value.toString() : ""
 
-    const { allow_undefined, on_change, on_blur, disabled, editing } = props
+    const { allow_undefined, on_change, on_blur, disabled, editing, default_value_when_invalid = 0 } = props
 
 
     let class_name = "editable_number"
@@ -62,7 +64,7 @@ function _EditableNumber (props: Props)
             {
                 if (!on_change) return
 
-                const valid_value = string_to_number(new_value)
+                const valid_value = string_to_number(new_value, default_value_when_invalid)
                 if (on_event_handler_accepts_undefined(on_change, allow_undefined)) on_change(valid_value)
                 else if (valid_value !== undefined) on_change(valid_value)
             }}
@@ -70,9 +72,13 @@ function _EditableNumber (props: Props)
             {
                 if (!on_blur) return
 
-                const valid_value = string_to_number(value)
+                let valid_value = string_to_number(value, default_value_when_invalid)
                 if (on_event_handler_accepts_undefined(on_blur, allow_undefined)) on_blur(valid_value)
-                else if (valid_value !== undefined) on_blur(valid_value)
+                else
+                {
+                    if (valid_value === undefined) valid_value = default_value_when_invalid
+                    on_blur(valid_value)
+                }
             }}
         />
     </div>
@@ -82,12 +88,12 @@ export const EditableNumber = connector(_EditableNumber) as FunctionalComponent<
 
 
 
-function string_to_number (value: string): number | undefined
+function string_to_number (value: string, default_value_when_invalid: number): number | undefined
 {
     if (!value) return undefined
 
     const num_value = parseFloat(value)
-    if (Number.isNaN(num_value)) return 0
+    if (Number.isNaN(num_value)) return default_value_when_invalid
 
     return num_value
 }

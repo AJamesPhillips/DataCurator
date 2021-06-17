@@ -50,6 +50,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 title,
                 jsx,
                 subtitle: `${wcomponent.title} -- @@${wcomponent.id}`,
+                color: wcomponent.label_color,
             }
         })
 

@@ -44,10 +44,7 @@ function _LabelsEditor (props: Props)
 {
     const { label_ids = [] } = props
 
-    const wcomponents = Object.values(props.wcomponents_by_id)
-
     const wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents,
         wcomponents_by_id: props.wcomponents_by_id,
         wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
         created_at_ms: props.created_at_ms,

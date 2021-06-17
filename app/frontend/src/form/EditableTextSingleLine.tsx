@@ -61,6 +61,12 @@ function _EditableTextSingleLine (props: Props)
             value={props.value}
             ref={el =>
             {
+                // This is useful when the value is deleted and this component's on_blur fires.
+                // The on_blur correctly assigns the placeholder css class name.
+                // If a downstream on_blur validation fires and sets a default, non-placeholder value,
+                // then this line removes the erroneous placeholder css class name.
+                el && update_parent_placeholder_css_class(el)
+
                 // We have initiated a searchWindow to populate an id insertiong so we do not want to
                 // focus this input box now
                 if (id_insertion_point !== undefined) return
@@ -115,7 +121,7 @@ interface HandleTextFieldChangeArgs
 }
 export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
-    update_parent_placeholder_css_class(args.e)
+    update_parent_placeholder_css_class(args.e.currentTarget)
     const id_insertion_point = get_id_insertion_point(args)
 
     args.conditional_on_change(args.e.currentTarget.value)
@@ -129,10 +135,10 @@ export function handle_text_field_change (args: HandleTextFieldChangeArgs)
 
 
 
-function update_parent_placeholder_css_class (e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>)
+function update_parent_placeholder_css_class (el: HTMLInputElement | HTMLTextAreaElement)
 {
-    const parent = e.currentTarget.parentElement!
-    const command = e.currentTarget.value ? "remove" : "add"
+    const parent = el.parentElement!
+    const command = el.value ? "remove" : "add"
     parent.classList[command]("placeholder")
 }
 

@@ -1,5 +1,7 @@
 import type { h } from "preact"
 
+import type { Color } from "../../shared/interfaces"
+
 
 
 // namespace AutocompleteText
@@ -10,6 +12,7 @@ interface BaseAutocompleteOption
     title: string
     jsx?: h.JSX.Element
     subtitle?: string
+    color?: Color
 }
 export interface InternalAutocompleteOption extends BaseAutocompleteOption
 {

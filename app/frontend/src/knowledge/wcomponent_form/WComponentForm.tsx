@@ -136,13 +136,16 @@ function _WComponentForm (props: Props)
             force_focus={previous_id.current !== wcomponent_id}
         /></h2>
 
+
         <WComponentLatestPrediction wcomponent={wcomponent} />
+
 
         {UI_value && (editing || UI_value.is_defined) &&
         <div style={{ cursor: "not-allowed" }}>
             <span className="description_label">Value</span>
             <DisplayValue UI_value={UI_value} />
         </div>}
+
 
         <p>
             <span className="description_label">Type</span>&nbsp;
@@ -179,6 +182,7 @@ function _WComponentForm (props: Props)
             </div>
         </p>}
 
+
         {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) &&
         <p>
             <div style={{ display: "inline-flex" }}>
@@ -195,6 +199,7 @@ function _WComponentForm (props: Props)
                 />
             </div>
         </p>}
+
 
         {wcomponent_is_plain_connection(wcomponent) && <p>
             <WComponentFromTo
@@ -244,12 +249,14 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
+
         {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <p>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
                 on_change={label_ids => upsert_wcomponent({ label_ids })}
             />
         </p>}
+
 
         {wcomponent_is_event(wcomponent)&& <WComponentEventAtFormField
             wcomponent={wcomponent}
@@ -261,6 +268,7 @@ function _WComponentForm (props: Props)
             upsert_wcomponent={upsert_wcomponent}
         />}
 
+
         <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
             <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
                 invariant_value={wcomponent.created_at}
@@ -268,6 +276,7 @@ function _WComponentForm (props: Props)
                 on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
             />
         </p>
+
 
         {orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && <div>
             <br />
