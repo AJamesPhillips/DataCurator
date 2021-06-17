@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact"
-import { useRef, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 
 import "./Editable.css"
 import type { RootState } from "../state/State"
@@ -34,6 +34,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _EditableTextSingleLine (props: Props)
 {
     const [value, set_value] = useState<string>(props.value)
+    useEffect(() => set_value(props.value), [props.value])
+
+
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 

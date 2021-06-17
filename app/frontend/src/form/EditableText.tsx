@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useRef, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 
 import "./Editable.css"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
@@ -8,7 +8,6 @@ import type { RootState } from "../state/State"
 import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
 import { handle_text_field_render, handle_text_field_change, handle_text_field_blur } from "./editable_text_common"
 import { adjust_height } from "./utils"
-
 
 
 
@@ -37,6 +36,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _EditableText (props: Props)
 {
     const [value, set_value] = useState<string>(props.value)
+    useEffect(() => set_value(props.value), [props.value])
+
+
     const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
