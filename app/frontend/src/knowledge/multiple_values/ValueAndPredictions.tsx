@@ -249,7 +249,7 @@ const get_details = (VAPs_represent: VAPsRepresent, editing: boolean) => (item: 
         <EditableText
             placeholder="..."
             value={item.description}
-            on_change={description => on_change({ ...item, description })}
+            on_blur={description => on_change({ ...item, description })}
         />
     </div>
 }

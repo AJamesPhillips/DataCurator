@@ -103,7 +103,7 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsRepresent, e
         {display_explanation && <EditableText
             placeholder="..."
             value={explanation}
-            on_change={explanation =>
+            on_blur={explanation =>
             {
                 const shared_entry_values = { ...VAP_set.shared_entry_values, explanation }
                 on_change({ ...VAP_set, shared_entry_values })

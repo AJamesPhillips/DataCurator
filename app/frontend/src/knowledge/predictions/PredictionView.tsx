@@ -66,7 +66,7 @@ export function PredictionViewDetails (props: OwnProps_Details)
         Explanation: <EditableText
             placeholder="Explanation..."
             value={explanation}
-            on_change={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
+            on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
         />
     </div>
 }

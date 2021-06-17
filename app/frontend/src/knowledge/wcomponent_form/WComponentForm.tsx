@@ -245,7 +245,7 @@ function _WComponentForm (props: Props)
             <EditableText
                 placeholder="Description..."
                 value={wcomponent.description}
-                on_change={description => upsert_wcomponent({ description })}
+                on_blur={description => upsert_wcomponent({ description })}
             />
         </p>}
 
