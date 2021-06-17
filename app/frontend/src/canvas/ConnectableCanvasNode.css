@@ -17,6 +17,7 @@
     border: thin solid #555;
     font-size: 9px;
     text-align: center;
+    user-select: none;
 }
 
 .connection_terminal:hover
