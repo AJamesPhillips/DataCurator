@@ -45,6 +45,7 @@ import { GoalFormFields } from "./GoalFormFields"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 import { LabelsEditor } from "./LabelsEditor"
+import { ColorPicker } from "../../sharedf/ColorPicker"
 
 
 
@@ -335,6 +336,18 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
+
+
+
+        {props.editing && <p>
+            <span className="description_label">Label color</span>
+            <ColorPicker
+                color={wcomponent.label_color}
+                on_blur={color => upsert_wcomponent({ label_color: color })}
+            />
+
+            <hr />
+        </p>}
 
 
         <p>

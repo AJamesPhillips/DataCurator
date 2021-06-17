@@ -1,3 +1,4 @@
+import type { Color } from "../../interfaces"
 
 
 
@@ -14,4 +15,5 @@ export interface Base // extends HasVersion
     created_at: Date
     custom_created_at?: Date
     label_ids?: string[]
+    label_color?: Color
 }
