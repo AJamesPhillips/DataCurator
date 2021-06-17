@@ -15,8 +15,6 @@ import { sync_actions } from "./sync"
 
 
 export const ACTIONS = {
-    noop: () => ({ type: "noop" }),
-
     controls: controls_actions,
     creation_context: creation_context_actions,
     display: display_actions,

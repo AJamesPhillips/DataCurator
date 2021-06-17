@@ -1,5 +1,6 @@
 import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import type { Dispatch } from "redux"
 
 import "./Canvas.css"
 import { ACTIONS } from "../state/actions"
@@ -38,24 +39,24 @@ const map_state = (state: RootState) => {
 
 
 interface ChangeRoutingArgsArgs { x?: number, y?: number, zoom?: number }
-const map_dispatch = {
+const map_dispatch = (dispatch: Dispatch) => ({
     change_routing_args: (args: ChangeRoutingArgsArgs) => {
         let new_args: ChangeRoutingArgsArgs = {}
         if (args.zoom !== undefined) new_args.zoom = Math.round(bound_zoom(args.zoom))
         if (args.x !== undefined) new_args.x = Math.round(args.x)
         if (args.y !== undefined) new_args.y = Math.round(args.y)
 
-        return ACTIONS.routing.change_route({ args: new_args })
+        dispatch(ACTIONS.routing.change_route({ args: new_args }))
     },
     update_bounding_rect: (bounding_rect: BoundingRect | null, current_br: BoundingRect | undefined) =>
     {
-        if (!bounding_rect) return ACTIONS.noop()
+        if (!bounding_rect) return
 
-        if (bounding_rects_equal(bounding_rect, current_br)) return ACTIONS.noop()
+        if (bounding_rects_equal(bounding_rect, current_br)) return
 
-        return ACTIONS.display.update_canvas_bounding_rect({ bounding_rect })
+        dispatch(ACTIONS.display.update_canvas_bounding_rect({ bounding_rect }))
     },
-}
+})
 
 
 
