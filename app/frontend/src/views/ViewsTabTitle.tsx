@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { sentence_case } from "../shared/utils/sentence_case"
 import type { RootState } from "../state/State"
 
 
@@ -16,7 +17,7 @@ type Props = ConnectedProps<typeof connector>
 function _ViewsTabTitle (props: Props)
 {
     const { current_view } = props
-    const view = current_view.slice(0, 1).toUpperCase() + current_view.slice(1).replaceAll("_", " ")
+    const view = sentence_case(current_view).replaceAll("_", " ")
 
     return <div>View ({view})</div>
 }

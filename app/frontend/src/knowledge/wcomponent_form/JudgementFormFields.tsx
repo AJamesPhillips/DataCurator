@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
+import { sentence_case } from "../../shared/utils/sentence_case"
 import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {
     judgement_operators,
@@ -75,7 +76,17 @@ function _JudgementFormFields (props: Props)
             connection_terminal_description="Target"
             wcomponent_id={target_wcomponent && target_wcomponent.id}
             connection_terminal_type="meta"
-            on_update_id={judgement_target_wcomponent_id => upsert_wcomponent({ judgement_target_wcomponent_id })}
+            on_update_id={judgement_target_wcomponent_id =>
+            {
+                const update: Partial<WComponentJudgement> = { judgement_target_wcomponent_id }
+
+                if (!wcomponent.title && judgement_target_wcomponent_id)
+                {
+                    update.title = sentence_case(wcomponent.type) + `: @@${judgement_target_wcomponent_id}`
+                }
+
+                upsert_wcomponent(update)
+            }}
         />
 
         <p>
