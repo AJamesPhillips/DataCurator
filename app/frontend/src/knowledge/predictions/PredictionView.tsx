@@ -41,6 +41,7 @@ export function PredictionViewSummary (props: OwnProps_Summary)
 interface OwnProps_Details
 {
     prediction: Prediction
+    editing: boolean
     on_change?: (prediction: Prediction) => void
 }
 
@@ -63,10 +64,12 @@ export function PredictionViewDetails (props: OwnProps_Details)
             on_change={datetime => update_prediction && update_prediction({ datetime })}
         />
         <br />
-        Explanation: <EditableText
-            placeholder="Explanation..."
-            value={explanation}
-            on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
-        />
+        {(props.editing || explanation) && <div>
+            <span className="description_label">Explanation</span> <EditableText
+                placeholder="Explanation..."
+                value={explanation}
+                on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
+            />
+        </div>}
     </div>
 }

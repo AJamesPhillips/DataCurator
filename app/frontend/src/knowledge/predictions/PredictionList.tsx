@@ -39,20 +39,20 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _PredictionList (props: Props)
 {
     const [new_item, set_new_item] = useState<Prediction | undefined>(undefined)
+    const { item_descriptor, predictions, created_at_ms, sim_ms, editing } = props
 
     const item_top_props = useMemo(() => {
         const props2: EditableListEntryTopProps<Prediction> = {
             get_created_at,
             get_custom_created_at,
             get_summary,
-            get_details,
+            get_details: factory_get_details(editing),
         }
 
         return props2
-    }, [])
+    }, [editing])
 
 
-    const { item_descriptor, predictions, created_at_ms, sim_ms, editing } = props
     const {
         invalid_items, future_items, present_items, past_items,
     } = partition_and_prune_items_by_datetimes({ items: predictions, created_at_ms, sim_ms })
@@ -180,11 +180,12 @@ function get_summary (item: Prediction, on_change?: (item: Prediction) => void):
 }
 
 
-function get_details (item: Prediction, on_change?: (item: Prediction) => void): h.JSX.Element
+function factory_get_details (editing: boolean)
 {
-    return <PredictionViewDetails
+    return (item: Prediction, on_change?: (item: Prediction) => void): h.JSX.Element => <PredictionViewDetails
         prediction={item}
         on_change={prediction => on_change && on_change(prediction) }
+        editing={editing}
     />
 }
 
