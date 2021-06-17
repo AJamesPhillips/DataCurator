@@ -214,8 +214,6 @@ function _WComponentCanvasNode (props: Props)
                 <Markdown options={{ forceInline: true }}>{title}</Markdown>
             </div>
 
-            {!props.is_editing && <LabelsListV2 label_ids={wcomponent.label_ids} />}
-
             {show_validity_value && <div className="node_validity_container">
                 <div className="description_label">validity</div>
                 <WComponentValidityValue wcomponent={wcomponent} />
@@ -226,6 +224,8 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentStatefulValue wcomponent={wcomponent} />
                 <WComponentJudgements wcomponent={wcomponent} />
             </div>}
+
+            {<LabelsListV2 label_ids={wcomponent.label_ids} />}
         </div>}
         extra_css_class={extra_css_class}
         extra_node_styles={{ opacity: validity_opacity }}

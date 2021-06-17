@@ -6,6 +6,7 @@ import "./LabelV2.css"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { color_to_string } from "../sharedf/color"
 
 
 
@@ -56,6 +57,7 @@ function _LabelV2 (props: Props)
 
     return <div
         className="label_v2"
+        style={{ backgroundColor: color_to_string(wcomponent.label_color) }}
         // onPointerOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}
         // onPointerLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}
         // onPointerDown={e => pointer_down && pointer_down(e, option.id)}
