@@ -32,6 +32,7 @@ import { WComponentValidityValue } from "../WComponentValidityValue"
 import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
+import { factory_on_pointer_down } from "../canvas_common"
 
 
 
@@ -96,7 +97,9 @@ function _WComponentCanvasNode (props: Props)
         knowledge_view_id, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
-        created_at_ms, sim_ms, validity_filter, certainty_formatting, } = props
+        created_at_ms, sim_ms, validity_filter, certainty_formatting,
+        clicked_wcomponent, clear_selected_wcomponents,
+    } = props
     const { change_route, set_highlighted_wcomponent } = props
 
     if (!knowledge_view_id) return <div>No current knowledge view</div>
@@ -124,28 +127,7 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
-    {
-        e.stopImmediatePropagation()
-        e.preventDefault()
-
-        props.clicked_wcomponent({ id })
-
-        if (ctrl_key_is_down)
-        {
-            change_route({ route: "wcomponents", sub_route: "wcomponents_edit_multiple", item_id: null })
-        }
-        else
-        {
-            // Copied to connection
-            if (is_current_item)
-            {
-                change_route({ route: "wcomponents", sub_route: null, item_id: null })
-                props.clear_selected_wcomponents({})
-            }
-            else change_route({ route: "wcomponents", sub_route: null, item_id: id })
-        }
-    }
+    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, ctrl_key_is_down, change_route, is_current_item })
 
 
     const update_position = (new_position: CanvasPoint) =>

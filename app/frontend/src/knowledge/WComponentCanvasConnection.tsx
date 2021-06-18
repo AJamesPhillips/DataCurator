@@ -24,6 +24,7 @@ import {
     calc_display_opacity,
     calc_judgement_connection_wcomponent_should_display,
 } from "./calc_display_parameters"
+import { factory_on_pointer_down } from "./canvas_common"
 
 
 
@@ -65,6 +66,10 @@ const map_state = (state: RootState, props: OwnProps) =>
         })
     }
 
+
+    const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
+
+
     return {
         current_UI_knowledge_view,
         wcomponent,
@@ -72,6 +77,7 @@ const map_state = (state: RootState, props: OwnProps) =>
         is_current_item: state.routing.item_id === props.id,
         is_editing: !state.display_options.consumption_formatting,
         certainty_formatting: state.display_options.derived_certainty_formatting,
+        ctrl_key_is_down,
     }
 }
 
@@ -92,7 +98,8 @@ function _WComponentCanvasConnection (props: Props)
 {
     const {
         id, current_UI_knowledge_view, wcomponent, is_current_item, validity_value,
-        change_route,
+        ctrl_key_is_down,
+        change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props
 
     if (!wcomponent)
@@ -116,21 +123,7 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_pointer_down = (e: h.JSX.TargetedMouseEvent<SVGGElement>) =>
-    {
-        e.stopImmediatePropagation()
-        e.preventDefault()
-
-        props.clicked_wcomponent({ id })
-
-        // Copied from Node
-        if (is_current_item)
-        {
-            change_route({ route: "wcomponents", sub_route: null, item_id: null })
-            props.clear_selected_wcomponents({})
-        }
-        else change_route({ route: "wcomponents", sub_route: null, item_id: id })
-    }
+    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, ctrl_key_is_down, change_route, is_current_item })
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type,

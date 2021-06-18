@@ -18,7 +18,7 @@ interface OwnProps {
     intensity?: number
     blur?: number
     is_highlighted?: boolean
-    on_pointer_down?: (e: h.JSX.TargetedMouseEvent<SVGGElement>) => void
+    on_pointer_down?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
 }
 
 
