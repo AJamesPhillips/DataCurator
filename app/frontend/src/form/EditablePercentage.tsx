@@ -13,6 +13,7 @@ interface OwnProps
     placeholder: string
     value: number | undefined
     on_change?: (new_value: number) => void
+    on_blur?: (new_value: number) => void
 }
 
 
@@ -20,8 +21,8 @@ export function EditablePercentage (props: OwnProps)
 {
     const value = percentage_to_string(props.value)
 
-    const { on_change, disabled } = props
-    if (!on_change || disabled)
+    const { on_change, on_blur, disabled } = props
+    if ((!on_change && !on_blur) || disabled)
     {
         const class_name = "editable_percentage" + (disabled ? "disabled" : "")
         return <div className={class_name}>{value || props.placeholder}&nbsp;%</div>
@@ -34,7 +35,11 @@ export function EditablePercentage (props: OwnProps)
             value={value}
             on_change={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) on_change(valid_value)
+                if (valid_value !== undefined) on_change && on_change(valid_value)
+            }}
+            on_blur={new_value => {
+                const valid_value = string_to_percentage(new_value)
+                if (valid_value !== undefined) on_blur && on_blur(valid_value)
             }}
         />&nbsp;%
     </div>
