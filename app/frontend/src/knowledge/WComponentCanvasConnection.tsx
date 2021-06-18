@@ -34,9 +34,9 @@ interface OwnProps
 }
 
 
-const map_state = (state: RootState, props: OwnProps) =>
+const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const wcomponent = get_wcomponent_from_state(state, props.id)
+    const wcomponent = get_wcomponent_from_state(state, own_props.id)
 
     const { current_UI_knowledge_view } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
@@ -74,7 +74,9 @@ const map_state = (state: RootState, props: OwnProps) =>
         current_UI_knowledge_view,
         wcomponent,
         validity_value,
-        is_current_item: state.routing.item_id === props.id,
+        is_current_item: state.routing.item_id === own_props.id,
+        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
+        is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         is_editing: !state.display_options.consumption_formatting,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         ctrl_key_is_down,
@@ -97,8 +99,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentCanvasConnection (props: Props)
 {
     const {
-        id, current_UI_knowledge_view, wcomponent, is_current_item, validity_value,
-        ctrl_key_is_down,
+        id, current_UI_knowledge_view, wcomponent, is_current_item, is_highlighted, is_selected,
+        validity_value, ctrl_key_is_down,
         change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props
 
@@ -145,7 +147,7 @@ function _WComponentCanvasConnection (props: Props)
         to_connection_type={to_connection_type}
         on_pointer_down={on_pointer_down}
         intensity={validity_opacity}
-        is_highlighted={is_current_item}
+        is_highlighted={is_current_item || is_highlighted || is_selected}
     />
 }
 
