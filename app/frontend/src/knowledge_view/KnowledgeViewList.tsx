@@ -11,7 +11,6 @@ import type { RootState } from "../state/State"
 import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
-import { sort_list } from "../shared/utils/sort"
 import { optional_view_type } from "../views/optional_view_type"
 import type { ViewType } from "../state/routing/interfaces"
 
@@ -49,9 +48,7 @@ function _KnowledgeViewList (props: Props)
         </div>
     }
 
-    const sorted_other_knowledge_views = sort_list(other_knowledge_views, kv => kv.title, "ascending")
-
-    const knowledge_views: KnowledgeView[] = [ base_knowledge_view, ...sorted_other_knowledge_views ]
+    const knowledge_views: KnowledgeView[] = [ base_knowledge_view, ...other_knowledge_views ]
 
 
     return <ExpandableListWithAddButton

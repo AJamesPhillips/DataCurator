@@ -67,7 +67,7 @@ export function get_base_knowledge_view (state: RootState): GetBaseKnowledgeView
     }
 
     const unsorted_other_knowledge_views = knowledge_views.filter(kv => !base_knowledge_view || kv.id !== base_knowledge_view.id)
-    const other_knowledge_views = sort_list(unsorted_other_knowledge_views, ({ created_at }) => created_at.getTime(), "descending")
+    const other_knowledge_views = sort_list(unsorted_other_knowledge_views, ({ title }) => title.toLowerCase(), "ascending")
 
     return {
         base_knowledge_view,
