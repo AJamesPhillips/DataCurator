@@ -117,10 +117,10 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
-            Title: <EditableTextSingleLine
+            <span className="description_label">Title</span> <EditableTextSingleLine
                 placeholder="Title..."
                 value={knowledge_view.title}
-                on_change={new_title => {
+                on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "Base" : make_default_title()
                     on_change({ ...knowledge_view, title: new_title || default_title })
                 }}
@@ -128,7 +128,7 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
         </p>
 
         <div>
-            Allow counterfactuals:
+            <span className="description_label">Allow counterfactuals</span>
             <input
                 type="checkbox"
                 checked={knowledge_view.allows_assumptions}

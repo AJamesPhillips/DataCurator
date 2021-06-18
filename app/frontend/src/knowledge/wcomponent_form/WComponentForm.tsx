@@ -192,6 +192,7 @@ function _WComponentForm (props: Props)
                     value={wcomponent.boolean_true_str || ""}
                     on_change={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
                 />
+                {!editing && <div>&nbsp; | &nbsp;</div>}
                 <EditableTextSingleLine
                     placeholder="False..."
                     value={wcomponent.boolean_false_str || ""}
