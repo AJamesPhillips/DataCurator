@@ -13,6 +13,7 @@ import type { ContentCoordinate } from "./interfaces"
 import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
+import { SelectionBox } from "./SelectionBox"
 
 
 
@@ -86,31 +87,47 @@ type PointerState =
 }
 
 
-class _Canvas extends Component<Props>
+interface State
 {
+    pointer_state: PointerState
+    client_current_x: number | undefined
+    client_current_y: number | undefined
+}
+
+
+class _Canvas extends Component<Props, State>
+{
+    constructor (props: Props)
+    {
+        super(props)
+
+        this.state = {
+            pointer_state: {
+                down: false,
+                area_select: false,
+                last_pointer_down_ms: undefined,
+                client_start_x: null,
+                client_start_y: null,
+                canvas_start_x: 0,
+                canvas_start_y: 0,
+            },
+            client_current_x: undefined,
+            client_current_y: undefined,
+        }
+    }
+
 
     // zoom aware values
     client_to_canvas = (client_xy: number) => client_xy * (scale_by / this.props.zoom)
     client_to_canvas_x = (client_x: number) =>
     {
-        const canvas_x = this.pointer_state.canvas_start_x
-        return canvas_x + this.client_to_canvas(client_x)
+        const { canvas_start_x } = this.state.pointer_state
+        return canvas_start_x + this.client_to_canvas(client_x)
     }
     client_to_canvas_y = (client_y: number) =>
     {
-        const canvas_y = this.pointer_state.canvas_start_y
-        return canvas_y - this.client_to_canvas(client_y)
-    }
-
-
-    private pointer_state: PointerState = {
-        down: false,
-        area_select: false,
-        last_pointer_down_ms: undefined,
-        client_start_x: null,
-        client_start_y: null,
-        canvas_start_x: 0,
-        canvas_start_y: 0,
+        const { canvas_start_y } = this.state.pointer_state
+        return canvas_start_y - this.client_to_canvas(client_y)
     }
 
 
@@ -128,12 +145,16 @@ class _Canvas extends Component<Props>
         }
 
         handle_if_double_tap({
-            current_pointer_state: this.pointer_state,
+            current_pointer_state: this.state.pointer_state,
             new_pointer_state,
             client_to_canvas_x: this.client_to_canvas_x,
             client_to_canvas_y: this.client_to_canvas_y,
         })
-        this.pointer_state = new_pointer_state
+        this.setState({
+            pointer_state: new_pointer_state,
+            client_current_x: e.clientX,
+            client_current_y: e.clientY,
+        })
     }
 
 
@@ -143,13 +164,13 @@ class _Canvas extends Component<Props>
         {
             down: false,
             area_select: false,
-            last_pointer_down_ms: this.pointer_state.last_pointer_down_ms,
+            last_pointer_down_ms: this.state.pointer_state.last_pointer_down_ms,
             client_start_x: null,
             client_start_y: null,
-            canvas_start_x: this.pointer_state.canvas_start_x,
-            canvas_start_y: this.pointer_state.canvas_start_y,
+            canvas_start_x: this.state.pointer_state.canvas_start_x,
+            canvas_start_y: this.state.pointer_state.canvas_start_y,
         }
-        this.pointer_state = new_pointer_state
+        this.setState({ pointer_state: new_pointer_state, client_current_x: undefined, client_current_y: undefined })
     }
 
 
@@ -165,17 +186,20 @@ class _Canvas extends Component<Props>
         //     })
         // }
 
-        if (!this.pointer_state.down) return
+        if (!this.state.pointer_state.down) return
 
-        if (this.pointer_state.area_select)
+        if (this.state.pointer_state.area_select)
         {
-
+            this.setState({
+                client_current_x: e.clientX,
+                client_current_y: e.clientY,
+            })
         }
         else
         {
             // Values are independent of zoom
-            const change_in_client_x = this.pointer_state.client_start_x - e.clientX
-            const change_in_client_y = this.pointer_state.client_start_y - e.clientY
+            const change_in_client_x = this.state.pointer_state.client_start_x - e.clientX
+            const change_in_client_y = this.state.pointer_state.client_start_y - e.clientY
 
             const x = this.client_to_canvas_x(change_in_client_x)
             const y = this.client_to_canvas_y(change_in_client_y)
@@ -238,6 +262,7 @@ class _Canvas extends Component<Props>
             transform: `scale(${scale})`
         }
 
+
         return (
         <div style={{ height: "100%" }}
             // This has the potential to form part of a feedback loop
@@ -277,9 +302,15 @@ class _Canvas extends Component<Props>
                             {this.props.svg_upper_children}
                         </svg>
 
-                        <div className="selection_box" style={{ top: 0, left: 0, width: 200, height: 200 }} />
                     </div>
                 </div>
+
+                {this.state.pointer_state.area_select && <SelectionBox
+                    client_start_x={this.state.pointer_state.client_start_x}
+                    client_start_y={this.state.pointer_state.client_start_y}
+                    client_current_x={this.state.client_current_x}
+                    client_current_y={this.state.client_current_y}
+                />}
             </div>
 
             {content_coordinates.length === 0 ? null : <div style={{ position: "relative", bottom: "20px" }}>
