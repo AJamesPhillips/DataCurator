@@ -4,6 +4,7 @@ import type { CreationContextState } from "../shared/creation_context/state"
 import type { ControlsState } from "./controls/state"
 import type { DerivedState } from "./derived/State"
 import type { DisplayOptionsState } from "./display_options/state"
+import type { FilterContextState } from "./filter_context/State"
 import type { RoutingState } from "./routing/interfaces"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
@@ -123,6 +124,7 @@ export interface RootState extends RootStateCore
     creation_context: CreationContextState
     derived: DerivedState
     display_options: DisplayOptionsState
+    filter_context: FilterContextState
     global_keys: GlobalKeyPress
     last_action: AnyAction | undefined
     meta_wcomponents: MetaWComponentsState
