@@ -13,6 +13,7 @@ interface OwnProps
 {
     label_ids: string[] | undefined
     on_change: (new_label_ids: string[]) => void
+    always_allow_editing?: boolean
 }
 
 
@@ -20,6 +21,7 @@ interface OwnProps
 const map_state = (state: RootState, { }: OwnProps) =>
 {
     return {
+        ready: state.sync.ready,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_id_counterfactuals_map: get_current_UI_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
         created_at_ms: state.routing.args.created_at_ms,
@@ -42,7 +44,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _LabelsEditor (props: Props)
 {
-    const { label_ids = [] } = props
+    const { ready, label_ids = [] } = props
+
+    if (!ready) return <div>Loading labels...</div>
 
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents_by_id: props.wcomponents_by_id,
@@ -50,6 +54,7 @@ function _LabelsEditor (props: Props)
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })
+
 
     return <div>
         <span className="description_label">Labels</span>
@@ -64,6 +69,7 @@ function _LabelsEditor (props: Props)
             }}
             on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
             on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
+            always_allow_editing={props.always_allow_editing}
         />
     </div>
 }

@@ -24,12 +24,13 @@ interface OwnProps <E extends AutocompleteOption = AutocompleteOption>
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
+    always_allow_editing?: boolean
 }
 
 
 
-const map_state = (state: RootState) => ({
-    editing: !state.display_options.consumption_formatting,
+const map_state = (state: RootState, own_props: OwnProps) => ({
+    editing: own_props.always_allow_editing || !state.display_options.consumption_formatting,
 })
 
 const map_dispatch = {

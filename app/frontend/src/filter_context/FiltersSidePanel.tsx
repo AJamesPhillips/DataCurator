@@ -1,8 +1,10 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { EditableCheckbox } from "../form/EditableCheckbox"
 
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { ACTIONS } from "../state/actions"
+import type { CompoundFilter } from "../state/filter_context/state"
 import type { RootState } from "../state/State"
 
 
@@ -38,14 +40,41 @@ function _FiltersSidePanel (props: Props)
         <h3>Filters</h3>
 
         <p>
-            <b>Exclude by label</b>
+            Enabled: <EditableCheckbox
+                value={props.apply_filter}
+                on_change={() => props.set_apply_filter(!props.apply_filter)}
+            />
+        </p>
+
+        <p>
+            Exclude by label:
 
             <LabelsEditor
                 label_ids={exclude_label_ids}
-                on_change={() => {}}
+                on_change={new_exclude_label_ids =>
+                {
+                    const filters = get_exclusion_filters_from_ids(new_exclude_label_ids)
+                    props.set_filters({ filters })
+                }}
+                always_allow_editing={true}
             />
         </p>
     </div>
 }
 
 export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent<{}>
+
+
+
+function get_exclusion_filters_from_ids (label_ids: string[]): CompoundFilter[]
+{
+    if (label_ids.length === 0) return []
+
+    return [
+        { type: "compound", operator: "OR", operation: "exclude", filters:
+            [
+                { type: "specific", label_ids, search_term: "", component_types: [] },
+            ]
+        },
+    ]
+}
