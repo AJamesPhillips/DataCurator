@@ -8,7 +8,6 @@ import { lefttop_to_xy } from "../state/display_options/display"
 import { BoundingRect, bounding_rects_equal } from "../state/display_options/state"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
-import { performance_logger } from "../utils/performance"
 import type { ContentCoordinate } from "./interfaces"
 import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
@@ -174,18 +173,15 @@ class _Canvas extends Component<Props, State>
     }
 
 
+    on_pointer_leave = () =>
+    {
+        // When pointer leaves the screen or canvas cancel the pointer being down if not dragging a selection
+        if (!this.state.pointer_state.area_select) this.on_pointer_up()
+    }
+
+
     on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
-
-        // // This is a hack because onPointerCapture is not as flexible as we wanted.
-        // if ((e.currentTarget as any).on_pointer_move_subscribers)
-        // {
-        //     (e.currentTarget as any).on_pointer_move_subscribers.forEach(on_pointer_move_subscriber =>
-        //     {
-        //         on_pointer_move_subscriber(e)
-        //     })
-        // }
-
         if (!this.state.pointer_state.down) return
 
         if (this.state.pointer_state.area_select)
@@ -244,7 +240,6 @@ class _Canvas extends Component<Props, State>
         const { zoom, bounding_rect, content_coordinates = [], update_bounding_rect } = this.props
 
         const scale = zoom / scale_by
-        performance_logger("Canvas...")
         const x = -1 * this.props.x * scale
         const y = this.props.y * scale
 
@@ -274,8 +269,7 @@ class _Canvas extends Component<Props, State>
                 onPointerDown={this.on_pointer_down}
                 onPointerMove={this.on_pointer_move}
                 onPointerUp={this.on_pointer_up}
-                // When pointer leaves the screen or canvas cancel the pointer being down
-                onPointerLeave={this.on_pointer_up}
+                onPointerLeave={this.on_pointer_leave}
                 onWheel={this.on_wheel}
                 onDragOver={e =>
                 {
