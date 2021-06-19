@@ -13,6 +13,7 @@ import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
+import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
 
 
 
@@ -159,6 +160,19 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_up = () =>
     {
+        if (this.state.pointer_state.area_select)
+        {
+            const args = area_selection_args(this.state)
+            const canvas_area_select: CanvasAreaSelectEvent = {
+                start_x: this.client_to_canvas_x(args.client_start_x),
+                start_y: this.client_to_canvas_y(args.client_start_y),
+                end_x: this.client_to_canvas_x(args.client_current_x),
+                end_y: this.client_to_canvas_y(args.client_current_y),
+            }
+
+            pub_sub.canvas.pub("canvas_area_select", canvas_area_select)
+        }
+
         const new_pointer_state: PointerState =
         {
             down: false,
@@ -299,12 +313,7 @@ class _Canvas extends Component<Props, State>
                     </div>
                 </div>
 
-                {this.state.pointer_state.area_select && <SelectionBox
-                    client_start_x={this.state.pointer_state.client_start_x}
-                    client_start_y={this.state.pointer_state.client_start_y}
-                    client_current_x={this.state.client_current_x}
-                    client_current_y={this.state.client_current_y}
-                />}
+                {this.state.pointer_state.area_select && <SelectionBox {...area_selection_args(this.state)} />}
             </div>
 
             {content_coordinates.length === 0 ? null : <div style={{ position: "relative", bottom: "20px" }}>
@@ -371,4 +380,16 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
     const y = client_to_canvas_y(current_y)
 
     pub_sub.canvas.pub("canvas_double_tap", { x, y })
+}
+
+
+
+function area_selection_args (state: Readonly<State>)
+{
+    return {
+        client_start_x: state.pointer_state.client_start_x || 0,
+        client_start_y: state.pointer_state.client_start_y || 0,
+        client_current_x: state.client_current_x || 0,
+        client_current_y: state.client_current_y || 0,
+    }
 }

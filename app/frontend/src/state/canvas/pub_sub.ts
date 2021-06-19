@@ -9,11 +9,20 @@ export interface CanvasPointerEvent
 }
 
 
+export interface CanvasAreaSelectEvent
+{
+    start_x: number
+    start_y: number
+    end_x: number
+    end_y: number
+}
+
 
 interface CanvasMsgMap
 {
     canvas_double_tap: CanvasPointerEvent
     canvas_right_click: CanvasPointerEvent
+    canvas_area_select: CanvasAreaSelectEvent
 }
 
 export const canvas_pub_sub = pub_sub_factory<CanvasMsgMap>()
