@@ -11,7 +11,7 @@ export interface FilterContextState
 type Filter = CompoundFilter | SpecificFilter
 
 
-interface CompoundFilter {
+export interface CompoundFilter {
     type: "compound"
     operator: "AND" | "OR"
     operation: "include" | "exclude"

@@ -5,6 +5,7 @@ import { controls_reducer } from "./controls/reducer"
 import { creation_context_reducer } from "./creation_context/reducer"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display_options/reducer"
+import { filter_context_reducer } from "./filter_context/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
 import { objectives_reducer } from "./objectives"
 import { objects_reducer } from "./objects/reducer"
@@ -37,6 +38,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = specialised_objects_reducer(state, action)
     state = controls_reducer(state, action)
     state = creation_context_reducer(state, action)
+    state = filter_context_reducer(state, action)
 
     state = { ...state, last_action: action }
 

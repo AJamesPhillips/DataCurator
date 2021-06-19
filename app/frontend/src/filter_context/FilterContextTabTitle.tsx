@@ -11,7 +11,7 @@ const map_state = (state: RootState) => ({
 })
 
 const map_dispatch = {
-    // toggle_apply_filter: ACTIONS.filter_context.toggle_apply_filter,
+    set_apply_filter: ACTIONS.filter_context.set_apply_filter,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -35,7 +35,7 @@ function _FilterContextTabTitle (props: Props)
             {
                 e.stopPropagation()
                 e.preventDefault()
-                // props.toggle_use_filter_context()
+                props.set_apply_filter(!props.apply_filter)
             }}
         />
     </div>
