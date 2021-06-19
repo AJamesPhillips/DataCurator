@@ -1,0 +1,20 @@
+
+
+.selection_box
+{
+    position: absolute;
+    z-index: 3;
+    border-radius: 2px;
+}
+
+.selection_box.color_blue
+{
+    border: 2px solid rgba(53, 50, 255, 0.65);
+    background-color: rgba(53, 50, 255, 0.2);
+}
+
+.selection_box.color_red
+{
+    border: 2px solid rgba(255, 53, 50, 0.65);
+    background-color: rgba(255, 53, 50, 0.2);
+}

@@ -21,7 +21,7 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 

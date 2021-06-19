@@ -166,8 +166,8 @@ class _Canvas extends Component<Props, State>
             const canvas_area_select: CanvasAreaSelectEvent = {
                 start_x: this.client_to_canvas_x(args.client_start_x),
                 start_y: this.client_to_canvas_y(args.client_start_y),
-                end_x: this.client_to_canvas_x(args.client_current_x),
-                end_y: this.client_to_canvas_y(args.client_current_y),
+                end_x: this.client_to_canvas_x(args.client_end_x),
+                end_y: this.client_to_canvas_y(args.client_end_y),
             }
 
             pub_sub.canvas.pub("canvas_area_select", canvas_area_select)
@@ -313,7 +313,10 @@ class _Canvas extends Component<Props, State>
                     </div>
                 </div>
 
-                {this.state.pointer_state.area_select && <SelectionBox {...area_selection_args(this.state)} />}
+                {this.state.pointer_state.area_select && <SelectionBox
+                    {...area_selection_args(this.state)}
+                    color={this.props.control_key_down ? "red" : "blue"}
+                />}
             </div>
 
             {content_coordinates.length === 0 ? null : <div style={{ position: "relative", bottom: "20px" }}>
@@ -386,10 +389,15 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
 
 function area_selection_args (state: Readonly<State>)
 {
+    const client_start_x = state.pointer_state.client_start_x || 0
+    const client_start_y = state.pointer_state.client_start_y || 0
+    const client_current_x = state.client_current_x || 0
+    const client_current_y = state.client_current_y || 0
+
     return {
-        client_start_x: state.pointer_state.client_start_x || 0,
-        client_start_y: state.pointer_state.client_start_y || 0,
-        client_current_x: state.client_current_x || 0,
-        client_current_y: state.client_current_y || 0,
+        client_start_x: Math.min(client_start_x, client_current_x),
+        client_start_y: Math.min(client_start_y, client_current_y),
+        client_end_x: Math.max(client_start_x, client_current_x),
+        client_end_y: Math.max(client_start_y, client_current_y),
     }
 }

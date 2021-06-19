@@ -15,10 +15,12 @@ export const get_empty_wcomponent_ids_by_type = (): WComponentIdsByType => ({
     relation_link: new Set(),
     judgement: new Set(),
     objective: new Set(),
-    judgement_or_objective: new Set(),
     counterfactual: new Set(),
     goal: new Set(),
     prioritisation: new Set(),
+
+    judgement_or_objective: new Set(),
+    any_link: new Set(),
 })
 
 
@@ -40,6 +42,7 @@ export function get_wcomponent_ids_by_type (state: RootState, ids: string[])
     })
 
     wc_ids_by_type.judgement_or_objective = set_union(wc_ids_by_type.judgement, wc_ids_by_type.objective)
+    wc_ids_by_type.any_link = set_union(wc_ids_by_type.causal_link, wc_ids_by_type.relation_link)
 
     return wc_ids_by_type
 }
