@@ -7,6 +7,7 @@ import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { ViewsTabTitle } from "../views/ViewsTabTitle"
+import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 
 
 interface OwnProps {
@@ -16,7 +17,7 @@ interface OwnProps {
 
 function get_title (id: ROUTE_TYPES)
 {
-    if (id === "filter") return "Filter"
+    if (id === "filter") return <FilterContextTabTitle />
     else if (id === "display") return "Display options"
     else if (id === "statements") return "Statements"
     else if (id === "objects") return "Objects"
