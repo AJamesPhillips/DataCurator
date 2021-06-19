@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { CreationContextSidePanel } from "../creation_context/CreationContextSidePanel"
 import { DisplayOptionsSidePanel } from "../display_options/DisplayOptionsSidePanel"
-import { FiltersSidePanel } from "../filters/FiltersSidePanel"
+import { FiltersSidePanel } from "../filter_context/FiltersSidePanel"
 import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
 import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"

@@ -1,11 +1,11 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { MultiAutocompleteText } from "../../form/Autocomplete/MultiAutocompleteText"
-import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
-import { ACTIONS } from "../../state/actions"
-import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
+import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
+import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
+import { ACTIONS } from "../state/actions"
+import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import type { RootState } from "../state/State"
 
 
 

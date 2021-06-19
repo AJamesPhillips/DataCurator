@@ -44,7 +44,7 @@ import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_pre
 import { GoalFormFields } from "./GoalFormFields"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
-import { LabelsEditor } from "./LabelsEditor"
+import { LabelsEditor } from "../../labels/LabelsEditor"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 
 
