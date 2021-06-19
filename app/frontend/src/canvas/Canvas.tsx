@@ -109,7 +109,8 @@ class _Canvas extends Component<Props>
     }
 
 
-    on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
+    on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+    {
         const new_pointer_state: PointerState =
         {
             down: true,
@@ -120,7 +121,12 @@ class _Canvas extends Component<Props>
             canvas_start_y: this.props.y,
         }
 
-        this.handle_if_double_tap(this.pointer_state, new_pointer_state)
+        handle_if_double_tap({
+            current_pointer_state: this.pointer_state,
+            new_pointer_state,
+            client_to_canvas_x: this.client_to_canvas_x,
+            client_to_canvas_y: this.client_to_canvas_y,
+        })
         this.pointer_state = new_pointer_state
     }
 
@@ -128,7 +134,8 @@ class _Canvas extends Component<Props>
     on_pointer_up = () => { this.pointer_state.down = false }
 
 
-    on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
+    on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+    {
 
         // // This is a hack because onPointerCapture is not as flexible as we wanted.
         // if ((e.currentTarget as any).on_pointer_move_subscribers)
@@ -180,29 +187,6 @@ class _Canvas extends Component<Props>
         const y = this.client_to_canvas_y(e.clientY)
 
         pub_sub.canvas.pub("canvas_right_click", { x, y })
-    }
-
-
-    // We could access current_pointer_state using this.pointer_state but prefer purer functions where possible
-    handle_if_double_tap = (current_pointer_state: PointerState, new_pointer_state: PointerState) =>
-    {
-        // first click
-        if (!current_pointer_state.last_pointer_down_ms || !new_pointer_state.last_pointer_down_ms) return
-
-        // too slow
-        if ((new_pointer_state.last_pointer_down_ms - current_pointer_state.last_pointer_down_ms) > MAX_DOUBLE_TAP_DELAY_MS) return
-
-        const { client_start_x: current_x, client_start_y: current_y } = current_pointer_state
-        const { client_start_x: new_x, client_start_y: new_y } = new_pointer_state
-        if (current_x === null || current_y === null || new_x === null || new_y === null) return
-
-        if (Math.abs(current_x - new_x) > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
-        if (Math.abs(current_y - new_y) > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
-
-        const x = this.client_to_canvas_x(current_x)
-        const y = this.client_to_canvas_y(current_y)
-
-        pub_sub.canvas.pub("canvas_double_tap", { x, y })
     }
 
 
@@ -291,3 +275,48 @@ const blur_filter_defs = <defs>
         <feGaussianBlur in="SourceGraphic" stdDeviation={i / 20} />
     </filter>)}
 </defs>
+
+
+
+interface HandleIfDoubleTapArgs
+{
+    current_pointer_state: PointerState
+    new_pointer_state: PointerState
+    client_to_canvas_x: (x: number) => number
+    client_to_canvas_y: (y: number) => number
+}
+function handle_if_double_tap (args: HandleIfDoubleTapArgs)
+{
+    const {
+        current_pointer_state,
+        new_pointer_state,
+        client_to_canvas_x,
+        client_to_canvas_y,
+    } = args
+
+    // first click
+    if (!current_pointer_state.last_pointer_down_ms) return
+
+    // type guard
+    if (!new_pointer_state.last_pointer_down_ms) return
+
+    // check if too slow
+    const time_between_pointer_down = new_pointer_state.last_pointer_down_ms - current_pointer_state.last_pointer_down_ms
+    if (time_between_pointer_down > MAX_DOUBLE_TAP_DELAY_MS) return
+
+    const { client_start_x: current_x, client_start_y: current_y } = current_pointer_state
+    const { client_start_x: new_x, client_start_y: new_y } = new_pointer_state
+    // type guard
+    if (current_x === null || current_y === null || new_x === null || new_y === null) return
+
+    // check if moved too far
+    const x_movement = Math.abs(current_x - new_x)
+    const y_movement = Math.abs(current_y - new_y)
+    if (x_movement > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
+    if (y_movement > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
+
+    const x = client_to_canvas_x(current_x)
+    const y = client_to_canvas_y(current_y)
+
+    pub_sub.canvas.pub("canvas_double_tap", { x, y })
+}
