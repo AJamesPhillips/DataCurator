@@ -33,8 +33,10 @@ const map_state = (state: RootState) => {
     const x = state.routing.args.x
     const y = state.routing.args.y
     const bounding_rect = state.display_options.canvas_bounding_rect
+    const shift_key_down = state.global_keys.keys_down.has("Shift")
+    const control_key_down = state.global_keys.keys_down.has("Control")
 
-    return { zoom, x, y, bounding_rect }
+    return { zoom, x, y, bounding_rect, shift_key_down, control_key_down }
 }
 
 
@@ -67,6 +69,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 type PointerState =
 {
     down: false
+    area_select: false
     last_pointer_down_ms: number | undefined
     client_start_x: null
     client_start_y: null
@@ -74,6 +77,7 @@ type PointerState =
     canvas_start_y: number
 } | {
     down: true
+    area_select: boolean
     last_pointer_down_ms: number | undefined
     client_start_x: number
     client_start_y: number
@@ -101,6 +105,7 @@ class _Canvas extends Component<Props>
 
     private pointer_state: PointerState = {
         down: false,
+        area_select: false,
         last_pointer_down_ms: undefined,
         client_start_x: null,
         client_start_y: null,
@@ -114,6 +119,7 @@ class _Canvas extends Component<Props>
         const new_pointer_state: PointerState =
         {
             down: true,
+            area_select: this.props.shift_key_down,
             last_pointer_down_ms: new Date().getTime(),
             client_start_x: e.clientX,
             client_start_y: e.clientY,
@@ -131,7 +137,20 @@ class _Canvas extends Component<Props>
     }
 
 
-    on_pointer_up = () => { this.pointer_state.down = false }
+    on_pointer_up = () =>
+    {
+        const new_pointer_state: PointerState =
+        {
+            down: false,
+            area_select: false,
+            last_pointer_down_ms: this.pointer_state.last_pointer_down_ms,
+            client_start_x: null,
+            client_start_y: null,
+            canvas_start_x: this.pointer_state.canvas_start_x,
+            canvas_start_y: this.pointer_state.canvas_start_y,
+        }
+        this.pointer_state = new_pointer_state
+    }
 
 
     on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
@@ -146,7 +165,13 @@ class _Canvas extends Component<Props>
         //     })
         // }
 
-        if (this.pointer_state.down)
+        if (!this.pointer_state.down) return
+
+        if (this.pointer_state.area_select)
+        {
+
+        }
+        else
         {
             // Values are independent of zoom
             const change_in_client_x = this.pointer_state.client_start_x - e.clientX
@@ -251,6 +276,8 @@ class _Canvas extends Component<Props>
                             {blur_filter_defs}
                             {this.props.svg_upper_children}
                         </svg>
+
+                        <div className="selection_box" style={{ top: 0, left: 0, width: 200, height: 200 }} />
                     </div>
                 </div>
             </div>
