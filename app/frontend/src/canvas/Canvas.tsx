@@ -73,10 +73,10 @@ type PointerState =
     down: false
     area_select: false
     last_pointer_down_ms: number | undefined
-    client_start_x: null
-    client_start_y: null
-    canvas_start_x: number
-    canvas_start_y: number
+    client_start_x: number | undefined
+    client_start_y: number | undefined
+    canvas_start_x: number | undefined
+    canvas_start_y: number | undefined
 } | {
     down: true
     area_select: boolean
@@ -107,10 +107,10 @@ class _Canvas extends Component<Props, State>
                 down: false,
                 area_select: false,
                 last_pointer_down_ms: undefined,
-                client_start_x: null,
-                client_start_y: null,
-                canvas_start_x: 0,
-                canvas_start_y: 0,
+                client_start_x: undefined,
+                client_start_y: undefined,
+                canvas_start_x: undefined,
+                canvas_start_y: undefined,
             },
             client_current_x: undefined,
             client_current_y: undefined,
@@ -122,12 +122,12 @@ class _Canvas extends Component<Props, State>
     client_to_canvas = (client_xy: number) => client_xy * (scale_by / this.props.zoom)
     client_to_canvas_x = (client_x: number) =>
     {
-        const { canvas_start_x } = this.state.pointer_state
+        const { canvas_start_x = 0 } = this.state.pointer_state
         return canvas_start_x + this.client_to_canvas(client_x)
     }
     client_to_canvas_y = (client_y: number) =>
     {
-        const { canvas_start_y } = this.state.pointer_state
+        const { canvas_start_y = 0 } = this.state.pointer_state
         return canvas_start_y - this.client_to_canvas(client_y)
     }
 
@@ -176,13 +176,9 @@ class _Canvas extends Component<Props, State>
 
         const new_pointer_state: PointerState =
         {
+            ...this.state.pointer_state,
             down: false,
             area_select: false,
-            last_pointer_down_ms: this.state.pointer_state.last_pointer_down_ms,
-            client_start_x: null,
-            client_start_y: null,
-            canvas_start_x: this.state.pointer_state.canvas_start_x,
-            canvas_start_y: this.state.pointer_state.canvas_start_y,
         }
         this.setState({ pointer_state: new_pointer_state, client_current_x: undefined, client_current_y: undefined })
     }
@@ -372,8 +368,9 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
 
     const { client_start_x: current_x, client_start_y: current_y } = current_pointer_state
     const { client_start_x: new_x, client_start_y: new_y } = new_pointer_state
+
     // type guard
-    if (current_x === null || current_y === null || new_x === null || new_y === null) return
+    if (current_x === undefined || current_y === undefined || new_x === undefined || new_y === undefined) return
 
     // check if moved too far
     const x_movement = Math.abs(current_x - new_x)
@@ -384,6 +381,7 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
     const x = client_to_canvas_x(current_x)
     const y = client_to_canvas_y(current_y)
 
+    console.log({ x, y })
     pub_sub.canvas.pub("canvas_double_tap", { x, y })
 }
 
