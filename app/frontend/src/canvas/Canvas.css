@@ -3,12 +3,16 @@
 #graph_container
 {
     cursor: move;
-    background-image:
-        linear-gradient(to right, #EEE 1px, transparent 1px),
-        linear-gradient(to bottom, #EEE 1px, transparent 1px);
     overflow: hidden;
     text-align: left;
     vertical-align: top;
+}
+
+#graph_container.squared_background
+{
+    background-image:
+        linear-gradient(to right, #EEE 1px, transparent 1px),
+        linear-gradient(to bottom, #EEE 1px, transparent 1px);
 }
 
 #graph_visuals_container

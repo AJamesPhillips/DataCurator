@@ -25,6 +25,7 @@ const map_state = (state: RootState) =>
         sync_ready,
         wcomponents,
         current_UI_knowledge_view,
+        presenting: state.display_options.consumption_formatting,
     }
 }
 
@@ -72,6 +73,7 @@ function _KnowledgeView (props: Props)
             svg_children={[]}
             svg_upper_children={get_svg_upper_children(props)}
             content_coordinates={content_coordinates}
+            plain_background={props.presenting}
         >
             {elements}
         </Canvas>}

@@ -26,6 +26,7 @@ interface OwnProps
     svg_children?: preact.ComponentChildren[]
     svg_upper_children?: preact.ComponentChildren[]
     content_coordinates?: ContentCoordinate[]
+    plain_background?: boolean
 }
 
 
@@ -279,6 +280,7 @@ class _Canvas extends Component<Props, State>
         >
             <div
                 id="graph_container"
+                className={this.props.plain_background ? "" : "squared_background"}
                 style={background_style}
                 onPointerDown={this.on_pointer_down}
                 onPointerMove={this.on_pointer_move}

@@ -151,7 +151,7 @@ function _WComponentCanvasNode (props: Props)
     if (is_highlighted || node_is_moving)
     {
         children.push(<Handles
-            set_node_is_moving={!on_graph ? undefined : (() => set_node_is_moving(true))}
+            set_node_is_moving={(!on_graph || !props.is_editing) ? undefined : (() => set_node_is_moving(true))}
         />)
     }
 
