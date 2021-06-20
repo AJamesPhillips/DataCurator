@@ -18,6 +18,10 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     wc_id_counterfactuals_map: WcIdCounterfactualsMap
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
+
+    filters: {
+        wc_ids_excluded_by_label: Set<string>
+    }
 }
 
 

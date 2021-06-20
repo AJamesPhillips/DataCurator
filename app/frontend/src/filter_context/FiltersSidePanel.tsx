@@ -6,7 +6,7 @@ import { LabelsEditor } from "../labels/LabelsEditor"
 import { ACTIONS } from "../state/actions"
 import type { CompoundFilter } from "../state/filter_context/state"
 import type { RootState } from "../state/State"
-import { get_excluded_label_ids } from "./utils"
+import { get_exclude_by_label_ids } from "./utils"
 
 
 
@@ -27,7 +27,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _FiltersSidePanel (props: Props)
 {
-    const exclude_label_ids = get_excluded_label_ids(props.filters)
+    const exclude_by_label_ids = get_exclude_by_label_ids(props.filters)
 
 
     return <div>
@@ -44,7 +44,7 @@ function _FiltersSidePanel (props: Props)
             Exclude by label:
 
             <LabelsEditor
-                label_ids={exclude_label_ids}
+                label_ids={exclude_by_label_ids}
                 on_change={new_exclude_label_ids =>
                 {
                     const filters = get_exclusion_filters_from_ids(new_exclude_label_ids)

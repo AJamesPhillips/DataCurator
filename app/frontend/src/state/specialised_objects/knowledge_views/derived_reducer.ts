@@ -3,7 +3,7 @@ import {
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
-import { update_substate } from "../../../utils/update_state"
+import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"
@@ -15,6 +15,8 @@ import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_
 import { is_knowledge_view_id } from "../../../shared/utils/ids"
 import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
 import { get_sim_datetime_ms } from "../../../shared/wcomponent/utils_datetime"
+import { get_exclude_by_label_ids } from "../../../filter_context/utils"
+import { is_defined } from "../../../shared/utils/is_defined"
 
 
 
@@ -46,13 +48,24 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
-    const need_update = kv_object_changed || one_or_more_wcomponents_changed
+    const UI_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
+    const filters_changed = initial_state.filter_context !== state.filter_context
 
 
-    if (need_update && current_kv)
+    if (current_kv)
     {
-        const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
-        state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+        if (UI_kv_needs_update)
+        {
+            const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
+            const current_UI_knowledge_view_updated_filters = update_filters(state, current_UI_knowledge_view)
+
+            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view_updated_filters)
+        }
+        else if (filters_changed)
+        {
+            const current_UI_knowledge_view = update_filters(state, state.derived.current_UI_knowledge_view)
+            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+        }
     }
 
 
@@ -110,6 +123,7 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
         wc_id_counterfactuals_map,
         wc_ids_by_type,
         prioritisations,
+        filters: { wc_ids_excluded_by_label: new Set() }
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_UI_knowledge_view as any).wc_id_map
@@ -177,4 +191,35 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
         .filter(wcomponent_is_prioritisation)
 
     return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")
+}
+
+
+
+function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUIKnowledgeView)
+{
+    if (!current_UI_knowledge_view) return undefined
+
+    const exclude_by_label_ids = new Set(get_exclude_by_label_ids(state.filter_context.filters))
+
+    const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
+    const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
+    .filter(is_defined)
+    .filter(wcomponent =>
+    {
+        const { label_ids = [] } = wcomponent
+
+        const should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+
+        return should_exclude
+    })
+    .map(({ id }) => id)
+
+
+    const wc_ids_excluded_by_label: Set<string> = new Set(wc_ids_to_exclude)
+
+
+    return {
+        ...current_UI_knowledge_view,
+        filters: { wc_ids_excluded_by_label }
+    }
 }
