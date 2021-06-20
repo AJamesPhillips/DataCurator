@@ -7,6 +7,7 @@ import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { Options } from "./Options"
 import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
+import { throttle } from "../../utils/throttle"
 
 
 
@@ -67,6 +68,12 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         this.options = result.new_internal_options
         this.prepared_targets = result.prepared_targets
     }
+
+
+    handle_on_change = throttle((new_value: string) =>
+    {
+        this.setState({ temp_value_str: new_value })
+    }, 300).throttled
 
 
     async handle_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[])
@@ -210,7 +217,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                     // select all text
                     e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
                 }}
-                onChange={e => this.setState({ temp_value_str: e.currentTarget.value })}
+                onChange={e => this.handle_on_change(e.currentTarget.value)}
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
                     this.setState({ editing: false, temp_value_str: undefined })

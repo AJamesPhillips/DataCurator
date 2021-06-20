@@ -1,4 +1,5 @@
 import type { Store } from "redux"
+import { throttle } from "../../utils/throttle"
 
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
@@ -34,27 +35,25 @@ export const factory_location_hash = (store: Store<RootState>) =>
 
 function factory_throttled_update_location_hash ()
 {
-    let timer_will_update_location_hash: NodeJS.Timeout | undefined
+    const { throttled: throttled_update_location_hash, cancel } = throttle((routing_state: RoutingState) => {
+        const route = routing_state_to_string(routing_state)
+        window.location.hash = route
+    }, 1000)
 
     return (changed_only_xy: boolean, routing_state: RoutingState) =>
     {
-        if (timer_will_update_location_hash)
+        if (changed_only_xy)
         {
-            clearTimeout(timer_will_update_location_hash)
-            timer_will_update_location_hash = undefined
+            throttled_update_location_hash(routing_state)
         }
-
-        if (!changed_only_xy)
+        else
         {
+            cancel()
+
             const route = routing_state_to_string(routing_state)
             window.location.hash = route
-            return
         }
 
-        timer_will_update_location_hash = setTimeout(() => {
-            const route = routing_state_to_string(routing_state)
-            window.location.hash = route
-        }, 1000)
     }
 }
 
