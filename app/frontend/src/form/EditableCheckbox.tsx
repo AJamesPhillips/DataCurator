@@ -23,6 +23,7 @@ export function EditableCheckbox (props: OwnProps)
         type="checkbox"
         checked={props.value}
         disabled={disabled}
+        style={{ cursor: disabled ? "not-allowed" : "" }}
         onChange={e => {
             if (!on_change) return
 

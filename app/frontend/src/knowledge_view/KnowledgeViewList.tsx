@@ -13,6 +13,7 @@ import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import { optional_view_type } from "../views/optional_view_type"
 import type { ViewType } from "../state/routing/interfaces"
+import { EditableCheckbox } from "../form/EditableCheckbox"
 
 
 
@@ -25,6 +26,7 @@ const map_state = (state: RootState) => ({
     other_knowledge_views: state.derived.other_knowledge_views,
     creation_context: state.creation_context,
     current_view: state.routing.args.view,
+    editing: !state.display_options.consumption_formatting,
 })
 
 const map_dispatch = {
@@ -39,7 +41,7 @@ type Props = PropsFromRedux & OwnProps
 
 function _KnowledgeViewList (props: Props)
 {
-    const { ready, base_knowledge_view, other_knowledge_views, current_view } = props
+    const { ready, base_knowledge_view, other_knowledge_views, current_view, editing } = props
 
     if (!base_knowledge_view)
     {
@@ -68,7 +70,11 @@ function _KnowledgeViewList (props: Props)
                 props.upsert_knowledge_view({ knowledge_view: changed_kv })
             },
 
-            item_top_props: { get_summary: factory_get_summary(current_view), get_details, get_details3 },
+            item_top_props: {
+                get_summary: factory_get_summary(current_view),
+                get_details: factor_get_details(editing),
+                get_details3,
+            },
 
             debug_item_descriptor: "Knowledge View",
         })}
@@ -109,12 +115,12 @@ function get_knowledge_view_title (knowledge_view: KnowledgeView)
 const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 
-function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void)
+const factor_get_details = (editing: boolean) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
 {
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
-            <span className="description_label">Title</span> <EditableTextSingleLine
+            <span className="description_label">Title</span> &nbsp; <EditableTextSingleLine
                 placeholder="Title..."
                 value={knowledge_view.title}
                 on_blur={new_title => {
@@ -126,11 +132,10 @@ function get_details (knowledge_view: KnowledgeView, on_change: (new_kv: Knowled
 
         <div>
             <span className="description_label">Allow counterfactuals</span>
-            <input
-                type="checkbox"
-                checked={knowledge_view.allows_assumptions}
-                disabled={knowledge_view.is_base}
-                onClick={() =>
+            <EditableCheckbox
+                disabled={knowledge_view.is_base || !editing}
+                value={knowledge_view.allows_assumptions}
+                on_change={() =>
                 {
                     const allows_assumptions = knowledge_view.allows_assumptions ? undefined : true
                     on_change({ ...knowledge_view, allows_assumptions })

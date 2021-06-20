@@ -18,6 +18,7 @@ interface OwnProps {
 
 const map_state = (state: RootState) => ({
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+    editing: !state.display_options.consumption_formatting,
 })
 
 const map_dispatch = {
@@ -32,7 +33,7 @@ type Props = PropsFromRedux & OwnProps
 
 function _FoundationKnowledgeViewsList (props: Props)
 {
-    const { owner_knowledge_view, knowledge_views_by_id, on_change } = props
+    const { owner_knowledge_view, knowledge_views_by_id, on_change, editing } = props
 
     const foundation_knowledge_view_ids = owner_knowledge_view.foundation_knowledge_view_ids || []
     const foundation_knowledge_view_ids_set = new Set(foundation_knowledge_view_ids)
@@ -57,9 +58,9 @@ function _FoundationKnowledgeViewsList (props: Props)
     const total = foundation_knowledge_views.length
 
     return <div>
-        Foundational Knowledge Views ({total})
+        Foundational Knowledge Views {editing && <span>({total})</span>}
 
-        <SelectKnowledgeView
+        {editing && <SelectKnowledgeView
             placeholder="Search for knowledge view to add..."
             exclude_ids={exclude_ids}
             on_change={id =>
@@ -67,7 +68,7 @@ function _FoundationKnowledgeViewsList (props: Props)
                 if (!id) return
                 on_change([id, ...foundation_knowledge_view_ids])
             }}
-        />
+        />}
 
 
         {foundation_knowledge_views.map((foundation_knowledge_view, index) =>
@@ -76,18 +77,18 @@ function _FoundationKnowledgeViewsList (props: Props)
                 <div style={{ flex: "1" }}>{total - index}</div>
                 <div style={{ flex: "9" }}>{foundation_knowledge_view.title}</div>
                 <div style={{ flex: "3" }}>
-                    <Button
+                    {editing && <Button
                         value="remove"
                         on_pointer_down={() =>
                         {
                             on_change(remove_from_list_by_predicate(foundation_knowledge_view_ids, id => id === foundation_knowledge_view.id))
                         }}
-                    />
+                    />}
                 </div>
             </div>
         })}
 
-        {unfound_ids.length && <div>Could not find {unfound_ids.length} knowledge views</div>}
+        {unfound_ids.length > 0 && <div>Could not find {unfound_ids.length} knowledge views</div>}
     </div>
 }
 
