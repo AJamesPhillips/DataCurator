@@ -7,6 +7,7 @@ import { get_routing_starting_state } from "./routing/starting_state"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
 import type { ObjectWithCache, Pattern, RootState, Statement } from "./State"
+import { user_activity_starting_state } from "./user_activity/starting_state"
 
 
 
@@ -153,6 +154,7 @@ export function get_starting_state (): RootState
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         derived: get_derived_starting_state(),
+        user_activity: user_activity_starting_state(),
     }
 
     return starting_state

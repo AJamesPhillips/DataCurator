@@ -12,6 +12,7 @@ import { display_at_sim_datetime_actions } from "./routing/datetime/display_at_s
 import { specialised_object_actions } from "./specialised_objects/actions"
 import { statement_actions } from "./statements"
 import { sync_actions } from "./sync"
+import { user_activity_actions } from "./user_activity/actions"
 
 
 
@@ -30,4 +31,5 @@ export const ACTIONS = {
     display_at_sim_datetime: display_at_sim_datetime_actions,
     objectives: objectives_actions,
     specialised_object: specialised_object_actions,
+    user_activity: user_activity_actions,
 }

@@ -29,7 +29,6 @@ function handle_ctrl_a (store: Store<RootState>)
         const viewing_knowledge = state.routing.args.view === "knowledge"
         if (!viewing_knowledge) return
 
-        // TODO make this only select visible items
         const ids = Object.keys(kv.derived_wc_id_map)
             .filter(id => !kv.wc_ids_by_type.any_link.has(id))
 
@@ -56,7 +55,6 @@ function handle_canvas_area_select (store: Store<RootState>)
         const start_top = -start_y
         const end_top = -end_y
 
-        // TODO make this only select visible items
         const ids: string[] = Object.entries(kv.derived_wc_id_map)
             .filter(([ id, entry ]) =>
             {

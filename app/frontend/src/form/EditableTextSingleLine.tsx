@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from "preact/hooks"
 import "./Editable.css"
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
-import { handle_text_field_render, handle_text_field_change, handle_text_field_blur } from "./editable_text_common"
+import { handle_text_field_render, handle_text_field_change, handle_text_field_blur, handle_text_field_focus } from "./editable_text_common"
 import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
+import { ACTIONS } from "../state/actions"
 
 
 
@@ -26,7 +27,11 @@ const map_state = (state: RootState) => ({
 })
 
 
-const connector = connect(map_state)
+const map_dispatch = {
+    set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -41,7 +46,7 @@ function _EditableTextSingleLine (props: Props)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { placeholder, on_change, on_blur, disabled, presenting, force_focus } = props
+    const { placeholder, on_change, on_blur, disabled, presenting, force_focus, set_editing_text_flag } = props
     if ((!on_change && !on_blur) || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
@@ -69,11 +74,12 @@ function _EditableTextSingleLine (props: Props)
                 if (!el) return
                 handle_text_field_render({ id_insertion_point, on_focus_set_selection, el, force_focus })
             }}
+            onFocus={e => handle_text_field_focus({ e, set_editing_text_flag })}
             onChange={e => {
                 handle_text_field_change({ e, set_id_insertion_point, conditional_on_change })
             }}
             onBlur={e => {
-                handle_text_field_blur({ e, conditional_on_change, on_blur })
+                handle_text_field_blur({ e, conditional_on_change, on_blur, set_editing_text_flag })
             }}
         />
 
