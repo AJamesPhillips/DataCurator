@@ -38,7 +38,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const wcomponent = get_wcomponent_from_state(state, own_props.id)
 
     const { force_display: force_displaying } = state.filter_context
-    const { current_UI_knowledge_view } = state.derived
+    const { current_UI_knowledge_view: UI_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
 
@@ -47,23 +47,29 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     let to_wc: WComponent | undefined = undefined
 
 
-    if (!wcomponent) ""
-    else if (wcomponent_is_plain_connection(wcomponent))
+    if (!wcomponent || !UI_kv) ""
+    else
     {
-        from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
-        to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
+        const { wc_ids_excluded_by_label: wc_ids_excluded_by_filter } = UI_kv.filters
 
-        validity_value = calc_connection_wcomponent_should_display({
-            force_displaying, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms,
-        })
-    }
-    else if (wcomponent_is_judgement_or_objective(wcomponent))
-    {
-        const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
 
-        validity_value = calc_judgement_connection_wcomponent_should_display({
-            force_displaying, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms
-        })
+        if (wcomponent_is_plain_connection(wcomponent))
+        {
+            from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
+            to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
+
+            validity_value = calc_connection_wcomponent_should_display({
+                force_displaying, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+            })
+        }
+        else if (wcomponent_is_judgement_or_objective(wcomponent))
+        {
+            const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
+
+            validity_value = calc_judgement_connection_wcomponent_should_display({
+                force_displaying, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+            })
+        }
     }
 
 
@@ -71,7 +77,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     return {
-        current_UI_knowledge_view,
+        current_UI_knowledge_view: UI_kv,
         wcomponent,
         validity_value,
         is_current_item: state.routing.item_id === own_props.id,

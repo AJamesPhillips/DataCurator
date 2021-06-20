@@ -20,8 +20,7 @@ export function filter_context_persist (state: RootState)
 export function filter_context_starting_state (): FilterContextState
 {
     const obj = get_persisted_state_object<FilterContextState>("filter_context")
-    const apply_filter = obj.apply_filter || false
-    const filters = obj.filters || []
+    const { apply_filter = false, filters = [] } = obj
 
     const state: FilterContextState = {
         apply_filter,

@@ -23,13 +23,17 @@ interface CalcWcomponentShouldDisplayArgs
     created_at_ms: number
     sim_ms: number
     validity_filter: ValidityFilterOption
+    wc_ids_excluded_by_filter: Set<string>
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { force_displaying, wcomponent, sim_ms } = args
+    const { force_displaying, wcomponent, sim_ms, wc_ids_excluded_by_filter } = args
 
 
     if (force_displaying) return { display_certainty: 1 }
+
+
+    if (wc_ids_excluded_by_filter.has(wcomponent.id)) return false
 
 
     // Do not show nodes if they do no exist yet
@@ -117,21 +121,22 @@ interface CalculateConnectionCertaintyArgs
     to_wc: WComponent | undefined
     created_at_ms: number
     sim_ms: number
+    wc_ids_excluded_by_filter: Set<string>
 }
 export function calc_connection_wcomponent_should_display (args: CalculateConnectionCertaintyArgs): false | { display_certainty: number }
 {
-    const { force_displaying, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms } = args
+    const { from_wc, to_wc } = args
 
     if (!from_wc || !to_wc) return false
 
 
-    const connection_validity_value = calc_wcomponent_should_display({ force_displaying, wcomponent, created_at_ms, sim_ms, validity_filter })
+    const connection_validity_value = calc_wcomponent_should_display(args)
     if (!connection_validity_value) return false
 
-    const from_node_validity_value = calc_wcomponent_should_display({ force_displaying, wcomponent: from_wc, created_at_ms, sim_ms, validity_filter })
+    const from_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: from_wc })
     if (!from_node_validity_value) return false
 
-    const to_node_validity_value = calc_wcomponent_should_display({ force_displaying, wcomponent: to_wc, created_at_ms, sim_ms, validity_filter })
+    const to_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: to_wc })
     if (!to_node_validity_value) return false
 
     // TODO add existence prediction
@@ -156,18 +161,19 @@ interface CalculateJudgementCertaintyArgs
     target_wc: WComponent | undefined
     created_at_ms: number
     sim_ms: number
+    wc_ids_excluded_by_filter: Set<string>
 }
 export function calc_judgement_connection_wcomponent_should_display (args: CalculateJudgementCertaintyArgs): false | { display_certainty: number }
 {
-    const { force_displaying, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms } = args
+    const { target_wc } = args
 
     if (!target_wc) return false
 
 
-    const judgement_connection_validity_value = calc_wcomponent_should_display({ force_displaying, wcomponent, created_at_ms, sim_ms, validity_filter })
+    const judgement_connection_validity_value = calc_wcomponent_should_display(args)
     if (!judgement_connection_validity_value) return false
 
-    const target_node_validity_value = calc_wcomponent_should_display({ force_displaying, wcomponent: target_wc, created_at_ms, sim_ms, validity_filter })
+    const target_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: target_wc })
     if (!target_node_validity_value) return false
 
     const judgement_connection_certainty = Math.min(

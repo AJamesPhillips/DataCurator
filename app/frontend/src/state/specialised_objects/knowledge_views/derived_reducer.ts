@@ -199,23 +199,30 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
 {
     if (!current_UI_knowledge_view) return undefined
 
-    const exclude_by_label_ids = new Set(get_exclude_by_label_ids(state.filter_context.filters))
 
-    const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
-    const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
-    .filter(is_defined)
-    .filter(wcomponent =>
+    let wc_ids_excluded_by_label: Set<string> = new Set()
+
+
+    if (state.filter_context.apply_filter)
     {
-        const { label_ids = [] } = wcomponent
+        const exclude_by_label_ids = new Set(get_exclude_by_label_ids(state.filter_context.filters))
 
-        const should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+        const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
+        const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
+        .filter(is_defined)
+        .filter(wcomponent =>
+        {
+            const { label_ids = [] } = wcomponent
 
-        return should_exclude
-    })
-    .map(({ id }) => id)
+            const should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+
+            return should_exclude
+        })
+        .map(({ id }) => id)
 
 
-    const wc_ids_excluded_by_label: Set<string> = new Set(wc_ids_to_exclude)
+        wc_ids_excluded_by_label = new Set(wc_ids_to_exclude)
+    }
 
 
     return {
