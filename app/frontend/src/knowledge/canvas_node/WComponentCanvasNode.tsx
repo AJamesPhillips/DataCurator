@@ -266,5 +266,7 @@ connection_terminal_attributes.forEach(attribute =>
 function get_wcomponent_color (wcomponent: WComponent)
 {
     return wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)"
-        : ((wcomponent_is_goal(wcomponent) /* || wcomponent_is_objective(wcomponent) */) ? "rgb(207, 255, 198)" : "")
+        : ((wcomponent_is_goal(wcomponent)
+        // || wcomponent_is_judgement_or_objective(wcomponent)
+        ) ? "rgb(207, 255, 198)" : "")
 }

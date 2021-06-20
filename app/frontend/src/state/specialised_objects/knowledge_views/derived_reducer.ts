@@ -3,7 +3,7 @@ import {
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
-import { update_substate, update_subsubstate } from "../../../utils/update_state"
+import { update_substate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import { get_base_knowledge_view, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"

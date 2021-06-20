@@ -15,6 +15,7 @@ const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
     creation_context: state.creation_context,
     current_knowledge_view: get_current_UI_knowledge_view_from_state(state),
+    editing: !state.display_options.consumption_formatting,
 })
 
 const connector = connect(map_state)
@@ -27,7 +28,10 @@ function _CreateNewWComponent (props: Props)
         // a_selected_wcomponent_id: judgement_target_wcomponent_id,
         creation_context,
         current_knowledge_view,
+        editing,
     } = props
+
+    if (!editing) return <div class="create_mew_wcomponent">Can not create in presentation mode</div>
 
 
     if (!current_knowledge_view) return <div class="create_mew_wcomponent">
@@ -35,7 +39,7 @@ function _CreateNewWComponent (props: Props)
             Create new component
         </h3>
 
-        Please select a knowledge view first
+        <p>Please select a knowledge view first</p>
     </div>
 
 
