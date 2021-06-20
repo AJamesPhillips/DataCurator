@@ -31,7 +31,8 @@ interface OwnProps
     VAPs_represent: VAPsRepresent
     update_items: (items: StateValueAndPredictionsSet[]) => void
 
-    invalid_items: StateValueAndPredictionsSet[]
+    invalid_future_items: StateValueAndPredictionsSet[]
+    invalid_past_items: StateValueAndPredictionsSet[]
     past_items: StateValueAndPredictionsSet[]
     present_items: StateValueAndPredictionsSet[]
     future_items: StateValueAndPredictionsSet[]
@@ -48,7 +49,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const {
         wcomponent_id, VAP_set_counterfactuals_map,
         item_descriptor, values_and_prediction_sets, VAPs_represent,
-        invalid_items, future_items, present_items, past_items, editing
+        invalid_future_items, invalid_past_items, future_items, present_items, past_items, editing
     } = props
 
 
@@ -136,8 +137,8 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             }}
         />
 
-        {invalid_items.length ? <div>
-            Hidden ({invalid_items.length})
+        {invalid_future_items.length || invalid_past_items.length ? <div>
+            Hidden ({invalid_future_items.length}, {invalid_past_items.length})
         </div> : null}
 
         {show_futures && <ExpandableList

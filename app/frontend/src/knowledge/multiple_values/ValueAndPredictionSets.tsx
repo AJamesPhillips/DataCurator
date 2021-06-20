@@ -44,7 +44,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ValueAndPredictionSets (props: Props)
 {
     const { wcomponent_id, VAP_set_counterfactuals_map, values_and_prediction_sets, VAPs_represent } = props
-    const { invalid_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
+    const { invalid_future_items, invalid_past_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
         items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
@@ -59,7 +59,8 @@ function _ValueAndPredictionSets (props: Props)
         VAPs_represent={VAPs_represent}
         update_items={props.update_values_and_predictions}
 
-        invalid_items={invalid_items}
+        invalid_future_items={invalid_future_items}
+        invalid_past_items={invalid_past_items}
         past_items={past_items}
         present_items={present_items}
         future_items={future_items}

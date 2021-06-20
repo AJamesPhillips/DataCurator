@@ -54,7 +54,7 @@ function _PredictionList (props: Props)
 
 
     const {
-        invalid_items, future_items, present_items, past_items,
+        invalid_future_items, invalid_past_items, future_items, present_items, past_items,
     } = partition_and_prune_items_by_datetimes({ items: predictions, created_at_ms, sim_ms })
 
 
@@ -120,8 +120,8 @@ function _PredictionList (props: Props)
             }}
         />
 
-        {invalid_items.length ? <div>
-            Hidden ({invalid_items.length})
+        {invalid_future_items.length || invalid_past_items.length ? <div>
+            Hidden ({invalid_future_items.length}, {invalid_past_items.length})
         </div> : null}
 
         {predictions.length > 0 && <div>
