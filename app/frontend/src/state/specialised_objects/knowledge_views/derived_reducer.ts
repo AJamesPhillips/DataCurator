@@ -1,4 +1,6 @@
 import {
+    WComponent,
+    wcomponent_can_render_connection,
     wcomponent_is_counterfactual, wcomponent_is_prioritisation,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
@@ -17,6 +19,7 @@ import type { WComponentPrioritisation } from "../../../shared/wcomponent/interf
 import { get_sim_datetime_ms } from "../../../shared/wcomponent/utils_datetime"
 import { get_exclude_by_label_ids } from "../../../filter_context/utils"
 import { is_defined } from "../../../shared/utils/is_defined"
+import type { WComponentType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
 
 
 
@@ -113,13 +116,19 @@ function get_knowledge_view (state: RootState, id: string)
 function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv: KnowledgeView)
 {
     const derived_wc_id_map = get_derived_wc_id_map(current_kv, intial_state, state)
+    const ids = Object.keys(derived_wc_id_map)
+    const wcomponents = get_wcomponents_from_state(state, ids).filter(is_defined)
+    const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
+    const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
-    const wc_ids_by_type = get_wcomponent_ids_by_type(state, Object.keys(derived_wc_id_map))
+    const wc_ids_by_type = get_wcomponent_ids_by_type(state, ids)
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
     const current_UI_knowledge_view: DerivedUIKnowledgeView = {
         ...current_kv,
         derived_wc_id_map,
+        wcomponent_nodes,
+        wcomponent_connections,
         wc_id_counterfactuals_map,
         wc_ids_by_type,
         prioritisations,
@@ -152,6 +161,18 @@ function get_derived_wc_id_map (current_kv: KnowledgeView, intial_state: RootSta
 
     return derived_wc_id_map
 }
+
+
+
+const invalid_node_types = new Set<WComponentType>([
+    "causal_link",
+    "relation_link",
+    "counterfactual",
+    "prioritisation",
+    "judgement",
+    "objective",
+])
+const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(wcomponent.type)
 
 
 

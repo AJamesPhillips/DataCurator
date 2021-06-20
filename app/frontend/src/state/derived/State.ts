@@ -15,6 +15,8 @@ import type { WComponentPrioritisation } from "../../shared/wcomponent/interface
 export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
     derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    wcomponent_nodes: WComponent[]
+    wcomponent_connections: WComponent[]
     wc_id_counterfactuals_map: WcIdCounterfactualsMap
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]

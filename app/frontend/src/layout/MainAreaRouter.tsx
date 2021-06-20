@@ -1,7 +1,7 @@
 import { ComponentClass, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeView } from "../knowledge_view/KnowledgeView"
+import { KnowledgeGraphView } from "../knowledge_view/KnowledgeView"
 import { ObjectivesView } from "../objectives/ObjectivesView"
 import { PrioritiesListView } from "../priorities_list_view/PrioritiesListView"
 import type { RootState } from "../state/State"
@@ -26,7 +26,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _MainAreaRouter (props: Props)
 {
-    if (props.view === "knowledge") return <KnowledgeView />
+    if (props.view === "knowledge") return <KnowledgeGraphView />
     if (props.view === "objectives") return <ObjectivesView />
     if (props.view === "priorities") return <PrioritiesView /> // <OldPrioritiesView />
     if (props.view === "priorities_list") return <PrioritiesListView />
