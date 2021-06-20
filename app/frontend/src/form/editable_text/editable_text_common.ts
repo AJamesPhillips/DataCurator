@@ -2,8 +2,8 @@ import type { h } from "preact"
 import type { Ref } from "preact/hooks"
 import type { Store } from "redux"
 
-import type { RootState } from "../state/State"
-import { config_store } from "../state/store"
+import type { RootState } from "../../state/State"
+import { config_store } from "../../state/store"
 
 
 

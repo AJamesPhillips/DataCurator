@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
-import { EditableTextSingleLine } from "../../form/EditableTextSingleLine"
+import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../../shared/utils/sentence_case"
 import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import {

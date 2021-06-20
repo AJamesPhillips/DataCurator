@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import { update_substate, update_subsubstate } from "../../utils/update_state"
+import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import { is_set_editing_text_flag } from "./actions"
 

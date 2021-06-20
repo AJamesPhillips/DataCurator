@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./Editable.css"
 import { bounded } from "../shared/utils/bounded"
-import { EditableTextSingleLine } from "./EditableTextSingleLine"
+import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 import { percentage_to_string } from "../shared/UI/percentages"
 
 

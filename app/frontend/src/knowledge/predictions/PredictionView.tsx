@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { EditablePercentage } from "../../form/EditablePercentage"
-import { EditableText } from "../../form/EditableText"
+import { EditableText } from "../../form/editable_text/EditableText"
 import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { SummaryForPrediction } from "./common"

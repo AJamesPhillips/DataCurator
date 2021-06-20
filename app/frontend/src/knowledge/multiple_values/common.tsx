@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./common.css"
 import { EditablePercentage } from "../../form/EditablePercentage"
-import { EditableText } from "../../form/EditableText"
+import { EditableText } from "../../form/editable_text/EditableText"
 import type {
     StateValueAndPredictionsSet,
     StateValueAndPrediction,

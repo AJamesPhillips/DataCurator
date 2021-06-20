@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./Editable.css"
 import "./EditableNumber.css"
 import type { RootState } from "../state/State"
-import { EditableTextSingleLine } from "./EditableTextSingleLine"
+import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 
 
 

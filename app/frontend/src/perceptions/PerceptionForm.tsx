@@ -2,7 +2,7 @@ import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { EditableText } from "../form/EditableText"
+import { EditableText } from "../form/editable_text/EditableText"
 import type { Perception } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"

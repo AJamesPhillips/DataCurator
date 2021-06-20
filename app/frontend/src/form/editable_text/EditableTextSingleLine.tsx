@@ -1,12 +1,12 @@
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 
-import "./Editable.css"
-import type { RootState } from "../state/State"
+import "../Editable.css"
+import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { handle_text_field_render, handle_text_field_change, handle_text_field_blur, handle_text_field_focus } from "./editable_text_common"
-import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
-import { ACTIONS } from "../state/actions"
+import { ConditionalWComponentSearchWindow } from "../ConditionalWComponentSearchWindow"
+import { ACTIONS } from "../../state/actions"
 
 
 

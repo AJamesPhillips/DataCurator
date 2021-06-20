@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { EditableTextSingleLine } from "../form/EditableTextSingleLine"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
