@@ -6,6 +6,7 @@ export interface FilterContextState
 {
     apply_filter: boolean
     filters: CompoundFilter[]
+    force_display: boolean
 }
 
 type Filter = CompoundFilter | SpecificFilter

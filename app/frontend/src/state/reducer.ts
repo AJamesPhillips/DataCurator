@@ -5,6 +5,7 @@ import { controls_reducer } from "./controls/reducer"
 import { creation_context_reducer } from "./creation_context/reducer"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display_options/reducer"
+import { derived_filter_context_state_reducer } from "./filter_context/derived"
 import { filter_context_reducer } from "./filter_context/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
 import { objectives_reducer } from "./objectives"
@@ -46,6 +47,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
 
     state = derived_state_reducer(initial_state, state)
     state = derived_meta_wcomponents_state_reducer(initial_state, state)
+    state = derived_filter_context_state_reducer(initial_state, state)
 
     // console. log (action.type, action)
 

@@ -2,7 +2,6 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
-import type { CurrentValidityValue } from "../shared/wcomponent/get_wcomponent_validity_value"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type {
     KnowledgeViewWComponentIdEntryMap,
@@ -38,11 +37,12 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const wcomponent = get_wcomponent_from_state(state, own_props.id)
 
+    const { force_display: force_displaying } = state.filter_context
     const { current_UI_knowledge_view } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
 
-    let validity_value: false | CurrentValidityValue = false
+    let validity_value: false | { display_certainty: number } = false
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
 
@@ -54,7 +54,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
         validity_value = calc_connection_wcomponent_should_display({
-            wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms,
+            force_displaying, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms,
         })
     }
     else if (wcomponent_is_judgement_or_objective(wcomponent))
@@ -62,7 +62,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
 
         validity_value = calc_judgement_connection_wcomponent_should_display({
-            wcomponent, validity_filter, target_wc, created_at_ms, sim_ms
+            force_displaying, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms
         })
     }
 
@@ -134,7 +134,7 @@ function _WComponentCanvasConnection (props: Props)
 
     const validity_opacity = calc_display_opacity({
         is_editing: props.is_editing,
-        certainty: validity_value.certainty,
+        certainty: validity_value.display_certainty,
         is_current_item,
         certainty_formatting: props.certainty_formatting,
     })

@@ -53,6 +53,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const kv_entry_maybe = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[own_props.id]
 
     return {
+        force_displaying: state.filter_context.force_display,
         knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
         wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
@@ -95,6 +96,7 @@ function _WComponentCanvasNode (props: Props)
 
     const {
         id, on_graph = true,
+        force_displaying,
         knowledge_view_id, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         ctrl_key_is_down,
@@ -113,14 +115,14 @@ function _WComponentCanvasNode (props: Props)
 
 
     const validity_value = calc_wcomponent_should_display({
-        wcomponent, created_at_ms, sim_ms, validity_filter
+        force_displaying, wcomponent, created_at_ms, sim_ms, validity_filter
     })
     if (!validity_value) return null
 
 
     const validity_opacity = calc_display_opacity({
         is_editing: props.is_editing,
-        certainty: validity_value.certainty,
+        certainty: validity_value.display_certainty,
         is_highlighted,
         is_selected,
         is_current_item,
