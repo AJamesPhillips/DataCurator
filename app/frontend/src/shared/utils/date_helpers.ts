@@ -271,3 +271,10 @@ export function get_today_str ()
 {
     return date2str(new Date(), "yyyy-MM-dd") + " 00:00"
 }
+
+
+
+export function get_today_date ()
+{
+    return new Date(get_today_str())
+}

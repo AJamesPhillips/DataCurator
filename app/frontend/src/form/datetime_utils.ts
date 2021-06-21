@@ -34,11 +34,19 @@ export function date_to_string (args: DateToStringArgs)
 }
 
 
+
+export function uncertain_datetime_is_eternal (datetime: TemporalUncertainty)
+{
+    return (datetime.min || datetime.value || datetime.max) === undefined
+}
+
+
+
 export function uncertain_date_to_string (datetime: TemporalUncertainty, time_resolution: TimeResolution)
 {
     let str = "Eternal"
 
-    if (datetime.min || datetime.value || datetime.max)
+    if (!uncertain_datetime_is_eternal(datetime))
     {
         const min = date_to_string({ date: datetime.min, time_resolution })
         const value = date_to_string({ date: datetime.value, time_resolution })

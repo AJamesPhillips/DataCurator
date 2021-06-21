@@ -18,6 +18,7 @@ import { prepare_new_VAP_set } from "./utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 
 
 
@@ -98,9 +99,9 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const new_VAP_set_form_top_props: EditableListEntryTopProps<StateValueAndPredictionsSet> = {
         get_created_at: v => v.created_at,
         get_custom_created_at: v => v.custom_created_at,
-        get_summary: get_summary_for_single_VAP_set(VAPs_represent, false, undefined),
-        get_details: get_details_for_single_VAP_set(VAPs_represent),
-        get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
+        get_summary: new_value_and_prediction_set(VAPs_represent),
+        get_details: () => <div />, // get_details_for_single_VAP_set(VAPs_represent),
+        get_details2: () => <div />, // get_details2_for_single_VAP_set(VAPs_represent, editing),
         extra_class_names: `value_and_prediction_set new`
     }
 
