@@ -24,17 +24,17 @@ interface CalcWcomponentShouldDisplayArgs
     created_at_ms: number
     sim_ms: number
     validity_filter: ValidityFilterOption
-    wc_ids_excluded_by_filter: Set<string>
+    wc_ids_excluded_by_filters: Set<string>
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filter } = args
+    const { force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters } = args
 
 
     if (force_displaying || is_selected) return { display_certainty: 1 }
 
 
-    if (wc_ids_excluded_by_filter.has(wcomponent.id)) return false
+    if (wc_ids_excluded_by_filters.has(wcomponent.id)) return false
 
 
     // Do not show nodes if they do no exist yet
@@ -123,7 +123,7 @@ interface CalculateConnectionCertaintyArgs
     to_wc: WComponent | undefined
     created_at_ms: number
     sim_ms: number
-    wc_ids_excluded_by_filter: Set<string>
+    wc_ids_excluded_by_filters: Set<string>
 }
 export function calc_connection_wcomponent_should_display (args: CalculateConnectionCertaintyArgs): false | { display_certainty: number }
 {
@@ -164,7 +164,7 @@ interface CalculateJudgementCertaintyArgs
     target_wc: WComponent | undefined
     created_at_ms: number
     sim_ms: number
-    wc_ids_excluded_by_filter: Set<string>
+    wc_ids_excluded_by_filters: Set<string>
 }
 export function calc_judgement_connection_wcomponent_should_display (args: CalculateJudgementCertaintyArgs): false | { display_certainty: number }
 {

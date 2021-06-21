@@ -51,7 +51,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     if (!wcomponent || !UI_kv) ""
     else
     {
-        const { wc_ids_excluded_by_label: wc_ids_excluded_by_filter } = UI_kv.filters
+        const { wc_ids_excluded_by_filters } = UI_kv.filters
 
 
         if (wcomponent_is_plain_connection(wcomponent))
@@ -60,7 +60,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
             validity_value = calc_connection_wcomponent_should_display({
-                force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+                force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
         }
         else if (wcomponent_is_judgement_or_objective(wcomponent))
@@ -68,7 +68,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
 
             validity_value = calc_judgement_connection_wcomponent_should_display({
-                force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+                force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
         }
     }

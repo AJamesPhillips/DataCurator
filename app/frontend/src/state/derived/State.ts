@@ -22,7 +22,7 @@ export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     prioritisations: WComponentPrioritisation[]
 
     filters: {
-        wc_ids_excluded_by_label: Set<string>
+        wc_ids_excluded_by_filters: Set<string>
     }
 }
 

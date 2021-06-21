@@ -131,7 +131,7 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
         wc_id_counterfactuals_map,
         wc_ids_by_type,
         prioritisations,
-        filters: { wc_ids_excluded_by_label: new Set() }
+        filters: { wc_ids_excluded_by_filters: new Set() }
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_UI_knowledge_view as any).wc_id_map
@@ -220,7 +220,7 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
     if (!current_UI_knowledge_view) return undefined
 
 
-    let wc_ids_excluded_by_label: Set<string> = new Set()
+    let wc_ids_excluded_by_filters: Set<string> = new Set()
 
 
     if (state.filter_context.apply_filter)
@@ -252,12 +252,12 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
         .map(({ id }) => id)
 
 
-        wc_ids_excluded_by_label = new Set(wc_ids_to_exclude)
+        wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude)
     }
 
 
     return {
         ...current_UI_knowledge_view,
-        filters: { wc_ids_excluded_by_label }
+        filters: { wc_ids_excluded_by_filters }
     }
 }
