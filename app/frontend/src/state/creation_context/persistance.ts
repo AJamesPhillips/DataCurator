@@ -20,12 +20,17 @@ export function creation_context_persist (state: RootState)
 export function creation_context_starting_state (): CreationContextState
 {
     const obj = get_persisted_state_object<CreationContextState>("creation_context")
-    const use_creation_context = obj.use_creation_context || false
-    const custom_created_at = (obj.creation_context && obj.creation_context.custom_created_at && new Date(obj.creation_context.custom_created_at)) || undefined
+    const {
+        use_creation_context = false,
+        creation_context = { custom_created_at: undefined, label_ids: [] },
+    } = obj
+
+    let { custom_created_at, label_ids = [] } = creation_context
+    custom_created_at = custom_created_at && new Date(custom_created_at)
 
     const state: CreationContextState = {
         use_creation_context,
-        creation_context: { custom_created_at },
+        creation_context: { custom_created_at, label_ids },
     }
 
     return state

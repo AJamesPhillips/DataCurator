@@ -381,7 +381,6 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
     const x = client_to_canvas_x(current_x)
     const y = client_to_canvas_y(current_y)
 
-    console.log({ x, y })
     pub_sub.canvas.pub("canvas_double_tap", { x, y })
 }
 

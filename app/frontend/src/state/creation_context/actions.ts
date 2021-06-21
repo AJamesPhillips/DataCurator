@@ -36,7 +36,27 @@ export const is_set_custom_created_at = (action: AnyAction): action is ActionSet
 
 
 
+interface SetLabelIdsArgs
+{
+    label_ids: string[]
+}
+interface ActionSetLabelIds extends Action, SetLabelIdsArgs {}
+
+const set_label_ids_type = "set_label_ids"
+
+const set_label_ids = (args: SetLabelIdsArgs): ActionSetLabelIds =>
+{
+    return { type: set_label_ids_type, ...args }
+}
+
+export const is_set_label_ids = (action: AnyAction): action is ActionSetLabelIds => {
+    return action.type === set_label_ids_type
+}
+
+
+
 export const creation_context_actions = {
     toggle_use_creation_context,
     set_custom_created_at,
+    set_label_ids,
 }
