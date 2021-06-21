@@ -87,8 +87,9 @@ export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WCom
     return wcomponent.type === "event"
 }
 
-export function wcomponent_is_state (wcomponent: WComponent): wcomponent is WComponentNodeState | WComponentNodeStateV2
+export function wcomponent_is_state (wcomponent: WComponent | undefined): wcomponent is WComponentNodeState | WComponentNodeStateV2
 {
+    if (!wcomponent) return false
     return wcomponent.type === "state" || wcomponent.type === "statev2"
 }
 export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WComponentNodeState

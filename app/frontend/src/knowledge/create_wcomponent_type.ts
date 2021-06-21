@@ -3,11 +3,11 @@ import { round_canvas_point } from "../canvas/position_utils"
 
 import type { CreationContextState } from "../shared/creation_context/state"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
-import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_state } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
-import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import type { RootState } from "../state/State"
 import { config_store } from "../state/store"
@@ -28,7 +28,9 @@ export function create_wcomponent (args: CreateWComponentArgs)
     const store = args.store || config_store()
     const state = store.getState()
 
-    const wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)
+    let wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)
+    wcomponent = set_judgement_or_objective_target(wcomponent, state)
+
 
     const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
 
@@ -58,4 +60,28 @@ export function create_wcomponent (args: CreateWComponentArgs)
     store.dispatch(ACTIONS.display_at_created_datetime.change_display_at_created_datetime({ datetime }))
     store.dispatch(ACTIONS.routing.change_route({ route: "wcomponents", item_id: wcomponent.id }))
     return true
+}
+
+
+
+function set_judgement_or_objective_target (wcomponent: WComponent, state: RootState): WComponent
+{
+    if (wcomponent_is_judgement_or_objective(wcomponent))
+    {
+        const selected_wcomponents = state.meta_wcomponents.selected_wcomponent_ids_list
+
+        if (selected_wcomponents.length === 1)
+        {
+            const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponents[0]!)
+            if (wcomponent_is_state(selected_wcomponent))
+            {
+                wcomponent = {
+                    ...wcomponent,
+                    judgement_target_wcomponent_id: selected_wcomponent.id,
+                }
+            }
+        }
+    }
+
+    return wcomponent
 }
