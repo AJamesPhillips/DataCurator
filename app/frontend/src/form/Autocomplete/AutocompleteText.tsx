@@ -96,7 +96,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
             }
             else if (is_escape)
             {
-                await this.conditional_on_change(undefined)
+                await this.conditional_on_change(this.props.selected_option_id)
             }
 
             e.currentTarget.blur()
