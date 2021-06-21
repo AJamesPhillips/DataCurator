@@ -5,9 +5,10 @@ import type {
 } from "../../shared/wcomponent/interfaces/state"
 import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
-import { get_new_created_ats, get_new_custom_created_at } from "../../shared/utils/datetime"
+import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { get_created_at_ms } from "../../shared/wcomponent/utils_datetime"
 
 
 
@@ -27,12 +28,13 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 export function prepare_new_VAP_set (creation_context: CreationContextState): StateValueAndPredictionsSet
 {
-    const now = get_new_custom_created_at(creation_context) || new Date()
+    const dates = get_new_created_ats(creation_context)
+    const now = new Date(get_created_at_ms(dates))
 
     return {
         id: get_new_value_and_prediction_set_id(),
         version: 1,
-        ...get_new_created_ats(creation_context),
+        ...dates,
         datetime: { min: now },
         entries: [prepare_new_VAP()],
     }
@@ -128,7 +130,10 @@ function run_tests ()
             }
         ],
     }
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+    const creation_context: CreationContextState = {
+        use_creation_context: false,
+        creation_context: { label_ids: [] },
+    }
     new_versioned_VAP_set = create_new_VAP_set_version(versioned_VAP_set, creation_context)
 
     let latest = new_versioned_VAP_set.latest
