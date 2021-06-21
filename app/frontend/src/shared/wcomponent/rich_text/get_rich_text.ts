@@ -145,7 +145,9 @@ function test_replace_ids_in_text ()
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
+        label_ids: [],
+    } }
 
     const wcomponents_by_id = {
         "123": get_new_wcomponent_object({ id: "123", title: "@@789 was told @@456 is here" }, creation_context),
@@ -195,7 +197,9 @@ function test_rendering_title ()
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
+        label_ids: [],
+    } }
 
     const get_statev2 = (args: { id: string, title: string }) =>
     {

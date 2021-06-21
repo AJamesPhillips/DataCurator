@@ -33,7 +33,6 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
         const wcomponent = tidy_wcomponent(action.wcomponent)
         const wcomponent_id = wcomponent.id
 
-
         state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent_id, wcomponent)
         // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
         // state = update_wcomponent_ids_by_type_on_upserting_wcomponent(state, wcomponent)
@@ -104,7 +103,9 @@ function run_tests ()
     const dt1 = new Date("2021-05-12")
     const dt2 = new Date("2021-05-13")
 
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {} }
+    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
+        label_ids: [],
+    } }
 
     let wcomponent: WComponentNodeStateV2
     let VAPs: StateValueAndPrediction[]

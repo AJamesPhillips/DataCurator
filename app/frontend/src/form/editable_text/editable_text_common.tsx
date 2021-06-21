@@ -88,7 +88,7 @@ function _EditableTextCommon (props: Props)
 
     const conditional_on_change = (new_value: string) =>
     {
-        on_change && on_change(new_value)
+        if (new_value !== value) on_change && on_change(new_value)
         set_value(new_value)
     }
 
@@ -116,7 +116,7 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_on_blur = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        handle_text_field_blur({ e, conditional_on_change, on_blur, set_editing_text_flag })
+        handle_text_field_blur({ e, initial_value: props.value, on_blur, set_editing_text_flag })
     }
 
 
@@ -201,16 +201,16 @@ function handle_text_field_change (args: HandleTextFieldChangeArgs)
 interface HandleTextFieldBlurArgs
 {
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
-    conditional_on_change: (value: string) => void
+    initial_value: string
     set_editing_text_flag: (value: boolean) => void
     on_blur?: (value: string) => void
 }
 function handle_text_field_blur (args: HandleTextFieldBlurArgs)
 {
     const { value } = args.e.currentTarget
-    args.conditional_on_change(value)
-    args.set_editing_text_flag(false)
-    args.on_blur && args.on_blur(value)
+    const { set_editing_text_flag, initial_value, on_blur } = args
+    set_editing_text_flag(false)
+    if (initial_value !== value) on_blur && on_blur(value)
 }
 
 

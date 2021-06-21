@@ -26,7 +26,7 @@ const wc10: WComponentNodeState = {
 }
 
 const creation_context: CreationContextState = { use_creation_context: true, creation_context: {
-    custom_created_at: created_at
+    custom_created_at: created_at, label_ids: [],
 } }
 
 
