@@ -82,4 +82,11 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     </div>
 }
 
-export const MultiAutocompleteText = connector(_MultiAutocompleteText) as FunctionalComponent<OwnProps>
+const ConnectedMultiAutocompleteText = connector(_MultiAutocompleteText) as FunctionalComponent<OwnProps>
+
+
+
+export function MultiAutocompleteText <E extends AutocompleteOption> (props: OwnProps<E>)
+{
+    return <ConnectedMultiAutocompleteText {...props} />
+}

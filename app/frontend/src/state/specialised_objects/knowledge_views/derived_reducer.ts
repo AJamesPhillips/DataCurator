@@ -226,28 +226,33 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
     if (state.filter_context.apply_filter)
     {
         const {
-            exclude_by_label_ids: e_l,
-            include_by_label_ids,
-            exclude_by_component_types: e_t,
-            include_by_component_types: i_t,
+            exclude_by_label_ids: exclude_by_label_ids_list,
+            include_by_label_ids: include_by_label_ids_list,
+            exclude_by_component_types: exclude_by_component_types_list,
+            include_by_component_types: include_by_component_types_list,
         } = state.filter_context.filters
 
-        const exclude_by_label_ids = new Set(e_l)
-        const exclude_by_component_types = new Set(e_t)
-        const include_by_component_types = new Set(i_t)
+        const exclude_by_label_ids = new Set(exclude_by_label_ids_list)
+        const exclude_by_component_types = new Set(exclude_by_component_types_list)
+        const include_by_component_types = new Set(include_by_component_types_list)
 
         const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
         const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
         .filter(is_defined)
         .filter(wcomponent =>
         {
-            const { label_ids = [] } = wcomponent
+            const { label_ids = [], type } = wcomponent
             const applied_ids = new Set(label_ids)
 
-            const should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
-            const lacks_include = !!(include_by_label_ids.find(label_id => !applied_ids.has(label_id)))
+            const labels__should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+            const labels__lacks_include = !!(include_by_label_ids_list.find(label_id => !applied_ids.has(label_id)))
 
-            return should_exclude || lacks_include
+            const types__should_exclude = exclude_by_component_types.has(type)
+            const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type)
+
+            const should_exclude = labels__should_exclude || labels__lacks_include || types__should_exclude || types__lacks_include
+
+            return should_exclude
         })
         .map(({ id }) => id)
 

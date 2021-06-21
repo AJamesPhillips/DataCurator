@@ -1,8 +1,10 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { EditableCheckbox } from "../form/EditableCheckbox"
 
+import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
+import { EditableCheckbox } from "../form/EditableCheckbox"
 import { LabelsEditor } from "../labels/LabelsEditor"
+import { wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 
@@ -53,7 +55,7 @@ function _FiltersSidePanel (props: Props)
 
 
         <p>
-            Filter by label:
+            Filter (include) by label:
 
             <LabelsEditor
                 label_ids={props.filters.include_by_label_ids}
@@ -64,7 +66,41 @@ function _FiltersSidePanel (props: Props)
                 always_allow_editing={true}
             />
         </p>
+
+
+        <p>
+            Exclude by component type:
+
+            <MultiAutocompleteText
+                placeholder=""
+                selected_option_ids={props.filters.exclude_by_component_types}
+                options={wcomponent_type_options()}
+                on_change={exclude_by_component_types =>
+                {
+                    props.set_filters({ filters: { ...props.filters, exclude_by_component_types } })
+                }}
+            />
+        </p>
+
+
+        <p>
+            Filter (include) by component type:
+
+            <MultiAutocompleteText
+                placeholder=""
+                selected_option_ids={props.filters.include_by_component_types}
+                options={wcomponent_type_options()}
+                on_change={include_by_component_types =>
+                {
+                    props.set_filters({ filters: { ...props.filters, include_by_component_types } })
+                }}
+            />
+        </p>
     </div>
 }
 
 export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent<{}>
+
+
+
+const wcomponent_type_options = () => wcomponent_types.map(type => ({ id: type, title: type }))
