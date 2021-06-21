@@ -1,4 +1,5 @@
 import type { Store } from "redux"
+import { round_canvas_point } from "../canvas/position_utils"
 
 import type { CreationContextState } from "../shared/creation_context/state"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
@@ -34,7 +35,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     let { add_to_knowledge_view } = args
     if (!add_to_knowledge_view && current_knowledge_view)
     {
-        const position = get_middle_of_screen(state)
+        const position = round_canvas_point(get_middle_of_screen(state), "large")
 
         add_to_knowledge_view = { id: current_knowledge_view.id, position }
     }
