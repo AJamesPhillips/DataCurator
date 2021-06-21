@@ -20,7 +20,20 @@ export function filter_context_persist (state: RootState)
 export function filter_context_starting_state (): FilterContextState
 {
     const obj = get_persisted_state_object<FilterContextState>("filter_context")
-    const { apply_filter = false, filters = [] } = obj
+
+    // TODO remove code as only needed to migrate persisted state once
+    if (obj.filters instanceof Array) delete obj.filters
+
+    const {
+        apply_filter = false,
+        filters = {
+            exclude_by_label_ids: [],
+            include_by_label_ids: [],
+            exclude_by_component_types: [],
+            include_by_component_types: [],
+        }
+    } = obj
+
 
     const state: FilterContextState = {
         apply_filter,

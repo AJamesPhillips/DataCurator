@@ -1,5 +1,5 @@
 import type { Action, AnyAction } from "redux"
-import type { CompoundFilter } from "./state"
+import type { FilterContextFilters } from "./state"
 
 
 
@@ -23,7 +23,7 @@ export const is_set_apply_filter = (action: AnyAction): action is ActionSetApply
 
 interface SetFiltersArgs
 {
-    filters: CompoundFilter[]
+    filters: FilterContextFilters
 }
 interface ActionSetFilters extends Action, SetFiltersArgs {}
 

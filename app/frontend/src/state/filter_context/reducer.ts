@@ -18,7 +18,15 @@ export const filter_context_reducer = (state: RootState, action: AnyAction): Roo
     if (is_set_filters(action))
     {
         state = update_substate(state, "filter_context", "filters", action.filters)
-        state = update_substate(state, "filter_context", "apply_filter", action.filters.length > 0)
+
+        const {
+            exclude_by_label_ids: e_l,
+            include_by_label_ids: i_l,
+            exclude_by_component_types: e_t,
+            include_by_component_types: i_t,
+        } = action.filters
+        const any_filters = (e_l.length + i_l.length + e_t.length + i_t.length) > 0
+        state = update_substate(state, "filter_context", "apply_filter", any_filters)
     }
 
 

@@ -5,24 +5,16 @@ import type { WComponentType } from "../../shared/wcomponent/interfaces/wcompone
 export interface FilterContextState
 {
     apply_filter: boolean
-    filters: CompoundFilter[]
+    filters: FilterContextFilters
     force_display: boolean
 }
 
-type Filter = CompoundFilter | SpecificFilter
 
 
-export interface CompoundFilter {
-    type: "compound"
-    operator: "AND" | "OR"
-    operation: "include" | "exclude"
-    filters: Filter[]
-}
-
-
-interface SpecificFilter {
-    type: "specific"
-    label_ids: string[]
-    search_term: string
-    component_types: WComponentType[]
+export interface FilterContextFilters
+{
+    exclude_by_label_ids: string[]
+    include_by_label_ids: string[]
+    exclude_by_component_types: WComponentType[]
+    include_by_component_types: WComponentType[]
 }

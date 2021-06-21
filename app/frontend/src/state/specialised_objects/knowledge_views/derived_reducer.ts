@@ -17,7 +17,6 @@ import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_
 import { is_knowledge_view_id } from "../../../shared/utils/ids"
 import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
 import { get_sim_datetime_ms } from "../../../shared/wcomponent/utils_datetime"
-import { get_exclude_by_label_ids } from "../../../filter_context/utils"
 import { is_defined } from "../../../shared/utils/is_defined"
 import type { WComponentType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
 
@@ -226,7 +225,16 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
 
     if (state.filter_context.apply_filter)
     {
-        const exclude_by_label_ids = new Set(get_exclude_by_label_ids(state.filter_context.filters))
+        const {
+            exclude_by_label_ids: e_l,
+            include_by_label_ids,
+            exclude_by_component_types: e_t,
+            include_by_component_types: i_t,
+        } = state.filter_context.filters
+
+        const exclude_by_label_ids = new Set(e_l)
+        const exclude_by_component_types = new Set(e_t)
+        const include_by_component_types = new Set(i_t)
 
         const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
         const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
@@ -234,10 +242,12 @@ function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUI
         .filter(wcomponent =>
         {
             const { label_ids = [] } = wcomponent
+            const applied_ids = new Set(label_ids)
 
             const should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+            const lacks_include = !!(include_by_label_ids.find(label_id => !applied_ids.has(label_id)))
 
-            return should_exclude
+            return should_exclude || lacks_include
         })
         .map(({ id }) => id)
 

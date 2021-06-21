@@ -4,9 +4,7 @@ import { EditableCheckbox } from "../form/EditableCheckbox"
 
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { ACTIONS } from "../state/actions"
-import type { CompoundFilter } from "../state/filter_context/state"
 import type { RootState } from "../state/State"
-import { get_exclude_by_label_ids } from "./utils"
 
 
 
@@ -27,7 +25,6 @@ type Props = ConnectedProps<typeof connector>
 
 function _FiltersSidePanel (props: Props)
 {
-    const exclude_by_label_ids = get_exclude_by_label_ids(props.filters)
 
 
     return <div>
@@ -40,15 +37,29 @@ function _FiltersSidePanel (props: Props)
             />
         </p>
 
+
         <p>
             Exclude by label:
 
             <LabelsEditor
-                label_ids={exclude_by_label_ids}
-                on_change={new_exclude_label_ids =>
+                label_ids={props.filters.exclude_by_label_ids}
+                on_change={exclude_by_label_ids =>
                 {
-                    const filters = get_exclusion_filters_from_ids(new_exclude_label_ids)
-                    props.set_filters({ filters })
+                    props.set_filters({ filters: { ...props.filters, exclude_by_label_ids } })
+                }}
+                always_allow_editing={true}
+            />
+        </p>
+
+
+        <p>
+            Filter by label:
+
+            <LabelsEditor
+                label_ids={props.filters.include_by_label_ids}
+                on_change={include_by_label_ids =>
+                {
+                    props.set_filters({ filters: { ...props.filters, include_by_label_ids } })
                 }}
                 always_allow_editing={true}
             />
@@ -57,18 +68,3 @@ function _FiltersSidePanel (props: Props)
 }
 
 export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent<{}>
-
-
-
-function get_exclusion_filters_from_ids (label_ids: string[]): CompoundFilter[]
-{
-    if (label_ids.length === 0) return []
-
-    return [
-        { type: "compound", operator: "OR", operation: "exclude", filters:
-            [
-                { type: "specific", label_ids, search_term: "", component_types: [] },
-            ]
-        },
-    ]
-}
