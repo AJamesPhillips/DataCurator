@@ -5,6 +5,10 @@ import "./ViewsBreadcrumb.css"
 import { sentence_case } from "../shared/utils/sentence_case"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { Button } from "../sharedf/Button"
+import { ACTIONS } from "../state/actions"
+import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
+import type { ViewType } from "../state/routing/interfaces"
 
 
 
@@ -20,7 +24,12 @@ const map_state = (state: RootState) =>
     }
 }
 
-const connector = connect(map_state)
+const map_dispatch = {
+    toggle_consumption_formatting: ACTIONS.display.toggle_consumption_formatting,
+    change_route: ACTIONS.routing.change_route,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
@@ -32,12 +41,25 @@ function _ViewsBreadcrumb (props: Props)
 
     return <div className="view_breadcrumb">
         <div className={props.presenting ? "presenting" : "editing"}>
-            {props.presenting ? "Presenting" : "Editing"}
+            <Button
+                value={props.presenting ? "Presenting" : "Editing"}
+                on_pointer_down={props.toggle_consumption_formatting}
+            />
         </div>
 
         <div className="routing">
             <div>
-                {sentence_case(props.view).replaceAll("_", " ")}
+                <AutocompleteText
+                    placeholder=""
+                    selected_option_id={props.view}
+                    options={view_options}
+                    allow_none={false}
+                    on_change={view =>
+                    {
+                        if (!view) return
+                        props.change_route({ args: { view } })
+                    }}
+                />
             </div>
             /
             <div>
@@ -48,3 +70,11 @@ function _ViewsBreadcrumb (props: Props)
 }
 
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent<{}>
+
+
+
+const view_options: { id: ViewType, title: string }[] = [
+    { id: "knowledge", title: "Knowledge" },
+    { id: "priorities", title: "Priorities" },
+    { id: "priorities_list", title: "Priorities list" },
+]
