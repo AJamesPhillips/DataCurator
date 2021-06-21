@@ -4,12 +4,14 @@ import "./App.css"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
 import { TabsContainer } from "./layout/TabsContainer"
 import { SidePanel } from "./side_panel/SidePanel"
+import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 
 function App() {
 
   return (
     <div className="App">
       <MainAreaRouter />
+      <ViewsBreadcrumb />
       <div id="side_panel">
         <TabsContainer content_changed={() => {}} />
         <div id="side_panel_content"><SidePanel /></div>
