@@ -19,6 +19,7 @@ import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/d
 interface CalcWcomponentShouldDisplayArgs
 {
     force_displaying: boolean
+    is_selected: boolean
     wcomponent: WComponent
     created_at_ms: number
     sim_ms: number
@@ -27,10 +28,10 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { force_displaying, wcomponent, sim_ms, wc_ids_excluded_by_filter } = args
+    const { force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filter } = args
 
 
-    if (force_displaying) return { display_certainty: 1 }
+    if (force_displaying || is_selected) return { display_certainty: 1 }
 
 
     if (wc_ids_excluded_by_filter.has(wcomponent.id)) return false
@@ -115,6 +116,7 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
 interface CalculateConnectionCertaintyArgs
 {
     force_displaying: boolean
+    is_selected: boolean
     wcomponent: WComponentConnection
     validity_filter: ValidityFilterOption
     from_wc: WComponent | undefined
@@ -156,6 +158,7 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 interface CalculateJudgementCertaintyArgs
 {
     force_displaying: boolean
+    is_selected: boolean
     wcomponent: WComponentJudgement
     validity_filter: ValidityFilterOption
     target_wc: WComponent | undefined

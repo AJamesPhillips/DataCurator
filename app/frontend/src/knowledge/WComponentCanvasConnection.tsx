@@ -38,6 +38,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const wcomponent = get_wcomponent_from_state(state, own_props.id)
 
     const { force_display: force_displaying } = state.filter_context
+    const is_selected = state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id)
     const { current_UI_knowledge_view: UI_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
@@ -59,7 +60,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
             validity_value = calc_connection_wcomponent_should_display({
-                force_displaying, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+                force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
             })
         }
         else if (wcomponent_is_judgement_or_objective(wcomponent))
@@ -67,7 +68,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
 
             validity_value = calc_judgement_connection_wcomponent_should_display({
-                force_displaying, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
+                force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filter,
             })
         }
     }
@@ -81,7 +82,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wcomponent,
         validity_value,
         is_current_item: state.routing.item_id === own_props.id,
-        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
+        is_selected,
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         is_editing: !state.display_options.consumption_formatting,
         certainty_formatting: state.display_options.derived_certainty_formatting,
