@@ -17,7 +17,7 @@ export function prepare_new_VAP (): StateValueAndPrediction
     return {
         id: get_new_VAP_id(),
         explanation: "",
-        probability: 1,
+        probability: 0,
         conviction: 1,
         value: "",
         description: "",
