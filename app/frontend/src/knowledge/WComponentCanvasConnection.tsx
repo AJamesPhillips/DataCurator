@@ -73,7 +73,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     }
 
 
-    const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
+    const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
 
     return {
@@ -85,7 +85,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         is_editing: !state.display_options.consumption_formatting,
         certainty_formatting: state.display_options.derived_certainty_formatting,
-        ctrl_key_is_down,
+        shift_or_control_keys_are_down,
     }
 }
 
@@ -106,7 +106,7 @@ function _WComponentCanvasConnection (props: Props)
 {
     const {
         id, current_UI_knowledge_view, wcomponent, is_current_item, is_highlighted, is_selected,
-        validity_value, ctrl_key_is_down,
+        validity_value, shift_or_control_keys_are_down,
         change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props
 
@@ -131,7 +131,7 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, ctrl_key_is_down, change_route, is_current_item })
+    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type,

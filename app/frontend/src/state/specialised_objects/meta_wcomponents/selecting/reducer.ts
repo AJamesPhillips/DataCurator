@@ -24,9 +24,9 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
         const { id } = action
         let selected_wcomponent_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids)
 
-        const ctrl_key_down = state.global_keys.keys_down.has("Control")
+        const { shift_or_control_down } = state.global_keys.derived
 
-        if (ctrl_key_down)
+        if (shift_or_control_down)
         {
             toggle_item_in_set(selected_wcomponent_ids, id)
         }

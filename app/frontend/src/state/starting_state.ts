@@ -8,6 +8,7 @@ import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
 import type { ObjectWithCache, Pattern, RootState, Statement } from "./State"
 import { user_activity_starting_state } from "./user_activity/starting_state"
+import { get_global_keys_starting_state } from "./global_keys/state"
 
 
 
@@ -150,7 +151,7 @@ export function get_starting_state (): RootState
         display_options: display_options_starting_state(),
         sync: { ready: false, saving: false, status: "LOADING" },
         routing,
-        global_keys: { last_key: undefined, last_key_time_stamp: undefined, keys_down: new Set(), },
+        global_keys: get_global_keys_starting_state(),
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         derived: get_derived_starting_state(),

@@ -7,7 +7,7 @@ import type { ActionChangeRouteArgs } from "../state/routing/actions"
 interface FactoryOnPointerDownArgs
 {
     wcomponent_id: string
-    ctrl_key_is_down: boolean
+    shift_or_control_keys_are_down: boolean
     change_route: (routing_params: ActionChangeRouteArgs) => void
     clicked_wcomponent: (args: { id: string }) => void
     is_current_item: boolean
@@ -17,7 +17,7 @@ export function factory_on_pointer_down (args: FactoryOnPointerDownArgs)
 {
     const {
         wcomponent_id: id,
-        ctrl_key_is_down,
+        shift_or_control_keys_are_down,
         change_route,
         clicked_wcomponent,
         clear_selected_wcomponents,
@@ -31,7 +31,7 @@ export function factory_on_pointer_down (args: FactoryOnPointerDownArgs)
 
         clicked_wcomponent({ id })
 
-        if (ctrl_key_is_down)
+        if (shift_or_control_keys_are_down)
         {
             change_route({ route: "wcomponents", sub_route: "wcomponents_edit_multiple", item_id: null })
         }

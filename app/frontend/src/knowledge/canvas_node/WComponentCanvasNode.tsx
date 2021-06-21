@@ -46,7 +46,7 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const ctrl_key_is_down = state.global_keys.keys_down.has("Control")
+    const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
     const { canvas_bounding_rect: cbr } = state.display_options
 
     const { current_UI_knowledge_view } = state.derived
@@ -60,7 +60,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_current_item: state.routing.item_id === own_props.id,
         is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
-        ctrl_key_is_down,
+        shift_or_control_keys_are_down,
         canvas_bounding_rect_left: cbr ? cbr.left : 0,
         canvas_bounding_rect_top: cbr ? cbr.top : 0,
         created_at_ms: state.routing.args.created_at_ms,
@@ -96,7 +96,7 @@ function _WComponentCanvasNode (props: Props)
         force_displaying,
         current_UI_knowledge_view: UI_kv, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
-        ctrl_key_is_down,
+        shift_or_control_keys_are_down,
         created_at_ms, sim_ms, validity_filter, certainty_formatting,
         clicked_wcomponent, clear_selected_wcomponents,
     } = props
@@ -128,7 +128,7 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, ctrl_key_is_down, change_route, is_current_item })
+    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
 
 
     const update_position = (new_position: CanvasPoint) =>

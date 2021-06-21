@@ -5,6 +5,7 @@ import type { ControlsState } from "./controls/state"
 import type { DerivedState } from "./derived/State"
 import type { DisplayOptionsState } from "./display_options/state"
 import type { FilterContextState } from "./filter_context/state"
+import type { GlobalKeysState } from "./global_keys/state"
 import type { RoutingState } from "./routing/interfaces"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
@@ -92,14 +93,6 @@ export interface SyncState
 
 
 
-export interface GlobalKeyPress
-{
-    last_key: string | undefined
-    last_key_time_stamp: number | undefined
-    keys_down: Set<string>
-}
-
-
 export interface ObjectivesState
 {
     selected_objective_ids: Set<string>
@@ -126,7 +119,7 @@ export interface RootState extends RootStateCore
     derived: DerivedState
     display_options: DisplayOptionsState
     filter_context: FilterContextState
-    global_keys: GlobalKeyPress
+    global_keys: GlobalKeysState
     last_action: AnyAction | undefined
     meta_wcomponents: MetaWComponentsState
     objectives: ObjectivesState
