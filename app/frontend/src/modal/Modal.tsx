@@ -1,72 +1,63 @@
-import { Component, ComponentClass, h } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./Modal.css"
 import type { RootState } from "../state/State"
 
 
-interface ModalChildProps
-{
-    first_render: boolean | undefined
-}
-
 
 interface OwnProps
 {
     title: string
     on_close: () => void
-    child: (props: ModalChildProps) => h.JSX.Element
+    child: () => h.JSX.Element
+}
+interface ModalCoreOwnProps extends OwnProps
+{
+    time_stamp_first_rendered: number
 }
 
 
-function map_state (state: RootState)
+function map_state (state: RootState, own_props: ModalCoreOwnProps)
 {
-    return {
-        last_key: state.global_keys.last_key,
-        last_key_time_stamp: state.global_keys.last_key_time_stamp,
-    }
+    const is_escape = state.global_keys.last_key === "Escape"
+    const { last_key_time_stamp = 0 } = state.global_keys
+    const should_close = is_escape && last_key_time_stamp > own_props.time_stamp_first_rendered
+
+    return { should_close }
 }
 
 const connector = connect(map_state)
 type PropsFromRedux = ConnectedProps<typeof connector>
 
-type Props = PropsFromRedux & OwnProps
+type Props = PropsFromRedux & ModalCoreOwnProps
 
 
-function calc_should_close (props: Props, time_stamp_first_rendered: number)
+
+function _ModalCore (props: Props)
 {
-    const is_escape = props.last_key === "Escape"
-    const is_new = props.last_key_time_stamp && props.last_key_time_stamp > time_stamp_first_rendered
+    if (props.should_close) setTimeout(() => props.on_close(), 0)
 
-    return is_escape && is_new
-}
+    return <div id="modal_background" onClick={() => props.on_close()}>
+        <div id="modal_container" onClick={e => e.stopPropagation()}>
+            {props.title}
+            <div id="modal_close" onClick={() => props.on_close()}><span>X</span></div>
 
-
-class _Modal extends Component<Props>
-{
-    private time_stamp_first_rendered = performance.now()
-    already_rendered: boolean | undefined = undefined
-
-    render ()
-    {
-        if (this.already_rendered === undefined) this.already_rendered = false
-        else if (this.already_rendered === false) this.already_rendered = true
-
-        const should_close = calc_should_close(this.props, this.time_stamp_first_rendered)
-        if (should_close) setTimeout(() => this.props.on_close(), 0)
-
-        return <div id="modal_background" onClick={() => this.props.on_close()}>
-            <div id="modal_container" onClick={e => e.stopPropagation()}>
-                {this.props.title}
-                <div id="modal_close" onClick={() => this.props.on_close()}><span>X</span></div>
-
-                {this.props.child({
-                    first_render: !this.already_rendered,
-                })}
-            </div>
+            {props.child()}
         </div>
-    }
+    </div>
 }
 
+const ModalCore = connector(_ModalCore) as FunctionalComponent<ModalCoreOwnProps>
 
-export const Modal = connector(_Modal) as ComponentClass<OwnProps>
+
+
+export function Modal (props: OwnProps)
+{
+    const time_stamp_first_rendered = performance.now()
+
+    return <ModalCore
+        {...props}
+        time_stamp_first_rendered={time_stamp_first_rendered}
+    />
+}

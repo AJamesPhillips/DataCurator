@@ -7,6 +7,7 @@ import { useState } from "preact/hooks"
 import { Modal } from "../modal/Modal"
 
 
+
 interface OwnProps
 {
     specific_type_id?: string
@@ -23,10 +24,10 @@ export function ItemSearchWindow (props: OwnProps)
     return <Modal
         on_close={props.on_close}
         title="Search"
-        child={child_props => {
+        child={() => {
 
             const id_search_box = "search_box"
-            if (child_props.first_render) setTimeout(() => focus_search_box(id_search_box), 0)
+            setTimeout(() => focus_search_box(id_search_box), 0)
 
             return <div id="search_container">
                 <input

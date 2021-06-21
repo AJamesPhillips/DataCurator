@@ -39,6 +39,5 @@ export function SearchWindow (props: OwnProps)
                 start_expanded={true}
             />
         </div>}
-    >
-    </Modal>
+    />
 }

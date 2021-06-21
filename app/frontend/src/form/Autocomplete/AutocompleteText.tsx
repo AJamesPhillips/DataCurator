@@ -206,7 +206,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                 ref={r =>
                 {
                     if (!r || !this.state.editing) return
-                    r.focus()
+                    setTimeout(() => r.focus(), 0)
                 }}
                 type="text"
                 placeholder={placeholder}
