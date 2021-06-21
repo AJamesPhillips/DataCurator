@@ -3,7 +3,7 @@ import { round_canvas_point } from "../canvas/position_utils"
 
 import type { CreationContextState } from "../shared/creation_context/state"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
-import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_state } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_state, wcomponent_is_statev2 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
@@ -78,6 +78,12 @@ function set_judgement_or_objective_target (wcomponent: WComponent, state: RootS
                 wcomponent = {
                     ...wcomponent,
                     judgement_target_wcomponent_id: selected_wcomponent.id,
+                }
+
+                if (wcomponent_is_statev2(selected_wcomponent) && selected_wcomponent.subtype === "boolean")
+                {
+                    wcomponent.judgement_operator = "=="
+                    wcomponent.judgement_comparator_value = "True"
                 }
             }
         }
