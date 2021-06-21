@@ -3,7 +3,7 @@ import { h } from "preact"
 import "./SelectedOption.css"
 import { Button } from "../../sharedf/Button"
 import type { AutocompleteOption } from "./interfaces"
-import { color_to_string } from "../../sharedf/color"
+import { color_to_opposite, color_to_string } from "../../sharedf/color"
 
 
 
@@ -30,7 +30,10 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 
     return <div
         className={class_name}
-        style={{ backgroundColor: color_to_string(option.color) }}
+        style={{
+            backgroundColor: color_to_string(option.color),
+            color: color_to_string(color_to_opposite(option.color)),
+        }}
         onPointerOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}
         onPointerLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}
         onPointerDown={e => pointer_down && pointer_down(e, option.id)}
