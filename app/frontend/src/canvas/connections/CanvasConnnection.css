@@ -9,6 +9,7 @@
     fill: transparent;
     stroke: transparent;
     stroke-width: 10px;
+    stroke-opacity: 0.3;
 }
 
 .connection_line
@@ -34,13 +35,18 @@
 
 .connection_line_background.hovered
 {
-    stroke: rgba(0,0,0,0.1);
+    stroke: orange;
+}
+.connection_line_background.highlighted
+{
+    stroke: blue;
+    stroke-opacity: 0.2;
 }
 
 .connection_line.hovered
 {
-    stroke-width: 3px;
-    stroke-dasharray: 6px 3px;
+    /* stroke-width: 3px; */
+    /* stroke-dasharray: 6px 3px; */
     stroke-opacity: 1 !important;
     filter: inherit !important;
 }
@@ -50,6 +56,16 @@
     fill-opacity: 1 !important;
     stroke-opacity: 1 !important;
 }
+
+/*
+.connection_line.highlighted
+{
+    stroke: blue;
+}
+.connection_end.highlighted
+{
+    fill: blue;
+} */
 
 
 

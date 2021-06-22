@@ -68,12 +68,3 @@
 {
     fill: #BBB;
 }
-
-.highlighted.connection_line
-{
-    stroke: blue;
-}
-.highlighted.connection_end
-{
-    fill: blue;
-}

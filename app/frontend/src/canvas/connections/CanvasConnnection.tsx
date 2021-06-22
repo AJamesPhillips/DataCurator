@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import "./connection.css"
+import "./CanvasConnnection.css"
 import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { CanvasPoint } from "../interfaces"
 import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"
@@ -42,7 +42,7 @@ export function CanvasConnnection (props: OwnProps)
         filter: `url(#blur_filter_${Math.round(blur)})`,
     }
 
-    const extra_line_classes = `${props.is_highlighted ? "highlighted" : ""} ${hovered ? "hovered" : ""}`
+    const extra_line_classes = `${hovered ? "hovered" : (props.is_highlighted ? "highlighted" : "")}`
     const extra_background_classes = (props.on_pointer_down ? " mouseable " : "") + extra_line_classes
 
 
