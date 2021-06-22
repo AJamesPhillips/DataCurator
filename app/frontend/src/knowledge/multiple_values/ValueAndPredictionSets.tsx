@@ -55,10 +55,10 @@ function _ValueAndPredictionSets (props: Props)
         VAP_set_counterfactuals_map={VAP_set_counterfactuals_map}
 
         item_descriptor="Value"
-        values_and_prediction_sets={values_and_prediction_sets}
         VAPs_represent={VAPs_represent}
         update_items={props.update_values_and_predictions}
 
+        values_and_prediction_sets={values_and_prediction_sets}
         invalid_future_items={invalid_future_items}
         invalid_past_items={invalid_past_items}
         past_items={past_items}

@@ -28,10 +28,10 @@ interface OwnProps
     VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
 
     item_descriptor: string
-    values_and_prediction_sets: StateValueAndPredictionsSet[]
     VAPs_represent: VAPsRepresent
     update_items: (items: StateValueAndPredictionsSet[]) => void
 
+    values_and_prediction_sets: StateValueAndPredictionsSet[]
     invalid_future_items: StateValueAndPredictionsSet[]
     invalid_past_items: StateValueAndPredictionsSet[]
     past_items: StateValueAndPredictionsSet[]
@@ -122,7 +122,11 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             on_click_header={undefined}
             other_content={() => !editing ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_VAP_set(props.creation_context))}
+                on_pointer_down_new_list_entry={() =>
+                {
+                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, values_and_prediction_sets, props.creation_context)
+                    set_new_item(new_VAP_set)
+                }}
             />}
         />
 

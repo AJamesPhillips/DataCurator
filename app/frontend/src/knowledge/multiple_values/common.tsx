@@ -14,6 +14,7 @@ import { SummaryForPrediction } from "../predictions/common"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { set_VAP_probabilities } from "./utils"
 
 
 
@@ -58,7 +59,14 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsRepresent, wc
                 VAPs_represent={VAPs_represent}
                 values_and_predictions={VAPs}
                 VAP_counterfactuals_map={VAP_counterfactuals_map}
-                update_values_and_predictions={VAPs => on_change(merge_entries(VAPs, VAP_set, VAPs_represent))}
+                update_values_and_predictions={VAPs =>
+                {
+                    const vanilla_entries = merge_entries(VAPs, VAP_set, VAPs_represent)
+                    const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
+
+                    const new_VAP_set = { ...VAP_set, entries: entries_with_probabilities }
+                    on_change(new_VAP_set)
+                }}
             />
         </div>
         <br />
@@ -136,7 +144,7 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent
 
 
 
-function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent): StateValueAndPredictionsSet
+function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent)
 {
     if (VAPs_represent.boolean)
     {
@@ -144,5 +152,5 @@ function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndP
         VAPs = VAPs.concat(VAP_set.entries.slice(1))
     }
 
-    return { ...VAP_set, entries: VAPs }
+    return VAPs
 }
