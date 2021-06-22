@@ -18,7 +18,7 @@ export function ensure_base_knowledge_view_subscriber (store: Store<RootState>)
         if (state.derived.base_knowledge_view) return
 
         // double check
-        const { base_knowledge_view } = get_base_knowledge_view(state)
+        const base_knowledge_view = get_base_knowledge_view(Object.values(state.specialised_objects.knowledge_views_by_id))
         if (base_knowledge_view)
         {
             console.error("Should have set base_knowledge_view by now but state.derived.base_knowledge_view is undefined")

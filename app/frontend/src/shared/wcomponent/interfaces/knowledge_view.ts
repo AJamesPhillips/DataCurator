@@ -15,7 +15,14 @@ export interface KnowledgeView extends Base, Project {
     foundation_knowledge_view_ids?: string[];
     // Used for semantically organising knowledge views in relation to each other
     parent_knowledge_view_id?: string;
+    ERROR_is_circular?: true;
 }
+
+export interface UIKnowledgeView extends KnowledgeView
+{
+    children: UIKnowledgeView[]
+}
+
 
 
 export type KnowledgeViewsById = { [id: string]: KnowledgeView; /*| undefined*/ };

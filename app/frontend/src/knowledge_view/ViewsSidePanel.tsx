@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeViewList } from "./KnowledgeViewList"
+import { KnowledgeViewListWrapper } from "./KnowledgeViewListWrapper"
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
@@ -78,7 +78,7 @@ function _ViewsSidePanel (props: Props)
 
         <hr />
 
-        <KnowledgeViewList />
+        <KnowledgeViewListWrapper />
 
     </div>
 }

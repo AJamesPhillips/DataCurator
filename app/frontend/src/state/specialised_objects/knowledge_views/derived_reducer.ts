@@ -8,7 +8,7 @@ import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
 import type { DerivedUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
-import { get_base_knowledge_view, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"
+import { get_base_knowledge_view, get_UI_knowledge_views, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
@@ -86,17 +86,15 @@ function update_derived_knowledge_view_state (state: RootState): RootState
     state = update_substate(state, "derived", "knowledge_views", knowledge_views)
 
 
-    const {
-        base_knowledge_view,
-        other_knowledge_views,
-    } = get_base_knowledge_view(state)
+    const base_knowledge_view = get_base_knowledge_view(knowledge_views)
+    const UI_knowledge_views = get_UI_knowledge_views(knowledge_views)
 
     state = {
         ...state,
         derived: {
             ...state.derived,
             base_knowledge_view,
-            other_knowledge_views,
+            UI_knowledge_views,
         },
     }
 

@@ -4,7 +4,7 @@ import type { KnowledgeViewWComponentEntry } from "../../../shared/wcomponent/in
 import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
-import { get_base_knowledge_view, get_knowledge_view_from_state } from "../accessors"
+import {get_knowledge_view_from_state } from "../accessors"
 import { is_upsert_wcomponent } from "../wcomponents/actions"
 import {
     is_upsert_knowledge_view,
@@ -102,7 +102,7 @@ function handle_delete_knowledge_view_entry (state: RootState, knowledge_view_id
 
 function add_wcomponent_to_base_knowledge_view (state: RootState, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
 {
-    const { base_knowledge_view } = get_base_knowledge_view(state)
+    const { base_knowledge_view } = state.derived
     if (!base_knowledge_view)
     {
         console.error("There should always be a base knowledge view once wcomponents are being added")
