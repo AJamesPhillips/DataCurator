@@ -10,8 +10,8 @@ function App() {
 
   return (
     <div className="App">
+	    <ViewsBreadcrumb />
       <MainAreaRouter />
-      <ViewsBreadcrumb />
       <div id="side_panel">
         <TabsContainer content_changed={() => {}} />
         <div id="side_panel_content"><SidePanel /></div>
