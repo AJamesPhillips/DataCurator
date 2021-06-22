@@ -14,6 +14,8 @@ import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import { optional_view_type } from "../views/optional_view_type"
 import type { ViewType } from "../state/routing/interfaces"
 import { EditableCheckbox } from "../form/EditableCheckbox"
+import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
+import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 
 
 
@@ -51,6 +53,7 @@ function _KnowledgeViewList (props: Props)
     }
 
     const knowledge_views: KnowledgeView[] = [ base_knowledge_view, ...other_knowledge_views ]
+    const parent_knowledge_view_options = knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
 
 
     return <ExpandableListWithAddButton
@@ -72,7 +75,7 @@ function _KnowledgeViewList (props: Props)
 
             item_top_props: {
                 get_summary: factory_get_summary(current_view),
-                get_details: factor_get_details(editing),
+                get_details: factory_get_details(editing, parent_knowledge_view_options),
                 get_details3,
             },
 
@@ -115,7 +118,7 @@ function get_knowledge_view_title (knowledge_view: KnowledgeView)
 const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 
-const factor_get_details = (editing: boolean) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
+const factory_get_details = (editing: boolean, parent_knowledge_view_options: AutocompleteOption[]) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
 {
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
@@ -152,6 +155,21 @@ const factor_get_details = (editing: boolean) => (knowledge_view: KnowledgeView,
                 }}
             />
         </p>
+
+
+        <p>
+            <span className="description_label">Nest under</span>
+            <AutocompleteText
+                selected_option_id={knowledge_view.parent_knowledge_view_id}
+                allow_none={true}
+                options={parent_knowledge_view_options.filter(({ id }) => id !== knowledge_view.id)}
+                on_change={parent_knowledge_view_id =>
+                {
+                    on_change({ ...knowledge_view, parent_knowledge_view_id })
+                }}
+            />
+        </p>
+
 
         <br />
     </div>
