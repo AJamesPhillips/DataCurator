@@ -11,7 +11,7 @@ import { ensure_base_knowledge_view_subscriber } from "./ensure_base_knowledge_v
 
 export function specialised_objects_subscribers (store: Store<RootState>)
 {
-    dispatchers(store)
+    pub_sub_subscribers(store)
 
     const c = create_links_on_connection_terminal_mouse_events(store)
     const ensure_base_knowledge_view = ensure_base_knowledge_view_subscriber(store)
@@ -26,7 +26,7 @@ export function specialised_objects_subscribers (store: Store<RootState>)
 
 
 
-function dispatchers (store: Store<RootState>)
+function pub_sub_subscribers (store: Store<RootState>)
 {
     // create_wcomponent_on_right_click(store)
     create_wcomponent_on_double_tap(store)
