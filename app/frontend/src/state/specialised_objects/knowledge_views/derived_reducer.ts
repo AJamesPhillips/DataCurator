@@ -80,19 +80,18 @@ function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const knowledge_views = sort_list(
         Object.values(state.specialised_objects.knowledge_views_by_id),
-        ({ created_at }) => created_at.getTime(),
+        ({ title }) => title,
         "ascending"
     )
-    state = update_substate(state, "derived", "knowledge_views", knowledge_views)
-
-
     const base_knowledge_view = get_base_knowledge_view(knowledge_views)
     const UI_knowledge_views = get_UI_knowledge_views(knowledge_views)
+
 
     state = {
         ...state,
         derived: {
             ...state.derived,
+            knowledge_views,
             base_knowledge_view,
             UI_knowledge_views,
         },
