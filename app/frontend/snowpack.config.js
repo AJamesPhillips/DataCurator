@@ -6,6 +6,7 @@ module.exports = {
   },
   plugins: [
     '@snowpack/plugin-dotenv',
+	['@snowpack/plugin-sass', { style: 'compressed'}],
     '@snowpack/plugin-typescript',
     '@prefresh/snowpack',
   ],
