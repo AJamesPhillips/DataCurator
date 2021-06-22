@@ -48,7 +48,7 @@ function _ViewsBreadcrumb (props: Props)
     if (!props.ready) return null
     return  <div class="breadcrumbs">
                 <Breadcrumbs aria-label="breadcrumb">
-                  <ToggleButtonGroup size="small" onChange={props.toggle_consumption_formatting} value={props.presenting ? "presenting" : "editing"} aria-label="text formatting">
+                  <ToggleButtonGroup size="small" exclusive onChange={props.toggle_consumption_formatting} value={props.presenting ? "presenting" : "editing"} aria-label="text formatting">
                     <ToggleButton value="editing" aria-label="Editing">
                       <EditIcon />
                     </ToggleButton>
