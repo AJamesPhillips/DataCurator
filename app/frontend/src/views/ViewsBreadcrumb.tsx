@@ -1,16 +1,17 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./ViewsBreadcrumb.css"
-import { sentence_case } from "../shared/utils/sentence_case"
+import "./ViewsBreadcrumb.scss"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
-import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { ViewType } from "../state/routing/interfaces"
 
-
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+import EditIcon from '@material-ui/icons/Edit';
+import PresentToAllIcon from '@material-ui/icons/PresentToAll';
 
 const map_state = (state: RootState) =>
 {
@@ -32,46 +33,38 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
-
+function navigate_view(event:Event, props:any)
+{
+    let target:HTMLElement = event.target as HTMLElement;
+    if (target instanceof HTMLSelectElement) {
+        const select = target as HTMLSelectElement;
+        const view = select.value;
+        props.change_route({ args: { view } })
+    }
+}
 
 function _ViewsBreadcrumb (props: Props)
 {
     if (!props.ready) return null
-
-
-    return <div className="view_breadcrumb">
-        <div className={props.presenting ? "presenting" : "editing"}>
-            <Button
-                value={props.presenting ? "Presenting" : "Editing"}
-                on_pointer_down={props.toggle_consumption_formatting}
-            />
-        </div>
-
-        <div className="routing">
-            <div>
-                <AutocompleteText
-                    placeholder=""
-                    selected_option_id={props.view}
-                    options={view_options}
-                    allow_none={false}
-                    on_change={view =>
-                    {
-                        if (!view) return
-                        props.change_route({ args: { view } })
-                    }}
-                />
+    return  <div class="breadcrumbs">
+                <Breadcrumbs aria-label="breadcrumb">
+                  <ToggleButtonGroup size="small" onChange={props.toggle_consumption_formatting} value={props.presenting ? "presenting" : "editing"} aria-label="text formatting">
+                    <ToggleButton value="editing" aria-label="Editing">
+                      <EditIcon />
+                    </ToggleButton>
+                  <ToggleButton value="presenting" aria-label="Presenting">
+                    <PresentToAllIcon />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                  <select name="select_view" onChange={(e:Event) => { navigate_view(e, props) }}>
+                    {view_options.map(opt => <option value={opt.id}>{opt.title}</option>)}
+                   </select>
+                <strong>{props.kv && props.kv.title.slice(0, 20)}</strong>
+              </Breadcrumbs>
             </div>
-            /
-            <div>
-                {props.kv && props.kv.title.slice(0, 20)}
-            </div>
-        </div>
-    </div>
 }
 
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent<{}>
-
-
 
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
