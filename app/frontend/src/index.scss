@@ -1,0 +1,22 @@
+html,
+html body,
+html body #root {
+  display:block;
+	min-width:100vw; width:100vw; max-width: 100vw;
+	min-height:100vh; height:100vh; max-height:100vh;
+  overflow:hidden;
+  margin:0; padding:0;
+}
+
+html {
+  body {
+    font-family:Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    #root {
+      display:flex;
+      flex-direction:column;
+    }
+  }
+}
