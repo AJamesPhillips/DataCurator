@@ -24,7 +24,7 @@ function App() {
           <Box id="app_content">
             <MainAreaRouter />
           </Box>
-          <Box id="side_panel" component="aside" p={1} mt={1}>
+          <Box id="side_panel" component="aside" p={5} mt={1}>
             <TabsContainer content_changed={() => {}} />
             <SidePanel />
           </Box>
