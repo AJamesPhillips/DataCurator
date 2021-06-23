@@ -11,27 +11,25 @@ function App() {
   return (
     <ThemeProvider theme={default_theme}>
       <CssBaseline />
-      <div class="app">
-        <header>
-          <AppBar position="static">
+      <Box id="app" className="app">
+        <Box component="header">
+        <AppBar position="static">
             <Toolbar variant="dense">
               <ViewsBreadcrumb />
             </Toolbar>
           </AppBar>
-        </header>
-        <main>
-          <div id="app_content">
+        </Box>
+        <Box component="main">
+          <Box id="app_content">
             <MainAreaRouter />
-          </div>
-          <aside id="side_panel">
-            <Box p={1} mt={1}>
-              <TabsContainer content_changed={() => {}} />
-              <SidePanel />
-            </Box>
-          </aside>
-        </main>
-        <footer></footer>
-      </div>
+          </Box>
+          <Box id="side_panel" component="aside" p={1} mt={1}>
+            <TabsContainer content_changed={() => {}} />
+            <SidePanel />
+          </Box>
+        </Box>
+        <Box component="footer"></Box>
+      </Box>
     </ThemeProvider>
   )
 }
