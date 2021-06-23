@@ -32,8 +32,11 @@ function _TabsContainer (props: Props)
     }
 
 
+    const [show_all_routes, set_show_all_routes] = useState(!!localStorage.getItem("show_all_tabs"))
+
+
     let routes = ALLOWED_ROUTES
-    if (!localStorage.getItem("show_all_tabs"))
+    if (!show_all_routes)
     {
         const hide_routes = new Set<ROUTE_TYPES>(["objects", "patterns", "perceptions", "statements"])
         routes = routes.filter(r => !hide_routes.has(r))
@@ -50,6 +53,10 @@ function _TabsContainer (props: Props)
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
                 {routes.map(route => <MenuItem onClick={handleClose}><Tab id={route} /></MenuItem>)}
+
+                <MenuItem onClick={() => set_show_all_routes(!show_all_routes)}>
+                    {show_all_routes ? "Hide" : "Show"} all options
+                </MenuItem>
             </Menu>
         </Box>
     )
