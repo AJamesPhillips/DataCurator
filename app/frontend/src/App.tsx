@@ -6,7 +6,9 @@ import { MainAreaRouter } from "./layout/MainAreaRouter"
 import { TabsContainer } from "./layout/TabsContainer"
 import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
-import default_theme from "./ui_themes/material_default";
+import default_theme from "./ui_themes/material_default"
+
+
 
 function App() {
   return (

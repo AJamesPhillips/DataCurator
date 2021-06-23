@@ -1,4 +1,4 @@
-import { Component, h } from "preact"
+import { h } from "preact"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"

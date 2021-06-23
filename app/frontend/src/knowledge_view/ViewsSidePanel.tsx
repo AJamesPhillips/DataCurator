@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeViewListWrapper } from "./KnowledgeViewListWrapper"
+import { KnowledgeViewListsSetWrapper } from "./KnowledgeViewListsSetWrapper"
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
@@ -65,7 +65,7 @@ type Props = PropsFromRedux & OwnProps
 function _ViewsSidePanel(props: Props) {
     return (
         <Box p={1} pt={5} class="views_side_panel">
-            <KnowledgeViewListWrapper />
+            <KnowledgeViewListsSetWrapper />
         </Box>
     )
 }

@@ -3,6 +3,10 @@ import type { Project } from "./project"
 
 
 
+export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived"
+export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
+
+
 export interface KnowledgeView extends Base, Project {
     // Explainable
     title: string
@@ -15,6 +19,7 @@ export interface KnowledgeView extends Base, Project {
     foundation_knowledge_view_ids?: string[]
     // Used for semantically organising knowledge views in relation to each other
     parent_knowledge_view_id?: string
+    sort_type: KnowledgeViewSortType
 }
 
 

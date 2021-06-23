@@ -55,21 +55,7 @@ export function routing_args_to_string (routing_args: RoutingStateArgs)
 
 
 
-export function get_current_route_params (routing_state: RoutingState): RoutingState
-{
-    const url = window.location.toString()
-    const new_routing_state = parse_url_for_state({ url, current_routing_state: routing_state })
-    return new_routing_state
-}
-
-
-
-interface ParseUrlForStateArgs
-{
-    url: string
-    current_routing_state: RoutingState
-}
-function parse_url_for_state ({ url, current_routing_state }: ParseUrlForStateArgs): RoutingState
+export function merge_route_params_prioritising_window_location (url: string, routing_state: RoutingState): RoutingState
 {
     const hash = url.split("#")[1] || ""
 
@@ -80,7 +66,7 @@ function parse_url_for_state ({ url, current_routing_state }: ParseUrlForStateAr
     const { route, sub_route, item_id } = get_route_subroute_and_item_id(path_parts)
 
     const args_from_url = main_parts.slice(1)
-    const args = update_args_from_url(current_routing_state.args, args_from_url)
+    const args = update_args_from_url(routing_state.args, args_from_url)
 
     return { route, sub_route, item_id, args }
 }

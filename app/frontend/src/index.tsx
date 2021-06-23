@@ -21,58 +21,58 @@ const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
 
 if (root) {
-  if (window.location.pathname === "/")
-  {
-    root.innerHTML = `<ul>
-    <li><a href="/app">app</a></li>
-    <li><a href="/project_dashboard">Project dashboard</a></li>
-    <li><a href="/prob_graph">Probability graph</a></li>
-    <li><a href="/prob_badge">Probability badge</a></li>
-    <li><a href="/statement_probability">Statement probability</a></li>
-    <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
-    <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
-    <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
-    <li><a href="/sandbox">Sandbox</a></li>
-    </ul>`
-  }
-  else if (window.location.pathname === "/project_dashboard")
-  {
-    render(<Provider store={config_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
-  }
-  else if (window.location.pathname === "/prob_graph")
-  {
-    render(<DemoPredictionsGraph />, root)
-  }
-  else if (window.location.pathname === "/prob_badge")
-  {
-    render(<DemoPredictionsBadge />, root)
-  }
-  else if (window.location.pathname === "/statement_probability")
-  {
-    render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
-  }
-  else if (window.location.pathname === "/statement_probability_explorer")
-  {
-    render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
-  }
-  else if (window.location.pathname === "/sandbox/editable_custom_datetime")
-  {
-    render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
-  }
-  else if (window.location.pathname === "/sandbox/canvas_nodes")
-  {
-    render(<SandboxWComponentCanvasNode />, root)
-  }
-  else if (window.location.pathname === "/sandbox")
-  {
-    render(<SandBox />, root)
-  }
-  else
-  {
-    render(<Provider store={config_store({ load_state_from_server: true })}><App /></Provider>, root)
-  }
+    if (window.location.pathname === "/")
+    {
+        root.innerHTML = `<ul>
+        <li><a href="/app">app</a></li>
+        <li><a href="/project_dashboard">Project dashboard</a></li>
+        <li><a href="/prob_graph">Probability graph</a></li>
+        <li><a href="/prob_badge">Probability badge</a></li>
+        <li><a href="/statement_probability">Statement probability</a></li>
+        <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
+        <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
+        <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
+        <li><a href="/sandbox">Sandbox</a></li>
+        </ul>`
+    }
+    else if (window.location.pathname === "/project_dashboard")
+    {
+        render(<Provider store={config_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
+    }
+    else if (window.location.pathname === "/prob_graph")
+    {
+        render(<DemoPredictionsGraph />, root)
+    }
+    else if (window.location.pathname === "/prob_badge")
+    {
+        render(<DemoPredictionsBadge />, root)
+    }
+    else if (window.location.pathname === "/statement_probability")
+    {
+        render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
+    }
+    else if (window.location.pathname === "/statement_probability_explorer")
+    {
+        render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
+    }
+    else if (window.location.pathname === "/sandbox/editable_custom_datetime")
+    {
+        render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
+    }
+    else if (window.location.pathname === "/sandbox/canvas_nodes")
+    {
+        render(<SandboxWComponentCanvasNode />, root)
+    }
+    else if (window.location.pathname === "/sandbox")
+    {
+        render(<SandBox />, root)
+    }
+    else
+    {
+        render(<Provider store={config_store({ load_state_from_server: true })}><App /></Provider>, root)
+    }
 }
 
 if (title) {
-  title.innerHTML = APP_DETAILS.NAME
+    title.innerHTML = APP_DETAILS.NAME
 }

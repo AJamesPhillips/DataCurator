@@ -87,6 +87,7 @@ const kv10: KnowledgeView = {
     },
     created_at,
     goal_ids: [],
+    sort_type: "normal",
 }
 
 

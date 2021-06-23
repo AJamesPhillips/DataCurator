@@ -3,7 +3,7 @@
 
 ## Setup (on Mac)
 
-    $ git clone git@github.com:centerofci/data-curator.git
+    $ git clone git@github.com:centerofci/data-curator2.git
 
 ### Install server dependencies
 
@@ -30,7 +30,10 @@
 Then visit [http://localhost:8080/app#wcomponents/&view=knowledge](http://localhost:8080/app#wcomponents/&view=knowledge)
 
 
-## Output data to Obsidian / Markdown
+## Optional: Output data to Obsidian / Markdown
+
+<b style="background-color: pink; color: black;">This is write only.  If you edit these files outside DataCurator the changes will be overwritten and lost.</b>  (for now)
+
 
 1. Start the server
 2. Find the new file: app/server/config.json

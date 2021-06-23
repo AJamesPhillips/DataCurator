@@ -121,8 +121,12 @@ class _Link extends Component<Props, State>
             + (this.props.extra_class_name || "")
         )
 
+
+        // TODO perhaps just get rid of the anchor tag all together?  We're not using it as
+        // an anchor tag at all as we're surpressing all of it's default behaviours
         return <a
             onPointerDown={on_pointer_down}
+            onClick={e => { e.preventDefault(); e.stopImmediatePropagation() }}
             href={routing_state_to_string({ ...full_routing_state })}
             className={class_name}
         >
