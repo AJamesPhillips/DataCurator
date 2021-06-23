@@ -38,7 +38,6 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
         Set to <br />
         {entry && !is_true && <Button
             value="Set to True"
-            size="normal"
             on_pointer_down={() =>
             {
                 on_change({ ...VAP_set, entries: [{ ...entry, probability: 1, conviction: 1 }] })
@@ -46,7 +45,6 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
         />}
         {entry && !is_false && <Button
             value="Set to False"
-            size="normal"
             on_pointer_down={() => {
                 on_change({ ...VAP_set, entries: [{ ...entry, probability: 0, conviction: 1 }] })
             }}
@@ -56,13 +54,11 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
 
         {entry && is_eternal && <Button
             value="Set to 'From today'"
-            size="normal"
             on_pointer_down={() => on_change({ ...VAP_set, datetime: { min: get_today_date() } })}
         />}
 
         {entry && !is_eternal && <Button
             value="Set to Eternal"
-            size="normal"
             on_pointer_down={() => on_change({ ...VAP_set, datetime: {} })}
         />}
 
@@ -70,7 +66,6 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
 
         <Button
             value={(show_advanced ? "Hide" : "Show") + " advanced options"}
-            size="normal"
             on_pointer_down={() => set_show_advanced(!show_advanced)}
         />
 
