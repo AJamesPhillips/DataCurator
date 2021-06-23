@@ -115,8 +115,8 @@ function run_tests ()
     // Should sort VAP sets by ascending created_at
     wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
-        { ...prepare_new_VAP_set(creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
+        { ...prepare_new_VAP_set({}, [], creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
+        { ...prepare_new_VAP_set({}, [], creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -130,7 +130,7 @@ function run_tests ()
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },
     ]
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(creation_context), entries: VAPs },
+        { ...prepare_new_VAP_set({}, [], creation_context), entries: VAPs },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -152,7 +152,7 @@ function run_tests ()
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0, probability: 1 },
     ]
     let values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(creation_context), entries: VAPs },
+        { ...prepare_new_VAP_set({}, [], creation_context), entries: VAPs },
     ]
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 

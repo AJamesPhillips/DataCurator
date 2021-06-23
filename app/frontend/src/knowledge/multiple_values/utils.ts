@@ -26,18 +26,48 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 
 
-export function prepare_new_VAP_set (creation_context: CreationContextState): StateValueAndPredictionsSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsRepresent, existing_VAP_sets: StateValueAndPredictionsSet[], creation_context: CreationContextState): StateValueAndPredictionsSet
 {
     const dates = get_new_created_ats(creation_context)
     const now = new Date(get_created_at_ms(dates))
 
-    return {
+    const options = VAPs_represent.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets) : [""]
+    const vanilla_entries = options.map(value => ({ ...prepare_new_VAP(), value }))
+    const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
+
+    const new_VAP_set = {
         id: get_new_value_and_prediction_set_id(),
         version: 1,
         ...dates,
         datetime: { min: now },
-        entries: [prepare_new_VAP()],
+        entries: entries_with_probabilities,
     }
+
+    return new_VAP_set
+}
+
+
+
+function all_options_in_VAP_set (VAPs_represent: VAPsRepresent, VAP_sets: StateValueAndPredictionsSet[])
+{
+    if (!VAPs_represent.other) return [""]
+
+    const options: string[] = []
+    const options_set: Set<string> = new Set()
+
+    // Go in reverse order as assuming options increase over time and latest (newest) VAP_sets
+    // will be added at end of list
+    for (let i = (VAP_sets.length - 1); i >= 0; --i) {
+        const VAP_set = VAP_sets[i]!
+        VAP_set.entries.forEach(({ value }) =>
+        {
+            if (options_set.has(value)) return
+            options.push(value)
+            options_set.add(value)
+        })
+    }
+
+    return options
 }
 
 
@@ -93,7 +123,8 @@ export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], VAPs_rep
 
         VAPs = VAPs.map(VAP =>
         {
-            const probability = (VAP.relative_probability || 1) / total_relative_probability
+            const relative_probability = VAP.relative_probability === undefined ? 1 : VAP.relative_probability
+            const probability = relative_probability / total_relative_probability
 
             return { ...VAP, probability }
         })

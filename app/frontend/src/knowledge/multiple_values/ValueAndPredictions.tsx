@@ -11,7 +11,7 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { StateValueAndPrediction } from "../../shared/wcomponent/interfaces/state"
-import { prepare_new_VAP } from "./utils"
+import { prepare_new_VAP, set_VAP_probabilities } from "./utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
@@ -72,15 +72,15 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictions (props: Props)
 {
-    const { creation_context, editing } = props
+    const { creation_context, editing, VAPs_represent } = props
 
     const VAPs = props.values_and_predictions
-    const class_name_only_one_VAP = (props.VAPs_represent.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
+    const class_name_only_one_VAP = (VAPs_represent.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
 
     const item_top_props: EditableListEntryTopProps<StateValueAndPrediction> = {
         get_created_at: () => props.created_at,
         get_summary: get_summary({
-            VAPs_represent: props.VAPs_represent,
+            VAPs_represent,
             allows_assumptions: props.allows_assumptions,
             VAP_counterfactuals_map: props.VAP_counterfactuals_map,
             upsert_counterfactual: props.upsert_counterfactual,
@@ -90,7 +90,7 @@ function _ValueAndPredictions (props: Props)
             creation_context,
             editing,
         }),
-        get_details: get_details(props.VAPs_represent, editing),
+        get_details: get_details(VAPs_represent, editing),
         extra_class_names: "value_and_prediction",
     }
 
@@ -102,11 +102,11 @@ function _ValueAndPredictions (props: Props)
             items_descriptor={get_items_descriptor(item_descriptor, VAPs.length)}
             other_content={() => !editing ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => {
-                    props.update_values_and_predictions([
-                        ...VAPs, prepare_new_VAP(),
-                    ])}
-                }
+                on_pointer_down_new_list_entry={() =>
+                {
+                    const vanilla_entries = [...VAPs, prepare_new_VAP() ]
+                    props.update_values_and_predictions(vanilla_entries)
+                }}
             />}
         />
 

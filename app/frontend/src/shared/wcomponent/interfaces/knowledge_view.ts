@@ -11,8 +11,18 @@ export interface KnowledgeView extends Base, Project {
     wc_id_map: KnowledgeViewWComponentIdEntryMap;
     is_base?: true;
     allows_assumptions?: true;
+    // Used for sharing data
     foundation_knowledge_view_ids?: string[];
+    // Used for semantically organising knowledge views in relation to each other
+    parent_knowledge_view_id?: string;
+    ERROR_is_circular?: true;
 }
+
+export interface UIKnowledgeView extends KnowledgeView
+{
+    children: UIKnowledgeView[]
+}
+
 
 
 export type KnowledgeViewsById = { [id: string]: KnowledgeView; /*| undefined*/ };

@@ -13,7 +13,7 @@ import { throttle } from "../../utils/throttle"
 
 export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
 {
-    placeholder: string
+    placeholder?: string // TODO can remove this now that it always has a "-" in it?
     selected_option_id: string | undefined
     initial_search_term?: string
     options: E[]

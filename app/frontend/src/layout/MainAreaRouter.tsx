@@ -1,7 +1,7 @@
 import { ComponentClass, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeGraphView } from "../knowledge_view/KnowledgeView"
+import { KnowledgeGraphView } from "../knowledge_view/KnowledgeGraphView"
 import { ObjectivesView } from "../objectives/ObjectivesView"
 import { PrioritiesListView } from "../priorities_list_view/PrioritiesListView"
 import type { RootState } from "../state/State"
