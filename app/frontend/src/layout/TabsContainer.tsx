@@ -1,35 +1,50 @@
-import { Box, Button, CssBaseline, Menu, MenuItem } from "@material-ui/core"
-import MenuIcon from '@material-ui/icons/Menu';
-import { h } from "preact"
-import { useState } from "preact/hooks";
-import { ALLOWED_ROUTES } from "../state/routing/interfaces"
-import { Tab } from "./Tab"
-interface TabsContainerProps
-{
-    content_changed: () => void
-}
+import { Box, Button, Menu, MenuItem } from "@material-ui/core"
+import MenuIcon from '@material-ui/icons/Menu'
+import { FunctionalComponent, h } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-export function TabsContainer (props: TabsContainerProps)
+import { ALLOWED_ROUTES, ROUTE_TYPES } from "../state/routing/interfaces"
+import type { RootState } from "../state/State"
+import { Tab } from "./Tab"
+
+
+
+interface OwnProps { }
+
+
+
+const map_state = (state: RootState) => ({ route: state.routing.route })
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+
+function _TabsContainer (props: Props)
 {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const handleClick = (event: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    setTimeout(() => props.content_changed(), 0) // remove hack
-    let routes = ALLOWED_ROUTES
-    if (localStorage.getItem("hide_other_tabs"))
-    {
-        routes = routes.filter(r => r === "objects" || r === "views" || r === "wcomponents")
+        setAnchorEl(event.currentTarget)
     }
+    const handleClose = () => {
+        setAnchorEl(null)
+    }
+
+
+    let routes = ALLOWED_ROUTES
+    if (!localStorage.getItem("show_all_tabs"))
+    {
+        const hide_routes = new Set<ROUTE_TYPES>(["objects", "patterns", "perceptions", "statements"])
+        routes = routes.filter(r => !hide_routes.has(r))
+    }
+
 
     return (
         <Box mb={5} display="flex" flexDirection="column" alignItems="end">
             <Button onClick={handleClick} aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
                 <Box component="span" width={1} display="flex" flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="start" alignContent="stretch">
-                    <Box component="strong">CURRENT_VIEW_NAME</Box>
+                    <Box component="strong">{route_to_text(props.route)}</Box>
                     <MenuIcon  />
                 </Box>
             </Button>
@@ -38,4 +53,14 @@ export function TabsContainer (props: TabsContainerProps)
             </Menu>
         </Box>
     )
+}
+
+export const TabsContainer = connector(_TabsContainer) as FunctionalComponent<OwnProps>
+
+
+
+function route_to_text (route: ROUTE_TYPES)
+{
+    if (route === "wcomponents") return "Components"
+    else return route
 }
