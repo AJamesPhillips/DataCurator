@@ -3,7 +3,7 @@ import { h } from "preact"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
-import type { KnowledgeView, UIKnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewsById } from "../shared/wcomponent/interfaces/knowledge_view"
 import { date2str } from "../shared/utils/date_helpers"
 import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
@@ -13,15 +13,19 @@ import type { ViewType } from "../state/routing/interfaces"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { CreationContextState } from "../shared/creation_context/state"
-import { UI_knowledge_view_to_plain_kv } from "./utils"
+import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
+import { is_defined } from "../shared/utils/is_defined"
 
 
 
 interface OwnProps
 {
     item_descriptor?: string
-    parent_knowledge_view_options: { id: string, title: string }[]
-    UI_knowledge_views: UIKnowledgeView[]
+    parent_knowledge_view_id?: string
+    possible_parent_knowledge_view_options: { id: string, title: string }[]
+    knowledge_views: KnowledgeView[]
+    nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
+    knowledge_views_by_id: KnowledgeViewsById
     creation_context: CreationContextState
     current_view: ViewType
     editing: boolean
@@ -30,25 +34,27 @@ interface OwnProps
 
 export function KnowledgeViewList (props: OwnProps)
 {
-    const { UI_knowledge_views, current_view } = props
+    const { parent_knowledge_view_id, knowledge_views, current_view } = props
 
     return <ExpandableListWithAddButton
-        items_count={UI_knowledge_views.length}
+        items_count={knowledge_views.length}
         on_click_new_item={() =>
         {
-            const knowledge_view = create_new_knowledge_view({ title: make_default_title() }, props.creation_context)
+            const knowledge_view = create_new_knowledge_view({
+                title: make_default_title(),
+                parent_knowledge_view_id,
+            }, props.creation_context)
             props.upsert_knowledge_view(knowledge_view)
         }}
         content={factory_render_list_content({
-            items: UI_knowledge_views,
+            items: knowledge_views,
             get_id: kv => kv.id,
             update_items: new_kvs =>
             {
-                const changed_UI_kv = new_kvs.find((new_kv, index) => UI_knowledge_views[index] !== new_kv)
-                if (!changed_UI_kv) return
+                const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv)
+                if (!changed_kv) return
 
-                const new_kv = UI_knowledge_view_to_plain_kv(changed_UI_kv)
-                props.upsert_knowledge_view(new_kv)
+                props.upsert_knowledge_view(changed_kv)
             },
 
             item_top_props: {
@@ -70,7 +76,7 @@ function factory_get_summary (current_view: ViewType)
 {
     const view = optional_view_type(current_view)
 
-    return (knowledge_view: UIKnowledgeView, on_change: (new_kv: UIKnowledgeView) => void) => <Link
+    return (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) => <Link
         route={undefined}
         sub_route={undefined}
         item_id={undefined}
@@ -82,7 +88,7 @@ function factory_get_summary (current_view: ViewType)
 }
 
 
-function get_knowledge_view_title (knowledge_view: UIKnowledgeView)
+function get_knowledge_view_title (knowledge_view: KnowledgeView)
 {
     if (!knowledge_view.is_base) return knowledge_view.title
     return knowledge_view.title !== "Base"
@@ -94,9 +100,12 @@ function get_knowledge_view_title (knowledge_view: UIKnowledgeView)
 const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
 
 
-const factory_get_details = (props: OwnProps) => (knowledge_view: UIKnowledgeView, on_change: (new_kv: UIKnowledgeView) => void) =>
+const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
 {
-    const { editing } = props
+    const { editing, nested_knowledge_view_ids_map } = props
+    const nested_kv = nested_knowledge_view_ids_map.map[knowledge_view.id]
+    const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
+        .filter(is_defined)
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
@@ -134,17 +143,17 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: UIKnowledgeVie
         </p>
 
 
-        {(editing || knowledge_view.ERROR_is_circular) && <p>
+        {(editing || nested_kv?.ERROR_is_circular) && <p>
             <span className="description_label">Nest under</span>
 
-            {knowledge_view.ERROR_is_circular && <div style={{ backgroundColor: "pink" }}>
+            {nested_kv?.ERROR_is_circular && <div style={{ backgroundColor: "pink" }}>
                 Is circularly nested
             </div>}
 
             <AutocompleteText
                 selected_option_id={knowledge_view.parent_knowledge_view_id}
                 allow_none={true}
-                options={props.parent_knowledge_view_options.filter(({ id }) => id !== knowledge_view.id)}
+                options={props.possible_parent_knowledge_view_options.filter(({ id }) => id !== knowledge_view.id)}
                 on_change={parent_knowledge_view_id =>
                 {
                     on_change({ ...knowledge_view, parent_knowledge_view_id })
@@ -153,10 +162,11 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: UIKnowledgeVie
         </p>}
 
 
-        {knowledge_view.children.length > 0 && <p>
+        {(editing || children.length > 0) && <p>
             <KnowledgeViewList
                 {...props}
-                UI_knowledge_views={knowledge_view.children}
+                parent_knowledge_view_id={knowledge_view.id}
+                knowledge_views={children}
                 item_descriptor="Nested"
             />
         </p>}

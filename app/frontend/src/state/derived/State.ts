@@ -2,7 +2,6 @@ import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
-    UIKnowledgeView,
 } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type {
     Perception,
@@ -13,7 +12,23 @@ import type { WComponentType } from "../../shared/wcomponent/interfaces/wcompone
 import type { WComponentPrioritisation } from "../../shared/wcomponent/interfaces/priorities"
 
 
-export interface DerivedUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
+
+export interface NestedKnowledgeViewIdsEntry
+{
+    id: string
+    title: string
+    parent_id: string | undefined
+    child_ids: string[]
+    ERROR_is_circular?: true
+}
+
+export type NestedKnowledgeViewIdsMap = {
+    top_ids: string[]
+    map: { [id: string]: NestedKnowledgeViewIdsEntry }
+}
+
+
+export interface GraphUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
     derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wcomponent_nodes: WComponent[]
@@ -40,12 +55,12 @@ export interface DerivedState
     knowledge_views: KnowledgeView[]
 
     base_knowledge_view: KnowledgeView | undefined
-    UI_knowledge_views: UIKnowledgeView[]
+    nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
     judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
 
-    current_UI_knowledge_view: DerivedUIKnowledgeView | undefined
+    current_UI_knowledge_view: GraphUIKnowledgeView | undefined
 
     project_priorities_meta: ProjectPrioritiesMeta
 }
