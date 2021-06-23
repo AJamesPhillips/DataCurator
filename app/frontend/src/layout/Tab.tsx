@@ -44,7 +44,7 @@ function _Tab (props: Props)
     const title = get_title(props.id)
     const css_class = "tab " + (props.current_route === props.id ? "selected" : "")
     return (
-        <Box compontent="span" m={1}>
+        <Box component="span" p={1}>
             <Button
                 color="primary"
                 variant="contained"
