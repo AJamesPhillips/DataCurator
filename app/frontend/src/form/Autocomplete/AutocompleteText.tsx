@@ -19,6 +19,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     options: E[]
     allow_none?: boolean
     on_change: (id: E["id"] | undefined) => void
+    on_choose_same?: (id: E["id"] | undefined) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
@@ -175,7 +176,11 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         })
 
         const original_id = this.props.selected_option_id
-        if (original_id !== id)
+        if (original_id === id)
+        {
+            this.props.on_choose_same && this.props.on_choose_same(id)
+        }
+        else
         {
             this.props.on_change(id)
         }
