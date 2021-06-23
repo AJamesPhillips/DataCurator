@@ -13,8 +13,8 @@ function App() {
     <ThemeProvider theme={default_theme}>
       <CssBaseline />
       <Box id="app" className="app">
-        <Box component="header">
-        <AppBar position="static">
+        <Box component="header" zIndex={1}>
+          <AppBar position="static">
             <Toolbar variant="dense">
               <ViewsBreadcrumb />
             </Toolbar>
