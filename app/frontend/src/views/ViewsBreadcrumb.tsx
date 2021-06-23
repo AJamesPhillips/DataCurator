@@ -13,8 +13,6 @@ import type { NestedKnowledgeViewIdsEntry, NestedKnowledgeViewIdsMap } from "../
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 
-
-
 const map_state = (state: RootState) =>
 {
     const kv_id = state.routing.args.subview_id
@@ -36,8 +34,6 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
-
-
 function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, props: Props)
 {
     const select_el = event.currentTarget
@@ -52,9 +48,6 @@ function _ViewsBreadcrumb (props: Props)
     if (!props.ready) return null
 
     const { kv_id, nested_knowledge_view_ids_map: map } = props
-
-
-
     let nested_kv = map.map[kv_id]
 
     const levels: { entries: NestedKnowledgeViewIdsEntry[], selected_id: string, allow_none: boolean }[] = []
@@ -80,51 +73,49 @@ function _ViewsBreadcrumb (props: Props)
     const top_level = map.top_ids.map(id => map.map[id]).filter(is_defined)
     levels.unshift({ entries: top_level, selected_id: last_parent_id, allow_none: false  })
 
-
-
-    return  <div class="breadcrumbs">
-        <Breadcrumbs aria-label="breadcrumb">
-            <ToggleButtonGroup
-                size="small"
-                exclusive
-                onChange={props.toggle_consumption_formatting}
-                value={props.presenting ? "presenting" : "editing"}
-                aria-label="text formatting"
-            >
-                <ToggleButton value="editing" aria-label="Editing">
-                    <EditIcon />
-                </ToggleButton>
-                <ToggleButton value="presenting" aria-label="Presenting">
-                    <PresentToAllIcon />
-                </ToggleButton>
-            </ToggleButtonGroup>
-            <select name="select_view" onChange={e => navigate_view(e, props) }>
-                {view_options.map(opt => <option value={opt.id}>{opt.title}</option>)}
-            </select>
-            {levels.map(options => <AutocompleteText
-                allow_none={options.allow_none}
-                selected_option_id={options.selected_id}
-                options={options.entries}
-                on_change={subview_id => props.change_route({ args: { subview_id } })}
-                on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
-                always_allow_editing={true}
-            />
-            )}
-        </Breadcrumbs>
-    </div>
+    return  (
+        <div class="breadcrumbs">
+            <Breadcrumbs aria-label="breadcrumb">
+                <ToggleButtonGroup
+                    size="small"
+                    exclusive
+                    onChange={props.toggle_consumption_formatting}
+                    value={props.presenting ? "presenting" : "editing"}
+                    aria-label="text formatting">
+                        <ToggleButton value="editing" aria-label="Editing">
+                            <EditIcon />
+                        </ToggleButton>
+                        <ToggleButton value="presenting" aria-label="Presenting">
+                            <PresentToAllIcon />
+                        </ToggleButton>
+                </ToggleButtonGroup>
+                <label>
+                    View Type:&nbsp;
+                    <select name="select_view" onChange={e => navigate_view(e, props) }>
+                        {view_options.map(opt => <option value={opt.id}>{opt.title}</option>)}
+                    </select>
+                </label>
+                {levels.map(options => <AutocompleteText
+                    allow_none={options.allow_none}
+                    selected_option_id={options.selected_id}
+                    options={options.entries}
+                    on_change={subview_id => props.change_route({ args: { subview_id } })}
+                    on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
+                    always_allow_editing={true}
+                />
+                )}
+            </Breadcrumbs>
+        </div>
+    )
 }
 
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent<{}>
-
-
 
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
     { id: "priorities", title: "Priorities" },
     { id: "priorities_list", title: "Priorities list" },
 ]
-
-
 
 function get_nested_kv (nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap, id: string | undefined)
 {
