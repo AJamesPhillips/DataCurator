@@ -1,0 +1,22 @@
+#main_area {
+	flex-grow:1;
+	flex-shrink:1;
+	overflow:hidden;
+	display:flex;
+	flex-direction:column;
+	flex-wrap:nowrap;
+
+	> * {
+		flex-grow:1;
+		flex-shrink:0;
+		flex-basis:auto;
+		overflow:hidden;
+
+		&#main_content {
+			display:flex;
+			flex-direction:column;
+			flex-wrap:nowrap;
+		}
+		&#main_content_controls { flex-grow:0; }
+	}
+}
