@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { is_defined } from "../shared/utils/is_defined"
 
+import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { KnowledgeViewList } from "./KnowledgeViewList"
+import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 
 
 
@@ -32,7 +32,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & OwnProps
 
 
-function _TopLevelKnowledgeViewList (props: Props)
+function _TopLevelKnowledgeViewListsSet (props: Props)
 {
     if (!props.base_knowledge_view)
     {
@@ -46,7 +46,7 @@ function _TopLevelKnowledgeViewList (props: Props)
     const knowledge_views = props.nested_knowledge_view_ids_map.top_ids.map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
-    return <KnowledgeViewList
+    return <KnowledgeViewListsSet
         {...props}
         parent_knowledge_view_id={undefined}
         knowledge_views={knowledge_views}
@@ -55,4 +55,4 @@ function _TopLevelKnowledgeViewList (props: Props)
     />
 }
 
-export const KnowledgeViewListWrapper = connector(_TopLevelKnowledgeViewList) as FunctionComponent<OwnProps>
+export const KnowledgeViewListsSetWrapper = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent<OwnProps>

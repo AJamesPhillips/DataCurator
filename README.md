@@ -3,7 +3,7 @@
 
 ## Setup (on Mac)
 
-    $ git clone git@github.com:centerofci/data-curator.git
+    $ git clone git@github.com:centerofci/data-curator2.git
 
 ### Install server dependencies
 

@@ -14,6 +14,7 @@ export function create_new_knowledge_view (args: Partial<KnowledgeView> = {}, cr
         description: "",
         wc_id_map: {},
         goal_ids: [],
+        sort_type: "normal",
         ...args,
     }
 

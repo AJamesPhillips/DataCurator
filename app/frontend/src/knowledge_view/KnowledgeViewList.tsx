@@ -3,7 +3,7 @@ import { h } from "preact"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
-import type { KnowledgeView, KnowledgeViewsById } from "../shared/wcomponent/interfaces/knowledge_view"
+import { KnowledgeView, KnowledgeViewSortType, knowledge_view_sort_types } from "../shared/wcomponent/interfaces/knowledge_view"
 import { date2str } from "../shared/utils/date_helpers"
 import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
@@ -12,29 +12,61 @@ import { optional_view_type } from "../views/optional_view_type"
 import type { ViewType } from "../state/routing/interfaces"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import type { CreationContextState } from "../shared/creation_context/state"
-import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
 import { is_defined } from "../shared/utils/is_defined"
+import { ExpandableList } from "../form/editable_list/ExpandableList"
+import { sentence_case } from "../shared/utils/sentence_case"
+import type { KnowledgeViewListCoreProps } from "./interfaces"
+import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 
 
 
-interface OwnProps
+interface OwnProps extends KnowledgeViewListCoreProps
 {
-    item_descriptor?: string
-    parent_knowledge_view_id?: string
-    possible_parent_knowledge_view_options: { id: string, title: string }[]
-    knowledge_views: KnowledgeView[]
-    nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
-    knowledge_views_by_id: KnowledgeViewsById
-    creation_context: CreationContextState
-    current_view: ViewType
-    editing: boolean
-    upsert_knowledge_view: (knowledge_view: KnowledgeView) => void
+    sort_type: KnowledgeViewSortType
 }
 
 export function KnowledgeViewList (props: OwnProps)
 {
-    const { parent_knowledge_view_id, knowledge_views, current_view } = props
+    const { parent_knowledge_view_id, knowledge_views, current_view, sort_type } = props
+
+
+    if (!props.editing && knowledge_views.length === 0) return null
+
+
+    const render_list_content = factory_render_list_content({
+        items: knowledge_views,
+        get_id: kv => kv.id,
+        update_items: new_kvs =>
+        {
+            const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv)
+            if (!changed_kv) return
+
+            props.upsert_knowledge_view(changed_kv)
+        },
+
+        item_top_props: {
+            get_summary: factory_get_summary(current_view),
+            get_details: factory_get_details(props),
+            get_details3,
+        },
+
+        debug_item_descriptor: "Knowledge View",
+    })
+
+
+    if (sort_type === "hidden" || sort_type === "archived")
+    {
+        return <ExpandableList
+            items_count={knowledge_views.length}
+            content={render_list_content}
+            item_descriptor={sentence_case(sort_type) + " " + (props.item_descriptor || "Knowledge View")}
+            disable_collapsed={false}
+        />
+    }
+
+
+    const item_descriptor = (sort_type === "priority" ? "Priority " : "") + (props.item_descriptor || "Knowledge View")
+
 
     return <ExpandableListWithAddButton
         items_count={knowledge_views.length}
@@ -43,29 +75,12 @@ export function KnowledgeViewList (props: OwnProps)
             const knowledge_view = create_new_knowledge_view({
                 title: make_default_title(),
                 parent_knowledge_view_id,
+                sort_type,
             }, props.creation_context)
             props.upsert_knowledge_view(knowledge_view)
         }}
-        content={factory_render_list_content({
-            items: knowledge_views,
-            get_id: kv => kv.id,
-            update_items: new_kvs =>
-            {
-                const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv)
-                if (!changed_kv) return
-
-                props.upsert_knowledge_view(changed_kv)
-            },
-
-            item_top_props: {
-                get_summary: factory_get_summary(current_view),
-                get_details: factory_get_details(props),
-                get_details3,
-            },
-
-            debug_item_descriptor: "Knowledge View",
-        })}
-        item_descriptor={props.item_descriptor || "Knowledge View"}
+        content={render_list_content}
+        item_descriptor={item_descriptor}
         disable_collapsed={true}
     />
 }
@@ -162,8 +177,19 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView,
         </p>}
 
 
+        {editing && <p>
+            <span className="description_label">Sort status</span>
+            <AutocompleteText
+                selected_option_id={knowledge_view.sort_type}
+                options={knowledge_view_sort_types.map(type => ({ id: type, title: type }))}
+                allow_none={false}
+                on_change={sort_type => sort_type && on_change({ ...knowledge_view, sort_type })}
+            />
+        </p>}
+
+
         {(editing || children.length > 0) && <p>
-            <KnowledgeViewList
+            <KnowledgeViewListsSet
                 {...props}
                 parent_knowledge_view_id={knowledge_view.id}
                 knowledge_views={children}

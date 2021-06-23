@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { KnowledgeViewListWrapper } from "./KnowledgeViewListWrapper"
+import { KnowledgeViewListsSetWrapper } from "./KnowledgeViewListsSetWrapper"
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
@@ -77,7 +77,7 @@ function _ViewsSidePanel(props: Props) {
                 />
                 <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
             </ButtonGroup>
-            <KnowledgeViewListWrapper />
+            <KnowledgeViewListsSetWrapper />
         </Box>
     )
 }
