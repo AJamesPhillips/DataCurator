@@ -8,6 +8,7 @@ import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import type { ROUTE_TYPES, RoutingStateArgs, SUB_ROUTE_TYPES } from "../state/routing/interfaces"
 import { merge_routing_state } from "../state/routing/merge_routing_state"
+import { Box, Button } from "@material-ui/core"
 
 
 
@@ -162,14 +163,17 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     const full_routing_args = { ...props.current_routing_state.args, ...partial_routing_args }
     full_routing_state.args = full_routing_args
 
-    return <input
-        type="button"
-        className={"styled " + (props.selected ? " selected " : "")}
-        onClick={on_click}
-        href={routing_state_to_string({ ...full_routing_state })}
-        value={props.name || "Link"}
-        style={props.style}
-    />
+    return (
+            <Button
+                size="small"
+                color="primary"
+                onClick={on_click}
+                href={routing_state_to_string({ ...full_routing_state })}
+            >
+                {props.name || "Link"}
+            </Button>
+
+    )
 }
 
 export const LinkButton = connector(_LinkButton) as ComponentClass<OwnProps & LinkButtonOwnProps>
