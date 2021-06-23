@@ -1,9 +1,10 @@
+import { Button, ButtonGroup } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { CreationContextState } from "../shared/creation_context/state"
 
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
-import { Button } from "../sharedf/Button"
+// import { Button } from "../sharedf/Button"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import "./CreateNewWComponent.css"
@@ -50,13 +51,15 @@ function _CreateNewWComponent (props: Props)
         <h3>
             Create new component
         </h3>
-
-        {types.map(type => <Button
+        <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
+            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>{type}</Button>)}
+        </ButtonGroup>
+        {/* {types.map(type => <Button
             value={type}
             extra_class_names="creation_option left"
             size="normal"
             on_pointer_down={() => create_wcomponent_type(type, creation_context)}
-        />)}
+        />)} */}
     </div>
 }
 
