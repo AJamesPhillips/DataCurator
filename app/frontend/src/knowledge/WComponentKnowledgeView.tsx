@@ -62,15 +62,13 @@ function _WComponentKnowledgeView (props: Props)
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
 
-    if (!knowledge_view_id) return <div>No current knowledge view selected</div>
-
 
     const other_knowledge_views = all_knowledge_views
         .filter(({ id }) => id !== knowledge_view_id)
         .filter(({ wc_id_map }) => wc_id_map[wcomponent_id])
 
 
-    function update (arg: Partial<KnowledgeViewWComponentEntry>)
+    function update (knowledge_view_id: string, arg: Partial<KnowledgeViewWComponentEntry>)
     {
         const new_entry: KnowledgeViewWComponentEntry = {
             ...(UI_knowledge_view_entry || { left: 0, top: 0 }),
@@ -78,23 +76,23 @@ function _WComponentKnowledgeView (props: Props)
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id,
-            knowledge_view_id: knowledge_view_id!,
+            knowledge_view_id,
             entry: new_entry,
         })
     }
 
 
-    function delete_entry ()
+    function delete_entry (knowledge_view_id: string)
     {
         props.delete_knowledge_view_entry({
             wcomponent_id,
-            knowledge_view_id: knowledge_view_id!,
+            knowledge_view_id,
         })
     }
 
 
     return <div>
-        {!knowledge_view_entry && <div>
+        {!knowledge_view_entry && knowledge_view_id && <div>
             Not present in this knowledge view
             {UI_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
@@ -102,7 +100,7 @@ function _WComponentKnowledgeView (props: Props)
                 value="Add to current knowledge view"
                 extra_class_names="left"
                 size="normal"
-                on_pointer_down={() => update({})}
+                on_pointer_down={() => update(knowledge_view_id, {})}
             />
         </div>}
 
@@ -119,10 +117,10 @@ function _WComponentKnowledgeView (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {(!consumption_formatting && knowledge_view_entry) && <div>
+        {(!consumption_formatting && knowledge_view_id && knowledge_view_entry) && <div>
             <br />
             <ConfirmatoryDeleteButton
-                on_delete={() => delete_entry()}
+                on_delete={() => delete_entry(knowledge_view_id)}
             />
             Remove from current knowledge view ({knowledge_view_title})
         </div>}
