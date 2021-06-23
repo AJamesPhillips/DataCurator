@@ -68,6 +68,8 @@ const _ProjectJudgementEntry = (props: Props) =>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
         </div>
+
+        {/* TODO remove this anchor tag and replace with a <Link /> component */}
         <a
             style={{ flex: "4", cursor: "pointer", display: "flex", textDecoration: "inherit", color: "inherit" }}
             href={(() => {

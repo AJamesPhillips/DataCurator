@@ -4,7 +4,7 @@ import { throttle } from "../../utils/throttle"
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
 import type { RoutingState } from "./interfaces"
-import { get_current_route_params, routing_state_to_string } from "./routing"
+import { merge_route_params_prioritising_window_location, routing_state_to_string } from "./routing"
 
 
 
@@ -16,7 +16,7 @@ export const factory_location_hash = (store: Store<RootState>) =>
 
     record_location_hash_change(store)
 
-    function update_location_hash ()
+    function store_subscriber_to_update_location_hash ()
     {
         const state = store.getState()
         if (state.routing === routing_state) return
@@ -26,9 +26,9 @@ export const factory_location_hash = (store: Store<RootState>) =>
         throttled_update_location_hash(changed_only_xy, state.routing)
     }
 
-    update_location_hash() // initial invocation to update hash
+    store_subscriber_to_update_location_hash() // initial invocation to update hash
 
-    return update_location_hash
+    return store_subscriber_to_update_location_hash
 }
 
 
@@ -97,12 +97,13 @@ function record_location_hash_change (store: Store<RootState>)
         }
         else
         {
-            const new_route = routing_state_to_string(state.routing)
-            const no_change = new_route === window.location.hash.toString()
+            const route_from_hash = "#" + (e.newURL.split("#")[1] || "")
+            const route_from_state = routing_state_to_string(state.routing)
+            const no_change = route_from_state === route_from_hash
             if (no_change) return
 
             store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
-            const routing_params = get_current_route_params(state.routing)
+            const routing_params = merge_route_params_prioritising_window_location(e.newURL, state.routing)
             store.dispatch(ACTIONS.routing.change_route(routing_params))
         }
     }
