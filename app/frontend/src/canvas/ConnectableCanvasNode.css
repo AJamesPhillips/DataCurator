@@ -1,6 +1,7 @@
 
 .connectable_canvas_node
 {
+    box-sizing: content-box;
     width: 250px;
     padding: 6px 10px;
 }
