@@ -1,23 +1,38 @@
+import "./App.scss"
 import { h } from "preact"
-
-import "./App.css"
-import { MainAreaRouter } from "./layout/MainAreaRouter"
-import { TabsContainer } from "./layout/TabsContainer"
-import { SidePanel } from "./side_panel/SidePanel"
+import { AppBar, Box, CssBaseline, ThemeProvider, Toolbar } from "@material-ui/core"
+import { MainAreaRouter } from "./layout/MainAreaRouter";
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
+import { TabsContainer } from "./layout/TabsContainer";
+import { SidePanel } from "./side_panel/SidePanel";
+import default_theme from "./ui_themes/material-default";
 
 function App() {
-
   return (
-    <div className="App">
-	    <ViewsBreadcrumb />
-      <MainAreaRouter />
-      <div id="side_panel">
-        <TabsContainer content_changed={() => {}} />
-        <div id="side_panel_content"><SidePanel /></div>
+    <ThemeProvider theme={default_theme}>
+      <CssBaseline />
+      <div class="app">
+        <header>
+          <AppBar position="static">
+            <Toolbar variant="dense">
+              <ViewsBreadcrumb />
+            </Toolbar>
+          </AppBar>
+        </header>
+        <main>
+          <div id="app_content">
+            <MainAreaRouter />
+          </div>
+          <aside id="side_panel">
+            <Box p={1} mt={1}>
+              <TabsContainer content_changed={() => {}} />
+              <SidePanel />
+            </Box>
+          </aside>
+        </main>
+        <footer></footer>
       </div>
-    </div>
+    </ThemeProvider>
   )
 }
-
 export default App

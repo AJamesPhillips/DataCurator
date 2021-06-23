@@ -1,11 +1,11 @@
+import "./index.scss"
+import App from "./App"
 import "./shared/utils/monkey_patch"
 
 import { h, render } from "preact"
 import "preact/devtools"
 import { Provider } from "react-redux"
 
-import App from "./App"
-import "./index.css"
 import { APP_DETAILS } from "./shared/constants"
 import { config_store } from "./state/store"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"

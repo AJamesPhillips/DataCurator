@@ -167,6 +167,7 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
             <Button
                 size="small"
                 color="primary"
+                variant="contained"
                 onClick={on_click}
                 href={routing_state_to_string({ ...full_routing_state })}
             >
