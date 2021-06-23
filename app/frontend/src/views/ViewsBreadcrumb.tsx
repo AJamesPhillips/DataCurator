@@ -1,19 +1,17 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-
-import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import { ACTIONS } from "../state/actions"
-import type { ViewType } from "../state/routing/interfaces"
-
 import Breadcrumbs from "@material-ui/core/Breadcrumbs"
 import ToggleButton from "@material-ui/lab/ToggleButton"
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
+
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
+import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry, NestedKnowledgeViewIdsMap } from "../state/derived/State"
+import type { ViewType } from "../state/routing/interfaces"
+import type { RootState } from "../state/State"
 
 
 

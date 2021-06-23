@@ -9,11 +9,11 @@ import { LinkButton } from "../sharedf/Link"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { alert_wcomponent_is_prioritisation } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import { Box, Button, ButtonGroup, Typography } from "@material-ui/core"
+import { Box, ButtonGroup, Typography } from "@material-ui/core"
 
 
 
-interface OwnProps {}
+interface OwnProps { }
 
 
 const map_state = (state: RootState) =>
@@ -51,44 +51,49 @@ const map_state = (state: RootState) =>
     }
 }
 
+
 const map_dispatch = {
     upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view,
 }
 
+
 const connector = connect(map_state, map_dispatch)
 type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux & OwnProps
-function _ViewsSidePanel (props: Props)
-{
-  return (
-    <Box p={1} pt={5} class="views_side_panel">
-      <Typography variant="h5" component="h3" gutterBottom>
-        Views
-        </Typography>
-      <ButtonGroup  size="small" color="primary" variant="contained">
-        <ViewLinkButton view="priorities" />
-        <ViewLinkButton
-          view="priorities_list" name="List"
-          subview_id={props.knowledge_view_id}
-          item_id={props.prioritisation_id}
-        />
-        <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
-      </ButtonGroup>
-      <KnowledgeViewListWrapper />
-    </Box>
-  )
+
+
+function _ViewsSidePanel(props: Props) {
+    return (
+        <Box p={1} pt={5} class="views_side_panel">
+            <Typography variant="h5" component="h3" gutterBottom>
+                Views
+            </Typography>
+            <ButtonGroup size="small" color="primary" variant="contained">
+                <ViewLinkButton view="priorities" />
+                <ViewLinkButton
+                    view="priorities_list" name="List"
+                    subview_id={props.knowledge_view_id}
+                    item_id={props.prioritisation_id}
+                />
+                <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
+            </ButtonGroup>
+            <KnowledgeViewListWrapper />
+        </Box>
+    )
 }
 
 export const ViewsSidePanel = connector(_ViewsSidePanel) as FunctionComponent<OwnProps>
 
-interface ViewLinkButtonProps
-{
+
+
+interface ViewLinkButtonProps {
     view: ViewType
     name?: string
     subview_id?: string
     item_id?: string
 }
-function ViewLinkButton (props: ViewLinkButtonProps)
+
+function ViewLinkButton(props: ViewLinkButtonProps)
 {
     const name = props.name || (props.view[0]!.toUpperCase() + props.view.slice(1))
 
