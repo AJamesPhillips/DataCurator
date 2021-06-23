@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./ViewsBreadcrumb.scss"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
