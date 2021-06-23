@@ -79,6 +79,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, exclude_by_component_types } })
                 }}
+                always_allow_editing={true}
             />
         </p>
 
@@ -94,6 +95,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, include_by_component_types } })
                 }}
+                always_allow_editing={true}
             />
         </p>
     </div>
