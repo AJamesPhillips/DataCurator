@@ -64,7 +64,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
             highlighted_option_index: 0,
         }
 
-        const result = prepare_options_and_targets(props.options, props.allow_none)
+        const result = prepare_options_and_targets(props.options)
         this.options = result.new_internal_options
         this.prepared_targets = result.prepared_targets
     }
@@ -131,11 +131,15 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
         return this.get_selected_option_title_str()
     }
 
-    get_options_to_display ()
+    get_options_to_display (): InternalAutocompleteOption[]
     {
+        // allow user to clear the current value / select none
+        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
+
         if (!this.state.temp_value_str)
         {
-            return this.options
+            if (this.props.allow_none) return [option_none, ...this.options]
+            else return this.options
         }
 
 
@@ -258,18 +262,9 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 
 
-function prepare_options_and_targets (options: AutocompleteOption[], allow_none?: boolean)
+function prepare_options_and_targets (options: AutocompleteOption[])
 {
-    const new_options = [...options]
-
-    if (allow_none)
-    {
-        // allow user to clear the current value / select none
-        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
-        new_options.unshift(option_none as any)
-    }
-
-    const new_internal_options: InternalAutocompleteOption[] = new_options.map(o => ({
+    const new_internal_options: InternalAutocompleteOption[] = options.map(o => ({
         ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
     }))
 
