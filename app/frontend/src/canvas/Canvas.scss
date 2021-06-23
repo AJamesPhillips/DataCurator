@@ -1,0 +1,65 @@
+
+#graph_container {
+    flex-grow:1;
+    flex-shrink:1;
+    cursor: move;
+    overflow: hidden;
+
+    &.squared_background {
+      background-image:
+        linear-gradient(to right, #EEE 1px, transparent 1px),
+        linear-gradient(to bottom, #EEE 1px, transparent 1px);
+    }
+}
+
+/* styles from here on are copies as-is because I don't fully know the scope/intent/etc */
+
+#graph_visuals_container
+{
+    overflow: visible;
+    position: relative;
+    transform-origin: left top;
+    height: 100%;
+}
+#graph_container svg
+{
+    overflow: visible;
+    pointer-events: none;
+}
+
+.visual
+{
+    position: absolute;
+    width: 200px;
+    cursor: pointer;
+}
+
+
+.node.mouseable
+{
+    cursor: pointer;
+}
+.node .node_main_content
+{
+    padding: 5px 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    user-select: none;
+    border: thin solid #555;
+    border-radius: 5px;
+    background-color: #FCFCFC;
+}
+
+.node.focused
+{
+    z-index: 100;
+}
+.highlighting_connection_lines .connection_line
+{
+    stroke: #BBB;
+}
+.highlighting_connection_lines .connection_end
+{
+    fill: #BBB;
+}
