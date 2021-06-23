@@ -65,18 +65,6 @@ type Props = PropsFromRedux & OwnProps
 function _ViewsSidePanel(props: Props) {
     return (
         <Box p={1} pt={5} class="views_side_panel">
-            <Typography variant="h5" component="h3" gutterBottom>
-                Views
-            </Typography>
-            <ButtonGroup size="small" color="primary" variant="contained">
-                <ViewLinkButton view="priorities" />
-                <ViewLinkButton
-                    view="priorities_list" name="List"
-                    subview_id={props.knowledge_view_id}
-                    item_id={props.prioritisation_id}
-                />
-                <ViewLinkButton view="knowledge" subview_id={props.knowledge_view_id} />
-            </ButtonGroup>
             <KnowledgeViewListWrapper />
         </Box>
     )
