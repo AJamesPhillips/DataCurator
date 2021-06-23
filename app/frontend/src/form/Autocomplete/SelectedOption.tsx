@@ -40,7 +40,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
     >
         {editing && <Button
             value="X"
-            on_pointer_down={e =>
+            on_pointer_down={(e:Event) =>
             {
                 e.stopImmediatePropagation()
                 on_remove_option(option.id)
