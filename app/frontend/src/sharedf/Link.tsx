@@ -164,16 +164,15 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     full_routing_state.args = full_routing_args
 
     return (
-            <Button
-                size="small"
-                color="primary"
-                variant="contained"
-                onClick={on_click}
-                href={routing_state_to_string({ ...full_routing_state })}
-            >
-                {props.name || "Link"}
-            </Button>
-
+        <Button
+            size="small"
+            color="primary"
+            variant="contained"
+            onClick={on_click}
+            href={routing_state_to_string({ ...full_routing_state })}
+        >
+            {props.name || "Link"}
+        </Button>
     )
 }
 

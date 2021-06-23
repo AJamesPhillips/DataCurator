@@ -6,9 +6,14 @@ import {
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
-import type { DerivedUIKnowledgeView } from "../../derived/State"
+import type { GraphUIKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
-import { get_base_knowledge_view, get_UI_knowledge_views, get_wcomponents_from_state, get_wcomponent_from_state } from "../accessors"
+import {
+    get_base_knowledge_view,
+    get_nested_knowledge_view_ids_map,
+    get_wcomponents_from_state,
+    get_wcomponent_from_state,
+} from "../accessors"
 import type {
     KnowledgeView,
     KnowledgeViewWComponentIdEntryMap,
@@ -78,14 +83,10 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
 function update_derived_knowledge_view_state (state: RootState): RootState
 {
-    const knowledge_views = sort_list(
-        Object.values(state.specialised_objects.knowledge_views_by_id),
-        ({ title }) => title,
-        "ascending"
-    )
+    const { knowledge_views_by_id } = state.specialised_objects
+    const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, "ascending")
     const base_knowledge_view = get_base_knowledge_view(knowledge_views)
-    const UI_knowledge_views = get_UI_knowledge_views(knowledge_views)
-
+    const nested_knowledge_view_ids_map = get_nested_knowledge_view_ids_map(knowledge_views)
 
     state = {
         ...state,
@@ -93,7 +94,7 @@ function update_derived_knowledge_view_state (state: RootState): RootState
             ...state.derived,
             knowledge_views,
             base_knowledge_view,
-            UI_knowledge_views,
+            nested_knowledge_view_ids_map,
         },
     }
 
@@ -120,7 +121,7 @@ function update_UI_current_knowledge_view_state (intial_state: RootState, state:
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, ids)
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
-    const current_UI_knowledge_view: DerivedUIKnowledgeView = {
+    const current_UI_knowledge_view: GraphUIKnowledgeView = {
         ...current_kv,
         derived_wc_id_map,
         wcomponent_nodes,
@@ -212,7 +213,7 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
 
 
 
-function update_filters (state: RootState, current_UI_knowledge_view?: DerivedUIKnowledgeView)
+function update_filters (state: RootState, current_UI_knowledge_view?: GraphUIKnowledgeView)
 {
     if (!current_UI_knowledge_view) return undefined
 

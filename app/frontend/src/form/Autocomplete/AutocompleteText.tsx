@@ -19,6 +19,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     options: E[]
     allow_none?: boolean
     on_change: (id: E["id"] | undefined) => void
+    on_choose_same?: (id: E["id"] | undefined) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
@@ -33,7 +34,7 @@ interface OwnProps <E extends AutocompleteOption> extends AutocompleteProps <E> 
 
 interface State
 {
-    temp_value_str: string | undefined
+    temp_value_str: string
     editing: boolean
     highlighted_option_index: number
 }
@@ -58,15 +59,17 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
     constructor (props: Props<E>)
     {
         super(props)
+
+        const result = prepare_options_and_targets(props.options)
+        this.options = result.new_internal_options
+        this.prepared_targets = result.prepared_targets
+
+        const selected_title = this.get_selected_option_title_str()
         this.state = {
-            temp_value_str: props.initial_search_term,
+            temp_value_str: props.initial_search_term || selected_title || "",
             editing: !!props.start_expanded,
             highlighted_option_index: 0,
         }
-
-        const result = prepare_options_and_targets(props.options, props.allow_none)
-        this.options = result.new_internal_options
-        this.prepared_targets = result.prepared_targets
     }
 
 
@@ -112,6 +115,11 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
 
     get_selected_option (): InternalAutocompleteOption | undefined
     {
+        if (this.props.selected_option_id === undefined)
+        {
+            return this.props.allow_none ? undefined : this.options[0]
+        }
+
         return this.options.find(({ id }) => id === this.props.selected_option_id)
     }
 
@@ -124,18 +132,15 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
     }
 
 
-    get_value_str ()
+    get_options_to_display (): InternalAutocompleteOption[]
     {
-        if (this.state.temp_value_str !== undefined) return this.state.temp_value_str
+        // allow user to clear the current value / select none
+        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
 
-        return this.get_selected_option_title_str()
-    }
-
-    get_options_to_display ()
-    {
         if (!this.state.temp_value_str)
         {
-            return this.options
+            if (this.props.allow_none) return [option_none, ...this.options]
+            else return this.options
         }
 
 
@@ -163,11 +168,19 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
     {
         await new Promise<void>(resolve =>
         {
-            this.setState({ editing: false, temp_value_str: undefined }, resolve)
+            this.setState({
+                editing: false,
+                temp_value_str: this.get_selected_option_title_str(),
+                highlighted_option_index: 0,
+            }, resolve)
         })
 
         const original_id = this.props.selected_option_id
-        if (original_id !== id)
+        if (original_id === id)
+        {
+            this.props.on_choose_same && this.props.on_choose_same(id)
+        }
+        else
         {
             this.props.on_change(id)
         }
@@ -177,7 +190,7 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
     render ()
     {
         const options_to_display = this.get_options_to_display()
-        const value_str = this.get_value_str()
+        const value_str = this.state.temp_value_str
 
         const final_value = get_valid_value(options_to_display, value_str)
         const valid = !final_value || value_str.toLowerCase() === final_value.title.toLowerCase()
@@ -220,7 +233,11 @@ class _AutocompleteText <E extends AutocompleteOption> extends Component <Props<
                 onChange={e => this.handle_on_change(e.currentTarget.value)}
                 onKeyDown={e => this.handle_key_down(e, options_to_display)}
                 onBlur={() => {
-                    this.setState({ editing: false, temp_value_str: undefined })
+                    this.setState({
+                        editing: false,
+                        temp_value_str: this.get_selected_option_title_str(),
+                        highlighted_option_index: 0,
+                    })
                 }}
             />
 
@@ -258,18 +275,9 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 
 
-function prepare_options_and_targets (options: AutocompleteOption[], allow_none?: boolean)
+function prepare_options_and_targets (options: AutocompleteOption[])
 {
-    const new_options = [...options]
-
-    if (allow_none)
-    {
-        // allow user to clear the current value / select none
-        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
-        new_options.unshift(option_none as any)
-    }
-
-    const new_internal_options: InternalAutocompleteOption[] = new_options.map(o => ({
+    const new_internal_options: InternalAutocompleteOption[] = options.map(o => ({
         ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
     }))
 

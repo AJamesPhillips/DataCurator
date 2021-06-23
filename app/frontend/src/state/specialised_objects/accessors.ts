@@ -1,7 +1,8 @@
 import type { Perception, WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeView, UIKnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
-import { sort_list } from "../../shared/utils/sort"
+import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
+import type { NestedKnowledgeViewIdsMap } from "../derived/State"
+import { sort_list } from "../../shared/utils/sort"
 
 
 
@@ -65,65 +66,87 @@ export function get_base_knowledge_view (knowledge_views: KnowledgeView[])
 
 
 
-interface UIKnowledgeViewWithParentId extends UIKnowledgeView
+interface KnowledgeViewWithParentId extends KnowledgeView
 {
     parent_knowledge_view_id: string
 }
 
 
-export function get_UI_knowledge_views (knowledge_views: KnowledgeView[]): UIKnowledgeView[]
+export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIdsMap
 {
-    const unsorted_top_level_knowledge_views: UIKnowledgeView[] = []
-    const unused_knowledge_views: UIKnowledgeViewWithParentId[] = []
+    const map: NestedKnowledgeViewIdsMap = { top_ids: [], map: {} }
+
+    const unused_knowledge_views: KnowledgeViewWithParentId[] = []
     knowledge_views.forEach(kv =>
     {
         const { parent_knowledge_view_id } = kv
         if (parent_knowledge_view_id)
         {
-            unused_knowledge_views.push({ ...kv, children: [], parent_knowledge_view_id })
+            unused_knowledge_views.push({ ...kv, parent_knowledge_view_id })
         }
-        else unsorted_top_level_knowledge_views.push({ ...kv, children: [] })
+        else
+        {
+            map.top_ids.push(kv.id)
+            map.map[kv.id] = { id: kv.id, title: kv.title, parent_id: undefined, child_ids: [] }
+        }
     })
 
-    const sorted_top_level_knowledge_views = sort_list(unsorted_top_level_knowledge_views, ({ title }) => title.toLowerCase(), "ascending")
 
-    const ERROR_circular_knowledge_views = add_child_views(sorted_top_level_knowledge_views, unused_knowledge_views)
-    const top_level_kvs = [...sorted_top_level_knowledge_views, ...ERROR_circular_knowledge_views]
+    add_child_views(unused_knowledge_views, map)
 
-    return top_level_kvs
+    sort_ids_by_title(map)
+
+    return map
 }
 
 
 
-function add_child_views (parent_knowledge_views: UIKnowledgeView[], potential_children: UIKnowledgeViewWithParentId[])
+function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIdsMap)
 {
-    const kv_id_map: { [id: string]: UIKnowledgeView } = {}
-    parent_knowledge_views.forEach(kv => kv_id_map[kv.id] = kv)
-    const new_potential_parents: UIKnowledgeViewWithParentId[] = []
-    const lack_parent: UIKnowledgeViewWithParentId[] = []
+    if (potential_children.length === 0) return
+
+
+    const lack_parent: KnowledgeViewWithParentId[] = []
 
     potential_children.forEach(potential_child =>
     {
-        const parent_kv = kv_id_map[potential_child.parent_knowledge_view_id]
+        const parent_kv = map.map[potential_child.parent_knowledge_view_id]
         if (parent_kv)
         {
-            parent_kv.children.push(potential_child)
-            new_potential_parents.push(potential_child)
+            const { id, title } = potential_child
+            parent_kv.child_ids.push(id)
+
+            map.map[id] = {
+                id, title, parent_id: parent_kv.id, child_ids: []
+            }
         }
         else lack_parent.push(potential_child)
     })
 
 
-    let ERROR_circular_knowledge_views: UIKnowledgeView[] = []
-    if (new_potential_parents.length > 0)
-    {
-        ERROR_circular_knowledge_views = add_child_views(new_potential_parents, lack_parent)
-    }
-    else if (lack_parent.length > 0)
+    if (potential_children.length === lack_parent.length)
     {
         console.error(`Circular knowledge view tree`)
-        ERROR_circular_knowledge_views = lack_parent.map(kv => ({ ...kv, ERROR_is_circular: true }))
+        lack_parent.forEach(({ id, title }) =>
+        {
+            map.top_ids.push(id)
+            map.map[id] = { id, title, parent_id: undefined, child_ids: [], ERROR_is_circular: true }
+        })
     }
+    else
+    {
+        add_child_views(lack_parent, map)
+    }
+}
 
-    return ERROR_circular_knowledge_views
+
+
+function sort_ids_by_title (map: NestedKnowledgeViewIdsMap)
+{
+    map.top_ids = sort_list(map.top_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
+
+    Object.values(map.map).forEach(entry =>
+    {
+        entry.child_ids = sort_list(entry.child_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
+    })
 }

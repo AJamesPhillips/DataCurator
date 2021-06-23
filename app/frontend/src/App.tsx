@@ -1,10 +1,11 @@
-import "./App.scss"
 import { h } from "preact"
 import { AppBar, Box, CssBaseline, ThemeProvider, Toolbar } from "@material-ui/core"
-import { MainAreaRouter } from "./layout/MainAreaRouter";
+
+import "./App.scss"
+import { MainAreaRouter } from "./layout/MainAreaRouter"
+import { TabsContainer } from "./layout/TabsContainer"
+import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
-import { TabsContainer } from "./layout/TabsContainer";
-import { SidePanel } from "./side_panel/SidePanel";
 import default_theme from "./ui_themes/material_default";
 
 function App() {

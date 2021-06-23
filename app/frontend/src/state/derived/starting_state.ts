@@ -12,7 +12,7 @@ export function get_derived_starting_state (): DerivedState
         knowledge_views: [],
 
         base_knowledge_view: undefined,
-        UI_knowledge_views: [],
+        nested_knowledge_view_ids_map: { top_ids: [], map: {} },
 
         judgement_or_objective_ids_by_target_id: {},
         judgement_or_objective_ids_by_goal_id: {},
