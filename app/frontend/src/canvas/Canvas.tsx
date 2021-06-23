@@ -1,8 +1,9 @@
+import "./Canvas.scss"
+
 import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Dispatch } from "redux"
 
-import "./Canvas.css"
 import { ACTIONS } from "../state/actions"
 import { lefttop_to_xy } from "../state/display_options/display"
 import { BoundingRect, bounding_rects_equal } from "../state/display_options/state"
@@ -270,7 +271,7 @@ class _Canvas extends Component<Props, State>
 
 
         return (
-        <div style={{ height: "100%" }}
+        <div style={{ flexGrow: 1 }}
             // This has the potential to form part of a feedback loop
             ref={r => update_bounding_rect(r && r.getBoundingClientRect(), bounding_rect)}
         >
