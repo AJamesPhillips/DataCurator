@@ -33,6 +33,7 @@ function _TabsContainer (props: Props)
 
 
     const [show_all_routes, set_show_all_routes] = useState(!!localStorage.getItem("show_all_tabs"))
+    localStorage.setItem("show_all_tabs", show_all_routes ? "1" : "")
 
 
     let routes = ALLOWED_ROUTES
