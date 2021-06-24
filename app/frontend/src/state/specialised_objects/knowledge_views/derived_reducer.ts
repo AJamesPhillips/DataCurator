@@ -85,8 +85,10 @@ function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
     const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, "ascending")
+    const priority_knowledge_views = knowledge_views.filter(({ sort_type }) => sort_type !== "hidden" && sort_type !== "archived")
     const base_knowledge_view = get_base_knowledge_view(knowledge_views)
     const nested_knowledge_view_ids_map = get_nested_knowledge_view_ids_map(knowledge_views)
+    const priority_nested_knowledge_view_ids_map = get_nested_knowledge_view_ids_map(priority_knowledge_views, true)
 
     state = {
         ...state,
@@ -95,6 +97,7 @@ function update_derived_knowledge_view_state (state: RootState): RootState
             knowledge_views,
             base_knowledge_view,
             nested_knowledge_view_ids_map,
+            priority_nested_knowledge_view_ids_map,
         },
     }
 

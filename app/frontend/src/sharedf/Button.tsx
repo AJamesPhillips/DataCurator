@@ -7,7 +7,9 @@ import type { ButtonProps } from "@material-ui/core/Button"
 
 interface SpecificProps
 {
-    onClick: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
+    on_pointer_down?: () => void
+    on_click?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
+    value?: string
 }
 
 
@@ -32,7 +34,8 @@ export function Button (props: ButtonProps & SpecificProps)
                 // Not sure we want to put this here
                 e.stopImmediatePropagation()
                 e.preventDefault()
-                props.onClick(e)
+                props.on_pointer_down && props.on_pointer_down()
+                props.on_click && props.on_click(e)
             }}
         >
             { props.children || props.value }

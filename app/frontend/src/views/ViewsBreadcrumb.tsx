@@ -9,9 +9,11 @@ import PresentToAllIcon from "@material-ui/icons/PresentToAll"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
-import type { NestedKnowledgeViewIdsEntry, NestedKnowledgeViewIdsMap } from "../state/derived/State"
+import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
+
+
 
 const map_state = (state: RootState) =>
 {
@@ -22,7 +24,7 @@ const map_state = (state: RootState) =>
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
         kv_id,
-        nested_knowledge_view_ids_map: state.derived.nested_knowledge_view_ids_map,
+        nested_kv_ids_map: state.derived.priority_nested_knowledge_view_ids_map,
     }
 }
 
@@ -34,6 +36,8 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
+
+
 function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, props: Props)
 {
     const select_el = event.currentTarget
@@ -43,12 +47,14 @@ function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, pr
     props.change_route({ args: { view } })
 }
 
+
+
 function _ViewsBreadcrumb (props: Props)
 {
     if (!props.ready) return null
 
-    const { kv_id, nested_knowledge_view_ids_map: map } = props
-    let nested_kv = map.map[kv_id]
+    const { kv_id, nested_kv_ids_map } = props
+    let nested_kv = nested_kv_ids_map.map[kv_id]
 
     const levels: { entries: NestedKnowledgeViewIdsEntry[], selected_id: string, allow_none: boolean }[] = []
     let deepest_level = true
@@ -57,7 +63,7 @@ function _ViewsBreadcrumb (props: Props)
     while (nested_kv)
     {
         const child_level_options = nested_kv.child_ids
-            .map(id => map.map[id])
+            .map(id => nested_kv_ids_map.map[id])
             .filter(is_defined)
 
         if (child_level_options.length)
@@ -67,10 +73,10 @@ function _ViewsBreadcrumb (props: Props)
         deepest_level = false
         last_parent_id = nested_kv.id
 
-        nested_kv = nested_kv.parent_id !== undefined ? map.map[nested_kv.parent_id] : undefined
+        nested_kv = nested_kv.parent_id !== undefined ? nested_kv_ids_map.map[nested_kv.parent_id] : undefined
     }
 
-    const top_level = map.top_ids.map(id => map.map[id]).filter(is_defined)
+    const top_level = nested_kv_ids_map.top_ids.map(id => nested_kv_ids_map.map[id]).filter(is_defined)
     levels.unshift({ entries: top_level, selected_id: last_parent_id, allow_none: false  })
 
     return  (
@@ -111,14 +117,10 @@ function _ViewsBreadcrumb (props: Props)
 
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent<{}>
 
+
+
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
     { id: "priorities", title: "Priorities" },
     { id: "priorities_list", title: "Priorities list" },
 ]
-
-function get_nested_kv (nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap, id: string | undefined)
-{
-    if (!id) return undefined
-    return nested_knowledge_view_ids_map.map[id]
-}
