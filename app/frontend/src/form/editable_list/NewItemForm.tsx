@@ -4,8 +4,7 @@ import { useEffect, useState } from "preact/hooks"
 import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
-
-
+import { Box, Dialog, DialogTitle } from "@material-ui/core"
 
 export interface NewItemForm<U>
 {
@@ -15,8 +14,6 @@ export interface NewItemForm<U>
     item_top_props: EditableListEntryTopProps<U>
     add_item: (new_item: U) => void
 }
-
-
 
 export function NewItemForm <T> (props: NewItemForm<T>)
 {
@@ -36,42 +33,29 @@ export function NewItemForm <T> (props: NewItemForm<T>)
         set_adding_item(false)
     }, [add_item, adding_item])
 
-
     if (!new_item) return null
-
-
-    return <div className="new_item_form" onClick={e => e.stopPropagation()}>
-        <hr />
-        <EditableListEntry
-            item={new_item}
-            {...item_top_props}
-            expanded={true}
-            disable_collapsable={true}
-            on_change={item => {
-                set_new_item(item)
-            }}
-        />
-
-        <Button
-            extra_class_names="add_new_item"
-            value={`Add ${item_descriptor}`}
-            onClick={() =>
-            {
-                const input = document.activeElement as HTMLElement | HTMLInputElement | null
-                if (input && input.blur) input.blur()
-                set_adding_item(true)
-            }}
-        />
-        <Button
-            value="Cancel"
-            extra_class_names="button_warning"
-            onClick={() => {
-                const input = document.activeElement as HTMLElement | HTMLInputElement | null
-                if (input && input.blur) input.blur()
-                set_new_item(undefined)
-            }}
-        />
-        <br />
-        <hr />
-    </div>
+    return (
+        <Box>
+            <Dialog  aria-labelledby="simple-dialog-title" open={true} onClose={() => set_new_item(undefined)}>
+                <DialogTitle id="simple-dialog-title">New Value</DialogTitle>
+                <Box>
+                    <EditableListEntry
+                        item={new_item}
+                        {...item_top_props}
+                        expanded={true}
+                        disable_collapsable={true}
+                        on_change={item => {
+                            set_new_item(item)
+                        }}
+                    />
+                </Box>
+                <Button onClick={() =>set_adding_item(true)}>
+                    {`Add ${item_descriptor}`}
+                </Button>
+                <Button onClick={() => set_new_item(undefined)}>
+                    Cancel
+                </Button>
+            </Dialog>
+        </Box>
+    )
 }
