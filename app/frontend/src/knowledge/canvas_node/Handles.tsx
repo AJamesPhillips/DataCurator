@@ -1,15 +1,20 @@
 import { h } from "preact"
 
 import "./Handles.css"
+import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
 
 
 
-interface HandlesProps extends HandleForMovingProps {}
+interface HandlesProps extends HandleForMovingProps, ExploreButtonHandleOwnProps {}
 export function Handles (props: HandlesProps)
 {
     return <div className="handles">
         <HandleForMoving set_node_is_moving={props.set_node_is_moving} />
-        <ExploreButton />
+        <ExploreButtonHandle
+            wcomponent={props.wcomponent}
+            wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
+            editing={props.editing}
+        />
     </div>
 }
 
@@ -36,10 +41,4 @@ function HandleForMoving (props: HandleForMovingProps)
         className="node_handle movement"
         onPointerDown={handle_pointer_down}
     >&#10021;</div>
-}
-
-
-function ExploreButton ()
-{
-    return <div className="node_handle explore">&#128269;</div>
 }

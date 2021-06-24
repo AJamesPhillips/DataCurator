@@ -1,11 +1,16 @@
+import type { Store } from "redux"
+
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
-import { get_new_knowledge_view_id } from "../shared/utils/ids"
+import { get_new_knowledge_view_id, is_wc_knowledge_view_id } from "../shared/utils/ids"
 import { get_new_created_ats } from "../shared/utils/datetime"
 import type { CreationContextState } from "../shared/creation_context/state"
+import { config_store } from "../state/store"
+import type { RootState } from "../state/State"
+import { ACTIONS } from "../state/actions"
 
 
 
-export function create_new_knowledge_view (args: Partial<KnowledgeView> = {}, creation_context: CreationContextState)
+export function get_new_knowledge_view_object (args: Partial<KnowledgeView> = {}, creation_context: CreationContextState)
 {
     const knowledge_view: KnowledgeView = {
         id: get_new_knowledge_view_id(),
@@ -19,4 +24,41 @@ export function create_new_knowledge_view (args: Partial<KnowledgeView> = {}, cr
     }
 
     return knowledge_view
+}
+
+
+
+interface CreateKnowledgeViewArgs
+{
+    knowledge_view: Partial<KnowledgeView>
+    creation_context: CreationContextState
+    store?: Store<RootState>
+}
+
+export function create_new_knowledge_view (args: CreateKnowledgeViewArgs)
+{
+    const store = args.store || config_store()
+
+    const knowledge_view = get_new_knowledge_view_object(args.knowledge_view, args.creation_context)
+
+    store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
+}
+
+
+
+export function navigate_to_kvwcomponent (kvwc_id: string, store: Store<RootState>)
+{
+    if (!is_wc_knowledge_view_id(kvwc_id))
+    {
+        console.warn(`Can not navigate to wcomponent knowledge view as id is: ${kvwc_id}`)
+        return
+    }
+
+    const wc_id = kvwc_id.replace("kv", "")
+
+    store.dispatch(ACTIONS.routing.change_route({
+        route: "wcomponents",
+        item_id: wc_id,
+        args: { subview_id: kvwc_id },
+    }))
 }

@@ -4,7 +4,7 @@ import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingle
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import { KnowledgeView, KnowledgeViewSortType, knowledge_view_sort_types } from "../shared/wcomponent/interfaces/knowledge_view"
-import { date2str } from "../shared/utils/date_helpers"
+import { get_today_str } from "../shared/utils/date_helpers"
 import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
@@ -73,11 +73,13 @@ export function KnowledgeViewList (props: OwnProps)
         on_click_new_item={() =>
         {
             const knowledge_view = create_new_knowledge_view({
-                title: make_default_title(),
-                parent_knowledge_view_id,
-                sort_type,
-            }, props.creation_context)
-            props.upsert_knowledge_view(knowledge_view)
+                knowledge_view: {
+                    title: make_default_title(),
+                    parent_knowledge_view_id,
+                    sort_type,
+                },
+                creation_context: props.creation_context,
+            })
         }}
         content={render_list_content}
         item_descriptor={item_descriptor}
@@ -112,7 +114,7 @@ function get_knowledge_view_title (knowledge_view: KnowledgeView)
 }
 
 
-const make_default_title = () => date2str(new Date(), "yyyy-MM-dd")
+const make_default_title = () => get_today_str(false)
 
 
 const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
