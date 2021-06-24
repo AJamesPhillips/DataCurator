@@ -227,7 +227,7 @@ function _WComponentForm (props: Props)
                 placeholder="..."
                 value={wcomponent.effect_when_true}
                 allow_undefined={true}
-                on_change={effect_when_true => upsert_wcomponent({ effect_when_true })}
+                on_blur={effect_when_true => upsert_wcomponent({ effect_when_true })}
             />
         </p>}
 
@@ -236,7 +236,7 @@ function _WComponentForm (props: Props)
                 placeholder="..."
                 value={wcomponent.effect_when_false}
                 allow_undefined={true}
-                on_change={effect_when_false => upsert_wcomponent({ effect_when_false })}
+                on_blur={effect_when_false => upsert_wcomponent({ effect_when_false })}
             />
         </p>}
 
