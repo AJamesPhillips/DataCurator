@@ -16,7 +16,7 @@ export function ListHeaderAddButton (props: OwnProps)
     } = props
 
     return (
-        <Button onClick={() => on_pointer_down_new_list_entry()}>
+        <Button fullWidth={true} onClick={() => on_pointer_down_new_list_entry()}>
             {`New ${new_item_descriptor}`}
         </Button>
     )
