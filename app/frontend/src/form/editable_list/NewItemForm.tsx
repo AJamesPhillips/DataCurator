@@ -37,7 +37,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
     return (
         <Box>
             <Dialog  aria-labelledby="simple-dialog-title" open={true} onClose={() => set_new_item(undefined)}>
-                <DialogTitle id="simple-dialog-title">New Value</DialogTitle>
+                <DialogTitle id="simple-dialog-title">New {item_descriptor}</DialogTitle>
                 <Box>
                     <EditableListEntry
                         item={new_item}
