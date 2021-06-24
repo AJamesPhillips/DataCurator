@@ -49,12 +49,14 @@ export function NewItemForm <T> (props: NewItemForm<T>)
                         }}
                     />
                 </Box>
-                <Button onClick={() =>set_adding_item(true)}>
-                    {`Add ${item_descriptor}`}
-                </Button>
-                <Button onClick={() => set_new_item(undefined)}>
-                    Cancel
-                </Button>
+				<Box p={2} display="flex" justifyContent="space-between">
+					<Button onClick={() =>set_adding_item(true)}>
+						{`Add ${item_descriptor}`}
+					</Button>
+					<Button onClick={() => set_new_item(undefined)}>
+						Cancel
+					</Button>
+				</Box>
             </Dialog>
         </Box>
     )
