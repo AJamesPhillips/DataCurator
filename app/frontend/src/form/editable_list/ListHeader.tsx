@@ -18,7 +18,10 @@ export function ListHeader (props: OwnProps)
     } = props
 
 
-    return <div onClick={on_click_header} style={{ cursor: on_click_header ? "pointer" : "default" }}>
+    return <div
+        onClick={on_click_header}
+        style={{ cursor: on_click_header ? "pointer" : "default" }}
+    >
         {other_content()}
 
         <div className="item_descriptors">{items_descriptor}</div>
