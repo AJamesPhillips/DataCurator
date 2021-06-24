@@ -1,5 +1,6 @@
 import type { ThemeOptions } from "@material-ui/core/styles";
 import { createMuiTheme }  from '@material-ui/core/styles'
+import { h } from "preact";
 const _defaultThemeOptions: ThemeOptions = {
   breakpoints: {
     values: {
@@ -9,14 +10,30 @@ const _defaultThemeOptions: ThemeOptions = {
       lg: 1280,
       xl: 1920,
     },
-  },palette: {
+  },
+  palette: {
     type: 'light',
-    primary: {
+	primary: {
       main: '#eceff1',
     },
     secondary: {
-      main: '#5e5a5a',
+      main: '#2196f3',
     },
+    warning: {
+      main: '#ff9800',
+    },
+
+    error: {
+      main: '#f44336',
+    },
+
+    info: {
+      main: '#2196f3',
+    },
+
+    success: {
+      main: '#4caf50'
+    }
   },
   spacing: 2,
   typography: {
@@ -35,5 +52,8 @@ const _defaultThemeOptions: ThemeOptions = {
   },
 };
 
-const DefaultTheme = createMuiTheme(_defaultThemeOptions)
-export default DefaultTheme
+export const DefaultTheme = createMuiTheme(_defaultThemeOptions)
+export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.warning } });
+export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.error } });
+export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.info } });
+export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.success } });
