@@ -6,14 +6,12 @@ import { MainAreaRouter } from "./layout/MainAreaRouter"
 import { TabsContainer } from "./layout/TabsContainer"
 import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
-import default_theme from "./ui_themes/material_default"
-
-
+import { DefaultTheme } from "./ui_themes/material_default"
 
 function App()
 {
     return (
-        <ThemeProvider theme={default_theme}>
+        <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
             <Box id="app" className="app">
                 <Box component="header" zIndex={1}>
