@@ -4,11 +4,13 @@ import type { ButtonProps } from "@material-ui/core/Button"
 
 interface SpecificProps
 {
-    value?: string
+    value?: string,
+	is_hidden?: boolean
 }
 
 export function Button (props: ButtonProps & SpecificProps)
 {
+	if (props.is_hidden) return
     return (
         <MaterialButton
             classes={props.classes}
