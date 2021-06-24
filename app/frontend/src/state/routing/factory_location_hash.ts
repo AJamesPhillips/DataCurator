@@ -39,27 +39,32 @@ declare global {
 
 function factory_throttled_update_location_hash ()
 {
-    const { throttled: throttled_update_location_hash, cancel } = throttle((routing_state: RoutingState) => {
+    const update_location_hash_after_1000 = throttle((routing_state: RoutingState) => {
         const route = routing_state_to_string(routing_state)
-        if (window.DEBUG_ROUTING) console .log("DELAYED changing route from ", window.location.hash.toString(), "\nto:\n", route)
+        if (window.DEBUG_ROUTING) console .log("DELAYED changing route from ", window.location.hash.toString(), "   to:   ", route)
         window.location.hash = route
     }, 1000)
+
+
+    const debounced_update_location_hash = throttle((routing_state: RoutingState) => {
+        const route = routing_state_to_string(routing_state)
+        if (window.DEBUG_ROUTING) console .log("Debounced changing route from ", window.location.hash.toString(), "   to:   ", route)
+        window.location.hash = route
+    }, 0)
+
 
     return (changed_only_xy: boolean, routing_state: RoutingState) =>
     {
         if (changed_only_xy)
         {
-            throttled_update_location_hash(routing_state)
+            update_location_hash_after_1000.throttled(routing_state)
         }
         else
         {
-            cancel()
-
-            const route = routing_state_to_string(routing_state)
-            if (window.DEBUG_ROUTING) console .log("changing route from ", window.location.hash.toString(), "\nto:\n", route)
-            window.location.hash = route
+            update_location_hash_after_1000.cancel()
+            debounced_update_location_hash.cancel()
+            debounced_update_location_hash.throttled(routing_state)
         }
-
     }
 }
 
@@ -112,7 +117,7 @@ function record_location_hash_change (store: Store<RootState>)
                 if (window.DEBUG_ROUTING) console .log("on hash change but no difference to current hash route_from_state", route_from_state)
                 return
             }
-            if (window.DEBUG_ROUTING) console .log("on hash change difference from url\n", route_from_hash, "\nstate:\n", route_from_state)
+            if (window.DEBUG_ROUTING) console .log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state)
 
             store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
             const routing_params = merge_route_params_prioritising_window_location(e.newURL, state.routing)
