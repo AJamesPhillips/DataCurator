@@ -1,16 +1,14 @@
-import { Button, ButtonGroup } from "@material-ui/core"
+import { ButtonGroup } from "@material-ui/core"
+import { Button } from "../sharedf/Button"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { CreationContextState } from "../shared/creation_context/state"
 
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
-// import { Button } from "../sharedf/Button"
 import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import "./CreateNewWComponent.css"
 import { create_wcomponent } from "./create_wcomponent_type"
-
-
 
 const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
@@ -21,7 +19,6 @@ const map_state = (state: RootState) => ({
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
-
 
 function _CreateNewWComponent (props: Props)
 {
