@@ -35,7 +35,7 @@ export function Button (props: ButtonProps & SpecificProps)
                 props.onClick(e)
             }}
         >
-            { props.children }
+            { props.children || props.value }
         </MaterialButton>
     )
 }
