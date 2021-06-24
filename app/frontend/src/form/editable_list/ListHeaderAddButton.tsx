@@ -1,3 +1,4 @@
+import { Box } from "@material-ui/core"
 import { h } from "preact"
 import { Button } from "../../sharedf/Button"
 
@@ -16,8 +17,10 @@ export function ListHeaderAddButton (props: OwnProps)
     } = props
 
     return (
-        <Button fullWidth={true} onClick={() => on_pointer_down_new_list_entry()}>
-            {`New ${new_item_descriptor}`}
-        </Button>
+        <Box mb={2}>
+            <Button fullWidth={true} onClick={() => on_pointer_down_new_list_entry()}>
+                {`New ${new_item_descriptor}`}
+            </Button>
+        </Box>
     )
 }
