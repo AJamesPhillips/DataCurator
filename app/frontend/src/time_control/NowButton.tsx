@@ -12,7 +12,7 @@ export function NowButton (props: NowButtonProps)
 {
     return <Button
         value="Now"
-        on_pointer_down={() => {
+        onClick={() => {
             // Add 60 seconds to ensure it is always the next minute
             const datetime_ms = new Date().getTime() + 60000
             props.change_datetime_ms(datetime_ms)

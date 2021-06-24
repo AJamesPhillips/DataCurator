@@ -63,7 +63,7 @@ function _WComponentsSidePanel (props: Props)
 
                 <Button
                     value={`Clear selection`}
-                    on_pointer_down={() => props.clear_selected_wcomponents({})}
+                    onClick={() => props.clear_selected_wcomponents({})}
                     is_left={true}
                 />
             </div>

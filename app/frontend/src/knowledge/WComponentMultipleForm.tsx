@@ -71,7 +71,7 @@ function _WComponentMultipleForm (props: Props)
             <Button
                 disabled={!knowledge_view_id}
                 value="Snap to grid"
-                on_pointer_down={() =>
+                onClick={() =>
                 {
                     if (!knowledge_view_id) return
                     snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })

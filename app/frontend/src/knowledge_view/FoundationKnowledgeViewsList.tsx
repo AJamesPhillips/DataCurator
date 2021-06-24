@@ -80,7 +80,7 @@ function _FoundationKnowledgeViewsList (props: Props)
                 <div style={{ flex: "3" }}>
                     {editing && <Button
                         value="remove"
-                        on_pointer_down={() =>
+                        onClick={() =>
                         {
                             on_change(remove_from_list_by_predicate(foundation_knowledge_view_ids, id => id === foundation_knowledge_view.id))
                         }}

@@ -1,17 +1,11 @@
 import { h } from "preact"
-
 import { Button as MaterialButton } from "@material-ui/core"
 import type { ButtonProps } from "@material-ui/core/Button"
 
-
-
 interface SpecificProps
 {
-    on_pointer_down?: () => void
-    on_click?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
     value?: string
 }
-
 
 export function Button (props: ButtonProps & SpecificProps)
 {
@@ -34,8 +28,7 @@ export function Button (props: ButtonProps & SpecificProps)
                 // Not sure we want to put this here
                 e.stopImmediatePropagation()
                 e.preventDefault()
-                props.on_pointer_down && props.on_pointer_down()
-                props.on_click && props.on_click(e)
+                props.onClick && props.onClick(e)
             }}
         >
             { props.children || props.value }

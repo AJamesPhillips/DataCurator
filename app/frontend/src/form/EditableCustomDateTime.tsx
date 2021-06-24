@@ -88,7 +88,7 @@ function _EditableCustomDateTime (props: Props)
         />}
         {editing && show_today_shortcut_button && <Button
             value="Today"
-            on_pointer_down={() => {
+            onClick={() => {
                 const today_dt_str = get_today_str()
                 on_change(new Date(today_dt_str))
             }}
@@ -115,7 +115,7 @@ function NowButton (props: NowButtonProps)
 {
     return <Button
         value="Now"
-        on_pointer_down={() => {
+        onClick={() => {
             // Add 30 seconds to ensure it rounds to nearest minute
             const datetime = new Date(new Date().getTime() + 30000)
 

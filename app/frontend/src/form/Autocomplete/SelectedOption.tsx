@@ -40,7 +40,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
     >
         {editing && <Button
             value="X"
-            on_pointer_down={() => on_remove_option(option.id)}
+            onClick={() => on_remove_option(option.id)}
         />}
 
         {option.jsx || option.title}

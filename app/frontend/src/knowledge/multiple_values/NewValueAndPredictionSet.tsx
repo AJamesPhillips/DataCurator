@@ -38,14 +38,14 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
         Set to <br />
         {entry && !is_true && <Button
             value="Set to True"
-            on_pointer_down={() =>
+            onClick={() =>
             {
                 on_change({ ...VAP_set, entries: [{ ...entry, probability: 1, conviction: 1 }] })
             }}
         />}
         {entry && !is_false && <Button
             value="Set to False"
-            on_pointer_down={() => {
+            onClick={() => {
                 on_change({ ...VAP_set, entries: [{ ...entry, probability: 0, conviction: 1 }] })
             }}
         />}
@@ -54,19 +54,19 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
 
         {entry && is_eternal && <Button
             value="Set to 'From today'"
-            on_pointer_down={() => on_change({ ...VAP_set, datetime: { min: get_today_date() } })}
+            onClick={() => on_change({ ...VAP_set, datetime: { min: get_today_date() } })}
         />}
 
         {entry && !is_eternal && <Button
             value="Set to Eternal"
-            on_pointer_down={() => on_change({ ...VAP_set, datetime: {} })}
+            onClick={() => on_change({ ...VAP_set, datetime: {} })}
         />}
 
         <br /><br />
 
         <Button
             value={(show_advanced ? "Hide" : "Show") + " advanced options"}
-            on_pointer_down={() => set_show_advanced(!show_advanced)}
+            onClick={() => set_show_advanced(!show_advanced)}
         />
 
         {show_advanced && <div>

@@ -55,7 +55,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
         <Button
             extra_class_names="add_new_item"
             value={`Add ${item_descriptor}`}
-            on_pointer_down={() =>
+            onClick={() =>
             {
                 const input = document.activeElement as HTMLElement | HTMLInputElement | null
                 if (input && input.blur) input.blur()
@@ -65,7 +65,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
         <Button
             value="Cancel"
             extra_class_names="button_warning"
-            on_pointer_down={() => {
+            onClick={() => {
                 const input = document.activeElement as HTMLElement | HTMLInputElement | null
                 if (input && input.blur) input.blur()
                 set_new_item(undefined)

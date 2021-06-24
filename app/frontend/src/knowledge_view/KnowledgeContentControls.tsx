@@ -51,7 +51,7 @@ function _KnowledgeContentControls (props: Props)
         <Button
             is_left={true}
             value={props.linked_datetime_sliders ? "Unlink" : "Link"}
-            on_pointer_down={() => props.toggle_linked_datetime_sliders()}
+            onClick={() => props.toggle_linked_datetime_sliders()}
             extra_class_names="button_link_time_sliders"
         />
         <div style={{ width: 40, display: "inline-block" }}></div>
