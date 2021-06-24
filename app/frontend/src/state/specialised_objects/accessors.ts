@@ -1,5 +1,5 @@
 import type { Perception, WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
@@ -72,14 +72,14 @@ interface KnowledgeViewWithParentId extends KnowledgeView
 }
 
 
-export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIdsMap
+export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[], sort_by_priority: boolean = false): NestedKnowledgeViewIdsMap
 {
     const map: NestedKnowledgeViewIdsMap = { top_ids: [], map: {} }
 
     const unused_knowledge_views: KnowledgeViewWithParentId[] = []
     knowledge_views.forEach(kv =>
     {
-        const { parent_knowledge_view_id } = kv
+        const { parent_knowledge_view_id, title, sort_type } = kv
         if (parent_knowledge_view_id)
         {
             unused_knowledge_views.push({ ...kv, parent_knowledge_view_id })
@@ -87,14 +87,15 @@ export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeVie
         else
         {
             map.top_ids.push(kv.id)
-            map.map[kv.id] = { id: kv.id, title: kv.title, parent_id: undefined, child_ids: [] }
+            map.map[kv.id] = { id: kv.id, title, sort_type, parent_id: undefined, child_ids: [] }
         }
     })
 
 
     add_child_views(unused_knowledge_views, map)
 
-    sort_ids_by_title(map)
+    if (sort_by_priority) sort_ids_by_priority_then_title(map)
+    else sort_ids_by_title(map)
 
     return map
 }
@@ -113,11 +114,11 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
         const parent_kv = map.map[potential_child.parent_knowledge_view_id]
         if (parent_kv)
         {
-            const { id, title } = potential_child
+            const { id, title, sort_type } = potential_child
             parent_kv.child_ids.push(id)
 
             map.map[id] = {
-                id, title, parent_id: parent_kv.id, child_ids: []
+                id, title, sort_type, parent_id: parent_kv.id, child_ids: []
             }
         }
         else lack_parent.push(potential_child)
@@ -127,16 +128,40 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
     if (potential_children.length === lack_parent.length)
     {
         console.error(`Circular knowledge view tree`)
-        lack_parent.forEach(({ id, title }) =>
+        lack_parent.forEach(({ id, title, sort_type }) =>
         {
             map.top_ids.push(id)
-            map.map[id] = { id, title, parent_id: undefined, child_ids: [], ERROR_is_circular: true }
+            map.map[id] = { id, title, sort_type, parent_id: undefined, child_ids: [], ERROR_is_circular: true }
         })
     }
     else
     {
         add_child_views(lack_parent, map)
     }
+}
+
+
+
+
+function sort_ids_by_priority_then_title (map: NestedKnowledgeViewIdsMap)
+{
+    const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
+        priority: "0",
+        normal: "1",
+        hidden: "2",
+        archived: "3",
+    }
+
+    map.top_ids = sort_list(map.top_ids, id =>
+    {
+        const entry = map.map[id]!
+        return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
+    }, "ascending")
+
+    Object.values(map.map).forEach(entry =>
+    {
+        entry.child_ids = sort_list(entry.child_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
+    })
 }
 
 

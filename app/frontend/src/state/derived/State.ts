@@ -1,6 +1,7 @@
 import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
     KnowledgeView,
+    KnowledgeViewSortType,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type {
@@ -17,6 +18,7 @@ export interface NestedKnowledgeViewIdsEntry
 {
     id: string
     title: string
+    sort_type: KnowledgeViewSortType
     parent_id: string | undefined
     child_ids: string[]
     ERROR_is_circular?: true
@@ -56,6 +58,7 @@ export interface DerivedState
 
     base_knowledge_view: KnowledgeView | undefined
     nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
+    priority_nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
     judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
