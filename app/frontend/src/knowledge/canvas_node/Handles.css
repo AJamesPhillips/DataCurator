@@ -28,3 +28,8 @@
     top: 20px;
     font-size: 13px;
 }
+
+.node_handle.explore.has_nested_knowledge_view
+{
+    color: blue; /* Can not colour unicode characters */
+}

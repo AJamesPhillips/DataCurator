@@ -267,9 +267,9 @@ export function date2str_auto (args: Date2strAutoArgs)
 
 
 
-export function get_today_str ()
+export function get_today_str (include_hours = true)
 {
-    return date2str(new Date(), "yyyy-MM-dd") + " 00:00"
+    return date2str(new Date(), "yyyy-MM-dd") + (include_hours ? " 00:00" : "")
 }
 
 

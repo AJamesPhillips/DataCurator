@@ -108,6 +108,8 @@ function _WComponentCanvasNode (props: Props)
 
     let kv_entry_maybe = UI_kv.derived_wc_id_map[id]
     if (!kv_entry_maybe && on_graph) return <div>Could not find knowledge view entry for id {id}</div>
+    // Provide a default kv_entry value for when this node is being in a different context e.g.
+    // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
 
 
@@ -152,6 +154,9 @@ function _WComponentCanvasNode (props: Props)
     {
         children.push(<Handles
             set_node_is_moving={(!on_graph || !props.is_editing) ? undefined : (() => set_node_is_moving(true))}
+            wcomponent={wcomponent}
+            wcomponent_current_kv_entry={kv_entry}
+            editing={props.is_editing}
         />)
     }
 
