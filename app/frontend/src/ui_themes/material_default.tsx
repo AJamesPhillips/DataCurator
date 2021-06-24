@@ -15,7 +15,7 @@ const _defaultThemeOptions: ThemeOptions = {
       main: '#eceff1',
     },
     secondary: {
-      main: '#b3e5fc',
+      main: '#5e5a5a',
     },
   },
   spacing: 2,
