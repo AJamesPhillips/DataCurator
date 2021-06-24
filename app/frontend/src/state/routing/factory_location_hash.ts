@@ -33,10 +33,15 @@ export const factory_location_hash = (store: Store<RootState>) =>
 
 
 
+declare global {
+    interface Window { DEBUG_ROUTING: any }
+}
+
 function factory_throttled_update_location_hash ()
 {
     const { throttled: throttled_update_location_hash, cancel } = throttle((routing_state: RoutingState) => {
         const route = routing_state_to_string(routing_state)
+        if (window.DEBUG_ROUTING) console .log("DELAYED changing route from ", window.location.hash.toString(), "\nto:\n", route)
         window.location.hash = route
     }, 1000)
 
@@ -51,6 +56,7 @@ function factory_throttled_update_location_hash ()
             cancel()
 
             const route = routing_state_to_string(routing_state)
+            if (window.DEBUG_ROUTING) console .log("changing route from ", window.location.hash.toString(), "\nto:\n", route)
             window.location.hash = route
         }
 
@@ -99,8 +105,14 @@ function record_location_hash_change (store: Store<RootState>)
         {
             const route_from_hash = "#" + (e.newURL.split("#")[1] || "")
             const route_from_state = routing_state_to_string(state.routing)
-            const no_change = route_from_state === route_from_hash
-            if (no_change) return
+            const no_difference = route_from_state === route_from_hash
+
+            if (no_difference)
+            {
+                if (window.DEBUG_ROUTING) console .log("on hash change but no difference to current hash route_from_state", route_from_state)
+                return
+            }
+            if (window.DEBUG_ROUTING) console .log("on hash change difference from url\n", route_from_hash, "\nstate:\n", route_from_state)
 
             store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
             const routing_params = merge_route_params_prioritising_window_location(e.newURL, state.routing)
