@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import "./Handles.css"
+import "./Handles.scss"
 import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
 
 
