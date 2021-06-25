@@ -1,0 +1,15 @@
+
+
+
+.connection_container
+{
+    &.connection_type_relation_link .connection_line
+    {
+        stroke-dasharray: 2 10;
+    }
+
+    &.connection_type_judgement .connection_line, &.connection_type_objective .connection_line
+    {
+        stroke-dasharray: 10 10;
+    }
+}

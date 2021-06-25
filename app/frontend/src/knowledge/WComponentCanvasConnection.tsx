@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./WComponentCanvasConnection.css"
+import "./WComponentCanvasConnection.scss"
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type {
