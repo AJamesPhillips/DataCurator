@@ -6,8 +6,9 @@ import type { ViewType } from "../state/routing/interfaces"
 import { optional_view_type } from "../views/optional_view_type"
 import type { RootState } from "../state/State"
 import type { PositionAndZoom } from "./interfaces"
-
-
+import { Button } from "../sharedf/Button"
+import { Box } from "@material-ui/core"
+import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus';
 
 interface OwnProps
 {
@@ -35,11 +36,13 @@ function _MoveToPositionButton (props: Props)
 
     const view = optional_view_type(props.view)
 
-    return <input
-        type="button"
-        value={props.description}
-        onClick={() => props.move(move_to_position, view)}
-    ></input>
+    return (
+        <Box zIndex={10}>
+            <Button onClick={() => props.move(move_to_position, view)} aria-label={props.description}>
+                <FilterCenterFocusIcon />
+            </Button>
+        </Box>
+    )
 }
 
 export const MoveToPositionButton = connector(_MoveToPositionButton) as FunctionalComponent<OwnProps>
