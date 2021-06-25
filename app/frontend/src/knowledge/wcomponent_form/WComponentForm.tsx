@@ -272,6 +272,7 @@ function _WComponentForm (props: Props)
 
         <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
             <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
+                title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
                 on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}

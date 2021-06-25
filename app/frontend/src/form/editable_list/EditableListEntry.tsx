@@ -113,6 +113,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                     >
                         <span className="description_label">Created at</span> &nbsp;
                         <EditableCustomDateTime
+                            title="Created at"
                             invariant_value={get_created_at && get_created_at(item)}
                             value={custom_created_at}
                             on_change={date_on_change}
