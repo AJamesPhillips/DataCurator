@@ -78,7 +78,7 @@ function _ValueAndPredictions (props: Props)
     const class_name_only_one_VAP = (VAPs_represent.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
 
     const item_top_props: EditableListEntryTopProps<StateValueAndPrediction> = {
-        get_created_at: () => props.created_at,
+        // get_created_at: () => props.created_at,
         get_summary: get_summary({
             VAPs_represent,
             allows_assumptions: props.allows_assumptions,
