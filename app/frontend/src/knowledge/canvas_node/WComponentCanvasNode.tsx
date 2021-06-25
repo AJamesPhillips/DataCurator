@@ -234,11 +234,15 @@ function _WComponentCanvasNode (props: Props)
                 // https://stackoverflow.com/a/56699962/539490
                 e.dataTransfer!.dropEffect = "move"
             },
+
             onDragEnd: e => {
-                e.currentTarget.style.cursor = "inherited"
-                update_position(round_canvas_point({
-                    left: kv_entry.left + e.offsetX - props.canvas_bounding_rect_left,
-                    top: kv_entry.top + e.offsetY - props.canvas_bounding_rect_top,
+				const top = kv_entry.top + (e.offsetY)
+				const left = kv_entry.left + (e.offsetX)
+				// console.log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
+				// console.log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
+				update_position(round_canvas_point({
+                    top: top,
+					left: left,
                 }))
             }
         }}
