@@ -1,7 +1,7 @@
+import { h } from "preact";
 import type { ThemeOptions } from "@material-ui/core/styles";
 import { createMuiTheme }  from '@material-ui/core/styles'
-import { h } from "preact";
-const _defaultThemeOptions: ThemeOptions = {
+const _default_theme_options: ThemeOptions = {
   breakpoints: {
     values: {
       xs: 0,
@@ -20,11 +20,11 @@ const _defaultThemeOptions: ThemeOptions = {
       main: '#2196f3',
     },
     warning: {
-      main: '#ff9800',
+      main: '#D32F2F',
     },
 
     error: {
-      main: '#f44336',
+      main: '#B71C1C',
     },
 
     info: {
@@ -52,8 +52,8 @@ const _defaultThemeOptions: ThemeOptions = {
   },
 };
 
-export const DefaultTheme = createMuiTheme(_defaultThemeOptions)
-export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.warning } });
-export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.error } });
-export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.info } });
-export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _defaultThemeOptions.palette?.success } });
+export const DefaultTheme = createMuiTheme(_default_theme_options)
+export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } });
+export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } });
+export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } });
+export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } });
