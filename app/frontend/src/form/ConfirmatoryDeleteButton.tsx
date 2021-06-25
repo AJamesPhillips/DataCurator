@@ -1,7 +1,9 @@
+import { Box, ThemeProvider } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { DefaultTheme, WarningTheme } from "../ui_themes/material_default"
 import { Button } from "../sharedf/Button"
 import type { RootState } from "../state/State"
 
@@ -28,21 +30,28 @@ function _ConfirmatoryDeleteButton (props: Props)
 
     if (props.consumption_formatting) return null
 
-    return <div className="button_container_confirmatory_delete">
-        <Button
-            is_hidden={!deleting}
-            value="CONFIRM"
-            extra_class_names="button_warning"
-            onClick={() => props.on_delete && props.on_delete()}
-        />
+    return (
+		<Box display="flex" justifyContent="space-between" mb={3}>
+			<ThemeProvider theme={WarningTheme}>
+				<Button
+					color="secondary"
+					is_hidden={!deleting}
+					value="CONFIRM"
+					extra_class_names="button_warning"
+					onClick={() => props.on_delete && props.on_delete()}
+				/>
+			</ThemeProvider>
 
-        <Button
-            is_hidden={!props.on_delete}
-            value={deleting ? "CANCEL" : "DELETE"}
-            extra_class_names={(deleting ? "" : " button_warning ")}
-            onClick={() => set_deleting(!deleting) }
-        />
-    </div>
+			<ThemeProvider theme={(deleting) ? DefaultTheme: WarningTheme  }>
+				<Button
+					color="primary"
+					is_hidden={!props.on_delete}
+					extra_class_names={(deleting ? "" : " button_warning ")}
+					onClick={() => set_deleting(!deleting) }
+				>{deleting ? "CANCEL" : "DELETE"}</Button>
+			</ThemeProvider>
+		</Box>
+	)
 }
 
 export const ConfirmatoryDeleteButton = connector(_ConfirmatoryDeleteButton) as FunctionalComponent<OwnProps>
