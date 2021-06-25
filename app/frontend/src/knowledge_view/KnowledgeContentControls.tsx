@@ -46,7 +46,7 @@ function _KnowledgeContentControls (props: Props)
             get_handle_ms={state => state.routing.args.created_at_ms}
             change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
             data_set_name="knowledge_created_at_datetimes"
-            title="Created at datetimes"
+            title="Created at"
         />
         <Button
             is_left={true}
@@ -64,7 +64,7 @@ function _KnowledgeContentControls (props: Props)
             get_handle_ms={state => state.routing.args.sim_ms}
             change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
             data_set_name="knowledge_sim_datetimes"
-            title="Simulation datetimes"
+            title="Simulation"
         />
     </div>
 }

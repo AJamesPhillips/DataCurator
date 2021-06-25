@@ -13,6 +13,7 @@ import type { TimeResolution } from "../shared/utils/datetime"
 
 interface OwnProps
 {
+    title?: string
     invariant_value?: Date | undefined
     value: Date | undefined
     on_change?: (new_value: Date | undefined) => void
@@ -50,7 +51,7 @@ function _EditableCustomDateTime (props: Props)
 
     const not_editable = props.always_allow_editing ? false : props.presenting
     const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
-    const title = "Created at " + (props.value ? "(custom)" : "")
+    const title = (props.title || "Created at ") + ((props.invariant_value && props.value) ? "(custom)" : "")
 
     return <div className={class_name} title={title}>
         <input

@@ -2,6 +2,8 @@ import { h } from "preact"
 import { Button as MaterialButton } from "@material-ui/core"
 import type { ButtonProps } from "@material-ui/core/Button"
 
+
+
 interface SpecificProps
 {
     value?: string,
@@ -13,6 +15,7 @@ export function Button (props: ButtonProps & SpecificProps)
 	if (props.is_hidden) return null
     return (
         <MaterialButton
+            title={props.title}
             classes={props.classes}
             color={props.color || "primary"}
             component={props.component}

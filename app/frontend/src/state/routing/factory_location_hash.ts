@@ -1,6 +1,6 @@
 import type { Store } from "redux"
-import { throttle } from "../../utils/throttle"
 
+import { throttle } from "../../utils/throttle"
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
 import type { RoutingState } from "./interfaces"
