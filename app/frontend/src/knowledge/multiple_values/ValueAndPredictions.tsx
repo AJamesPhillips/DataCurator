@@ -100,7 +100,7 @@ function _ValueAndPredictions (props: Props)
     return <div className={`value_and_predictions ${class_name_only_one_VAP}`}>
         <ListHeader
             items_descriptor={get_items_descriptor(item_descriptor, VAPs.length)}
-            other_content={() => !editing ? null : <ListHeaderAddButton
+            other_content={() => (!editing || VAPs_represent.boolean) ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
