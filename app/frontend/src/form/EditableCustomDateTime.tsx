@@ -51,7 +51,7 @@ function _EditableCustomDateTime (props: Props)
 
     const not_editable = props.always_allow_editing ? false : props.presenting
     const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
-    const title = (props.title || "Created at ") + ((props.invariant_value && props.value) ? "(custom)" : "")
+    const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
 
     return <div className={class_name} title={title}>
         <input
