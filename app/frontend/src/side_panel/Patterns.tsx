@@ -5,6 +5,7 @@ import type { RootState } from "../state/State"
 import { EditPatternForm } from "../patterns/EditPatternForm"
 import { PatternsList } from "../patterns/PatternsList"
 import { NewPatternForm } from "../patterns/NewPatternForm"
+import { Box, Divider, Typography } from "@material-ui/core"
 
 
 interface OwnProps {}
@@ -30,15 +31,18 @@ function _Patterns (props: Props)
         </div>
     }
 
-    return <div>
-        <b>Add patterns</b>
-        <hr />
-        <NewPatternForm />
-        <hr />
-        Patterns: {props.pattern_count}
-        <PatternsList />
-    </div>
+	return (
+		<Box>
+			<Typography component="h2" gutterBottom>
+				Add patterns
+			</Typography>
+			<NewPatternForm />
+			<Typography component="h3" my={3}>
+				Patterns: {props.pattern_count}
+			</Typography>
+			<PatternsList />
+		</Box>
+	)
 }
-
 
 export const Patterns = connector(_Patterns) as FunctionComponent<OwnProps>
