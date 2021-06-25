@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
@@ -7,8 +8,11 @@ import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
 import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
 import { Box, ButtonGroup, IconButton, Slider } from "@material-ui/core"
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import { date2str_auto } from "../shared/utils/date_helpers"
+
+
 
 interface OwnProps
 {
@@ -26,6 +30,8 @@ const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
+
+
 
 function _TimeSlider (props: Props)
 {
@@ -70,7 +76,7 @@ function _TimeSlider (props: Props)
         }
     }
 
-    const valuetext = (value: number) => `${value}`
+
     return (
         <Box class="time_slider" title={props.title} my={2} px={5}>
             <Box class="slider_container"  display="flex">
@@ -91,7 +97,8 @@ function _TimeSlider (props: Props)
                         onChange={(e, value) => changed_handle_position(value)}
                         color="secondary"
                         value={props.handle_datetime_ms}
-                        getAriaValueText={valuetext}
+                        getAriaValueText={value_text}
+                        valueLabelFormat={get_value_label_format}
                         step={1}
                         min={earliest_ms}
                         max={latest_ms}
@@ -128,3 +135,16 @@ function _TimeSlider (props: Props)
 
 
 export const TimeSlider = connector(_TimeSlider) as FunctionalComponent<OwnProps>
+
+
+
+const value_text = (value: number) => `${value}`
+
+
+
+const get_value_label_format = (value: number) =>
+{
+    const date_str = date2str_auto({ date: new Date(value), time_resolution: "minute" })
+
+    return <span style={{ whiteSpace: "nowrap" }}>{date_str}</span>
+}
