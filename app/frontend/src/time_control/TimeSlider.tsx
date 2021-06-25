@@ -78,21 +78,25 @@ function _TimeSlider (props: Props)
 
 
     return (
-        <Box class="time_slider" title={props.title} my={2} px={5}>
+        <Box class="time_slider" my={2} px={5}>
             <Box class="slider_container"  display="flex">
                 <ButtonGroup size="small">
                     <IconButton
                         onClick={move_to_event_datetime(-1)}
-                        disabled={current_index.bounds === "n/a" || current_index.index <= 0}>
+                        disabled={current_index.bounds === "n/a" || current_index.index <= 0}
+                        title={"Previous " + props.title + " datetime"}
+                    >
                         <NavigateBeforeIcon />
                     </IconButton>
                     <IconButton
                         onClick={move_to_event_datetime(1)}
-                        disabled={current_index.bounds === "n/a" || current_index.index >= (event_start_datetimes_ms.length - 1)}>
-                            <NavigateNextIcon />
+                        disabled={current_index.bounds === "n/a" || current_index.index >= (event_start_datetimes_ms.length - 1)}
+                        title={"Next " + props.title + " datetime"}
+                    >
+                        <NavigateNextIcon />
                     </IconButton>
                 </ButtonGroup>
-                <Box flexGrow={1}>
+                <Box flexGrow={1} title={props.title + " datetimes"}>
                     <Slider
                         onChange={(e, value) => changed_handle_position(value)}
                         color="secondary"
@@ -121,13 +125,17 @@ function _TimeSlider (props: Props)
             </datalist> */}
             <Box display="flex" justifyContent="flex-end"alignItems="center">
                 <EditableCustomDateTime
+                    title={props.title}
                     value={new Date(props.handle_datetime_ms)}
                     on_change={new_datetime => new_datetime && props.change_handle_ms(new_datetime.getTime())}
                     show_now_shortcut_button={false}
                     show_today_shortcut_button={false}
                     always_allow_editing={true}
                 />
-                <NowButton change_datetime_ms={datetime_ms => props.change_handle_ms(datetime_ms)} />
+                <NowButton
+                    title={"Set " + props.title + " to now"}
+                    change_datetime_ms={datetime_ms => props.change_handle_ms(datetime_ms)}
+                />
             </Box>
         </Box>
     )
