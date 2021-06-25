@@ -15,6 +15,7 @@ import { grid_small_step } from "./position_utils"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
 import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
+import { Translate } from "@material-ui/icons"
 
 
 
@@ -318,7 +319,7 @@ class _Canvas extends Component<Props, State>
                 />}
             </div>
 
-            {content_coordinates.length === 0 ? null : <div style={{ position: "relative", bottom: "20px" }}>
+            {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
                 <MoveToPositionButton
                     description="Move to content"
                     move_to_xy={lefttop_to_xy(content_coordinates![0])}
