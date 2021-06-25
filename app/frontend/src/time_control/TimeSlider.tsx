@@ -40,10 +40,9 @@ function _TimeSlider (props: Props)
     const latest_ms = event_start_datetimes_ms[event_start_datetimes_ms.length - 1]
     const current_index = find_nearest_index_in_sorted_list(event_start_datetimes_ms, i => i, props.handle_datetime_ms)
 
-    function changed_handle_position (e: h.JSX.TargetedEvent<HTMLInputElement, Event>)
+    function changed_handle_position (new_handle_datetime_ms: number | number[])
     {
-        console.log("ASLKDJLASKJDA")
-        const new_handle_datetime_ms = parseInt(e.currentTarget.value)
+        if (typeof new_handle_datetime_ms !== "number") return
         props.change_handle_ms(new_handle_datetime_ms)
     }
 
@@ -73,7 +72,7 @@ function _TimeSlider (props: Props)
 
     const valuetext = (value: number) => `${value}`
     return (
-        <Box class="time_slider" title="{props.title}" my={2} px={5}>
+        <Box class="time_slider" title={props.title} my={2} px={5}>
             <Box class="slider_container"  display="flex">
                 <ButtonGroup size="small">
                     <IconButton
@@ -89,7 +88,7 @@ function _TimeSlider (props: Props)
                 </ButtonGroup>
                 <Box flexGrow={1}>
                     <Slider
-                        onChange={changed_handle_position}
+                        onChange={(e, value) => changed_handle_position(value)}
                         color="secondary"
                         value={props.handle_datetime_ms}
                         getAriaValueText={valuetext}
@@ -110,9 +109,9 @@ function _TimeSlider (props: Props)
                     /> */}
                 </Box>
             </Box>
-            <datalist id={"tickmarks_timeslider_" + props.data_set_name}>
+            {/* <datalist id={"tickmarks_timeslider_" + props.data_set_name}>
                 {event_start_datetimes_ms.map(d => <option value={d}>{d}</option>)}
-            </datalist>
+            </datalist> */}
             <Box display="flex" justifyContent="flex-end"alignItems="center">
                 <EditableCustomDateTime
                     value={new Date(props.handle_datetime_ms)}
