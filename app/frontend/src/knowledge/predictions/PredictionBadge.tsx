@@ -62,77 +62,81 @@ export function PredictionBadge (props: Props)
     const border_width = 3
     const counterfactual_active__class = `counterfactual_${counterfactual_active ? "" : "in"}active`
     const class_name = `prediction_badge ${counterfactual_active__class}`
+    const title = props.disabled
+        ? "Disabled: counterfactuals have probably not yet been allowed on this knowledge view"
+        : "Click to toggle prediction counterfactuals"
 
-    return <svg
-        width={size + (border_width * 2)}
-        height={size + (border_width * 2)}
-        onClick={() => (!props.disabled) && toggle_counterfactual()}
-        className={class_name}
-        style={{ cursor: props.disabled ? "not-allowed" : "pointer" }}
-    >
-        <rect
-            x={0}
-            y={0}
+    return <div style={{ cursor: props.disabled ? "not-allowed" : "pointer" }} title={title}>
+        <svg
             width={size + (border_width * 2)}
             height={size + (border_width * 2)}
-            className="outline"
-        />
+            onClick={() => (!props.disabled) && toggle_counterfactual()}
+            className={class_name}
+        >
+            <rect
+                x={0}
+                y={0}
+                width={size + (border_width * 2)}
+                height={size + (border_width * 2)}
+                className="outline"
+            />
 
-        <g>
-        {Array.from(Array(total_elements))
-            .map((_, i) => {
-                const i_frac = i / total_elements
-                const x = i % elements_width
-                const y = Math.floor(i / elements_width)
+            <g>
+            {Array.from(Array(total_elements))
+                .map((_, i) => {
+                    const i_frac = i / total_elements
+                    const x = i % elements_width
+                    const y = Math.floor(i / elements_width)
 
-                return {
-                    i, i_frac, x, y,
-                    ys: border_width + (elements_width - 1 - x) * cell_size,
-                    xs: border_width + (y * cell_size),
-                }
-            })
-            // .map(e => {
-            //     const f = e.i_frac < probability
+                    return {
+                        i, i_frac, x, y,
+                        ys: border_width + (elements_width - 1 - x) * cell_size,
+                        xs: border_width + (y * cell_size),
+                    }
+                })
+                // .map(e => {
+                //     const f = e.i_frac < probability
 
-            //     Math.random() >= conviction
+                //     Math.random() >= conviction
 
-            //     const intensity = 0.5 * 255
-            //     const fill = `rgb(${intensity},${intensity},${intensity})`
-            //     return <rect x={e.xs} y={e.ys} width={cell_size} height={cell_size} fill={fill} />
-            // })
+                //     const intensity = 0.5 * 255
+                //     const fill = `rgb(${intensity},${intensity},${intensity})`
+                //     return <rect x={e.xs} y={e.ys} width={cell_size} height={cell_size} fill={fill} />
+                // })
 
-            .map(e => {
-                // // const rnd_range_contribution = 1 - Math.abs(probability - e.i_frac)
-                // // const probability_of_random = min_rnd + (rnd_range * rnd_range_contribution)
-                // // const is_random = Math.random() < probability_of_random
+                .map(e => {
+                    // // const rnd_range_contribution = 1 - Math.abs(probability - e.i_frac)
+                    // // const probability_of_random = min_rnd + (rnd_range * rnd_range_contribution)
+                    // // const is_random = Math.random() < probability_of_random
 
-                // const is_random = Math.random() >= conviction
+                    // const is_random = Math.random() >= conviction
 
-                // // const certainty_if_random = Math.random()
-                // // const certainty_if_random = Math.round(Math.random())
-                // const certainty_if_random = 0.5
+                    // // const certainty_if_random = Math.random()
+                    // // const certainty_if_random = Math.round(Math.random())
+                    // const certainty_if_random = 0.5
 
-                // const certainty = is_random ? certainty_if_random : (e.f ? 0 : 1)
-                const f = e.i_frac < final_probability
-                const certainty = f ? 0 : 1
-                const intensity = certainty * 255
+                    // const certainty = is_random ? certainty_if_random : (e.f ? 0 : 1)
+                    const f = e.i_frac < final_probability
+                    const certainty = f ? 0 : 1
+                    const intensity = certainty * 255
 
-                return {
-                    ...e,
-                    fill: `rgb(${intensity},${intensity},${intensity})`,
-                }
-            })
-            .map(e => <rect x={e.xs} y={e.ys} width={cell_size} height={cell_size} fill={e.fill} />)
-        }
-        </g>
+                    return {
+                        ...e,
+                        fill: `rgb(${intensity},${intensity},${intensity})`,
+                    }
+                })
+                .map(e => <rect x={e.xs} y={e.ys} width={cell_size} height={cell_size} fill={e.fill} />)
+            }
+            </g>
 
-        <PredictionsBadgeConvictionMask
-            size={size}
-            border_width={border_width}
-            elements_width={elements_width}
-            conviction={final_conviction}
-        />
-    </svg>
+            <PredictionsBadgeConvictionMask
+                size={size}
+                border_width={border_width}
+                elements_width={elements_width}
+                conviction={final_conviction}
+            />
+        </svg>
+    </div>
 }
 
 
