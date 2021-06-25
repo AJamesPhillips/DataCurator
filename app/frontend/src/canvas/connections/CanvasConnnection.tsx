@@ -19,6 +19,7 @@ interface OwnProps {
     blur?: number
     is_highlighted?: boolean
     on_pointer_down?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
+    extra_css_classes?: string
 }
 
 
@@ -46,7 +47,11 @@ export function CanvasConnnection (props: OwnProps)
     const extra_background_classes = (props.on_pointer_down ? " mouseable " : "") + extra_line_classes
 
 
-    return <g className="connection_container" onPointerDown={props.on_pointer_down} style={{ display: props.hidden ? "none" : "" }}>
+    return <g
+        className={"connection_container " + (props.extra_css_classes || "")}
+        onPointerDown={props.on_pointer_down}
+        style={{ display: props.hidden ? "none" : "" }}
+    >
         <path
             className={"connection_line_background " + extra_background_classes}
             d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}

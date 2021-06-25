@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import "./WComponentCanvasConnection.css"
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type {
@@ -155,6 +156,7 @@ function _WComponentCanvasConnection (props: Props)
         on_pointer_down={on_pointer_down}
         intensity={validity_opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
+        extra_css_classes={"connection_type_" + wcomponent.type}
     />
 }
 
