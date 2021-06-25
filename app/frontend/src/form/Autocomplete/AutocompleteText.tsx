@@ -53,7 +53,7 @@ type Props <E extends AutocompleteOption = AutocompleteOption> = ConnectedProps<
 
 
 interface ActivelyChosenId {
-    actively_choosen: boolean
+    actively_chosen: boolean
     id: string | undefined
 }
 
@@ -71,7 +71,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     })
 
 
-    const actively_selected_option = useRef<ActivelyChosenId>({ actively_choosen: false, id: undefined })
+    const actively_selected_option = useRef<ActivelyChosenId>({ actively_chosen: false, id: undefined })
 
 
     const selected_title = get_selected_option_title_str()
@@ -178,16 +178,18 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const conditional_on_change = (id: string | undefined) =>
     {
-        set_to_not_editing()
-        actively_selected_option.current = { actively_choosen: true, id }
+        set_to_not_editing() // will trigger blur and that calls `handle_on_blur`
+        actively_selected_option.current = { actively_chosen: true, id }
     }
 
 
-    const handle_conditional_on_change = () =>
+    const handle_on_blur = () =>
     {
-        const { actively_choosen, id } = actively_selected_option.current
-        if (actively_choosen)
-        actively_selected_option.current = { actively_choosen: false, id: undefined }
+        set_to_not_editing()
+
+        const { actively_chosen, id } = actively_selected_option.current
+        if (!actively_chosen) return
+        actively_selected_option.current = { actively_chosen: false, id: undefined }
 
         const original_id = props.selected_option_id
         if (original_id === id)
@@ -237,11 +239,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             }}
             onChange={e => handle_on_change(e.currentTarget.value)}
             onKeyDown={e => handle_key_down(e, options_to_display)}
-            onBlur={() =>
-            {
-                set_to_not_editing()
-                handle_conditional_on_change()
-            }}
+            onBlur={() => handle_on_blur()}
         />
 
         <Options
