@@ -46,7 +46,6 @@ function _ConfirmatoryDeleteButton (props: Props)
 				<Button
 					color="primary"
 					is_hidden={!props.on_delete}
-					extra_class_names={(deleting ? "" : " button_warning ")}
 					onClick={() => set_deleting(!deleting) }
 				>{deleting ? "CANCEL" : "DELETE"}</Button>
 			</ThemeProvider>
