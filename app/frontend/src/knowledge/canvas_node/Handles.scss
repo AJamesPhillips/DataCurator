@@ -1,11 +1,13 @@
 
+$handle_width:1em;
+
 .wcomponent_canvas_node .handles
 {
     user-select: none;
     position: absolute;
-    left: -12px;
-    top: 3px;
-    font-size: 15px;
+    top: 0; right: auto; bottom:auto; left: 0;
+    font-size: $handle_width;
+	background:rgba(255, 255, 255, 0.7)
 }
 
 
@@ -20,14 +22,14 @@
 
 .node_handle.movement
 {
-    left: -11px;
+    left: $handle_width * 0.5;
 }
 
-.node_handle.explore
-{
-    top: 20px;
-    font-size: 13px;
-}
+// .node_handle.explore
+// {
+//     // top: 20px;
+//     // font-size: 13px;
+// }
 
 .node_handle.explore.has_nested_knowledge_view
 {
