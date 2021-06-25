@@ -185,7 +185,7 @@ function _WComponentCanvasNode (props: Props)
         || is_highlighted || is_current_item
 
 
-    const terminals = !on_graph ? [] : ((is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label)
+    const terminals = (!on_graph || (!props.is_editing && !is_highlighted)) ? [] : ((is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label)
 
 
     return <ConnectableCanvasNode
