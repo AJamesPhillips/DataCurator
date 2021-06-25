@@ -145,8 +145,6 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     const partial_routing_args: Partial<RoutingStateArgs> = props.args || {}
 
     const on_click = (e: h.JSX.TargetedEvent<HTMLInputElement, MouseEvent>) => {
-        if (props.selected) return // no-op
-
         if (props.on_pointer_down)
         {
             e.preventDefault()
