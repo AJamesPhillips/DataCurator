@@ -169,8 +169,8 @@ const invalid_node_types = new Set<WComponentType>([
     "relation_link",
     "counterfactual",
     "prioritisation",
-    // "judgement",
-    // "objective",
+    "judgement",
+    "objective",
 ])
 const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(wcomponent.type)
 

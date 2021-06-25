@@ -202,7 +202,7 @@ export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
 {
-    return wcomponent_is_plain_connection(wcomponent) || wcomponent_is_judgement_or_objective(wcomponent)
+    return wcomponent_is_plain_connection(wcomponent) // || wcomponent_is_judgement_or_objective(wcomponent)
 }
 
 export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
