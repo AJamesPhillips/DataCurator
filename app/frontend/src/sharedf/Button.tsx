@@ -10,7 +10,7 @@ interface SpecificProps
 
 export function Button (props: ButtonProps & SpecificProps)
 {
-	if (props.is_hidden) return
+	if (props.is_hidden) return null
     return (
         <MaterialButton
             classes={props.classes}
