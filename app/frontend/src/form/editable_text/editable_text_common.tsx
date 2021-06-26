@@ -1,6 +1,5 @@
 import { FunctionalComponent, h } from "preact"
 import { Ref, useEffect, useRef, useState } from "preact/hooks"
-import type { Store } from "redux"
 
 import "../Editable.css"
 import type { RootState } from "../../state/State"
@@ -9,16 +8,6 @@ import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { ACTIONS } from "../../state/actions"
 import { ConditionalWComponentSearchWindow } from "../ConditionalWComponentSearchWindow"
-
-
-
-//  \    /
-//   \  /
-//    \/
-let store: Store<RootState>
-//    /\
-//   /  \
-//  /    \
 
 
 
@@ -224,7 +213,7 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
 
         if (char1 === "@" && char2 === "@")
         {
-            if (!store) store = config_store()
+            const store = config_store()
 
             if (store.getState().global_keys.last_key === "@")
             {
