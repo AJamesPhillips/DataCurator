@@ -64,7 +64,6 @@ function _ExploreButtonHandle (props: Props)
 
                 // Optimisisation, only need the creation_context if creating a new knowledge view
                 const { creation_context } = store.getState()
-                debugger
 
                 kvwc = get_new_knowledge_view_object(partial_knowledge_view_wcomponent, creation_context)
 
