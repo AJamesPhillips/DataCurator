@@ -1,0 +1,64 @@
+import { FunctionComponent, h } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
+
+import { ACTIONS } from "../state/actions"
+
+
+
+interface OwnProps {}
+
+
+const map_dispatch = {
+    noop: () => ({ type: "noop" }),
+    toggle_consumption_formatting: () => ACTIONS.display.toggle_consumption_formatting({}),
+}
+
+const connector = connect(null, map_dispatch)
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux & OwnProps
+
+
+
+function _DebugMemory (props: Props)
+{
+    const [i, set_i] = useState(0)
+
+    return <div>
+        <button onPointerDown={() => call(set_i, i, props.noop, 1) }>noop</button>
+        <button onPointerDown={() => call(set_i, i, props.toggle_consumption_formatting, 1) }>toggle</button>
+        <button onPointerDown={() => call(set_i, i, props.noop, 99) }>noop 99</button>
+        <button onPointerDown={() => call(set_i, i, props.toggle_consumption_formatting, 99)}>toggle 99</button>
+        <div>
+            Iteration: {i}
+            < br/>
+            Memory total: {Math.round((performance as any).memory.totalJSHeapSize / 1e6)}
+            <br />
+            Used: {Math.round((performance as any).memory.usedJSHeapSize / 1e6)}
+        </div>
+
+    </div>
+}
+
+export const DebugMemory = connector(_DebugMemory) as FunctionComponent<OwnProps>
+
+
+
+
+const call = async (set_i: (i: number) => void, i: number, func: () => void, num: number) =>
+{
+    while (num > 0)
+    {
+        num--
+        set_i(++i)
+        func()
+        await wait(10)
+    }
+}
+
+
+function wait (ms: number)
+{
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
