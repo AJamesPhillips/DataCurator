@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { AboutSidePanel } from "../about/AboutSidePanel"
 
 import { CreationContextSidePanel } from "../creation_context/CreationContextSidePanel"
 import { DisplayOptionsSidePanel } from "../display_options/DisplayOptionsSidePanel"
@@ -48,6 +49,8 @@ function _SidePanel (props: Props)
         {props.route === "perceptions" && <PerceptionsSidePanel />}
 
         {props.route === "wcomponents" && <WComponentsSidePanel />}
+
+        {props.route === "about" && <AboutSidePanel />}
     </div>
 }
 

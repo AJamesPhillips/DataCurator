@@ -25,6 +25,7 @@ function get_title (id: ROUTE_TYPES)
     else if (id === "views") return <ViewsTabTitle />
     else if (id === "perceptions") return "Perceptions"
     else if (id === "wcomponents") return "Components"
+    else if (id === "about") return "About"
     else return "?" + id
 }
 
@@ -36,7 +37,6 @@ type Props = PropsFromRedux & OwnProps
 function _Tab (props: Props)
 {
     const title = get_title(props.id)
-    const css_class = "tab " + (props.current_route === props.id ? "selected" : "")
     return (
         <Link route={props.id} sub_route={null} item_id={null} args={undefined}>
             {title}
