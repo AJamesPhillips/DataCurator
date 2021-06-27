@@ -6,27 +6,27 @@ import "./SelectionBox.css"
 
 interface Props
 {
-    client_start_x: number
-    client_start_y: number
-    client_end_x: number
-    client_end_y: number
+    canvas_start_x: number
+    canvas_start_y: number
+    canvas_end_x: number
+    canvas_end_y: number
     color: "blue" | "red"
 }
 
 export function SelectionBox (props: Props)
 {
     const {
-        client_start_x,
-        client_start_y,
-        client_end_x,
-        client_end_y,
+        canvas_start_x,
+        canvas_start_y,
+        canvas_end_x,
+        canvas_end_y,
     } = props
 
     const selection_box_style: h.JSX.CSSProperties = {
-        left: client_start_x,
-        top: client_start_y,
-        width: client_end_x - client_start_x,
-        height: client_end_y - client_start_y,
+        left: canvas_start_x,
+        top: -canvas_end_y,
+        width: canvas_end_x - canvas_start_x,
+        height: canvas_end_y - canvas_start_y,
     }
 
     return <div

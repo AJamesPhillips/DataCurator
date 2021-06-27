@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { BoundingRect, ValidityFilterTypes, CertaintyFormattingTypes } from "./state"
+import type { ValidityFilterTypes, CertaintyFormattingTypes } from "./state"
 
 
 
@@ -16,25 +16,6 @@ const toggle_consumption_formatting = (args: {}): ActionToggleConsumptionFormatt
 
 export const is_toggle_consumption_formatting = (action: AnyAction): action is ActionToggleConsumptionFormatting => {
     return action.type === toggle_consumption_formatting_type
-}
-
-
-
-interface UpdateCanvasBoundingRectArgs
-{
-    bounding_rect: BoundingRect
-}
-interface ActionUpdateCanvasBoundingRect extends Action, UpdateCanvasBoundingRectArgs {}
-
-const update_canvas_bounding_rect_type = "update_canvas_bounding_rect"
-
-const update_canvas_bounding_rect = (args: UpdateCanvasBoundingRectArgs): ActionUpdateCanvasBoundingRect =>
-{
-    return { type: update_canvas_bounding_rect_type, ...args }
-}
-
-export const is_update_canvas_bounding_rect = (action: AnyAction): action is ActionUpdateCanvasBoundingRect => {
-    return action.type === update_canvas_bounding_rect_type
 }
 
 
@@ -98,7 +79,6 @@ export const is_set_certainty_formatting = (action: AnyAction): action is Action
 
 export const display_actions = {
     toggle_consumption_formatting,
-    update_canvas_bounding_rect,
     set_time_resolution,
     set_validity_filter,
     set_certainty_formatting,

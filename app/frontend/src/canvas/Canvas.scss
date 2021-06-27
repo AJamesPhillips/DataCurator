@@ -19,7 +19,11 @@
     overflow: visible;
     position: relative;
     transform-origin: left top;
-    height: 100%;
+    // Set to 0 height and 0 width to prevent a subset of canvas area behaving differently than
+    // other areas.  For example, the mouse events and dragging a selection box both behaved
+    // strangely when height was 100%
+    height: 0;
+    width: 0;
 }
 #graph_container svg
 {

@@ -37,7 +37,6 @@ export function display_options_starting_state (): DisplayOptionsState
         derived_validity_filter,
         derived_certainty_formatting,
 
-        canvas_bounding_rect: undefined,
         ...obj,
     }
 

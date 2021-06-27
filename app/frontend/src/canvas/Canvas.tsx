@@ -6,7 +6,6 @@ import type { Dispatch } from "redux"
 
 import { ACTIONS } from "../state/actions"
 import { lefttop_to_xy } from "../state/display_options/display"
-import { BoundingRect, bounding_rects_equal } from "../state/display_options/state"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
 import type { ContentCoordinate } from "./interfaces"
@@ -15,7 +14,6 @@ import { grid_small_step } from "./position_utils"
 import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
 import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
-import { Translate } from "@material-ui/icons"
 
 
 
@@ -36,11 +34,10 @@ const map_state = (state: RootState) => {
     const zoom = state.routing.args.zoom
     const x = state.routing.args.x
     const y = state.routing.args.y
-    const bounding_rect = state.display_options.canvas_bounding_rect
     const shift_key_down = state.global_keys.keys_down.has("Shift")
     const control_key_down = state.global_keys.keys_down.has("Control")
 
-    return { zoom, x, y, bounding_rect, shift_key_down, control_key_down }
+    return { zoom, x, y, shift_key_down, control_key_down }
 }
 
 
@@ -53,14 +50,6 @@ const map_dispatch = (dispatch: Dispatch) => ({
         if (args.y !== undefined) new_args.y = Math.round(args.y)
 
         dispatch(ACTIONS.routing.change_route({ args: new_args }))
-    },
-    update_bounding_rect: (bounding_rect: BoundingRect | null, current_br: BoundingRect | undefined) =>
-    {
-        if (!bounding_rect) return
-
-        if (bounding_rects_equal(bounding_rect, current_br)) return
-
-        dispatch(ACTIONS.display.update_canvas_bounding_rect({ bounding_rect }))
     },
 })
 
@@ -75,26 +64,34 @@ type PointerState =
     down: false
     area_select: false
     last_pointer_down_ms: number | undefined
-    client_start_x: number | undefined
-    client_start_y: number | undefined
     canvas_start_x: number | undefined
     canvas_start_y: number | undefined
+
+    // for scrolling
+    x_when_pointer_down: number | undefined
+    y_when_pointer_down: number | undefined
+    client_start_x: number | undefined
+    client_start_y: number | undefined
 } | {
     down: true
     area_select: boolean
     last_pointer_down_ms: number | undefined
-    client_start_x: number
-    client_start_y: number
     canvas_start_x: number
     canvas_start_y: number
+
+    // for scrolling
+    x_when_pointer_down: number
+    y_when_pointer_down: number
+    client_start_x: number
+    client_start_y: number
 }
 
 
 interface State
 {
     pointer_state: PointerState
-    client_current_x: number | undefined
-    client_current_y: number | undefined
+    canvas_current_x: number | undefined
+    canvas_current_y: number | undefined
 }
 
 
@@ -109,13 +106,16 @@ class _Canvas extends Component<Props, State>
                 down: false,
                 area_select: false,
                 last_pointer_down_ms: undefined,
-                client_start_x: undefined,
-                client_start_y: undefined,
                 canvas_start_x: undefined,
                 canvas_start_y: undefined,
+
+                x_when_pointer_down: undefined,
+                y_when_pointer_down: undefined,
+                client_start_x: undefined,
+                client_start_y: undefined,
             },
-            client_current_x: undefined,
-            client_current_y: undefined,
+            canvas_current_x: undefined,
+            canvas_current_y: undefined,
         }
     }
 
@@ -124,39 +124,42 @@ class _Canvas extends Component<Props, State>
     client_to_canvas = (client_xy: number) => client_xy * (scale_by / this.props.zoom)
     client_to_canvas_x = (client_x: number) =>
     {
-        const { canvas_start_x = 0 } = this.state.pointer_state
-        return canvas_start_x + this.client_to_canvas(client_x)
+        return this.props.x + this.client_to_canvas(client_x)
     }
     client_to_canvas_y = (client_y: number) =>
     {
-        const { canvas_start_y = 0 } = this.state.pointer_state
-        return canvas_start_y - this.client_to_canvas(client_y)
+        return this.props.y - this.client_to_canvas(client_y)
     }
 
 
     on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        const client_start_x = e.offsetX
+        const client_start_y = e.offsetY
+
         const new_pointer_state: PointerState =
         {
             down: true,
             area_select: this.props.shift_key_down,
             last_pointer_down_ms: new Date().getTime(),
-            client_start_x: e.clientX,
-            client_start_y: e.clientY,
-            canvas_start_x: this.props.x,
-            canvas_start_y: this.props.y,
+            canvas_start_x: this.client_to_canvas_x(client_start_x),
+            canvas_start_y: this.client_to_canvas_y(client_start_y),
+
+            x_when_pointer_down: this.props.x,
+            y_when_pointer_down: this.props.y,
+            client_start_x,
+            client_start_y,
         }
 
         handle_if_double_tap({
+            zoom: this.props.zoom,
             current_pointer_state: this.state.pointer_state,
             new_pointer_state,
-            client_to_canvas_x: this.client_to_canvas_x,
-            client_to_canvas_y: this.client_to_canvas_y,
         })
         this.setState({
             pointer_state: new_pointer_state,
-            client_current_x: e.clientX,
-            client_current_y: e.clientY,
+            canvas_current_x: new_pointer_state.canvas_start_x,
+            canvas_current_y: new_pointer_state.canvas_start_y,
         })
     }
 
@@ -167,10 +170,10 @@ class _Canvas extends Component<Props, State>
         {
             const args = area_selection_args(this.state)
             const canvas_area_select: CanvasAreaSelectEvent = {
-                start_x: this.client_to_canvas_x(args.client_start_x),
-                start_y: this.client_to_canvas_y(args.client_start_y),
-                end_x: this.client_to_canvas_x(args.client_end_x),
-                end_y: this.client_to_canvas_y(args.client_end_y),
+                start_x: args.canvas_start_x,
+                start_y: args.canvas_start_y,
+                end_x: args.canvas_end_x,
+                end_y: args.canvas_end_y,
             }
 
             pub_sub.canvas.pub("canvas_area_select", canvas_area_select)
@@ -182,7 +185,7 @@ class _Canvas extends Component<Props, State>
             down: false,
             area_select: false,
         }
-        this.setState({ pointer_state: new_pointer_state, client_current_x: undefined, client_current_y: undefined })
+        this.setState({ pointer_state: new_pointer_state, canvas_current_x: undefined, canvas_current_y: undefined })
     }
 
 
@@ -197,21 +200,23 @@ class _Canvas extends Component<Props, State>
     {
         if (!this.state.pointer_state.down) return
 
+        const client_x = e.offsetX
+        const client_y = e.offsetY
+
         if (this.state.pointer_state.area_select)
         {
-            this.setState({
-                client_current_x: e.clientX,
-                client_current_y: e.clientY,
-            })
+            const canvas_current_x = this.client_to_canvas_x(client_x)
+            const canvas_current_y = this.client_to_canvas_y(client_y)
+            this.setState({ canvas_current_x, canvas_current_y })
         }
         else
         {
             // Values are independent of zoom
-            const change_in_client_x = this.state.pointer_state.client_start_x - e.clientX
-            const change_in_client_y = this.state.pointer_state.client_start_y - e.clientY
+            const change_in_client_x = this.state.pointer_state.client_start_x - client_x
+            const change_in_client_y = this.state.pointer_state.client_start_y - client_y
 
-            const x = this.client_to_canvas_x(change_in_client_x)
-            const y = this.client_to_canvas_y(change_in_client_y)
+            const x = this.state.pointer_state.x_when_pointer_down + this.client_to_canvas(change_in_client_x)
+            const y = this.state.pointer_state.y_when_pointer_down - this.client_to_canvas(change_in_client_y)
 
             this.props.change_routing_args({ x, y })
         }
@@ -222,15 +227,15 @@ class _Canvas extends Component<Props, State>
     {
         e.stopPropagation()
 
-        const { bounding_rect } = this.props
-        if (!bounding_rect) return
-
         const wheel_change = e.deltaY
         const new_zoom = calculate_new_zoom({ zoom: this.props.zoom, wheel_change })
         if (new_zoom === this.props.zoom) return
 
-        const { clientX: pointer_x, clientY: pointer_y } = e
-        const result = calculate_new_zoom_xy({ old: this.props, new_zoom, bounding_rect, pointer_x, pointer_y })
+        const { offsetX: pointer_x, offsetY: pointer_y, currentTarget } = e
+        const { offsetHeight: client_height, offsetWidth: client_width } = currentTarget
+        const result = calculate_new_zoom_xy({
+            old: this.props, new_zoom, pointer_x, pointer_y, client_height, client_width,
+        })
 
         this.props.change_routing_args({ zoom: new_zoom, x: result.x, y: result.y })
     }
@@ -241,8 +246,8 @@ class _Canvas extends Component<Props, State>
         e.stopPropagation()
         e.preventDefault()
 
-        const x = this.client_to_canvas_x(e.clientX)
-        const y = this.client_to_canvas_y(e.clientY)
+        const x = this.client_to_canvas_x(e.offsetX)
+        const y = this.client_to_canvas_y(e.offsetY)
 
         pub_sub.canvas.pub("canvas_right_click", { x, y })
     }
@@ -250,7 +255,7 @@ class _Canvas extends Component<Props, State>
 
     render ()
     {
-        const { zoom, bounding_rect, content_coordinates = [], update_bounding_rect } = this.props
+        const { zoom, content_coordinates = [] } = this.props
 
         const scale = zoom / scale_by
         const x = -1 * this.props.x * scale
@@ -272,10 +277,7 @@ class _Canvas extends Component<Props, State>
 
 
         return (
-        <div style={{ flexGrow: 1 }}
-            // This has the potential to form part of a feedback loop
-            ref={r => update_bounding_rect(r && r.getBoundingClientRect(), bounding_rect)}
-        >
+        <div style={{ flexGrow: 1 }}>
             <div
                 id="graph_container"
                 className={this.props.plain_background ? "" : "squared_background"}
@@ -298,25 +300,27 @@ class _Canvas extends Component<Props, State>
             >
                 <div id="graph_visuals_container" style={html_translation_container_style}>
                     <div style={html_container_style}>
-                        <svg style={{ zIndex: 0, position: "absolute", top: 0, left: 0 }}>
-                            {blur_filter_defs}
-                            {this.props.svg_children}
-                        </svg>
+                        <div style={{ pointerEvents: this.state.pointer_state.down ? "none" : undefined }}>
+                            <svg style={{ zIndex: 0, position: "absolute", top: 0, left: 0 }}>
+                                {blur_filter_defs}
+                                {this.props.svg_children}
+                            </svg>
 
-                        {this.props.children}
+                            {this.props.children}
 
-                        <svg style={{ zIndex: 2, position: "absolute", top: 0, left: 0 }}>
-                            {blur_filter_defs}
-                            {this.props.svg_upper_children}
-                        </svg>
+                            <svg style={{ zIndex: 2, position: "absolute", top: 0, left: 0 }}>
+                                {blur_filter_defs}
+                                {this.props.svg_upper_children}
+                            </svg>
+                        </div>
 
+
+                        {this.state.pointer_state.area_select && <SelectionBox
+                            {...area_selection_args(this.state)}
+                            color={this.props.control_key_down ? "red" : "blue"}
+                        />}
                     </div>
                 </div>
-
-                {this.state.pointer_state.area_select && <SelectionBox
-                    {...area_selection_args(this.state)}
-                    color={this.props.control_key_down ? "red" : "blue"}
-                />}
             </div>
 
             {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
@@ -344,18 +348,16 @@ const blur_filter_defs = <defs>
 
 interface HandleIfDoubleTapArgs
 {
+    zoom: number
     current_pointer_state: PointerState
     new_pointer_state: PointerState
-    client_to_canvas_x: (x: number) => number
-    client_to_canvas_y: (y: number) => number
 }
 function handle_if_double_tap (args: HandleIfDoubleTapArgs)
 {
     const {
+        zoom,
         current_pointer_state,
         new_pointer_state,
-        client_to_canvas_x,
-        client_to_canvas_y,
     } = args
 
     // first click
@@ -368,8 +370,8 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
     const time_between_pointer_down = new_pointer_state.last_pointer_down_ms - current_pointer_state.last_pointer_down_ms
     if (time_between_pointer_down > MAX_DOUBLE_TAP_DELAY_MS) return
 
-    const { client_start_x: current_x, client_start_y: current_y } = current_pointer_state
-    const { client_start_x: new_x, client_start_y: new_y } = new_pointer_state
+    const { canvas_start_x: current_x, canvas_start_y: current_y } = current_pointer_state
+    const { canvas_start_x: new_x, canvas_start_y: new_y } = new_pointer_state
 
     // type guard
     if (current_x === undefined || current_y === undefined || new_x === undefined || new_y === undefined) return
@@ -377,28 +379,26 @@ function handle_if_double_tap (args: HandleIfDoubleTapArgs)
     // check if moved too far
     const x_movement = Math.abs(current_x - new_x)
     const y_movement = Math.abs(current_y - new_y)
-    if (x_movement > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
-    if (y_movement > MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT) return
+    const max_movement = MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT / zoom
+    if (x_movement > max_movement) return
+    if (y_movement > max_movement) return
 
-    const x = client_to_canvas_x(current_x)
-    const y = client_to_canvas_y(current_y)
-
-    pub_sub.canvas.pub("canvas_double_tap", { x, y })
+    pub_sub.canvas.pub("canvas_double_tap", { x: current_x, y: current_y })
 }
 
 
 
 function area_selection_args (state: Readonly<State>)
 {
-    const client_start_x = state.pointer_state.client_start_x || 0
-    const client_start_y = state.pointer_state.client_start_y || 0
-    const client_current_x = state.client_current_x || 0
-    const client_current_y = state.client_current_y || 0
+    const canvas_start_x = state.pointer_state.canvas_start_x || 0
+    const canvas_start_y = state.pointer_state.canvas_start_y || 0
+    const canvas_current_x = state.canvas_current_x || 0
+    const canvas_current_y = state.canvas_current_y || 0
 
     return {
-        client_start_x: Math.min(client_start_x, client_current_x),
-        client_start_y: Math.min(client_start_y, client_current_y),
-        client_end_x: Math.max(client_start_x, client_current_x),
-        client_end_y: Math.max(client_start_y, client_current_y),
+        canvas_start_x: Math.min(canvas_start_x, canvas_current_x),
+        canvas_start_y: Math.min(canvas_start_y, canvas_current_y),
+        canvas_end_x: Math.max(canvas_start_x, canvas_current_x),
+        canvas_end_y: Math.max(canvas_start_y, canvas_current_y),
     }
 }

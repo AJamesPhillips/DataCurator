@@ -2,9 +2,10 @@
 
 .selection_box
 {
-    position: absolute;
+    position: relative;
     z-index: 3;
     border-radius: 2px;
+    pointer-events: none;
 }
 
 .selection_box.color_blue

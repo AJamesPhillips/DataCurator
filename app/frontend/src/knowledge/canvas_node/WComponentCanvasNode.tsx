@@ -49,7 +49,6 @@ interface OwnProps
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
-    const { canvas_bounding_rect: cbr } = state.display_options
 
     const { current_UI_knowledge_view } = state.derived
 
@@ -63,8 +62,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         shift_or_control_keys_are_down,
-        canvas_bounding_rect_left: cbr ? cbr.left : 0,
-        canvas_bounding_rect_top: cbr ? cbr.top : 0,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         is_editing: !state.display_options.consumption_formatting,

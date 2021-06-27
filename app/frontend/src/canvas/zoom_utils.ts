@@ -1,5 +1,4 @@
 import { test } from "../shared/utils/test"
-import type { BoundingRect } from "../state/display_options/state"
 import { bounded } from "../shared/utils/bounded"
 
 
@@ -30,22 +29,17 @@ interface CalculateNewZoomXYArgs
 {
     old: { zoom: number, x: number, y: number }
     new_zoom: number
-    bounding_rect: BoundingRect
     pointer_x: number
     pointer_y: number
+    client_width: number
+    client_height: number
 }
 export function calculate_new_zoom_xy (args: CalculateNewZoomXYArgs)
 {
-    const { old, new_zoom, bounding_rect, pointer_x, pointer_y } = args
+    const { old, new_zoom, pointer_x, pointer_y, client_width, client_height } = args
 
-    const client_x = pointer_x - bounding_rect.left
-    const client_y = pointer_y - bounding_rect.top
-
-    const client_width = bounding_rect.width
-    const client_height = bounding_rect.height
-
-    const x_factor = client_x / client_width
-    const y_factor = client_y / client_height
+    const x_factor = pointer_x / client_width
+    const y_factor = pointer_y / client_height
 
     const scale = (scale_by / new_zoom) - (scale_by / old.zoom)
 
@@ -72,7 +66,6 @@ function run_tests ()
     let zoom: number
     let new_zoom: number
     let pointer: "top_left" | "bottom_right"
-    const bounding_rect = { width, height, left: canvas_left, top: canvas_top }
     const top_left = { pointer_x: canvas_left + 0, pointer_y: canvas_top + 0 }
     const bottom_right = { pointer_x: canvas_left + width, pointer_y: canvas_top + height }
 
@@ -84,8 +77,9 @@ function run_tests ()
         return calculate_new_zoom_xy({
             old: { x: args.x, y: args.y, zoom: args.zoom },
             new_zoom: args.new_zoom,
-            bounding_rect,
-            ...pointer
+            ...pointer,
+            client_width: width,
+            client_height: height,
         })
     }
 

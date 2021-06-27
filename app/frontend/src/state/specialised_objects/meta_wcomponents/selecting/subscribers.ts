@@ -59,7 +59,7 @@ function handle_canvas_area_select (store: Store<RootState>)
             .filter(([ id, entry ]) =>
             {
                 return entry.left >= start_x && entry.left <= end_x
-                    && entry.top >= start_top && entry.top <= end_top
+                    && entry.top <= start_top && entry.top >= end_top
             })
             .map(([ id ]) => id)
             .filter(id => !kv.wc_ids_by_type.any_link.has(id))
