@@ -134,6 +134,9 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        const right_button = e.button === 2
+        if (right_button) return
+
         const client_start_x = e.offsetX
         const client_start_y = e.offsetY
 
@@ -249,7 +252,9 @@ class _Canvas extends Component<Props, State>
         const x = this.client_to_canvas_x(e.offsetX)
         const y = this.client_to_canvas_y(e.offsetY)
 
-        pub_sub.canvas.pub("canvas_right_click", { x, y })
+        const right_button = e.button === 2
+        if (right_button) pub_sub.canvas.pub("canvas_right_click", { x, y })
+        else "todo publish canvas_control_left_click"
     }
 
 
