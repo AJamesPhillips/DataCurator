@@ -81,7 +81,7 @@ function get_route_subroute_and_item_id (path_parts: string[])
 
     if (!ALLOWED_ROUTES.includes(route))
     {
-        route = "statements"
+        route = "wcomponents"
     }
     else
     {
