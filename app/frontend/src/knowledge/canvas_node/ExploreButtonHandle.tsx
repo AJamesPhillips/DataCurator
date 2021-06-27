@@ -65,7 +65,7 @@ function _ExploreButtonHandle (props: Props)
                     id: props.kvwc_id,
                     wc_id_map,
                     title,
-                    sort_type: "hidden",
+                    sort_type: props.current_kv_id ? "hidden" : "normal",
                     parent_knowledge_view_id: props.current_kv_id,
                 }
 
