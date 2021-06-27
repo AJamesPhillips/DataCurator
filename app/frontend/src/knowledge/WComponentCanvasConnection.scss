@@ -6,10 +6,19 @@
     &.connection_type_relation_link .connection_line
     {
         stroke-dasharray: 2 10;
+        &.hovered
+        {
+            stroke-dasharray: none;
+        }
     }
 
-    &.connection_type_judgement .connection_line, &.connection_type_objective .connection_line
+    &.connection_type_judgement .connection_line,
+    &.connection_type_objective .connection_line
     {
         stroke-dasharray: 10 10;
+        &.hovered
+        {
+            stroke-dasharray: none;
+        }
     }
 }
