@@ -28,12 +28,14 @@ export function Button (props: ButtonProps & SpecificProps)
             size={props.size || "small"}
             startIcon={props.startIcon}
             variant={props.variant || "contained"}
-            onClick={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+            onPointerDown={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
             {
                 // Not sure we want to put this here
                 e.stopImmediatePropagation()
                 e.preventDefault()
-                props.onClick && props.onClick(e)
+                // Using onPointerDown otherwise other onPointerDown on parent elements fire
+                // and the onClick here never gets to fire
+                props.onPointerDown ? props.onPointerDown(e) : (props.onClick && props.onClick(e))
             }}
         >
             { props.children || props.value }
