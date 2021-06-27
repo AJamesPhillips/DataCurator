@@ -6,7 +6,9 @@ import type { RootState } from "../state/State"
 import { EditablePosition } from "../form/EditablePosition"
 import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
 import { Button } from "../sharedf/Button"
-import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_UI_knowledge_view_from_state, get_wcomponents_from_state } from "../state/specialised_objects/accessors"
+import { LabelsEditor } from "../labels/LabelsEditor"
+import { is_defined } from "../shared/utils/is_defined"
 
 
 
@@ -15,11 +17,15 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const kv = get_current_UI_knowledge_view_from_state(state)
+    const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids
+    const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
 
     return {
         ready: state.sync.ready,
-        wcomponent_ids: state.meta_wcomponents.selected_wcomponent_ids,
+        wcomponent_ids,
+        wcomponents,
         knowledge_view_id: kv && kv.id,
+        editing: !state.display_options.consumption_formatting,
     }
 }
 
@@ -28,6 +34,7 @@ const map_dispatch = {
     bulk_edit_knowledge_view_entries: ACTIONS.specialised_object.bulk_edit_knowledge_view_entries,
     bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
+    bulk_edit_wcomponents: ACTIONS.specialised_object.bulk_edit_wcomponents,
 }
 
 
@@ -43,17 +50,26 @@ function _WComponentMultipleForm (props: Props)
 
     const {
         wcomponent_ids: ids,
+        wcomponents,
         knowledge_view_id,
+        editing,
         bulk_edit_knowledge_view_entries,
         bulk_add_to_knowledge_view,
         snap_to_grid_knowledge_view_entries,
+        bulk_edit_wcomponents,
     } = props
     const wcomponent_ids = Array.from(ids)
 
-    return <div>
-        <h2>Bulk editing {wcomponent_ids.length} components</h2>
 
-        <p>
+    const label_ids_set = new Set<string>()
+    wcomponents.forEach(wc => (wc.label_ids || []).forEach(id => label_ids_set.add(id)))
+    const label_ids: string[] = Array.from(label_ids_set).sort()
+
+
+    return <div>
+        <h2>{editing ? "Bulk editing" : "Viewing"} {wcomponent_ids.length} components</h2>
+
+        {editing && <p>
             Position:
             <EditablePosition
                 point={{ left: 0, top: 0 }}
@@ -65,9 +81,9 @@ function _WComponentMultipleForm (props: Props)
                     })
                 }}
             />
-        </p>
+        </p>}
 
-        <p>
+        {editing && <p>
             <Button
                 disabled={!knowledge_view_id}
                 value="Snap to grid"
@@ -78,6 +94,15 @@ function _WComponentMultipleForm (props: Props)
                 }}
                 is_left={true}
             />
+        </p>}
+
+        <p>
+            {(editing || label_ids.length > 0) && <p>
+                <LabelsEditor
+                    label_ids={label_ids}
+                    on_change={label_ids => bulk_edit_wcomponents({ wcomponent_ids, change: { label_ids } })}
+                />
+            </p>}
         </p>
 
         <hr />

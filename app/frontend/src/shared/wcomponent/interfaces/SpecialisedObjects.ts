@@ -29,6 +29,11 @@ export interface Perception extends Base
 
 // World Component
 export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement | WComponentPrioritisation
+type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection & keyof WComponentJudgement & keyof WComponentPrioritisation, "type">
+export type WComponentCommon = {
+    [K in WComponentCommonKeys]: WComponentNode[K] | WComponentConnection[K] | WComponentCausalConnection[K] | WComponentJudgement[K] | WComponentPrioritisation[K]
+}
+
 export type WComponentsById = { [id: string]: WComponent /*| undefined*/ }
 
 
