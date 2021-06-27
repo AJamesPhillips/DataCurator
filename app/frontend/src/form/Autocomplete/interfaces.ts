@@ -10,6 +10,7 @@ interface BaseAutocompleteOption
 {
     id: string | undefined
     title: string
+    is_hidden?: boolean
     jsx?: h.JSX.Element
     subtitle?: string
     color?: Color

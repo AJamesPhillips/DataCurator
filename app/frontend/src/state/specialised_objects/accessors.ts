@@ -72,7 +72,7 @@ interface KnowledgeViewWithParentId extends KnowledgeView
 }
 
 
-export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[], sort_by_priority: boolean = false): NestedKnowledgeViewIdsMap
+export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIdsMap
 {
     const map: NestedKnowledgeViewIdsMap = { top_ids: [], map: {} }
 
@@ -93,9 +93,6 @@ export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeVie
 
 
     add_child_views(unused_knowledge_views, map)
-
-    if (sort_by_priority) sort_ids_by_priority_then_title(map)
-    else sort_ids_by_title(map)
 
     return map
 }
@@ -143,7 +140,7 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
 
 
 
-function sort_ids_by_priority_then_title (map: NestedKnowledgeViewIdsMap)
+export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewIdsMap)
 {
     const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
         priority: "0",
@@ -157,18 +154,6 @@ function sort_ids_by_priority_then_title (map: NestedKnowledgeViewIdsMap)
         const entry = map.map[id]!
         return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
     }, "ascending")
-
-    Object.values(map.map).forEach(entry =>
-    {
-        entry.child_ids = sort_list(entry.child_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
-    })
-}
-
-
-
-function sort_ids_by_title (map: NestedKnowledgeViewIdsMap)
-{
-    map.top_ids = sort_list(map.top_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
 
     Object.values(map.map).forEach(entry =>
     {

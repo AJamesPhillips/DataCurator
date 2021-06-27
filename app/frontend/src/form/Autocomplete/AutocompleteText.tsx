@@ -96,7 +96,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     function get_selected_option_title_str (): string
     {
-        const selected_option = get_selected_option(props, options.current)
+        const selected_option = get_selected_option(props, props.options)
 
         return selected_option ? selected_option.title : "-"
     }
@@ -263,8 +263,9 @@ export function AutocompleteText <E extends AutocompleteOption> (props: OwnProps
 
 
 
-
-function get_selected_option (props: Props, options: InternalAutocompleteOption[]): InternalAutocompleteOption | undefined
+// We use the initial `AutocompleteOption` options to allow for display the text
+// of a selected but normally hidden option
+function get_selected_option (props: Props, options: AutocompleteOption[]): AutocompleteOption | undefined
 {
     if (props.selected_option_id === undefined)
     {
@@ -290,9 +291,11 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 function prepare_options_and_targets (options: AutocompleteOption[])
 {
-    const new_internal_options: InternalAutocompleteOption[] = options.map(o => ({
-        ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
-    }))
+    const new_internal_options: InternalAutocompleteOption[] = options
+        .filter(({ is_hidden }) => !is_hidden)
+        .map(o => ({
+            ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
+        }))
 
     const prepared_targets = new_internal_options.map(({ total_text }) =>
     {

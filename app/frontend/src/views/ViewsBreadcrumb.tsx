@@ -12,6 +12,8 @@ import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
+import type { Color } from "../shared/interfaces"
+import { sort_list } from "../shared/utils/sort"
 
 
 
@@ -24,7 +26,7 @@ const map_state = (state: RootState) =>
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
         kv_id,
-        nested_kv_ids_map: state.derived.priority_nested_knowledge_view_ids_map,
+        nested_kv_ids_map: state.derived.nested_knowledge_view_ids_map,
     }
 }
 
@@ -56,19 +58,25 @@ function _ViewsBreadcrumb (props: Props)
     const { kv_id, nested_kv_ids_map } = props
     let nested_kv = nested_kv_ids_map.map[kv_id]
 
-    const levels: { entries: NestedKnowledgeViewIdsEntry[], selected_id: string, allow_none: boolean }[] = []
+    const levels: { options: KnowledgeViewOption[], selected_id: string, allow_none: boolean }[] = []
     let deepest_level = true
     let last_parent_id = ""
 
     while (nested_kv)
     {
-        const child_level_options = nested_kv.child_ids
+        const entries = nested_kv.child_ids
             .map(id => nested_kv_ids_map.map[id])
             .filter(is_defined)
 
-        if (child_level_options.length)
+        if (entries.length)
         {
-            levels.unshift({ entries: child_level_options, selected_id: last_parent_id, allow_none: deepest_level })
+            const options = entries.map(calc_if_is_hidden)
+
+            levels.unshift({
+                options,
+                selected_id: last_parent_id,
+                allow_none: deepest_level,
+            })
         }
         deepest_level = false
         last_parent_id = nested_kv.id
@@ -76,8 +84,10 @@ function _ViewsBreadcrumb (props: Props)
         nested_kv = nested_kv.parent_id !== undefined ? nested_kv_ids_map.map[nested_kv.parent_id] : undefined
     }
 
-    const top_level = nested_kv_ids_map.top_ids.map(id => nested_kv_ids_map.map[id]).filter(is_defined)
-    levels.unshift({ entries: top_level, selected_id: last_parent_id, allow_none: false  })
+    const top_level_options = nested_kv_ids_map.top_ids.map(id => nested_kv_ids_map.map[id])
+        .filter(is_defined)
+        .map(calc_if_is_hidden)
+    levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
 
     return  (
         <div class="breadcrumbs">
@@ -101,10 +111,10 @@ function _ViewsBreadcrumb (props: Props)
                         {view_options.map(opt => <option value={opt.id}>{opt.title}</option>)}
                     </select>
                 </label>
-                {levels.map(options => <AutocompleteText
-                    allow_none={options.allow_none}
-                    selected_option_id={options.selected_id}
-                    options={options.entries}
+                {levels.map(level => <AutocompleteText
+                    allow_none={level.allow_none}
+                    selected_option_id={level.selected_id}
+                    options={level.options}
                     on_change={subview_id => props.change_route({ args: { subview_id } })}
                     on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
                     always_allow_editing={true}
@@ -124,3 +134,22 @@ const view_options: { id: ViewType, title: string }[] = [
     { id: "priorities", title: "Priorities" },
     { id: "priorities_list", title: "Priorities list" },
 ]
+
+
+
+interface KnowledgeViewOption
+{
+    id: string
+    title: string
+    is_hidden: boolean
+    color?: Color
+}
+
+function calc_if_is_hidden (entry: NestedKnowledgeViewIdsEntry): KnowledgeViewOption
+{
+    const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived"
+    const color = entry.ERROR_is_circular ? pink : undefined
+    return { id: entry.id, title: entry.title, is_hidden, color }
+}
+
+const pink: Color = { r: 231, g: 190, b: 201, a: 1 }

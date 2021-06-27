@@ -13,6 +13,7 @@ import {
     get_nested_knowledge_view_ids_map,
     get_wcomponents_from_state,
     get_wcomponent_from_state,
+    sort_nested_knowledge_map_ids_by_priority_then_title,
 } from "../accessors"
 import type {
     KnowledgeView,
@@ -85,10 +86,9 @@ function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
     const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, "ascending")
-    const priority_knowledge_views = knowledge_views.filter(({ sort_type }) => sort_type !== "hidden" && sort_type !== "archived")
     const base_knowledge_view = get_base_knowledge_view(knowledge_views)
     const nested_knowledge_view_ids_map = get_nested_knowledge_view_ids_map(knowledge_views)
-    const priority_nested_knowledge_view_ids_map = get_nested_knowledge_view_ids_map(priority_knowledge_views, true)
+    sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids_map)
 
     state = {
         ...state,
@@ -97,7 +97,6 @@ function update_derived_knowledge_view_state (state: RootState): RootState
             knowledge_views,
             base_knowledge_view,
             nested_knowledge_view_ids_map,
-            priority_nested_knowledge_view_ids_map,
         },
     }
 
