@@ -48,6 +48,16 @@ export function get_current_knowledge_view_from_state (state: RootState)
 
 
 
+export function is_on_current_knowledge_view (state: RootState, wcomponent_id: string)
+{
+    const kv = get_current_knowledge_view_from_state(state)
+    if (!kv) return false
+
+    return !!kv.wc_id_map[wcomponent_id]
+}
+
+
+
 export function get_knowledge_view_from_state (state: RootState, knowledge_view_id: string): KnowledgeView | undefined
 {
     return state.specialised_objects.knowledge_views_by_id[knowledge_view_id]

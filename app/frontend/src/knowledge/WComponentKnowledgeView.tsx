@@ -99,7 +99,7 @@ function _WComponentKnowledgeView (props: Props)
             <Button
                 value="Add to current knowledge view"
                 extra_class_names="left"
-                onClick={() => update(knowledge_view_id, UI_knowledge_view_entry || {})}
+                onClick={() => update(knowledge_view_id, {})}
             />
         </div>}
 
