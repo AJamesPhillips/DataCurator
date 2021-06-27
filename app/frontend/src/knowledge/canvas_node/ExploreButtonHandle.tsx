@@ -13,6 +13,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
+import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 
@@ -29,11 +30,13 @@ export interface ExploreButtonHandleOwnProps
 
 const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
 {
+    const current_kv = get_current_UI_knowledge_view_from_state(state)
     const kvwc_id = wcomponent_id_to_wcomponent_kv_id(own_props.wcomponent.id)
 
     return {
         kvwc_id,
-        kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id]
+        kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id],
+        current_kv_id: current_kv && current_kv.id,
     }
 }
 
@@ -59,7 +62,11 @@ function _ExploreButtonHandle (props: Props)
                 }
                 const title = "Knowledge View for: " + (props.wcomponent.title || `World Component ${props.wcomponent.id} created: ${get_today_str()}`)
                 const partial_knowledge_view_wcomponent: Partial<KnowledgeView> = {
-                    id: props.kvwc_id, wc_id_map, title, sort_type: "hidden",
+                    id: props.kvwc_id,
+                    wc_id_map,
+                    title,
+                    sort_type: "hidden",
+                    parent_knowledge_view_id: props.current_kv_id,
                 }
 
                 // Optimisisation, only need the creation_context if creating a new knowledge view
