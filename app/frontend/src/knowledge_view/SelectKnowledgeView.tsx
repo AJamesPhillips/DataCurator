@@ -50,6 +50,7 @@ function _SelectKnowledgeView (props: Props)
 
     return <AutocompleteText
         placeholder={placeholder || "Select knowledge view..."}
+        allow_none={true}
         selected_option_id={selected_option_id}
         options={options}
         on_change={on_change}
