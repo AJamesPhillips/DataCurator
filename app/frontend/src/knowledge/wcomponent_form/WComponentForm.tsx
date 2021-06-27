@@ -132,7 +132,7 @@ function _WComponentForm (props: Props)
         <h2><EditableText
             placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
             value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
-            on_blur={title => upsert_wcomponent({ title })}
+            conditional_on_blur={title => upsert_wcomponent({ title })}
             force_focus={previous_id.current !== wcomponent_id}
         /></h2>
 
@@ -190,13 +190,13 @@ function _WComponentForm (props: Props)
                 <EditableTextSingleLine
                     placeholder="True..."
                     value={wcomponent.boolean_true_str || ""}
-                    on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
+                    conditional_on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
                 />
                 {!editing && <div>&nbsp; | &nbsp;</div>}
                 <EditableTextSingleLine
                     placeholder="False..."
                     value={wcomponent.boolean_false_str || ""}
-                    on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
+                    conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
                 />
             </div>
         </p>}
@@ -227,7 +227,7 @@ function _WComponentForm (props: Props)
                 placeholder="..."
                 value={wcomponent.effect_when_true}
                 allow_undefined={true}
-                on_blur={effect_when_true => upsert_wcomponent({ effect_when_true })}
+                conditional_on_blur={effect_when_true => upsert_wcomponent({ effect_when_true })}
             />
         </p>}
 
@@ -236,7 +236,7 @@ function _WComponentForm (props: Props)
                 placeholder="..."
                 value={wcomponent.effect_when_false}
                 allow_undefined={true}
-                on_blur={effect_when_false => upsert_wcomponent({ effect_when_false })}
+                conditional_on_blur={effect_when_false => upsert_wcomponent({ effect_when_false })}
             />
         </p>}
 
@@ -246,7 +246,7 @@ function _WComponentForm (props: Props)
             <EditableText
                 placeholder="Description..."
                 value={wcomponent.description}
-                on_blur={description => upsert_wcomponent({ description })}
+                conditional_on_blur={description => upsert_wcomponent({ description })}
             />
         </p>}
 
@@ -354,7 +354,7 @@ function _WComponentForm (props: Props)
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
-                on_blur={color => upsert_wcomponent({ label_color: color })}
+                conditional_on_blur={color => upsert_wcomponent({ label_color: color })}
             />
 
             <hr />

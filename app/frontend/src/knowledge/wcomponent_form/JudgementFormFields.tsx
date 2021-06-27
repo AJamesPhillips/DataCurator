@@ -103,7 +103,7 @@ function _JudgementFormFields (props: Props)
                 {!target_VAPs_represent.boolean && <EditableTextSingleLine
                     placeholder="Value..."
                     value={wcomponent.judgement_comparator_value || ""}
-                    on_change={new_value =>
+                    conditional_on_change={new_value =>
                         {
                         const judgement_comparator_value = new_value.trim()
 

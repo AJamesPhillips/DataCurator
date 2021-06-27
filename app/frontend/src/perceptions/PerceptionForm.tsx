@@ -49,13 +49,13 @@ function _PerceptionForm (props: Props)
         <h2><EditableText
             placeholder="Title..."
             value={perception.title}
-            on_change={title => upsert_perception({ title })}
+            conditional_on_change={title => upsert_perception({ title })}
         /></h2>
 
         <p><EditableText
             placeholder="Description..."
             value={perception.description}
-            on_change={description => upsert_perception({ description })}
+            conditional_on_change={description => upsert_perception({ description })}
         /></p>
 
         <p title={(perception.custom_created_at ? "Custom " : "") + "Created at"}>

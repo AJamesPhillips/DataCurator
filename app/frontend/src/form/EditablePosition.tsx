@@ -27,7 +27,7 @@ export function EditablePosition (props: OwnProps)
             placeholder="Left"
             value={left}
             allow_undefined={false}
-            on_change={new_left => update({ left: round_coordinate_small_step(new_left) }) }
+            conditional_on_change={new_left => update({ left: round_coordinate_small_step(new_left) }) }
         />
         <input
             type="button"
@@ -54,7 +54,7 @@ export function EditablePosition (props: OwnProps)
             placeholder="Top"
             value={top}
             allow_undefined={false}
-            on_change={new_top => update({ top: round_coordinate_small_step(new_top) }) }
+            conditional_on_change={new_top => update({ top: round_coordinate_small_step(new_top) }) }
         />
         <input
             type="button"

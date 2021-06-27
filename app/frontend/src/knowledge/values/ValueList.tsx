@@ -70,7 +70,7 @@ function get_summary (item: StateValueString, on_change?: (item: StateValueStrin
         Value: &nbsp; <EditableTextSingleLine
             placeholder="value..."
             value={item.value || ""}
-            on_change={new_value =>
+            conditional_on_change={new_value =>
             {
                 const value = new_value && new_value.trim()
                 if (on_change) on_change({ ...item, value })
@@ -88,7 +88,7 @@ function get_details (item: StateValueString, on_change?: (item: StateValueStrin
             Description: <EditableText
                 placeholder="Description..."
                 value={item.description}
-                on_change={on_change && (new_d => on_change({ ...item, description: new_d }))}
+                conditional_on_change={on_change && (new_d => on_change({ ...item, description: new_d }))}
             />
         </div>
     </div>

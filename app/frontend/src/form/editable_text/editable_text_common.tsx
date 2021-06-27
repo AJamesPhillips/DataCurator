@@ -16,8 +16,9 @@ export interface EditableTextCommonOwnProps
     disabled?: boolean
     placeholder: string
     value: string
-    on_change?: (new_value: string) => void
-    on_blur?: (value: string) => void
+    conditional_on_change?: (new_value: string) => void
+    conditional_on_blur?: (value: string) => void
+    always_on_blur?: (value: string) => void
     force_focus?: boolean
 }
 
@@ -64,9 +65,18 @@ function _EditableTextCommon (props: Props)
     const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
 
-    const { placeholder, on_change, on_blur, disabled, presenting, force_focus, set_editing_text_flag } = props
+    const {
+        placeholder,
+        conditional_on_change: user_conditional_on_change,
+        conditional_on_blur,
+        always_on_blur,
+        disabled,
+        presenting,
+        force_focus,
+        set_editing_text_flag,
+    } = props
 
-    if ((!on_change && !on_blur) || disabled || presenting)
+    if ((!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || presenting)
     {
         const class_name = (disabled ? "disabled" : "")
         return <div className={class_name}>
@@ -77,7 +87,7 @@ function _EditableTextCommon (props: Props)
 
     const conditional_on_change = (new_value: string) =>
     {
-        if (new_value !== value) on_change && on_change(new_value)
+        if (new_value !== value) user_conditional_on_change && user_conditional_on_change(new_value)
         set_value(new_value)
     }
 
@@ -97,7 +107,7 @@ function _EditableTextCommon (props: Props)
     }
 
 
-    const wrapped_on_change = (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
+    const wrapped_conditional_on_change = (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
     {
         handle_text_field_change({ e, set_id_insertion_point, conditional_on_change })
     }
@@ -105,12 +115,18 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_on_blur = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        handle_text_field_blur({ e, initial_value: props.value, on_blur, set_editing_text_flag })
+        handle_text_field_blur({ e, initial_value: props.value, conditional_on_blur, always_on_blur, set_editing_text_flag })
     }
 
 
     return <div className={class_name}>
-        {props.component({ value, on_render, on_focus, on_change: wrapped_on_change, on_blur: wrapped_on_blur })}
+        {props.component({
+            value,
+            on_render,
+            on_focus,
+            on_change: wrapped_conditional_on_change,
+            on_blur: wrapped_on_blur,
+        })}
 
         {id_insertion_point !== undefined && <ConditionalWComponentSearchWindow
             value={value}
@@ -192,14 +208,17 @@ interface HandleTextFieldBlurArgs
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
     initial_value: string
     set_editing_text_flag: (value: boolean) => void
-    on_blur?: (value: string) => void
+    conditional_on_blur?: (value: string) => void
+    always_on_blur?: (value: string) => void
 }
 function handle_text_field_blur (args: HandleTextFieldBlurArgs)
 {
     const { value } = args.e.currentTarget
-    const { set_editing_text_flag, initial_value, on_blur } = args
+    const { set_editing_text_flag, initial_value, conditional_on_blur, always_on_blur } = args
     set_editing_text_flag(false)
-    if (initial_value !== value) on_blur && on_blur(value)
+
+    if (initial_value !== value) conditional_on_blur && conditional_on_blur(value)
+    always_on_blur && always_on_blur(value)
 }
 
 

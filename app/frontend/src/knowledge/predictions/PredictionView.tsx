@@ -25,12 +25,12 @@ export function PredictionViewSummary (props: OwnProps_Summary)
         probability={<EditablePercentage
             placeholder="..."
             value={probability}
-            on_change={on_change && (new_probability => on_change({ ...prediction, probability: new_probability }))}
+            conditional_on_change={on_change && (new_probability => on_change({ ...prediction, probability: new_probability }))}
         />}
         conviction={<EditablePercentage
             placeholder="..."
             value={conviction}
-            on_change={on_change && (new_conviction => on_change({ ...prediction, conviction: new_conviction }))}
+            conditional_on_change={on_change && (new_conviction => on_change({ ...prediction, conviction: new_conviction }))}
         />}
     />
 }
@@ -68,7 +68,7 @@ export function PredictionViewDetails (props: OwnProps_Details)
             <span className="description_label">Explanation</span> <EditableText
                 placeholder="Explanation..."
                 value={explanation}
-                on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
+                conditional_on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
             />
         </div>}
     </div>

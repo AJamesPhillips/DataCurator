@@ -12,7 +12,7 @@ import { color_to_string } from "./color"
 interface OwnProps
 {
     color?: Color
-    on_blur: (color: Color) => void
+    conditional_on_blur: (color: Color) => void
 }
 
 
@@ -30,7 +30,7 @@ export function ColorPicker (props: OwnProps)
     {
         const valid_new_color = get_valid_new_color(color, partial_color)
         _set_color(valid_new_color)
-        props.on_blur(valid_new_color)
+        if (colours_different(props.color, valid_new_color)) props.conditional_on_blur(valid_new_color)
     }
 
 
@@ -40,8 +40,8 @@ export function ColorPicker (props: OwnProps)
             placeholder=""
             value={color.r}
             allow_undefined={false}
-            on_change={r => set_color({ r })}
-            on_blur={r => on_blur({ r })}
+            conditional_on_change={r => set_color({ r })}
+            always_on_blur={r => on_blur({ r })}
         />
 
         <span className="description_label">g</span>
@@ -49,8 +49,8 @@ export function ColorPicker (props: OwnProps)
             placeholder=""
             value={color.g}
             allow_undefined={false}
-            on_change={g => set_color({ g })}
-            on_blur={g => on_blur({ g })}
+            conditional_on_change={g => set_color({ g })}
+            always_on_blur={g => on_blur({ g })}
         />
 
         <span className="description_label">b</span>
@@ -58,8 +58,8 @@ export function ColorPicker (props: OwnProps)
             placeholder=""
             value={color.b}
             allow_undefined={false}
-            on_change={b => set_color({ b })}
-            on_blur={b => on_blur({ b })}
+            conditional_on_change={b => set_color({ b })}
+            always_on_blur={b => on_blur({ b })}
         />
 
 
@@ -90,4 +90,13 @@ function validate_color (color: Color)
     a = bounded(a, 0, 1)
 
     return { r, g, b, a }
+}
+
+
+
+function colours_different (color1: Color | undefined, color2: Color)
+{
+    if (!color1) return true
+
+    return color1.r !== color2.r || color1.g !== color2.g || color1.b !== color2.b || color1.a !== color2.a
 }

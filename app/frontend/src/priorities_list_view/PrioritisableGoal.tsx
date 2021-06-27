@@ -51,7 +51,7 @@ function _PrioritisableGoal (props: Props)
                 placeholder="..."
                 allow_undefined={true}
                 value={effort}
-                on_blur={new_effort =>
+                conditional_on_blur={new_effort =>
                 {
                     const goals_attributes: PrioritisedGoalAttributes = { ...goal_prioritisation_attributes }
                     if (new_effort === undefined) delete goals_attributes[goal.id]

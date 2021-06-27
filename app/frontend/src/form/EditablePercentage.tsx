@@ -12,8 +12,8 @@ interface OwnProps
     disabled?: boolean
     placeholder: string
     value: number | undefined
-    on_change?: (new_value: number) => void
-    on_blur?: (new_value: number) => void
+    conditional_on_change?: (new_value: number) => void
+    conditional_on_blur?: (new_value: number) => void
 }
 
 
@@ -21,8 +21,8 @@ export function EditablePercentage (props: OwnProps)
 {
     const value = percentage_to_string(props.value)
 
-    const { on_change, on_blur, disabled } = props
-    if ((!on_change && !on_blur) || disabled)
+    const { conditional_on_change, conditional_on_blur, disabled } = props
+    if ((!conditional_on_change && !conditional_on_blur) || disabled)
     {
         const class_name = "editable_percentage" + (disabled ? "disabled" : "")
         return <div className={class_name}>{value || props.placeholder}&nbsp;%</div>
@@ -33,13 +33,13 @@ export function EditablePercentage (props: OwnProps)
         <EditableTextSingleLine
             placeholder={props.placeholder}
             value={value}
-            on_change={new_value => {
+            conditional_on_change={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) on_change && on_change(valid_value)
+                if (valid_value !== undefined) conditional_on_change && conditional_on_change(valid_value)
             }}
-            on_blur={new_value => {
+            conditional_on_blur={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) on_blur && on_blur(valid_value)
+                if (valid_value !== undefined) conditional_on_blur && conditional_on_blur(valid_value)
             }}
         />&nbsp;%
     </div>

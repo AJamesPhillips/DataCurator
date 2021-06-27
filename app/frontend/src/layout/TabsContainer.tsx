@@ -39,7 +39,13 @@ function _TabsContainer (props: Props)
     let routes = ALLOWED_ROUTES
     if (!show_all_routes)
     {
-        const hide_routes = new Set<ROUTE_TYPES>(["objects", "patterns", "perceptions", "statements", "about"])
+        const hide_routes = new Set<ROUTE_TYPES>([
+            "objects",
+            "patterns",
+            "perceptions",
+            "statements",
+            "about",
+        ])
         routes = routes.filter(r => !hide_routes.has(r))
     }
 

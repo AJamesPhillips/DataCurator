@@ -166,7 +166,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                 <div className="description_label">min</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.min || ""}
-                    on_blur={min => on_change({ ...VAP, min })}
+                    conditional_on_blur={min => on_change({ ...VAP, min })}
                 />
             </div>}
             {(editing || VAP.value) && <div>
@@ -174,14 +174,14 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={is_boolean}
                     placeholder="..."
                     value={is_boolean ? "True" : VAP.value}
-                    on_blur={value => on_change({ ...VAP, value })}
+                    conditional_on_blur={value => on_change({ ...VAP, value })}
                 />
             </div>}
             {is_number && (editing || VAP.max) && <div>
                 <div className="description_label">max</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.max || ""}
-                    on_blur={max => on_change({ ...VAP, max })}
+                    conditional_on_blur={max => on_change({ ...VAP, max })}
                 />
             </div>}
         </div>
@@ -191,7 +191,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={disabled_prob}
                     placeholder="..."
                     value={probability}
-                    on_blur={probability => on_change({ ...VAP, probability })}
+                    conditional_on_blur={probability => on_change({ ...VAP, probability })}
                 />
             </div>}
             {!is_boolean && VAP.relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
@@ -200,7 +200,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     placeholder="..."
                     value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
-                    on_blur={relative_probability => on_change({ ...VAP, relative_probability })}
+                    conditional_on_blur={relative_probability => on_change({ ...VAP, relative_probability })}
                 />
             </div>}
             {is_boolean && <div className={disabled_conviction ? "disabled" : ""}>
@@ -208,7 +208,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={disabled_conviction}
                     placeholder="..."
                     value={conviction}
-                    on_blur={conviction => on_change({ ...VAP, conviction })}
+                    conditional_on_blur={conviction => on_change({ ...VAP, conviction })}
                 />
             </div>}
 
@@ -250,7 +250,7 @@ const get_details = (VAPs_represent: VAPsRepresent, editing: boolean) => (item: 
         <EditableText
             placeholder="..."
             value={item.description}
-            on_blur={description => on_change({ ...item, description })}
+            conditional_on_blur={description => on_change({ ...item, description })}
         />
     </div>
 }

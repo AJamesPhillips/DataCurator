@@ -129,7 +129,7 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView,
             <span className="description_label">Title</span> &nbsp; <EditableTextSingleLine
                 placeholder="Title..."
                 value={knowledge_view.title}
-                on_blur={new_title => {
+                conditional_on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "Base" : make_default_title()
                     on_change({ ...knowledge_view, title: new_title || default_title })
                 }}

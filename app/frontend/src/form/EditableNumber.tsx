@@ -15,8 +15,9 @@ type OwnProps =
     value: number
     default_value_when_invalid?: number
     allow_undefined: false
-    on_change?: (new_value: number) => void
-    on_blur?: (value: number) => void
+    conditional_on_change?: (new_value: number) => void
+    conditional_on_blur?: (value: number) => void
+    always_on_blur?: (value: number) => void
 } |
 {
     disabled?: boolean
@@ -24,8 +25,9 @@ type OwnProps =
     value: number | undefined
     default_value_when_invalid?: number
     allow_undefined: true
-    on_change?: (new_value: number | undefined) => void
-    on_blur?: (value: number | undefined) => void
+    conditional_on_change?: (new_value: number | undefined) => void
+    conditional_on_blur?: (value: number | undefined) => void
+    always_on_blur?: (value: number | undefined) => void
 }
 
 
@@ -44,12 +46,20 @@ function _EditableNumber (props: Props)
 {
     const value = props.value !== undefined ? props.value.toString() : ""
 
-    const { allow_undefined, on_change, on_blur, disabled, editing, default_value_when_invalid = 0 } = props
+    const {
+        allow_undefined,
+        conditional_on_change,
+        conditional_on_blur,
+        always_on_blur,
+        disabled,
+        editing,
+        default_value_when_invalid = 0,
+    } = props
 
 
     let class_name = "editable_number"
 
-    if (!editing || (!on_change && !on_blur) || disabled)
+    if (!editing || (!conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled)
     {
         class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "")
         return <div className={class_name}>{props.value === undefined ? props.placeholder : props.value}</div>
@@ -60,25 +70,25 @@ function _EditableNumber (props: Props)
         <EditableTextSingleLine
             placeholder={props.placeholder}
             value={value}
-            on_change={new_value =>
+            conditional_on_change={new_value =>
             {
-                if (!on_change) return
+                if (!conditional_on_change) return
 
                 const valid_value = string_to_number(new_value, default_value_when_invalid)
-                if (on_event_handler_accepts_undefined(on_change, allow_undefined)) on_change(valid_value)
-                else if (valid_value !== undefined) on_change(valid_value)
+                if (on_event_handler_accepts_undefined(conditional_on_change, allow_undefined)) conditional_on_change(valid_value)
+                else if (valid_value !== undefined) conditional_on_change(valid_value)
             }}
-            on_blur={value =>
+            conditional_on_blur={value =>
             {
-                if (!on_blur) return
+                if (!conditional_on_blur) return
 
-                let valid_value = string_to_number(value, default_value_when_invalid)
-                if (on_event_handler_accepts_undefined(on_blur, allow_undefined)) on_blur(valid_value)
-                else
-                {
-                    if (valid_value === undefined) valid_value = default_value_when_invalid
-                    on_blur(valid_value)
-                }
+                handle_blur({ value, default_value_when_invalid, on_blur: conditional_on_blur, allow_undefined })
+            }}
+            always_on_blur={value =>
+            {
+                if (!always_on_blur) return
+
+                handle_blur({ value, default_value_when_invalid, on_blur: always_on_blur, allow_undefined })
             }}
         />
     </div>
@@ -103,4 +113,28 @@ function string_to_number (value: string, default_value_when_invalid: number): n
 function on_event_handler_accepts_undefined (on_change: (v: number) => void, allow_undefined?: boolean): on_change is (v: number | undefined) => void
 {
     return !!allow_undefined
+}
+
+
+
+interface HandleBlurArgs
+{
+    value: string
+    default_value_when_invalid: number
+    on_blur: ((value: number) => void) | ((value: number | undefined) => void)
+    allow_undefined: boolean
+}
+function handle_blur ({ value, default_value_when_invalid, on_blur, allow_undefined }: HandleBlurArgs)
+{
+    let valid_value = string_to_number(value, default_value_when_invalid)
+
+    if (on_event_handler_accepts_undefined(on_blur, allow_undefined))
+    {
+        on_blur(valid_value)
+    }
+    else
+    {
+        if (valid_value === undefined) valid_value = default_value_when_invalid
+        on_blur(valid_value)
+    }
 }
