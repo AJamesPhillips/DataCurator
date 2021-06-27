@@ -99,15 +99,15 @@ function _WComponentKnowledgeView (props: Props)
             <Button
                 value="Add to current knowledge view"
                 extra_class_names="left"
-                onClick={() => update(knowledge_view_id, {})}
+                onClick={() => update(knowledge_view_id, UI_knowledge_view_entry || {})}
             />
         </div>}
 
 
-        {knowledge_view_entry && <div>
+        {UI_knowledge_view_entry && <div>
             <MoveToPositionButton
                 description="Show node"
-                move_to_xy={lefttop_to_xy({ ...knowledge_view_entry, zoom: 100 }, true)}
+                move_to_xy={lefttop_to_xy({ ...UI_knowledge_view_entry, zoom: 100 }, true)}
             />
         </div>}
 
