@@ -11,7 +11,7 @@ import {
     RootState,
     Statement,
 } from "../state/State"
-import { config_store } from "../state/store"
+import { get_store } from "../state/store"
 
 
 interface OwnProps
@@ -28,7 +28,7 @@ export function object_content ({ object, depth }: OwnProps)
 {
     if (object.is_rendered) return object.rendered
 
-    if (!store) store = config_store()
+    if (!store) store = get_store()
 
     return render_object({ object, state: store.getState(), depth })
 }
@@ -216,7 +216,7 @@ function _run_tests ()
 {
     console. log("running tests of object_content")
 
-    if (!store) store = config_store()
+    if (!store) store = get_store()
 
     const initial_state = store.getState()
 
@@ -230,7 +230,7 @@ function _run_tests ()
 
 
     patterns = [{ id: "p2", content: "@@abc(0) c(1)" }].map(get_pattern_for_test)
-    store = config_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [] }})
+    store = get_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [] }})
 
     const obj2: ObjectWithCache = get_object_for_test({ pattern_id: "p2", attributes: [
         { pidx: 0, value: " val" },
@@ -252,7 +252,7 @@ function _run_tests ()
     const obj3b: ObjectWithCache = get_object_for_test({ pattern_id: "p31", attributes: [
         { pidx: 0, id: "o3" },
     ] }, patterns)
-    store = config_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj3] }})
+    store = get_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj3] }})
     const res3a = object_content({ object: obj3b })
     test(res3a, "b a val2 stat1")
     const res3b = object_content({ object: obj3b, depth: 1 })
@@ -276,7 +276,7 @@ function _run_tests ()
     const obj4c: ObjectWithCache = get_object_for_test({ pattern_id: "p42", attributes: [
         { pidx: 0, id: "o5" },
     ] }, patterns)
-    store = config_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj4, obj4b] }})
+    store = get_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj4, obj4b] }})
     const res4a = object_content({ object: obj4c, depth: 3 })
     test(res4a, "a b c val2 stat1")
 
@@ -291,7 +291,7 @@ function _run_tests ()
     const obj5b: ObjectWithCache = get_object_for_test({ pattern_id: "p51", attributes: [
         { pidx: 0, id: "o5" },
     ] }, patterns)
-    store = config_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj5a] }})
+    store = get_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj5a] }})
     const res5 = object_content({ object: obj5b })
     test(res5, "a o5 val")
 
@@ -311,13 +311,13 @@ function _run_tests ()
     const obj6c: ObjectWithCache = get_object_for_test({ pattern_id: "p62", attributes: [
         { pidx: 0, id: "o5" },
     ] }, patterns)
-    store = config_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj6, obj6b] }})
+    store = get_store({ use_cache: false, override_preloaded_state: { statements: [statement], patterns: [], objects: [obj6, obj6b] }})
     const res6 = object_content({ object: obj6c, depth: 3 })
     test(res6, "a part1: val2 part2: stat1")
 
 
     // reset store just in case we run this in production by accident
-    store = config_store({ use_cache: false, override_preloaded_state: initial_state })
+    store = get_store({ use_cache: false, override_preloaded_state: initial_state })
 }
 
 // run_tests()

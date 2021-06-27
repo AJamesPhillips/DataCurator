@@ -14,7 +14,7 @@ import type {
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import { config_store } from "../../state/store"
+import { get_store } from "../../state/store"
 
 
 
@@ -50,7 +50,7 @@ function _ExploreButtonHandle (props: Props)
         className={`node_handle explore ${kvwc ? "has_nested_knowledge_view" : ""}`}
         onPointerDown={() =>
         {
-            const store = config_store()
+            const store = get_store()
 
             if (!kvwc)
             {

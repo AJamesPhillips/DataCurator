@@ -7,7 +7,7 @@ import "preact/devtools"
 import { Provider } from "react-redux"
 
 import { APP_DETAILS } from "./shared/constants"
-import { config_store } from "./state/store"
+import { get_store } from "./state/store"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"
 import { DemoStatementProbability } from "./statements/StatementWithProbability"
 import { DemoStatementProbabilityExplorer } from "./statements/StatementProbabilityExplorer"
@@ -37,7 +37,7 @@ if (root) {
     }
     else if (window.location.pathname === "/project_dashboard")
     {
-        render(<Provider store={config_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
     }
     else if (window.location.pathname === "/prob_graph")
     {
@@ -49,15 +49,15 @@ if (root) {
     }
     else if (window.location.pathname === "/statement_probability")
     {
-        render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
     }
     else if (window.location.pathname === "/statement_probability_explorer")
     {
-        render(<Provider store={config_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox/editable_custom_datetime")
     {
-        render(<Provider store={config_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox/canvas_nodes")
     {
@@ -69,7 +69,7 @@ if (root) {
     }
     else
     {
-        render(<Provider store={config_store({ load_state_from_server: true })}><App /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: true })}><App /></Provider>, root)
     }
 }
 

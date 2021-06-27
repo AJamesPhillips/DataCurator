@@ -4,7 +4,7 @@ import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_vi
 import { get_new_knowledge_view_id, is_wc_knowledge_view_id } from "../shared/utils/ids"
 import { get_new_created_ats } from "../shared/utils/datetime"
 import type { CreationContextState } from "../shared/creation_context/state"
-import { config_store } from "../state/store"
+import { get_store } from "../state/store"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 
@@ -37,7 +37,7 @@ interface CreateKnowledgeViewArgs
 
 export function create_new_knowledge_view (args: CreateKnowledgeViewArgs)
 {
-    const store = args.store || config_store()
+    const store = args.store || get_store()
 
     const knowledge_view = get_new_knowledge_view_object(args.knowledge_view, args.creation_context)
 

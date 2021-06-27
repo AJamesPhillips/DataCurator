@@ -3,7 +3,7 @@ import { Ref, useEffect, useRef, useState } from "preact/hooks"
 
 import "../Editable.css"
 import type { RootState } from "../../state/State"
-import { config_store } from "../../state/store"
+import { get_store } from "../../state/store"
 import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { ACTIONS } from "../../state/actions"
@@ -232,7 +232,7 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
 
         if (char1 === "@" && char2 === "@")
         {
-            const store = config_store()
+            const store = get_store()
 
             if (store.getState().global_keys.last_key === "@")
             {

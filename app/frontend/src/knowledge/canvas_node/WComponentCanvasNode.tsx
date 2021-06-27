@@ -34,7 +34,7 @@ import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import { factory_on_pointer_down } from "../canvas_common"
 import { scale_by } from "../../canvas/zoom_utils"
-import { config_store } from "../../state/store"
+import { get_store } from "../../state/store"
 
 
 
@@ -244,7 +244,7 @@ function _WComponentCanvasNode (props: Props)
             },
 
             onDragEnd: e => {
-                const store = config_store()
+                const store = get_store()
                 const zoom = store.getState().routing.args.zoom
                 const scale = zoom / scale_by
                 const top_fudge = -8 * (scale / 2)

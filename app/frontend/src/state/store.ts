@@ -24,7 +24,7 @@ interface ConfigStoreArgs
     override_preloaded_state?: Partial<RootState> | undefined
     load_state_from_server?: boolean
 }
-export function config_store (args: ConfigStoreArgs = {})
+export function get_store (args: ConfigStoreArgs = {})
 {
     const {
         use_cache = true,

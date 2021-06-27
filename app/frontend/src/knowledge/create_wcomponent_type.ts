@@ -10,7 +10,7 @@ import { get_middle_of_screen } from "../state/display_options/display"
 import { get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import type { RootState } from "../state/State"
-import { config_store } from "../state/store"
+import { get_store } from "../state/store"
 
 
 
@@ -25,7 +25,7 @@ interface CreateWComponentArgs
 
 export function create_wcomponent (args: CreateWComponentArgs)
 {
-    const store = args.store || config_store()
+    const store = args.store || get_store()
     const state = store.getState()
 
     let wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)

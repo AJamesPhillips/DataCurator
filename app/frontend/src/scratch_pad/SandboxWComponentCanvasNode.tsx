@@ -10,7 +10,7 @@ import type { WComponentNodeState, WComponentNodeStateV2 } from "../shared/wcomp
 import { ACTIONS } from "../state/actions"
 import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
-import { config_store } from "../state/store"
+import { get_store } from "../state/store"
 
 
 
@@ -111,7 +111,7 @@ export function SandboxWComponentCanvasNode ()
         },
     }
 
-    const store = config_store({ load_state_from_server: false, override_preloaded_state })
+    const store = get_store({ load_state_from_server: false, override_preloaded_state })
 
 
 
