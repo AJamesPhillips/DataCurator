@@ -170,21 +170,22 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
-        + ((props.is_editing || is_highlighted || is_current_item) ? " compact_display " : "")
+        + ((props.is_editing || is_current_item) ? " compact_display " : "")
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = (props.is_editing || is_highlighted || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
+    const show_validity_value = (props.is_editing || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
     const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
         || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
-        || is_highlighted || is_current_item
+        // || is_highlighted
+        || is_current_item
 
 
-    const terminals = (!on_graph || (!props.is_editing && !is_highlighted)) ? [] : ((is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label)
+    const terminals = (!on_graph || !props.is_editing) ? [] : ((is_highlighted && props.is_editing) ? terminals_with_label : terminals_without_label)
 
 
     const extra_node_styles = {
