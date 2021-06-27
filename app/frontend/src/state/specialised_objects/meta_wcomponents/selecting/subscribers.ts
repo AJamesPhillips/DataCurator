@@ -33,7 +33,7 @@ function handle_ctrl_a (store: Store<RootState>)
             .filter(id => !kv.wc_ids_by_type.any_link.has(id))
 
         store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
-        store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple" }))
+        store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple", item_id: null }))
     })
 }
 
@@ -70,7 +70,7 @@ function handle_canvas_area_select (store: Store<RootState>)
 
 
         store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids: new_selected_ids }))
-        store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple" }))
+        store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple", item_id: null }))
     })
 }
 
