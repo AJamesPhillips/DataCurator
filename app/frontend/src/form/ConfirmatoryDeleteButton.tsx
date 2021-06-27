@@ -38,11 +38,15 @@ function _ConfirmatoryDeleteButton (props: Props)
 					is_hidden={!deleting}
 					value="CONFIRM"
 					extra_class_names="button_warning"
-					onClick={() => props.on_delete && props.on_delete()}
+					onClick={() =>
+					{
+						set_deleting(false)
+						props.on_delete && props.on_delete()
+					}}
 				/>
 			</ThemeProvider>
 
-			<ThemeProvider theme={(deleting) ? DefaultTheme: WarningTheme  }>
+			<ThemeProvider theme={DefaultTheme}>
 				<Button
 					color="primary"
 					is_hidden={!props.on_delete}
