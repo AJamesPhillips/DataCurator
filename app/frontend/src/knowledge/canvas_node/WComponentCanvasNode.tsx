@@ -33,6 +33,8 @@ import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connectio
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import { factory_on_pointer_down } from "../canvas_common"
+import { scale_by } from "../../canvas/zoom_utils"
+import { config_store } from "../../state/store"
 
 
 
@@ -188,6 +190,12 @@ function _WComponentCanvasNode (props: Props)
     const terminals = (!on_graph || (!props.is_editing && !is_highlighted)) ? [] : ((is_highlighted || props.is_editing) ? terminals_with_label : terminals_without_label)
 
 
+    const extra_node_styles = {
+        opacity: validity_opacity,
+        // transform: node_is_moving ? `scale(${props.zoom / scale_by})` : "",
+    }
+
+
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
         node_main_content={<div>
@@ -216,7 +224,7 @@ function _WComponentCanvasNode (props: Props)
             {<LabelsListV2 label_ids={wcomponent.label_ids} />}
         </div>}
         extra_css_class={extra_css_class}
-        extra_node_styles={{ opacity: validity_opacity }}
+        extra_node_styles={extra_node_styles}
         unlimited_width={false}
         glow={glow}
         color={color}
@@ -236,8 +244,14 @@ function _WComponentCanvasNode (props: Props)
             },
 
             onDragEnd: e => {
-				const top = kv_entry.top + (e.offsetY)
-				const left = kv_entry.left + (e.offsetX)
+                const store = config_store()
+                const zoom = store.getState().routing.args.zoom
+                const scale = zoom / scale_by
+                const top_fudge = -8 * (scale / 2)
+                const left_fudge = 6 / (scale / 2)
+                // maybe explore using e.currentTarget.offsetLeft?
+				const top = kv_entry.top + (e.offsetY) + top_fudge
+				const left = kv_entry.left + (e.offsetX) + left_fudge
 				// console.log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
 				// console.log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
 				update_position(round_canvas_point({
