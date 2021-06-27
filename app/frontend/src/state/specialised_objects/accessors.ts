@@ -1,4 +1,4 @@
-import type { Perception, WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { Perception, WComponent, WComponentsById } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeView, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIdsMap } from "../derived/State"
@@ -10,6 +10,17 @@ export function get_wcomponent_from_state (state: RootState, id: string | null):
 {
     return id ? state.specialised_objects.wcomponents_by_id[id] : undefined
 }
+
+
+export function get_wcomponents_id_map (wcomponents_by_id: WComponentsById, ids: string[] | Set<string> | undefined): (WComponent | undefined)[]
+{
+    ids = ids || []
+    ids = ids instanceof Set ? Array.from(ids): ids
+
+    return ids.map(id => id ? wcomponents_by_id[id] : undefined)
+}
+
+
 export function get_wcomponents_from_state (state: RootState, ids: string[] | Set<string> | undefined): (WComponent | undefined)[]
 {
     ids = ids || []
@@ -17,6 +28,7 @@ export function get_wcomponents_from_state (state: RootState, ids: string[] | Se
 
     return ids.map(id => get_wcomponent_from_state(state, id))
 }
+
 
 
 export function get_perception_from_state (state: RootState, id: string | null): Perception | undefined

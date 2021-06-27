@@ -48,6 +48,7 @@ function _LabelsEditor (props: Props)
 
     if (!ready) return <div>Loading labels...</div>
 
+
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents_by_id: props.wcomponents_by_id,
         wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
