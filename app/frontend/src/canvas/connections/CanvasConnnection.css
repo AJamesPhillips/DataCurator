@@ -30,6 +30,11 @@
     cursor: pointer;
     pointer-events: stroke;
 }
+.graph_background_pointer_down .connection_line_background.mouseable, .graph_background_pointer_down .connection_end.mouseable
+{
+    cursor: inherit;
+    pointer-events: none;
+}
 
 
 

@@ -10,6 +10,10 @@
         linear-gradient(to right, #EEE 1px, transparent 1px),
         linear-gradient(to bottom, #EEE 1px, transparent 1px);
     }
+
+    &.graph_background_pointer_down #graph_lowest_elements_container {
+        pointer-events: none;
+    }
 }
 
 /* styles from here on are copies as-is because I don't fully know the scope/intent/etc */

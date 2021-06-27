@@ -281,11 +281,14 @@ class _Canvas extends Component<Props, State>
         }
 
 
+        const graph_class_name = `${this.props.plain_background ? "" : "squared_background"} ${this.state.pointer_state.down ? "graph_background_pointer_down" : ""}`
+
+
         return (
         <div style={{ flexGrow: 1 }}>
             <div
                 id="graph_container"
-                className={this.props.plain_background ? "" : "squared_background"}
+                className={graph_class_name}
                 style={background_style}
                 onPointerDown={this.on_pointer_down}
                 onPointerMove={this.on_pointer_move}
@@ -305,7 +308,7 @@ class _Canvas extends Component<Props, State>
             >
                 <div id="graph_visuals_container" style={html_translation_container_style}>
                     <div style={html_container_style}>
-                        <div style={{ pointerEvents: this.state.pointer_state.down ? "none" : undefined }}>
+                        <div id="graph_lowest_elements_container">
                             <svg style={{ zIndex: 0, position: "absolute", top: 0, left: 0 }}>
                                 {blur_filter_defs}
                                 {this.props.svg_children}
