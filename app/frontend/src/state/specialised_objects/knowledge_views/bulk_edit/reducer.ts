@@ -14,9 +14,11 @@ import { handle_upsert_knowledge_view } from "../utils"
 import {
     ActionBulkAddToKnowledgeView,
     ActionBulkEditKnowledgeViewEntries,
+    ActionBulkRemoveFromKnowledgeView,
     ActionSnapToGridKnowledgeViewEntries,
     is_bulk_add_to_knowledge_view,
     is_bulk_edit_knowledge_view_entries,
+    is_bulk_remove_from_knowledge_view,
     is_snap_to_grid_knowledge_view_entries,
 } from "./actions"
 
@@ -43,6 +45,12 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
     }
 
 
+    if (is_bulk_remove_from_knowledge_view(action))
+    {
+        state = handle_bulk_remove_from_knowledge_view(state, action)
+    }
+
+
     return state
 }
 
@@ -55,7 +63,17 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
     const kv = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
     const UI_kv = get_current_UI_knowledge_view_from_state(state)
 
-    if (kv && UI_kv) {
+
+    if (!kv)
+    {
+        console.error(`Could not find knowledge view for bulk_add_to_knowledge_view by id: "${knowledge_view_id}"`)
+    }
+    else if (!UI_kv)
+    {
+        console.error("There should always be a current knowledge view if bulk editing position of world components")
+    }
+    else
+    {
         let new_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
 
 
@@ -75,15 +93,31 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
         state = handle_upsert_knowledge_view(state, new_kv)
     }
 
-    else {
-        if (!kv) {
-            console.error(`Could not find knowledge view for bulk_add_to_knowledge_view by id: "${knowledge_view_id}"`)
-        }
+    return state
+}
 
-        else {
-            console.error("There should always be a current knowledge view if bulk editing position of world components")
-        }
+
+
+function handle_bulk_remove_from_knowledge_view (state: RootState, action: ActionBulkRemoveFromKnowledgeView)
+{
+    const { wcomponent_ids } = action
+
+    const kv = get_current_knowledge_view_from_state(state)
+
+    if (!kv)
+    {
+        console.error("There should always be a current knowledge view if bulk editing (removing) positions of world components")
     }
+    else
+    {
+        const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = { ...kv.wc_id_map }
+
+        wcomponent_ids.forEach(id => delete new_wc_id_map[id])
+
+        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
+        state = handle_upsert_knowledge_view(state, new_kv)
+    }
+
     return state
 }
 

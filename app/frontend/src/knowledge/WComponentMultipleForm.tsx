@@ -12,6 +12,7 @@ import {
 } from "../state/specialised_objects/accessors"
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { is_defined } from "../shared/utils/is_defined"
+import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
 
 
 
@@ -36,6 +37,7 @@ const map_state = (state: RootState) =>
 const map_dispatch = {
     bulk_edit_knowledge_view_entries: ACTIONS.specialised_object.bulk_edit_knowledge_view_entries,
     bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
+    bulk_remove_from_knowledge_view: ACTIONS.specialised_object.bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
     bulk_edit_wcomponents: ACTIONS.specialised_object.bulk_edit_wcomponents,
 }
@@ -58,6 +60,7 @@ function _WComponentMultipleForm (props: Props)
         editing,
         bulk_edit_knowledge_view_entries,
         bulk_add_to_knowledge_view,
+        bulk_remove_from_knowledge_view,
         snap_to_grid_knowledge_view_entries,
         bulk_edit_wcomponents,
     } = props
@@ -117,9 +120,19 @@ function _WComponentMultipleForm (props: Props)
                     if (!knowledge_view_id) return
 
                     bulk_add_to_knowledge_view({
-                        knowledge_view_id,
                         wcomponent_ids: Array.from(wcomponent_ids),
+                        knowledge_view_id,
                     })
+                }}
+            />
+        </p>
+
+        <p>
+            Remove from knowledge view
+            <ConfirmatoryDeleteButton
+                on_delete={() =>
+                {
+                    bulk_remove_from_knowledge_view({ wcomponent_ids: Array.from(wcomponent_ids) })
                 }}
             />
         </p>
