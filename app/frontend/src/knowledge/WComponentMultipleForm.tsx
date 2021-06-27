@@ -112,7 +112,7 @@ function _WComponentMultipleForm (props: Props)
 
         <hr />
 
-        <p>
+        {editing && <p>
             Add to knowledge view
             <SelectKnowledgeView
                 on_change={knowledge_view_id =>
@@ -125,9 +125,9 @@ function _WComponentMultipleForm (props: Props)
                     })
                 }}
             />
-        </p>
+        </p>}
 
-        <p>
+        {editing && <p>
             Remove from knowledge view
             <ConfirmatoryDeleteButton
                 on_delete={() =>
@@ -135,7 +135,7 @@ function _WComponentMultipleForm (props: Props)
                     bulk_remove_from_knowledge_view({ wcomponent_ids: Array.from(wcomponent_ids) })
                 }}
             />
-        </p>
+        </p>}
 
     </div>
 }
