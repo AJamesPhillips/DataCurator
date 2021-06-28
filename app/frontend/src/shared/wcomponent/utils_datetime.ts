@@ -86,12 +86,12 @@ function partition_items_by_datetimes <U extends Base & HasDateTime & Partial<Ha
     const created_items_by_id: { [id: string]: U[] } = {}
 
 
-    items.filter(item =>
+    items.forEach(item =>
     {
         if (get_created_at_ms(item) > created_at_ms)
         {
             invalid_future_items.push(item)
-            return false
+            return
         }
 
         const item_group = [...(created_items_by_id[item.id] || []), item]

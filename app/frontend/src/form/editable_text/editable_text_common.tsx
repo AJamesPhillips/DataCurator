@@ -240,4 +240,6 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
             }
         }
     }
+
+    return undefined
 }
