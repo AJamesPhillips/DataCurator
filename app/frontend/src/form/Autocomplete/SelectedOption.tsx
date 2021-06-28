@@ -3,7 +3,7 @@ import { Button } from "../../sharedf/Button"
 import type { AutocompleteOption } from "./interfaces"
 import { color_to_opposite, color_to_string } from "../../sharedf/color"
 import { Box, ButtonGroup, IconButton, Tooltip, Typography } from "@material-ui/core"
-import RemoveFromQueueIcon from '@material-ui/icons/RemoveFromQueue';
+import ClearIcon from '@material-ui/icons/Clear';
 
 interface Props <E extends AutocompleteOption = AutocompleteOption>
 {
@@ -27,7 +27,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
         <Box mb={1}>
 			<ButtonGroup size="small" fullWidth={true}>
 				{editing &&	<IconButton color="primary" onClick={() => on_remove_option(option.id)}>
-						<RemoveFromQueueIcon />
+						<ClearIcon />
 					</IconButton>
 				}
 				<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
