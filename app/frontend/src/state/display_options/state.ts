@@ -22,6 +22,7 @@ export interface DisplayOptionsState
 {
     consumption_formatting: boolean
     time_resolution: TimeResolution
+    display_by_simulated_time: boolean
 
     // Validity
     validity_filter: ValidityFilterTypes

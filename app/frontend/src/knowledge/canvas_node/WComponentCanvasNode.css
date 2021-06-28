@@ -63,3 +63,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.wcomponent_canvas_node.node_on_foundational_kv .node_main_content
+{
+    border-color: lightblue;
+}

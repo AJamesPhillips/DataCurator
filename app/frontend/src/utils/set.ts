@@ -9,10 +9,14 @@ export function equal_sets <T> (as: Set<T>, bs: Set<T>)
 
 
 
-export function toggle_item_in_set <E> (set: Set<E>, item: E)
+export function toggle_item_in_set <E> (set: Set<E>, item: E): Set<E>
 {
+    set = new Set(set)
+
     if (set.has(item)) set.delete(item)
     else set.add(item)
+
+    return set
 }
 
 

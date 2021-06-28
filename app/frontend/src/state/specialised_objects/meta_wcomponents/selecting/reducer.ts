@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import { toggle_item_in_set } from "../../../../utils/set"
+import { toggle_item_in_list } from "../../../../utils/list"
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
 import {
@@ -16,28 +16,28 @@ import {
 
 export const selecting_reducer = (state: RootState, action: AnyAction): RootState =>
 {
-    const initial_selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids
+    const initial_selected_wcomponent_ids_list = state.meta_wcomponents.selected_wcomponent_ids_list
 
 
     if (is_clicked_wcomponent(action))
     {
         const { id } = action
-        let selected_wcomponent_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids)
+        let selected_wcomponent_ids_list = [...state.meta_wcomponents.selected_wcomponent_ids_list]
 
         const { shift_or_control_down } = state.global_keys.derived
 
         if (shift_or_control_down)
         {
-            toggle_item_in_set(selected_wcomponent_ids, id)
+            selected_wcomponent_ids_list = toggle_item_in_list(selected_wcomponent_ids_list, i => i === id, id)
         }
         else
         {
-            selected_wcomponent_ids = new Set([id])
+            selected_wcomponent_ids_list = [id]
         }
 
         const meta_wcomponents = {
             ...state.meta_wcomponents,
-            selected_wcomponent_ids,
+            selected_wcomponent_ids_list,
             last_clicked_wcomponent_id: id,
         }
 
@@ -84,10 +84,19 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
-    if (initial_selected_wcomponent_ids !== state.meta_wcomponents.selected_wcomponent_ids)
+    if (initial_selected_wcomponent_ids_list !== state.meta_wcomponents.selected_wcomponent_ids_list)
     {
-        const selected_wcomponent_ids_list = Array.from(state.meta_wcomponents.selected_wcomponent_ids)
-        state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids_list", selected_wcomponent_ids_list)
+        const selected_wcomponent_ids_set = new Set(state.meta_wcomponents.selected_wcomponent_ids_list)
+        const map: { [id: string]: number } = {}
+        state.meta_wcomponents.selected_wcomponent_ids_list.forEach((id, index) => map[id] = index)
+
+        const meta_wcomponents = {
+            ...state.meta_wcomponents,
+            selected_wcomponent_ids_set,
+            selected_wcomponent_ids_map: map,
+        }
+
+        state = { ...state, meta_wcomponents }
     }
 
 
@@ -97,7 +106,7 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
 
 function handle_clear_selected_wcomponents (state: RootState): RootState {
-    state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids", new Set<string>())
+    state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids_list", [])
 
     return state
 }
@@ -105,7 +114,7 @@ function handle_clear_selected_wcomponents (state: RootState): RootState {
 
 
 function handle_set_selected_wcomponents (state: RootState, action: ActionSetSelectedWcomponents): RootState {
-    state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids", new Set<string>(action.ids))
+    state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids_list", [...action.ids])
 
     return state
 }

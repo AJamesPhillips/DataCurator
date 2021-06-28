@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { LabelsEditor } from "../labels/LabelsEditor"
+import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 
@@ -43,6 +44,12 @@ function _CreationContextSidePanel (props: Props)
                 value={props.custom_created_at}
                 on_change={custom_created_at => props.set_custom_created_at({ custom_created_at })}
             />
+            {props.custom_created_at !== undefined && <div style={{ backgroundColor: "pink" }}>
+                Tip: you only need to set this for easing entry of historical data.  If you want to view
+                the data you are currently entering in a lower time resolution then use the
+                <Link route="display" sub_route={undefined} item_id={undefined} args={undefined}> display options </Link>
+                to change the time resolution.
+            </div>}
         </p>
 
         <p>

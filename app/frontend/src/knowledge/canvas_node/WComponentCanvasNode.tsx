@@ -19,7 +19,7 @@ import {
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
 import { ACTIONS } from "../../state/actions"
-import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
+import { get_wcomponent_from_state, is_on_current_knowledge_view } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { calc_display_opacity, calc_wcomponent_should_display } from "../calc_display_parameters"
 import { WComponentStatefulValue } from "../WComponentStatefulValue"
@@ -50,16 +50,18 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
+    const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id)
     const { current_UI_knowledge_view } = state.derived
 
     return {
         force_displaying: state.filter_context.force_display,
+        on_current_knowledge_view,
         current_UI_knowledge_view,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
         wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
-        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
+        is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         shift_or_control_keys_are_down,
         created_at_ms: state.routing.args.created_at_ms,
@@ -93,6 +95,7 @@ function _WComponentCanvasNode (props: Props)
     const {
         id, on_graph = true,
         force_displaying,
+        is_editing,
         current_UI_knowledge_view: UI_kv, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         shift_or_control_keys_are_down,
@@ -120,7 +123,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const validity_opacity = calc_display_opacity({
-        is_editing: props.is_editing,
+        is_editing,
         certainty: validity_value.display_certainty,
         is_highlighted,
         is_selected,
@@ -129,7 +132,14 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
+    const on_pointer_down = factory_on_pointer_down({
+        wcomponent_id: id,
+        clicked_wcomponent,
+        clear_selected_wcomponents,
+        shift_or_control_keys_are_down,
+        change_route,
+        is_current_item,
+    })
 
 
     const update_position = (new_position: CanvasPoint) =>
@@ -152,10 +162,10 @@ function _WComponentCanvasNode (props: Props)
     if (is_highlighted || node_is_moving)
     {
         children.push(<Handles
-            set_node_is_moving={(!on_graph || !props.is_editing) ? undefined : (() => set_node_is_moving(true))}
+            set_node_is_moving={(!on_graph || !is_editing) ? undefined : (() => set_node_is_moving(true))}
             wcomponent={wcomponent}
             wcomponent_current_kv_entry={kv_entry}
-            editing={props.is_editing}
+            editing={is_editing}
         />)
     }
 
@@ -165,19 +175,20 @@ function _WComponentCanvasNode (props: Props)
 
     const extra_css_class = (
         ` wcomponent_canvas_node `
+        + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
         + (node_is_moving ? " node_is_moving " : "")
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
-        + ((props.is_editing || is_current_item) ? " compact_display " : "")
+        + ((is_editing || is_current_item) ? " compact_display " : "")
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = (props.is_editing || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
-    const show_state_value = (props.is_editing && wcomponent_should_have_state(wcomponent))
+    const show_validity_value = (is_editing || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
+    const show_state_value = (is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
         || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
@@ -185,7 +196,7 @@ function _WComponentCanvasNode (props: Props)
         || is_current_item
 
 
-    const terminals = (!on_graph || !props.is_editing) ? [] : ((is_highlighted && props.is_editing) ? terminals_with_label : terminals_without_label)
+    const terminals = (!on_graph || !is_editing) ? [] : ((is_highlighted && is_editing) ? terminals_with_label : terminals_without_label)
 
 
     const extra_node_styles = {

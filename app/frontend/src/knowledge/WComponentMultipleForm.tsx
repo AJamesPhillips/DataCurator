@@ -21,7 +21,7 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const kv = get_current_UI_knowledge_view_from_state(state)
-    const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids
+    const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_set
     const { wcomponents_by_id } = state.specialised_objects
 
     return {
@@ -112,7 +112,7 @@ function _WComponentMultipleForm (props: Props)
 
         <hr />
 
-        <p>
+        {editing && <p>
             Add to knowledge view
             <SelectKnowledgeView
                 on_change={knowledge_view_id =>
@@ -125,9 +125,9 @@ function _WComponentMultipleForm (props: Props)
                     })
                 }}
             />
-        </p>
+        </p>}
 
-        <p>
+        {editing && <p>
             Remove from knowledge view
             <ConfirmatoryDeleteButton
                 on_delete={() =>
@@ -135,7 +135,7 @@ function _WComponentMultipleForm (props: Props)
                     bulk_remove_from_knowledge_view({ wcomponent_ids: Array.from(wcomponent_ids) })
                 }}
             />
-        </p>
+        </p>}
 
     </div>
 }
