@@ -1,7 +1,7 @@
 import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValuePossibility, UIValue } from "./interfaces/generic_value"
-import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 
 
@@ -84,15 +84,10 @@ export function get_boolean_representation (args: { wcomponent: WComponent | und
         boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
         boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
     }
-    else if (wcomponent_is_action(wcomponent))
-    {
-        boolean_true_str = "Completed"
-        boolean_false_str = "Incomplete"
-    }
 
 
-    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)": boolean_true_str) : "True"
-    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)": boolean_false_str) : "False"
+    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)" : boolean_true_str) : "True"
+    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)" : boolean_false_str) : "False"
 
 
     return { true: boolean_true_str, false: boolean_false_str }

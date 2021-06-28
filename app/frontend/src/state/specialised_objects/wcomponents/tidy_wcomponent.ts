@@ -1,13 +1,13 @@
 import { set_VAP_probabilities } from "../../../knowledge/multiple_values/utils"
 import { sort_list } from "../../../shared/utils/sort"
+import { get_wcomponent_VAPsType } from "../../../shared/wcomponent/get_wcomponent_state_value"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
+    wcomponent_has_VAP_sets,
     wcomponent_is_statev1,
-    wcomponent_is_statev2,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/wcomponent/utils_datetime"
-import { subtype_to_VAPsType } from "../../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -19,17 +19,19 @@ export function tidy_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.validity = sorted_predictions
     }
 
+
     if (wcomponent_is_statev1(wcomponent))
     {
         const sorted_values = sort_list(wcomponent.values || [], get_created_at_ms, "ascending")
         wcomponent.values = sorted_values
     }
 
-    if (wcomponent_is_statev2(wcomponent))
+
+    if (wcomponent_has_VAP_sets(wcomponent))
     {
         const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
 
-        const VAPs_represent = subtype_to_VAPsType(wcomponent.subtype)
+        const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
 
         const corrected_VAPs_in_VAP_sets = sorted_VAP_sets.map(VAP_set => ({
             ...VAP_set,

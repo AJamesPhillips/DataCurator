@@ -9,6 +9,7 @@ import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_created_at_ms } from "../../shared/wcomponent/utils_datetime"
+import { action_statuses } from "../../shared/wcomponent/interfaces/action"
 
 
 
@@ -26,14 +27,26 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 
 
+export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_VAP_sets: StateValueAndPredictionsSet[])
+{
+    const options = VAPs_represent === VAPsType.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets)
+        : (VAPs_represent === VAPsType.action ? action_statuses
+        : [""])
+    const vanilla_entries = options.map(value => ({ ...prepare_new_VAP(), value }))
+    const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
+
+    return entries_with_probabilities
+}
+
+
+
 export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets: StateValueAndPredictionsSet[], creation_context: CreationContextState): StateValueAndPredictionsSet
 {
     const dates = get_new_created_ats(creation_context)
     const now = new Date(get_created_at_ms(dates))
 
-    const options = VAPs_represent === VAPsType.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets) : [""]
-    const vanilla_entries = options.map(value => ({ ...prepare_new_VAP(), value }))
-    const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
+    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_VAP_sets)
+
 
     const new_VAP_set = {
         id: get_new_value_and_prediction_set_id(),

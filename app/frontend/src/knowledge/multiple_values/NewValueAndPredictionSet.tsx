@@ -1,13 +1,15 @@
 import { h } from "preact"
-import { useEffect } from "preact/hooks"
 import { useState } from "preact/hooks"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 
 import { uncertain_datetime_is_eternal } from "../../form/datetime_utils"
 import { get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
+import { ACTION_OPTIONS, get_action_status_of_VAP_set } from "../../shared/wcomponent/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
 import { get_details2_for_single_VAP_set, get_details_for_single_VAP_set, get_summary_for_single_VAP_set } from "./common"
+import { prepare_new_VAP_set_entries } from "./utils"
 
 
 
@@ -22,6 +24,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType) =>
 
     return <div>
         {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={on_change} />}
+        {VAPs_represent === VAPsType.action && <SimplifiedActionForm VAP_set={VAP_set} on_change={on_change} />}
 
         {<SimplifiedDatetimeForm VAP_set={VAP_set} on_change={on_change} />}
 
@@ -78,6 +81,46 @@ function SimplifiedBooleanForm (props: SimplifiedBooleanFormProps)
                 on_change({ ...VAP_set, entries: [{ ...entry, probability: 0, conviction: 1 }] })
             }}
         />}
+
+        <br /><br />
+    </div>
+}
+
+
+
+interface SimplifiedActionFormProps
+{
+    VAP_set: StateValueAndPredictionsSet
+    on_change: (VAP_set: StateValueAndPredictionsSet) => void
+}
+function SimplifiedActionForm (props: SimplifiedActionFormProps)
+{
+    const { VAP_set, on_change } = props
+
+    const selected_option_id = get_action_status_of_VAP_set(VAP_set)
+
+    return <div>
+        Set action status to:
+        <AutocompleteText
+            selected_option_id={selected_option_id}
+            options={ACTION_OPTIONS}
+            allow_none={true}
+            on_change={new_status =>
+            {
+                if (!new_status) return
+
+                const entries = prepare_new_VAP_set_entries(VAPsType.action, [])
+                entries.forEach(entry =>
+                {
+                    const probability = entry.value === new_status ? 1 : 0
+                    entry.relative_probability = probability
+                    entry.probability = probability
+                    entry.conviction = 1
+                })
+
+                on_change({ ...VAP_set, entries })
+            }}
+        />
 
         <br /><br />
     </div>
