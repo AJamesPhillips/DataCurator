@@ -1,6 +1,7 @@
 import { is_wcomponent_id } from "../../../../shared/utils/ids"
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
+import { update_derived_selected_wcomponent_ids } from "./reducer"
 
 
 
@@ -19,8 +20,10 @@ function handle_route_changed (initial_state: RootState, state: RootState)
     {
         if (state.routing.item_id && is_wcomponent_id(state.routing.item_id))
         {
-            const selected_wcomponent_ids = new Set([ state.routing.item_id ])
-            state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids", selected_wcomponent_ids)
+            const selected_wcomponent_ids_list = [ state.routing.item_id ]
+            state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids_list", selected_wcomponent_ids_list)
+
+            state = update_derived_selected_wcomponent_ids(state)
         }
     }
 
