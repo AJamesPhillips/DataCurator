@@ -52,38 +52,38 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     options.forEach(option => option_by_id[option.id] = option)
 
 
-	return (
-		<Box>
-			{
-				editing && <AutocompleteText
-					{...props}
-					selected_option_id={undefined}
-					options={filtered_options}
-					on_change={id =>
-					{
-						if (id === undefined) return
-						props.on_change([...selected_option_ids, id])
-					}}
-				/>
-			}
-			<Box className={`selected_options ${editing ? "editing" : ""}`}>
-				{selected_option_ids.map(id => <SelectedOption
-					editing={editing}
-					option={option_by_id[id]}
-					on_remove_option={removed_id =>
-					{
-						props.on_change(selected_option_ids.filter(id => id !== removed_id))
-					}}
-					on_mouse_over_option={props.on_mouse_over_option}
-					on_mouse_leave_option={props.on_mouse_leave_option}
-					on_pointer_down_selected_option={(e, id) =>
-					{
-						props.change_route({ item_id: id })
-					}}
-				/>)}
-			</Box>
-		</Box>
-	)
+    return (
+        <Box>
+            {
+                editing && <AutocompleteText
+                    {...props}
+                    selected_option_id={undefined}
+                    options={filtered_options}
+                    on_change={id =>
+                    {
+                        if (id === undefined) return
+                        props.on_change([...selected_option_ids, id])
+                    }}
+                />
+            }
+            <Box className={`selected_options ${editing ? "editing" : ""}`}>
+                {selected_option_ids.map(id => <SelectedOption
+                    editing={editing}
+                    option={option_by_id[id]}
+                    on_remove_option={removed_id =>
+                    {
+                        props.on_change(selected_option_ids.filter(id => id !== removed_id))
+                    }}
+                    on_mouse_over_option={props.on_mouse_over_option}
+                    on_mouse_leave_option={props.on_mouse_leave_option}
+                    on_pointer_down_selected_option={(e, id) =>
+                    {
+                        props.change_route({ item_id: id })
+                    }}
+                />)}
+            </Box>
+        </Box>
+    )
 }
 
 const ConnectedMultiAutocompleteText = connector(_MultiAutocompleteText) as FunctionalComponent<OwnProps>
