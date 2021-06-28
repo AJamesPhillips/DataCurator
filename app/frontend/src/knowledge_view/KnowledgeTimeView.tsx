@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 
+import "./KnowledgeTimeView.scss"
 import type { ContentCoordinate } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
@@ -52,7 +53,7 @@ function _KnowledgeTimeView (props: Props)
     const { elements, content_coordinates } = get_children(props)
 
     return <MainArea
-        main_content={<div>{elements}</div>}
+        main_content={<div className="knowledge_time_view">{elements}</div>}
     />
 }
 
@@ -89,14 +90,19 @@ const get_children = (props: Props): ChildrenRawData =>
     {
         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
 
-        elements.push(<div key={wc.id}>
+        elements.push(<div
+            key={wc.id}
+            className="node_container"
+        >
             <WComponentCanvasNode
                 id={wc.id}
                 on_graph={false}
             />
 
-            {VAP_sets.length > 0 && <hr />}
-            {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}
+            {VAP_sets.length > 0 && <div className="value_and_prediction_set_summaries_container">
+
+                {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}
+            </div>}
 
             <hr />
         </div>)

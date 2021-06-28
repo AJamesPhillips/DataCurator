@@ -1,0 +1,27 @@
+
+
+.value_and_prediction_set_summary
+{
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+    width: 200px;
+    background-color: blue;
+
+    .value_and_prediction
+    {
+        text-align: center;
+        vertical-align: middle;
+        // font-size: 1vh;
+        text-overflow: clip;
+    }
+
+    .value_and_prediction:nth-of-type(odd)
+    {
+        background-color: yellow;
+    }
+    .value_and_prediction:nth-of-type(even)
+    {
+        background-color: green;
+    }
+}
