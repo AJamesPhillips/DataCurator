@@ -51,14 +51,7 @@ function _KnowledgeTimeView (props: Props)
     const { elements, content_coordinates } = get_children(props)
 
     return <MainArea
-        main_content={<Canvas
-            svg_children={[]}
-            svg_upper_children={get_svg_upper_children(props)}
-            content_coordinates={content_coordinates}
-            plain_background={props.presenting}
-        >
-            {elements}
-        </Canvas>}
+        main_content={<div>{elements}</div>}
     />
 }
 
@@ -90,11 +83,16 @@ const get_children = (props: Props): ChildrenRawData =>
     wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending")
 
 
-    const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode
-        key={id}
-        id={id}
-        on_graph={false}
-    />)
+    const elements: h.JSX.Element[] = []
+    wcomponent_nodes.map(({ id }) =>
+    {
+        elements.push(<WComponentCanvasNode
+            key={id}
+            id={id}
+            on_graph={false}
+        />)
+        elements.push(<hr />)
+    })
 
 
     return {
