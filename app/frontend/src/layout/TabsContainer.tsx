@@ -14,7 +14,10 @@ interface OwnProps { }
 
 
 
-const map_state = (state: RootState) => ({ route: state.routing.route })
+const map_state = (state: RootState) => ({
+    route: state.routing.route,
+    editing: !state.display_options.consumption_formatting,
+})
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
@@ -45,8 +48,9 @@ function _TabsContainer (props: Props)
             "perceptions",
             "statements",
             "about",
+            "creation_context",
         ])
-        routes = routes.filter(r => !hide_routes.has(r))
+        routes = routes.filter(r => !hide_routes.has(r) || (props.editing && r === "creation_context"))
     }
 
 
