@@ -334,7 +334,7 @@ class _Canvas extends Component<Props, State>
             {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
                 <MoveToPositionButton
                     description="Move to content"
-                    move_to_xy={lefttop_to_xy(content_coordinates![0])}
+                    move_to_xy={lefttop_to_xy(content_coordinates![0], true)}
                 />
             </div>}
         </div>
