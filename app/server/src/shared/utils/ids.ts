@@ -34,5 +34,8 @@ export const is_wcomponent_id = (id: string | undefined | null) => !!id && wcomp
 const prediction_id_regex = new RegExp(/^pr\d/)
 export const is_prediction_id = (id: string | undefined | null) => !!id && prediction_id_regex.test(id)
 
-const knowledge_view_id_regex = new RegExp(/^kv\d/)
+const knowledge_view_id_regex = new RegExp(/^kv(wc)?\d/)
 export const is_knowledge_view_id = (id: string | undefined | null) => !!id && knowledge_view_id_regex.test(id)
+
+const wc_knowledge_view_id_regex = new RegExp(/^kvwc\d/)
+export const is_wc_knowledge_view_id = (id: string | undefined | null) => !!id && wc_knowledge_view_id_regex.test(id)

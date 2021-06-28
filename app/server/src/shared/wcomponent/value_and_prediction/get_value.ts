@@ -3,7 +3,7 @@ import {
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
-import type { CurrentValue, CurrentValuePossibility, VAPsRepresent } from "../interfaces/generic_value"
+import { CurrentValue, CurrentValuePossibility, VAPsType } from "../interfaces/generic_value"
 import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
     WComponentNodeStateV2,
@@ -48,7 +48,7 @@ export function get_current_value (possibilities: CurrentValuePossibility[]): Cu
 interface GetVAPSetValueArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     wc_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
@@ -70,12 +70,12 @@ export function get_VAP_set_possible_values (args: GetVAPSetValueArgs): CurrentV
 
 
 
-function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsRepresent)
+function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType)
 {
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const subtype_specific_VAPs = VAPs_represent.boolean
+        const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
             ? VAP_set.entries.slice(0, 1)
             : VAP_set.entries
 
@@ -87,7 +87,7 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VA
 
 
 
-function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsRepresent): CurrentValuePossibility[]
+function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsType): CurrentValuePossibility[]
 {
     if (!all_VAPs.length) return []
 
@@ -98,8 +98,8 @@ function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPredictio
     const possibilities: CurrentValuePossibility[] = VAPs_by_prob.map(VAP =>
     {
         // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
-        const value = VAPs_represent.boolean ? VAP.probability > 0.5
-            : (VAPs_represent.number ? parseFloat(VAP.value)
+        const value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
+            : (VAPs_represent === VAPsType.number ? parseFloat(VAP.value)
             : VAP.value)
 
         const certainty = Math.min(VAP.probability, VAP.conviction)
@@ -114,7 +114,7 @@ function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPredictio
     })
     .filter(possibility =>
     {
-        return VAPs_represent.boolean || possibility.uncertain || possibility.probability > 0
+        return VAPs_represent === VAPsType.boolean || possibility.uncertain || possibility.probability > 0
     })
 
     return possibilities

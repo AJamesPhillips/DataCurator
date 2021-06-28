@@ -1,7 +1,7 @@
 import { make_graph, find_leaf_groups } from "../../utils/graph"
 import { sort_list } from "../../utils/sort"
-import type { VAPsRepresent } from "../interfaces/generic_value"
-import { WComponent, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
+import { VAPsType } from "../interfaces/generic_value"
+import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
 import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
@@ -95,33 +95,34 @@ function get_VAP_datetime_sort_key (VAP: StateValueAndPredictionsSet)
 
 
 
-export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VAPs: E[], VAPs_represents: VAPsRepresent): E[]
+export function get_VAPs_ordered_by_prob <E extends StateValueAndPrediction> (VAPs: E[], VAPs_represent: VAPsType): E[]
 {
     const first_VAP = VAPs[0]
-    if (VAPs_represents.boolean && first_VAP) return [first_VAP]
+    if (VAPs_represent === VAPsType.boolean && first_VAP) return [first_VAP]
 
     return VAPs.sort((a, b) => a.probability > b.probability ? -1 : (a.probability < b.probability ? 1 : 0))
 }
 
 
 
-export function subtype_to_VAPsRepresent (subtype: WComponentStateV2SubType): VAPsRepresent
+export function subtype_to_VAPsType (subtype: WComponentStateV2SubType): VAPsType
 {
-    return subtype === "boolean" ? { boolean: true }
-    : (subtype === "number" ? { number: true }
-        : (subtype === "other" ? { other: true } : { undefined: true }))
+    return subtype === "boolean" ? VAPsType.boolean
+    : (subtype === "number" ? VAPsType.number
+        : (subtype === "other" ? VAPsType.other : VAPsType.undefined))
 }
 
 
 
 export function wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
 {
-    let VAPs_represent: VAPsRepresent = { undefined: true }
+    let VAPs_represent = VAPsType.undefined
 
     if (wcomponent)
     {
-        VAPs_represent = { boolean: true }
-        if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
+        VAPs_represent = VAPsType.boolean
+        if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsType(wcomponent.subtype)
+        else if (wcomponent_is_action(wcomponent)) VAPs_represent = VAPsType.action
     }
 
     return VAPs_represent

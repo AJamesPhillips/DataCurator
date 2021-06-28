@@ -1,7 +1,8 @@
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
-import type { CurrentValuePossibility } from "./interfaces/generic_value"
+import { CurrentValuePossibility, VAPsType } from "./interfaces/generic_value"
 import {
     WComponent,
+    wcomponent_is_action,
     wcomponent_is_statev1,
     wcomponent_is_statev2,
     wcomponent_should_have_state_VAP_sets,
@@ -9,8 +10,18 @@ import {
 import type { WComponentNodeState } from "./interfaces/state"
 import { get_created_at_ms } from "./utils_datetime"
 import { get_VAP_set_possible_values } from "./value_and_prediction/get_value"
-import { subtype_to_VAPsRepresent } from "./value_and_prediction/utils"
+import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
+
+
+export function get_wcomponent_VAPsType (wcomponent: WComponent)
+{
+    const VAPs_represent = wcomponent_is_statev2(wcomponent) ? subtype_to_VAPsType(wcomponent.subtype)
+        : (wcomponent_is_action(wcomponent) ? VAPsType.action
+        : VAPsType.other)
+
+    return VAPs_represent
+}
 
 
 interface GetWcomponentStateValueArgs
@@ -27,8 +38,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
     if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
     else if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
-        const subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
-        const VAPs_represent = subtype_to_VAPsRepresent(subtype)
+        const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
 
         return get_VAP_set_possible_values({
             values_and_prediction_sets: wcomponent.values_and_prediction_sets,

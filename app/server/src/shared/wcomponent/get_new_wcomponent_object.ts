@@ -104,10 +104,24 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
 
 export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent>, creation_context: CreationContextState)
 {
-    const wcomponent: WComponent = {
+    let wcomponent: WComponent = {
         ...get_contextless_new_wcomponent_object(partial_wcomponent),
         ...get_new_created_ats(creation_context),
     }
 
+    wcomponent = set_creation_context_label_ids(wcomponent, creation_context)
+
     return wcomponent
+}
+
+
+
+function set_creation_context_label_ids(wcomponent: WComponent, creation_context: CreationContextState)
+{
+    const additional_labels = !creation_context.use_creation_context ? [] : creation_context.creation_context.label_ids
+    const existing_label_ids_list = (wcomponent.label_ids || [])
+    const existing_label_ids = new Set(existing_label_ids_list)
+    additional_labels.forEach(id => existing_label_ids.has(id) ? "" : existing_label_ids_list.push(id))
+
+    return { ...wcomponent, label_ids: existing_label_ids_list }
 }

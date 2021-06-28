@@ -9,8 +9,23 @@ export interface StartedStoppedAt
 }
 
 
-// prioritised == actions which are 'to do'
-type ActionStatus = "potential" | "icebox" | "prioritised" | "in progress" | "completed" | "rejected"
+
+export type ActionStatusType = "potential"
+    | "in progress"
+    | "paused"
+    | "completed"
+    | "failed"
+    | "rejected"
+export const action_statuses: ActionStatusType[] = [
+    "potential",
+    "in progress",
+    "paused",
+    "completed",
+    "failed",
+    "rejected",
+]
+export const action_statuses_set = new Set(action_statuses)
+
 
 export interface WComponentNodeAction extends WComponentNodeBase, StartedStoppedAt
 {
@@ -33,7 +48,7 @@ export interface WComponentNodeAction extends WComponentNodeBase, StartedStopped
     // --- 2021-05-24
     goal_id?: string
 
-    status?: ActionStatus
+    // status?: ActionStatus
     reason_for_status: string
 
     encompassing_action_id?: string

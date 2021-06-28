@@ -1,7 +1,7 @@
 import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValuePossibility, UIValue } from "./interfaces/generic_value"
-import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 
 
@@ -84,15 +84,10 @@ export function get_boolean_representation (args: { wcomponent: WComponent | und
         boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
         boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
     }
-    else if (wcomponent_is_action(wcomponent))
-    {
-        boolean_true_str = "Completed"
-        boolean_false_str = "Incomplete"
-    }
 
 
-    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)": boolean_true_str) : "True"
-    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)": boolean_false_str) : "False"
+    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)" : boolean_true_str) : "True"
+    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)" : boolean_false_str) : "False"
 
 
     return { true: boolean_true_str, false: boolean_false_str }
@@ -106,19 +101,19 @@ interface ReduceDisplayStringValuesArgs
     probability_strings: string[]
     conviction_strings: string[]
 }
+const max_items = 3
 function reduce_display_string_values (args: ReduceDisplayStringValuesArgs)
 {
     const { value_strings, probability_strings, conviction_strings } = args
 
+    let values_string = value_strings.length ? value_strings.slice(0, max_items).join(", ") : "not defined"
+    if (value_strings.length > max_items) values_string += `, (${value_strings.length - max_items} more)`
 
-    let values_string = value_strings.length ? value_strings.slice(0, 2).join(", ") : "not defined"
-    if (value_strings.length > 2) values_string += `, (${value_strings.length - 2} more)`
+    let probabilities_string = probability_strings.length ? (probability_strings.slice(0, max_items).join(", ") + "%") : ""
+    if (probability_strings.length > max_items) probabilities_string += `, (${probability_strings.length - max_items} more)`
 
-    let probabilities_string = probability_strings.length ? (probability_strings.slice(0, 2).join(", ") + "%") : ""
-    if (probability_strings.length > 2) probabilities_string += `, (${probability_strings.length - 2} more)`
-
-    let convictions_string = conviction_strings.length ? (conviction_strings.slice(0, 2).join(", ") + "%") : ""
-    if (conviction_strings.length > 2) convictions_string += `, (${conviction_strings.length - 2} more)`
+    let convictions_string = conviction_strings.length ? (conviction_strings.slice(0, max_items).join(", ") + "%") : ""
+    if (conviction_strings.length > max_items) convictions_string += `, (${conviction_strings.length - max_items} more)`
 
 
     return { values_string, probabilities_string, convictions_string }
