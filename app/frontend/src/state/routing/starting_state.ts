@@ -9,7 +9,7 @@ export function get_routing_starting_state (): RoutingState
     const now_ms = now.getTime()
 
     const routing_args: RoutingStateArgs = {
-        view: "priorities",
+        view: "knowledge",
         subview_id: "",
         zoom: 100,
         x: 0,
@@ -22,7 +22,7 @@ export function get_routing_starting_state (): RoutingState
     }
 
     const default_routing_state: RoutingState = {
-        route: "statements",
+        route: "wcomponents",
         sub_route: null,
         item_id: null,
         args: routing_args,

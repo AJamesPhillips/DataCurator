@@ -16,7 +16,12 @@ export function derived_meta_wcomponents_state_reducer (initial_state: RootState
 
 function handle_route_changed (initial_state: RootState, state: RootState)
 {
-    if (initial_state.routing.item_id !== state.routing.item_id)
+    // TODO: rethink.  We want to trigger this reducer when the application first loads
+    // to correctly set the current item_id to be in the selected ids list.
+    // Using the change in sync.ready is a hack.
+    const ready_changed = initial_state.sync.ready !== state.sync.ready
+
+    if (initial_state.routing.item_id !== state.routing.item_id || ready_changed)
     {
         if (state.routing.item_id && is_wcomponent_id(state.routing.item_id))
         {
