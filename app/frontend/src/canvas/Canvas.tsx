@@ -23,8 +23,8 @@ const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10
 
 interface OwnProps
 {
-    svg_children?: preact.ComponentChildren[]
-    svg_upper_children?: preact.ComponentChildren[]
+    svg_children?: preact.ComponentChildren[] | null
+    svg_upper_children?: preact.ComponentChildren[] | null
     content_coordinates?: ContentCoordinate[]
     plain_background?: boolean
 }
