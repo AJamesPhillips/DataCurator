@@ -19,7 +19,9 @@ interface OwnProps {}
 
 
 const map_state = (state: RootState) => ({
-    route: state.routing.route
+    route: state.routing.route,
+    item_id: state.routing.item_id,
+    presenting: state.display_options.consumption_formatting,
 })
 
 
@@ -31,6 +33,14 @@ type Props = PropsFromRedux & OwnProps
 
 function _SidePanel (props: Props)
 {
+    if (props.presenting)
+    {
+        if (props.route === "wcomponents")
+        {
+            if (!props.item_id) return <div>TODO: Should be hidden</div>
+        }
+    }
+
     return <div>
         {props.route === "filter" && <FiltersSidePanel />}
 
