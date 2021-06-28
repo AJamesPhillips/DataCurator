@@ -11,6 +11,7 @@ export function display_options_persist (state: RootState)
     const to_persist = pick([
         "consumption_formatting",
         "time_resolution",
+        "display_by_simulated_time",
         "validity_filter",
         "certainty_formatting",
     ], state.display_options)
