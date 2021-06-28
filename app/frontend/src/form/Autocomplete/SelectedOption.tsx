@@ -2,10 +2,10 @@ import { h } from "preact"
 import { Button } from "../../sharedf/Button"
 import type { AutocompleteOption } from "./interfaces"
 import { color_to_opposite, color_to_string } from "../../sharedf/color"
-import { ButtonGroup, IconButton, ThemeProvider } from "@material-ui/core"
+import { Box, ButtonGroup, IconButton, Tooltip, Typography } from "@material-ui/core"
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-
+import RemoveFromQueueIcon from '@material-ui/icons/RemoveFromQueue';
 interface Props <E extends AutocompleteOption = AutocompleteOption>
 {
     editing: boolean
@@ -25,14 +25,20 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 
     const class_name = `selected_option ${pointer_down ? "" : "not_"}clickable `
 	return(
-		<ButtonGroup size="small" fullWidth={true}>
-			{editing && <IconButton onClick={() => on_remove_option(option.id)}>
-					<DeleteIcon color="error" />
-				</IconButton>
-			}
-			<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
-				{option.jsx || option.title}
-			</Button>
-		</ButtonGroup>
+		<Box mb={1}>
+			<ButtonGroup size="small" fullWidth={true}>
+				{editing &&	<IconButton color="primary" onClick={() => on_remove_option(option.id)}>
+						<RemoveFromQueueIcon />
+					</IconButton>
+				}
+				<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
+					<Tooltip title={option.jsx || option.title} aria-label={option.jsx || option.title}>
+						<Typography noWrap>
+							{option.jsx || option.title}
+						</Typography>
+					</Tooltip>
+				</Button>
+			</ButtonGroup>
+		</Box>
 	)
 }
