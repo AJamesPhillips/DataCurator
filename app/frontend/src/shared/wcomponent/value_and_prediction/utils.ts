@@ -1,7 +1,7 @@
 import { make_graph, find_leaf_groups } from "../../utils/graph"
 import { sort_list } from "../../utils/sort"
 import type { VAPsRepresent } from "../interfaces/generic_value"
-import { WComponent, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
 import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
@@ -122,6 +122,7 @@ export function wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
     {
         VAPs_represent = { boolean: true }
         if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
+        else if (wcomponent_is_action(wcomponent)) VAPs_represent = { other: true }
     }
 
     return VAPs_represent
