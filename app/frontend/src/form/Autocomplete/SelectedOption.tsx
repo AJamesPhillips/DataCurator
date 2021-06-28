@@ -30,7 +30,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 					<DeleteIcon color="error" />
 				</IconButton>
 			}
-			<Button onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
+			<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
 				{option.jsx || option.title}
 			</Button>
 		</ButtonGroup>
