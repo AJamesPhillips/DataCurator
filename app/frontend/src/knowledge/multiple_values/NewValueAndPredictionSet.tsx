@@ -110,12 +110,12 @@ function SimplifiedActionForm (props: SimplifiedActionFormProps)
                 if (!new_status) return
 
                 const entries = prepare_new_VAP_set_entries(VAPsType.action, [])
-                entries.forEach(entry =>
+                entries.forEach(VAP =>
                 {
-                    const probability = entry.value === new_status ? 1 : 0
-                    entry.relative_probability = probability
-                    entry.probability = probability
-                    entry.conviction = 1
+                    const probability = VAP.value === new_status ? 1 : 0
+                    VAP.relative_probability = probability
+                    VAP.probability = probability
+                    VAP.conviction = 1
                 })
 
                 on_change({ ...VAP_set, entries })

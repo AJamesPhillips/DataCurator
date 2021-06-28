@@ -8,8 +8,9 @@ import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { connect, ConnectedProps } from "react-redux"
 import { sort_list } from "../shared/utils/sort"
-import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+import { ValueAndPredictionSetSummary } from "../knowledge/multiple_values/ValueAndPredictionSetSummary"
 
 
 
@@ -84,14 +85,21 @@ const get_children = (props: Props): ChildrenRawData =>
 
 
     const elements: h.JSX.Element[] = []
-    wcomponent_nodes.map(({ id }) =>
+    wcomponent_nodes.map(wc =>
     {
-        elements.push(<WComponentCanvasNode
-            key={id}
-            id={id}
-            on_graph={false}
-        />)
-        elements.push(<hr />)
+        const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
+
+        elements.push(<div key={wc.id}>
+            <WComponentCanvasNode
+                id={wc.id}
+                on_graph={false}
+            />
+
+            {VAP_sets.length > 0 && <hr />}
+            {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}
+
+            <hr />
+        </div>)
     })
 
 
