@@ -24,15 +24,15 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
     if (!option) return null
 
     const class_name = `selected_option ${pointer_down ? "" : "not_"}clickable `
-	return(
-		<ButtonGroup size="small" fullWidth={true}>
-			{editing && <IconButton onClick={() => on_remove_option(option.id)}>
-					<DeleteIcon color="error" />
-				</IconButton>
-			}
-			<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
-				{option.jsx || option.title}
-			</Button>
-		</ButtonGroup>
-	)
+    return(
+        <ButtonGroup size="small" fullWidth={true}>
+            {editing && <IconButton onClick={() => on_remove_option(option.id)}>
+                    <DeleteIcon color="error" />
+                </IconButton>
+            }
+            <Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
+                {option.jsx || option.title}
+            </Button>
+        </ButtonGroup>
+    )
 }
