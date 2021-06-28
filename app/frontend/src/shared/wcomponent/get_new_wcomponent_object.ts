@@ -118,7 +118,8 @@ export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponen
 
 function set_creation_context_label_ids(wcomponent: WComponent, creation_context: CreationContextState)
 {
-    const additional_labels = !creation_context.use_creation_context ? [] : creation_context.creation_context.label_ids
+    const cc = creation_context.creation_context
+    const additional_labels = creation_context.use_creation_context && cc && cc.label_ids || []
     const existing_label_ids_list = (wcomponent.label_ids || [])
     const existing_label_ids = new Set(existing_label_ids_list)
     additional_labels.forEach(id => existing_label_ids.has(id) ? "" : existing_label_ids_list.push(id))

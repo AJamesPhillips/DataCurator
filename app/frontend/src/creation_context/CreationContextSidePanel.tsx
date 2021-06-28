@@ -10,11 +10,15 @@ import type { RootState } from "../state/State"
 
 
 
-const map_state = (state: RootState) => ({
-    use_creation_context: state.creation_context.use_creation_context,
-    custom_created_at: state.creation_context.creation_context.custom_created_at,
-    label_ids: state.creation_context.creation_context.label_ids,
-})
+const map_state = (state: RootState) =>
+{
+    const { creation_context: cc } = state.creation_context
+    return {
+        use_creation_context: state.creation_context.use_creation_context,
+        custom_created_at: cc && cc.custom_created_at,
+        label_ids: cc && cc.label_ids,
+    }
+}
 
 const map_dispatch = {
     toggle_use_creation_context: ACTIONS.creation_context.toggle_use_creation_context,

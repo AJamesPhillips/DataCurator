@@ -33,8 +33,8 @@ interface GetCreatedAtsReturn
 export function get_new_created_ats (creation_context_state: CreationContextState): GetCreatedAtsReturn
 {
     const created_at = new Date()
-    const { use_creation_context, creation_context } = creation_context_state
-    const custom_created_at = use_creation_context ? creation_context.custom_created_at : undefined
+    const { use_creation_context, creation_context: cc } = creation_context_state
+    const custom_created_at = use_creation_context ? (cc && cc.custom_created_at) : undefined
 
     return { created_at, custom_created_at }
 }
