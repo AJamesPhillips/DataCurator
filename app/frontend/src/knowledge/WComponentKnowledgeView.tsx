@@ -117,11 +117,10 @@ function _WComponentKnowledgeView (props: Props)
         </div>} */}
 
         {(!consumption_formatting && knowledge_view_id && knowledge_view_entry) && <div>
-            <br />
             <ConfirmatoryDeleteButton
+                tooltip_text={"Remove from current knowledge view (" + knowledge_view_title + ")"}
                 on_delete={() => delete_entry(knowledge_view_id)}
             />
-            Remove from current knowledge view ({knowledge_view_title})
         </div>}
 
         {other_knowledge_views.length > 0 && <div>
