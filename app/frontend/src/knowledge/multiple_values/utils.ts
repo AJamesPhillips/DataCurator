@@ -7,7 +7,7 @@ import { test } from "../../shared/utils/test"
 import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../shared/utils/ids"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_created_at_ms } from "../../shared/wcomponent/utils_datetime"
 
 
@@ -26,12 +26,12 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 
 
-export function prepare_new_VAP_set (VAPs_represent: VAPsRepresent, existing_VAP_sets: StateValueAndPredictionsSet[], creation_context: CreationContextState): StateValueAndPredictionsSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets: StateValueAndPredictionsSet[], creation_context: CreationContextState): StateValueAndPredictionsSet
 {
     const dates = get_new_created_ats(creation_context)
     const now = new Date(get_created_at_ms(dates))
 
-    const options = VAPs_represent.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets) : [""]
+    const options = VAPs_represent === VAPsType.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets) : [""]
     const vanilla_entries = options.map(value => ({ ...prepare_new_VAP(), value }))
     const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
 
@@ -48,9 +48,9 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsRepresent, existing_VAP
 
 
 
-function all_options_in_VAP_set (VAPs_represent: VAPsRepresent, VAP_sets: StateValueAndPredictionsSet[])
+function all_options_in_VAP_set (VAPs_represent: VAPsType, VAP_sets: StateValueAndPredictionsSet[])
 {
-    if (!VAPs_represent.other) return [""]
+    if (VAPs_represent !== VAPsType.other) return [""]
 
     const options: string[] = []
     const options_set: Set<string> = new Set()
@@ -101,7 +101,7 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet, creation_context: 
 
 
 
-export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], VAPs_represent: VAPsRepresent): StateValueAndPrediction[]
+export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], VAPs_represent: VAPsType): StateValueAndPrediction[]
 {
     const multiple = VAPs.length > 1
     let total_relative_probability = 0
@@ -117,7 +117,7 @@ export function set_VAP_probabilities (VAPs: StateValueAndPrediction[], VAPs_rep
         return { ...VAP, relative_probability }
     })
 
-    if (!VAPs_represent.boolean)
+    if (VAPs_represent !== VAPsType.boolean)
     {
         total_relative_probability = total_relative_probability || 1
 

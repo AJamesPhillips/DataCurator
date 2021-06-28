@@ -10,6 +10,7 @@ import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
 import type { CreationContextState } from "../../../shared/creation_context/state"
 import { tidy_wcomponent } from "./tidy_wcomponent"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
+import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
 // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
 // import {
 //     update_wcomponent_ids_by_type_on_upserting_wcomponent,
@@ -77,8 +78,8 @@ function run_tests ()
     // Should sort VAP sets by ascending created_at
     wcomponent = get_new_wcomponent_object({ type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set({ undefined: true }, [], creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
-        { ...prepare_new_VAP_set({ undefined: true }, [], creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(VAPsType.undefined, [], creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(VAPsType.undefined, [], creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -92,7 +93,7 @@ function run_tests ()
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },
     ]
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set({ undefined: true }, [], creation_context), entries: VAPs },
+        { ...prepare_new_VAP_set(VAPsType.undefined, [], creation_context), entries: VAPs },
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
@@ -114,7 +115,7 @@ function run_tests ()
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0, probability: 1 },
     ]
     let values_and_prediction_sets = [
-        { ...prepare_new_VAP_set({ undefined: true }, [], creation_context), entries: VAPs },
+        { ...prepare_new_VAP_set(VAPsType.undefined, [], creation_context), entries: VAPs },
     ]
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 

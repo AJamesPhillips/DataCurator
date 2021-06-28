@@ -22,7 +22,7 @@ import { is_counterfactual_active } from "../../shared/counterfactuals/active"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { get_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 import type { CreationContextState } from "../../shared/creation_context/state"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -31,7 +31,7 @@ interface OwnProps
     wcomponent_id?: string
     VAP_set_id?: string
     created_at: Date
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     values_and_predictions: StateValueAndPrediction[]
     VAP_counterfactuals_map?: VAP_id_counterfactual_map
     update_values_and_predictions: (values_and_predictions: StateValueAndPrediction[]) => void
@@ -75,7 +75,7 @@ function _ValueAndPredictions (props: Props)
     const { creation_context, editing, VAPs_represent } = props
 
     const VAPs = props.values_and_predictions
-    const class_name_only_one_VAP = (VAPs_represent.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
+    const class_name_only_one_VAP = (VAPs_represent === VAPsType.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
 
     const item_top_props: EditableListEntryTopProps<StateValueAndPrediction> = {
         // Do not show created_at of VAPs when in VAP set
@@ -101,7 +101,7 @@ function _ValueAndPredictions (props: Props)
     return <div className={`value_and_predictions ${class_name_only_one_VAP}`}>
         <ListHeader
             items_descriptor={get_items_descriptor(item_descriptor, VAPs.length)}
-            other_content={() => (!editing || VAPs_represent.boolean) ? null : <ListHeaderAddButton
+            other_content={() => (!editing || VAPs_represent === VAPsType.boolean) ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
@@ -131,7 +131,7 @@ const get_id = (item: StateValueAndPrediction) => item.id
 
 interface GetSummaryArgs
 {
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     allows_assumptions: boolean
     VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined
     knowledge_view_id: string | undefined
@@ -150,8 +150,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
     const counterfactual_active = is_counterfactual_active(counterfactual)
     const { probability, conviction } = merge_counterfactual_into_VAP(VAP, counterfactual)
 
-    const is_boolean = VAPs_represent.boolean
-    const is_number = VAPs_represent.number
+    const is_boolean = VAPs_represent === VAPsType.boolean
+    const is_number = VAPs_represent === VAPsType.number
 
     const has_rel_prob = VAP.relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean || counterfactual_active
@@ -239,9 +239,9 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 }
 
 
-const get_details = (VAPs_represent: VAPsRepresent, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
-    if (VAPs_represent.boolean) return <div></div>
+    if (VAPs_represent === VAPsType.boolean) return <div></div>
 
     if (!editing && !item.description) return <div></div>
 

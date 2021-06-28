@@ -6,6 +6,7 @@ import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../../shared/utils/sentence_case"
 import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import {
     judgement_operators,
     WComponentJudgement,
@@ -60,7 +61,7 @@ function _JudgementFormFields (props: Props)
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
     let boolean_options: AutocompleteOption[] = []
-    if (target_VAPs_represent.boolean)
+    if (target_VAPs_represent === VAPsType.boolean)
     {
         const result = get_boolean_representation({ wcomponent: target_wcomponent, append_boolean: true })
 
@@ -100,7 +101,7 @@ function _JudgementFormFields (props: Props)
                     />
                 &nbsp;
 
-                {!target_VAPs_represent.boolean && <EditableTextSingleLine
+                {target_VAPs_represent !== VAPsType.boolean && <EditableTextSingleLine
                     placeholder="Value..."
                     value={wcomponent.judgement_comparator_value || ""}
                     conditional_on_change={new_value =>
@@ -112,7 +113,7 @@ function _JudgementFormFields (props: Props)
                     }}
                 />}
 
-                {target_VAPs_represent.boolean && <AutocompleteText
+                {target_VAPs_represent === VAPsType.boolean && <AutocompleteText
                     placeholder="Value..."
                     selected_option_id={wcomponent.judgement_comparator_value}
                     options={boolean_options}

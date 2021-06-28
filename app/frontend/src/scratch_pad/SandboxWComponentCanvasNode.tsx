@@ -4,6 +4,7 @@ import { connect, ConnectedProps, Provider } from "react-redux"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { prepare_new_VAP_set } from "../knowledge/multiple_values/utils"
 import type { CreationContextState } from "../shared/creation_context/state"
+import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
 import type { WComponentNodeState, WComponentNodeStateV2 } from "../shared/wcomponent/interfaces/state"
@@ -30,7 +31,7 @@ const creation_context: CreationContextState = { use_creation_context: true, cre
 } }
 
 
-const VAP_set1 = prepare_new_VAP_set({ undefined: true }, [], creation_context)
+const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
 VAP_set1.entries[0]!.value = "thing"
 const wc11: WComponentNodeStateV2 = {
     type: "statev2",
@@ -61,7 +62,7 @@ const wc13_judgement: WComponentJudgement = {
 }
 
 
-const VAP_set2 = prepare_new_VAP_set({ undefined: true }, [], creation_context)
+const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
 VAP_set2.entries[0]!.probability = 0
 const wc14: WComponentNodeStateV2 = {
     ...wc11,

@@ -16,13 +16,13 @@ import {
 } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { CreationContextState } from "../../shared/creation_context/state"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
 interface OwnProps
 {
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     versioned_VAP_set: VersionedStateVAPsSet
     update_versioned_VAP_set: (versioned_VAP_set: VersionedStateVAPsSet) => void
     creation_context: CreationContextState

@@ -13,12 +13,12 @@ import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/me
 import { SummaryForPrediction } from "../predictions/common"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { set_VAP_probabilities } from "./utils"
 
 
 
-export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsRepresent, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
@@ -30,7 +30,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsRepresent, sh
 
     return <SummaryForPrediction
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
-        value={VAPs_represent.boolean ? values : ""}
+        value={VAPs_represent === VAPsType.boolean ? values : ""}
         datetime={VAP_set.datetime}
         probability={prob}
         conviction={conv}
@@ -39,7 +39,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsRepresent, sh
 
 
 
-export const get_details_for_single_VAP_set = (VAPs_represent: VAPsRepresent, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
@@ -76,7 +76,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsRepresent, wc
 
 
 
-export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsRepresent, editing: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editing: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
 {
     const shared_entry_values = VAP_set.shared_entry_values || {}
     // Provide the explanations from exist VAPs
@@ -92,7 +92,7 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsRepresent, e
     return <div className="shared_VAP_set_details">
         <div className="row_one">
             <div className="description_label">{display_explanation && "Explanation:"}</div>
-            {!VAPs_represent.boolean && <div>
+            {VAPs_represent !== VAPsType.boolean && <div>
                 <div className="description_label" style={{ display: "inline"}}>Cn:</div> &nbsp;
                 <EditablePercentage
                     disabled={false}
@@ -129,11 +129,11 @@ const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom
 
 
 
-function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent)
+function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
 {
     let VAPs = VAP_set.entries
 
-    if (VAPs_represent.boolean && VAPs.length !== 1)
+    if (VAPs_represent === VAPsType.boolean && VAPs.length !== 1)
     {
         // ensure the ValueAndPrediction component always and only receives up to a single VAP entry
         VAPs = VAPs.slice(0, 1)
@@ -144,9 +144,9 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent
 
 
 
-function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsRepresent)
+function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
 {
-    if (VAPs_represent.boolean)
+    if (VAPs_represent === VAPsType.boolean)
     {
         // For now we'll save any other values that were already here from other subtypes
         VAPs = VAPs.concat(VAP_set.entries.slice(1))

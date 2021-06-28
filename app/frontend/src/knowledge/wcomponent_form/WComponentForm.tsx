@@ -39,7 +39,7 @@ import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { useEffect, useRef } from "preact/hooks"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
-import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
+import { UIValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { GoalFormFields } from "./GoalFormFields"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
@@ -309,10 +309,10 @@ function _WComponentForm (props: Props)
 
         {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
-                {VAPs_represent.undefined && <div>
+                {VAPs_represent === VAPsType.undefined && <div>
                     Values: Set subtype to view
                 </div>}
-                {!VAPs_represent.undefined && <ValueAndPredictionSets
+                {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
                     VAPs_represent={VAPs_represent}
                     values_and_prediction_sets={orig_values_and_prediction_sets}

@@ -3,6 +3,7 @@ import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/jud
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -53,8 +54,8 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-    const coerced_comparator = target_VAPs_represent.number ? parseFloat(comparator || "")
-        : (target_VAPs_represent.boolean ? comparator === "True" || (comparator === "False" ? false : undefined)
+    const coerced_comparator = target_VAPs_represent === VAPsType.number ? parseFloat(comparator || "")
+        : (target_VAPs_represent === VAPsType.boolean ? comparator === "True" || (comparator === "False" ? false : undefined)
         : comparator)
 
 

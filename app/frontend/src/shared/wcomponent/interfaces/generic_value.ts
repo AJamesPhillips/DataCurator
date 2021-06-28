@@ -1,40 +1,12 @@
 
 
 
-export type VAPsRepresent = {
-    boolean: true
-    number?: false
-    other?: false
-    action?: false
-    undefined?: false
-} |
-{
-    boolean?: false
-    number: true
-    other?: false
-    action?: false
-    undefined?: false
-} |
-{
-    boolean?: false
-    number?: false
-    other: true
-    action?: false
-    undefined?: false
-} |
-{
-    boolean?: false
-    number?: false
-    other?: false
-    action: true
-    undefined?: false
-} |
-{
-    boolean?: false
-    number?: false
-    other?: false
-    action?: false
-    undefined: true
+export enum VAPsType {
+    boolean,
+    number,
+    other,
+    action,
+    undefined,
 }
 
 

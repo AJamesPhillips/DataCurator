@@ -4,14 +4,14 @@ import { useState } from "preact/hooks"
 
 import { uncertain_datetime_is_eternal } from "../../form/datetime_utils"
 import { get_today_date } from "../../shared/utils/date_helpers"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { Button } from "../../sharedf/Button"
 import { get_details2_for_single_VAP_set, get_details_for_single_VAP_set, get_summary_for_single_VAP_set } from "./common"
 
 
 
-export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
+export const new_value_and_prediction_set = (VAPs_represent: VAPsType) =>
 {
     // I do not understand why this works as it occurs after a conditional in NewItemForm
     const [show_advanced, set_show_advanced] = useState(false)
@@ -21,7 +21,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsRepresent) =>
 {
 
     return <div>
-        {VAPs_represent.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={on_change} />}
+        {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={on_change} />}
 
         {<SimplifiedDatetimeForm VAP_set={VAP_set} on_change={on_change} />}
 

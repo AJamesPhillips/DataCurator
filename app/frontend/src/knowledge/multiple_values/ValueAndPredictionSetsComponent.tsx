@@ -17,7 +17,7 @@ import { get_summary_for_single_VAP_set, get_details_for_single_VAP_set, get_det
 import { prepare_new_VAP_set } from "./utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import type { CreationContextState } from "../../shared/creation_context/state"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 
 
@@ -28,7 +28,7 @@ interface OwnProps
     VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
 
     item_descriptor: string
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     update_items: (items: StateValueAndPredictionsSet[]) => void
 
     values_and_prediction_sets: StateValueAndPredictionsSet[]
@@ -175,7 +175,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
 
 
-function validate_sort_and_group_VAP_sets_by_version(values_and_prediction_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsRepresent)
+function validate_sort_and_group_VAP_sets_by_version(values_and_prediction_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType)
 {
     const VAP_sets = validate_VAP_sets_for_VAPs_represent(values_and_prediction_sets, VAPs_represent)
     const grouped_VAP_sets = group_VAP_sets_by_version(VAP_sets)
@@ -186,9 +186,9 @@ function validate_sort_and_group_VAP_sets_by_version(values_and_prediction_sets:
 
 
 
-function validate_VAP_sets_for_VAPs_represent (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsRepresent): StateValueAndPredictionsSet[]
+function validate_VAP_sets_for_VAPs_represent (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType): StateValueAndPredictionsSet[]
 {
-    if (VAPs_represent.boolean)
+    if (VAPs_represent === VAPsType.boolean)
     {
         VAP_sets.map(VAP_set =>
         {
@@ -226,7 +226,7 @@ interface FactoryRenderListContentArgs <U, V>
     update_items: (items: U[]) => void
     wcomponent_id: string
     VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     tense: Tense
     creation_context: CreationContextState
     editing: boolean
@@ -292,7 +292,7 @@ const set_latest_custom_created_at = (item: VersionedStateVAPsSet, custom_create
 }
 
 
-const get_summary = (VAPs_represent: VAPsRepresent, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_summary = (VAPs_represent: VAPsType, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
     const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[latest_VAP_set.id]
@@ -302,7 +302,7 @@ const get_summary = (VAPs_represent: VAPsRepresent, VAP_set_counterfactuals_map?
 
 
 
-const get_details = (VAPs_represent: VAPsRepresent, wcomponent_id: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details = (VAPs_represent: VAPsType, wcomponent_id: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
 
@@ -311,7 +311,7 @@ const get_details = (VAPs_represent: VAPsRepresent, wcomponent_id: string, VAP_s
 
 
 
-const get_details2 = (VAPs_represent: VAPsRepresent, editing: boolean) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details2 = (VAPs_represent: VAPsType, editing: boolean) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     const { latest: latest_VAP_set, older } = versioned_VAP_set
 
@@ -320,7 +320,7 @@ const get_details2 = (VAPs_represent: VAPsRepresent, editing: boolean) => (versi
 
 
 
-const get_details3 = (VAPs_represent: VAPsRepresent, creation_context: CreationContextState, editing: boolean) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
+const get_details3 = (VAPs_represent: VAPsType, creation_context: CreationContextState, editing: boolean) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
     return <div className="VAP_set_details">
         <br />

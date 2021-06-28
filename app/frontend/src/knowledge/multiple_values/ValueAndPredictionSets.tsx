@@ -9,14 +9,14 @@ import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
 import { get_wcomponent_VAP_set_counterfactuals } from "../../state/derived/accessor"
-import type { VAPsRepresent } from "../../shared/wcomponent/interfaces/generic_value"
+import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
 interface OwnProps
 {
     wcomponent_id: string
-    VAPs_represent: VAPsRepresent
+    VAPs_represent: VAPsType
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     update_values_and_predictions: (values_and_predictions: StateValueAndPredictionsSet[]) => void
 }

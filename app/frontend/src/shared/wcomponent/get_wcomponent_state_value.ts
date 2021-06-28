@@ -9,7 +9,7 @@ import {
 import type { WComponentNodeState } from "./interfaces/state"
 import { get_created_at_ms } from "./utils_datetime"
 import { get_VAP_set_possible_values } from "./value_and_prediction/get_value"
-import { subtype_to_VAPsRepresent } from "./value_and_prediction/utils"
+import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
 
 
@@ -28,7 +28,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
     else if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         const subtype = wcomponent_is_statev2(wcomponent) ? wcomponent.subtype : "boolean"
-        const VAPs_represent = subtype_to_VAPsRepresent(subtype)
+        const VAPs_represent = subtype_to_VAPsType(subtype)
 
         return get_VAP_set_possible_values({
             values_and_prediction_sets: wcomponent.values_and_prediction_sets,
