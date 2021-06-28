@@ -122,7 +122,7 @@ export function wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
     {
         VAPs_represent = { boolean: true }
         if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsRepresent(wcomponent.subtype)
-        else if (wcomponent_is_action(wcomponent)) VAPs_represent = { other: true }
+        else if (wcomponent_is_action(wcomponent)) VAPs_represent = { action: true }
     }
 
     return VAPs_represent

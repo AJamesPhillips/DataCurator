@@ -6,6 +6,8 @@ import { Button } from "../../sharedf/Button"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
 import { Box, Dialog, DialogTitle } from "@material-ui/core"
 
+
+
 export interface NewItemForm<U>
 {
     new_item: U | undefined
@@ -14,6 +16,8 @@ export interface NewItemForm<U>
     item_top_props: EditableListEntryTopProps<U>
     add_item: (new_item: U) => void
 }
+
+
 
 export function NewItemForm <T> (props: NewItemForm<T>)
 {
