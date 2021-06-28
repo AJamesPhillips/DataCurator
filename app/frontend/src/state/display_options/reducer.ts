@@ -7,6 +7,7 @@ import {
     is_set_validity_filter,
     is_set_certainty_formatting,
     is_toggle_consumption_formatting,
+    is_set_display_by_simulated_time,
 } from "./actions"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
@@ -41,6 +42,11 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
         state = update_substate(state, "display_options", "derived_certainty_formatting", derived_certainty_formatting)
     }
 
+
+    if (is_set_display_by_simulated_time(action))
+    {
+        state = update_substate(state, "display_options", "display_by_simulated_time", action.display_by_simulated_time)
+    }
 
     return state
 }

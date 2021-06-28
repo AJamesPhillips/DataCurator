@@ -31,6 +31,7 @@ export function display_options_starting_state (): DisplayOptionsState
     const state: DisplayOptionsState = {
         consumption_formatting: false,
         time_resolution: "hour",
+        display_by_simulated_time: false,
 
         validity_filter,
         certainty_formatting,

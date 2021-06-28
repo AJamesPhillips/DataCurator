@@ -76,10 +76,29 @@ export const is_set_certainty_formatting = (action: AnyAction): action is Action
 }
 
 
+interface SetDisplayBySimulatedTimeArgs
+{
+    display_by_simulated_time: boolean
+}
+interface ActionSetDisplayBySimulatedTime extends Action, SetDisplayBySimulatedTimeArgs {}
+
+const set_display_by_simulated_time_type = "set_display_by_simulated_time"
+
+const set_display_by_simulated_time = (args: SetDisplayBySimulatedTimeArgs): ActionSetDisplayBySimulatedTime =>
+{
+    return { type: set_display_by_simulated_time_type, ...args }
+}
+
+export const is_set_display_by_simulated_time = (action: AnyAction): action is ActionSetDisplayBySimulatedTime => {
+    return action.type === set_display_by_simulated_time_type
+}
+
+
 
 export const display_actions = {
     toggle_consumption_formatting,
     set_time_resolution,
     set_validity_filter,
     set_certainty_formatting,
+    set_display_by_simulated_time,
 }

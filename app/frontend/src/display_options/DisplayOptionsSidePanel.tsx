@@ -7,18 +7,21 @@ import { ACTIONS } from "../state/actions"
 import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/display_options/state"
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
+import { EditableCheckbox } from "../form/EditableCheckbox"
 
 
 
 const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
     certainty_formatting: state.display_options.certainty_formatting,
+    display_by_simulated_time: state.display_options.display_by_simulated_time,
 })
 
 
 const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
+    set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
 }
 
 
@@ -98,6 +101,20 @@ function _DisplayOptionsSidePanel (props: Props)
             <b>Time resolution</b>
 
             <TimeResolutionOptions />
+        </p>
+
+
+
+        <p className="section">
+            <b>Display by simulated time</b>
+
+            <EditableCheckbox
+                value={props.display_by_simulated_time}
+                on_change={display_by_simulated_time =>
+                {
+                    props.set_display_by_simulated_time({ display_by_simulated_time })
+                }}
+            />
         </p>
     </div>
 }

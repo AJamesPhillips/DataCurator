@@ -16,6 +16,7 @@ const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
     current_UI_knowledge_view: get_current_UI_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
+    display_by_simulated_time: state.display_options.display_by_simulated_time,
 })
 
 
@@ -23,6 +24,7 @@ const map_dispatch = {
     change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime,
     change_display_at_sim_datetime: ACTIONS.display_at_sim_datetime.change_display_at_sim_datetime,
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
+    set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -58,6 +60,17 @@ function _KnowledgeContentControls (props: Props)
 
         Time resolution:
         <TimeResolutionOptions extra_styles={{ display: "inline-block", width: 100 }} />
+
+        Display by <span
+            style={{ cursor: "pointer" }}
+            onPointerDown={() =>
+            {
+                const display_by_simulated_time = !props.display_by_simulated_time
+                props.set_display_by_simulated_time({ display_by_simulated_time })
+            }}
+        >
+            {props.display_by_simulated_time ? "simulated time" : "relationsips"}
+        </span>
 
         <TimeSlider
             events={sim_events}
