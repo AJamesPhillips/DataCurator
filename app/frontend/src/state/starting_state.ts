@@ -9,6 +9,7 @@ import { get_specialised_objects_starting_state } from "./specialised_objects/st
 import type { ObjectWithCache, Pattern, RootState, Statement } from "./State"
 import { user_activity_starting_state } from "./user_activity/starting_state"
 import { get_global_keys_starting_state } from "./global_keys/state"
+import { controls_starting_state } from "./controls/persistance"
 
 
 
@@ -140,7 +141,7 @@ export function get_starting_state (): RootState
     const routing = get_routing_starting_state()
 
     const starting_state: RootState = {
-        controls: { linked_datetime_sliders: false },
+        controls: controls_starting_state(),
         creation_context: creation_context_starting_state(),
         filter_context: filter_context_starting_state(),
         statements,

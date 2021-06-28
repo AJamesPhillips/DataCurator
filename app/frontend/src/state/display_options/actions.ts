@@ -76,6 +76,7 @@ export const is_set_certainty_formatting = (action: AnyAction): action is Action
 }
 
 
+
 interface SetDisplayBySimulatedTimeArgs
 {
     display_by_simulated_time: boolean

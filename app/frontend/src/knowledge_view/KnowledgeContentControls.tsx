@@ -17,6 +17,8 @@ const map_state = (state: RootState) => ({
     current_UI_knowledge_view: get_current_UI_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
+    display_created_at_time_slider: state.controls.display_created_at_time_slider,
+    editing: !state.display_options.consumption_formatting,
 })
 
 
@@ -43,19 +45,21 @@ function _KnowledgeContentControls (props: Props)
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     return <div>
-        <TimeSlider
+        {(props.editing || props.display_created_at_time_slider) && <TimeSlider
             events={created_events}
             get_handle_ms={state => state.routing.args.created_at_ms}
             change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
             data_set_name="knowledge_created_at_datetimes"
             title="Created at"
-        />
-        <Button
+        />}
+
+        {(props.editing || props.display_created_at_time_slider) && <Button
             is_left={true}
             value={props.linked_datetime_sliders ? "Unlink" : "Link"}
             onClick={() => props.toggle_linked_datetime_sliders()}
-            extra_class_names="button_link_time_sliders"
-        />
+            extra_class_names="content_control_button"
+        />}
+
         <div style={{ width: 40, display: "inline-block" }}></div>
 
         Time resolution:
