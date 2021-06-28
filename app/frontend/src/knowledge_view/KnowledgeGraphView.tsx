@@ -23,39 +23,12 @@ const map_state = (state: RootState) =>
         sync_ready,
         current_UI_knowledge_view,
         presenting: state.display_options.consumption_formatting,
+        display_by_simulated_time: state.display_options.display_by_simulated_time,
     }
 }
 
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
-
-
-const get_children = ({ sync_ready, current_UI_knowledge_view }: Props): ChildrenRawData =>
-{
-    if (!sync_ready || !current_UI_knowledge_view) return { elements: [], content_coordinates: [] }
-
-    const { wcomponent_nodes } = current_UI_knowledge_view
-    const elements = wcomponent_nodes.map(wc => <WComponentCanvasNode id={wc.id} />)
-
-    const p = Object.values(current_UI_knowledge_view.derived_wc_id_map)[0]
-    const content_coordinates: ContentCoordinate[] = p ? [{...p, zoom: 100}] : []
-
-    return {
-        elements,
-        content_coordinates,
-    }
-}
-
-
-
-const get_svg_upper_children = ({ current_UI_knowledge_view }: Props) =>
-{
-    if (!current_UI_knowledge_view) return []
-
-    const { wcomponent_connections } = current_UI_knowledge_view
-
-    return wcomponent_connections.map(({ id }) => <WComponentCanvasConnection id={id} />)
-}
 
 
 
@@ -76,3 +49,32 @@ function _KnowledgeGraphView (props: Props)
 }
 
 export const KnowledgeGraphView = connector(_KnowledgeGraphView) as FunctionalComponent<{}>
+
+
+
+const get_children = ({ sync_ready, current_UI_knowledge_view, display_by_simulated_time }: Props): ChildrenRawData =>
+{
+    if (!sync_ready || !current_UI_knowledge_view || display_by_simulated_time) return { elements: [], content_coordinates: [] }
+
+    const { wcomponent_nodes } = current_UI_knowledge_view
+    const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode key={id} id={id} />)
+
+    const p = Object.values(current_UI_knowledge_view.derived_wc_id_map)[0]
+    const content_coordinates: ContentCoordinate[] = p ? [{...p, zoom: 100}] : []
+
+    return {
+        elements,
+        content_coordinates,
+    }
+}
+
+
+
+const get_svg_upper_children = ({ current_UI_knowledge_view, display_by_simulated_time }: Props) =>
+{
+    if (!current_UI_knowledge_view || display_by_simulated_time) return []
+
+    const { wcomponent_connections } = current_UI_knowledge_view
+
+    return wcomponent_connections.map(({ id }) => <WComponentCanvasConnection key={id} id={id} />)
+}
