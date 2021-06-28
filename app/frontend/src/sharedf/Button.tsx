@@ -18,6 +18,7 @@ export function Button (props: ButtonProps & SpecificProps)
             <MaterialButton
                 title={props.title}
                 color={props.color || "primary"}
+                style={props.style}
                 component={props.component}
                 disabled={props.disabled || false}
                 disableElevation={props.disableElevation || true}

@@ -22,22 +22,38 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 
     if (!option) return null
 
-    const class_name = `selected_option ${pointer_down ? "" : "not_"}clickable `
+
     return(
-        <Box mb={1}>
-			<ButtonGroup size="small" fullWidth={true}>
-				{editing &&	<IconButton color="primary" onClick={() => on_remove_option(option.id)}>
-						<ClearIcon />
-					</IconButton>
-				}
-				<Button variant="contained" color="primary" onClick={(e:any) => pointer_down && pointer_down(e, option.id)}>
-					<Tooltip title={option.jsx || option.title} aria-label={option.jsx || option.title}>
-						<Typography noWrap>
-							{option.jsx || option.title}
-						</Typography>
-					</Tooltip>
-				</Button>
-			</ButtonGroup>
-		</Box>
+        <Box
+            mb={1}
+            onMouseOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}
+            onMouseLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}
+        >
+            <ButtonGroup size="small" fullWidth={true}>
+                {editing &&	<IconButton color="primary" onClick={() => on_remove_option(option.id)}>
+                    <ClearIcon />
+                </IconButton>}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    style={{
+                        backgroundColor: option.color && color_to_string(option.color),
+                        color: option.color && color_to_string(color_to_opposite(option.color)),
+                        cursor: !pointer_down ? "not-allowed" : "",
+                    }}
+                    onClick={(e: any) => pointer_down && pointer_down(e, option.id)}
+                    disabled={!pointer_down}
+                >
+                    <Tooltip
+                        title={option.jsx || option.title}
+                        aria-label={option.jsx || option.title}
+                    >
+                        <Typography noWrap>
+                            {option.jsx || option.title}
+                        </Typography>
+                    </Tooltip>
+                </Button>
+            </ButtonGroup>
+        </Box>
     )
 }

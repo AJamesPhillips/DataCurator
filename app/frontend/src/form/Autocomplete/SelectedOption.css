@@ -9,12 +9,12 @@
 }
 
 
-.multi_autocomplete .selected_option.not_clickable
+/* .multi_autocomplete .selected_option.not_clickable
 {
     cursor: default;
-}
-.multi_autocomplete .selected_option.clickable
+} */
+/* .multi_autocomplete .selected_option.clickable
 {
     cursor: pointer;
 }
-
+ */
