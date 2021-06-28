@@ -39,7 +39,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const wcomponent = get_wcomponent_from_state(state, own_props.id)
 
     const { force_display: force_displaying } = state.filter_context
-    const is_selected = state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id)
+    const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id)
     const { current_UI_knowledge_view: UI_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options

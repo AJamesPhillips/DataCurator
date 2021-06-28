@@ -28,7 +28,7 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
         if (shift_or_control_down)
         {
-            toggle_item_in_list(selected_wcomponent_ids_list, i => i === id, id)
+            selected_wcomponent_ids_list = toggle_item_in_list(selected_wcomponent_ids_list, i => i === id, id)
         }
         else
         {
@@ -86,8 +86,17 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
     if (initial_selected_wcomponent_ids_list !== state.meta_wcomponents.selected_wcomponent_ids_list)
     {
-        const selected_wcomponent_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids_list)
-        state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids", selected_wcomponent_ids)
+        const selected_wcomponent_ids_set = new Set(state.meta_wcomponents.selected_wcomponent_ids_list)
+        const map: { [id: string]: number } = {}
+        state.meta_wcomponents.selected_wcomponent_ids_list.forEach((id, index) => map[id] = index)
+
+        const meta_wcomponents = {
+            ...state.meta_wcomponents,
+            selected_wcomponent_ids_set,
+            selected_wcomponent_ids_map: map,
+        }
+
+        state = { ...state, meta_wcomponents }
     }
 
 

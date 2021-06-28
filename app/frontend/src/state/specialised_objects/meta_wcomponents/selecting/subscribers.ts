@@ -82,7 +82,7 @@ function calculate_new_selected_ids (remove_ids: boolean, state: RootState, ids:
 
     if (remove_ids)
     {
-        const current_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids)
+        const current_ids = new Set(state.meta_wcomponents.selected_wcomponent_ids_set)
         ids.forEach(id => current_ids.delete(id))
         all_selected_ids = Array.from(current_ids)
     }

@@ -61,7 +61,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
-        is_selected: state.meta_wcomponents.selected_wcomponent_ids.has(own_props.id),
+        is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         shift_or_control_keys_are_down,
         created_at_ms: state.routing.args.created_at_ms,
@@ -132,7 +132,14 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
+    const on_pointer_down = factory_on_pointer_down({
+        wcomponent_id: id,
+        clicked_wcomponent,
+        clear_selected_wcomponents,
+        shift_or_control_keys_are_down,
+        change_route,
+        is_current_item,
+    })
 
 
     const update_position = (new_position: CanvasPoint) =>
