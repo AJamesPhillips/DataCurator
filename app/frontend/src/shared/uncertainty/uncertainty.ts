@@ -24,7 +24,7 @@ export interface TemporalUncertainty extends Partial<PredictionBase>
     // One of the things it indicates / allows for is hope.
     // ~~We need it though as datetime.value is not always known, i.e. we think something will happen in the
     // future sometime but can not say when with any certainty.~~  -- actually we don't need it, we should
-    // min and set to now.
+    // use min and set to now.
     //
     // 2021-04-12 13:00:  have commented out because it is a derived value and more importantly, it will
     // change according to the current created_at datetime value

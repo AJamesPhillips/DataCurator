@@ -96,11 +96,11 @@ function _WComponentKnowledgeView (props: Props)
             Not present in this knowledge view
             {UI_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
-            <Button
+            {!consumption_formatting && <Button
                 value="Add to current knowledge view"
                 extra_class_names="left"
                 onClick={() => update(knowledge_view_id, {})}
-            />
+            />}
         </div>}
 
 
