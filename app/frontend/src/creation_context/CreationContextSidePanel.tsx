@@ -34,8 +34,6 @@ type Props = ConnectedProps<typeof connector>
 function _CreationContextSidePanel (props: Props)
 {
     return <div>
-        <h3>Creation Context</h3>
-
         <p>
             Enabled: <EditableCheckbox
                 value={props.use_creation_context}

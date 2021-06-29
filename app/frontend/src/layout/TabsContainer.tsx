@@ -63,7 +63,9 @@ function _TabsContainer (props: Props)
                 </Box>
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
-                {routes.map(route => <MenuItem onClick={handleClose}><Tab id={route} /></MenuItem>)}
+                {routes.map(route => <MenuItem onClick={handleClose}>
+                    <Tab id={route} on_pointer_down={handleClose} />
+                </MenuItem>)}
 
                 <MenuItem onClick={() => set_show_all_routes(!show_all_routes)}>
                     {show_all_routes ? "Hide" : "Show"} all options
@@ -80,5 +82,5 @@ export const TabsContainer = connector(_TabsContainer) as FunctionalComponent<Ow
 function route_to_text (route: ROUTE_TYPES)
 {
     if (route === "wcomponents") return "Components"
-    else return route
+    else return route.replaceAll("_", " ")
 }

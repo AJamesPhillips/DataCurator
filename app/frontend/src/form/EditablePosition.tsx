@@ -23,7 +23,7 @@ export function EditablePosition (props: OwnProps)
     }
 
     return <div>
-        Left: <EditableNumber
+        Move Left: <EditableNumber
             placeholder="Left"
             value={left}
             allow_undefined={false}
@@ -50,7 +50,7 @@ export function EditablePosition (props: OwnProps)
             onClick={() => update({ left: round_coordinate_small_step(left + grid_small_step) })}
         />
         <br />
-        Top: <EditableNumber
+        Move Top: <EditableNumber
             placeholder="Top"
             value={top}
             allow_undefined={false}

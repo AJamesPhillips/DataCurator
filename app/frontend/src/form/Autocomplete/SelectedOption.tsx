@@ -37,9 +37,12 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
                     variant="contained"
                     color="primary"
                     style={{
+                        cursor: !pointer_down ? "not-allowed" : "",
+                        // If no color is present, then allow MaterialUI Button to use it's own
+                        // prettier defaults (with on hover animation) rather than force it to be
+                        // white (the default of color_to_string)
                         backgroundColor: option.color && color_to_string(option.color),
                         color: option.color && color_to_string(color_to_opposite(option.color)),
-                        cursor: !pointer_down ? "not-allowed" : "",
                     }}
                     onClick={(e: any) => pointer_down && pointer_down(e, option.id)}
                     disabled={!pointer_down}

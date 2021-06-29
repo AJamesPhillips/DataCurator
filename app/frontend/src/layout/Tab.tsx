@@ -12,6 +12,7 @@ import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 interface OwnProps
 {
     id: ROUTE_TYPES
+    on_pointer_down: () => void
 }
 
 function get_title (id: ROUTE_TYPES)
@@ -38,7 +39,13 @@ function _Tab (props: Props)
 {
     const title = get_title(props.id)
     return (
-        <Link route={props.id} sub_route={null} item_id={null} args={undefined}>
+        <Link
+            route={props.id}
+            sub_route={null}
+            item_id={null}
+            args={undefined}
+            on_pointer_down={props.on_pointer_down}
+        >
             {title}
         </Link>
     )
