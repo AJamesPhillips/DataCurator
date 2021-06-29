@@ -14,11 +14,13 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     const data = get_VAP_visuals_data(props.VAP_set)
 
     return (
-        <Box m={3}
-            flexGrow={1} flexShrink={1}
-            flex-basis="25%" maxWidth="33%"
+        <Box
+            border={3}
+            borderColor="white"
+            flexGrow={0} flexShrink={0} flexBasis="33.33333333%"
             display="flex" flexDirection="column"
-            alignItems="stretch" alignContent="stretch" justifyContent="flex-end"
+            alignItems="stretch" alignContent="stretch"
+            justifyContent="flex-end"
             className="value_and_prediction_set_summary">
                 {data.map(vap_visual =>
                 {
@@ -27,12 +29,14 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             flexGrow={0} flexShrink={1}
                             flexBasis={`${vap_visual.percentage_height}%`}
                             maxHeight={`${vap_visual.percentage_height}%`}
-                            display="flex"
-                            alignItems="center"
+                            display="flex" flexDirection="column"
+                            alignItems="center" justifyContent="center"
                             key={vap_visual.id}
                             className="value_and_prediction"
                         >
-                            {vap_visual.option_text}
+                            <Typography>
+                                {vap_visual.option_text}
+                            </Typography>
                         </Box>
                     )
                 })}

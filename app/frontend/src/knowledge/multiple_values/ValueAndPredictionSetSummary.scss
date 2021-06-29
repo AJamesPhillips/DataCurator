@@ -2,22 +2,6 @@
 
 .value_and_prediction_set_summary
 {
-    visibility:visible;
-    // display: block;
-    // height: 50px;
-    // width: 200px;
-    // background-color: blue;
-    // margin: 0 30px;
-
-    // .value_and_prediction
-    // {
-    //     text-align: center;
-    //     vertical-align: middle;
-    //     // font-size: 1vh;
-    //     overflow: hidden;
-    // }
-
-
     $base-color:lightgrey;
     background-color:$base-color;
 
@@ -27,21 +11,20 @@
         }
     }
 
+    .value_and_prediction {
+        transition-delay:0;
+        transition-duration:0.5s;
+        transition-property: all;
+        transition-timing-function:ease-in-out;
+
+    }
+
     &:hover {
         .value_and_prediction {
             flex-basis:auto !important;
-            max-height: 100vh;
+            max-height: 50%;
             flex-grow:1;
             flex-shrink:1;
         }
     }
-
-    // .value_and_prediction:nth-of-type(odd)
-    // {
-    //     background-color:yellow;
-    // }
-    // .value_and_prediction:nth-of-type(even)
-    // {
-    //     background-color: green;
-    // }
 }
