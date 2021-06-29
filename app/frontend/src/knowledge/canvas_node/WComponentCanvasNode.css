@@ -57,8 +57,7 @@
 }
 
 
-/* compact / presentation / consumption */
-.wcomponent_canvas_node.compact_display .node_main_content .node_title
+.wcomponent_canvas_node.compact_title .node_main_content .node_title
 {
     white-space: nowrap;
     overflow: hidden;

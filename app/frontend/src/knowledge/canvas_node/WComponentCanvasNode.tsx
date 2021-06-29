@@ -173,6 +173,8 @@ function _WComponentCanvasNode (props: Props)
     const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })
 
 
+    const show_all_details = is_editing || is_current_item
+
     const extra_css_class = (
         ` wcomponent_canvas_node `
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
@@ -181,13 +183,13 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
-        + ((is_editing || is_current_item) ? " compact_display " : "")
+        + (show_all_details ? " compact_title " : "")
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = (is_editing || is_current_item) && wcomponent_can_have_validity_predictions(wcomponent)
+    const show_validity_value = show_all_details && wcomponent_can_have_validity_predictions(wcomponent)
     const show_state_value = (is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
@@ -203,14 +205,15 @@ function _WComponentCanvasNode (props: Props)
         position={on_graph ? kv_entry : undefined}
         node_main_content={<div>
             <div className="description_label">
-                {wcomponent.type}
+                {is_editing && wcomponent.type}
             </div>
+
             <div className="node_title">
                 {kv_entry_maybe === undefined && <span>
                     <WarningTriangle message="Missing from this knowledge view" />
                     &nbsp;
                 </span>}
-                <Markdown options={{ forceInline: true }}>{title}</Markdown>
+                {(is_editing || !wcomponent.hide_title) && <Markdown options={{ forceInline: true }}>{title}</Markdown>}
             </div>
 
             {show_validity_value && <div className="node_validity_container">
@@ -219,12 +222,12 @@ function _WComponentCanvasNode (props: Props)
             </div>}
 
             {show_state_value && <div className="node_state_container">
-                <div className="description_label">state</div>
+                {is_editing && <div className="description_label">state</div>}
                 <WComponentStatefulValue wcomponent={wcomponent} />
                 <WComponentJudgements wcomponent={wcomponent} />
             </div>}
 
-            {<LabelsListV2 label_ids={wcomponent.label_ids} />}
+            <LabelsListV2 label_ids={wcomponent.label_ids} />
         </div>}
         extra_css_class={extra_css_class}
         opacity={validity_opacity}

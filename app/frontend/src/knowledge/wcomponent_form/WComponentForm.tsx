@@ -46,6 +46,7 @@ import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 import { LabelsEditor } from "../../labels/LabelsEditor"
 import { ColorPicker } from "../../sharedf/ColorPicker"
+import { EditableCheckbox } from "../../form/EditableCheckbox"
 
 
 
@@ -125,12 +126,14 @@ function _WComponentForm (props: Props)
 
 
     return <div key={wcomponent_id}>
-        <h2><EditableText
-            placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
-            value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
-            conditional_on_blur={title => upsert_wcomponent({ title })}
-            force_focus={previous_id.current !== wcomponent_id}
-        /></h2>
+        <h2>
+            <EditableText
+                placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
+                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
+                conditional_on_blur={title => upsert_wcomponent({ title })}
+                force_focus={previous_id.current !== wcomponent_id}
+            />
+        </h2>
 
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
@@ -346,11 +349,20 @@ function _WComponentForm (props: Props)
 
 
 
-        {props.editing && <p>
+        {editing && <p>
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
                 conditional_on_blur={color => upsert_wcomponent({ label_color: color })}
+            />
+        </p>}
+
+
+        {editing && <p>
+            <span className="description_label">Hide (node) title</span>
+            <EditableCheckbox
+                value={wcomponent.hide_title}
+                on_change={hide_title => upsert_wcomponent({ hide_title })}
             />
 
             <hr />
