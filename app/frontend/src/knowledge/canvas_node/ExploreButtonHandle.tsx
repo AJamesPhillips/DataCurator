@@ -39,7 +39,8 @@ const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
         kvwc_id,
         kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id],
         subview_id: state.routing.args.subview_id,
-        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids_map.map[kvwc_id],
+        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids.map[kvwc_id],
+        presenting: state.display_options.consumption_formatting,
     }
 }
 
@@ -52,7 +53,7 @@ function _ExploreButtonHandle (props: Props)
 {
     let { kvwc, is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
 
-    if (!is_highlighted && !kvwc) return null
+    if (!kvwc || (!is_highlighted && props.presenting)) return null
 
     const is_current_knowledge_view = props.subview_id === props.kvwc_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
