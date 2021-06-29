@@ -85,19 +85,39 @@ export function get_current_values_and_probabilities (args: GetCurrentValueAndPr
 
 
 
+export function clean_VAP_set_entries (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+{
+    const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
+        ? VAP_set.entries.slice(0, 1)
+        : VAP_set.entries
+
+    return { ...VAP_set, entries: subtype_specific_VAPs }
+}
+
+
+
 function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType)
 {
     let all_VAPs: StateValueAndPrediction[] = []
     VAP_sets.forEach(VAP_set =>
     {
-        const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
-            ? VAP_set.entries.slice(0, 1)
-            : VAP_set.entries
-
+        const subtype_specific_VAPs = clean_VAP_set_entries(VAP_set, VAPs_represent).entries
         all_VAPs = all_VAPs.concat(subtype_specific_VAPs)
     })
 
     return all_VAPs
+}
+
+
+
+export function parse_VAP_value (VAP: StateValueAndPrediction, VAPs_represent: VAPsType)
+{
+    // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
+    const value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
+        : (VAPs_represent === VAPsType.number ? parseFloat(VAP.value)
+        : VAP.value)
+
+    return value
 }
 
 
@@ -112,11 +132,7 @@ function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPredictio
 
     const possibilities: CurrentValueAndProbabilities[] = VAPs_by_prob.map(VAP =>
     {
-        // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
-        const value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
-            : (VAPs_represent === VAPsType.number ? parseFloat(VAP.value)
-            : VAP.value)
-
+        const value = parse_VAP_value(VAP, VAPs_represent)
         const certainty = Math.min(VAP.probability, VAP.conviction)
 
         return {

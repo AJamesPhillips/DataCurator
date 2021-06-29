@@ -51,13 +51,7 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
     const conviction_strings: string[] = []
     possibilities.forEach(({ value, probability, conviction }) =>
     {
-        let value_string: string
-
-        if (typeof value === "boolean")
-        {
-            value_string = value ? boolean_representation.true : boolean_representation.false
-        }
-        else value_string = `${value}`
+        const value_string = VAP_value_to_string(value, boolean_representation)
 
         value_strings.push(value_string)
         probability_strings.push(percentage_to_string(probability))
@@ -69,7 +63,12 @@ function get_display_strings (wcomponent: WComponent, possibilities: CurrentValu
 
 
 
-export function get_boolean_representation (args: { wcomponent: WComponent | undefined, append_boolean?: boolean })
+interface BooleanRepresentation
+{
+    true: string
+    false: string
+}
+export function get_boolean_representation (args: { wcomponent: WComponent | undefined, append_boolean?: boolean }): BooleanRepresentation
 {
     const { wcomponent, append_boolean } = args
 
@@ -91,6 +90,21 @@ export function get_boolean_representation (args: { wcomponent: WComponent | und
 
 
     return { true: boolean_true_str, false: boolean_false_str }
+}
+
+
+
+export function VAP_value_to_string (value: string | number | boolean, boolean_representation: BooleanRepresentation)
+{
+    let value_string: string
+
+    if (typeof value === "boolean")
+    {
+        value_string = value ? boolean_representation.true : boolean_representation.false
+    }
+    else value_string = `${value}`
+
+    return value_string
 }
 
 

@@ -35,7 +35,7 @@ export function SandBox ()
 
     return <div>
         Should display yellow area with height of 50px and green with 0 height and the ? hidden:
-        <ValueAndPredictionSetSummary VAP_set={VAP_set_simple} />
+        {/* <ValueAndPredictionSetSummary VAP_set={VAP_set_simple} />
 
         <br />
         <br />
@@ -60,6 +60,6 @@ export function SandBox ()
         <br />
         <br />
         Action 2:
-        <ValueAndPredictionSetSummary VAP_set={VAP_set2} />
+        <ValueAndPredictionSetSummary VAP_set={VAP_set2} /> */}
     </div>
 }

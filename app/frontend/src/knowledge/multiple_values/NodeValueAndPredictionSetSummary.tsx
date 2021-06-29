@@ -48,7 +48,7 @@ function _NodeValueAndPredictionSetSummary (props: Props)
 
     if (!VAP_set) return null
 
-    return <ValueAndPredictionSetSummary VAP_set={VAP_set} />
+    return <ValueAndPredictionSetSummary wcomponent={props.wcomponent} VAP_set={VAP_set} />
 }
 
 export const NodeValueAndPredictionSetSummary = connector(_NodeValueAndPredictionSetSummary) as FunctionalComponent<OwnProps>

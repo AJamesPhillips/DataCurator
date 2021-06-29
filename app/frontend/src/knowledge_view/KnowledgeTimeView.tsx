@@ -105,7 +105,7 @@ const get_children = (props: Props): ChildrenRawData =>
                     <Box
                         flexGrow={1} flexShrink={1}
                         display="flex" alignItems="stretch">
-                        {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}
+                        {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />)}
                     </Box>
                 )}
             </Box>
