@@ -199,12 +199,6 @@ function _WComponentCanvasNode (props: Props)
     const terminals = (!on_graph || !is_editing) ? [] : ((is_highlighted && is_editing) ? terminals_with_label : terminals_without_label)
 
 
-    const extra_node_styles = {
-        opacity: validity_opacity,
-        // transform: node_is_moving ? `scale(${props.zoom / scale_by})` : "",
-    }
-
-
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
         node_main_content={<div>
@@ -233,7 +227,7 @@ function _WComponentCanvasNode (props: Props)
             {<LabelsListV2 label_ids={wcomponent.label_ids} />}
         </div>}
         extra_css_class={extra_css_class}
-        extra_node_styles={extra_node_styles}
+        opacity={validity_opacity}
         unlimited_width={false}
         glow={glow}
         color={color}
