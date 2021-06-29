@@ -15,6 +15,7 @@ export interface KnowledgeViewListCoreProps
     knowledge_views_by_id: KnowledgeViewsById
     creation_context: CreationContextState
     current_view: ViewType
+    current_subview_id: string
     current_kv_parent_ids: Set<string>
     editing: boolean
     upsert_knowledge_view: (knowledge_view: KnowledgeView) => void

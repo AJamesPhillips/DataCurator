@@ -48,6 +48,7 @@ export function KnowledgeViewList (props: OwnProps)
             get_summary: factory_get_summary(current_view),
             get_details: factory_get_details(props),
             get_details3,
+            calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props),
         },
 
         debug_item_descriptor: "Knowledge View",
@@ -220,9 +221,30 @@ function get_details3 ()
 
 function calc_expanded_initial_state (props: OwnProps): ExpandedListStates | undefined
 {
-    const { current_kv_parent_ids: parent_knowledge_view_ids, knowledge_views } = props
+    const { current_kv_parent_ids, knowledge_views, current_subview_id } = props
 
-    const knowledge_views_contain_current_kv = !!knowledge_views.find(({ id }) => parent_knowledge_view_ids.has(id))
+    const knowledge_views_contain_current_kv = !!knowledge_views.find(({ id }) =>
+    {
+        return (
+            // this item in the list is the current knowledge view
+            id === current_subview_id
+            // this item in the list has the current knowledge view nested under it
+            || current_kv_parent_ids.has(id)
+        )
+    })
 
     return knowledge_views_contain_current_kv ? ExpandedListStates.partial_expansion : undefined
+}
+
+
+
+function factory_calc_initial_custom_expansion_state (props: OwnProps)
+{
+    return (item: KnowledgeView) =>
+    {
+        return props.current_kv_parent_ids.has(item.id)
+            // this item has the current knowledge view nested under it so expand it
+            ? true
+            : undefined
+    }
 }
