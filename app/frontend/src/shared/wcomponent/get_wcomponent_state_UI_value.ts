@@ -1,6 +1,6 @@
 import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
-import type { CurrentValuePossibility, UIValue } from "./interfaces/generic_value"
+import type { CurrentValueAndProbabilities, UIValue } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 
@@ -42,7 +42,7 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
 }
 
 
-function get_display_strings (wcomponent: WComponent, possibilities: CurrentValuePossibility[])
+function get_display_strings (wcomponent: WComponent, possibilities: CurrentValueAndProbabilities[])
 {
     const boolean_representation = get_boolean_representation({ wcomponent })
 

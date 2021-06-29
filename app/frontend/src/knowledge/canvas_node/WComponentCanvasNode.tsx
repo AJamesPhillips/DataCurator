@@ -35,6 +35,7 @@ import { LabelsListV2 } from "../../labels/LabelsListV2"
 import { factory_on_pointer_down } from "../canvas_common"
 import { scale_by } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
+import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
 
 
 
@@ -225,6 +226,11 @@ function _WComponentCanvasNode (props: Props)
                 {is_editing && <div className="description_label">state</div>}
                 <WComponentStatefulValue wcomponent={wcomponent} />
                 <WComponentJudgements wcomponent={wcomponent} />
+                <NodeValueAndPredictionSetSummary
+                    wcomponent={wcomponent}
+                    created_at_ms={created_at_ms}
+                    sim_ms={sim_ms}
+                />
             </div>}
 
             <LabelsListV2 label_ids={wcomponent.label_ids} />

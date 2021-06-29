@@ -12,7 +12,7 @@ export interface CurrentValidityValue extends CurrentValue
 
 
 const default_value = (): CurrentValidityValue => ({
-    possibilities: [],
+    probabilities: [],
     is_defined: false,
     value: true,
     probability: 1,
@@ -55,7 +55,7 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
     const certainty = Math.min(probability, conviction)
 
     return {
-        possibilities: [], // TODO this will get values once we're using VAPs
+        probabilities: [], // TODO this will get values once we're using VAPs
         is_defined: true,
         value: valid,
         uncertain,

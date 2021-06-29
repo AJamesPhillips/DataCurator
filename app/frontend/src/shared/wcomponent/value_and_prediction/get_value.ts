@@ -3,7 +3,7 @@ import {
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
-import { CurrentValue, CurrentValuePossibility, VAPsType } from "../interfaces/generic_value"
+import { CurrentValue, CurrentValueAndProbabilities, VAPsType } from "../interfaces/generic_value"
 import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
     WComponentNodeStateV2,
@@ -22,22 +22,22 @@ import { get_VAPs_ordered_by_prob } from "./utils"
 
 
 
-export function get_current_value (possibilities: CurrentValuePossibility[]): CurrentValue
+export function get_current_value (probabilities: CurrentValueAndProbabilities[]): CurrentValue
 {
     let value: CurrentValue = {
-        possibilities,
-        is_defined: possibilities.length > 0,
+        probabilities,
+        is_defined: probabilities.length > 0,
         value: undefined,
         probability: 1,
         conviction: 1,
         certainty: 1,
-        uncertain: possibilities.length > 1,
+        uncertain: probabilities.length > 1,
         assumed: false,
     }
 
-    if (possibilities.length === 1)
+    if (probabilities.length === 1)
     {
-        value = { ...value, ...possibilities[0], possibilities }
+        value = { ...value, ...probabilities[0], probabilities }
     }
 
     return value
@@ -45,7 +45,7 @@ export function get_current_value (possibilities: CurrentValuePossibility[]): Cu
 
 
 
-interface GetVAPSetValueArgs
+interface GetCurrentCounterfactualVAPSetsArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
     VAPs_represent: VAPsType
@@ -53,7 +53,7 @@ interface GetVAPSetValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_VAP_set_possible_values (args: GetVAPSetValueArgs): CurrentValuePossibility[]
+export function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): CounterfactualStateValueAndPrediction[]
 {
     const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
         created_at_ms, sim_ms } = args
@@ -62,10 +62,25 @@ export function get_VAP_set_possible_values (args: GetVAPSetValueArgs): CurrentV
         items: values_and_prediction_sets || [], created_at_ms, sim_ms,
     })
 
-    const all_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
+    const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
     const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    const counterfactual_VAPs = merge_all_counterfactuals_into_all_VAPs(all_VAPs, VAP_counterfactuals_maps)
-    return get_probable_VAP_values(counterfactual_VAPs, VAPs_represent)
+    return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
+}
+
+
+
+interface GetCurrentValueAndProbabilitiesArgs
+{
+    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
+    VAPs_represent: VAPsType
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+export function get_current_values_and_probabilities (args: GetCurrentValueAndProbabilitiesArgs): CurrentValueAndProbabilities[]
+{
+    const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args)
+    return get_probable_VAP_values(counterfactual_VAPs, args.VAPs_represent)
 }
 
 
@@ -87,7 +102,7 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VA
 
 
 
-function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsType): CurrentValuePossibility[]
+function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsType): CurrentValueAndProbabilities[]
 {
     if (!all_VAPs.length) return []
 
@@ -95,7 +110,7 @@ function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPredictio
     const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represent)
 
 
-    const possibilities: CurrentValuePossibility[] = VAPs_by_prob.map(VAP =>
+    const possibilities: CurrentValueAndProbabilities[] = VAPs_by_prob.map(VAP =>
     {
         // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
         const value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5

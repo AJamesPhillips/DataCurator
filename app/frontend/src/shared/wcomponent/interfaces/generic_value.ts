@@ -11,7 +11,7 @@ export enum VAPsType {
 
 
 
-export interface CurrentValuePossibility
+export interface CurrentValueAndProbabilities
 {
     value: string | number | boolean
     probability: number
@@ -25,7 +25,7 @@ export interface CurrentValuePossibility
 
 export interface CurrentValue
 {
-    possibilities: CurrentValuePossibility[]
+    probabilities: CurrentValueAndProbabilities[]
 
     is_defined: boolean
     value: undefined | string | number | boolean

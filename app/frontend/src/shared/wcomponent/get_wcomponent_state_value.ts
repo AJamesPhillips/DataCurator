@@ -1,5 +1,5 @@
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
-import { CurrentValuePossibility, VAPsType } from "./interfaces/generic_value"
+import { CurrentValueAndProbabilities, VAPsType } from "./interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_action,
@@ -9,7 +9,7 @@ import {
 } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeState } from "./interfaces/state"
 import { get_created_at_ms } from "./utils_datetime"
-import { get_VAP_set_possible_values } from "./value_and_prediction/get_value"
+import { get_current_values_and_probabilities } from "./value_and_prediction/get_value"
 import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
 
@@ -31,7 +31,7 @@ interface GetWcomponentStateValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): CurrentValuePossibility[]
+export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): CurrentValueAndProbabilities[]
 {
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
@@ -40,7 +40,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
     {
         const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
 
-        return get_VAP_set_possible_values({
+        return get_current_values_and_probabilities({
             values_and_prediction_sets: wcomponent.values_and_prediction_sets,
             VAPs_represent,
             wc_counterfactuals,
@@ -53,7 +53,7 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
 
 
 
-function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_at_ms: number, sim_ms: number): CurrentValuePossibility[]
+function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_at_ms: number, sim_ms: number): CurrentValueAndProbabilities[]
 {
     if (!wcomponent.values) return [] // TODO remove once MVP reached
 
@@ -62,7 +62,7 @@ function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_
 
     if (!state_value_entry) return []
 
-    const possibility: CurrentValuePossibility = {
+    const possibility: CurrentValueAndProbabilities = {
         value: state_value_entry.value,
         probability: 1,
         conviction: 1,
