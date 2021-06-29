@@ -53,7 +53,7 @@ function _ExploreButtonHandle (props: Props)
 {
     let { kvwc, is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
 
-    if (!kvwc || (!is_highlighted && props.presenting)) return null
+    if (props.presenting ? !kvwc : !is_highlighted) return null
 
     const is_current_knowledge_view = props.subview_id === props.kvwc_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
