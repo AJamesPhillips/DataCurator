@@ -1,19 +1,19 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { MoveToPositionButton } from "../canvas/MoveToPositionButton"
-import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
-import type { KnowledgeViewWComponentEntry } from "../shared/wcomponent/interfaces/knowledge_view"
-import { Button } from "../sharedf/Button"
-import { Link } from "../sharedf/Link"
-import { ACTIONS } from "../state/actions"
-import { lefttop_to_xy } from "../state/display_options/display"
+import { MoveToPositionButton } from "../../canvas/MoveToPositionButton"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
+import { Button } from "../../sharedf/Button"
+import { Link } from "../../sharedf/Link"
+import { ACTIONS } from "../../state/actions"
+import { lefttop_to_xy } from "../../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
     get_current_UI_knowledge_view_from_state,
     get_wcomponent_from_state,
-} from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
+} from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
 
 
 
@@ -55,7 +55,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _WComponentKnowledgeView (props: Props)
+function _WComponentKnowledgeViewForm (props: Props)
 {
     const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry,
         knowledge_view_entry, all_knowledge_views, consumption_formatting } = props
@@ -135,4 +135,4 @@ function _WComponentKnowledgeView (props: Props)
     </div>
 }
 
-export const WComponentKnowledgeView = connector(_WComponentKnowledgeView) as FunctionalComponent<OwnProps>
+export const WComponentKnowledgeViewForm = connector(_WComponentKnowledgeViewForm) as FunctionalComponent<OwnProps>

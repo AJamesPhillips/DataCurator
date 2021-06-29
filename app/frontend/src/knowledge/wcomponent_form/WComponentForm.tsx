@@ -34,7 +34,7 @@ import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSet
 import { PredictionList } from "../predictions/PredictionList"
 import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
-import { WComponentKnowledgeView } from "../WComponentKnowledgeView"
+import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { useEffect, useRef } from "preact/hooks"
@@ -358,7 +358,7 @@ function _WComponentForm (props: Props)
 
 
         <p>
-            <WComponentKnowledgeView wcomponent_id={wcomponent_id} />
+            <WComponentKnowledgeViewForm wcomponent_id={wcomponent_id} />
         </p>
 
 
