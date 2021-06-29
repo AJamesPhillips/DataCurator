@@ -159,13 +159,13 @@ function _WComponentCanvasNode (props: Props)
 
 
     const children: h.JSX.Element[] = []
-    if (is_highlighted || node_is_moving)
+    if (!is_editing || is_highlighted || node_is_moving)
     {
         children.push(<Handles
             set_node_is_moving={(!on_graph || !is_editing) ? undefined : (() => set_node_is_moving(true))}
             wcomponent={wcomponent}
             wcomponent_current_kv_entry={kv_entry}
-            editing={is_editing}
+            is_highlighted={is_highlighted}
         />)
     }
 

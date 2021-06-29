@@ -13,7 +13,7 @@ export function Handles (props: HandlesProps)
         <ExploreButtonHandle
             wcomponent={props.wcomponent}
             wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
-            editing={props.editing}
+            is_highlighted={props.is_highlighted}
         />
     </div>
 }

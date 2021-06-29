@@ -26,7 +26,7 @@ export interface ExploreButtonHandleOwnProps
 {
     wcomponent: WComponent
     wcomponent_current_kv_entry: KnowledgeViewWComponentEntry
-    editing: boolean
+    is_highlighted: boolean
 }
 
 
@@ -48,7 +48,9 @@ type Props = ConnectedProps<typeof connector> & ExploreButtonHandleOwnProps
 
 function _ExploreButtonHandle (props: Props)
 {
-    let { kvwc } = props
+    let { kvwc, is_highlighted } = props
+
+    if (!is_highlighted && !kvwc) return null
 
     return <div
         className={`node_handle explore ${kvwc ? "has_nested_knowledge_view" : ""}`}
