@@ -39,9 +39,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             key={vap_visual.id}
                             className="value_and_prediction"
                         >
-                            <Typography>
+                            <Box p={1} height="1.5em" overflow="hidden" textOverflow="ellipsis">
                                 {vap_visual.option_text}
-                            </Typography>
+                            </Box>
                         </Box>
                     )
                 })}

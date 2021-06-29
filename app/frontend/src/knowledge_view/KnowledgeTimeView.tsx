@@ -91,15 +91,16 @@ const get_children = (props: Props): ChildrenRawData =>
 
         elements.push(
             <Box
-                display="flex" flexDirection="row"
-                alignItems="stretch"
+                display="flex" flexDirection="row" alignItems="stretch"
                 py="0.5em"
                 key={wc.id}
             >
-                <WComponentCanvasNode
-                    id={wc.id}
-                    on_graph={false}
-                />
+                <Box>
+                    <WComponentCanvasNode
+                        id={wc.id}
+                        on_graph={false}
+                    />
+                </Box>
                 {VAP_sets.length > 0 && (
                     <Box
                         flexGrow={1} flexShrink={1}
