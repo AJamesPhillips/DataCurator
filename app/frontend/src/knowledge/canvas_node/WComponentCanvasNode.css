@@ -5,6 +5,7 @@
     text-overflow: initial;
     white-space: initial;
     overflow: initial;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 

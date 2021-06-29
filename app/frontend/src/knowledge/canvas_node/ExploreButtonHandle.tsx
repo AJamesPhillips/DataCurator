@@ -92,7 +92,7 @@ function _ExploreButtonHandle (props: Props)
             }
         }}
     >
-        {is_current_knowledge_view && parent_knowledge_view_id
+        {is_current_knowledge_view
             ? <span>&#8593;</span>
             : <span>&#128269;</span>}
     </div>
