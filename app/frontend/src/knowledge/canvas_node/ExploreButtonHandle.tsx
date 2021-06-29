@@ -4,7 +4,7 @@ import type { Store } from "redux"
 
 import {
     get_new_knowledge_view_object,
-    navigate_to_kvwcomponent,
+    navigate_to_knowledge_view_or_kvwcomponent,
 } from "../../knowledge_view/create_new_knowledge_view"
 import { get_today_str } from "../../shared/utils/date_helpers"
 import type {
@@ -38,6 +38,8 @@ const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
     return {
         kvwc_id,
         kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id],
+        subview_id: state.routing.args.subview_id,
+        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids_map.map[kvwc_id],
     }
 }
 
@@ -48,26 +50,52 @@ type Props = ConnectedProps<typeof connector> & ExploreButtonHandleOwnProps
 
 function _ExploreButtonHandle (props: Props)
 {
-    let { kvwc, is_highlighted } = props
+    let { kvwc, is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
 
     if (!is_highlighted && !kvwc) return null
 
+    const is_current_knowledge_view = props.subview_id === props.kvwc_id
+    const parent_knowledge_view_id = nested_map && nested_map.parent_id
+    const current_but_no_parent = is_current_knowledge_view && !parent_knowledge_view_id
+
+    const class_name = `node_handle explore `
+        + (kvwc ? " has_nested_knowledge_view " : "")
+        + (current_but_no_parent ? " current_but_no_parent " : "")
+
     return <div
-        className={`node_handle explore ${kvwc ? "has_nested_knowledge_view" : ""}`}
-        onPointerDown={() =>
+        className={class_name}
+        onPointerDown={e =>
         {
+            e.preventDefault()
+            e.stopImmediatePropagation()
+
             const store = get_store()
 
-            if (!kvwc)
+            if (is_current_knowledge_view)
             {
-                kvwc = prepare_wcomponent_knowledge_view(props, store)
-
-                store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view: kvwc }))
+                if (parent_knowledge_view_id)
+                {
+                    navigate_to_knowledge_view_or_kvwcomponent(parent_knowledge_view_id, store)
+                }
             }
+            else
+            {
 
-            navigate_to_kvwcomponent(kvwc.id, store)
+                if (!kvwc)
+                {
+                    kvwc = prepare_wcomponent_knowledge_view(props, store)
+
+                    store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view: kvwc }))
+                }
+
+                navigate_to_knowledge_view_or_kvwcomponent(kvwc.id, store)
+            }
         }}
-    >&#128269;</div>
+    >
+        {is_current_knowledge_view && parent_knowledge_view_id
+            ? <span>&#8593;</span>
+            : <span>&#128269;</span>}
+    </div>
 }
 
 export const ExploreButtonHandle = connector(_ExploreButtonHandle) as FunctionalComponent<ExploreButtonHandleOwnProps>

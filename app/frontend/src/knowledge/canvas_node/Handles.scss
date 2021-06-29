@@ -14,6 +14,10 @@ $handle_width:1em;
 .node_handle
 {
     color: rgba(0,0,0,0.3);
+    min-width: $handle_width * 1.5;
+    border-radius: 3px;
+    transition: background-color 0.5s;
+    text-align: center;
 }
 .node_handle:hover
 {
@@ -25,13 +29,21 @@ $handle_width:1em;
     left: $handle_width * 0.5;
 }
 
-// .node_handle.explore
-// {
-//     // top: 20px;
-//     // font-size: 13px;
-// }
 
-.node_handle.explore.has_nested_knowledge_view
+.node_handle.explore
 {
-    color: blue; /* Can not colour unicode characters */
+    &.has_nested_knowledge_view
+    {
+        color: blue; /* Can not colour unicode characters */
+    }
+
+    &.current_but_no_parent
+    {
+        background-color: pink;
+
+        &:hover
+        {
+            background-color: red;
+        }
+    }
 }
