@@ -8,6 +8,7 @@ import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_boolean_representation, VAP_value_to_string } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { sort_list } from "../../shared/utils/sort"
 
 
 
@@ -82,9 +83,13 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     const unconfidence = 1 - confidence
 
 
-    const data: VAPVisual[] = expanded_VAP_set.entries.map(VAP =>
+    const data: VAPVisual[] = expanded_VAP_set.entries.map((VAP, index) =>
     {
-        const value = parse_VAP_value(VAP, args.VAPs_represent)
+        let value = parse_VAP_value(VAP, args.VAPs_represent)
+        if (args.VAPs_represent === VAPsType.boolean)
+        {
+            value = index === 0
+        }
         const option_text = VAP_value_to_string(value, boolean_representation)
 
         return {
@@ -101,7 +106,10 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
         percentage_height: unconfidence * 100,
     })
 
-    return data
+    // TODO protect against unstable sort when percentage_height is the same
+    const sorted_data = sort_list(data, i => i.percentage_height, "descending")
+
+    return sorted_data
 }
 
 

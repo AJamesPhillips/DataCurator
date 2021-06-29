@@ -33,6 +33,7 @@ const creation_context: CreationContextState = { use_creation_context: true, cre
 
 const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
 VAP_set1.entries[0]!.value = "thing"
+VAP_set1.entries[0]!.probability = 0.4
 const wc11: WComponentNodeStateV2 = {
     type: "statev2",
     subtype: "boolean",
@@ -40,6 +41,8 @@ const wc11: WComponentNodeStateV2 = {
     created_at,
     title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
     description: "wc11 description",
+    boolean_false_str: "this is false",
+    boolean_true_str: "this is true",
     values_and_prediction_sets: [
         VAP_set1,
     ]
