@@ -1,3 +1,4 @@
+import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -14,6 +15,7 @@ import {
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 
 
 
@@ -104,11 +106,18 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {UI_knowledge_view_entry && <div>
+        {UI_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
             <MoveToPositionButton
                 description="Show node"
                 move_to_xy={lefttop_to_xy({ ...UI_knowledge_view_entry, zoom: 100 }, true)}
             />
+            <Box zIndex={10} m={4} class="node_handle">
+                <ExploreButtonHandle
+                    wcomponent={wcomponent}
+                    wcomponent_current_kv_entry={UI_knowledge_view_entry}
+                    is_highlighted={true}
+                />
+            </Box>
         </div>}
 
         {/* {knowledge_view_entry && !wcomponent_is_plain_connection(wcomponent) && <div>
