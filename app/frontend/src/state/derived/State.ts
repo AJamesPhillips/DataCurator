@@ -24,9 +24,14 @@ export interface NestedKnowledgeViewIdsEntry
     ERROR_is_circular?: true
 }
 
-export type NestedKnowledgeViewIdsMap = {
+export interface NestedKnowledgeViewIdsMap
+{
+    [id: string]: NestedKnowledgeViewIdsEntry
+}
+
+export type NestedKnowledgeViewIds = {
     top_ids: string[]
-    map: { [id: string]: NestedKnowledgeViewIdsEntry }
+    map: NestedKnowledgeViewIdsMap
 }
 
 
@@ -57,7 +62,7 @@ export interface DerivedState
     knowledge_views: KnowledgeView[]
 
     base_knowledge_view: KnowledgeView | undefined
-    nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap
+    nested_knowledge_view_ids: NestedKnowledgeViewIds
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
     judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }

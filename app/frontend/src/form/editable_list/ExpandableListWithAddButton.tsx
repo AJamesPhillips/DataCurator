@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 
-import { ExpandableList } from "./ExpandableList"
+import { ExpandableList, ExpandedListStates } from "./ExpandableList"
 import type { ExpandableListContentProps } from "./interfaces"
 import { ListHeaderAddButton } from "./ListHeaderAddButton"
 
@@ -17,6 +17,7 @@ export interface ExpandableListProps {
     on_click_new_item: () => void
     disable_collapsed?: boolean
     disable_partial_collapsed?: boolean
+    expanded_initial_state?: ExpandedListStates
 }
 
 
@@ -49,6 +50,7 @@ function _ExpandableListWithAddButton (props: Props)
         item_descriptor={item_descriptor}
         disable_collapsed={props.disable_collapsed}
         disable_partial_collapsed={props.disable_partial_collapsed}
+        expanded_initial_state={props.expanded_initial_state}
     />
 }
 

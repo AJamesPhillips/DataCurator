@@ -13,7 +13,7 @@ import type { ViewType } from "../state/routing/interfaces"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
-import { ExpandableList } from "../form/editable_list/ExpandableList"
+import { ExpandableList, ExpandedListStates } from "../form/editable_list/ExpandableList"
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { KnowledgeViewListCoreProps } from "./interfaces"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
@@ -54,6 +54,9 @@ export function KnowledgeViewList (props: OwnProps)
     })
 
 
+    const expanded_initial_state = calc_expanded_initial_state(props)
+
+
     if (sort_type === "hidden" || sort_type === "archived")
     {
         return <ExpandableList
@@ -61,6 +64,7 @@ export function KnowledgeViewList (props: OwnProps)
             content={render_list_content}
             item_descriptor={sentence_case(sort_type) + " " + (props.item_descriptor || "Knowledge View")}
             disable_collapsed={false}
+            expanded_initial_state={expanded_initial_state}
         />
     }
 
@@ -72,7 +76,7 @@ export function KnowledgeViewList (props: OwnProps)
         items_count={knowledge_views.length}
         on_click_new_item={() =>
         {
-            const knowledge_view = create_new_knowledge_view({
+            create_new_knowledge_view({
                 knowledge_view: {
                     title: make_default_title(),
                     parent_knowledge_view_id,
@@ -84,6 +88,7 @@ export function KnowledgeViewList (props: OwnProps)
         content={render_list_content}
         item_descriptor={item_descriptor}
         disable_collapsed={true}
+        expanded_initial_state={expanded_initial_state}
     />
 }
 
@@ -119,8 +124,8 @@ const make_default_title = () => get_today_str(false)
 
 const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
 {
-    const { editing, nested_knowledge_view_ids_map } = props
-    const nested_kv = nested_knowledge_view_ids_map.map[knowledge_view.id]
+    const { editing, nested_knowledge_view_ids } = props
+    const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
@@ -209,4 +214,15 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView,
 function get_details3 ()
 {
     return <div><br /><br /></div>
+}
+
+
+
+function calc_expanded_initial_state (props: OwnProps): ExpandedListStates | undefined
+{
+    const { current_kv_parent_ids: parent_knowledge_view_ids, knowledge_views } = props
+
+    const knowledge_views_contain_current_kv = !!knowledge_views.find(({ id }) => parent_knowledge_view_ids.has(id))
+
+    return knowledge_views_contain_current_kv ? ExpandedListStates.partial_expansion : undefined
 }

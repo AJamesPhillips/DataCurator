@@ -26,7 +26,7 @@ const map_state = (state: RootState) =>
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
         kv_id,
-        nested_kv_ids_map: state.derived.nested_knowledge_view_ids_map,
+        nested_kv_ids_map: state.derived.nested_knowledge_view_ids,
     }
 }
 

@@ -1,7 +1,7 @@
 import type { Perception, WComponent, WComponentsById } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeView, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
-import type { NestedKnowledgeViewIdsMap } from "../derived/State"
+import type { NestedKnowledgeViewIds } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
 
 
@@ -94,9 +94,9 @@ interface KnowledgeViewWithParentId extends KnowledgeView
 }
 
 
-export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIdsMap
+export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIds
 {
-    const map: NestedKnowledgeViewIdsMap = { top_ids: [], map: {} }
+    const map: NestedKnowledgeViewIds = { top_ids: [], map: {} }
 
     const unused_knowledge_views: KnowledgeViewWithParentId[] = []
     knowledge_views.forEach(kv =>
@@ -121,7 +121,7 @@ export function get_nested_knowledge_view_ids_map (knowledge_views: KnowledgeVie
 
 
 
-function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIdsMap)
+function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds)
 {
     if (potential_children.length === 0) return
 
@@ -162,7 +162,7 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
 
 
 
-export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewIdsMap)
+export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewIds)
 {
     const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
         priority: "0",

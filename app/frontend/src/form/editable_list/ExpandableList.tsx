@@ -8,6 +8,14 @@ import { ListHeader } from "./ListHeader"
 
 
 
+export enum ExpandedListStates {
+    collapsed = 0,
+    partial_expansion = 1,
+    expanded = 2,
+}
+
+
+
 export interface ExpandableList2Props {
     header_content?: () => h.JSX.Element | null
     content: (props: ExpandableListContentProps) => h.JSX.Element | null
@@ -16,6 +24,7 @@ export interface ExpandableList2Props {
     item_descriptor: string
     disable_collapsed?: boolean
     disable_partial_collapsed?: boolean
+    expanded_initial_state?: ExpandedListStates
 }
 
 
@@ -31,9 +40,12 @@ type Props = ConnectedProps<typeof connector> & ExpandableList2Props
 
 function _ExpandableList (props: Props)
 {
-    const expanded_initial_state = props.disable_collapsed
-        ? (props.disable_partial_collapsed ? ExpandedListStates.expanded : ExpandedListStates.partial_expansion)
-        : ExpandedListStates.collapsed
+    const expanded_initial_state = props.expanded_initial_state || (
+        props.disable_collapsed
+        ? (props.disable_partial_collapsed
+            ? ExpandedListStates.expanded
+            : ExpandedListStates.partial_expansion)
+        : ExpandedListStates.collapsed)
     const [expanded_items, set_expanded_items] = useState(expanded_initial_state)
 
     const expanded_item_rows = expanded_items === ExpandedListStates.expanded
@@ -69,14 +81,6 @@ function _ExpandableList (props: Props)
 }
 
 export const ExpandableList = connector(_ExpandableList) as FunctionalComponent<ExpandableList2Props>
-
-
-
-enum ExpandedListStates {
-    collapsed = 0,
-    partial_expansion = 1,
-    expanded = 2,
-}
 
 
 
