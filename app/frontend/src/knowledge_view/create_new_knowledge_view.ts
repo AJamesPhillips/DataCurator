@@ -58,7 +58,7 @@ export function navigate_to_knowledge_view_or_kvwcomponent (kv_or_kvwc_id: strin
 
     store.dispatch(ACTIONS.routing.change_route({
         route: "wcomponents",
-        item_id: wc_id,
+        // item_id: wc_id,
         args: { subview_id: kv_or_kvwc_id },
     }))
 }
