@@ -90,9 +90,10 @@ const get_children = (props: Props): ChildrenRawData =>
         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
 
         elements.push(
-            <Box pt="0.5em" pb="1em"
-                display="flex" flexDirection="row" flexWrap
+            <Box
+                display="flex" flexDirection="row"
                 alignItems="stretch"
+                py="0.5em"
                 key={wc.id}
             >
                 <WComponentCanvasNode
@@ -100,7 +101,7 @@ const get_children = (props: Props): ChildrenRawData =>
                     on_graph={false}
                 />
                 {VAP_sets.length > 0 && (
-                    <Box className="VAPS"
+                    <Box
                         flexGrow={1} flexShrink={1}
                         display="flex" alignItems="stretch">
                         {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}

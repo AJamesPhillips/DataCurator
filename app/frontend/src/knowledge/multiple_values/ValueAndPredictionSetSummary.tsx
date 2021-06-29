@@ -2,7 +2,8 @@ import { h } from "preact"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { Box,  Typography } from "@material-ui/core"
+import { Box,  ThemeProvider,  Typography } from "@material-ui/core"
+import { ValueList } from "../values/ValueList"
 
 interface OwnProps
 {
@@ -14,9 +15,13 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     const data = get_VAP_visuals_data(props.VAP_set)
 
     return (
+        // Try out various bgcolor values!
+        // valid values are based on what is in:
+        // frontend/src/ui_themes/material_default.tsx
+        // valid values include: success.main, info.main, warning.main, error.main
         <Box
-            border={3}
-            borderColor="white"
+            bgcolor="primary.main"
+            border={3} borderColor="white"
             flexGrow={0} flexShrink={0} flexBasis="33.33333333%"
             display="flex" flexDirection="column"
             alignItems="stretch" alignContent="stretch"

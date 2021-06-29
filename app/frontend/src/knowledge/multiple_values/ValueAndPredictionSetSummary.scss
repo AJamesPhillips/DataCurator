@@ -2,12 +2,9 @@
 
 .value_and_prediction_set_summary
 {
-    $base-color:lightgrey;
-    background-color:$base-color;
-
     @for $i from 1 through 10 {
         .value_and_prediction:nth-child(#{$i}) {
-            background-color: darken($base-color, $i * 10%);
+            background-color: rgba(255, 255, 255, $i * 0.20);
         }
     }
 
