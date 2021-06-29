@@ -8,9 +8,7 @@ import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasN
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { connect, ConnectedProps } from "react-redux"
-import { sort_list } from "../shared/utils/sort"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import type { KnowledgeViewWComponentEntry } from "../shared/wcomponent/interfaces/knowledge_view"
 
 
@@ -34,10 +32,11 @@ const map_state = (state: RootState) =>
         wcomponent_nodes = current_UI_knowledge_view.wcomponent_nodes
         const selected_id = selected_wcomponent_ids_list[0]
         const a_node = wcomponent_nodes[0]
-        const a_node_id = selected_id || a_node && a_node.id
-        if (a_node_id)
+        const a_node_id = a_node && a_node.id
+        if (selected_id || a_node_id)
         {
-            a_location = current_UI_knowledge_view.derived_wc_id_map[a_node_id]
+            a_location = current_UI_knowledge_view.derived_wc_id_map[selected_id || ""]
+            a_location = a_location || current_UI_knowledge_view.derived_wc_id_map[a_node_id || ""]
         }
     }
 
