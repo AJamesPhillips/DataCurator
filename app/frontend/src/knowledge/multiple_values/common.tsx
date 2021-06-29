@@ -30,7 +30,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
     return <SummaryForPrediction
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
-        value={VAPs_represent === VAPsType.boolean ? values : ""}
+        value={(VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.number) ? values : ""}
         datetime={VAP_set.datetime}
         probability={prob}
         conviction={conv}

@@ -8,6 +8,7 @@ import type {
     ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
+import { useState } from "preact/hooks"
 
 
 
@@ -17,6 +18,7 @@ interface OwnProps
     position?: CanvasPoint
     node_main_content: h.JSX.Element
     hidden?: boolean
+    opacity?: number
     unlimited_width?: boolean
     glow?: false | "blue" | "orange"
     color?: string
@@ -35,9 +37,25 @@ interface OwnProps
 
 export function ConnectableCanvasNode (props: OwnProps)
 {
+    let { opacity } = props
+    const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
+
+    if (opacity !== undefined)
+    {
+        if (fade_inout_opacity < opacity)
+        {
+            const new_opacity = Math.min(fade_inout_opacity + 0.1, opacity)
+            setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
+        }
+
+        opacity = fade_inout_opacity
+    }
+
+
     const extra_node_styles: h.JSX.CSSProperties =
     {
         display: props.hidden ? "none": "",
+        opacity,
         ...props.extra_node_styles,
     }
     if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
