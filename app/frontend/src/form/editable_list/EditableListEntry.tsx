@@ -15,6 +15,7 @@ export interface EditableListEntryTopProps<U>
     get_details: (item: U, on_change: (item: U) => void) => h.JSX.Element
     get_details2?: (item: U, on_change: (item: U) => void) => h.JSX.Element
     get_details3?: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    calc_initial_custom_expansion_state?: (item: U) => boolean | undefined
     extra_class_names?: string
 }
 
@@ -41,9 +42,12 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
     constructor (props: OwnProps<T>)
     {
         super(props)
-        this.state = {
-            internal__expanded: !!props.expanded,
-        }
+
+        const { calc_initial_custom_expansion_state: calc_initial_expanded } = props
+        const custom_expanded = calc_initial_expanded && calc_initial_expanded(props.item)
+        const internal__expanded = custom_expanded !== undefined ? custom_expanded : !!props.expanded
+
+        this.state = { internal__expanded }
     }
 
     componentDidUpdate (prev_props: OwnProps<T>, prev_state: State)
