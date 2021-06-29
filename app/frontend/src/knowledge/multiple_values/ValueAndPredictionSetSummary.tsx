@@ -2,8 +2,7 @@ import { h } from "preact"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-
-
+import { Box,  Typography } from "@material-ui/core"
 
 interface OwnProps
 {
@@ -14,18 +13,31 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const data = get_VAP_visuals_data(props.VAP_set)
 
-    return <div className="value_and_prediction_set_summary">
-        {data.map(vap_visual =>
-        {
-            return <div
-                key={vap_visual.id}
-                className="value_and_prediction"
-                style={{ height: `${vap_visual.percentage_height}%`, maxHeight: `${vap_visual.percentage_height}%` }}
-            >
-                {vap_visual.option_text}
-            </div>
-        })}
-    </div>
+    return (
+        <Box m={3}
+            flexGrow={1} flexShrink={1}
+            flex-basis="25%" maxWidth="33%"
+            display="flex" flexDirection="column"
+            alignItems="stretch" alignContent="stretch" justifyContent="flex-end"
+            className="value_and_prediction_set_summary">
+                {data.map(vap_visual =>
+                {
+                    return (
+                        <Box
+                            flexGrow={0} flexShrink={1}
+                            flexBasis={`${vap_visual.percentage_height}%`}
+                            maxHeight={`${vap_visual.percentage_height}%`}
+                            display="flex"
+                            alignItems="center"
+                            key={vap_visual.id}
+                            className="value_and_prediction"
+                        >
+                            {vap_visual.option_text}
+                        </Box>
+                    )
+                })}
+        </Box>
+    )
 }
 
 

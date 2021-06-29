@@ -2,26 +2,46 @@
 
 .value_and_prediction_set_summary
 {
-    display: block;
-    height: 50px;
-    width: 200px;
-    background-color: blue;
-    margin: 0 30px;
+    visibility:visible;
+    // display: block;
+    // height: 50px;
+    // width: 200px;
+    // background-color: blue;
+    // margin: 0 30px;
 
-    .value_and_prediction
-    {
-        text-align: center;
-        vertical-align: middle;
-        // font-size: 1vh;
-        overflow: hidden;
+    // .value_and_prediction
+    // {
+    //     text-align: center;
+    //     vertical-align: middle;
+    //     // font-size: 1vh;
+    //     overflow: hidden;
+    // }
+
+
+    $base-color:lightgrey;
+    background-color:$base-color;
+
+    @for $i from 1 through 10 {
+        .value_and_prediction:nth-child(#{$i}) {
+            background-color: darken($base-color, $i * 10%);
+        }
     }
 
-    .value_and_prediction:nth-of-type(odd)
-    {
-        background-color: yellow;
+    &:hover {
+        .value_and_prediction {
+            flex-basis:auto !important;
+            max-height: 100vh;
+            flex-grow:1;
+            flex-shrink:1;
+        }
     }
-    .value_and_prediction:nth-of-type(even)
-    {
-        background-color: green;
-    }
+
+    // .value_and_prediction:nth-of-type(odd)
+    // {
+    //     background-color:yellow;
+    // }
+    // .value_and_prediction:nth-of-type(even)
+    // {
+    //     background-color: green;
+    // }
 }

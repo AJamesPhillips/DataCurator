@@ -2,8 +2,6 @@
 .value_and_prediction_set, .value_and_prediction
 {
     border: thin solid rgba(73, 98, 167, 0.2);
-    border-radius: 3px;
-    padding: 3px;
 }
 
 .value_and_prediction_set

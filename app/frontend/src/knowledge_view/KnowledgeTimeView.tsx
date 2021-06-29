@@ -12,6 +12,7 @@ import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ValueAndPredictionSetSummary } from "../knowledge/multiple_values/ValueAndPredictionSetSummary"
+import { Box } from "@material-ui/core"
 
 
 
@@ -53,13 +54,11 @@ function _KnowledgeTimeView (props: Props)
     const { elements, content_coordinates } = get_children(props)
 
     return <MainArea
-        main_content={<div className="knowledge_time_view">{elements}</div>}
+        main_content={<Box className="knowledge_time_view">{elements}</Box>}
     />
 }
 
 export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>
-
-
 
 const no_children: h.JSX.Element[] = []
 const default_content_coordinates: ContentCoordinate[] = [{ left: 0, top: 0, zoom: 100 }]
@@ -90,24 +89,20 @@ const get_children = (props: Props): ChildrenRawData =>
     {
         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
 
-        elements.push(<div
+        elements.push(<Box mb={5}
+            display="flex" flexDirection="row" flexWrap
+            alignItems="stretch"
             key={wc.id}
-            className="node_container"
         >
             <WComponentCanvasNode
                 id={wc.id}
                 on_graph={false}
             />
-
-            {VAP_sets.length > 0 && <div className="value_and_prediction_set_summaries_container">
-
+            {VAP_sets.length > 0 && <Box flexGrow={1} flexShrink={1} display="flex" flexWrap="wrap" alignItems="stretch">
                 {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary VAP_set={VAP_set} />)}
-            </div>}
-
-            <hr />
-        </div>)
+            </Box>}
+        </Box>)
     })
-
 
     return {
         elements,
