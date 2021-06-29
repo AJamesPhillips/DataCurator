@@ -35,7 +35,7 @@ $handle_width:1em;
 {
     &.has_nested_knowledge_view
     {
-        color: blue; /* Can not colour unicode characters */
+        color: black; /* Can not colour unicode characters */
     }
 
     &.current_but_no_parent
