@@ -22,6 +22,7 @@ import {
     wcomponent_is_goal,
     wcomponent_can_have_validity_predictions,
     wcomponent_is_prioritisation,
+    wcomponent_is_counterfactual_v2,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
@@ -47,6 +48,7 @@ import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/g
 import { LabelsEditor } from "../../labels/LabelsEditor"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
+import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 
 
 
@@ -170,12 +172,18 @@ function _WComponentForm (props: Props)
         </p>
 
 
+        {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
+
+
         {wcomponent_is_statev2(wcomponent) &&
         <p>
             <span className="description_label">Sub type</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
-                    placeholder={"Sub type..."}
+                    placeholder="Sub type..."
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
                     on_change={option_id => upsert_wcomponent({ subtype: option_id })}

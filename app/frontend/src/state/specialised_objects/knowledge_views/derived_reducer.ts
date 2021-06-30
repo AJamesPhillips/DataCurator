@@ -119,6 +119,10 @@ function get_knowledge_view (state: RootState, id: string)
 function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
     const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id)
+    // Possible optimisation: store a set of wcomponent_ids and only run the following code when
+    // this set changes... may save a bunch of views from updating (and also help them run faster)
+    // as many just want to know what ids are present in the knowledge view not the positions of
+    // the components
     const wcomponent_ids = Object.keys(composed_wc_id_map)
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
