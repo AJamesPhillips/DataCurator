@@ -1,6 +1,5 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./ValueAndPredictionSets.css"
 import type {
     StateValueAndPredictionsSet,
 } from "../../shared/wcomponent/interfaces/state"
