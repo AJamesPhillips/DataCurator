@@ -30,7 +30,7 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
             const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv)
             if (!changed_kv) return
 
-            props.upsert_knowledge_view(changed_kv)
+            props.upsert_knowledge_view({ knowledge_view: changed_kv })
         },
 
         item_top_props: {

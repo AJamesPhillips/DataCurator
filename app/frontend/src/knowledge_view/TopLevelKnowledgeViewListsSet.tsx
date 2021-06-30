@@ -3,8 +3,8 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
-import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
 import type { RootState } from "../state/State"
+import { get_all_parent_knowledge_view_ids } from "./common"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 
 
@@ -44,7 +44,7 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
     }
 
 
-    const parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
+    const possible_parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
     const knowledge_views = props.nested_knowledge_view_ids.top_ids.map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
@@ -54,25 +54,10 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
         {...props}
         parent_knowledge_view_id={undefined}
         knowledge_views={knowledge_views}
-        possible_parent_knowledge_view_options={parent_knowledge_view_options}
-        upsert_knowledge_view={knowledge_view => props.upsert_knowledge_view({ knowledge_view })}
+        possible_parent_knowledge_view_options={possible_parent_knowledge_view_options}
+        upsert_knowledge_view={props.upsert_knowledge_view}
         current_kv_parent_ids={current_kv_parent_ids}
     />
 }
 
 export const TopLevelKnowledgeViewListsSet = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent<OwnProps>
-
-
-
-function get_all_parent_knowledge_view_ids (nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap, current_subview_id: string)
-{
-    const all_parent_ids = new Set<string>()
-    let nested_entry = nested_knowledge_view_ids_map[current_subview_id]
-    while (nested_entry && nested_entry.parent_id)
-    {
-        all_parent_ids.add(nested_entry.parent_id)
-        nested_entry = nested_knowledge_view_ids_map[nested_entry.parent_id]
-    }
-
-    return all_parent_ids
-}

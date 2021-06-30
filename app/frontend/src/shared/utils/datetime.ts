@@ -30,11 +30,15 @@ interface GetCreatedAtsReturn
     created_at: Date
     custom_created_at: Date | undefined
 }
-export function get_new_created_ats (creation_context_state: CreationContextState): GetCreatedAtsReturn
+export function get_new_created_ats (creation_context_state?: CreationContextState): GetCreatedAtsReturn
 {
     const created_at = new Date()
-    const { use_creation_context, creation_context: cc } = creation_context_state
-    const custom_created_at = use_creation_context ? (cc && cc.custom_created_at) : undefined
+    let custom_created_at: Date | undefined = undefined
+    if (creation_context_state)
+    {
+        const { use_creation_context, creation_context: cc } = creation_context_state
+        custom_created_at = use_creation_context ? (cc && cc.custom_created_at) : undefined
+    }
 
     return { created_at, custom_created_at }
 }

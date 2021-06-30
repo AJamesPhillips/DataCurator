@@ -7,9 +7,25 @@ import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingle
 import { get_today_str } from "../shared/utils/date_helpers"
 import { is_defined } from "../shared/utils/is_defined"
 import { KnowledgeView, knowledge_view_sort_types } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
-import type { KnowledgeViewListProps } from "./interfaces"
+import type { KnowledgeViewFormProps } from "./interfaces"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
+
+
+
+export function get_all_parent_knowledge_view_ids (nested_knowledge_view_ids_map: NestedKnowledgeViewIdsMap, current_subview_id: string)
+{
+    const all_parent_ids = new Set<string>()
+    let nested_entry = nested_knowledge_view_ids_map[current_subview_id]
+    while (nested_entry && nested_entry.parent_id)
+    {
+        all_parent_ids.add(nested_entry.parent_id)
+        nested_entry = nested_knowledge_view_ids_map[nested_entry.parent_id]
+    }
+
+    return all_parent_ids
+}
 
 
 
@@ -17,7 +33,7 @@ export const make_default_kv_title = () => get_today_str(false)
 
 
 
-export const factory_get_kv_details = (props: KnowledgeViewListProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
+export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
 {
     const { editing, nested_knowledge_view_ids } = props
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]

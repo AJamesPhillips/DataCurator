@@ -10,7 +10,7 @@ import { ACTIONS } from "../state/actions"
 
 
 
-export function get_new_knowledge_view_object (args: Partial<KnowledgeView> = {}, creation_context: CreationContextState)
+export function get_new_knowledge_view_object (args: Partial<KnowledgeView> = {}, creation_context?: CreationContextState)
 {
     const knowledge_view: KnowledgeView = {
         id: get_new_knowledge_view_id(),
@@ -31,7 +31,7 @@ export function get_new_knowledge_view_object (args: Partial<KnowledgeView> = {}
 interface CreateKnowledgeViewArgs
 {
     knowledge_view: Partial<KnowledgeView>
-    creation_context: CreationContextState
+    creation_context: CreationContextState | undefined
     store?: Store<RootState>
 }
 
