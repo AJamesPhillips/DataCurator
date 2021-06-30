@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from "preact"
+import { Box } from "@material-ui/core"
 
 import "./ValueAndPredictionSetSummary.scss"
 import { WComponent, wcomponent_has_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -25,7 +26,10 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     const wc_counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
 
-    return { wc_counterfactuals }
+    return {
+        wc_counterfactuals,
+        presenting: state.display_options.consumption_formatting,
+    }
 }
 
 
@@ -48,7 +52,16 @@ function _NodeValueAndPredictionSetSummary (props: Props)
 
     if (!VAP_set) return null
 
-    return <ValueAndPredictionSetSummary wcomponent={props.wcomponent} VAP_set={VAP_set} />
+    return <Box
+        flexGrow={1} flexShrink={1}
+        display="flex" alignItems="stretch"
+    >
+        <ValueAndPredictionSetSummary
+            wcomponent={props.wcomponent}
+            VAP_set={VAP_set}
+            flexBasis={props.presenting ? 100 : 70}
+        />
+    </Box>
 }
 
 export const NodeValueAndPredictionSetSummary = connector(_NodeValueAndPredictionSetSummary) as FunctionalComponent<OwnProps>

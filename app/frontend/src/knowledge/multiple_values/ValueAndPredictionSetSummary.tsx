@@ -10,6 +10,7 @@ import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedO
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { sort_list } from "../../shared/utils/sort"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
+import { useState } from "preact/hooks"
 
 
 
@@ -17,12 +18,21 @@ interface OwnProps
 {
     wcomponent: WComponent
     VAP_set: StateValueAndPredictionsSet
+    flexBasis?: number
 }
 
 export function ValueAndPredictionSetSummary (props: OwnProps)
 {
+    const [show_all_judgements, set_show_all_judgements] = useState(false)
+
+    const { flexBasis = 33.33333333 } = props
+
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
-    const data = get_VAP_visuals_data({ ...props, VAPs_represent })
+    const raw_data = get_VAP_visuals_data({ ...props, VAPs_represent })
+
+    // For now put the most likely at the bottom so that most of the time things are a bit brighter
+    const put_most_probable_last = true
+    const data = put_most_probable_last ? raw_data.reverse() : raw_data
 
     return (
         // Try out various bgcolor values!
@@ -32,34 +42,40 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
         <Box
             bgcolor="primary.main"
             border={3} borderColor="white"
-            flexGrow={0} flexShrink={0} flexBasis="33.33333333%"
+            flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
             display="flex" flexDirection="column"
             alignItems="stretch" alignContent="stretch"
             justifyContent="flex-end"
-            className="value_and_prediction_set_summary">
-                {data.map((vap_visual, index) =>
-                {
-                    return (
-                        <Box
-                            flexGrow={0} flexShrink={1}
-                            flexBasis={`${vap_visual.percentage_height}%`}
-                            maxHeight={`${vap_visual.percentage_height}%`}
-                            display="flex" flexDirection="column"
-                            alignItems="center" justifyContent="center"
-                            key={vap_visual.id}
-                            className="value_and_prediction"
-                        >
-                            <Box p={1} height="1.5em" overflow="hidden" textOverflow="ellipsis">
-                                {vap_visual.option_text}
-                                {index === 0 && <WComponentJudgements
-                                    wcomponent={props.wcomponent}
-                                    target_VAPs_represent={VAPs_represent}
-                                    value={vap_visual.value}
-                                />}
-                            </Box>
+            className="value_and_prediction_set_summary"
+            onPointerOver={() => set_show_all_judgements(true)}
+            onPointerLeave={() => set_show_all_judgements(false)}
+        >
+            {data.map((vap_visual, index) =>
+            {
+                const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
+
+                return (
+                    <Box
+                        flexGrow={0} flexShrink={1}
+                        flexBasis={`${vap_visual.percentage_height}%`}
+                        maxHeight={`${vap_visual.percentage_height}%`}
+                        display="flex" flexDirection="column"
+                        alignItems="center" justifyContent="center"
+                        key={vap_visual.id}
+                        className="value_and_prediction"
+                        onClick={() => {}}
+                    >
+                        <Box p={1} height="1.5em" overflow="hidden" textOverflow="ellipsis">
+                            {vap_visual.option_text}
+                            {show_judgements && <WComponentJudgements
+                                wcomponent={props.wcomponent}
+                                target_VAPs_represent={VAPs_represent}
+                                value={vap_visual.value}
+                            />}
                         </Box>
-                    )
-                })}
+                    </Box>
+                )
+            })}
         </Box>
     )
 }
