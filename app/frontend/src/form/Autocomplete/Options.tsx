@@ -6,7 +6,7 @@ import type { InternalAutocompleteOption } from "./interfaces"
 
 interface OwnProps
 {
-    editing: boolean
+    editing_options: boolean
     options_to_display: InternalAutocompleteOption[]
     is_option_wrapper_highlighted: (option: InternalAutocompleteOption, index: number) => boolean
     conditional_on_change: (option_id: string | undefined) => void
@@ -19,12 +19,12 @@ interface OwnProps
 
 export function Options (props: OwnProps)
 {
-    const { editing, options_to_display, is_option_wrapper_highlighted, conditional_on_change,
+    const { editing_options, options_to_display, is_option_wrapper_highlighted, conditional_on_change,
         set_highlighted_option_index, on_mouse_over_option, on_mouse_leave_option, } = props
 
-    if (options_to_display.length === 0) return null
+    if (options_to_display.length === 0 || !editing_options) return null
 
-    return <div className="options_outer" style={{ display: editing ? "" : "none" }}>
+    return <div className="options_outer">
         <div className="options_inner">
             {options_to_display.map((option, index) => <div
                 className={"option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : "")}

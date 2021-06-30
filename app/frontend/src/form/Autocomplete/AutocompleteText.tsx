@@ -84,10 +84,10 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     }, [props.initial_search_term, selected_title])
 
 
-    const [editing, set_editing] = useState(false)
+    const [editing_options, set_editing_options] = useState(false)
     useEffect(() =>
     {
-        set_editing(!!props.start_expanded)
+        set_editing_options(!!props.start_expanded)
     }, [props.start_expanded])
 
 
@@ -170,7 +170,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const set_to_not_editing = () =>
     {
-        set_editing(false)
+        set_editing_options(false)
         set_temp_value_str(get_selected_option_title_str())
         set_highlighted_option_index(0)
     }
@@ -225,14 +225,14 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             ref={r =>
             {
                 if (!r) return
-                else if (!editing) setTimeout(() => r.blur(), 0)
+                else if (!editing_options) setTimeout(() => r.blur(), 0)
                 else setTimeout(() => r.focus(), 0)
             }}
             type="text"
             placeholder={placeholder}
             value={temp_value_str}
             onFocus={e => {
-                set_editing(true)
+                set_editing_options(true)
 
                 // select all text
                 e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
@@ -243,7 +243,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         />
 
         <Options
-            editing={editing}
+            editing_options={editing_options}
             options_to_display={options_to_display}
             is_option_wrapper_highlighted={(_, index) => index === highlighted_option_index}
             conditional_on_change={conditional_on_change}
