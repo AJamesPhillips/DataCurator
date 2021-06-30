@@ -1,6 +1,4 @@
 import { h } from "preact"
-
-import "./ValueAndPredictionSets.css"
 import type {
     StateValueAndPredictionsSet,
     VersionedStateVAPsSet,
