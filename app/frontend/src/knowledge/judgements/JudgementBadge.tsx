@@ -26,7 +26,8 @@ export function JudgementBadge (props: OwnProps)
 
 
     let args: Partial<RoutingStateArgs> | undefined = undefined
-    if (props.position) args = lefttop_to_xy({ ...props.position, zoom: 100 }, true)
+    // Commmenting out for the moment as judgements are hidden from the canvas
+    // if (props.position) args = lefttop_to_xy({ ...props.position, zoom: 100 }, true)
 
 
     return <Link

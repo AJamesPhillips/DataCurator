@@ -15,7 +15,6 @@ import { get_store } from "../state/store"
 
 
 
-
 const created_at = new Date("2021-01-01")
 
 const wc10: WComponentNodeState = {
@@ -33,7 +32,8 @@ const creation_context: CreationContextState = { use_creation_context: true, cre
 
 const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
 VAP_set1.entries[0]!.value = "thing"
-VAP_set1.entries[0]!.probability = 0.4
+VAP_set1.entries[0]!.probability = 0.6
+VAP_set1.shared_entry_values = { conviction: 0.4 }
 const wc11: WComponentNodeStateV2 = {
     type: "statev2",
     subtype: "boolean",
@@ -56,7 +56,7 @@ const wc12_judgement: WComponentJudgement = {
     description: "wc12 description",
     judgement_target_wcomponent_id: wc11.id,
     judgement_operator: "==",
-    judgement_comparator_value: "thing",
+    judgement_comparator_value: "True",
 }
 const wc13_judgement: WComponentJudgement = {
     ...wc12_judgement,

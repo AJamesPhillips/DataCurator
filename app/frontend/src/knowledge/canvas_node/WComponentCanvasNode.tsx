@@ -224,8 +224,8 @@ function _WComponentCanvasNode (props: Props)
 
             {show_state_value && <div className="node_state_container">
                 {is_editing && <div className="description_label">state</div>}
-                <WComponentStatefulValue wcomponent={wcomponent} />
-                <WComponentJudgements wcomponent={wcomponent} />
+                {/* <WComponentStatefulValue wcomponent={wcomponent} />
+                <WComponentJudgements wcomponent={wcomponent} /> */}
                 <NodeValueAndPredictionSetSummary
                     wcomponent={wcomponent}
                     created_at_ms={created_at_ms}

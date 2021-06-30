@@ -45,7 +45,6 @@ export function CanvasConnnection (props: OwnProps)
             const new_opacity = Math.min(fade_inout_opacity + 0.1, opacity)
             setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
         }
-        console.log(fade_inout_opacity)
         opacity = fade_inout_opacity
     }
 

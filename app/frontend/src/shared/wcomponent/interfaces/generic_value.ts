@@ -10,10 +10,12 @@ export enum VAPsType {
 }
 
 
+export type ParsedValue = string | number | boolean | null
+
 
 export interface CurrentValueAndProbabilities
 {
-    value: string | number | boolean
+    value: ParsedValue
     probability: number
     conviction: number
     certainty: number
@@ -28,7 +30,7 @@ export interface CurrentValue
     probabilities: CurrentValueAndProbabilities[]
 
     is_defined: boolean
-    value: undefined | string | number | boolean
+    value: undefined | ParsedValue
     probability: number
     conviction: number
     certainty: number

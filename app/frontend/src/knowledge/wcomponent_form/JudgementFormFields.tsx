@@ -56,7 +56,7 @@ function _JudgementFormFields (props: Props)
     const { judgement_manual } = wcomponent
     const selected_option_id_for_manual = judgement_manual === undefined ? undefined : judgement_manual.toString()
 
-    const judgement = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
+    const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)

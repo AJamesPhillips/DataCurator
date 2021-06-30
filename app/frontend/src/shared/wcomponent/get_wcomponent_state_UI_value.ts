@@ -1,6 +1,6 @@
 import { percentage_to_string } from "../UI/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
-import type { CurrentValueAndProbabilities, UIValue } from "./interfaces/generic_value"
+import type { CurrentValueAndProbabilities, ParsedValue, UIValue } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
 
@@ -94,7 +94,7 @@ export function get_boolean_representation (args: { wcomponent: WComponent | und
 
 
 
-export function VAP_value_to_string (value: string | number | boolean, boolean_representation: BooleanRepresentation)
+export function VAP_value_to_string (value: ParsedValue, boolean_representation: BooleanRepresentation)
 {
     let value_string: string
 

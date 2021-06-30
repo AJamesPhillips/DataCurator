@@ -1,9 +1,13 @@
 import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
-import { JudgementBadgeC } from "../knowledge/judgements/JudgementBadgeC"
+import { JudgementBadgeConnected } from "../knowledge/judgements/JudgementBadgeConnected"
 import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
-import { WComponent, WComponentsById, wcomponent_is_judgement_or_objective } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    WComponentsById,
+    wcomponent_is_judgement_or_objective,
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 
 
@@ -40,7 +44,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
             if (wcomponent_is_judgement_or_objective(wcomponent))
             {
                 jsx = <div>
-                    <JudgementBadgeC judgement_or_objective_id={wcomponent.id} />
+                    <JudgementBadgeConnected judgement_or_objective_id={wcomponent.id} />
                     {title}
                 </div>
             }

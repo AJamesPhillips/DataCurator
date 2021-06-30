@@ -3,7 +3,7 @@ import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/jud
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
 
@@ -12,7 +12,7 @@ export type JudgementValue = boolean | undefined
 
 interface CalculateJudgementValueArgs
 {
-    wcomponent: WComponentJudgement
+    judgement_wcomponent: WComponentJudgement
     target_wcomponent: WComponent | undefined
     target_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
@@ -22,15 +22,7 @@ interface CalculateJudgementValueArgs
 
 export function calculate_judgement_value (args: CalculateJudgementValueArgs): JudgementValue
 {
-    const { wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = args
-
-    const {
-        judgement_operator: operator,
-        judgement_comparator_value: comparator,
-        judgement_manual: manual,
-    } = wcomponent
-    if (manual !== undefined) return manual
-
+    const { judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = args
 
     if (!target_wcomponent) return undefined
 
@@ -54,16 +46,42 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 
 
     const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-    const coerced_comparator = target_VAPs_represent === VAPsType.number ? parseFloat(comparator || "")
-        : (target_VAPs_represent === VAPsType.boolean ? comparator === "True" || (comparator === "False" ? false : undefined)
-        : comparator)
+
+    return core_calculate_judgement_value({ judgement_wcomponent, target_VAPs_represent, value })
+}
+
+
+
+interface CoreCalculateJudgementValueArgs
+{
+    judgement_wcomponent: WComponentJudgement
+    target_VAPs_represent: VAPsType
+    value: ParsedValue
+}
+// Rename this
+export function core_calculate_judgement_value (args: CoreCalculateJudgementValueArgs)
+{
+    const { judgement_wcomponent, target_VAPs_represent, value } = args
+
+    const {
+        judgement_operator: operator,
+        judgement_comparator_value: comparator,
+        judgement_manual: manual,
+    } = judgement_wcomponent
+    if (manual !== undefined) return manual
+
+
+    const coerced_comparator = target_VAPs_represent === VAPsType.number
+        ? parseFloat(comparator || "")
+        : (target_VAPs_represent === VAPsType.boolean
+            ? (comparator === "True" || (comparator === "False" ? false : undefined))
+            : comparator)
 
 
     let result = undefined
-    // purposefully using abstract equality comparison to accommodate strings, numbers etc
-    if (operator === "==") result = value == coerced_comparator
-    else if (operator === "!=") result = value != coerced_comparator
-    else if (value === null || coerced_comparator === undefined) result = undefined
+    if (value === null || coerced_comparator === undefined) result = undefined
+    else if (operator === "==") result = value === coerced_comparator
+    else if (operator === "!=") result = value !== coerced_comparator
     else if (operator === "<") result = value < coerced_comparator
     else if (operator === "<=") result = value <= coerced_comparator
     else if (operator === ">") result = value > coerced_comparator

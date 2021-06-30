@@ -90,7 +90,7 @@ function process_props (props: Props)
     {
         is_judgement = true
 
-        judgement_value = calculate_judgement_value({ wcomponent, target_wcomponent, target_counterfactuals: wc_counterfactuals, created_at_ms, sim_ms })
+        judgement_value = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, target_counterfactuals: wc_counterfactuals, created_at_ms, sim_ms })
     }
     else
     {

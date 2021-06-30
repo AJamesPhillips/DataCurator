@@ -4,11 +4,12 @@ import "./ValueAndPredictionSetSummary.scss"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { Box } from "@material-ui/core"
 import { clean_VAP_set_entries, parse_VAP_value } from "../../shared/wcomponent/value_and_prediction/get_value"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_boolean_representation, VAP_value_to_string } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { sort_list } from "../../shared/utils/sort"
+import { WComponentJudgements } from "../judgements/WComponentJudgements"
 
 
 
@@ -36,7 +37,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             alignItems="stretch" alignContent="stretch"
             justifyContent="flex-end"
             className="value_and_prediction_set_summary">
-                {data.map(vap_visual =>
+                {data.map((vap_visual, index) =>
                 {
                     return (
                         <Box
@@ -50,6 +51,11 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                         >
                             <Box p={1} height="1.5em" overflow="hidden" textOverflow="ellipsis">
                                 {vap_visual.option_text}
+                                {index === 0 && <WComponentJudgements
+                                    wcomponent={props.wcomponent}
+                                    target_VAPs_represent={VAPs_represent}
+                                    value={vap_visual.value}
+                                />}
                             </Box>
                         </Box>
                     )
@@ -71,6 +77,7 @@ interface VAPVisual
     id: string
     option_text: string
     percentage_height: number
+    value: ParsedValue
 }
 function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 {
@@ -96,6 +103,7 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
             id: VAP.id,
             option_text,
             percentage_height: VAP.probability * confidence * 100,
+            value,
         }
     })
 
@@ -104,6 +112,7 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
         id: "id__undefined__",
         option_text: "?",
         percentage_height: unconfidence * 100,
+        value: null, // should result in `undefined` as a judgemnet
     })
 
     // TODO protect against unstable sort when percentage_height is the same

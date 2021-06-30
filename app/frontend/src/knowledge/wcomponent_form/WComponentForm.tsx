@@ -128,7 +128,7 @@ function _WComponentForm (props: Props)
     return <div key={wcomponent_id}>
         <h2>
             <EditableText
-                placeholder={wcomponent.type === "action" ? "Passive imperative title..." : "Title..."}
+                placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={previous_id.current !== wcomponent_id}

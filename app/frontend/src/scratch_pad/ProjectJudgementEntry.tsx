@@ -78,7 +78,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             })()}
         >
             <JudgementBadge
-                judgement={calculate_judgement_value({ wcomponent: judgement, target_wcomponent, target_counterfactuals: undefined, created_at_ms, sim_ms })}
+                judgement={calculate_judgement_value({ judgement_wcomponent: judgement, target_wcomponent, target_counterfactuals: undefined, created_at_ms, sim_ms })}
             />
 
             <RichMarkDown

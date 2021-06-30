@@ -4,13 +4,22 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentJudgements.css"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
-import { JudgementBadgeC } from "./JudgementBadgeC"
+import { JudgementBadgeConnected } from "./JudgementBadgeConnected"
+import type { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { JudgementBadgeSimple } from "./JudgementBadgeSimple"
 
 
 
-interface OwnProps
+type OwnProps =
 {
     wcomponent: WComponent
+    target_VAPs_represent?: undefined
+    value?: undefined
+}
+| {
+    wcomponent: WComponent
+    target_VAPs_represent: VAPsType
+    value: ParsedValue
 }
 
 
@@ -33,11 +42,22 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentJudgements (props: Props)
 {
-    const { judgement_or_objective_ids: ids } = props
+    const { judgement_or_objective_ids: ids, target_VAPs_represent, value } = props
     const node_judgements_container_class_name = "node_judgements_container " + (ids.length ? "" : "empty")
 
+    if (value === undefined || target_VAPs_represent === undefined)
+    {
+        return <div className={node_judgements_container_class_name}>
+            {ids.map(id => <JudgementBadgeConnected judgement_or_objective_id={id} />)}
+        </div>
+    }
+
     return <div className={node_judgements_container_class_name}>
-        {ids.map(id => <JudgementBadgeC judgement_or_objective_id={id} />)}
+        {ids.map(id => <JudgementBadgeSimple
+            judgement_or_objective_id={id}
+            target_VAPs_represent={target_VAPs_represent}
+            value={value}
+        />)}
     </div>
 }
 
