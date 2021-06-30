@@ -22,10 +22,10 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
 
-    const { flexBasis = 33.33333333 } = props
+    const { flexBasis = 33.33333333, counterfactual_VAP_set: VAP_set } = props
 
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
-    const raw_data = get_VAP_visuals_data({ ...props, VAP_set: props.counterfactual_VAP_set, VAPs_represent })
+    const raw_data = get_VAP_visuals_data({ ...props, VAP_set, VAPs_represent })
 
     // For now put the most likely at the top so that most of the time things are a bit brighter
     const put_most_probable_last = false
@@ -59,7 +59,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     return (
 
                         <Box
-                            bgcolor="primary.main"
+                            bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
                             position="relative" overflow="hidden"
                             flexGrow={0} flexShrink={0}
                             flexBasis={`${vap_visual.certainty * 100}%`}
