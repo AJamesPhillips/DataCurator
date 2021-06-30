@@ -28,7 +28,7 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
         if (shift_or_control_down)
         {
-            selected_wcomponent_ids_list = toggle_item_in_list(selected_wcomponent_ids_list, i => i === id, id)
+            selected_wcomponent_ids_list = toggle_item_in_list(selected_wcomponent_ids_list, id)
         }
         else
         {

@@ -67,9 +67,11 @@ export function remove_from_list_by_predicate <I> (list: I[], predicate: (i: I) 
 
 
 
-export function toggle_item_in_list <I> (list: I[], predicate: (i: I) => boolean, item: I): I[]
+export function toggle_item_in_list <I> (list: I[], item: I, predicate?: (i: I) => boolean): I[]
 {
-    const new_list = list.filter(i => !predicate(i))
+    const pred = predicate || ((i: I) => i === item)
+
+    const new_list = list.filter(i => !pred(i))
 
     if (new_list.length === list.length) new_list.push(item)
 
