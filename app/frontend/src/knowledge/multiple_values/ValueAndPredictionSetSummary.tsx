@@ -44,7 +44,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
           >
             <Box
-                flexGrow={0} flexShrink={1}
+                flexGrow={1} flexShrink={1}
                 display="flex" flexDirection="column"
                 alignItems="stretch" alignContent="stretch"
                 justifyContent="flex-end"
@@ -76,7 +76,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                         >
                             <Box
                                 position="relative" zIndex="10"
-                                overflow="hidden" textOverflow="ellipsis">
+                                overflowY="hidden" textOverflow="ellipsis">
                                     {vap_visual.option_text}
 
                                     {show_judgements && <WComponentJudgements
