@@ -22,41 +22,31 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 
     if (!option) return null
 
-
     return(
-        <Box
-            mb={1}
-            onMouseOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}
-            onMouseLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}
-        >
-            <ButtonGroup size="small" fullWidth={true}>
-                {editing &&	<IconButton color="primary" onClick={() => on_remove_option(option.id)}>
-                    <ClearIcon />
-                </IconButton>}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    style={{
-                        cursor: !pointer_down ? "not-allowed" : "",
-                        // If no color is present, then allow MaterialUI Button to use it's own
-                        // prettier defaults (with on hover animation) rather than force it to be
-                        // white (the default of color_to_string)
-                        backgroundColor: option.color && color_to_string(option.color),
-                        color: option.color && color_to_string(color_to_opposite(option.color)),
-                    }}
-                    onClick={(e: any) => pointer_down && pointer_down(e, option.id)}
-                    disabled={!pointer_down}
+        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true}  disableElevation={true}>
+            <Button
+                onClick={(e: any) => pointer_down && pointer_down(e, option.id)}
+                disabled={!pointer_down}
+                style={{
+                    cursor: !pointer_down ? "not-allowed" : "",
+                    // If no color is present, then allow MaterialUI Button to use it's own
+                    // prettier defaults (with on hover animation) rather than force it to be
+                    // white (the default of color_to_string)
+                    backgroundColor: option.color && color_to_string(option.color),
+                    color: option.color && color_to_string(color_to_opposite(option.color)),
+                }}>
+                <Tooltip
+                    title={option.jsx || option.title}
+                    aria-label={option.jsx || option.title}
                 >
-                    <Tooltip
-                        title={option.jsx || option.title}
-                        aria-label={option.jsx || option.title}
-                    >
-                        <Typography noWrap>
-                            {option.jsx || option.title}
-                        </Typography>
-                    </Tooltip>
-                </Button>
-            </ButtonGroup>
-        </Box>
+                    <Typography noWrap textOverflow="ellipsis" variant="caption">
+                        {option.jsx || option.title}
+                    </Typography>
+                </Tooltip>
+            </Button>
+            {editing &&	<IconButton onClick={() => on_remove_option(option.id)}>
+                <ClearIcon />
+            </IconButton>}
+        </ButtonGroup>
     )
 }

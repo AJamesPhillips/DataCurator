@@ -53,7 +53,7 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
 
     return (
-        <Box>
+        <Box width="100%" overflowX="hidden">
             {
                 editing && <AutocompleteText
                     {...props}
@@ -66,21 +66,23 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                     }}
                 />
             }
-            <Box className={`selected_options ${editing ? "editing" : ""}`}>
-                {selected_option_ids.map(id => <SelectedOption
-                    editing={editing}
-                    option={option_by_id[id]}
-                    on_remove_option={removed_id =>
-                    {
-                        props.on_change(selected_option_ids.filter(id => id !== removed_id))
-                    }}
-                    on_mouse_over_option={props.on_mouse_over_option}
-                    on_mouse_leave_option={props.on_mouse_leave_option}
-                    on_pointer_down_selected_option={(e, id) =>
-                    {
-                        props.change_route({ item_id: id })
-                    }}
-                />)}
+            <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
+                {selected_option_ids.map(id => <Box p={1} flexGrow={1} flexShrink={1} flexBasis="30%" maxWidth="100%">
+                    <SelectedOption
+                        editing={editing}
+                        option={option_by_id[id]}
+                        on_remove_option={removed_id =>
+                        {
+                            props.on_change(selected_option_ids.filter(id => id !== removed_id))
+                        }}
+                        on_mouse_over_option={props.on_mouse_over_option}
+                        on_mouse_leave_option={props.on_mouse_leave_option}
+                        on_pointer_down_selected_option={(e, id) =>
+                        {
+                            props.change_route({ item_id: id })
+                        }}
+                    />
+                </Box>)}
             </Box>
         </Box>
     )
