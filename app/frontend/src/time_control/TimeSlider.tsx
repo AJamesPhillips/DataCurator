@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import "./time_slider.scss"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
@@ -78,8 +79,8 @@ function _TimeSlider (props: Props)
 
 
     return (
-        <Box class="time_slider" my={2} px={5}>
-            <Box class="slider_container"  display="flex">
+        <Box className="time_slider" my={2} px={5}>
+            <Box className="slider_container"  display="flex">
                 <ButtonGroup size="small">
                     <IconButton
                         onClick={move_to_event_datetime(-1)}

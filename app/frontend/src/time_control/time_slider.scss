@@ -1,0 +1,13 @@
+
+.time_slider
+{
+    .MuiSlider-mark
+    {
+        color: blue;
+    }
+
+    .MuiSlider-mark.MuiSlider-markActive
+    {
+        background-color: navy;
+    }
+}
