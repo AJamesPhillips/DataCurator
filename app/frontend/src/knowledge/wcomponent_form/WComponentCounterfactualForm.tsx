@@ -5,10 +5,12 @@ import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
+import { get_VAP_visuals_data, VAP_visual_id__undefined } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type { WComponentCounterfactualV2 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
+import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ACTIONS } from "../../state/actions"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -94,6 +96,7 @@ function _WComponentCounterfactualForm (props: Props)
 
 
     const counterfactual_VAP_set = wcomponent.counterfactual_VAP_set
+    const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
 
 
     return <div>
@@ -139,21 +142,45 @@ function _WComponentCounterfactualForm (props: Props)
         </p>}
 
 
-        {counterfactual_VAP_set && <p>
+        {counterfactual_VAP_set && target_wcomponent && <p>
             <span className="description_label">Counterfactual value set</span> &nbsp;
-            {counterfactual_VAP_set.entries.map(VAP =>
+            {get_VAP_visuals_data({
+                VAP_set: counterfactual_VAP_set,
+                VAPs_represent,
+                wcomponent: target_wcomponent,
+                sort: false,
+            }).map(visual_VAP =>
             {
-                const { value = "no value" } = VAP
+                const { id, value_text, certainty } = visual_VAP
+                const checked = certainty === 1
 
                 return <div>
                     <input
                         type="radio"
-                        id={value}
+                        id={id}
                         name="counterfactual_vap"
-                        value={value}
+                        value={value_text}
+                        checked={checked}
+                        onChange={() =>
+                        {
+                            const new_entries = counterfactual_VAP_set.entries
+                                .map(entry => ({ ...entry, probability: entry.id === id ? 1 : 0 }))
 
+                            const shared_entry_values = {
+                                ...counterfactual_VAP_set.shared_entry_values,
+                                conviction: id === VAP_visual_id__undefined ? 0 : 1,
+                            }
+
+                            const new_counterfactual_VAP_set = {
+                                ...counterfactual_VAP_set,
+                                entries: new_entries,
+                                shared_entry_values,
+                            }
+
+                            upsert_wcomponent({ counterfactual_VAP_set: new_counterfactual_VAP_set })
+                        }}
                     />
-                    <label for={value}>{value}</label>
+                    <label for={id}>{value_text}</label>
                 </div>
             })}
         </p>}
