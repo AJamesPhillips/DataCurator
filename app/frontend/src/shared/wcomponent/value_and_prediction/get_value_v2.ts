@@ -1,6 +1,6 @@
 import { wcomponent_has_knowledge_view } from "../../../state/specialised_objects/accessors"
 import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
-import type { ComposedCounterfactualStateValueAndPredictionSetV2, WComponentCounterfactualV2 } from "../interfaces/counterfactual"
+import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry, TargetVAPIdCounterfactualMap, WComponentCounterfactualV2 } from "../interfaces/counterfactual"
 import type { KnowledgeViewsById } from "../interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
@@ -66,27 +66,34 @@ function filter_counterfactuals_v2_to_active (counterfactuals_v2: WComponentCoun
 function merge_counterfactuals_v2_into_VAP_set (VAP_set: StateValueAndPredictionsSet, counterfactuals_v2: WComponentCounterfactualV2[] = [], knowledge_views_by_id: KnowledgeViewsById): ComposedCounterfactualStateValueAndPredictionSetV2
 {
     let is_counterfactual = false
-    let active_target_VAP_id: string | undefined = undefined
+    const target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap = {}
     let active_counterfactual_v2_id: string | undefined = undefined
-    let active_counterfactual_has_knowledge_view: boolean | undefined = undefined
 
     counterfactuals_v2.forEach(cf =>
     {
         is_counterfactual = true
         VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
 
-        active_target_VAP_id = cf.counterfactual_VAP_set && cf.counterfactual_VAP_set.target_VAP_id
         active_counterfactual_v2_id = cf.id
 
-        const has_knowledge_view = wcomponent_has_knowledge_view(cf.id, knowledge_views_by_id)
-        active_counterfactual_has_knowledge_view = has_knowledge_view
+        const target_VAP_id = cf.counterfactual_VAP_set && cf.counterfactual_VAP_set.target_VAP_id
+        if (!target_VAP_id) return
+
+        const counterfactual_has_knowledge_view = wcomponent_has_knowledge_view(cf.id, knowledge_views_by_id)
+        const entry: TargetVAPIdCounterfactualEntry = {
+            counterfactual_v2_id: cf.id,
+            counterfactual_has_knowledge_view,
+        }
+
+        const cf_data = target_VAP_id_counterfactual_map[target_VAP_id] || []
+        cf_data.push(entry)
+        target_VAP_id_counterfactual_map[target_VAP_id] = cf_data
     })
 
     return {
         ...VAP_set,
         is_counterfactual,
-        active_target_VAP_id,
-        active_counterfactual_v2_id,
-        active_counterfactual_has_knowledge_view,
+        target_VAP_id_counterfactual_map,
+        active_counterfactual_v2_id
     }
 }

@@ -7,7 +7,8 @@ import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedO
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
-import type { ComposedCounterfactualStateValueAndPredictionSetV2 } from "../../shared/wcomponent/interfaces/counterfactual"
+import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry } from "../../shared/wcomponent/interfaces/counterfactual"
+import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 
 
 
@@ -54,6 +55,8 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
                     const base_line_height = `${vap_visual.certainty * 200}%`
 
+                    const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
+
                     // NOTE: I have moved the bgcolor to the Box below.
                     // This allows for color specificaton of each VAP "stripe"
                     return (
@@ -75,7 +78,11 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                                 position="relative" zIndex="10"
                                 overflowY="hidden" textOverflow="ellipsis"
                             >
-                                {VAP_set.active_target_VAP_id === vap_visual.id && <CounterfactualAvailable />}
+                                {cf_entries.map(entry => <CounterfactualLink
+                                    any_active={VAP_set.is_counterfactual}
+                                    counterfactual={entry}
+                                    active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
+                                />)}
 
                                 {vap_visual.value_text}
 
@@ -95,14 +102,32 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 
 
 
-function CounterfactualAvailable (props: {})
+interface CounterfactualLinkProps
 {
+    any_active: boolean
+    counterfactual: TargetVAPIdCounterfactualEntry
+    active_counterfactual_v2_id: string | undefined
+}
+function CounterfactualLink (props: CounterfactualLinkProps)
+{
+    const this_counterfactual_active = props.counterfactual.counterfactual_v2_id === props.active_counterfactual_v2_id
+
+    const color = this_counterfactual_active
+        ? "darkorange"
+        : (props.any_active ? "white" : "orange")
+
     const style: h.JSX.CSSProperties = {
         fontSize: "1.8em",
-        color: "darkorange",
+        color,
         verticalAlign: "middle",
         fontWeight: "bold",
     }
 
-    return <span style={style}>&#x2442;</span>
+    return <span style={style}>
+        &#x2442;
+        {props.counterfactual.counterfactual_has_knowledge_view && <ExploreButtonHandle
+            wcomponent_id={props.counterfactual.counterfactual_v2_id || ""}
+            is_highlighted={true}
+        />}
+    </span>
 }

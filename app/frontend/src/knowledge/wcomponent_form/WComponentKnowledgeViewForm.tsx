@@ -113,7 +113,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             />
             <Box zIndex={10} m={4} class="node_handle">
                 <ExploreButtonHandle
-                    wcomponent={wcomponent}
+                    wcomponent_id={wcomponent.id}
                     wcomponent_current_kv_entry={composed_knowledge_view_entry}
                     is_highlighted={true}
                 />

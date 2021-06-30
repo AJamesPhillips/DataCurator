@@ -11,7 +11,7 @@ export function Handles (props: HandlesProps)
     return <div className="handles">
         <HandleForMoving set_node_is_moving={props.set_node_is_moving} />
         <ExploreButtonHandle
-            wcomponent={props.wcomponent}
+            wcomponent_id={props.wcomponent_id}
             wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
             is_highlighted={props.is_highlighted}
         />

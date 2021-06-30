@@ -13,11 +13,10 @@ import type {
     KnowledgeView,
     KnowledgeViewWComponentEntry,
 } from "../../shared/wcomponent/interfaces/knowledge_view"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
-import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 
@@ -25,8 +24,8 @@ import { get_store } from "../../state/store"
 
 export interface ExploreButtonHandleOwnProps
 {
-    wcomponent: WComponent
-    wcomponent_current_kv_entry: KnowledgeViewWComponentEntry
+    wcomponent_id: string
+    wcomponent_current_kv_entry?: KnowledgeViewWComponentEntry
     is_highlighted: boolean
 }
 
@@ -34,9 +33,11 @@ export interface ExploreButtonHandleOwnProps
 
 const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
 {
-    const kvwc_id = wcomponent_id_to_wcomponent_kv_id(own_props.wcomponent.id)
+    const wcomponent = get_wcomponent_from_state(state, own_props.wcomponent_id)
+    const kvwc_id = wcomponent_id_to_wcomponent_kv_id(own_props.wcomponent_id)
 
     return {
+        wcomponent,
         kvwc_id,
         kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id],
         subview_id: state.routing.args.subview_id,
@@ -85,7 +86,10 @@ function _ExploreButtonHandle (props: Props)
 
                 if (!kvwc)
                 {
-                    kvwc = prepare_wcomponent_knowledge_view(props, store)
+                    const success = prepare_wcomponent_knowledge_view(props, store)
+
+                    if (!success) return
+                    kvwc = success
 
                     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view: kvwc }))
                 }
@@ -107,6 +111,8 @@ export const ExploreButtonHandle = connector(_ExploreButtonHandle) as Functional
 
 function prepare_wcomponent_knowledge_view(props: Props, store: Store<RootState>)
 {
+    if (!props.wcomponent_current_kv_entry || !props.wcomponent) return false
+
     const wc_id_map: KnowledgeViewWComponentIdEntryMap = {
         [props.wcomponent.id]: props.wcomponent_current_kv_entry,
     }

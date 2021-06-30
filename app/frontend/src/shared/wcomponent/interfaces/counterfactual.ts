@@ -16,14 +16,25 @@ export interface WComponentCounterfactual extends WComponentNodeBase
 
 
 
+export interface TargetVAPIdCounterfactualEntry
+{
+    counterfactual_v2_id: string | undefined
+    counterfactual_has_knowledge_view: boolean | undefined
+}
+
+export interface TargetVAPIdCounterfactualMap
+{
+    [target_VAP_id: string]: TargetVAPIdCounterfactualEntry[]
+}
+
+
 // The v1 interface is at the VAP level and is: ComposedCounterfactualStateValueAndPredictionV1
 // This is composed / denormalised form suitable for UI
 export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
 {
     is_counterfactual: boolean
-    active_target_VAP_id: string | undefined
+    target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap
     active_counterfactual_v2_id: string | undefined
-    active_counterfactual_has_knowledge_view: boolean | undefined
 }
 
 
