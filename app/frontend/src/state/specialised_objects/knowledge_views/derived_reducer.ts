@@ -1,12 +1,15 @@
 import {
     WComponent,
+    WComponentsById,
     wcomponent_can_render_connection,
-    wcomponent_is_counterfactual, wcomponent_is_prioritisation,
+    wcomponent_is_counterfactual,
+    wcomponent_is_counterfactual_v2,
+    wcomponent_is_prioritisation,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
+import type { WcIdCounterfactualsMap, WcIdCounterfactualsV2Map } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
-import type { ComposedKnowledgeView } from "../../derived/State"
+import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
 import type { RootState } from "../../State"
 import {
     get_base_knowledge_view,
@@ -117,12 +120,15 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 {
     const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id)
     const wcomponent_ids = Object.keys(composed_wc_id_map)
+    const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
-    const wc_id_counterfactuals_v2_map = {} // get_wc_id_counterfactuals_v2_map(state, current_kv)
-    const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
+    const wc_id_counterfactuals_v2_map = get_wc_id_counterfactuals_v2_map({
+        wc_ids_by_type,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    })
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
@@ -144,11 +150,11 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 
 
 
-export function get_composed_wc_id_map (current_kv: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
+export function get_composed_wc_id_map (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
 {
     const to_compose: KnowledgeViewWComponentIdEntryMap[] = []
 
-    const foundation_knowledge_view_ids = current_kv.foundation_knowledge_view_ids || []
+    const foundation_knowledge_view_ids = knowledge_view.foundation_knowledge_view_ids || []
 
     foundation_knowledge_view_ids.forEach(id =>
     {
@@ -158,7 +164,7 @@ export function get_composed_wc_id_map (current_kv: KnowledgeView, knowledge_vie
     })
 
 
-    to_compose.push(current_kv.wc_id_map)
+    to_compose.push(knowledge_view.wc_id_map)
     const composed_wc_id_map = Object.assign({}, ...to_compose) as KnowledgeViewWComponentIdEntryMap
 
     return composed_wc_id_map
@@ -201,6 +207,32 @@ function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: Knowle
             return
         }
         level_VAP_ids[target_VAP_id] = counterfactual
+    })
+
+    return map
+}
+
+
+
+interface GetWcIdCounterfactualsV2MapArgs
+{
+    wc_ids_by_type: WComponentIdsByType
+    wcomponents_by_id: WComponentsById
+}
+function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdCounterfactualsV2Map
+{
+    const map: WcIdCounterfactualsV2Map = {}
+
+    args.wc_ids_by_type.counterfactualv2.forEach(id =>
+    {
+        const counterfactual_v2 = args.wcomponents_by_id[id]
+        if (!wcomponent_is_counterfactual_v2(counterfactual_v2)) return
+
+        const level_VAP_set_ids = map[counterfactual_v2.target_wcomponent_id] || { VAP_set: {} }
+        map[counterfactual_v2.target_wcomponent_id] = level_VAP_set_ids
+
+        const counterfactual_v2s = level_VAP_set_ids.VAP_set[counterfactual_v2.target_VAP_set_id] || []
+        counterfactual_v2s.push(counterfactual_v2)
     })
 
     return map

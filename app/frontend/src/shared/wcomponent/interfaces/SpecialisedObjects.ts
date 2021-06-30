@@ -15,7 +15,7 @@ import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
-import type { WComponentCounterfactual } from "./counterfactual"
+import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "./counterfactual"
 
 
 
@@ -203,6 +203,14 @@ export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined
 {
     return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
 }
+
+
+
+export function wcomponent_is_counterfactual_v2 (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactualV2
+{
+    return wcomponent_is_a("counterfactualv2", wcomponent, log_error_id)
+}
+
 
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
