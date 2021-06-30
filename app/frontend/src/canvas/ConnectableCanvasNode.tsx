@@ -38,18 +38,19 @@ interface OwnProps
 export function ConnectableCanvasNode (props: OwnProps)
 {
     let { opacity } = props
-    const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
+    // const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
 
-    if (opacity !== undefined)
-    {
-        if (fade_inout_opacity < opacity)
-        {
-            const new_opacity = Math.min(fade_inout_opacity + 0.1, opacity)
-            setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
-        }
+    // Disabled as not performant at the moment
+    // if (opacity !== undefined)
+    // {
+    //     if (fade_inout_opacity < opacity)
+    //     {
+    //         const new_opacity = Math.min(fade_inout_opacity + 0.3, opacity)
+    //         setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
+    //     }
 
-        opacity = fade_inout_opacity
-    }
+    //     opacity = fade_inout_opacity
+    // }
 
 
     const extra_node_styles: h.JSX.CSSProperties =

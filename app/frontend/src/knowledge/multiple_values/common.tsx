@@ -98,7 +98,7 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
                     disabled={false}
                     placeholder="..."
                     value={conviction}
-                    conditional_on_change={conviction =>
+                    conditional_on_blur={conviction =>
                     {
                         const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
                         // Overwrite all the existing convictions with this conviction

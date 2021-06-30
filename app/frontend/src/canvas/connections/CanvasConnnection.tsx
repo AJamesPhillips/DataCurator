@@ -26,7 +26,7 @@ interface OwnProps {
 export function CanvasConnnection (props: OwnProps)
 {
     const [hovered, set_hovered] = useState(false)
-    const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
+    // const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type } = props
@@ -38,15 +38,16 @@ export function CanvasConnnection (props: OwnProps)
 
 
     let opacity = props.intensity === undefined ? 1 : props.intensity
-    if (opacity !== undefined)
-    {
-        if (fade_inout_opacity < opacity)
-        {
-            const new_opacity = Math.min(fade_inout_opacity + 0.1, opacity)
-            setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
-        }
-        opacity = fade_inout_opacity
-    }
+    // Disabled as not performant at the moment
+    // if (opacity !== undefined)
+    // {
+    //     if (fade_inout_opacity < opacity)
+    //     {
+    //         const new_opacity = Math.min(fade_inout_opacity + 0.1, opacity)
+    //         setTimeout(() => set_fade_inout_opacity(new_opacity), 30)
+    //     }
+    //     opacity = fade_inout_opacity
+    // }
 
 
     const blur = props.blur || 0

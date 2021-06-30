@@ -59,7 +59,7 @@ function _NodeValueAndPredictionSetSummary (props: Props)
         <ValueAndPredictionSetSummary
             wcomponent={props.wcomponent}
             VAP_set={VAP_set}
-            flexBasis={props.presenting ? 100 : 70}
+            flexBasis={100}
         />
     </Box>
 }
