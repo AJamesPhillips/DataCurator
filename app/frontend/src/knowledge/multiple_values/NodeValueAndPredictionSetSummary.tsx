@@ -4,11 +4,13 @@ import { Box } from "@material-ui/core"
 import "./ValueAndPredictionSetSummary.scss"
 import { WComponent, wcomponent_has_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ValueAndPredictionSetSummary } from "./ValueAndPredictionSetSummary"
-import { get_current_counterfactual_v2_VAP_sets } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import {
+    get_current_counterfactual_v2_VAP_sets,
+} from "../../shared/wcomponent/value_and_prediction/get_value_v2"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
-import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import type { VAP_set_id_counterfactual_mapV2 } from "../../shared/uncertainty/uncertainty"
 
 
 
@@ -24,11 +26,21 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const { wcomponent } = own_props
 
-    const wc_counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
+    const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
+
+    let VAP_set_counterfactuals_map: VAP_set_id_counterfactual_mapV2 | undefined = undefined
+    let active_counterfactual_v2_ids: string[] | undefined = undefined
+    if (current_composed_kv)
+    {
+        active_counterfactual_v2_ids = current_composed_kv.active_counterfactual_v2_ids
+
+        const cf = current_composed_kv.wc_id_counterfactuals_v2_map[wcomponent.id]
+        VAP_set_counterfactuals_map = cf && cf.VAP_set
+    }
 
     return {
-        wc_counterfactuals,
-        presenting: state.display_options.consumption_formatting,
+        VAP_set_counterfactuals_map,
+        active_counterfactual_v2_ids,
     }
 }
 
@@ -42,13 +54,12 @@ function _NodeValueAndPredictionSetSummary (props: Props)
 {
     if (!wcomponent_has_VAP_sets(props.wcomponent)) return null
 
-    const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
-
+    // debugger
     const VAP_set = get_current_counterfactual_v2_VAP_sets({
         ...props,
         values_and_prediction_sets: props.wcomponent.values_and_prediction_sets,
-        VAPs_represent,
     })
+
 
     if (!VAP_set) return null
 

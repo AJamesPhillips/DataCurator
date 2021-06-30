@@ -1,25 +1,26 @@
-import type { CounterfactualStateValueAndPrediction } from "../../counterfactuals/merge"
-import type { WComponentCounterfactuals, VAP_id_counterfactual_map } from "../../uncertainty/uncertainty"
-import type { VAPsType } from "../interfaces/generic_value"
+import type { CounterfactualStateValueAndPredictionSetV2 } from "../../counterfactuals/interfaces"
+import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
+import type { WComponentCounterfactualV2 } from "../interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
-import { clean_VAP_set_entries } from "./get_value"
 
 
 
 interface GetCurrentCounterfactualVAPSetsArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represent: VAPsType
-    wc_counterfactuals: WComponentCounterfactuals | undefined
     created_at_ms: number
     sim_ms: number
+    VAP_set_counterfactuals_map: VAP_set_id_counterfactual_mapV2 | undefined
+    active_counterfactual_v2_ids: string[] | undefined
 }
-export function get_current_counterfactual_v2_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): StateValueAndPredictionsSet | undefined
+export function get_current_counterfactual_v2_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): CounterfactualStateValueAndPredictionSetV2 | undefined
 {
     const {
-        values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
+        values_and_prediction_sets,
         created_at_ms, sim_ms,
+        VAP_set_counterfactuals_map: cf_map,
+        active_counterfactual_v2_ids,
     } = args
 
     const { present_items } = partition_and_prune_items_by_datetimes({
@@ -30,14 +31,31 @@ export function get_current_counterfactual_v2_VAP_sets (args: GetCurrentCounterf
     if (!VAP_set) return undefined
 
 
-    // const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    return VAP_set//  merge_counterfactuals_into_VAP_set(present_item, VAP_counterfactuals_maps)
+    const counterfactual_v2 = cf_map && cf_map[VAP_set.id]
+    const active_counterfactuals = filter_counterfactuals_v2_to_active(counterfactual_v2, active_counterfactual_v2_ids || [])
+
+    return merge_counterfactuals_v2_into_VAP_set(VAP_set, active_counterfactuals)
 }
 
 
 
-// function merge_counterfactuals_into_VAP_set (vap_set: StateValueAndPredictionsSet, VAP_counterfactuals_maps: VAP_id_counterfactual_map[]): CounterfactualStateValueAndPrediction | undefined
-// {
+function filter_counterfactuals_v2_to_active (counterfactuals_v2: WComponentCounterfactualV2[] = [], active_counterfactual_v2_ids: string[]): WComponentCounterfactualV2[]
+{
+    const ids = new Set(active_counterfactual_v2_ids)
+    return counterfactuals_v2.filter(cf => ids.has(cf.id))
+}
 
-// }
 
+
+function merge_counterfactuals_v2_into_VAP_set (VAP_set: StateValueAndPredictionsSet, counterfactuals_v2: WComponentCounterfactualV2[] = []): CounterfactualStateValueAndPredictionSetV2
+{
+    let is_counterfactual = false
+
+    counterfactuals_v2.forEach(cf =>
+    {
+        is_counterfactual = true
+        VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
+    })
+
+    return { ...VAP_set, is_counterfactual }
+}

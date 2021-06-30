@@ -1,13 +1,8 @@
 import type { StateValueAndPrediction } from "../wcomponent/interfaces/state"
 import type { VAP_id_counterfactual_map } from "../uncertainty/uncertainty"
 import type { WComponentCounterfactual } from "../wcomponent/interfaces/counterfactual"
+import type { CounterfactualStateValueAndPrediction } from "./interfaces"
 
-
-
-export interface CounterfactualStateValueAndPrediction extends StateValueAndPrediction
-{
-    is_counterfactual: boolean
-}
 
 
 export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): CounterfactualStateValueAndPrediction
@@ -23,6 +18,7 @@ export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, cou
 
     return ({ ...VAP, probability, conviction, is_counterfactual: cf })
 }
+
 
 
 export function merge_counterfactuals_into_VAPs (VAPs: StateValueAndPrediction[], VAP_counterfactuals_map?: VAP_id_counterfactual_map): CounterfactualStateValueAndPrediction[]

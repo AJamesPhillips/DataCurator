@@ -1,5 +1,4 @@
 import {
-    CounterfactualStateValueAndPrediction,
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
@@ -19,6 +18,7 @@ import type {
 import { calc_is_uncertain } from "../uncertainty_utils"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
+import type { CounterfactualStateValueAndPrediction } from "../../counterfactuals/interfaces"
 
 
 
