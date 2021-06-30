@@ -12,10 +12,10 @@ import type {
     WComponentNodeStateV2,
 } from "./state"
 import type { ExistencePredictions } from "../../uncertainty/existence"
-import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
+import type { WComponentCounterfactual } from "./counterfactual"
 
 
 

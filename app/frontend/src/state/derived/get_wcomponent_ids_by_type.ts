@@ -16,6 +16,7 @@ export const get_empty_wcomponent_ids_by_type = (): WComponentIdsByType => ({
     judgement: new Set(),
     objective: new Set(),
     counterfactual: new Set(),
+    counterfactualv2: new Set(),
     goal: new Set(),
     prioritisation: new Set(),
 

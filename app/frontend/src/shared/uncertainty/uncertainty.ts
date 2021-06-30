@@ -1,5 +1,5 @@
 import type { Base } from "../wcomponent/interfaces/base"
-import type { WComponentNodeBase } from "../wcomponent/interfaces/wcomponent_base"
+import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "../wcomponent/interfaces/counterfactual"
 
 
 
@@ -134,19 +134,6 @@ export interface Prediction extends Base, PredictionBase, HasDateTime {}
 
 
 
-export interface WComponentCounterfactual extends WComponentNodeBase
-{
-    type: "counterfactual"
-    target_wcomponent_id: string
-    // subtype: "existence" | "validity"
-    target_VAP_set_id: string
-    target_VAP_id: string
-    probability?: number
-    conviction?: number
-}
-
-
-
 export interface VAP_id_counterfactual_map
 {
     [target_VAP_id: string]: WComponentCounterfactual
@@ -163,4 +150,19 @@ export interface WComponentCounterfactuals
 }
 export type WcIdCounterfactualsMap = {
     [target_wcomponent_id: string]: WComponentCounterfactuals
+}
+
+
+
+export interface VAP_set_id_counterfactual_mapV2
+{
+    [target_VAP_set_id: string]: WComponentCounterfactualV2
+}
+export interface WComponentCounterfactualsV2
+{
+    VAP_set: VAP_set_id_counterfactual_mapV2
+    // validity_VAP_set: VAP_set_id_counterfactual_map
+}
+export type WcIdCounterfactualsMapV2 = {
+    [target_wcomponent_id: string]: WComponentCounterfactualsV2
 }

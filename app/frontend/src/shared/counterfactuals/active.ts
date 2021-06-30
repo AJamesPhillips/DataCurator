@@ -1,4 +1,4 @@
-import type { WComponentCounterfactual } from "../uncertainty/uncertainty"
+import type { WComponentCounterfactual } from "../wcomponent/interfaces/counterfactual"
 
 
 
