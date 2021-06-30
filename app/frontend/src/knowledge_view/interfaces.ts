@@ -1,5 +1,5 @@
 import type { CreationContextState } from "../shared/creation_context/state"
-import type { KnowledgeView, KnowledgeViewsById } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewsById, KnowledgeViewSortType } from "../shared/wcomponent/interfaces/knowledge_view"
 import type { NestedKnowledgeViewIds } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 
@@ -19,4 +19,11 @@ export interface KnowledgeViewListCoreProps
     current_kv_parent_ids: Set<string>
     editing: boolean
     upsert_knowledge_view: (knowledge_view: KnowledgeView) => void
+}
+
+
+
+export interface KnowledgeViewListProps extends KnowledgeViewListCoreProps
+{
+    sort_type: KnowledgeViewSortType
 }
