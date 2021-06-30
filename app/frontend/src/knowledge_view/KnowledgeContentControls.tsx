@@ -71,7 +71,7 @@ function _KnowledgeContentControls (props: Props)
                         value={props.display_by_simulated_time}
                         aria-label="text formatting">
                             <ToggleButton value={true} aria-label="Display by simulated time">
-                               Simulated Time
+                               Time
                             </ToggleButton>
                             <ToggleButton value={false} aria-label="Display by relationships">
                                 Relationships

@@ -12,4 +12,5 @@ export interface CounterfactualStateValueAndPrediction extends StateValueAndPred
 export interface CounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
 {
     is_counterfactual: boolean
+    counterfactual_v2_id: string
 }

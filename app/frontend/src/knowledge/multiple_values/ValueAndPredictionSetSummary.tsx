@@ -75,13 +75,15 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                                 position="relative" zIndex="10"
                                 overflowY="hidden" textOverflow="ellipsis"
                             >
-                                    {vap_visual.value_text}
+                                <CounterfactualAvailable />
 
-                                    {show_judgements && <WComponentJudgements
-                                        wcomponent={props.wcomponent}
-                                        target_VAPs_represent={VAPs_represent}
-                                        value={vap_visual.value}
-                                    />}
+                                {vap_visual.value_text}
+
+                                {show_judgements && <WComponentJudgements
+                                    wcomponent={props.wcomponent}
+                                    target_VAPs_represent={VAPs_represent}
+                                    value={vap_visual.value}
+                                />}
                             </Box>
                         </Box>
                     )
@@ -89,4 +91,18 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             </Box>
         </Box>
     )
+}
+
+
+
+function CounterfactualAvailable (props: {})
+{
+    const style: h.JSX.CSSProperties = {
+        fontSize: "1.8em",
+        color: "darkorange",
+        verticalAlign: "middle",
+        fontWeight: "bold",
+    }
+
+    return <span style={style}>&#x2442;</span>
 }
