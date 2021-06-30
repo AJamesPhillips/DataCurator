@@ -60,7 +60,7 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
     />
 }
 
-export const KnowledgeViewListsSetWrapper = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent<OwnProps>
+export const TopLevelKnowledgeViewListsSet = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent<OwnProps>
 
 
 
