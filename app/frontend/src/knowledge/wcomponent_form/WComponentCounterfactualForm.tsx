@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
+import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import { get_VAP_visuals_data, VAP_visual_id__undefined } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
@@ -183,6 +184,15 @@ function _WComponentCounterfactualForm (props: Props)
                     <label for={id}>{value_text}</label>
                 </div>
             })}
+        </p>}
+
+
+        {counterfactual_VAP_set && <p>
+            <span className="description_label">Counterfactual active</span> &nbsp;
+            <EditableCheckbox
+                value={true} //counterfactual_active_for_current_knowledge_view
+                on_change={() => {}}
+            />
         </p>}
     </div>
 }
