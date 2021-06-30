@@ -104,7 +104,7 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 
     const maybe_confidence = expanded_VAP_set.shared_entry_values?.conviction
     const confidence = maybe_confidence === undefined ? 1 : maybe_confidence
-    const unconfidence = 1 - confidence
+    let total_certainties = 0
 
 
     const data: VAPVisual[] = expanded_VAP_set.entries.map((VAP, index) =>
@@ -115,11 +115,13 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
             value = index === 0
         }
         const option_text = VAP_value_to_string(value, boolean_representation)
+        const certainty = VAP.probability * confidence
+        total_certainties += certainty
 
         return {
             id: VAP.id,
             option_text,
-            percentage_height: VAP.probability * confidence * 100,
+            percentage_height: certainty * 100,
             value,
         }
     })
@@ -131,7 +133,7 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     sorted_data.push({
         id: "id__undefined__",
         option_text: "?",
-        percentage_height: unconfidence * 100,
+        percentage_height: (1 - total_certainties) * 100,
         value: null, // should result in `undefined` as a judgemnet
     })
 
