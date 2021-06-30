@@ -5,8 +5,15 @@
 {
     $max_elements: 6;
 
+    .value_and_prediction:before {
+        content:"";
+        position:absolute;
+        top:0; right:0; bottom:0; left:0;
+        z-index:1;
+    }
+
     @for $i from 1 through $max_elements {
-        .value_and_prediction:nth-child(#{$i}) {
+        .value_and_prediction:nth-child(#{$i}):before {
             background-color: rgba(255, 255, 255, math.div($max-elements - $i - 1, $max-elements));
         }
     }
@@ -20,8 +27,7 @@
 
     &:hover {
         .value_and_prediction {
-            flex-basis:auto !important;
-            max-height: 50%;
+            flex-basis:33.33333333%;
             flex-grow:1;
             flex-shrink:1;
         }

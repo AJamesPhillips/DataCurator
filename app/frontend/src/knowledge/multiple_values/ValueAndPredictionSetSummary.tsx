@@ -35,13 +35,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     const data = put_most_probable_last ? raw_data.reverse() : raw_data
 
     return (
-        // Try out various bgcolor values!
-        // valid values are based on what is in:
-        // frontend/src/ui_themes/material_default.tsx
-        // valid values include: success.main, info.main, warning.main, error.main
         <Box
-            bgcolor="primary.main"
-            border={3} borderColor="white"
+            m={1}
+            // border={1} borderColor="primary.main"
             flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
             display="flex" flexDirection="column"
             alignItems="stretch" alignContent="stretch"
@@ -54,24 +50,33 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             {
                 const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
 
+                // NOTE: I have moved the bgcolor to the Box below.
+                // This allows for color specificaton of each VAP "stripe"
                 return (
+
                     <Box
+                        bgcolor="primary.main"
+                        position="relative" overflow="hidden"
                         flexGrow={0} flexShrink={1}
                         flexBasis={`${vap_visual.percentage_height}%`}
-                        maxHeight={`${vap_visual.percentage_height}%`}
                         display="flex" flexDirection="column"
                         alignItems="center" justifyContent="center"
                         key={vap_visual.id}
                         className="value_and_prediction"
                         onClick={() => {}}
                     >
-                        <Box p={1} height="1.5em" overflow="hidden" textOverflow="ellipsis">
-                            {vap_visual.option_text}
-                            {show_judgements && <WComponentJudgements
-                                wcomponent={props.wcomponent}
-                                target_VAPs_represent={VAPs_represent}
-                                value={vap_visual.value}
-                            />}
+                        <Box
+                            position="relative" zIndex="10"
+                            component="span"
+                            height="1.5em" lineHeight="1.5em"
+                            textOverflow="ellipsis">
+                                {vap_visual.option_text}
+
+                                {show_judgements && <WComponentJudgements
+                                    wcomponent={props.wcomponent}
+                                    target_VAPs_represent={VAPs_represent}
+                                    value={vap_visual.value}
+                                />}
                         </Box>
                     </Box>
                 )
