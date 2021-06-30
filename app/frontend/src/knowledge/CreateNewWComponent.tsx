@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from "react-redux"
 import type { CreationContextState } from "../shared/creation_context/state"
 
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
-import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import "./CreateNewWComponent.css"
 import { create_wcomponent } from "./create_wcomponent_type"
@@ -13,7 +13,7 @@ import { create_wcomponent } from "./create_wcomponent_type"
 const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
     creation_context: state.creation_context,
-    current_knowledge_view: get_current_UI_knowledge_view_from_state(state),
+    current_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     editing: !state.display_options.consumption_formatting,
 })
 

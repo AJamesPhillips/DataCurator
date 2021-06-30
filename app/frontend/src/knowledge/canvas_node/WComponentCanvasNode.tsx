@@ -52,12 +52,12 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
     const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id)
-    const { current_UI_knowledge_view } = state.derived
+    const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
     return {
         force_displaying: state.filter_context.force_display,
         on_current_knowledge_view,
-        current_UI_knowledge_view,
+        current_composed_knowledge_view,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
         wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
@@ -97,7 +97,7 @@ function _WComponentCanvasNode (props: Props)
         id, on_graph = true,
         force_displaying,
         is_editing,
-        current_UI_knowledge_view: UI_kv, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
+        current_composed_knowledge_view: composed_kv, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         shift_or_control_keys_are_down,
         created_at_ms, sim_ms, validity_filter, certainty_formatting,
@@ -105,18 +105,18 @@ function _WComponentCanvasNode (props: Props)
     } = props
     const { change_route, set_highlighted_wcomponent } = props
 
-    if (!UI_kv) return <div>No current knowledge view</div>
+    if (!composed_kv) return <div>No current knowledge view</div>
     if (!wcomponent) return <div>Could not find component of id {id}</div>
 
 
-    let kv_entry_maybe = UI_kv.derived_wc_id_map[id]
+    let kv_entry_maybe = composed_kv.composed_wc_id_map[id]
     if (!kv_entry_maybe && on_graph) return <div>Could not find knowledge view entry for id {id}</div>
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
 
 
-    const { wc_ids_excluded_by_filters } = UI_kv.filters
+    const { wc_ids_excluded_by_filters } = composed_kv.filters
     const validity_value = calc_wcomponent_should_display({
         force_displaying, is_selected, wcomponent, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
@@ -150,7 +150,7 @@ function _WComponentCanvasNode (props: Props)
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id: props.id,
-            knowledge_view_id: UI_kv.id,
+            knowledge_view_id: composed_kv.id,
             entry: new_entry,
         })
 

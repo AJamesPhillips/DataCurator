@@ -5,7 +5,7 @@ import type { ValidityPredictions } from "../../uncertainty/validity"
 
 
 
-export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual" | "goal"
+export type WComponentNodeType = "event" | "state" | "statev2" | "process" | "action" | "actor" | "counterfactual" | "counterfactualv2" | "goal"
 export type WComponentConnectionType = "causal_link" | "relation_link"
 export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective" | "prioritisation"
 const _wcomponent_types: {[P in WComponentType]: true} = {
@@ -20,6 +20,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     judgement: true,
     objective: true,
     counterfactual: true,
+    counterfactualv2: true,
     goal: true,
     prioritisation: true,
 }
@@ -45,4 +46,3 @@ export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPred
     type: WComponentNodeType
     // encompassed_by: string
 }
-

@@ -16,7 +16,7 @@ import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedO
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
-import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 
@@ -127,7 +127,7 @@ function prepare_wcomponent_knowledge_view(props: Props, store: Store<RootState>
     const title = rendered_title || `World Component ${props.wcomponent.id} created: ${get_today_str()}`
 
 
-    const current_kv = get_current_UI_knowledge_view_from_state(state)
+    const current_kv = get_current_composed_knowledge_view_from_state(state)
     const current_kv_id = current_kv && current_kv.id
 
 

@@ -22,6 +22,7 @@ import {
     wcomponent_is_goal,
     wcomponent_can_have_validity_predictions,
     wcomponent_is_prioritisation,
+    wcomponent_is_counterfactual_v2,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
@@ -47,6 +48,7 @@ import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/g
 import { LabelsEditor } from "../../labels/LabelsEditor"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
+import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 
 
 
@@ -94,14 +96,16 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentForm (props: Props)
 {
+    const previous_id = useRef<undefined | string>(undefined)
+
     if (!props.ready) return <div>Loading...</div>
 
-    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent, editing, created_at_ms, sim_ms, creation_context } = props
+    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent,
+        editing, created_at_ms, sim_ms, creation_context } = props
     const wcomponent_id = wcomponent.id
     const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
 
-    const previous_id = useRef<undefined | string>(undefined)
     useEffect(() => { previous_id.current = wcomponent_id }, [wcomponent_id])
 
 
@@ -168,12 +172,18 @@ function _WComponentForm (props: Props)
         </p>
 
 
+        {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
+
+
         {wcomponent_is_statev2(wcomponent) &&
         <p>
             <span className="description_label">Sub type</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
-                    placeholder={"Sub type..."}
+                    placeholder="Sub type..."
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
                     on_change={option_id => upsert_wcomponent({ subtype: option_id })}
@@ -269,22 +279,13 @@ function _WComponentForm (props: Props)
         />}
 
 
-        <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
-            <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
-                title="Created at"
-                invariant_value={wcomponent.created_at}
-                value={wcomponent.custom_created_at}
-                on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
-            />
-        </p>
-
-
         {orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && <div>
             <br />
 
             <p>
                 <PredictionList
-                    item_descriptor="Validity prediction"
+                    // TODO remove this hack and restore existence predictions
+                    item_descriptor={(wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction"}
                     predictions={orig_validity_predictions}
                     update_predictions={new_predictions => upsert_wcomponent({ validity: new_predictions }) }
                 />
@@ -293,6 +294,7 @@ function _WComponentForm (props: Props)
             <hr />
             <br />
         </div>}
+
 
         {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
             <p style={{ color: "red" }}>
@@ -347,6 +349,15 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
+
+        <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
+            <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
+                title="Created at"
+                invariant_value={wcomponent.created_at}
+                value={wcomponent.custom_created_at}
+                on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
+            />
+        </p>
 
 
         {editing && <p>

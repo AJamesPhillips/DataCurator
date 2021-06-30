@@ -37,9 +37,9 @@ export function get_perception_from_state (state: RootState, id: string | null):
 }
 
 
-export function get_current_UI_knowledge_view_from_state (state: RootState)
+export function get_current_composed_knowledge_view_from_state (state: RootState)
 {
-    return state.derived.current_UI_knowledge_view
+    return state.derived.current_composed_knowledge_view
 }
 export function get_current_knowledge_view_from_state (state: RootState)
 {

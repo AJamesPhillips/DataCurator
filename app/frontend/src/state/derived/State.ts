@@ -8,7 +8,7 @@ import type {
     Perception,
     WComponent,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap } from "../../shared/uncertainty/uncertainty"
+import type { WcIdCounterfactualsMap, WcIdCounterfactualsV2Map } from "../../shared/uncertainty/uncertainty"
 import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import type { WComponentPrioritisation } from "../../shared/wcomponent/interfaces/priorities"
 
@@ -35,12 +35,13 @@ export type NestedKnowledgeViewIds = {
 }
 
 
-export interface GraphUIKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
+export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
-    derived_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
     wc_id_counterfactuals_map: WcIdCounterfactualsMap
+    wc_id_counterfactuals_v2_map: WcIdCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 
@@ -67,7 +68,7 @@ export interface DerivedState
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
     judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
 
-    current_UI_knowledge_view: GraphUIKnowledgeView | undefined
+    current_composed_knowledge_view: ComposedKnowledgeView | undefined
 
     project_priorities_meta: ProjectPrioritiesMeta
 }

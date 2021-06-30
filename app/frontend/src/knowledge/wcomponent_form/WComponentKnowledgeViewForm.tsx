@@ -11,7 +11,7 @@ import { ACTIONS } from "../../state/actions"
 import { lefttop_to_xy } from "../../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
-    get_current_UI_knowledge_view_from_state,
+    get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -31,15 +31,15 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     const current_knowledge_view = get_current_knowledge_view_from_state(state)
     const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id]
-    const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
-    const UI_knowledge_view_entry = current_UI_knowledge_view && current_UI_knowledge_view.derived_wc_id_map[wcomponent_id]
+    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
+    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
     const all_knowledge_views = state.derived.knowledge_views
 
     return {
         wcomponent: get_wcomponent_from_state(state, wcomponent_id),
         knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
         knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
-        UI_knowledge_view_entry,
+        composed_knowledge_view_entry,
         knowledge_view_entry,
         all_knowledge_views,
         consumption_formatting: state.display_options.consumption_formatting,
@@ -59,7 +59,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeViewForm (props: Props)
 {
-    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, UI_knowledge_view_entry,
+    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
         knowledge_view_entry, all_knowledge_views, consumption_formatting } = props
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
@@ -73,7 +73,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     function update (knowledge_view_id: string, arg: Partial<KnowledgeViewWComponentEntry>)
     {
         const new_entry: KnowledgeViewWComponentEntry = {
-            ...(UI_knowledge_view_entry || { left: 0, top: 0 }),
+            ...(composed_knowledge_view_entry || { left: 0, top: 0 }),
             ...arg,
         }
         props.upsert_knowledge_view_entry({
@@ -96,7 +96,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     return <div>
         {!knowledge_view_entry && knowledge_view_id && <div>
             Not present in this knowledge view
-            {UI_knowledge_view_entry && " but is present in a foundational knowledge view"}
+            {composed_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
             {!consumption_formatting && <Button
                 value="Add to current knowledge view"
@@ -106,15 +106,15 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {UI_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
+        {composed_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
             <MoveToPositionButton
                 description="Show node"
-                move_to_xy={lefttop_to_xy({ ...UI_knowledge_view_entry, zoom: 100 }, true)}
+                move_to_xy={lefttop_to_xy({ ...composed_knowledge_view_entry, zoom: 100 }, true)}
             />
             <Box zIndex={10} m={4} class="node_handle">
                 <ExploreButtonHandle
                     wcomponent={wcomponent}
-                    wcomponent_current_kv_entry={UI_knowledge_view_entry}
+                    wcomponent_current_kv_entry={composed_knowledge_view_entry}
                     is_highlighted={true}
                 />
             </Box>

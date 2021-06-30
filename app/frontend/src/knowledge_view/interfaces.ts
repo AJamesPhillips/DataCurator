@@ -19,6 +19,7 @@ export interface KnowledgeViewFormProps
 }
 
 
+
 export interface KnowledgeViewListCoreProps extends KnowledgeViewFormProps
 {
     parent_knowledge_view_id?: string

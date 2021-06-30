@@ -4,7 +4,7 @@ import Markdown from "markdown-to-jsx"
 
 import "./LabelV2.css"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
-import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { color_to_opposite, color_to_string } from "../sharedf/color"
 
@@ -26,7 +26,7 @@ function map_state (state: RootState, { wcomponent_id }: OwnProps)
         wcomponent,
         rich_text: state.display_options.consumption_formatting,
         wcomponents_by_id,
-        wc_id_counterfactuals_map: get_current_UI_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+        wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }

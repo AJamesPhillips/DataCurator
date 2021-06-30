@@ -12,10 +12,10 @@ import type {
     WComponentNodeStateV2,
 } from "./state"
 import type { ExistencePredictions } from "../../uncertainty/existence"
-import type { WComponentCounterfactual } from "../../uncertainty/uncertainty"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
+import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "./counterfactual"
 
 
 
@@ -101,8 +101,9 @@ export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WC
 {
     return wcomponent.type === "state"
 }
-export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WComponentNodeStateV2
+export function wcomponent_is_statev2 (wcomponent: WComponent | undefined): wcomponent is WComponentNodeStateV2
 {
+    if (!wcomponent) return false
     return wcomponent.type === "statev2"
 }
 
@@ -203,6 +204,14 @@ export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined
 {
     return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
 }
+
+
+
+export function wcomponent_is_counterfactual_v2 (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactualV2
+{
+    return wcomponent_is_a("counterfactualv2", wcomponent, log_error_id)
+}
+
 
 
 export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement

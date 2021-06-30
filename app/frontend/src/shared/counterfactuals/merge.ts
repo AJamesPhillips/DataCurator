@@ -1,5 +1,6 @@
 import type { StateValueAndPrediction } from "../wcomponent/interfaces/state"
-import type { VAP_id_counterfactual_map, WComponentCounterfactual } from "../uncertainty/uncertainty"
+import type { VAP_id_counterfactual_map } from "../uncertainty/uncertainty"
+import type { WComponentCounterfactual } from "../wcomponent/interfaces/counterfactual"
 
 
 

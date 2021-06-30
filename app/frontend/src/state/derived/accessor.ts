@@ -4,7 +4,7 @@ import type { RootState } from "../State"
 
 export function get_wc_id_counterfactuals_map (state: RootState)
 {
-    return state.derived.current_UI_knowledge_view && state.derived.current_UI_knowledge_view.wc_id_counterfactuals_map
+    return state.derived.current_composed_knowledge_view && state.derived.current_composed_knowledge_view.wc_id_counterfactuals_map
 }
 
 

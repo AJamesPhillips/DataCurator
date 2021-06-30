@@ -8,7 +8,7 @@ import type {
 import type { RootState } from "../../../State"
 import {
     get_current_knowledge_view_from_state,
-    get_current_UI_knowledge_view_from_state,
+    get_current_composed_knowledge_view_from_state,
 } from "../../accessors"
 import { handle_upsert_knowledge_view } from "../utils"
 import {
@@ -61,14 +61,14 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
     const { knowledge_view_id, wcomponent_ids } = action
 
     const kv = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
-    const UI_kv = get_current_UI_knowledge_view_from_state(state)
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
 
 
     if (!kv)
     {
         console.error(`Could not find knowledge view for bulk_add_to_knowledge_view by id: "${knowledge_view_id}"`)
     }
-    else if (!UI_kv)
+    else if (!composed_kv)
     {
         console.error("There should always be a current knowledge view if bulk editing position of world components")
     }
@@ -78,9 +78,9 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
 
 
         wcomponent_ids.forEach(id => {
-            const entry = UI_kv.derived_wc_id_map[id]
+            const entry = composed_kv.composed_wc_id_map[id]
             if (!entry) {
-                console.error(`we should always have an entry but wcomponent "${id}" lacking entry in UI_kv derived_wc_id_map for "${knowledge_view_id}"`)
+                console.error(`we should always have an entry but wcomponent "${id}" lacking entry in composed_kv composed_wc_id_map for "${knowledge_view_id}"`)
                 return
             }
             new_wc_id_map[id] = entry
@@ -155,12 +155,12 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
     const { wcomponent_ids, change_left, change_top } = action
 
     const kv = get_current_knowledge_view_from_state(state)
-    const UI_kv = get_current_UI_knowledge_view_from_state(state)
-    if (kv && UI_kv) {
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
+    if (kv && composed_kv) {
         const new_wc_id_map = { ...kv.wc_id_map }
 
         wcomponent_ids.forEach(id => {
-            const existing_entry = UI_kv.derived_wc_id_map[id]!
+            const existing_entry = composed_kv.composed_wc_id_map[id]!
 
             const new_entry = { ...existing_entry }
 

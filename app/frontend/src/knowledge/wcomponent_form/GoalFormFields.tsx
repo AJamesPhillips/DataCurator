@@ -10,7 +10,7 @@ import {
     alert_wcomponent_is_judgement_or_objective,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
-import { get_current_UI_knowledge_view_from_state, get_wcomponents_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { set_union } from "../../utils/set"
 
@@ -25,7 +25,7 @@ interface OwnProps
 
 const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 {
-    const kv = get_current_UI_knowledge_view_from_state(state)
+    const kv = get_current_composed_knowledge_view_from_state(state)
     const filtered_wcomponents: WComponentJudgement[] = []
 
     if (kv)
@@ -41,7 +41,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     }
 
 
-    const wc_id_counterfactuals_map = get_current_UI_knowledge_view_from_state(state)?.wc_id_counterfactuals_map
+    const wc_id_counterfactuals_map = get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map
 
 
     return {

@@ -10,7 +10,7 @@ import {
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import { get_current_UI_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { ExternalLinkIcon } from "../sharedf/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 
@@ -30,7 +30,7 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_current_UI_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
 })

@@ -40,7 +40,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     const { force_display: force_displaying } = state.filter_context
     const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id)
-    const { current_UI_knowledge_view: UI_kv } = state.derived
+    const { current_composed_knowledge_view: composed_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
 
@@ -49,10 +49,10 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     let to_wc: WComponent | undefined = undefined
 
 
-    if (!wcomponent || !UI_kv) ""
+    if (!wcomponent || !composed_kv) ""
     else
     {
-        const { wc_ids_excluded_by_filters } = UI_kv.filters
+        const { wc_ids_excluded_by_filters } = composed_kv.filters
 
 
         if (wcomponent_is_plain_connection(wcomponent))
@@ -79,7 +79,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     return {
-        current_UI_knowledge_view: UI_kv,
+        current_composed_knowledge_view: composed_kv,
         wcomponent,
         validity_value,
         is_current_item: state.routing.item_id === own_props.id,
@@ -107,7 +107,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentCanvasConnection (props: Props)
 {
     const {
-        id, current_UI_knowledge_view, wcomponent, is_current_item, is_highlighted, is_selected,
+        id, current_composed_knowledge_view, wcomponent, is_current_item, is_highlighted, is_selected,
         validity_value, shift_or_control_keys_are_down,
         change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props
@@ -126,9 +126,9 @@ function _WComponentCanvasConnection (props: Props)
 
     if (!validity_value) return null
 
-    if (!current_UI_knowledge_view)
+    if (!current_composed_knowledge_view)
     {
-        console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but no current_UI_knowledge_view`)
+        console.error(`Tried to render a WComponentCanvasConnection of world component id: "${id}" but no current_composed_knowledge_view`)
         return null
     }
 
@@ -137,7 +137,7 @@ function _WComponentCanvasConnection (props: Props)
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type,
-    } = get_connection_terminal_positions({ wcomponent, wc_id_map: current_UI_knowledge_view.derived_wc_id_map })
+    } = get_connection_terminal_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
 
 
     const validity_opacity = calc_display_opacity({
