@@ -8,7 +8,10 @@ import { get_wcomponent_search_options } from "../../search/get_wcomponent_searc
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import { get_VAP_visuals_data, VAP_visual_id__undefined } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
-import type { WComponentCounterfactualV2 } from "../../shared/wcomponent/interfaces/counterfactual"
+import type {
+    CoreCounterfactualStateValueAndPredictionSetV2,
+    WComponentCounterfactualV2,
+} from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
@@ -153,7 +156,7 @@ function _WComponentCounterfactualForm (props: Props)
                     {
                         const target_VAP_set = target_VAP_sets.find(({ id }) => id === new_target_VAP_set_id)
 
-                        const VAP_set: StateValueAndPredictionsSet | undefined = target_VAP_set
+                        const VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
                             ? clean_VAP_set_for_counterfactual(target_VAP_set)
                             : undefined
 
@@ -197,10 +200,11 @@ function _WComponentCounterfactualForm (props: Props)
                                 conviction: id === VAP_visual_id__undefined ? 0 : 1,
                             }
 
-                            const new_counterfactual_VAP_set = {
+                            const new_counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 = {
                                 ...counterfactual_VAP_set,
                                 entries: new_entries,
                                 shared_entry_values,
+                                target_VAP_id: id,
                             }
 
                             upsert_wcomponent({ counterfactual_VAP_set: new_counterfactual_VAP_set })

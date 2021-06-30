@@ -7,14 +7,14 @@ import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedO
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
-import type { CounterfactualStateValueAndPredictionSetV2 } from "../../shared/counterfactuals/interfaces"
+import type { ComposedCounterfactualStateValueAndPredictionSetV2 } from "../../shared/wcomponent/interfaces/counterfactual"
 
 
 
 interface OwnProps
 {
     wcomponent: WComponent
-    counterfactual_VAP_set: CounterfactualStateValueAndPredictionSetV2
+    counterfactual_VAP_set: ComposedCounterfactualStateValueAndPredictionSetV2
     flexBasis?: number
 }
 
@@ -75,7 +75,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                                 position="relative" zIndex="10"
                                 overflowY="hidden" textOverflow="ellipsis"
                             >
-                                <CounterfactualAvailable />
+                                {VAP_set.active_target_VAP_id === vap_visual.id && <CounterfactualAvailable />}
 
                                 {vap_visual.value_text}
 

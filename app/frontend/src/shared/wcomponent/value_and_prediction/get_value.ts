@@ -1,4 +1,5 @@
 import {
+    ComposedCounterfactualStateValueAndPredictionV1,
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
 import { test } from "../../utils/test"
@@ -18,7 +19,6 @@ import type {
 import { calc_is_uncertain } from "../uncertainty_utils"
 import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
 import { get_VAPs_ordered_by_prob } from "./utils"
-import type { CounterfactualStateValueAndPrediction } from "../../counterfactuals/interfaces"
 
 
 
@@ -53,7 +53,7 @@ interface GetCurrentCounterfactualVAPSetsArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): CounterfactualStateValueAndPrediction[]
+export function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): ComposedCounterfactualStateValueAndPredictionV1[]
 {
     const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
         created_at_ms, sim_ms } = args
@@ -122,7 +122,7 @@ export function parse_VAP_value (VAP: StateValueAndPrediction, VAPs_represent: V
 
 
 
-function get_probable_VAP_values (all_VAPs: CounterfactualStateValueAndPrediction[], VAPs_represent: VAPsType): CurrentValueAndProbabilities[]
+function get_probable_VAP_values (all_VAPs: ComposedCounterfactualStateValueAndPredictionV1[], VAPs_represent: VAPsType): CurrentValueAndProbabilities[]
 {
     if (!all_VAPs.length) return []
 

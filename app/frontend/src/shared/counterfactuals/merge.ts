@@ -1,11 +1,17 @@
 import type { StateValueAndPrediction } from "../wcomponent/interfaces/state"
 import type { VAP_id_counterfactual_map } from "../uncertainty/uncertainty"
 import type { WComponentCounterfactual } from "../wcomponent/interfaces/counterfactual"
-import type { CounterfactualStateValueAndPrediction } from "./interfaces"
 
 
 
-export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): CounterfactualStateValueAndPrediction
+export interface ComposedCounterfactualStateValueAndPredictionV1 extends StateValueAndPrediction
+{
+    is_counterfactual: boolean
+}
+
+
+
+export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, counterfactual?: WComponentCounterfactual): ComposedCounterfactualStateValueAndPredictionV1
 {
     if (!counterfactual) return { ...VAP, is_counterfactual: false }
 
@@ -21,7 +27,7 @@ export function merge_counterfactual_into_VAP (VAP: StateValueAndPrediction, cou
 
 
 
-export function merge_counterfactuals_into_VAPs (VAPs: StateValueAndPrediction[], VAP_counterfactuals_map?: VAP_id_counterfactual_map): CounterfactualStateValueAndPrediction[]
+export function merge_counterfactuals_into_VAPs (VAPs: StateValueAndPrediction[], VAP_counterfactuals_map?: VAP_id_counterfactual_map): ComposedCounterfactualStateValueAndPredictionV1[]
 {
     return VAPs.map(VAP =>
     {
