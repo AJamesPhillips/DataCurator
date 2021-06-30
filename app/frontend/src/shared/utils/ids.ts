@@ -39,3 +39,6 @@ export const is_knowledge_view_id = (id: string | undefined | null) => !!id && k
 
 const wc_knowledge_view_id_regex = new RegExp(/^kvwc\d/)
 export const is_wc_knowledge_view_id = (id: string | undefined | null) => !!id && wc_knowledge_view_id_regex.test(id)
+
+
+export const wcomponent_id_to_wcomponent_kv_id = (id: string) => "kv" + id

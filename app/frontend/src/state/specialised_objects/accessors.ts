@@ -1,8 +1,9 @@
 import type { Perception, WComponent, WComponentsById } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeView, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewsById, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
+import { wcomponent_id_to_wcomponent_kv_id } from "../../shared/utils/ids"
 
 
 
@@ -181,4 +182,12 @@ export function sort_nested_knowledge_map_ids_by_priority_then_title (map: Neste
     {
         entry.child_ids = sort_list(entry.child_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
     })
+}
+
+
+
+export function wcomponent_has_knowledge_view (wcomponent_id: string, knowledge_views_by_id: KnowledgeViewsById)
+{
+    const kvwc_id = wcomponent_id_to_wcomponent_kv_id(wcomponent_id)
+    return !!knowledge_views_by_id[kvwc_id]
 }

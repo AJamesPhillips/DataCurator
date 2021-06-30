@@ -39,6 +39,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         VAP_set_counterfactuals_map,
         active_counterfactual_v2_ids,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     }
 }
 
