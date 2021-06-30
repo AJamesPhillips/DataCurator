@@ -17,6 +17,7 @@ import { ExpandableList, ExpandedListStates } from "../form/editable_list/Expand
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { KnowledgeViewListCoreProps } from "./interfaces"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
+import { EditableText } from "../form/editable_text/EditableText"
 
 
 
@@ -111,6 +112,7 @@ function factory_get_summary (current_view: ViewType)
 }
 
 
+
 function get_knowledge_view_title (knowledge_view: KnowledgeView)
 {
     if (!knowledge_view.is_base) return knowledge_view.title
@@ -120,7 +122,9 @@ function get_knowledge_view_title (knowledge_view: KnowledgeView)
 }
 
 
+
 const make_default_title = () => get_today_str(false)
+
 
 
 const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
@@ -132,7 +136,8 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView,
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
-            <span className="description_label">Title</span> &nbsp; <EditableTextSingleLine
+            {editing && <span className="description_label">Title</span>} &nbsp;
+            <EditableTextSingleLine
                 placeholder="Title..."
                 value={knowledge_view.title}
                 conditional_on_blur={new_title => {
@@ -141,6 +146,18 @@ const factory_get_details = (props: OwnProps) => (knowledge_view: KnowledgeView,
                 }}
             />
         </p>
+
+        {(editing || knowledge_view.description) && <p>
+            {editing && <span className="description_label">Description</span>} &nbsp;
+            <EditableText
+                placeholder="..."
+                value={knowledge_view.description}
+                conditional_on_blur={description => {
+                    on_change({ ...knowledge_view, description })
+                }}
+            />
+        </p>}
+
 
         <div>
             <span className="description_label">Allow counterfactuals</span>
