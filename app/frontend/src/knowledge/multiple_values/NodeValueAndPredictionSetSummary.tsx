@@ -54,7 +54,6 @@ function _NodeValueAndPredictionSetSummary (props: Props)
 {
     if (!wcomponent_has_VAP_sets(props.wcomponent)) return null
 
-    // debugger
     const VAP_set = get_current_counterfactual_v2_VAP_sets({
         ...props,
         values_and_prediction_sets: props.wcomponent.values_and_prediction_sets,

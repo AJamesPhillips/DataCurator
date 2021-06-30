@@ -12,6 +12,8 @@ import type { WComponentCounterfactualV2 } from "../../shared/wcomponent/interfa
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { ExternalLinkIcon } from "../../sharedf/ExternalLinkIcon"
+import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"
 import {
     get_current_composed_knowledge_view_from_state,
@@ -115,6 +117,14 @@ function _WComponentCounterfactualForm (props: Props)
     return <div>
         <p>
             <span className="description_label">Target component</span> &nbsp;
+
+            {wcomponent.target_wcomponent_id && <Link
+                route={undefined}
+                sub_route={undefined}
+                item_id={wcomponent.target_wcomponent_id}
+                args={undefined}
+            ><ExternalLinkIcon /> &nbsp;</Link>}
+
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
                     allow_none={true}
@@ -172,6 +182,7 @@ function _WComponentCounterfactualForm (props: Props)
                 return <div>
                     <input
                         type="radio"
+                        disabled={!props.editing}
                         id={id}
                         name="counterfactual_vap"
                         value={value_text}
@@ -204,6 +215,7 @@ function _WComponentCounterfactualForm (props: Props)
         {counterfactual_VAP_set && knowledge_view && <p>
             <span className="description_label">Counterfactual activity on this knowledge view</span> &nbsp;
             <EditableCheckbox
+                disabled={!props.editing}
                 value={counterfactual_active_for_current_knowledge_view}
                 on_change={() => {
                     const { id } = wcomponent
