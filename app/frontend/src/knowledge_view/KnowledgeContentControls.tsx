@@ -9,8 +9,11 @@ import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { TimeSlider } from "../time_control/TimeSlider"
 import { TimeResolutionOptions } from "../display_options/TimeResolutionOptions"
-
-
+import ToggleButton from "@material-ui/lab/ToggleButton"
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
+import { Box } from "@material-ui/core"
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LinkIcon from '@material-ui/icons/Link';
 
 const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
@@ -44,46 +47,61 @@ function _KnowledgeContentControls (props: Props)
         .filter(wc => wc.type !== "counterfactual")
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
-    return <div>
-        {(props.editing || props.display_created_at_time_slider) && <TimeSlider
-            events={created_events}
-            get_handle_ms={state => state.routing.args.created_at_ms}
-            change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
-            data_set_name="knowledge_created_at_datetimes"
-            title="Created at"
-        />}
+    return (
+        <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
+            {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
 
-        {(props.editing || props.display_created_at_time_slider) && <Button
-            is_left={true}
-            value={props.linked_datetime_sliders ? "Unlink" : "Link"}
-            onClick={() => props.toggle_linked_datetime_sliders()}
-            extra_class_names="content_control_button"
-        />}
 
-        <div style={{ width: 40, display: "inline-block" }}></div>
+            <Box mb={2}  display="flex" flexDirection="row" justifyContent="space-between">
+                <Box component="label">
+                    {/* <Box component="span" pr={1}>Time Resolution:</Box> */}
+                    <TimeResolutionOptions  />
+                </Box>
 
-        Time resolution:
-        <TimeResolutionOptions extra_styles={{ display: "inline-block", width: 100 }} />
-
-        Display by <span
-            style={{ cursor: "pointer" }}
-            onPointerDown={() =>
-            {
-                const display_by_simulated_time = !props.display_by_simulated_time
-                props.set_display_by_simulated_time({ display_by_simulated_time })
-            }}
-        >
-            {props.display_by_simulated_time ? "simulated time" : "relationsips"}
-        </span>
-
-        <TimeSlider
-            events={sim_events}
-            get_handle_ms={state => state.routing.args.sim_ms}
-            change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
-            data_set_name="knowledge_sim_datetimes"
-            title="Simulation"
-        />
-    </div>
+                <Box component="label">
+                    {/* <Box component="span" pr={1}>Display by:</Box> */}
+                    <ToggleButtonGroup
+                        size="small"
+                        exclusive
+                        onChange={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+                        {
+                            const display_by_simulated_time = JSON.parse(e.currentTarget.value)
+                            props.set_display_by_simulated_time({ display_by_simulated_time })
+                        }}
+                        value={props.display_by_simulated_time}
+                        aria-label="text formatting">
+                            <ToggleButton value={true} aria-label="Display by simulated time">
+                               Simulated Time
+                            </ToggleButton>
+                            <ToggleButton value={false} aria-label="Display by relationships">
+                                Relationships
+                            </ToggleButton>
+                    </ToggleButtonGroup>
+                </Box>
+            </Box>
+            <Box display="flex" flexDirection="row" alignItems="center" alignContent="center">
+                    {(props.editing || props.display_created_at_time_slider) && <Button
+                        onClick={() => props.toggle_linked_datetime_sliders()}
+                    >{props.linked_datetime_sliders ? "Unlink" : "Link"}</Button>}
+                <Box flexGrow={1}>
+                    {(props.editing || props.display_created_at_time_slider) && <TimeSlider
+                        events={created_events}
+                        get_handle_ms={state => state.routing.args.created_at_ms}
+                        change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
+                        data_set_name="knowledge_created_at_datetimes"
+                        title="Created at"
+                    />}
+                    <TimeSlider
+                        events={sim_events}
+                        get_handle_ms={state => state.routing.args.sim_ms}
+                        change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
+                        data_set_name="knowledge_sim_datetimes"
+                        title="Simulation"
+                    />
+                </Box>
+            </Box>
+        </Box>
+    )
 }
 
 export const KnowledgeContentControls = connector(_KnowledgeContentControls) as FunctionalComponent<{}>
