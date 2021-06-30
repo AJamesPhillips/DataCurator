@@ -4,9 +4,11 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
+import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import { is_defined } from "../../shared/utils/is_defined"
 import type { WComponentCounterfactualV2 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { ACTIONS } from "../../state/actions"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -75,17 +77,23 @@ function _WComponentCounterfactualForm (props: Props)
     })
 
 
-    const target_wcomponent = wcomponents_by_id[wcomponent.target_wcomponent_id]
+    const target_wcomponent = wcomponents_by_id[wcomponent.target_wcomponent_id || ""]
+    let target_VAP_sets: StateValueAndPredictionsSet[] = []
     let VAP_set_id_options: { id: string, title: string }[] = []
     if (wcomponent_is_statev2(target_wcomponent))
     {
-        VAP_set_id_options = (target_wcomponent.values_and_prediction_sets || [])
+        target_VAP_sets = target_wcomponent.values_and_prediction_sets || []
+
+        VAP_set_id_options = target_VAP_sets
             .map(({ id, datetime }) =>
             {
                 const title = uncertain_date_to_string(datetime, "minute")
                 return { id, title }
             })
     }
+
+
+    const counterfactual_VAP_set = wcomponent.counterfactual_VAP_set
 
 
     return <div>
@@ -96,23 +104,59 @@ function _WComponentCounterfactualForm (props: Props)
                     allow_none={true}
                     selected_option_id={wcomponent.target_wcomponent_id}
                     options={wcomponent_id_options}
-                    on_change={target_wcomponent_id => upsert_wcomponent({ target_wcomponent_id, target_VAP_set_id: "" })}
+                    on_change={target_wcomponent_id => upsert_wcomponent({
+                        target_wcomponent_id,
+                        target_VAP_set_id: undefined,
+                        counterfactual_VAP_set: undefined,
+                    })}
                 />
             </div>
         </p>
 
 
-        <p>
-            <span className="description_label">Target value set</span> &nbsp;
+        {wcomponent.target_wcomponent_id && <p>
+            <span className="description_label">Target value set to override</span> &nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
                     allow_none={true}
                     selected_option_id={wcomponent.target_VAP_set_id}
                     options={VAP_set_id_options}
-                    on_change={target_VAP_set_id => upsert_wcomponent({ target_VAP_set_id })}
+                    on_change={new_target_VAP_set_id =>
+                    {
+                        const target_VAP_set = target_VAP_sets.find(({ id }) => id === new_target_VAP_set_id)
+
+                        const VAP_set: StateValueAndPredictionsSet | undefined = target_VAP_set
+                            ? clean_VAP_set_for_counterfactual(target_VAP_set)
+                            : undefined
+
+                        upsert_wcomponent({
+                            target_VAP_set_id: new_target_VAP_set_id,
+                            counterfactual_VAP_set: VAP_set,
+                        })
+                    }}
                 />
             </div>
-        </p>
+        </p>}
+
+
+        {counterfactual_VAP_set && <p>
+            <span className="description_label">Counterfactual value set</span> &nbsp;
+            {counterfactual_VAP_set.entries.map(VAP =>
+            {
+                const { value = "no value" } = VAP
+
+                return <div>
+                    <input
+                        type="radio"
+                        id={value}
+                        name="counterfactual_vap"
+                        value={value}
+
+                    />
+                    <label for={value}>{value}</label>
+                </div>
+            })}
+        </p>}
     </div>
 }
 
