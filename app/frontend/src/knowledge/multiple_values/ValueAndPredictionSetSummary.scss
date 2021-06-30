@@ -1,10 +1,13 @@
+@use 'sass:math';
 
 
 .value_and_prediction_set_summary
 {
-    @for $i from 1 through 6 {
+    $max_elements: 6;
+
+    @for $i from 1 through $max_elements {
         .value_and_prediction:nth-child(#{$i}) {
-            background-color: rgba(255, 255, 255, $i * 0.24);
+            background-color: rgba(255, 255, 255, math.div($max-elements - $i - 1, $max-elements));
         }
     }
 

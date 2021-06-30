@@ -30,8 +30,8 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
     const raw_data = get_VAP_visuals_data({ ...props, VAPs_represent })
 
-    // For now put the most likely at the bottom so that most of the time things are a bit brighter
-    const put_most_probable_last = true
+    // For now put the most likely at the top so that most of the time things are a bit brighter
+    const put_most_probable_last = false
     const data = put_most_probable_last ? raw_data.reverse() : raw_data
 
     return (
@@ -102,7 +102,8 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     const cleaned_VAP_set = clean_VAP_set_entries(args.VAP_set, args.VAPs_represent)
     const expanded_VAP_set = expand_booleans(cleaned_VAP_set, args.VAPs_represent)
 
-    const confidence = expanded_VAP_set.shared_entry_values?.conviction || 1
+    const maybe_confidence = expanded_VAP_set.shared_entry_values?.conviction
+    const confidence = maybe_confidence === undefined ? 1 : maybe_confidence
     const unconfidence = 1 - confidence
 
 
@@ -123,16 +124,16 @@ function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
         }
     })
 
+    // TODO protect against unstable sort when percentage_height is the same
+    const sorted_data = sort_list(data, i => i.percentage_height, "descending")
 
-    data.push({
+    // Always put uncertain value last
+    sorted_data.push({
         id: "id__undefined__",
         option_text: "?",
         percentage_height: unconfidence * 100,
         value: null, // should result in `undefined` as a judgemnet
     })
-
-    // TODO protect against unstable sort when percentage_height is the same
-    const sorted_data = sort_list(data, i => i.percentage_height, "descending")
 
     return sorted_data
 }
