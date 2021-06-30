@@ -3,7 +3,7 @@ import type { Store } from "redux"
 import { ACTIONS } from "../../../actions"
 import { pub_sub } from "../../../pub_sub/pub_sub"
 import type { RootState } from "../../../State"
-import { get_current_UI_knowledge_view_from_state } from "../../accessors"
+import { get_current_composed_knowledge_view_from_state } from "../../accessors"
 
 
 
@@ -23,13 +23,13 @@ function handle_ctrl_a (store: Store<RootState>)
         if (!select_all) return
 
         const state = store.getState()
-        const kv = get_current_UI_knowledge_view_from_state(state)
+        const kv = get_current_composed_knowledge_view_from_state(state)
         if (!kv) return
 
         const viewing_knowledge = state.routing.args.view === "knowledge"
         if (!viewing_knowledge) return
 
-        const ids = Object.keys(kv.derived_wc_id_map)
+        const ids = Object.keys(kv.composed_wc_id_map)
             .filter(id => !kv.wc_ids_by_type.any_link.has(id))
 
         store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
@@ -45,7 +45,7 @@ function handle_canvas_area_select (store: Store<RootState>)
     {
         const state = store.getState()
 
-        const kv = get_current_UI_knowledge_view_from_state(state)
+        const kv = get_current_composed_knowledge_view_from_state(state)
         if (!kv) return
 
         const viewing_knowledge = state.routing.args.view === "knowledge"
@@ -55,7 +55,7 @@ function handle_canvas_area_select (store: Store<RootState>)
         const start_top = -start_y
         const end_top = -end_y
 
-        const ids: string[] = Object.entries(kv.derived_wc_id_map)
+        const ids: string[] = Object.entries(kv.composed_wc_id_map)
             .filter(([ id, entry ]) =>
             {
                 return entry.left >= start_x && entry.left <= end_x

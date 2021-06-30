@@ -3,11 +3,19 @@ import { round_canvas_point } from "../canvas/position_utils"
 
 import type { CreationContextState } from "../shared/creation_context/state"
 import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
-import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_state, wcomponent_is_statev2 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_state,
+    wcomponent_is_statev2,
+} from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
-import { get_current_UI_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import {
+    get_current_composed_knowledge_view_from_state,
+    get_wcomponent_from_state,
+} from "../state/specialised_objects/accessors"
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
@@ -32,7 +40,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
 
 
-    const current_knowledge_view = get_current_UI_knowledge_view_from_state(state)
+    const current_knowledge_view = get_current_composed_knowledge_view_from_state(state)
 
     let { add_to_knowledge_view } = args
     if (!add_to_knowledge_view && current_knowledge_view)

@@ -15,7 +15,7 @@ import { prepare_new_VAP } from "./utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-import { get_current_UI_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import { ACTIONS } from "../../state/actions"
 import type { VAP_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { is_counterfactual_active } from "../../shared/counterfactuals/active"
@@ -41,13 +41,10 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => {
-    const current_UI_knowledge_view = get_current_UI_knowledge_view_from_state(state)
-
-    const allows_assumptions = !!(current_UI_knowledge_view && current_UI_knowledge_view.allows_assumptions)
+    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
 
     return {
-        allows_assumptions,
-        knowledge_view_id: current_UI_knowledge_view && current_UI_knowledge_view.id,
+        knowledge_view_id: current_composed_knowledge_view && current_composed_knowledge_view.id,
         creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
     }
@@ -83,7 +80,6 @@ function _ValueAndPredictions (props: Props)
         // get_created_at: () => props.created_at,
         get_summary: get_summary({
             VAPs_represent,
-            allows_assumptions: props.allows_assumptions,
             VAP_counterfactuals_map: props.VAP_counterfactuals_map,
             upsert_counterfactual: props.upsert_counterfactual,
             knowledge_view_id: props.knowledge_view_id,
@@ -133,7 +129,6 @@ const get_id = (item: StateValueAndPrediction) => item.id
 interface GetSummaryArgs
 {
     VAPs_represent: VAPsType
-    allows_assumptions: boolean
     VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined
     knowledge_view_id: string | undefined
     wcomponent_id: string | undefined
@@ -144,7 +139,7 @@ interface GetSummaryArgs
 }
 const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
 {
-    const { VAPs_represent, allows_assumptions, VAP_counterfactuals_map, knowledge_view_id,
+    const { VAPs_represent, VAP_counterfactuals_map, knowledge_view_id,
         wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context, editing } = args
 
     const counterfactual = VAP_counterfactuals_map && VAP_counterfactuals_map[VAP.id]
@@ -159,7 +154,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
     const disabled_rel_prob = !has_rel_prob || is_boolean
     const disabled_conviction = counterfactual_active
 
-    const disabled_setting_counterfactual = !allows_assumptions || !knowledge_view_id || !wcomponent_id || !VAP_set_id
+    const disabled_setting_counterfactual = !editing || !knowledge_view_id || !wcomponent_id || !VAP_set_id
 
     return <div className="value_and_prediction_summary">
         <div className="temporal_uncertainty">

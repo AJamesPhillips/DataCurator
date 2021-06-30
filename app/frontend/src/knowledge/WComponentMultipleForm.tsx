@@ -7,7 +7,7 @@ import { EditablePosition } from "../form/EditablePosition"
 import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
 import { Button } from "../sharedf/Button"
 import {
-    get_current_UI_knowledge_view_from_state,
+    get_current_composed_knowledge_view_from_state,
     get_wcomponents_id_map,
 } from "../state/specialised_objects/accessors"
 import { LabelsEditor } from "../labels/LabelsEditor"
@@ -20,7 +20,7 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
-    const kv = get_current_UI_knowledge_view_from_state(state)
+    const kv = get_current_composed_knowledge_view_from_state(state)
     const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_set
     const { wcomponents_by_id } = state.specialised_objects
 

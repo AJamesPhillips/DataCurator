@@ -17,7 +17,7 @@ export function get_derived_starting_state (): DerivedState
         judgement_or_objective_ids_by_target_id: {},
         judgement_or_objective_ids_by_goal_id: {},
 
-        current_UI_knowledge_view: undefined,
+        current_composed_knowledge_view: undefined,
 
         project_priorities_meta: {
             project_priorities: [],

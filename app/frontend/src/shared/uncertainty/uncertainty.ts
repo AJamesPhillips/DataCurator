@@ -163,6 +163,6 @@ export interface WComponentCounterfactualsV2
     VAP_set: VAP_set_id_counterfactual_mapV2
     // validity_VAP_set: VAP_set_id_counterfactual_map
 }
-export type WcIdCounterfactualsMapV2 = {
+export type WcIdCounterfactualsV2Map = {
     [target_wcomponent_id: string]: WComponentCounterfactualsV2
 }

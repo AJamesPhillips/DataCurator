@@ -6,7 +6,7 @@ import {
 import type { WcIdCounterfactualsMap } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
-import type { GraphUIKnowledgeView } from "../../derived/State"
+import type { ComposedKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import {
     get_base_knowledge_view,
@@ -17,6 +17,7 @@ import {
 } from "../accessors"
 import type {
     KnowledgeView,
+    KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
@@ -46,7 +47,7 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
     const kv_object_id_changed = initial_kv_id !== current_kv_id
     if (kv_object_id_changed)
     {
-        state = update_substate(state, "derived", "current_UI_knowledge_view", undefined)
+        state = update_substate(state, "derived", "current_composed_knowledge_view", undefined)
     }
 
 
@@ -56,23 +57,23 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
-    const UI_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
+    const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
     const filters_changed = initial_state.filter_context !== state.filter_context
 
 
     if (current_kv)
     {
-        if (UI_kv_needs_update)
+        if (composed_kv_needs_update)
         {
-            const current_UI_knowledge_view = update_UI_current_knowledge_view_state(initial_state, state, current_kv)
-            const current_UI_knowledge_view_updated_filters = update_filters(state, current_UI_knowledge_view)
+            const current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv)
+            const current_composed_knowledge_view_updated_filters = update_filters(state, current_composed_knowledge_view)
 
-            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view_updated_filters)
+            state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view_updated_filters)
         }
         else if (filters_changed)
         {
-            const current_UI_knowledge_view = update_filters(state, state.derived.current_UI_knowledge_view)
-            state = update_substate(state, "derived", "current_UI_knowledge_view", current_UI_knowledge_view)
+            const current_composed_knowledge_view = update_filters(state, state.derived.current_composed_knowledge_view)
+            state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
         }
     }
 
@@ -112,36 +113,38 @@ function get_knowledge_view (state: RootState, id: string)
 
 
 
-function update_UI_current_knowledge_view_state (intial_state: RootState, state: RootState, current_kv: KnowledgeView)
+function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
-    const derived_wc_id_map = get_derived_wc_id_map(current_kv, intial_state, state)
-    const ids = Object.keys(derived_wc_id_map)
-    const wcomponents = get_wcomponents_from_state(state, ids).filter(is_defined)
+    const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id)
+    const wcomponent_ids = Object.keys(composed_wc_id_map)
+    const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
-    const wc_ids_by_type = get_wcomponent_ids_by_type(state, ids)
+    const wc_id_counterfactuals_v2_map = {} // get_wc_id_counterfactuals_v2_map(state, current_kv)
+    const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
-    const current_UI_knowledge_view: GraphUIKnowledgeView = {
+    const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
-        derived_wc_id_map,
+        composed_wc_id_map,
         wcomponent_nodes,
         wcomponent_connections,
         wc_id_counterfactuals_map,
+        wc_id_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() }
     }
     // do not need to do this but helps reduce confusion when debugging
-    delete (current_UI_knowledge_view as any).wc_id_map
+    delete (current_composed_knowledge_view as any).wc_id_map
 
-    return current_UI_knowledge_view
+    return current_composed_knowledge_view
 }
 
 
 
-function get_derived_wc_id_map (current_kv: KnowledgeView, intial_state: RootState, state: RootState)
+export function get_composed_wc_id_map (current_kv: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
 {
     const to_compose: KnowledgeViewWComponentIdEntryMap[] = []
 
@@ -149,16 +152,16 @@ function get_derived_wc_id_map (current_kv: KnowledgeView, intial_state: RootSta
 
     foundation_knowledge_view_ids.forEach(id =>
     {
-        const new_kv = get_knowledge_view(state, id)
+        const new_kv = knowledge_views_by_id[id]
 
         if (new_kv) to_compose.push(new_kv.wc_id_map)
     })
 
 
     to_compose.push(current_kv.wc_id_map)
-    const derived_wc_id_map = Object.assign({}, ...to_compose) as KnowledgeViewWComponentIdEntryMap
+    const composed_wc_id_map = Object.assign({}, ...to_compose) as KnowledgeViewWComponentIdEntryMap
 
-    return derived_wc_id_map
+    return composed_wc_id_map
 }
 
 
@@ -215,9 +218,9 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
 
 
 
-function update_filters (state: RootState, current_UI_knowledge_view?: GraphUIKnowledgeView)
+function update_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView)
 {
-    if (!current_UI_knowledge_view) return undefined
+    if (!current_composed_knowledge_view) return undefined
 
 
     let wc_ids_excluded_by_filters: Set<string> = new Set()
@@ -236,7 +239,7 @@ function update_filters (state: RootState, current_UI_knowledge_view?: GraphUIKn
         const exclude_by_component_types = new Set(exclude_by_component_types_list)
         const include_by_component_types = new Set(include_by_component_types_list)
 
-        const current_wc_ids = Object.keys(current_UI_knowledge_view.derived_wc_id_map)
+        const current_wc_ids = Object.keys(current_composed_knowledge_view.composed_wc_id_map)
         const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
         .filter(is_defined)
         .filter(wcomponent =>
@@ -262,7 +265,7 @@ function update_filters (state: RootState, current_UI_knowledge_view?: GraphUIKn
 
 
     return {
-        ...current_UI_knowledge_view,
+        ...current_composed_knowledge_view,
         filters: { wc_ids_excluded_by_filters }
     }
 }

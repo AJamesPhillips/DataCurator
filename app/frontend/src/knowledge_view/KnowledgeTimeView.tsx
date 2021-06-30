@@ -20,25 +20,25 @@ const map_state = (state: RootState) =>
 {
     const sync_ready = state.sync.ready
 
-    const { current_UI_knowledge_view } = state.derived
+    const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
-    if (sync_ready && !current_UI_knowledge_view) console .log(`No current_UI_knowledge_view`)
+    if (sync_ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
 
 
     let wcomponent_nodes: WComponent[] = []
-    if (current_UI_knowledge_view)
+    if (current_composed_knowledge_view)
     {
-        wcomponent_nodes = current_UI_knowledge_view.wcomponent_nodes
+        wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
     }
 
 
     return {
         sync_ready,
         wcomponent_nodes,
-        wcomponent_connections: current_UI_knowledge_view && current_UI_knowledge_view.wcomponent_connections,
+        wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
     }

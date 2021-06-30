@@ -4,14 +4,14 @@ import { connect, ConnectedProps } from "react-redux"
 import { Canvas } from "../canvas/Canvas"
 import type { ContentCoordinate } from "../canvas/interfaces"
 import { MainArea } from "../layout/MainArea"
-import { get_current_UI_knowledge_view_from_state, get_wcomponents_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 
 
 
 const map_state = (state: RootState) =>
 {
-    const kv = get_current_UI_knowledge_view_from_state(state)
+    const kv = get_current_composed_knowledge_view_from_state(state)
     const prioritisations = kv?.prioritisations || []
 
     return {

@@ -1,7 +1,6 @@
 import { h } from "preact"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { get_today_str } from "../shared/utils/date_helpers"
@@ -10,6 +9,7 @@ import { KnowledgeView, knowledge_view_sort_types } from "../shared/wcomponent/i
 import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import type { KnowledgeViewFormProps } from "./interfaces"
+import { KnowledgeViewActiveCounterFactuals } from "./KnowledgeViewActiveCounterfactuals"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 
 
@@ -53,6 +53,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             />
         </p>
 
+
         {(editing || knowledge_view.description) && <p>
             {editing && <span className="description_label">Description</span>} &nbsp;
             <EditableText
@@ -66,17 +67,13 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
 
 
         <div>
-            <span className="description_label">Allow counterfactuals</span>
-            <EditableCheckbox
-                disabled={knowledge_view.is_base || !editing}
-                value={knowledge_view.allows_assumptions}
-                on_change={() =>
-                {
-                    const allows_assumptions = knowledge_view.allows_assumptions ? undefined : true
-                    on_change({ ...knowledge_view, allows_assumptions })
-                }}
+            <span className="description_label">Active assumptions (counterfactuals)</span>
+            <KnowledgeViewActiveCounterFactuals
+                knowledge_view_id={knowledge_view.id}
+                on_change={ids => on_change({ ...knowledge_view, active_counterfactual_v2_ids: ids })}
             />
         </div>
+
 
         <p>
             <FoundationKnowledgeViewsList
