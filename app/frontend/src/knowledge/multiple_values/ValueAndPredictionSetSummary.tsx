@@ -37,7 +37,6 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     return (
         <Box
             m={1}
-            // border={1} borderColor="primary.main"
             flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
             display="flex" flexDirection="column"
             alignItems="stretch" alignContent="stretch"
@@ -57,8 +56,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     <Box
                         bgcolor="primary.main"
                         position="relative" overflow="hidden"
-                        flexGrow={0} flexShrink={1}
+                        flexGrow={0} flexShrink={0}
                         flexBasis={`${vap_visual.percentage_height}%`}
+                        minHeight={`${vap_visual.percentage_height}%`}
                         display="flex" flexDirection="column"
                         alignItems="center" justifyContent="center"
                         key={vap_visual.id}
@@ -67,8 +67,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     >
                         <Box
                             position="relative" zIndex="10"
-                            component="span"
-                            height="1.5em" lineHeight="1.5em"
+                            height="1.5em" lineHeight="1.5em" overflow="hidden"
                             textOverflow="ellipsis">
                                 {vap_visual.option_text}
 

@@ -53,7 +53,7 @@ function _NodeValueAndPredictionSetSummary (props: Props)
     if (!VAP_set) return null
 
     return <Box
-        flexGrow={1} flexShrink={1}
+        flexGrow={1} flexShrink={0}
         display="flex" alignItems="stretch"
     >
         <ValueAndPredictionSetSummary
