@@ -240,6 +240,7 @@ function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs
 
         const counterfactual_v2s = level_VAP_set_ids.VAP_set[target_VAP_set_id] || []
         counterfactual_v2s.push(counterfactual_v2)
+        level_VAP_set_ids.VAP_set[target_VAP_set_id] = counterfactual_v2s
     })
 
     return map
