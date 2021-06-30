@@ -5,14 +5,13 @@ import type { ContentCoordinate } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
-import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { connect, ConnectedProps } from "react-redux"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import { ValueAndPredictionSetSummary } from "../knowledge/multiple_values/ValueAndPredictionSetSummary"
 import { Box } from "@material-ui/core"
+import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 
 
 
@@ -105,7 +104,7 @@ const get_children = (props: Props): ChildrenRawData =>
                     <Box
                         flexGrow={1} flexShrink={1}
                         display="flex" alignItems="stretch">
-                        {VAP_sets.map(VAP_set => <ValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />)}
+                        {VAP_sets.map(VAP_set => <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />)}
                     </Box>
                 )}
             </Box>

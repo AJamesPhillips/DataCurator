@@ -3,18 +3,18 @@ import { useState } from "preact/hooks"
 import { Box } from "@material-ui/core"
 
 import "./ValueAndPredictionSetSummary.scss"
-import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+import type { CounterfactualStateValueAndPredictionSetV2 } from "../../shared/counterfactuals/interfaces"
 
 
 
 interface OwnProps
 {
     wcomponent: WComponent
-    VAP_set: StateValueAndPredictionsSet
+    counterfactual_VAP_set: CounterfactualStateValueAndPredictionSetV2
     flexBasis?: number
 }
 
@@ -25,7 +25,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
     const { flexBasis = 33.33333333 } = props
 
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
-    const raw_data = get_VAP_visuals_data({ ...props, VAPs_represent })
+    const raw_data = get_VAP_visuals_data({ ...props, VAP_set: props.counterfactual_VAP_set, VAPs_represent })
 
     // For now put the most likely at the top so that most of the time things are a bit brighter
     const put_most_probable_last = false

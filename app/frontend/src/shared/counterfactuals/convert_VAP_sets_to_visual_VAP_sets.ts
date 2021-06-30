@@ -56,6 +56,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
         }
     })
 
+
     // TODO protect against unstable sort when percentage_height is the same
     const should_sort = args.sort === undefined || args.sort
     const sorted_data = should_sort ? sort_list(data, i => i.certainty, "descending") : data
