@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import { is_defined } from "../../shared/utils/is_defined"
 import type { WComponentCounterfactualV2 } from "../../shared/wcomponent/interfaces/counterfactual"
@@ -74,16 +75,41 @@ function _WComponentCounterfactualForm (props: Props)
     })
 
 
+    const target_wcomponent = wcomponents_by_id[wcomponent.target_wcomponent_id]
+    let VAP_set_id_options: { id: string, title: string }[] = []
+    if (wcomponent_is_statev2(target_wcomponent))
+    {
+        VAP_set_id_options = (target_wcomponent.values_and_prediction_sets || [])
+            .map(({ id, datetime }) =>
+            {
+                const title = uncertain_date_to_string(datetime, "minute")
+                return { id, title }
+            })
+    }
+
+
     return <div>
         <p>
-            {editing && <span className="description_label">Target component</span>}
+            <span className="description_label">Target component</span> &nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
-                    placeholder="Target component..."
                     allow_none={true}
                     selected_option_id={wcomponent.target_wcomponent_id}
                     options={wcomponent_id_options}
-                    on_change={target_wcomponent_id => upsert_wcomponent({ target_wcomponent_id })}
+                    on_change={target_wcomponent_id => upsert_wcomponent({ target_wcomponent_id, target_VAP_set_id: "" })}
+                />
+            </div>
+        </p>
+
+
+        <p>
+            <span className="description_label">Target value set</span> &nbsp;
+            <div style={{ width: "60%", display: "inline-block" }}>
+                <AutocompleteText
+                    allow_none={true}
+                    selected_option_id={wcomponent.target_VAP_set_id}
+                    options={VAP_set_id_options}
+                    on_change={target_VAP_set_id => upsert_wcomponent({ target_VAP_set_id })}
                 />
             </div>
         </p>

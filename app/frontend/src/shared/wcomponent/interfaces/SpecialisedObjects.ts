@@ -101,8 +101,9 @@ export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WC
 {
     return wcomponent.type === "state"
 }
-export function wcomponent_is_statev2 (wcomponent: WComponent): wcomponent is WComponentNodeStateV2
+export function wcomponent_is_statev2 (wcomponent: WComponent | undefined): wcomponent is WComponentNodeStateV2
 {
+    if (!wcomponent) return false
     return wcomponent.type === "statev2"
 }
 
