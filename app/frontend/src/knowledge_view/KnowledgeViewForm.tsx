@@ -37,18 +37,20 @@ type Props = ConnectedProps<typeof connector>
 
 function _KnowledgeViewForm (props: Props)
 {
-    if (!props.knowledge_view) return <div>No knowledge view selected</div>
+    const { knowledge_view, upsert_knowledge_view } = props
+
+    if (!knowledge_view) return <div>No knowledge view selected</div>
 
     const possible_parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
     const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id)
 
-    const on_change = (new_kv: KnowledgeView) => {}
+    const on_change = (knowledge_view: KnowledgeView) => upsert_knowledge_view({ knowledge_view })
 
     return factory_get_kv_details({
         ...props,
         possible_parent_knowledge_view_options,
         current_kv_parent_ids,
-    })(props.knowledge_view, on_change)
+    })(knowledge_view, on_change)
 }
 
 

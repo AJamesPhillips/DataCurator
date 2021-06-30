@@ -172,12 +172,6 @@ function _WComponentForm (props: Props)
         </p>
 
 
-        {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
-            wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
-        />}
-
-
         {wcomponent_is_statev2(wcomponent) &&
         <p>
             <span className="description_label">Sub type</span>&nbsp;
@@ -189,6 +183,15 @@ function _WComponentForm (props: Props)
                     on_change={option_id => upsert_wcomponent({ subtype: option_id })}
                 />
             </div>
+        </p>}
+
+
+        {(editing || wcomponent.description) && <p>
+            <EditableText
+                placeholder="Description..."
+                value={wcomponent.description}
+                conditional_on_blur={description => upsert_wcomponent({ description })}
+            />
         </p>}
 
 
@@ -209,6 +212,12 @@ function _WComponentForm (props: Props)
                 />
             </div>
         </p>}
+
+
+        {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
 
 
         {wcomponent_is_plain_connection(wcomponent) && <p>
@@ -250,14 +259,6 @@ function _WComponentForm (props: Props)
         </p>}
 
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
-
-        {(editing || wcomponent.description) && <p>
-            <EditableText
-                placeholder="Description..."
-                value={wcomponent.description}
-                conditional_on_blur={description => upsert_wcomponent({ description })}
-            />
-        </p>}
 
 
         {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <p>

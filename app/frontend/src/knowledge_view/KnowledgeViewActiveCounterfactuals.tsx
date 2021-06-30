@@ -1,5 +1,4 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
@@ -38,15 +37,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _KnowledgeViewActiveCounterFactuals (props: Props)
 {
-    const [editing_options, set_editing_options] = useState(false)
     const { editing, knowledge_view, wcomponents_by_id, knowledge_views_by_id, on_change } = props
 
+    if (!knowledge_view) return <div></div>
 
-    if (!editing || !knowledge_view) return <div></div>
 
-
-    if (!editing_options) return <div onClick={() => set_editing_options(true)}>...</div>
-
+    const selected_option_ids = knowledge_view.active_counterfactual_v2_ids || []
 
     const wc_id_map = get_composed_wc_id_map(knowledge_view, knowledge_views_by_id)
     const options = Object.keys(wc_id_map)
@@ -56,21 +52,25 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
         .map(({ id, title }) => ({ id, title }))
 
 
-    if (options.length === 0) return <div onClick={() => set_editing_options(false)}>
-        No counterfactuals in knowledge view or foundational knowledge views
-    </div>
+    if (editing)
+    {
+        if (options.length === 0) return <div>
+            No counterfactuals in composed knowledge view (includes foundational knowledge views)
+        </div>
+    }
+    else
+    {
+        if (selected_option_ids.length === 0) return <div>No assumptions set</div>
+    }
 
 
     return <div>
         <MultiAutocompleteText
             placeholder="..."
-            selected_option_ids={knowledge_view.active_counterfactual_v2_ids || []}
+            allow_none={true}
+            selected_option_ids={selected_option_ids}
             options={options}
-            on_change={ids =>
-            {
-                set_editing_options(false)
-                on_change(ids)
-            }}
+            on_change={on_change}
         />
     </div>
 }

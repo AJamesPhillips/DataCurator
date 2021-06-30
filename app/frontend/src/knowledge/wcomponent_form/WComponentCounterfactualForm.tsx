@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
+import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import { get_VAP_visuals_data, VAP_visual_id__undefined } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
@@ -12,8 +13,12 @@ import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/Specia
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ACTIONS } from "../../state/actions"
-import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import {
+    get_current_composed_knowledge_view_from_state,
+    get_current_knowledge_view_from_state,
+} from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import { toggle_item_in_list } from "../../utils/list"
 
 
 
@@ -26,11 +31,13 @@ interface OwnProps
 
 const map_state = (state: RootState) =>
 {
-    const kv = get_current_composed_knowledge_view_from_state(state)
+    const knowledge_view = get_current_knowledge_view_from_state(state)
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
 
     return {
+        knowledge_view,
         editing: !state.display_options.consumption_formatting,
-        composed_wc_id_map: kv && kv.composed_wc_id_map,
+        composed_wc_id_map: composed_kv && composed_kv.composed_wc_id_map,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
@@ -40,6 +47,7 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
+    upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view,
 }
 
 
@@ -52,12 +60,9 @@ function _WComponentCounterfactualForm (props: Props)
     const {
         wcomponent,
         upsert_wcomponent,
-        editing,
         wcomponents_by_id,
         composed_wc_id_map,
-        // wcomponent_id,
-        // wcomponents,
-        // wcomponents_by_id,
+        knowledge_view,
     } = props
 
     if (!composed_wc_id_map) return <div>
@@ -99,6 +104,14 @@ function _WComponentCounterfactualForm (props: Props)
     const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
 
 
+    let counterfactual_active_for_current_knowledge_view = false
+    if (knowledge_view)
+    {
+        const ids = (knowledge_view.active_counterfactual_v2_ids || [])
+        counterfactual_active_for_current_knowledge_view = ids.includes(wcomponent.id)
+    }
+
+
     return <div>
         <p>
             <span className="description_label">Target component</span> &nbsp;
@@ -112,6 +125,8 @@ function _WComponentCounterfactualForm (props: Props)
                         target_VAP_set_id: undefined,
                         counterfactual_VAP_set: undefined,
                     })}
+                    on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
+                    on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
                 />
             </div>
         </p>
@@ -143,7 +158,7 @@ function _WComponentCounterfactualForm (props: Props)
 
 
         {counterfactual_VAP_set && target_wcomponent && <p>
-            <span className="description_label">Counterfactual value set</span> &nbsp;
+            <span className="description_label">Counterfactual value</span> &nbsp;
             {get_VAP_visuals_data({
                 VAP_set: counterfactual_VAP_set,
                 VAPs_represent,
@@ -183,6 +198,24 @@ function _WComponentCounterfactualForm (props: Props)
                     <label for={id}>{value_text}</label>
                 </div>
             })}
+        </p>}
+
+
+        {counterfactual_VAP_set && knowledge_view && <p>
+            <span className="description_label">Counterfactual activity on this knowledge view</span> &nbsp;
+            <EditableCheckbox
+                value={counterfactual_active_for_current_knowledge_view}
+                on_change={() => {
+                    const { id } = wcomponent
+                    const active_counterfactual_v2_ids = toggle_item_in_list(knowledge_view.active_counterfactual_v2_ids || [], id)
+
+                    const kv = {
+                        ...knowledge_view,
+                        active_counterfactual_v2_ids,
+                    }
+                    props.upsert_knowledge_view({ knowledge_view: kv })
+                }}
+            />
         </p>}
     </div>
 }
