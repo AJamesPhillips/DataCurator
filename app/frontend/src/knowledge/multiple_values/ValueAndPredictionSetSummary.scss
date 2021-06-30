@@ -5,11 +5,13 @@
 {
     $max_elements: 6;
 
-    .value_and_prediction:before {
-        content:"";
-        position:absolute;
-        top:0; right:0; bottom:0; left:0;
-        z-index:1;
+    .value_and_prediction {
+        &:before {
+            content:"";
+            position:absolute;
+            top:0; right:0; bottom:0; left:0;
+            z-index:1;
+        }
     }
 
     @for $i from 1 through $max_elements {
@@ -18,15 +20,19 @@
         }
     }
 
-    .value_and_prediction {
+    &, .value_and_prediction {
         transition-delay:0;
         transition-duration:0.5s;
         transition-property: all;
         transition-timing-function:ease-in-out;
+
     }
 
     &:hover {
+        flex-grow:1;
+
         .value_and_prediction {
+            line-height:2;
             flex-basis:33.33333333%;
             flex-grow:1;
             flex-shrink:1;

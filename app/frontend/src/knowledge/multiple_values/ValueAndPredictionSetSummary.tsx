@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { Box } from "@material-ui/core"
+import { Box, Typography } from "@material-ui/core"
 import { clean_VAP_set_entries, parse_VAP_value } from "../../shared/wcomponent/value_and_prediction/get_value"
 import { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_boolean_representation, VAP_value_to_string } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
@@ -36,50 +36,59 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 
     return (
         <Box
-            m={1}
-            flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
+            // This box is really just serving to allow for padding without
+            // without overflowing the parent container
+            p={1}
             display="flex" flexDirection="column"
-            alignItems="stretch" alignContent="stretch"
-            justifyContent="flex-end"
-            className="value_and_prediction_set_summary"
-            onPointerOver={() => set_show_all_judgements(true)}
-            onPointerLeave={() => set_show_all_judgements(false)}
-        >
-            {data.map((vap_visual, index) =>
-            {
-                const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
+            alignItems="stretch" alignContent="stretch" justifyContent="center"
+            flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
+          >
+            <Box
+                flexGrow={0} flexShrink={1}
+                display="flex" flexDirection="column"
+                alignItems="stretch" alignContent="stretch"
+                justifyContent="flex-end"
+                className="value_and_prediction_set_summary"
+                onPointerOver={() => set_show_all_judgements(true)}
+                onPointerLeave={() => set_show_all_judgements(false)}
+            >
+                {data.map((vap_visual, index) =>
+                {
+                    const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
+                    const base_line_height = `${vap_visual.percentage_height * 2}%`
 
-                // NOTE: I have moved the bgcolor to the Box below.
-                // This allows for color specificaton of each VAP "stripe"
-                return (
+                    // NOTE: I have moved the bgcolor to the Box below.
+                    // This allows for color specificaton of each VAP "stripe"
+                    return (
 
-                    <Box
-                        bgcolor="primary.main"
-                        position="relative" overflow="hidden"
-                        flexGrow={0} flexShrink={0}
-                        flexBasis={`${vap_visual.percentage_height}%`}
-                        minHeight={`${vap_visual.percentage_height}%`}
-                        display="flex" flexDirection="column"
-                        alignItems="center" justifyContent="center"
-                        key={vap_visual.id}
-                        className="value_and_prediction"
-                        onClick={() => {}}
-                    >
                         <Box
-                            position="relative" zIndex="10"
-                            height="1.5em" lineHeight="1.5em" overflow="hidden"
-                            textOverflow="ellipsis">
-                                {vap_visual.option_text}
+                            bgcolor="primary.main"
+                            position="relative" overflow="hidden"
+                            flexGrow={0} flexShrink={0}
+                            flexBasis={`${vap_visual.percentage_height}%`}
+                            lineHeight={base_line_height}
+                            minHeight={`${vap_visual.percentage_height}%`}
+                            display="flex" flexDirection="column"
+                            alignItems="center" justifyContent="center"
+                            key={vap_visual.id}
+                            className="value_and_prediction"
+                            onClick={() => {}}
+                        >
+                            <Box
+                                position="relative" zIndex="10"
+                                overflow="hidden" textOverflow="ellipsis">
+                                    {vap_visual.option_text}
 
-                                {show_judgements && <WComponentJudgements
-                                    wcomponent={props.wcomponent}
-                                    target_VAPs_represent={VAPs_represent}
-                                    value={vap_visual.value}
-                                />}
+                                    {show_judgements && <WComponentJudgements
+                                        wcomponent={props.wcomponent}
+                                        target_VAPs_represent={VAPs_represent}
+                                        value={vap_visual.value}
+                                    />}
+                            </Box>
                         </Box>
-                    </Box>
-                )
-            })}
+                    )
+                })}
+            </Box>
         </Box>
     )
 }
