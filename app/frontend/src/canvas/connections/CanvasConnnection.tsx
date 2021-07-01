@@ -55,6 +55,10 @@ export function CanvasConnnection (props: OwnProps)
 
     const blur = props.blur || 0
 
+    const style_line_background: h.JSX.CSSProperties = {
+        strokeWidth: thickness + 10,
+    }
+
     const style_line: h.JSX.CSSProperties = {
         strokeOpacity: opacity,
         strokeWidth: thickness,
@@ -75,6 +79,7 @@ export function CanvasConnnection (props: OwnProps)
             d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}
             onPointerOver={() => set_hovered(true)}
             onPointerOut={() => set_hovered(false)}
+            style={style_line_background}
         />
         <path
             className={"connection_line " + extra_line_classes}
