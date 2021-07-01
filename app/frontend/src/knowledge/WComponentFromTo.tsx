@@ -77,7 +77,7 @@ function _WComponentFromTo (props: Props)
 
 
     return <div title={wcomponent && wcomponent.title} className="wcomponent_from_to">
-        <div>{connection_terminal_description + ":"} &nbsp;</div>
+        <span className="description_label">{connection_terminal_description} &nbsp;</span>
         <AutocompleteText
             placeholder={connection_terminal_description + "..."}
             selected_option_id={wcomponent_id}

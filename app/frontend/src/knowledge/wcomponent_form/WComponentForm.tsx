@@ -49,6 +49,7 @@ import { LabelsEditor } from "../../labels/LabelsEditor"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
+import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 
 
 
@@ -240,23 +241,14 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
-        {wcomponent_is_causal_link(wcomponent) && <p>
-            Effect when true: <EditableNumber
-                placeholder="..."
-                value={wcomponent.effect_when_true}
-                allow_undefined={true}
-                conditional_on_blur={effect_when_true => upsert_wcomponent({ effect_when_true })}
-            />
-        </p>}
 
-        {wcomponent_is_causal_link(wcomponent) && <p>
-            Effect when false: <EditableNumber
-                placeholder="..."
-                value={wcomponent.effect_when_false}
-                allow_undefined={true}
-                conditional_on_blur={effect_when_false => upsert_wcomponent({ effect_when_false })}
-            />
-        </p>}
+        {wcomponent_is_causal_link(wcomponent) && <WComponentCausalLinkForm
+            wcomponent={wcomponent}
+            from_wcomponent={from_wcomponent}
+            editing={editing}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
+
 
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
