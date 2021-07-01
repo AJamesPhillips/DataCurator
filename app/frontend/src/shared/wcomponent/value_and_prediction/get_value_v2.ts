@@ -68,10 +68,12 @@ function merge_counterfactuals_v2_into_composed_VAP_set (
 
     counterfactuals_v2.forEach(cf =>
     {
-        is_counterfactual = true
-        VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
-
-        if (active_cf_ids.has(cf.id)) active_counterfactual_v2_id = cf.id
+        if (active_cf_ids.has(cf.id))
+        {
+            VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
+            is_counterfactual = true
+            active_counterfactual_v2_id = cf.id
+        }
 
         const target_VAP_id = cf.counterfactual_VAP_set && cf.counterfactual_VAP_set.target_VAP_id
         if (!target_VAP_id) return
