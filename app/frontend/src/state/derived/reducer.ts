@@ -7,6 +7,8 @@ import { knowledge_views_derived_reducer } from "../specialised_objects/knowledg
 import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
+import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
+import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
 
 
 
@@ -46,11 +48,18 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         // }
 
 
-        const judgement_or_objective_ids_by_target_id = update_judgement_or_objective_ids_by_target_id(state)
+        const judgement_or_objectives = get_wcomponents_from_state(state, wcomponent_ids_by_type.judgement_or_objective)
+            .filter(is_defined)
+            .filter(wcomponent_is_judgement_or_objective)
+
+        const judgement_or_objective_ids_by_target_id = update_judgement_or_objective_ids_by_target_id(judgement_or_objectives)
         state = update_substate(state, "derived", "judgement_or_objective_ids_by_target_id", judgement_or_objective_ids_by_target_id)
 
+        const goals = get_wcomponents_from_state(state, state.derived.wcomponent_ids_by_type.goal)
+            .filter(is_defined)
+            .filter(wcomponent_is_goal)
 
-        const judgement_or_objective_ids_by_goal_id = update_judgement_or_objective_ids_by_goal_id(state)
+        const judgement_or_objective_ids_by_goal_id = update_judgement_or_objective_ids_by_goal_id(goals)
         state = update_substate(state, "derived", "judgement_or_objective_ids_by_goal_id", judgement_or_objective_ids_by_goal_id)
     }
 
@@ -64,15 +73,11 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 
 
-function update_judgement_or_objective_ids_by_target_id (state: RootState)
+function update_judgement_or_objective_ids_by_target_id (judgement_or_objectives: WComponentJudgement[])
 {
     const judgement_or_objective_ids_by_target_id: { [target_id: string]: string[] } = {}
 
-    const judgement_or_objective_ids = state.derived.wcomponent_ids_by_type.judgement_or_objective
-
-    get_wcomponents_from_state(state, judgement_or_objective_ids)
-    .filter(is_defined)
-    .filter(wcomponent_is_judgement_or_objective)
+    judgement_or_objectives
     // .sort () // some kind of sort so that front end display is stable and predictable
     .forEach(judgement =>
     {
@@ -88,15 +93,11 @@ function update_judgement_or_objective_ids_by_target_id (state: RootState)
 
 
 
-function update_judgement_or_objective_ids_by_goal_id (state: RootState)
+function update_judgement_or_objective_ids_by_goal_id (goals: WComponentNodeGoal[])
 {
     const judgement_or_objective_ids_by_goal_id: { [goal_id: string]: string[] } = {}
 
-    const goal_ids = state.derived.wcomponent_ids_by_type.goal
-
-    get_wcomponents_from_state(state, goal_ids)
-    .filter(is_defined)
-    .filter(wcomponent_is_goal)
+    goals
     // .sort () // some kind of sort so that front end display is stable and predictable
     .forEach(({ id: goal_id, objective_ids }) =>
     {

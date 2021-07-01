@@ -54,12 +54,16 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
     const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id)
-    const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
+    const { current_composed_knowledge_view } = state.derived
 
+
+    const wc_id_map = current_composed_knowledge_view?.composed_wc_id_map || {}
     const judgement_or_objective_ids = [
         ...(state.derived.judgement_or_objective_ids_by_target_id[own_props.id] || []),
         ...(state.derived.judgement_or_objective_ids_by_goal_id[own_props.id] || []),
     ]
+    .filter(id => !!wc_id_map[id])
+
 
     return {
         force_displaying: state.filter_context.force_display,

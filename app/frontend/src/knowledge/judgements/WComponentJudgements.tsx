@@ -7,6 +7,7 @@ import type { RootState } from "../../state/State"
 import { JudgementBadgeConnected } from "./JudgementBadgeConnected"
 import type { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { JudgementBadgeSimple } from "./JudgementBadgeSimple"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 
 
 
@@ -25,10 +26,15 @@ type OwnProps =
 
 
 const map_state = (state: RootState, own_props: OwnProps) => {
+    const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
+
+    const wc_id_map = current_composed_kv?.composed_wc_id_map || {}
+
     const judgement_or_objective_ids = [
         ...(state.derived.judgement_or_objective_ids_by_target_id[own_props.wcomponent.id] || []),
         ...(state.derived.judgement_or_objective_ids_by_goal_id[own_props.wcomponent.id] || []),
     ]
+    .filter(id => !!wc_id_map[id])
 
     return {
         judgement_or_objective_ids,
