@@ -15,6 +15,7 @@ interface OwnProps {
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
     hidden?: boolean
+    thickness?: number
     intensity?: number
     blur?: number
     is_highlighted?: boolean
@@ -38,6 +39,7 @@ export function CanvasConnnection (props: OwnProps)
 
 
     let opacity = props.intensity === undefined ? 1 : props.intensity
+    const thickness = hovered ? 1 : props.thickness
     // Disabled as not performant at the moment
     // if (opacity !== undefined)
     // {
@@ -54,6 +56,7 @@ export function CanvasConnnection (props: OwnProps)
 
     const style_line: h.JSX.CSSProperties = {
         strokeOpacity: opacity,
+        strokeWidth: thickness,
         filter: `url(#blur_filter_${Math.round(blur)})`,
     }
 

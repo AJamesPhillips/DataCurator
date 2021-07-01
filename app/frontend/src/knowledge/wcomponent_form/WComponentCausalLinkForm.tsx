@@ -28,13 +28,13 @@ export function WComponentCausalLinkForm (props: OwnProps)
 
 
     const from_statev2 = wcomponent_is_statev2(from_wcomponent)
-    const VAPs_represent = wcomponent_VAPs_represent(from_wcomponent)
+    const VAPs_represent_number = wcomponent_VAPs_represent(from_wcomponent) === VAPsType.number
 
 
     const show_primary_effect = editing || wcomponent.effect_when_true !== undefined
-    const primary_effect_description = (VAPs_represent === VAPsType.number) ? "Effect" : "Effect when true"
+    const primary_effect_description = VAPs_represent_number ? "Effect" : "Effect when true"
 
-    const show_effect_when_false = editing
+    const show_effect_when_false = !VAPs_represent_number && editing
         ? (from_wcomponent === undefined || from_statev2)
         : from_statev2 && wcomponent.effect_when_false !== undefined
 
