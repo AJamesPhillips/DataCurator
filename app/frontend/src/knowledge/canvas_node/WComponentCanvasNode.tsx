@@ -15,6 +15,8 @@ import {
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_statev1,
+    wcomponent_is_statev2,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
@@ -54,6 +56,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const on_current_knowledge_view = is_on_current_knowledge_view(state, own_props.id)
     const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
+    const judgement_or_objective_ids = [
+        ...(state.derived.judgement_or_objective_ids_by_target_id[own_props.id] || []),
+        ...(state.derived.judgement_or_objective_ids_by_goal_id[own_props.id] || []),
+    ]
+
     return {
         force_displaying: state.filter_context.force_display,
         on_current_knowledge_view,
@@ -71,6 +78,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         validity_filter: state.display_options.derived_validity_filter,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         focused_mode: state.display_options.focused_mode,
+        have_judgements: judgement_or_objective_ids.length > 0,
     }
 }
 
@@ -197,9 +205,13 @@ function _WComponentCanvasNode (props: Props)
         || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
         // || is_highlighted
         || is_current_item
+        || props.have_judgements
 
 
     const terminals = (!on_graph || !is_editing) ? [] : ((is_highlighted && is_editing) ? terminals_with_label : terminals_without_label)
+
+
+    const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
 
 
     return <ConnectableCanvasNode
@@ -220,8 +232,8 @@ function _WComponentCanvasNode (props: Props)
 
             {show_state_value && <div className="node_state_container">
                 {is_editing && <div className="description_label">state</div>}
-                {/* <WComponentStatefulValue wcomponent={wcomponent} />
-                <WComponentJudgements wcomponent={wcomponent} /> */}
+                {/* <WComponentStatefulValue wcomponent={wcomponent} /> */}
+                {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
                 <NodeValueAndPredictionSetSummary
                     wcomponent={wcomponent}
                     created_at_ms={created_at_ms}
