@@ -20,6 +20,7 @@ interface OwnProps {
     on_pointer_down?: () => void
     selected_on?: Set<"route" | "args.view" | "args.subview_id">
     extra_class_name?: string
+    extra_css_style?: h.JSX.CSSProperties
 }
 
 
@@ -124,6 +125,7 @@ class _Link extends Component<Props, State>
             onPointerDown={on_pointer_down}
             href={routing_state_to_string({ ...full_routing_state })}
             className={class_name}
+            style={this.props.extra_css_style}
         >
             {this.props.children || "Link"}
         </a>

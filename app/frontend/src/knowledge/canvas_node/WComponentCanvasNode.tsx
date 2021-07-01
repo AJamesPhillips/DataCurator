@@ -159,16 +159,14 @@ function _WComponentCanvasNode (props: Props)
     }
 
 
-    const children: h.JSX.Element[] = []
-    if (!is_editing || is_highlighted || node_is_moving)
-    {
-        children.push(<Handles
-            set_node_is_moving={(!on_graph || !is_editing) ? undefined : (() => set_node_is_moving(true))}
+    const children: h.JSX.Element[] = [
+        <Handles
+            set_node_is_moving={(!on_graph || !is_editing || !is_highlighted) ? undefined : (() => set_node_is_moving(true))}
             wcomponent_id={wcomponent.id}
             wcomponent_current_kv_entry={kv_entry}
             is_highlighted={is_highlighted}
-        />)
-    }
+        />
+    ]
 
 
     const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })

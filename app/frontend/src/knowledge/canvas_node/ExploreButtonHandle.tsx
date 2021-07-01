@@ -55,7 +55,7 @@ function _ExploreButtonHandle (props: Props)
 {
     let { kvwc, is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
 
-    if (props.presenting ? !kvwc : !is_highlighted) return null
+    if (!kvwc && (props.presenting || (!props.presenting && !is_highlighted))) return null
 
     const is_current_knowledge_view = props.subview_id === props.kvwc_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
@@ -65,7 +65,7 @@ function _ExploreButtonHandle (props: Props)
         + (kvwc ? " has_nested_knowledge_view " : "")
         + (current_but_no_parent ? " current_but_no_parent " : "")
 
-    return <div
+    return <span
         className={class_name}
         onPointerDown={e =>
         {
@@ -101,7 +101,7 @@ function _ExploreButtonHandle (props: Props)
         {is_current_knowledge_view
             ? <span>&#8593;</span>
             : <span>&#128269;</span>}
-    </div>
+    </span>
 }
 
 export const ExploreButtonHandle = connector(_ExploreButtonHandle) as FunctionalComponent<ExploreButtonHandleOwnProps>

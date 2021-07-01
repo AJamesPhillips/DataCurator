@@ -9,6 +9,7 @@ import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry } from "../../shared/wcomponent/interfaces/counterfactual"
 import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
+import { Link } from "../../sharedf/Link"
 
 
 
@@ -78,19 +79,22 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                                 position="relative" zIndex="10"
                                 overflowY="hidden" textOverflow="ellipsis"
                             >
+                                {vap_visual.value_text}
+
+                                {show_judgements && <span style={{ verticalAlign: "middle" }}>
+                                    <WComponentJudgements
+                                        wcomponent={props.wcomponent}
+                                        target_VAPs_represent={VAPs_represent}
+                                        value={vap_visual.value}
+                                    />
+                                </span>}
+
                                 {cf_entries.map(entry => <CounterfactualLink
                                     any_active={VAP_set.is_counterfactual}
                                     counterfactual={entry}
                                     active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
                                 />)}
 
-                                {vap_visual.value_text}
-
-                                {show_judgements && <WComponentJudgements
-                                    wcomponent={props.wcomponent}
-                                    target_VAPs_represent={VAPs_represent}
-                                    value={vap_visual.value}
-                                />}
                             </Box>
                         </Box>
                     )
@@ -114,20 +118,38 @@ function CounterfactualLink (props: CounterfactualLinkProps)
 
     const color = this_counterfactual_active
         ? "darkorange"
-        : (props.any_active ? "white" : "orange")
+        : (props.any_active ? "white" : "#ffc965")
 
     const style: h.JSX.CSSProperties = {
-        fontSize: "1.8em",
+        fontSize: "25px",
         color,
         verticalAlign: "middle",
         fontWeight: "bold",
     }
 
-    return <span style={style}>
-        &#x2442;
-        {props.counterfactual.counterfactual_has_knowledge_view && <ExploreButtonHandle
-            wcomponent_id={props.counterfactual.counterfactual_v2_id || ""}
-            is_highlighted={true}
-        />}
+    return <span
+        onPointerDown={e => e.stopImmediatePropagation()}
+        onClick={e => e.stopImmediatePropagation()}
+    >
+        &nbsp;
+
+        <Link
+            route={undefined}
+            sub_route={undefined}
+            item_id={props.counterfactual.counterfactual_v2_id}
+            args={undefined}
+            extra_css_style={style}
+        >
+            &#x2442;
+        </Link>
+
+        {props.counterfactual.counterfactual_has_knowledge_view && <span style={{ fontSize: 14 }}>
+            <ExploreButtonHandle
+                wcomponent_id={props.counterfactual.counterfactual_v2_id || ""}
+                is_highlighted={true}
+            />
+        </span>}
+
+        &nbsp;
     </span>
 }

@@ -28,7 +28,9 @@ function HandleForMoving (props: HandleForMovingProps)
 {
     const { set_node_is_moving } = props
 
-    if (!set_node_is_moving) return null
+    if (!set_node_is_moving) return <div
+        className="node_handle movement"
+    >&nbsp;</div>
 
 
     const handle_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
