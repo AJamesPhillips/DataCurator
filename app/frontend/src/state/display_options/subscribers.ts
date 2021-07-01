@@ -20,5 +20,10 @@ function toggle_consumption_formatting_on_key_press (store: Store<RootState>)
         {
             store.dispatch(ACTIONS.display.toggle_consumption_formatting({}))
         }
+
+        if (e.ctrl_key && e.key === "d")
+        {
+            store.dispatch(ACTIONS.display.toggle_focused_mode({}))
+        }
     })
 }

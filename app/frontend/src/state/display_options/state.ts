@@ -21,6 +21,7 @@ export type CertaintyFormattingOption = {[type in CertaintyFormattingTypes]: boo
 export interface DisplayOptionsState
 {
     consumption_formatting: boolean
+    focused_mode: boolean
     time_resolution: TimeResolution
     display_by_simulated_time: boolean
 

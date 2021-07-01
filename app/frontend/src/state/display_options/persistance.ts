@@ -31,6 +31,7 @@ export function display_options_starting_state (): DisplayOptionsState
 
     const state: DisplayOptionsState = {
         consumption_formatting: false,
+        focused_mode: false,
         time_resolution: "hour",
         display_by_simulated_time: false,
 

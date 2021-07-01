@@ -20,6 +20,21 @@ export const is_toggle_consumption_formatting = (action: AnyAction): action is A
 
 
 
+interface ActionToggleFocusedMode extends Action {}
+
+const toggle_focused_mode_type = "toggle_focused_mode"
+
+const toggle_focused_mode = (args: {}): ActionToggleFocusedMode =>
+{
+    return { type: toggle_focused_mode_type, ...args }
+}
+
+export const is_toggle_focused_mode = (action: AnyAction): action is ActionToggleFocusedMode => {
+    return action.type === toggle_focused_mode_type
+}
+
+
+
 interface SetTimeResolutionArgs
 {
     time_resolution: TimeResolution
@@ -98,6 +113,7 @@ export const is_set_display_by_simulated_time = (action: AnyAction): action is A
 
 export const display_actions = {
     toggle_consumption_formatting,
+    toggle_focused_mode,
     set_time_resolution,
     set_validity_filter,
     set_certainty_formatting,
