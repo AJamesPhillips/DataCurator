@@ -31,4 +31,10 @@
     {
         fill: orangered;
     }
+
+    &.no_connection_effect .connection_line,
+    &.no_connection_effect .connection_end
+    {
+        stroke: #aaa;
+    }
 }
