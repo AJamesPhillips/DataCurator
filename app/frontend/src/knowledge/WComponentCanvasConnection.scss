@@ -21,4 +21,14 @@
             stroke-dasharray: none;
         }
     }
+
+    &.negative_connection_effect .connection_line,
+    &.negative_connection_effect .connection_end
+    {
+        stroke: orangered;
+    }
+    &.negative_connection_effect .connection_end
+    {
+        fill: orangered;
+    }
 }

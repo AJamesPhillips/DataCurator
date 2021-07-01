@@ -33,6 +33,7 @@ import { get_VAP_visuals_data } from "../shared/counterfactuals/convert_VAP_sets
 import { wcomponent_VAPs_represent } from "../shared/wcomponent/value_and_prediction/utils"
 import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
 import { bounded } from "../shared/utils/bounded"
+import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
 
 
 
@@ -164,12 +165,21 @@ function _WComponentCanvasConnection (props: Props)
 
 
     let thickness = 2
+    let connection_end_type = ConnectionEndType.positive
     let effect = ""
     if (connection_effect !== undefined)
     {
         thickness = bounded(Math.abs(connection_effect), 2, 15)
-        if (connection_effect < 0) effect = "negative_connection_effect"
-        else if (connection_effect === 0) effect = "no_connection_effect"
+        if (connection_effect < 0)
+        {
+            connection_end_type = ConnectionEndType.negative
+            effect = "negative_connection_effect"
+        }
+        else if (connection_effect === 0)
+        {
+            connection_end_type = ConnectionEndType.noop
+            effect = "no_connection_effect"
+        }
     }
 
     return <CanvasConnnection
@@ -179,6 +189,7 @@ function _WComponentCanvasConnection (props: Props)
         to_connection_type={to_connection_type}
         on_pointer_down={on_pointer_down}
         thickness={thickness}
+        connection_end_type={connection_end_type}
         intensity={validity_opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
         extra_css_classes={"connection_type_" + wcomponent.type + " " + effect}

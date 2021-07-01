@@ -50,6 +50,7 @@
 
 .connection_line.hovered
 {
+    stroke: blue;
     /* stroke-width: 3px; */
     /* stroke-dasharray: 6px 3px; */
     stroke-opacity: 1 !important;
@@ -58,6 +59,8 @@
 
 .connection_end.hovered
 {
+    stroke: blue;
+    fill: blue;
     fill-opacity: 1 !important;
     stroke-opacity: 1 !important;
 }

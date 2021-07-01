@@ -18,6 +18,7 @@ interface OwnProps {
     thickness?: number
     intensity?: number
     blur?: number
+    connection_end_type?: ConnectionEndType
     is_highlighted?: boolean
     on_pointer_down?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
     extra_css_classes?: string
@@ -39,7 +40,7 @@ export function CanvasConnnection (props: OwnProps)
 
 
     let opacity = props.intensity === undefined ? 1 : props.intensity
-    const thickness = hovered ? 1 : props.thickness
+    const thickness = hovered ? 2 : (props.thickness === undefined ? 2 : props.thickness)
     // Disabled as not performant at the moment
     // if (opacity !== undefined)
     // {
@@ -82,12 +83,13 @@ export function CanvasConnnection (props: OwnProps)
         />
 
         <ConnectionEnd
-            type={ConnectionEndType.positive}
+            type={props.connection_end_type || ConnectionEndType.positive}
             x={x2}
             y={y2}
             end_angle={end_angle}
             opacity={opacity}
             blur={blur}
+            size={thickness / 2}
             is_hovered={hovered}
             is_highlighted={props.is_highlighted}
         />

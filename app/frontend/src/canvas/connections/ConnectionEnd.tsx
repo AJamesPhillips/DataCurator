@@ -1,8 +1,9 @@
 import { h } from "preact"
+import { bounded } from "../../shared/utils/bounded"
 
 import { rads } from "../../utils/angles"
 import type { Position } from "../interfaces"
-import { add_vec, multiply_vec, to_vec } from "./utils"
+import { add_vec, to_vec } from "./utils"
 
 
 
@@ -21,6 +22,7 @@ interface OwnProps
     end_angle: number
     opacity: number
     blur: number
+    size?: number
     is_hovered: boolean
     is_highlighted: boolean | undefined
 }
@@ -37,14 +39,17 @@ export function ConnectionEnd (props: OwnProps)
     }
 
 
+    let size = props.size === undefined ? 10 : bounded(props.size * 10, 5, 25)
+
+
     let points: Position[]
     if (type === ConnectionEndType.positive)
     {
-        points = get_connection_arrow_end(end_angle)
+        points = get_connection_arrow_end(end_angle, size)
     }
     else if (type === ConnectionEndType.negative)
     {
-        points = get_connection_bar_end(end_angle)
+        points = get_connection_bar_end(end_angle, size)
     }
     else
     {
@@ -77,19 +82,19 @@ function points_to_path (start: { x: number, y: number }, points: { x: number, y
 
 
 
-function get_connection_arrow_end (end_angle: number)
+function get_connection_arrow_end (end_angle: number, size: number)
 {
-    const p1 = get_arrow_end_points(end_angle, 1)
-    const p2 = get_arrow_end_points(end_angle, -1)
+    const p1 = get_arrow_end_points(end_angle, 1, size)
+    const p2 = get_arrow_end_points(end_angle, -1, size)
 
     return [p1, p2]
 }
 
 
 const arrow_angle = rads._25
-function get_arrow_end_points (angle: number, type: 1 | -1)
+function get_arrow_end_points (angle: number, type: 1 | -1, size: number)
 {
-    return to_vec(angle + (type * arrow_angle), 10)
+    return to_vec(angle + (type * arrow_angle), size)
 }
 
 
@@ -97,12 +102,13 @@ function get_arrow_end_points (angle: number, type: 1 | -1)
 const BAR_WIDTH = 12
 const BAR_HALF_WIDTH = BAR_WIDTH / 2
 const BAR_THICKNESS = 4
-function get_connection_bar_end (end_angle: number)
+function get_connection_bar_end (end_angle: number, size: number)
 {
-    const p1 = to_vec(end_angle + rads._90, BAR_HALF_WIDTH)
-    const p2 = add_vec(to_vec(end_angle, BAR_THICKNESS), p1)
-    const p3 = add_vec(to_vec(end_angle - rads._90, BAR_WIDTH), p2)
-    const p4 = add_vec(to_vec(end_angle - rads._180, BAR_THICKNESS), p3)
+    size = size / 10
+    const p1 = to_vec(end_angle + rads._90, BAR_HALF_WIDTH * size)
+    const p2 = add_vec(to_vec(end_angle, BAR_THICKNESS * size), p1)
+    const p3 = add_vec(to_vec(end_angle - rads._90, BAR_WIDTH * size), p2)
+    const p4 = add_vec(to_vec(end_angle - rads._180, BAR_THICKNESS * size), p3)
 
     return [ p1, p2, p3, p4 ]
 }
