@@ -5,7 +5,8 @@
     text-overflow: initial;
     white-space: initial;
     overflow: initial;
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    /* Attempt to allow opacity to transition smoothly */
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, opacity 0.2s;
 }
 
 

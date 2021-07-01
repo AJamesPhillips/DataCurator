@@ -3,6 +3,12 @@
 
 .connection_container
 {
+    .connection_line, .connection_end
+    {
+        // Attempt to allow opacity to transition smoothly
+        transition: opacity .25s ease-in-out;
+    }
+
     &.connection_type_relation_link .connection_line
     {
         stroke-dasharray: 2 10;
