@@ -205,10 +205,6 @@ function _WComponentCanvasNode (props: Props)
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
         node_main_content={<div>
-            <div className="description_label">
-                {is_editing && wcomponent.type}
-            </div>
-
             <div className="node_title">
                 {kv_entry_maybe === undefined && <span>
                     <WarningTriangle message="Missing from this knowledge view" />
@@ -232,6 +228,10 @@ function _WComponentCanvasNode (props: Props)
                     sim_ms={sim_ms}
                 />
             </div>}
+
+            <div className="description_label">
+                {(is_editing || wcomponent.type === "actor") && wcomponent.type}
+            </div>
 
             <LabelsListV2 label_ids={wcomponent.label_ids} />
         </div>}

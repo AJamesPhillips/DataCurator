@@ -37,7 +37,7 @@ function _SidePanel (props: Props)
     {
         if (props.route === "wcomponents")
         {
-            if (!props.item_id) return <div>TODO: Should be hidden</div>
+            if (!props.item_id) return <div>TODO: can hide this</div>
         }
     }
 
