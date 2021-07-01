@@ -44,26 +44,23 @@ export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetAr
     const {
         VAP_set,
         VAP_set_counterfactuals_map: cf_map,
-        active_counterfactual_v2_ids,
+        active_counterfactual_v2_ids = [],
     } = args
 
     const counterfactual_v2 = cf_map && cf_map[VAP_set.id]
-    const active_counterfactuals = filter_counterfactuals_v2_to_active(counterfactual_v2, active_counterfactual_v2_ids || [])
+    const active_cf_ids = new Set(active_counterfactual_v2_ids)
 
-    return merge_counterfactuals_v2_into_VAP_set(VAP_set, active_counterfactuals, args.knowledge_views_by_id)
+    return merge_counterfactuals_v2_into_composed_VAP_set(VAP_set, counterfactual_v2, active_cf_ids, args.knowledge_views_by_id)
 }
 
 
 
-function filter_counterfactuals_v2_to_active (counterfactuals_v2: WComponentCounterfactualV2[] = [], active_counterfactual_v2_ids: string[]): WComponentCounterfactualV2[]
-{
-    const ids = new Set(active_counterfactual_v2_ids)
-    return counterfactuals_v2.filter(cf => ids.has(cf.id))
-}
-
-
-
-function merge_counterfactuals_v2_into_VAP_set (VAP_set: StateValueAndPredictionsSet, counterfactuals_v2: WComponentCounterfactualV2[] = [], knowledge_views_by_id: KnowledgeViewsById): ComposedCounterfactualStateValueAndPredictionSetV2
+function merge_counterfactuals_v2_into_composed_VAP_set (
+    VAP_set: StateValueAndPredictionsSet,
+    counterfactuals_v2: WComponentCounterfactualV2[] = [],
+    active_cf_ids: Set<string>,
+    knowledge_views_by_id: KnowledgeViewsById,
+): ComposedCounterfactualStateValueAndPredictionSetV2
 {
     let is_counterfactual = false
     const target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap = {}
@@ -74,7 +71,7 @@ function merge_counterfactuals_v2_into_VAP_set (VAP_set: StateValueAndPrediction
         is_counterfactual = true
         VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
 
-        active_counterfactual_v2_id = cf.id
+        if (active_cf_ids.has(cf.id)) active_counterfactual_v2_id = cf.id
 
         const target_VAP_id = cf.counterfactual_VAP_set && cf.counterfactual_VAP_set.target_VAP_id
         if (!target_VAP_id) return
