@@ -70,6 +70,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_editing: !state.display_options.consumption_formatting,
         validity_filter: state.display_options.derived_validity_filter,
         certainty_formatting: state.display_options.derived_certainty_formatting,
+        focused_mode: state.display_options.focused_mode,
     }
 }
 
@@ -129,7 +130,8 @@ function _WComponentCanvasNode (props: Props)
         is_highlighted,
         is_selected,
         is_current_item,
-        certainty_formatting: certainty_formatting,
+        certainty_formatting,
+        focused_mode: props.focused_mode,
     })
 
 

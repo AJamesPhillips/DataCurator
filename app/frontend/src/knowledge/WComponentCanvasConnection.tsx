@@ -102,6 +102,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_editing: !state.display_options.consumption_formatting,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         shift_or_control_keys_are_down,
+        focused_mode: state.display_options.focused_mode,
     }
 }
 
@@ -161,6 +162,7 @@ function _WComponentCanvasConnection (props: Props)
         certainty: validity_value.display_certainty,
         is_current_item,
         certainty_formatting: props.certainty_formatting,
+        focused_mode: props.focused_mode,
     })
 
 

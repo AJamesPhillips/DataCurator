@@ -22,8 +22,7 @@
         }
     }
 
-    &.negative_connection_effect .connection_line,
-    &.negative_connection_effect .connection_end
+    &.negative_connection_effect .connection_line
     {
         stroke: orangered;
     }

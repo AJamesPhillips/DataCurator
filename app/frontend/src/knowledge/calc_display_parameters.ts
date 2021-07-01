@@ -199,10 +199,15 @@ interface CalcDisplayOpacityArgs
     is_selected?: boolean
     is_current_item: boolean
     certainty_formatting: CertaintyFormattingOption
+    focused_mode: boolean
 }
 export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 {
-    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item || args.certainty_formatting.render_100_opacity) return 1
+    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item) return 1
+
+    if (args.certainty_formatting.render_100_opacity && !args.focused_mode) return 1
+
+    if (args.focused_mode) return 0.2
 
     const min50 = args.certainty_formatting.render_certainty_as_easier_opacity
 

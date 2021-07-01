@@ -8,6 +8,7 @@ import {
     is_set_certainty_formatting,
     is_toggle_consumption_formatting,
     is_set_display_by_simulated_time,
+    is_toggle_focused_mode,
 } from "./actions"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
@@ -21,7 +22,7 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
     }
 
 
-    if (is_toggle_consumption_formatting(action))
+    if (is_toggle_focused_mode(action))
     {
         state = update_substate(state, "display_options", "focused_mode", !state.display_options.focused_mode)
     }
