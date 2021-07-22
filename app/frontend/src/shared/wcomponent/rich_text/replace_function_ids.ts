@@ -1,9 +1,9 @@
-import type { WComponentsById } from "../interfaces/SpecialisedObjects"
+import type { WComponent, WComponentsById } from "../interfaces/SpecialisedObjects"
 import { format_wcomponent_url, format_wcomponent_link } from "./templates"
 
 
 
-export function replace_function_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean, root_url: string)
+export function replace_function_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean, root_url: string, get_title: (wcomponent: WComponent) => string)
 {
     const functional_ids = get_functional_ids_from_text(text)
     functional_ids.forEach(({ id, funktion }) =>
@@ -16,11 +16,13 @@ export function replace_function_ids_in_text (text: string, wcomponents_by_id: W
         let replacement = ""
 
         if (funktion === "url") replacement = format_wcomponent_url(root_url, id)
-        else if (funktion === "description")
+        else
         {
             // Add link at start
             replacement = render_links ? format_wcomponent_link(root_url, id) : ""
-            replacement += referenced_wcomponent.description
+
+            if (funktion === "title") replacement = get_title(referenced_wcomponent)
+            else if (funktion === "description") replacement += referenced_wcomponent.description
         }
 
         const replacer = new RegExp(`@@${id}\.${funktion}`, "g")
@@ -39,9 +41,10 @@ function get_functional_ids_from_text (text: string): { id: string, funktion: st
 
 
 
-type Funktion = "url" | "description"
+type Funktion = "url" | "title" | "description"
 const _supported_functions: {[f in Funktion]: true} = {
     url: true,
+    title: true,
     description: true,
 }
 const supported_funktions = new Set(Object.keys(_supported_functions))
