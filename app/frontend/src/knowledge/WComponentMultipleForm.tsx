@@ -13,6 +13,7 @@ import {
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { is_defined } from "../shared/utils/is_defined"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
+import type { KnowledgeViewWComponentIdEntryMap } from "../shared/wcomponent/interfaces/knowledge_view"
 
 
 
@@ -28,7 +29,8 @@ const map_state = (state: RootState) =>
         ready: state.sync.ready,
         wcomponent_ids,
         wcomponents_by_id,
-        knowledge_view_id: kv && kv.id,
+        knowledge_view_id: kv?.id,
+        composed_wc_id_map: kv?.composed_wc_id_map,
         editing: !state.display_options.consumption_formatting,
     }
 }
@@ -55,6 +57,7 @@ function _WComponentMultipleForm (props: Props)
 
     const {
         wcomponent_ids: ids,
+        composed_wc_id_map,
         knowledge_view_id,
         wcomponents_by_id,
         editing,
@@ -66,6 +69,7 @@ function _WComponentMultipleForm (props: Props)
     } = props
     const wcomponent_ids = Array.from(ids)
     const wcomponents = get_wcomponents_id_map(wcomponents_by_id, wcomponent_ids).filter(is_defined)
+    const all_wcomponent_ids_present_in_current_kv = calc_all_wcomponent_ids_present_in_current_kv(wcomponent_ids, composed_wc_id_map)
 
 
     const label_ids_set = new Set<string>()
@@ -114,7 +118,9 @@ function _WComponentMultipleForm (props: Props)
 
         {editing && <p>
             Add to knowledge view
+            {all_wcomponent_ids_present_in_current_kv ?
             <SelectKnowledgeView
+                exclude_ids={new Set(knowledge_view_id ? [knowledge_view_id]: [])}
                 on_change={knowledge_view_id =>
                 {
                     if (!knowledge_view_id) return
@@ -125,10 +131,11 @@ function _WComponentMultipleForm (props: Props)
                     })
                 }}
             />
+            : " (Disabled - not all components present in current view)" }
         </p>}
 
         {editing && <p>
-            Remove from knowledge view
+            Remove from current knowledge view
             <ConfirmatoryDeleteButton
                 on_delete={() =>
                 {
@@ -142,3 +149,12 @@ function _WComponentMultipleForm (props: Props)
 
 
 export const WComponentMultipleForm = connector(_WComponentMultipleForm) as FunctionComponent<OwnProps>
+
+
+
+function calc_all_wcomponent_ids_present_in_current_kv (wcomponent_ids: string[], composed_wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined)
+{
+    if (!composed_wc_id_map) return false
+
+    return wcomponent_ids.find(id => !composed_wc_id_map[id]) === undefined
+}
