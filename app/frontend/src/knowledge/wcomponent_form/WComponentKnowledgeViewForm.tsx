@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MoveToPositionButton } from "../../canvas/MoveToPositionButton"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
 import { Link } from "../../sharedf/Link"
@@ -42,7 +43,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         composed_knowledge_view_entry,
         knowledge_view_entry,
         all_knowledge_views,
-        consumption_formatting: state.display_options.consumption_formatting,
+        editing: !state.display_options.consumption_formatting,
     }
 }
 
@@ -60,7 +61,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentKnowledgeViewForm (props: Props)
 {
     const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
-        knowledge_view_entry, all_knowledge_views, consumption_formatting } = props
+        knowledge_view_entry, all_knowledge_views, editing } = props
 
     if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
 
@@ -70,11 +71,10 @@ function _WComponentKnowledgeViewForm (props: Props)
         .filter(({ wc_id_map }) => wc_id_map[wcomponent_id])
 
 
-    function update (knowledge_view_id: string, arg: Partial<KnowledgeViewWComponentEntry>)
+    function update (knowledge_view_id: string)
     {
         const new_entry: KnowledgeViewWComponentEntry = {
             ...(composed_knowledge_view_entry || { left: 0, top: 0 }),
-            ...arg,
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id,
@@ -98,10 +98,10 @@ function _WComponentKnowledgeViewForm (props: Props)
             Not present in this knowledge view
             {composed_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
-            {!consumption_formatting && <Button
+            {editing && <Button
                 value="Add to current knowledge view"
                 extra_class_names="left"
-                onClick={() => update(knowledge_view_id, {})}
+                onClick={() => update(knowledge_view_id)}
             />}
         </div>}
 
@@ -125,12 +125,27 @@ function _WComponentKnowledgeViewForm (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {(!consumption_formatting && knowledge_view_id && knowledge_view_entry) && <div>
+        {(editing && knowledge_view_id && knowledge_view_entry) && <div>
             <ConfirmatoryDeleteButton
+                button_text="Remove from knowledge view"
                 tooltip_text={"Remove from current knowledge view (" + knowledge_view_title + ")"}
                 on_delete={() => delete_entry(knowledge_view_id)}
             />
         </div>}
+
+
+        {editing && <p>
+            Add to knowledge view
+            <SelectKnowledgeView
+                on_change={knowledge_view_id =>
+                {
+                    if (!knowledge_view_id) return
+
+                    update(knowledge_view_id)
+                }}
+            />
+        </p>}
+
 
         {other_knowledge_views.length > 0 && <div>
             <br />

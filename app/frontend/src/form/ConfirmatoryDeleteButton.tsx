@@ -13,6 +13,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 interface OwnProps
 {
     on_delete?: () => void,
+    button_text?: string
     tooltip_text?: string
 }
 
@@ -62,7 +63,7 @@ function _ConfirmatoryDeleteButton (props: Props)
                 >
                     <Tooltip title={deleting ? ""  : toolip_text } aria-label={deleting ? ""  : toolip_text }>
                         <Box component="span">
-                            {deleting ? "Cancel" : "Delete" }
+                            {deleting ? "Cancel" : (props.button_text || "Delete") }
                         </Box>
                     </Tooltip>
                 </Button>
