@@ -17,7 +17,6 @@ interface OwnProps {
 
 
 const map_state = (state: RootState) => ({
-    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     knowledge_views: state.derived.knowledge_views,
 })
 
