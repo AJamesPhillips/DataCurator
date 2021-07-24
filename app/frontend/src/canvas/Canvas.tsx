@@ -421,15 +421,16 @@ function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent
     let pointer_x = e.offsetX
     let pointer_y = e.offsetY
 
-    let event_target = e.target as HTMLDivElement
+    let event_target = e.target as HTMLElement
 
     if (event_target?.id !== GRAPH_CONTAINER_ID)
     {
         while (event_target?.id !== GRAPH_VISUALS_CONTAINER_ID)
         {
-            pointer_x += event_target.offsetLeft
-            pointer_y += event_target.offsetTop
-            event_target = event_target.parentElement as HTMLDivElement
+            pointer_x += event_target.offsetLeft || 0  // `|| 0` needed as svg elements do not have `.offsetLeft`
+            pointer_y += event_target.offsetTop || 0
+
+            event_target = event_target.parentElement as HTMLElement
         }
 
         pointer_x -= pos.x
