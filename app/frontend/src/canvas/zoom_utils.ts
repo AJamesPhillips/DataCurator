@@ -5,7 +5,7 @@ import { bounded } from "../shared/utils/bounded"
 
 export const bound_zoom = (new_zoom: number) => bounded(new_zoom, 10, 400)
 
-export const scale_by = 100
+export const SCALE_BY = 100
 
 
 interface CalculateNewZoomArgs
@@ -41,7 +41,7 @@ export function calculate_new_zoom_xy (args: CalculateNewZoomXYArgs)
     const x_factor = pointer_x / client_width
     const y_factor = pointer_y / client_height
 
-    const scale = (scale_by / new_zoom) - (scale_by / old.zoom)
+    const scale = (SCALE_BY / new_zoom) - (SCALE_BY / old.zoom)
 
     const dx = x_factor * client_width * scale
     const dy = y_factor * client_height * scale

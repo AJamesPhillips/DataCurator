@@ -11,12 +11,14 @@ import type { RootState } from "../state/State"
 import type { ContentCoordinate } from "./interfaces"
 import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
-import { bound_zoom, scale_by, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
+import { bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
 import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
 
 
 
+const GRAPH_CONTAINER_ID = "graph_container"
+const GRAPH_VISUALS_CONTAINER_ID = "graph_visuals_container"
 const MAX_DOUBLE_TAP_DELAY_MS = 900
 const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10
 
@@ -32,12 +34,13 @@ interface OwnProps
 
 const map_state = (state: RootState) => {
     const zoom = state.routing.args.zoom
+    const scale = zoom / SCALE_BY
     const x = state.routing.args.x
     const y = state.routing.args.y
     const shift_key_down = state.global_keys.keys_down.has("Shift")
     const control_key_down = state.global_keys.keys_down.has("Control")
 
-    return { zoom, x, y, shift_key_down, control_key_down }
+    return { zoom, scale, x, y, shift_key_down, control_key_down }
 }
 
 
@@ -121,7 +124,7 @@ class _Canvas extends Component<Props, State>
 
 
     // zoom aware values
-    client_to_canvas = (client_xy: number) => client_xy * (scale_by / this.props.zoom)
+    client_to_canvas = (client_xy: number) => client_xy * (SCALE_BY / this.props.zoom)
     client_to_canvas_x = (client_x: number) =>
     {
         return this.props.x + this.client_to_canvas(client_x)
@@ -234,8 +237,9 @@ class _Canvas extends Component<Props, State>
         const new_zoom = calculate_new_zoom({ zoom: this.props.zoom, wheel_change })
         if (new_zoom === this.props.zoom) return
 
-        const { offsetX: pointer_x, offsetY: pointer_y, currentTarget } = e
-        const { offsetHeight: client_height, offsetWidth: client_width } = currentTarget
+        const { pointer_x, pointer_y } = get_pointer_position(e, this.props)
+        const { offsetHeight: client_height, offsetWidth: client_width } = e.currentTarget
+
         const result = calculate_new_zoom_xy({
             old: this.props, new_zoom, pointer_x, pointer_y, client_height, client_width,
         })
@@ -260,9 +264,8 @@ class _Canvas extends Component<Props, State>
 
     render ()
     {
-        const { zoom, content_coordinates = [] } = this.props
+        const { scale, content_coordinates = [] } = this.props
 
-        const scale = zoom / scale_by
         const x = -1 * this.props.x * scale
         const y = this.props.y * scale
 
@@ -287,7 +290,7 @@ class _Canvas extends Component<Props, State>
         return (
         <div style={{ flexGrow: 1 }}>
             <div
-                id="graph_container"
+                id={GRAPH_CONTAINER_ID}
                 className={graph_class_name}
                 style={background_style}
                 onPointerDown={this.on_pointer_down}
@@ -306,7 +309,7 @@ class _Canvas extends Component<Props, State>
                 }}
                 onContextMenu={this.on_context_menu}
             >
-                <div id="graph_visuals_container" style={html_translation_container_style}>
+                <div id={GRAPH_VISUALS_CONTAINER_ID} style={html_translation_container_style}>
                     <div style={html_container_style}>
                         <div id="graph_lowest_elements_container">
                             <svg style={{ zIndex: 0, position: "absolute", top: 0, left: 0 }}>
@@ -409,4 +412,35 @@ function area_selection_args (state: Readonly<State>)
         canvas_end_x: Math.max(canvas_start_x, canvas_current_x),
         canvas_end_y: Math.max(canvas_start_y, canvas_current_y),
     }
+}
+
+
+
+function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent>, pos: { x: number, y: number, scale: number })
+{
+    let pointer_x = e.offsetX
+    let pointer_y = e.offsetY
+
+    let event_target = e.target as HTMLDivElement
+
+    if (event_target?.id !== GRAPH_CONTAINER_ID)
+    {
+        while (event_target?.id !== GRAPH_VISUALS_CONTAINER_ID)
+        {
+            pointer_x += event_target.offsetLeft
+            pointer_y += event_target.offsetTop
+            event_target = event_target.parentElement as HTMLDivElement
+        }
+
+        pointer_x -= pos.x
+        pointer_y += pos.y
+
+        pointer_x *= pos.scale
+        pointer_y *= pos.scale
+
+        pointer_x = Math.round(pointer_x)
+        pointer_y = Math.round(pointer_y)
+    }
+
+    return { pointer_x, pointer_y }
 }

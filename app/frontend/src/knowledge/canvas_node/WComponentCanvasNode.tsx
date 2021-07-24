@@ -35,7 +35,7 @@ import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connectio
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import { factory_on_pointer_down } from "../canvas_common"
-import { scale_by } from "../../canvas/zoom_utils"
+import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
 
@@ -274,7 +274,7 @@ function _WComponentCanvasNode (props: Props)
             onDragEnd: e => {
                 const store = get_store()
                 const zoom = store.getState().routing.args.zoom
-                const scale = zoom / scale_by
+                const scale = zoom / SCALE_BY
                 const top_fudge = -8 * (scale / 2)
                 const left_fudge = 6 / (scale / 2)
                 // maybe explore using e.currentTarget.offsetLeft?
