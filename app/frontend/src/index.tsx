@@ -66,7 +66,7 @@ if (root) {
     }
     else if (window.location.pathname === "/sandbox/connected")
     {
-        render(<Provider store={get_store({ load_state_from_server: true })}><SandBoxConnected /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_server: false })}><SandBoxConnected /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox")
     {

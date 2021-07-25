@@ -207,10 +207,15 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             placeholder={placeholder}
             value={temp_value_str}
             onFocus={e => {
-                set_editing_options(true)
+                setTimeout(() =>
+                {
+                    set_editing_options(true)
 
-                // select all text
-                e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+                    if (!e.currentTarget) return
+
+                    // select all text
+                    e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+                }, 0)
             }}
             onChange={e => handle_on_change(e.currentTarget.value)}
             onKeyDown={e => handle_key_down(e, options_to_display)}
