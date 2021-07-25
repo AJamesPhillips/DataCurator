@@ -40,6 +40,17 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 sim_ms,
             })
 
+
+            // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
+            const limit = 150
+            let limited_title = title.slice(0, limit)
+            let limited_subtitle = wcomponent.title.slice(0, limit)
+
+            if (limited_title.length !== title.length) limited_title += "..."
+            if (limited_subtitle.length !== wcomponent.title.length) limited_subtitle += "..."
+            limited_subtitle += `-- @@${wcomponent.id}`
+
+
             let jsx: h.JSX.Element | undefined = undefined
             if (wcomponent_is_judgement_or_objective(wcomponent))
             {
@@ -51,9 +62,9 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
 
             return {
                 id: wcomponent.id,
-                title,
+                title: limited_title,
                 jsx,
-                subtitle: `${wcomponent.title} -- @@${wcomponent.id}`,
+                subtitle: limited_subtitle,
                 color: wcomponent.label_color,
             }
         })

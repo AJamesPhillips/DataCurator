@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import { EditableNumber } from "../../form/EditableNumber"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"

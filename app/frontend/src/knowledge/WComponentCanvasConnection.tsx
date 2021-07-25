@@ -12,11 +12,11 @@ import {
     WComponent,
     wcomponent_is_plain_connection,
     wcomponent_can_render_connection,
-    WComponentConnection,
     ConnectionTerminalType,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
+    WComponentConnection,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"

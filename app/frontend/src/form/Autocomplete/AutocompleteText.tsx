@@ -61,6 +61,7 @@ interface ActivelyChosenId {
 
 function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
+
     const prepared_targets = useRef<(Fuzzysort.Prepared | undefined)[]>([])
     const options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
@@ -82,6 +83,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         set_temp_value_str(props.initial_search_term || selected_title || "")
     }, [props.initial_search_term, selected_title])
+    const { throttled: handle_on_change, flush: flush_temp_value_str } = throttle(set_temp_value_str, 300)
 
 
     const [editing_options, set_editing_options] = useState(false)
@@ -89,6 +91,17 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         set_editing_options(!!props.start_expanded)
     }, [props.start_expanded])
+
+
+
+    const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
+    useEffect(() =>
+    {
+        const options_to_display = get_options_to_display(temp_value_str, !!props.allow_none, options.current, prepared_targets.current)
+        set_options_to_display(options_to_display)
+        flush_temp_value_str()
+    }, [temp_value_str])
+
 
 
     const [highlighted_option_index, set_highlighted_option_index] = useState(0)
@@ -100,9 +113,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
         return selected_option ? selected_option.title : "-"
     }
-
-
-    const handle_on_change = throttle((new_value: string) => set_temp_value_str(new_value), 300).throttled
 
 
     const handle_key_down = async (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[]) =>
@@ -133,38 +143,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             new_highlighted_option_index = new_highlighted_option_index % displayed_options.length
             set_highlighted_option_index(new_highlighted_option_index)
         }
-    }
-
-
-    function get_options_to_display (): InternalAutocompleteOption[]
-    {
-        // allow user to clear the current value / select none
-        const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
-
-        if (!temp_value_str)
-        {
-            if (props.allow_none) return [option_none, ...options.current]
-            else return options.current
-        }
-
-
-        const search_options = {
-            limit: 100, // don't return more results than we need
-            allowTypo: true,
-            threshold: -10000, // don't return bad results
-        }
-        const results = fuzzysort.go(temp_value_str, prepared_targets.current, search_options)
-
-        const map_target_to_score: { [target: string]: number } = {}
-        results.forEach(({ target, score }) => map_target_to_score[target] = score)
-
-        const options_to_display: InternalAutocompleteOption[] = sort_list(options.current, o =>
-            {
-                const score = map_target_to_score[o.total_text]
-                return score === undefined ? -10000 : score
-            }, "descending")
-
-        return options_to_display
     }
 
 
@@ -202,9 +180,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         }
     }
 
-
-
-    const options_to_display = get_options_to_display()
 
     const final_value = get_valid_value(options_to_display, temp_value_str)
     const valid = !final_value || temp_value_str.toLowerCase() === final_value.title.toLowerCase()
@@ -303,4 +278,38 @@ function prepare_options_and_targets (options: AutocompleteOption[])
     })
 
     return { new_internal_options, prepared_targets}
+}
+
+
+
+function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[]): InternalAutocompleteOption[]
+{
+    // allow user to clear the current value / select none
+    const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
+
+    if (!temp_value_str)
+    {
+        if (allow_none) return [option_none, ...options]
+        else return options
+    }
+
+
+    const search_options = {
+        limit: 100, // don't return more results than we need
+        allowTypo: true,
+        threshold: -10000, // don't return bad results
+    }
+
+    const results = fuzzysort.go(temp_value_str, prepared_targets, search_options)
+
+    const map_target_to_score: { [target: string]: number } = {}
+    results.forEach(({ target, score }) => map_target_to_score[target] = score)
+
+    const options_to_display: InternalAutocompleteOption[] = sort_list(options, o =>
+        {
+            const score = map_target_to_score[o.total_text]
+            return score === undefined ? -10000 : score
+        }, "descending")
+
+    return options_to_display
 }

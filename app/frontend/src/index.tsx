@@ -16,6 +16,7 @@ import { SandBox } from "./scratch_pad/SandBox"
 import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCustomDateTime"
 import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
+import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -62,6 +63,10 @@ if (root) {
     else if (window.location.pathname === "/sandbox/canvas_nodes")
     {
         render(<SandboxWComponentCanvasNode />, root)
+    }
+    else if (window.location.pathname === "/sandbox/connected")
+    {
+        render(<Provider store={get_store({ load_state_from_server: true })}><SandBoxConnected /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox")
     {

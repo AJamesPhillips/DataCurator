@@ -12,12 +12,31 @@ export function throttle <A extends any[]> (func: (...args: A) => void, delay: n
     }
 
 
+    let pending_args: A | undefined = undefined
     const throttled = (...args: A) =>
     {
         cancel()
+        pending_args = args
 
-        timeout = setTimeout(() => func(...args), delay)
+        timeout = setTimeout(() =>
+        {
+            func(...args)
+            pending_args = undefined
+        }, delay)
     }
 
-    return { throttled, cancel }
+
+    const flush = () =>
+    {
+        cancel()
+
+        if (pending_args)
+        {
+            func(...pending_args)
+            pending_args = undefined
+        }
+    }
+
+
+    return { throttled, cancel, flush }
 }
