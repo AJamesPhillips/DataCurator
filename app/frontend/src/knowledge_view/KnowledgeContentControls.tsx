@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./KnowledgeContentControls.css"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
-import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { TimeSlider } from "../time_control/TimeSlider"
@@ -12,10 +12,10 @@ import { TimeResolutionOptions } from "../display_options/TimeResolutionOptions"
 import ToggleButton from "@material-ui/lab/ToggleButton"
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
 import { Box } from "@material-ui/core"
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import LinkIcon from '@material-ui/icons/Link';
+import { MoveToWComponentButton } from "../canvas/MoveToWComponentButton"
 
 const map_state = (state: RootState) => ({
+    selected_component_id: state.routing.item_id,
     wcomponents: state.derived.wcomponents,
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
@@ -23,7 +23,6 @@ const map_state = (state: RootState) => ({
     display_created_at_time_slider: state.controls.display_created_at_time_slider,
     editing: !state.display_options.consumption_formatting,
 })
-
 
 const map_dispatch = {
     change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime,
@@ -38,13 +37,14 @@ type Props = ConnectedProps<typeof connector>
 
 function _KnowledgeContentControls (props: Props)
 {
-    const { wcomponents, current_composed_knowledge_view } = props
+    const { wcomponents, current_composed_knowledge_view, selected_component_id } = props
 
     if (!current_composed_knowledge_view) return <div></div>
 
     const wcomponents_on_kv = wcomponents
         .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
         .filter(wc => wc.type !== "counterfactual")
+
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     return (
@@ -52,7 +52,13 @@ function _KnowledgeContentControls (props: Props)
             {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
 
 
+
+
             <Box mb={2}  display="flex" flexDirection="row" justifyContent="space-between">
+                <Box>
+                    <MoveToWComponentButton wcomponent_id={selected_component_id} />
+                </Box>
+
                 <Box component="label">
                     {/* <Box component="span" pr={1}>Time Resolution:</Box> */}
                     <TimeResolutionOptions  />
