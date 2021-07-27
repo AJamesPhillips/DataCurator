@@ -14,20 +14,28 @@ interface OwnProps
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const { wcomponent_id } = own_props
-    const wcomponent = get_wcomponent_from_state(state, wcomponent_id)
-
-    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
-
-    const position = {
-        zoom:state.routing.args.zoom,
-        ...composed_knowledge_view_entry
-    }
-
     const canvas_date:Date = state.routing.args.created_at_datetime
     let go_to_date:Date = canvas_date
-    if (wcomponent && canvas_date < wcomponent.created_at) {
-        go_to_date = wcomponent.created_at
+
+    let position = {
+        zoom:state.routing.args.zoom,
+    }
+
+    if (wcomponent_id) {
+        const wcomponent = get_wcomponent_from_state(state, wcomponent_id)
+
+        if (wcomponent && canvas_date < wcomponent.created_at) {
+            go_to_date = wcomponent.created_at
+        }
+
+        const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
+        const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
+        if (composed_knowledge_view_entry) {
+            position = {
+                ...position,
+                ...composed_knowledge_view_entry
+            }
+        }
     }
     return {
         date_time: go_to_date,
@@ -36,15 +44,13 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 }
 
 const map_dispatch = {
-    move: (position:any, date_time:any) => {
-        return ACTIONS.routing.change_route({
-            args: {
-                created_at_datetime:date_time,
-                created_at_ms:date_time.getTime(),
-                ...position
-            },
-        })
-    }
+    move: (position:any, date_time:any) => ACTIONS.routing.change_route({
+        args: {
+            created_at_datetime:date_time,
+            created_at_ms:date_time.getTime(),
+            ...position
+        },
+    })
 }
 
 const connector = connect(map_state, map_dispatch)
