@@ -9,7 +9,7 @@ import { Box, IconButton } from "@material-ui/core"
 
 interface OwnProps
 {
-    wcomponent_id:string
+    wcomponent_id:string | null
 }
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
@@ -52,7 +52,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _MoveToWComponentButton (props: Props)
 {
-    const { position, date_time  } = props
+   const { wcomponent_id, position, date_time  } = props
+    if (!wcomponent_id) return
+
     return (
         <Box zIndex={10} m={2}>
             <IconButton size="small" onClick={() => props.move(position, date_time)}>
