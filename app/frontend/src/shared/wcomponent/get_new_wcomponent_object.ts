@@ -21,6 +21,11 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
         type: "process",
     }
 
+    const when = (partial_wcomponent.custom_created_at
+        || partial_wcomponent.created_at
+        || base.custom_created_at
+        || base.created_at)
+
     let wcomponent: WComponent
 
     if (partial_wcomponent.type === "causal_link" || partial_wcomponent.type === "relation_link")
@@ -62,8 +67,6 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
     }
     else if (partial_wcomponent.type === "prioritisation")
     {
-        const when = base.custom_created_at || base.created_at
-
         const prioritisation: WComponentPrioritisation = {
             ...base,
             title: date2str_auto({ date: when, time_resolution: "day" }),
@@ -76,8 +79,6 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
     }
     else if (partial_wcomponent.type === "goal")
     {
-        const when = base.custom_created_at || base.created_at
-
         const goal: WComponentNodeGoal = {
             ...base,
             ...partial_wcomponent,
