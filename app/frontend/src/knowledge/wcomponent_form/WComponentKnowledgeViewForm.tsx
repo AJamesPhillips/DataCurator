@@ -1,15 +1,15 @@
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 
-import { MoveToPositionButton } from "../../canvas/MoveToPositionButton"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
 import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
 import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"
-import { lefttop_to_xy } from "../../state/display_options/display"
+
 import {
     get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
@@ -17,7 +17,6 @@ import {
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
-
 
 
 interface OwnProps
@@ -31,6 +30,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { wcomponent_id } = own_props
 
     const current_knowledge_view = get_current_knowledge_view_from_state(state)
+
     const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id]
     const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
     const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
@@ -92,7 +92,6 @@ function _WComponentKnowledgeViewForm (props: Props)
         })
     }
 
-
     return <div>
         {!knowledge_view_entry && knowledge_view_id && <div>
             Not present in this knowledge view
@@ -107,10 +106,8 @@ function _WComponentKnowledgeViewForm (props: Props)
 
 
         {composed_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
-            <MoveToPositionButton
-                description="Show node"
-                move_to_xy={lefttop_to_xy({ ...composed_knowledge_view_entry, zoom: 100 }, true)}
-            />
+            <MoveToWComponentButton wcomponent_id={wcomponent.id} />
+
             <Box zIndex={10} m={4} class="node_handle">
                 <ExploreButtonHandle
                     wcomponent_id={wcomponent.id}
