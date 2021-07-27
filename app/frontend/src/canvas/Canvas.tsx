@@ -333,13 +333,12 @@ class _Canvas extends Component<Props, State>
                     </div>
                 </div>
             </div>
-
-            {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
+            {/* {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
                 <MoveToPositionButton
                     description="Move to content"
                     move_to_xy={lefttop_to_xy(content_coordinates![0], true)}
                 />
-            </div>}
+            </div>} */}
         </div>
         )
     }
