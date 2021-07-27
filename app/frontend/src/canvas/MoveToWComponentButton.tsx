@@ -18,7 +18,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     let go_to_date:Date = canvas_date
 
     let position = {
-        zoom:state.routing.args.zoom,
+        zoom:100,
     }
 
     if (wcomponent_id) {
