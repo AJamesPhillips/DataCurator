@@ -24,82 +24,50 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
 
-    const { flexBasis = 33.33333333, counterfactual_VAP_set: VAP_set } = props
+    const { counterfactual_VAP_set: VAP_set } = props
 
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
     const raw_data = get_VAP_visuals_data({ ...props, VAP_set, VAPs_represent })
 
-    // For now put the most likely at the top so that most of the time things are a bit brighter
     const put_most_probable_last = false
     const data = put_most_probable_last ? raw_data.reverse() : raw_data
+    const data_with_non_zero_certainty = data.filter(d => d.certainty > 0)
 
     return (
         <Box
-            // This box is really just serving to allow for padding without
-            // without overflowing the parent container
-            p={1}
-            display="flex" flexDirection="column"
-            alignItems="stretch" alignContent="stretch" justifyContent="center"
-            flexGrow={0} flexShrink={0} flexBasis={`${flexBasis}%`}
+            height="100%"
+            overflow="hidden"
+            position="relative"
+            flexDirection="column"
+            justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
+            className={`value_and_prediction_set_summary items-${data.length} visible-${data_with_non_zero_certainty.length}`}
         >
-            <Box
-                flexGrow={1} flexShrink={1}
-                display="flex" flexDirection="column"
-                alignItems="stretch" alignContent="stretch"
-                justifyContent="flex-end"
-                className="value_and_prediction_set_summary"
-                onPointerOver={() => set_show_all_judgements(true)}
-                onPointerLeave={() => set_show_all_judgements(false)}
-            >
-                {data.map((vap_visual, index) =>
-                {
-                    const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
-                    const base_line_height = `${vap_visual.certainty * 200}%`
-
-                    const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
-
-                    // NOTE: I have moved the bgcolor to the Box below.
-                    // This allows for color specificaton of each VAP "stripe"
-                    return (
-
-                        <Box
-                            bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
-                            position="relative" overflow="hidden"
-                            flexGrow={0} flexShrink={0}
-                            flexBasis={`${vap_visual.certainty * 100}%`}
-                            lineHeight={base_line_height}
-                            minHeight={`${vap_visual.certainty * 100}%`}
-                            display="flex" flexDirection="column"
-                            alignItems="center" justifyContent="center"
-                            key={vap_visual.id}
-                            className="value_and_prediction"
-                            onClick={() => {}}
-                        >
-                            <Box
-                                position="relative" zIndex="10"
-                                overflowY="hidden" textOverflow="ellipsis"
-                            >
-                                {vap_visual.value_text}
-
-                                {show_judgements && <span style={{ verticalAlign: "middle" }}>
-                                    <WComponentJudgements
-                                        wcomponent={props.wcomponent}
-                                        target_VAPs_represent={VAPs_represent}
-                                        value={vap_visual.value}
-                                    />
-                                </span>}
-
-                                {cf_entries.map(entry => <CounterfactualLink
-                                    any_active={VAP_set.is_counterfactual}
-                                    counterfactual={entry}
-                                    active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
-                                />)}
-
-                            </Box>
+            {data.map((vap_visual, index) =>
+            {
+                const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
+                const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
+                return (
+                    <Box
+                        className={`value_and_prediction prob-${vap_visual.certainty * 100}`}
+                        position="relative"
+                        bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
+                        flexGrow={1} flexShrink={1}
+                        flexBasis="auto"
+                        fontSize={`${vap_visual.certainty * 100}%`}
+                        maxHeight={`${vap_visual.certainty * 100}%`}
+                        overflow="hidden"
+                    >
+                        <Box p={1} textAlign="center" position="relative" zIndex={10}>
+                            {vap_visual.value_text}
+                            {show_judgements && <WComponentJudgements
+                                wcomponent={props.wcomponent}
+                                target_VAPs_represent={VAPs_represent}
+                                value={vap_visual.value}
+                            />}
                         </Box>
-                    )
-                })}
-            </Box>
+                    </Box>
+                )
+            })}
         </Box>
     )
 }
