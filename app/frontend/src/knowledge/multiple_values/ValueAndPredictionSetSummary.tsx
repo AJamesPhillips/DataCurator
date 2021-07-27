@@ -17,7 +17,6 @@ interface OwnProps
 {
     wcomponent: WComponent
     counterfactual_VAP_set: ComposedCounterfactualStateValueAndPredictionSetV2
-    flexBasis?: number
 }
 
 export function ValueAndPredictionSetSummary (props: OwnProps)
