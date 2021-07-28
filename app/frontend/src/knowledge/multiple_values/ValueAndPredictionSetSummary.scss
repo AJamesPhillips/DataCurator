@@ -32,7 +32,7 @@ $max_vap_height:$max_vap_fontsize * 1.75;
 
     @for $i from 2 through $max_elements {
         &.visible-#{$i} {
-            min-height:$max_vap_height * ($i);
+            min-height:$max_vap_height * ($i * 0.90);
         }
     }
 
@@ -53,7 +53,9 @@ $max_vap_height:$max_vap_fontsize * 1.75;
 
         .value_and_prediction {
             font-size:$max_vap_fontsize;
+            line-height:$max_vap_height;
             max-height:$max_vap_height;
+
             min-height:0;
         }
     }

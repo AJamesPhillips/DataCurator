@@ -44,6 +44,10 @@ s
                 const rounded_certainty_percent = Math.round(certainty_percent_num)
                 const rounded_certainty_percent_str = `${rounded_certainty_percent}%`
 
+                let font_size = 100
+                if (rounded_certainty_percent < 100) {
+                    font_size = rounded_certainty_percent * 1.25
+                }
                 const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
                 const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
                 return (
@@ -52,22 +56,24 @@ s
                         p={2} boxSizing="border-box"
                         position="relative"
                         bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
-
                         flexGrow={1} flexShrink={1} flexBasis="auto"
                         display="flex" flexDirection="row" justifyContent="center" alignItems="center"
-
-                        fontSize={certainty_percent_str}
+                        fontSize={`${font_size}%`}
+                        lineHeight="1em"
                         maxHeight={certainty_percent_str}
                         minHeight={certainty_percent_str}
                         maxWidth="100%"
-                        overflow="hidden"
                     >
                         <Box
+                            fontSize="inherit"
                             maxWidth="100%" overflow="hidden"
-                            whiteSpace="nowrap" textOverflow="ellipsis"
-                            position="relative" zIndex={10}
+                            whiteSpace="nowrap"
+                            overflowX="hidden" overflowY="visible"
+                            textOverflow="ellipsis"
+                            position="relative"
+                            zIndex={10}
                         >
-                            {vap_visual.value_text}
+                            {vap_visual.value_text} {rounded_certainty_percent_str}
                             {show_judgements && <WComponentJudgements
                                 wcomponent={props.wcomponent}
                                 target_VAPs_represent={VAPs_represent}
