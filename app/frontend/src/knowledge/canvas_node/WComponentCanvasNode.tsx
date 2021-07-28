@@ -235,11 +235,11 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {show_state_value && <Box display="flex">
+            {show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden">
                 {is_editing && <Box pr={2}>state</Box>}
                 {/* <WComponentStatefulValue wcomponent={wcomponent} /> */}
                 {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
-                <Box flexGrow={1} flexShrink={1}>
+                <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeValueAndPredictionSetSummary
                         wcomponent={wcomponent}
                         created_at_ms={created_at_ms}
