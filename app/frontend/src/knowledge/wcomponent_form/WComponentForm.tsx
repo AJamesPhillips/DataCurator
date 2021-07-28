@@ -325,7 +325,7 @@ function _WComponentForm (props: Props)
         </div>}
 
 
-        {wcomponent_is_statev1(wcomponent) && <div>
+        {wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && <div>
             <p>
                 <ValueList
                     values={wcomponent.values || []}
