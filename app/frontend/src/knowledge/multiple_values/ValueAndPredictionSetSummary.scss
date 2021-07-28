@@ -1,42 +1,57 @@
 @use 'sass:math';
 
 
-.value_and_prediction_set_summary
-{
-    $max_elements: 6;
+.value_and_prediction_set_summary {
+    $max_elements: 10;
+    $max_vap_height:1.4rem;
+
+    min-height:$max_vap_height;
+
+    transition-duration:0.5s;
+    transition-property:all;
+    transition-timing-function:ease-in-out;
 
     .value_and_prediction {
+        transition-delay:0;
+        transition-duration:0.75s;
+        transition-property:all;
+        transition-timing-function:ease-in-out;
+
         &:before {
             content:"";
             position:absolute;
             top:0; right:0; bottom:0; left:0;
-            z-index:1;
+        }
+    }
+
+    @for $i from 2 through $max_elements {
+        &.visible-#{$i} {
+            height:$max_vap_height * ($i * 0.80);
         }
     }
 
     @for $i from 1 through $max_elements {
+        &.visible-#{$i} {
+            height:$max_vap_height * ($i * 0.80);
+        }
+
         .value_and_prediction:nth-child(#{$i}):before {
             background-color: rgba(255, 255, 255, math.div($max-elements - $i - 1, $max-elements));
         }
     }
-
-    &, .value_and_prediction {
-        transition-delay:0;
-        transition-duration:0.5s;
-        transition-property: all;
-        transition-timing-function:ease-in-out;
-
-    }
-
     &:hover {
-        flex-grow:1;
+        display:flex;
+
+        @for $i from 1 through $max_elements {
+
+            &.items-#{$i} {
+                height:$max_vap_height * ($i);
+            }
+        }
 
         .value_and_prediction {
-            line-height:2;
-            flex-basis:33.33333333%;
-            flex-grow:1;
-            flex-shrink:1;
-            min-height:0;
+            font-size:inherit;
+            max-height:100%;
         }
     }
 }

@@ -27,14 +27,9 @@ export function NodeValueAndPredictionSetSummary (props: OwnProps)
 
     if (!VAP_set) return null
 
-    return <Box
-        flexGrow={1} flexShrink={0}
-        display="flex" alignItems="stretch"
-    >
-        <ConnectedValueAndPredictionSetSummary
-            wcomponent={props.wcomponent}
-            VAP_set={VAP_set}
-            flexBasis={100}
-        />
-    </Box>
+    return <ConnectedValueAndPredictionSetSummary
+        wcomponent={props.wcomponent}
+        VAP_set={VAP_set}
+        flexBasis={100}
+    />
 }

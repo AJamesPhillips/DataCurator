@@ -39,7 +39,6 @@ function _ConnectedValueAndPredictionSetSummary (props: Props)
     return <ValueAndPredictionSetSummary
         wcomponent={props.wcomponent}
         counterfactual_VAP_set={counterfactual_VAP_set}
-        flexBasis={props.flexBasis}
     />
 }
 

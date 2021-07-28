@@ -38,6 +38,7 @@ import { factory_on_pointer_down } from "../canvas_common"
 import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
+import { Box } from "@material-ui/core"
 
 
 
@@ -234,16 +235,18 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {show_state_value && <div className="node_state_container">
-                {is_editing && <div className="description_label">state</div>}
+            {show_state_value && <Box display="flex">
+                {is_editing && <Box pr={2}>state</Box>}
                 {/* <WComponentStatefulValue wcomponent={wcomponent} /> */}
                 {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
-                <NodeValueAndPredictionSetSummary
-                    wcomponent={wcomponent}
-                    created_at_ms={created_at_ms}
-                    sim_ms={sim_ms}
-                />
-            </div>}
+                <Box flexGrow={1} flexShrink={1}>
+                    <NodeValueAndPredictionSetSummary
+                        wcomponent={wcomponent}
+                        created_at_ms={created_at_ms}
+                        sim_ms={sim_ms}
+                    />
+                </Box>
+            </Box>}
 
             <div className="description_label">
                 {(is_editing || wcomponent.type === "actor") && wcomponent.type}
