@@ -73,7 +73,7 @@ s
                             position="relative"
                             zIndex={10}
                         >
-                            {vap_visual.value_text} {rounded_certainty_percent_str}
+                            {vap_visual.value_text}
                             {show_judgements && <WComponentJudgements
                                 wcomponent={props.wcomponent}
                                 target_VAPs_represent={VAPs_represent}
