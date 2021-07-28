@@ -45,7 +45,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
             value = index === 0
         }
         const value_text = VAP_value_to_string(value, boolean_representation)
-        const certainty = VAP.probability * confidence
+        const certainty = VAP.probability * VAP.conviction * confidence
         total_certainties += certainty
 
         return {
