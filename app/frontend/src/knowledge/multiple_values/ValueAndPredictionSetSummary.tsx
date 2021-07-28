@@ -12,7 +12,6 @@ import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
 
 
-
 interface OwnProps
 {
     wcomponent: WComponent
@@ -22,12 +21,9 @@ interface OwnProps
 export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
-
     const { counterfactual_VAP_set: VAP_set } = props
-
     const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
     const raw_data = get_VAP_visuals_data({ ...props, VAP_set, VAPs_represent })
-
     const put_most_probable_last = false
     const data = put_most_probable_last ? raw_data.reverse() : raw_data
     const data_with_non_zero_certainty = data.filter(d => d.certainty > 0)
@@ -37,32 +33,47 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             height="100%"
             overflow="hidden"
             position="relative"
-            flexDirection="column"
-            justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
+            flexDirection="column" justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
             className={`value_and_prediction_set_summary items-${data.length} visible-${data_with_non_zero_certainty.length}`}
+s
         >
             {data.map((vap_visual, index) =>
             {
+                const certainty_percent_num = vap_visual.certainty * 100
+                const certainty_percent_str = `${certainty_percent_num}%`
+                const rounded_certainty_percent = Math.round(certainty_percent_num)
+                const rounded_certainty_percent_str = `${rounded_certainty_percent}%`
+
                 const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
                 const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
                 return (
                     <Box
-                        className={`value_and_prediction prob-${vap_visual.certainty * 100}`}
+                        className={`value_and_prediction prob-${rounded_certainty_percent}`}
+                        p={2} boxSizing="border-box"
                         position="relative"
                         bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
-                        flexGrow={1} flexShrink={1}
-                        flexBasis="auto"
-                        fontSize={`${vap_visual.certainty * 100}%`}
-                        maxHeight={`${vap_visual.certainty * 100}%`}
+
+                        flexGrow={1} flexShrink={1} flexBasis="auto"
+                        display="flex" flexDirection="row" justifyContent="center" alignItems="center"
+
+                        fontSize={certainty_percent_str}
+                        maxHeight={certainty_percent_str}
+                        minHeight={certainty_percent_str}
+                        maxWidth="100%"
                         overflow="hidden"
                     >
-                        <Box p={1} textAlign="center" position="relative" zIndex={10}>
+                        <Box
+                            maxWidth="100%" overflow="hidden"
+                            whiteSpace="nowrap" textOverflow="ellipsis"
+                            position="relative" zIndex={10}
+                        >
                             {vap_visual.value_text}
                             {show_judgements && <WComponentJudgements
                                 wcomponent={props.wcomponent}
                                 target_VAPs_represent={VAPs_represent}
                                 value={vap_visual.value}
                             />}
+
                         </Box>
                     </Box>
                 )

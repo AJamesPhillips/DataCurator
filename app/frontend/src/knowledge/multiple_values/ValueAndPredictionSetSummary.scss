@@ -1,21 +1,27 @@
 @use 'sass:math';
 
 
-.value_and_prediction_set_summary {
-    $max_elements: 10;
-    $max_vap_height:1.4rem;
-
-    min-height:$max_vap_height;
-
+@mixin vap_transition($delay:0s) {
+    transition-delay:$delay;
     transition-duration:0.5s;
     transition-property:all;
-    transition-timing-function:ease-in-out;
+    transition-timing-function:linear;
+}
+
+$max_elements: 10;
+
+
+$max_vap_fontsize:16px;
+$max_vap_height:$max_vap_fontsize * 1.75;
+
+.value_and_prediction_set_summary {
+    @include vap_transition();
+    min-height:$max_vap_height;
+    font-size:$max_vap_fontsize;
 
     .value_and_prediction {
-        transition-delay:0;
-        transition-duration:0.75s;
-        transition-property:all;
-        transition-timing-function:ease-in-out;
+        @include vap_transition();
+        max-height:$max_vap_height;
 
         &:before {
             content:"";
@@ -26,15 +32,11 @@
 
     @for $i from 2 through $max_elements {
         &.visible-#{$i} {
-            height:$max_vap_height * ($i * 0.80);
+            min-height:$max_vap_height * ($i);
         }
     }
 
     @for $i from 1 through $max_elements {
-        &.visible-#{$i} {
-            height:$max_vap_height * ($i * 0.80);
-        }
-
         .value_and_prediction:nth-child(#{$i}):before {
             background-color: rgba(255, 255, 255, math.div($max-elements - $i - 1, $max-elements));
         }
@@ -43,15 +45,16 @@
         display:flex;
 
         @for $i from 1 through $max_elements {
-
             &.items-#{$i} {
-                height:$max_vap_height * ($i);
+                min-height:$max_vap_height * ($i);
+                max-height:$max_vap_height * ($i);
             }
         }
 
         .value_and_prediction {
-            font-size:inherit;
-            max-height:100%;
+            font-size:$max_vap_fontsize;
+            max-height:$max_vap_height;
+            min-height:0;
         }
     }
 }
