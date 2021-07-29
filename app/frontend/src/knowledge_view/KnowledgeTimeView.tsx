@@ -52,7 +52,7 @@ function _KnowledgeTimeView (props: Props)
     const elements = get_children(props)
 
     return <MainArea
-        main_content={<Box className="knowledge_time_view">{elements}</Box>}
+        main_content={<Box className="knowledge_time_view" maxHeight="100%" overflow="auto">{elements}</Box>}
     />
 }
 
@@ -92,16 +92,15 @@ const get_children = (props: Props): ChildrenRawData =>
                 py="0.5em"
                 key={wc.id}
             >
-                <Box>
-                    <WComponentCanvasNode
-                        id={wc.id}
-                        on_graph={false}
-                    />
-                </Box>
+                <WComponentCanvasNode
+                    id={wc.id}
+                    on_graph={false}
+                />
+
                 {VAP_sets.length > 0 && (
-                    <Box
-                        flexGrow={1} flexShrink={1}
-                        display="flex" alignItems="stretch">
+                    <Box p="0.5em"
+                        flexGrow={1} flexShrink={0}
+                        display="flex" alignItems="stretch" alignContent="stretch">
                         {VAP_sets.map(VAP_set => <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />)}
                     </Box>
                 )}
