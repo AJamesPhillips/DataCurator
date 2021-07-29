@@ -45,18 +45,17 @@ function _KnowledgeContentControls (props: Props)
         .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
         .filter(wc => wc.type !== "counterfactual")
 
+    const move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id
+
     const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
 
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
             {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
 
-
-
-
             <Box mb={2}  display="flex" flexDirection="row" justifyContent="space-between">
                 <Box>
-                    <MoveToWComponentButton wcomponent_id={selected_component_id} />
+                    <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                 </Box>
 
                 <Box component="label">

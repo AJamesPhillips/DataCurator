@@ -1,4 +1,4 @@
-import type { PositionAndZoom } from "../../canvas/interfaces"
+import type { ContentCoordinate, PositionAndZoom } from "../../canvas/interfaces"
 import { h_step, round_number, v_step } from "../../canvas/position_utils"
 // import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
@@ -33,8 +33,9 @@ export function get_middle_of_screen (state: RootState)
     return { left: result.x, top: -result.y }
 }
 
-
-export function lefttop_to_xy (position?: { left?: number, top?: number, zoom?: number}, middle?: boolean): PositionAndZoom | undefined
+export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined, middle?: boolean): PositionAndZoom | undefined
+export function lefttop_to_xy (position: ContentCoordinate, middle?: boolean): PositionAndZoom
+export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined, middle?: boolean): PositionAndZoom | undefined
 {
     if (!position) return undefined
 

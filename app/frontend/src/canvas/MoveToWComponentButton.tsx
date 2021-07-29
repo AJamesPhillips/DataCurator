@@ -1,53 +1,63 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+
+import {
+    get_current_composed_knowledge_view_from_state,
+    get_wcomponent_from_state,
+} from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus'
 import { lefttop_to_xy } from "../state/display_options/display"
 import { Box, IconButton } from "@material-ui/core"
+import type { PositionAndZoom } from "./interfaces"
+import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+
+
 
 interface OwnProps
 {
-    wcomponent_id:string | null
+    wcomponent_id?: string
 }
+
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const { wcomponent_id } = own_props
-    const canvas_date:Date = state.routing.args.created_at_datetime
-    let go_to_date:Date = canvas_date
+    let go_to_datetime_ms = state.routing.args.created_at_ms
 
-    let position = {
-        zoom:100,
-    }
+    let position: PositionAndZoom | undefined = undefined
 
-    if (wcomponent_id) {
+    if (wcomponent_id)
+    {
         const wcomponent = get_wcomponent_from_state(state, wcomponent_id)
 
-        if (wcomponent && canvas_date < wcomponent.created_at) {
-            go_to_date = wcomponent.created_at
+        if (wcomponent)
+        {
+            const wcomponent_created_at_ms = get_created_at_ms(wcomponent)
+            go_to_datetime_ms = Math.max(go_to_datetime_ms, wcomponent_created_at_ms)
         }
 
         const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
         const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
-        if (composed_knowledge_view_entry) {
+        if (composed_knowledge_view_entry)
+        {
             position = {
-                ...position,
-                ...composed_knowledge_view_entry
+                ...composed_knowledge_view_entry,
+                zoom: 100,
             }
         }
     }
+
     return {
-        date_time: go_to_date,
+        go_to_datetime_ms,
         position: lefttop_to_xy(position, true)
     }
 }
 
 const map_dispatch = {
-    move: (position:any, date_time:any) => ACTIONS.routing.change_route({
+    move: (position: PositionAndZoom, datetime_ms: number) => ACTIONS.routing.change_route({
         args: {
-            created_at_datetime:date_time,
-            created_at_ms:date_time.getTime(),
+            created_at_ms: datetime_ms,
             ...position
         },
     })
@@ -58,12 +68,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _MoveToWComponentButton (props: Props)
 {
-   const { wcomponent_id, position, date_time  } = props
-    if (!wcomponent_id) return
+    const { wcomponent_id, position, go_to_datetime_ms  } = props
+
+    if (!wcomponent_id || !position) return
 
     return (
         <Box zIndex={10} m={2}>
-            <IconButton size="small" onClick={() => props.move(position, date_time)}>
+            <IconButton size="small" onClick={() => props.move(position, go_to_datetime_ms)}>
                 <FilterCenterFocusIcon />
             </IconButton>
         </Box>
