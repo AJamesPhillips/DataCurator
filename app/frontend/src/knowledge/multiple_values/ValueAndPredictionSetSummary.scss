@@ -8,15 +8,13 @@
     transition-timing-function:linear;
 }
 
-$max_elements: 10;
-
-
+$max_elements: 6;
 $max_vap_fontsize:1em;
 $max_vap_height:$max_vap_fontsize * 1.75;
 
 .value_and_prediction_set_summary {
     @include vap_transition();
-    min-height:$max_vap_height;
+    min-height:100%;
     font-size:$max_vap_fontsize;
 
     .value_and_prediction {
@@ -43,10 +41,9 @@ $max_vap_height:$max_vap_fontsize * 1.75;
     }
     &:hover {
         display:flex;
-
         @for $i from 1 through $max_elements {
             &.items-#{$i} {
-                min-height:$max_vap_height * ($i);
+
                 max-height:$max_vap_height * ($i);
             }
         }
@@ -54,8 +51,7 @@ $max_vap_height:$max_vap_fontsize * 1.75;
         .value_and_prediction {
             font-size:$max_vap_fontsize;
             line-height:$max_vap_height;
-            max-height:$max_vap_height;
-
+            max-height:100%;
             min-height:0;
         }
     }
