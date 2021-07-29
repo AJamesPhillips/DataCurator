@@ -30,7 +30,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 
     return (
         <Box
-            height="100%"
+            height="100%" maxWidth="100%" minWidth={100}
             overflow="hidden"
             position="relative"
             flexDirection="column" justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
