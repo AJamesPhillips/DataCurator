@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { Canvas } from "../canvas/Canvas"
 import { project_priority_y } from "../canvas/display"
-import type { ContentCoordinate } from "../canvas/interfaces"
 import { MainArea } from "../layout/MainArea"
 import type { RootState } from "../state/State"
 import { CurrentDatetimeLine } from "./CurrentDatetimeLine"
@@ -58,15 +57,13 @@ const get_children = (props: Props) =>
         />),
     ]
 
-    const content_coordinates: ContentCoordinate[] = []
     const first_project_priority_nodes = project_priority_nodes.first()
     if (first_project_priority_nodes)
     {
         const { x: left, y: top } = first_project_priority_nodes
-        content_coordinates.push({ left, top, zoom: 100 })
     }
 
-    return { elements, content_coordinates }
+    return elements
 }
 
 
@@ -103,13 +100,12 @@ function get_nodes_from_props (props: Props)
 
 function _OldPrioritiesView (props: Props)
 {
-    const { elements, content_coordinates } = get_children(props)
+    const elements = get_children(props)
 
     return <MainArea
         main_content={<Canvas
             svg_children={get_svg_children(props)}
             svg_upper_children={[]}
-            content_coordinates={content_coordinates}
         >
             {elements}
         </Canvas>}

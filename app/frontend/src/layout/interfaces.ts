@@ -3,12 +3,7 @@ import type { h } from "preact"
 import type { CanvasPoint, ContentCoordinate } from "../canvas/interfaces"
 
 
-export interface ChildrenRawData
-{
-    elements: h.JSX.Element[]
-    content_coordinates: ContentCoordinate[]
-}
-
+export type ChildrenRawData = h.JSX.Element[]
 
 export interface ChildrenData
 {

@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 
 import "./KnowledgeTimeView.scss"
-import type { ContentCoordinate } from "../canvas/interfaces"
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
@@ -50,7 +49,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _KnowledgeTimeView (props: Props)
 {
-    const { elements, content_coordinates } = get_children(props)
+    const elements = get_children(props)
 
     return <MainArea
         main_content={<Box className="knowledge_time_view">{elements}</Box>}
@@ -60,14 +59,13 @@ function _KnowledgeTimeView (props: Props)
 export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>
 
 const no_children: h.JSX.Element[] = []
-const default_content_coordinates: ContentCoordinate[] = [{ left: 0, top: 0, zoom: 100 }]
 const get_children = (props: Props): ChildrenRawData =>
 {
     const { sync_ready } = props
     let { wcomponent_nodes } = props
     if (!sync_ready || !wcomponent_nodes)
     {
-        return { elements: no_children, content_coordinates: default_content_coordinates }
+        return no_children
     }
 
 
@@ -111,10 +109,7 @@ const get_children = (props: Props): ChildrenRawData =>
         )
     })
 
-    return {
-        elements,
-        content_coordinates: default_content_coordinates,
-    }
+    return elements
 }
 
 

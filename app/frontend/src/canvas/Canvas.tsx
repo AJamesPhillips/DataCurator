@@ -5,11 +5,8 @@ import { connect, ConnectedProps } from "react-redux"
 import type { Dispatch } from "redux"
 
 import { ACTIONS } from "../state/actions"
-import { lefttop_to_xy } from "../state/display_options/display"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
-import type { ContentCoordinate } from "./interfaces"
-import { MoveToPositionButton } from "./MoveToPositionButton"
 import { grid_small_step } from "./position_utils"
 import { bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
@@ -27,7 +24,6 @@ interface OwnProps
 {
     svg_children?: preact.ComponentChildren[] | null
     svg_upper_children?: preact.ComponentChildren[] | null
-    content_coordinates?: ContentCoordinate[]
     plain_background?: boolean
 }
 
@@ -264,7 +260,7 @@ class _Canvas extends Component<Props, State>
 
     render ()
     {
-        const { scale, content_coordinates = [] } = this.props
+        const { scale } = this.props
 
         const x = -1 * this.props.x * scale
         const y = this.props.y * scale
@@ -333,12 +329,6 @@ class _Canvas extends Component<Props, State>
                     </div>
                 </div>
             </div>
-            {/* {content_coordinates.length === 0 ? null : <div style="transform:Translate(0, -100%)">
-                <MoveToPositionButton
-                    description="Move to content"
-                    move_to_xy={lefttop_to_xy(content_coordinates![0], true)}
-                />
-            </div>} */}
         </div>
         )
     }
