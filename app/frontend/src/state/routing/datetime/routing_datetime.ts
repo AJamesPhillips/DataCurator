@@ -24,3 +24,12 @@ export function get_datetime_and_ms (args: { datetime: Date; ms?: undefined } | 
     if (args.ms === undefined) return { ms: args.datetime.getTime(), datetime: args.datetime }
     return { ms: args.ms, datetime: new Date(args.ms) }
 }
+
+export function get_datetime_or_ms (new_datetime?: Date, new_ms?: number, logger: (msg: string) => void = console.warn): number | undefined
+{
+    if (new_ms === undefined) return new_datetime ? new_datetime.getTime() : undefined
+
+    if (new_datetime !== undefined) logger("do not set both new_ms and new_datetime")
+
+    return new_ms
+}
