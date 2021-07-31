@@ -50,12 +50,12 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     return {
         go_to_datetime_ms,
-        position: lefttop_to_xy(position, true)
+        position: lefttop_to_xy(position, true),
     }
 }
 
 const map_dispatch = {
-    move: (position: PositionAndZoom, datetime_ms: number) => ACTIONS.routing.change_route({
+    move: (datetime_ms: number, position?: PositionAndZoom) => ACTIONS.routing.change_route({
         args: {
             created_at_ms: datetime_ms,
             ...position
@@ -70,11 +70,17 @@ function _MoveToWComponentButton (props: Props)
 {
     const { wcomponent_id, position, go_to_datetime_ms  } = props
 
-    if (!wcomponent_id || !position) return
+    const moveable = wcomponent_id && position
+
+    const move = () => moveable && props.move(go_to_datetime_ms, position)
 
     return (
-        <Box zIndex={10} m={2}>
-            <IconButton size="small" onClick={() => props.move(position, go_to_datetime_ms)}>
+        <Box zIndex={10} m={2} title={moveable ? "" : "No components present"}>
+            <IconButton
+                size="small"
+                onClick={move}
+                disabled={!moveable}
+            >
                 <FilterCenterFocusIcon />
             </IconButton>
         </Box>
