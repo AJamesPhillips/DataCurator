@@ -13,7 +13,6 @@ import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import type { Color } from "../shared/interfaces"
-import { sort_list } from "../shared/utils/sort"
 
 
 
@@ -90,21 +89,21 @@ function _ViewsBreadcrumb (props: Props)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
 
     return  (
-        <div class="breadcrumbs">
-            <Breadcrumbs aria-label="breadcrumb">
-                <ToggleButtonGroup
-                    size="small"
-                    exclusive
-                    onChange={props.toggle_consumption_formatting}
-                    value={props.presenting ? "presenting" : "editing"}
-                    aria-label="text formatting">
-                        <ToggleButton value="editing" aria-label="Editing">
-                            <EditIcon />
-                        </ToggleButton>
-                        <ToggleButton value="presenting" aria-label="Presenting">
-                            <PresentToAllIcon />
-                        </ToggleButton>
-                </ToggleButtonGroup>
+        <div style={{ display: "inline-flex" }}>
+            <ToggleButtonGroup
+                size="small"
+                exclusive
+                onChange={props.toggle_consumption_formatting}
+                value={props.presenting ? "presenting" : "editing"}
+                aria-label="text formatting">
+                    <ToggleButton value="editing" aria-label="Editing">
+                        <EditIcon />
+                    </ToggleButton>
+                    <ToggleButton value="presenting" aria-label="Presenting">
+                        <PresentToAllIcon />
+                    </ToggleButton>
+            </ToggleButtonGroup>
+            <Breadcrumbs aria-label="breadcrumb" style={{ margin: "auto 0 auto 10px" }}>
                 <label>
                     View Type:&nbsp;
                     <select name="select_view" onChange={e => navigate_view(e, props) }>
