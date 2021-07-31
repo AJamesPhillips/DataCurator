@@ -1,18 +1,14 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./KnowledgeContentControls.css"
-import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
-import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
-import { TimeSlider } from "../time_control/TimeSlider"
-import { TimeResolutionOptions } from "../display_options/TimeResolutionOptions"
-import ToggleButton from "@material-ui/lab/ToggleButton"
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup"
-import { Box } from "@material-ui/core"
-import { MoveToWComponentButton } from "../canvas/MoveToWComponentButton"
+import { ContentControls } from "../sharedf/content_controls/ContentControls"
+import { useMemo } from "preact/hooks"
+
+
 
 const map_state = (state: RootState) => ({
     selected_component_id: state.routing.item_id,
@@ -41,72 +37,23 @@ function _KnowledgeContentControls (props: Props)
 
     if (!current_composed_knowledge_view) return <div></div>
 
-    const wcomponents_on_kv = wcomponents
+    const wcomponents_on_kv = useMemo(() =>
+        wcomponents
         .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
         .filter(wc => wc.type !== "counterfactual")
+    , [wcomponents, current_composed_knowledge_view])
 
     const move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id
 
-    const { created_events, sim_events } = get_wcomponent_time_slider_data(wcomponents_on_kv)
+    const { created_events, sim_events } = useMemo(() =>
+        get_wcomponent_time_slider_data(wcomponents_on_kv)
+    , [wcomponents_on_kv])
 
-    return (
-        <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
-            {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
-
-            <Box mb={2}  display="flex" flexDirection="row" justifyContent="space-between">
-                <Box>
-                    <MoveToWComponentButton wcomponent_id={move_to_component_id} />
-                </Box>
-
-                <Box component="label">
-                    {/* <Box component="span" pr={1}>Time Resolution:</Box> */}
-                    <TimeResolutionOptions  />
-                </Box>
-
-                <Box component="label">
-                    {/* <Box component="span" pr={1}>Display by:</Box> */}
-                    <ToggleButtonGroup
-                        size="small"
-                        exclusive
-                        onChange={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
-                        {
-                            const display_by_simulated_time = JSON.parse(e.currentTarget.value)
-                            props.set_display_by_simulated_time({ display_by_simulated_time })
-                        }}
-                        value={props.display_by_simulated_time}
-                        aria-label="text formatting">
-                            <ToggleButton value={true} aria-label="Display by simulated time">
-                               Time
-                            </ToggleButton>
-                            <ToggleButton value={false} aria-label="Display by relationships">
-                                Relationships
-                            </ToggleButton>
-                    </ToggleButtonGroup>
-                </Box>
-            </Box>
-            <Box display="flex" flexDirection="row" alignItems="center" alignContent="center">
-                    {(props.editing || props.display_created_at_time_slider) && <Button
-                        onClick={() => props.toggle_linked_datetime_sliders()}
-                    >{props.linked_datetime_sliders ? "Unlink" : "Link"}</Button>}
-                <Box flexGrow={1}>
-                    {(props.editing || props.display_created_at_time_slider) && <TimeSlider
-                        events={created_events}
-                        get_handle_ms={state => state.routing.args.created_at_ms}
-                        change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
-                        data_set_name="knowledge_created_at_datetimes"
-                        title="Created at"
-                    />}
-                    <TimeSlider
-                        events={sim_events}
-                        get_handle_ms={state => state.routing.args.sim_ms}
-                        change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
-                        data_set_name="knowledge_sim_datetimes"
-                        title="Simulation"
-                    />
-                </Box>
-            </Box>
-        </Box>
-    )
+    return <ContentControls
+        move_to_component_id={move_to_component_id}
+        created_events={created_events}
+        sim_events={sim_events}
+    />
 }
 
 export const KnowledgeContentControls = connector(_KnowledgeContentControls) as FunctionalComponent<{}>
