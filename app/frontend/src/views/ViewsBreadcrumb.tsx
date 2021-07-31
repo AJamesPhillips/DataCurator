@@ -107,7 +107,9 @@ function _ViewsBreadcrumb (props: Props)
                 <label>
                     View Type:&nbsp;
                     <select name="select_view" onChange={e => navigate_view(e, props) }>
-                        {view_options.map(opt => <option value={opt.id}>{opt.title}</option>)}
+                        {view_options.map(opt =>
+                            <option value={opt.id} selected={opt.id === props.view}>{opt.title}</option>
+                        )}
                     </select>
                 </label>
                 {levels.map(level => <AutocompleteText
