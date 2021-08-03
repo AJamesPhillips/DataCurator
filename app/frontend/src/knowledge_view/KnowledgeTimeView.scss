@@ -1,8 +1,17 @@
 @use 'sass:math';
+$scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
 .time_view {
     $grid_color:grey;
 
     .visible_timeline {
+        @each $scale in $scales {
+            .#{$scale} { display:none; }
+        }
+
+        @each $scale in $scales {
+            &.#{$scale}  .#{$scale} { display:inline; }
+        }
+
         .unit {
             position:relative;
             transition-property: all;
@@ -12,7 +21,9 @@
             &:before, &:after {
                 content:"";
                 position:absolute;
-                top:0; right:0; bottom:-100vh; left:0;
+                top:0; right:0; bottom:0; left:0;
+                padding-bottom:1000vh;
+                margin-bottom:-1000vh;
             }
 
             &:not(:first-child):before {
@@ -22,7 +33,6 @@
             &:after {
                 background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
             }
-
 
             > * {
                 position:relative;

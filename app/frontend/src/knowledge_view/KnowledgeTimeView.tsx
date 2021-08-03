@@ -159,7 +159,7 @@ class DateRange {
     render(wcomponent_nodes:any[]) {
         return(
             <Box className={`time_view`} flexGrow={1}>
-                <Box className={`visible_timeline ${this.scale}`} display="flex" maxWidth="100%" overflowX="hidden">
+                <Box className={`visible_timeline ${this.scale}`} display="flex" maxWidth="100%" overflowX="hidden" bgcolor="white">
                     {
                         this.range_dates.map((date:Date, i:number) => {
                             let next_date = (this.range_dates.length >= i + 1) ? this.range_dates[i + 1] : null
@@ -171,13 +171,16 @@ class DateRange {
                             }
                             return (
                                 <Box
-                                    bgcolor="white"
                                     className="unit"
                                     boxSizing="border-box" p={5}
                                     flexGrow={1} flexShrink={(flex_basis === "auto") ? 1 : 0} flexBasis={flex_basis}
                                     textAlign="center"
                                 >
-                                    <Box component="span">{date.toDateString()}</Box>
+                                    <Box component="span" className="months">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</Box>
+
+                                    <Box component="span" className="days hours minutes">{date.toLocaleDateString()}</Box>
+
+                                    <Box component="span" className="hours minutes"> {date.toLocaleTimeString()}</Box>
                                 </Box>
                             )
                         })
