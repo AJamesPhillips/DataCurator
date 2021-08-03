@@ -6,6 +6,7 @@ import type { RootState } from "../State"
 
 
 
+// TODO move this to some dynamic measure of screen size
 const half_screen_width = 1000 / 2
 const half_screen_height = 600 / 2
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
