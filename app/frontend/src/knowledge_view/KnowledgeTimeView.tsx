@@ -9,7 +9,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
-import { Box, Mark, Slider } from "@material-ui/core"
+import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 
 
@@ -21,11 +21,13 @@ const map_state = (state: RootState) =>
 
     if (sync_ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
-
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
 
+    const cdate:Date = new Date(state.routing.args.created_at_ms)
+    const sdate:Date = new Date(state.routing.args.sim_ms)
 
     let wcomponent_nodes: WComponent[] = []
+
     if (current_composed_knowledge_view)
     {
         wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
@@ -38,6 +40,8 @@ const map_state = (state: RootState) =>
         wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
+        cdate: cdate,
+        sdate: sdate
     }
 }
 
@@ -153,13 +157,41 @@ class DateRange {
         return rounded_date
     }
 
-    constructor(dates:Date[]) {
+    cdate:Date = new Date()
+    sdate:Date = new Date()
+    constructor(dates:Date[], props: Props) {
         this.dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
+        this.cdate = props.cdate;
+        this.sdate = props.sdate;
     }
     render(wcomponent_nodes:any[]) {
         return(
-            <Box className={`time_view`} flexGrow={1}>
-                <Box className={`visible_timeline ${this.scale}`} display="flex" maxWidth="100%" overflowX="hidden" bgcolor="white">
+            <Box className={`time_view ${this.scale}`}
+                position="relative"
+                flexGrow={1} flexShrink="1" maxHeight="100%"
+                display="flex" flexDirection="column" alignItems="stretch"
+                boxSizing="border-box"
+            >
+                <Box className="cdate"
+                    position="absolute"
+                    top={0} right="auto" bottom={0} left={`${this.date_offset_percent(this.cdate)}%`}
+                    bgcolor="red" width="1px" height="100%"
+                    textAlign="center"
+                >
+                    <Box className="rotater"
+                        whiteSpace="nowrap"
+                        width="100vh"
+                        textAlign="center"
+                    >
+                        {this.cdate.toDateString()}
+                    </Box>
+                </Box>
+                <Box className={`visible_timeline ${this.scale}`}
+                    position="relative"
+                    display="flex" flexDirection="row" alignItems="stretch"
+                    bgcolor="white"
+                    boxSizing="border-box"
+                >
                     {
                         this.range_dates.map((date:Date, i:number) => {
                             let next_date = (this.range_dates.length >= i + 1) ? this.range_dates[i + 1] : null
@@ -168,47 +200,55 @@ class DateRange {
                             if (next_date) {
                                 let end_percent:number = parseInt(this.date_offset_percent(next_date))
                                 flex_basis = `${end_percent - start_percent}%`
+                            } else {
+                                let end_percent:number = parseInt(this.date_offset_percent(this.range_end_date))
+                                flex_basis = `${end_percent - start_percent}%`
                             }
                             return (
-                                <Box
-                                    className="unit"
-                                    boxSizing="border-box" p={5}
-                                    flexGrow={1} flexShrink={(flex_basis === "auto") ? 1 : 0} flexBasis={flex_basis}
+                                <Box className="unit"
                                     textAlign="center"
+                                    flexGrow={1} flexShrink={(flex_basis === "auto") ? 1 : 0} flexBasis={flex_basis}
+                                    boxSizing="border-box"
                                 >
                                     <Box component="span" className="months">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</Box>
 
                                     <Box component="span" className="days hours minutes">{date.toLocaleDateString()}</Box>
 
                                     <Box component="span" className="hours minutes"> {date.toLocaleTimeString()}</Box>
+
                                 </Box>
                             )
                         })
                     }
                 </Box>
-                {wcomponent_nodes.map(wc => {
-                    const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-                    const wc_percent = this.date_offset_percent(wc.created_at)
-                    return (
-                        <Box m={5} id={`WC-${wc.id}`} position="relative">
-                            <Box className="wc" display="inline-block" position="relative" left={`${wc_percent}%`} textAlign="right">
-                                {/* {wc_percent} {wc.created_at.toLocaleString()} */}
-                                <WComponentCanvasNode id={wc.id} on_graph={false} />
+                <Box
+                    className="time_view_scrollable_container"
+                    flexGrow={1} flexShrink={1} overflow="auto"
+                >
+                    {wcomponent_nodes.map(wc => {
+                        const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
+                        const wc_percent = this.date_offset_percent(wc.created_at)
+                        return (
+                            <Box m={2} id={`WC-${wc.id}`} position="relative">
+                                <Box className="wc" display="inline-block" position="relative" left={`${wc_percent}%`}>
+                                    {/* {wc_percent} {wc.created_at.toLocaleString()} */}
+                                    <WComponentCanvasNode id={wc.id} on_graph={false} />
+                                </Box>
+                                <Box m={2}>
+                                    {VAP_sets.map(VAP => {
+                                        const vap_percent = this.date_offset_percent(VAP.created_at)
+                                        return (
+                                            <Box className="vap" display="inline-block"  position="relative" left={`${vap_percent}%`}>
+                                                {/* {vap_percent} */}
+                                                <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
+                                            </Box>
+                                        )
+                                    })}
+                                </Box>
                             </Box>
-                            <Box>
-                                {VAP_sets.map(VAP => {
-                                    const vap_percent = this.date_offset_percent(VAP.created_at)
-                                    return (
-                                        <Box className="vap" display="inline-block"  position="relative" left={`${vap_percent}%`}>
-                                            {/* {vap_percent} */}
-                                            <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
-                                        </Box>
-                                    )
-                                })}
-                            </Box>
-                        </Box>
-                    )
-                })}
+                        )
+                    })}
+                </Box>
             </Box>
         )
     }
@@ -234,7 +274,7 @@ function _KnowledgeTimeView (props: Props)
             dates.push(VAP.created_at)
         })
     })
-    let date_range = new DateRange(dates)
+    let date_range = new DateRange(dates, props)
     return <MainArea main_content={date_range.render(wcomponent_nodes)} />
 }
 
