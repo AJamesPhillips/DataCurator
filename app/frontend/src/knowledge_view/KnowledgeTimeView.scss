@@ -20,32 +20,22 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
         }
 
         .unit {
-            position:relative;
             z-index:100;
             transition-property: all;
             transition-duration: 0.25s;
             transition-timing-function: ease-in-out;
 
-            // &:before, &:after {
-            //     content:"";
-            //     position:absolute;
-            //     top:0; right:0; bottom:-10000vh; left:0;
-            //     // margin-bottom:-2000vh;
-            //     z-index:1;
-            // }
-
-            // &:not(:first-child):before {
-            //     border-left:1px $grid_color solid;
-            // }
-
-            // &:after {
-            //     background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
-            // }
-
-            // > * {
-            //     position:relative;
-            //     z-index: 10;
-            // }
+            &:before, &:after {
+                content:"";
+                position:absolute;
+                top:0; right:0; bottom:-100vh; left:0;
+                z-index:1;
+                background-size: 100%, 100%;
+                background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
+            }
+            &:after {
+                background-image: linear-gradient(to right, rgba($grid_color, 0.125) 1px, transparent 1px)
+            }
         }
 
         &.months .unit:after {

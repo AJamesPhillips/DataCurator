@@ -168,7 +168,7 @@ class DateRange {
         return(
             <Box className={`time_view ${this.scale}`}
                 position="relative"
-                flexGrow={1} flexShrink="1" maxHeight="100%"
+                flexGrow={1} flexShrink="1" maxHeight="100%" overflow="hidden"
                 display="flex" flexDirection="column" alignItems="stretch"
                 boxSizing="border-box"
             >
@@ -187,7 +187,6 @@ class DateRange {
                     </Box>
                 </Box>
                 <Box className={`visible_timeline ${this.scale}`}
-                    position="relative"
                     display="flex" flexDirection="row" alignItems="stretch"
                     bgcolor="white"
                     boxSizing="border-box"
@@ -206,9 +205,12 @@ class DateRange {
                             }
                             return (
                                 <Box className="unit"
+                                    position="relative"
                                     textAlign="center"
                                     flexGrow={1} flexShrink={(flex_basis === "auto") ? 1 : 0} flexBasis={flex_basis}
                                     boxSizing="border-box"
+                                    p={2} m={0}
+                                    bgcolor="white"
                                 >
                                     <Box component="span" className="months">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</Box>
 
@@ -222,6 +224,7 @@ class DateRange {
                     }
                 </Box>
                 <Box
+                    position="relative" zIndex={1000}
                     className="time_view_scrollable_container"
                     flexGrow={1} flexShrink={1} overflow="auto"
                 >
