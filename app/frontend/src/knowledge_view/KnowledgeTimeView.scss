@@ -1,12 +1,47 @@
+@use 'sass:math';
+.time_view {
+    $grid_color:grey;
+
+    .visible_timeline {
+        .unit {
+            position:relative;
+            transition-property: all;
+            transition-duration: 0.25s;
+            transition-timing-function: ease-in-out;
+
+            &:before, &:after {
+                content:"";
+                position:absolute;
+                top:0; right:0; bottom:-100vh; left:0;
+            }
+
+            &:not(:first-child):before {
+                border-left:1px $grid_color solid;
+            }
+
+            &:after {
+                background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
+            }
 
 
-.knowledge_time_view
-{
-    .node_container
-    {
-        .value_and_prediction_set_summaries_container
-        {
-            display: inline-flex;
+            > * {
+                position:relative;
+                z-index: 10;
+            }
+
+
         }
+
+        &.months .unit:after {
+            background-size: 25%, 100%;
+        }
+    }
+
+    // .wc { border:1px teal solid}
+    // .vap { border:1px yellowgreen solid}
+
+    .wc, .vap {
+        zoom: 0.75;
+        transform:translate(-50%, 0)
     }
 }
