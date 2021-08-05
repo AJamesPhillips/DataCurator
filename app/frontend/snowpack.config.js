@@ -20,8 +20,8 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    clean: true,
-    out: "../../build",
+    clean: false,
+    out: "../../../data-curator-build",
   },
   routes: [
     {
