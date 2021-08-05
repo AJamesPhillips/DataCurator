@@ -20,7 +20,8 @@ module.exports = {
     /* ... */
   },
   buildOptions: {
-    /* ... */
+    clean: true,
+    out: "../../build",
   },
   routes: [
     {
