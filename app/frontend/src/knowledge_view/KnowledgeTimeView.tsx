@@ -90,7 +90,6 @@ class DateRange {
         let start_date = this.round_date(this.start_date)
         let end_date = this.round_date(this.end_date)
         dates.push(start_date)
-
         dates.push(end_date)
         return dates;
 
@@ -120,16 +119,7 @@ class DateRange {
         let date_ms:number = date.getTime()
         let start_ms:number = this.range_start_date.getTime()
         let end_ms:number = this.range_end_date.getTime()
-
         percent = ((date_ms - start_ms) / (end_ms - start_ms)) * 100
-        // console.group(date.toDateString())
-        // console.log(`${this.range_start_date.toDateString()} • ${this.range_end_date.toDateString()} • ${percent}`)
-        // // console.log(`((${date_ms} - ${start_ms}) / (${end_ms} - ${start_ms})) * 100  EQUALS: ${percent}` )
-        // console.groupEnd()
-        // if (this.range_start_date && this.range_end_date) {
-        //     // percent = ((date.getTime() - this.range_start_date.getTime()) / (this.range_end_date.getTime() - this.range_start_date.getTime())) * 100
-
-        // }
         return percent
     }
 
@@ -193,12 +183,13 @@ class DateRange {
     render(wcomponent_nodes:any[]) {
         let width_percent:number = 100 + (this.get_date_offset_percent(this.start_date) * -1) + this.get_date_offset_percent(this.end_date)
         const container = window.document.getElementById('main_content')
-        const container_width:number = (container) ? container.offsetWidth : 0
+        // const container_width:number = (container) ? container.offsetWidth : 0
 
         const days_in_range:number[] = Array.from(
             { length: (this.range_end_date.getTime() - this.range_start_date.getTime()) / this.single_time_units['days']},
             (v, i) => i
         )
+        console.log(days_in_range)
         return(
             <Box
                 id="knowledge_time_view"
@@ -222,8 +213,8 @@ class DateRange {
                 <Box className="timeline"
                     height={1} maxHeight={1}
                     position="absolute"
-                    minWidth={`${width_percent}%`} maxWidth={`${width_percent}%`}
-                    top={0} right={`${width_percent}%`} bottom={0} left={0}
+                    minWidth={`${width_percent}%`} width={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                    top={0} right="auto" bottom={0} left={0}
                     zIndex={1}
                 >
                     <Box
@@ -232,15 +223,15 @@ class DateRange {
                         display="flex" flexDirection="row"
                     >
                         {days_in_range.map(d => {
-                            let this_date:Date = new Date(this.start_date.getTime())
-                            this_date.setDate(d)
+                            let this_date:Date = new Date(this.range_start_date.getTime())
+                            this_date.setDate(this_date.getDate() + d)
                             return (
-                                <Box className="unit" flexGrow={1} flexShrink={1} flexBasis="auto" position="relative" overflow="visible">
+                                <Box className="unit" flexGrow={1} flexShrink={0} flexBasis="auto" position="relative" overflow="visible">
                                     <Box position="absolute" className="tick" width="1em" height={0} top={0} right="50%">
                                         <Box className="rotater" whiteSpace="nowrap" pl={3} pb={1}>
                                             {this_date.toLocaleDateString()}
 
-                                            {this_date.toLocaleTimeString()}
+                                            {/* {this_date.toLocaleTimeString()} */}
                                         </Box>
                                     </Box>
                                 </Box>
@@ -255,7 +246,7 @@ class DateRange {
                 >
                     <Box
                         className="scroll_area_y"
-                        minWidth={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                        minWidth="100%" maxWidth="100%"
                         position="relative" zIndex={10}
                         height={1} maxHeight={1}
                     >
@@ -266,7 +257,7 @@ class DateRange {
 
                             return (
                                 <Box
-                                    width={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                                    width={1} maxWidth={1}
                                     overflow="hidden"
                                     position="relative"
                                 >
@@ -278,13 +269,10 @@ class DateRange {
                                     >
                                         <WComponentCanvasNode id={wc.id} on_graph={false} />
                                     </Box>
-                                    <Box visibility="hidden" className="hidden_sizer">
-                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
-                                    </Box>
 
                                     <Box className="vaps"
                                         width={1} maxWidth={1} overflow="hidden"
-                                        minHeight="5em" maxHeight="10em"
+                                        minHeight="7em" height="7em" maxHeight="7em"
                                         mx="auto"
                                         position="relative"
                                     >
@@ -294,18 +282,16 @@ class DateRange {
                                                 <Box className="vap"
                                                     display="inline-block"
                                                     mx="auto"
+                                                    border={1}
                                                     minHeight="100%" height="100%" maxHeight="100%"
                                                     position="absolute" left={`${vap_percent}%`}
-                                                    border={1}
                                                 >
-                                                    <Box component="small">{vap_percent.toFixed(2)}%</Box><br />
-                                                    {/* <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} /> */}
-
-                                                    {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                    {/* <Box component="small">{VAP.created_at.toLocaleDateString()}%</Box><br />
+                                                    <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                    <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
                                                 </Box>
                                             )
                                         })}
-
                                     </Box>
                                 </Box>
                             )

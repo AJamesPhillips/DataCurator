@@ -5,8 +5,6 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
     $grid_color:grey;
     overflow-x: auto;
     overflow-y:hidden;
-    border:2px red solid;
-
 
     .rotater {
         white-space: nowrap;
@@ -15,17 +13,13 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
     }
 
     .scroll_area_y {
+        // overflowX and overflowX styleprops DO NOT WORK, setting here
         overflow-y: auto;
         overflow-x:hidden;
     }
 
-    .thing {
-        border:2px green solid;
-    }
-
     .vaps .vap {
         z-index:1;
-
         &:hover { z-index:9; }
     }
 
