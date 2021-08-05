@@ -3,7 +3,7 @@ import { useState, useCallback } from "preact/hooks"
 import type { Dispatch } from "redux"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./Objectform.css"
+import "./ObjectForm.css"
 import { SelectPattern } from "../patterns/SelectPattern"
 import { DeleteButton } from "../sharedf/DeleteButton"
 import { ACTIONS } from "../state/actions"

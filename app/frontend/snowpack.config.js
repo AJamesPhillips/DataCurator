@@ -10,11 +10,11 @@ module.exports = {
     '@snowpack/plugin-typescript',
     '@prefresh/snowpack',
   ],
-  install: [
-    /* ... */
-  ],
-  installOptions: {
+  packageOptions: {
     installTypes: true,
+    knownEntrypoints: [
+      /* ... */
+    ],
   },
   devOptions: {
     /* ... */
@@ -22,9 +22,13 @@ module.exports = {
   buildOptions: {
     /* ... */
   },
-  proxy: {
-    /* ... */
-  },
+  routes: [
+    {
+      match: "routes",
+      src: ".*",
+      dest: "/index.html",
+    },
+  ],
   alias: {
     "react": "preact/compat",
     "react-dom": "preact/compat"
