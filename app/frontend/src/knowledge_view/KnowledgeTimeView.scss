@@ -19,7 +19,15 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
         overflow-x:hidden;
     }
 
+    .thing {
+        border:2px green solid;
+    }
 
+    .vaps .vap {
+        z-index:1;
+
+        &:hover { z-index:9; }
+    }
 
     .timeline {
         .unit {

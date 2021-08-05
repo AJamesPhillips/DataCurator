@@ -32,6 +32,9 @@ const map_state = (state: RootState) =>
     {
         wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
     }
+    window.addEventListener('scroll', (e) => {
+        console.log(e)
+    })
 
 
     return {
@@ -189,16 +192,33 @@ class DateRange {
     }
     render(wcomponent_nodes:any[]) {
         let width_percent:number = 100 + (this.get_date_offset_percent(this.start_date) * -1) + this.get_date_offset_percent(this.end_date)
+        const container = window.document.getElementById('main_content')
+        const container_width:number = (container) ? container.offsetWidth : 0
+
         const days_in_range:number[] = Array.from(
             { length: (this.range_end_date.getTime() - this.range_start_date.getTime()) / this.single_time_units['days']},
             (v, i) => i
         )
         return(
             <Box
+                id="knowledge_time_view"
                 className={`time_view scroll_area_x ${this.scale}`}
                 flexGrow={1} flexShrink={1}
                 position="relative"
+                onScroll={(e:Event) => {
+                    let scrolled_element:any = e.target
+                    let scrolled_offset = scrolled_element.scrollLeft
+                    let nodes:HTMLCollection = document.getElementsByClassName('wc')
+                    for (let i = 0; i < nodes.length; i++) {
+                        const node:any = nodes[i]
+                        if (node) {
+                            node.style.marginLeft = `${scrolled_offset}px`
+                        }
+                    }
+                    // console.log(scrolled_element.scrollLeft)
+                }}
             >
+
                 <Box className="timeline"
                     height={1} maxHeight={1}
                     position="absolute"
@@ -219,7 +239,8 @@ class DateRange {
                                     <Box position="absolute" className="tick" width="1em" height={0} top={0} right="50%">
                                         <Box className="rotater" whiteSpace="nowrap" pl={3} pb={1}>
                                             {this_date.toLocaleDateString()}
-                                            {/* {this_date.toLocaleTimeString()} */}
+
+                                            {this_date.toLocaleTimeString()}
                                         </Box>
                                     </Box>
                                 </Box>
@@ -238,7 +259,7 @@ class DateRange {
                         position="relative" zIndex={10}
                         height={1} maxHeight={1}
                     >
-                        <Box className="contents">
+                        <Box className="contents" mt={50}>
                         {wcomponent_nodes.map(wc => {
                             const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
                             const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
@@ -249,20 +270,11 @@ class DateRange {
                                     overflow="hidden"
                                     position="relative"
                                 >
-                                    {/* <Box id={`WC-${wc.id}`}
-                                        position="fixed" left={`${wc_percent}%`}
-                                        className="wc"
-                                    >
-                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
-                                    </Box>
-                                    <Box visibility="hidden" className="hidden_sizer">
-                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
-                                    </Box> */}
-
-
                                     <Box id={`WC-${wc.id}`}
-                                        position="fixed" left={`${wc_percent}%`}
                                         className="wc"
+                                        display="inline-block"
+                                        position="relative"
+                                        top={0}
                                     >
                                         <WComponentCanvasNode id={wc.id} on_graph={false} />
                                     </Box>
@@ -272,23 +284,28 @@ class DateRange {
 
                                     <Box className="vaps"
                                         width={1} maxWidth={1} overflow="hidden"
+                                        minHeight="5em" maxHeight="10em"
                                         mx="auto"
+                                        position="relative"
                                     >
-                                        <Box className="vap_wrap"
-                                            minHeight="10em" maxHeight="10em" height="10em"
-                                            position="relative"
-                                        >
-                                            {VAP_sets.map((VAP, index) => {
-                                                const vap_percent = this.get_date_offset_percent(VAP.created_at)
-                                                return (
-                                                    <Box className="vap" display="inline-block" mx="auto" minHeight="100%" height="100%" maxHeight="100%" border={1} position="absolute" left={`${vap_percent}%`}>
-                                                        <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
-                                                        {/* <Box component="small">{VAP.created_at.toLocaleDateString()}</Box><br /> */}
-                                                        {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
-                                                    </Box>
-                                                )
-                                            })}
-                                        </Box>
+                                        {VAP_sets.map((VAP, index) => {
+                                            const vap_percent = this.get_date_offset_percent(VAP.created_at)
+                                            return (
+                                                <Box className="vap"
+                                                    display="inline-block"
+                                                    mx="auto"
+                                                    minHeight="100%" height="100%" maxHeight="100%"
+                                                    position="absolute" left={`${vap_percent}%`}
+                                                    border={1}
+                                                >
+                                                    <Box component="small">{vap_percent.toFixed(2)}%</Box><br />
+                                                    {/* <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} /> */}
+
+                                                    {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                </Box>
+                                            )
+                                        })}
+
                                     </Box>
                                 </Box>
                             )
