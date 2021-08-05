@@ -69,19 +69,28 @@ class DateRange {
 
     dates:Date[] = []
 
+    increment(date:Date, count:number = 1):Date {
+        let new_date = new Date(date.getTime())
+        let fn = this.get_date_prop_func_names(this.scale)
+        Object(new_date)[fn.set](Object(new_date)[fn.get]() + count)
+        return new_date
+    }
+
+    // get_range_dates_for(target_date:Date = this.cdate):Date[] {
+    //     let start_date = this.round_date(target_date)
+    //     let end_date = this.round_date(target_date, true)
+    //     return [start_date, end_date]
+    // }
+
     get range_dates():Date[] {
         let dates:Date[] = []
-        let current_date = this.round_date(new Date(this.start_date.getTime()))
-        const date_prop_fns = this.get_date_prop_func_names(this.scale)
-        dates.push(new Date(current_date.getTime()))
-        while (current_date.getTime() <= this.end_date.getTime()) {
-            Object(current_date)[date_prop_fns.set](Object(current_date)[date_prop_fns.get]() + 1)
-            if (current_date.getTime() >= this.end_date.getTime()) {
-                this.round_date(current_date, this.scale, true)
-            }
-            dates.push(new Date(current_date.getTime()))
-        }
-        return dates
+        let start_date = this.round_date(this.start_date)
+        let end_date = this.round_date(this.end_date)
+        dates.push(start_date)
+
+        dates.push(end_date)
+        return dates;
+
     }
 
     get start_date():Date {
@@ -103,12 +112,22 @@ class DateRange {
         return (typeof d === typeof (new Date())) ? d : new Date()
     }
 
-    date_offset_percent(date:Date) {
+    get_date_offset_percent(date:Date):number {
         let percent:number = 0;
-        if (this.start_date && this.end_date) {
-            percent = ((date.getTime() - this.range_start_date.getTime()) / (this.range_end_date.getTime() - this.range_start_date.getTime())) * 100
-        }
-        return percent.toFixed(0)
+        let date_ms:number = date.getTime()
+        let start_ms:number = this.range_start_date.getTime()
+        let end_ms:number = this.range_end_date.getTime()
+
+        percent = ((date_ms - start_ms) / (end_ms - start_ms)) * 100
+        // console.group(date.toDateString())
+        // console.log(`${this.range_start_date.toDateString()} • ${this.range_end_date.toDateString()} • ${percent}`)
+        // // console.log(`((${date_ms} - ${start_ms}) / (${end_ms} - ${start_ms})) * 100  EQUALS: ${percent}` )
+        // console.groupEnd()
+        // if (this.range_start_date && this.range_end_date) {
+        //     // percent = ((date.getTime() - this.range_start_date.getTime()) / (this.range_end_date.getTime() - this.range_start_date.getTime())) * 100
+
+        // }
+        return percent
     }
 
     get_date_prop_func_names(date_unit:string):Record<string, any> {
@@ -136,24 +155,28 @@ class DateRange {
         }
     }
 
-    round_date(date:Date, scale:string=this.scale, round_up:boolean = false):Date {
+    round_date(date:Date, round_up:boolean = false, scale:string=this.scale):Date {
         let rounded_date = new Date(date.getTime())
         this.scales.forEach((scale, i) => {
             const date_prop_fns = this.get_date_prop_func_names(scale)
+            const adjusted_value = (scale === 'days') ? 1 : 0
             if (round_up) {
                 if (i === this.scale_index) {
-                    const current_value = Object(rounded_date)[date_prop_fns.get]()
-                    Object(rounded_date)[date_prop_fns.set](current_value + 1)
+                    Object(rounded_date)[date_prop_fns.set](Object(rounded_date)[date_prop_fns.get]() + 1)
+                } else if (i < this.scale_index) {
+                    Object(rounded_date)[date_prop_fns.set](adjusted_value)
                 }
             } else {
                 if (i < this.scale_index) {
-                    const adjusted_value = (scale === 'days') ? 1 : 0
                     if (date_prop_fns.set && Object(rounded_date)[date_prop_fns.set]) {
                         Object(rounded_date)[date_prop_fns.set](adjusted_value)
                     }
                 }
             }
         })
+        if (round_up) {
+           rounded_date.setTime(rounded_date.getTime() - 1)
+        }
         return rounded_date
     }
 
@@ -165,88 +188,85 @@ class DateRange {
         this.sdate = props.sdate;
     }
     render(wcomponent_nodes:any[]) {
+        const width_percent:number = 100 + (this.get_date_offset_percent(this.start_date) * -1) + this.get_date_offset_percent(this.end_date)
+        const days_in_range:number[] = Array.from(
+            { length: (this.range_end_date.getTime() - this.range_start_date.getTime()) / this.single_time_units['days']},
+            (v, i) => i
+        )
         return(
             <Box className={`time_view ${this.scale}`}
                 position="relative"
-                flexGrow={1} flexShrink="1" maxHeight="100%" overflow="hidden"
+                flexGrow={1} flexShrink="1"
+                overflowX="scroll"
                 display="flex" flexDirection="column" alignItems="stretch"
                 boxSizing="border-box"
+                width="100%"
+                overflow="auto"
             >
-                <Box className="cdate"
-                    position="absolute"
-                    top={0} right="auto" bottom={0} left={`${this.date_offset_percent(this.cdate)}%`}
-                    bgcolor="red" width="1px" height="100%"
-                    textAlign="center"
-                >
-                    <Box className="rotater"
-                        whiteSpace="nowrap"
-                        width="100vh"
-                        textAlign="center"
-                    >
-                        {this.cdate.toDateString()}
-                    </Box>
-                </Box>
                 <Box className={`visible_timeline ${this.scale}`}
-                    display="flex" flexDirection="row" alignItems="stretch"
-                    bgcolor="white"
+                    display="flex" flexDirection="row"
                     boxSizing="border-box"
+                    width={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                    height={1}
+                    overflowX="hidden" overflowY="visible"
                 >
-                    {
-                        this.range_dates.map((date:Date, i:number) => {
-                            let next_date = (this.range_dates.length >= i + 1) ? this.range_dates[i + 1] : null
-                            let start_percent:number = parseInt(this.date_offset_percent(date))
-                            let flex_basis = "auto"
-                            if (next_date) {
-                                let end_percent:number = parseInt(this.date_offset_percent(next_date))
-                                flex_basis = `${end_percent - start_percent}%`
-                            } else {
-                                let end_percent:number = parseInt(this.date_offset_percent(this.range_end_date))
-                                flex_basis = `${end_percent - start_percent}%`
-                            }
-                            return (
-                                <Box className="unit"
-                                    position="relative"
-                                    textAlign="center"
-                                    flexGrow={1} flexShrink={(flex_basis === "auto") ? 1 : 0} flexBasis={flex_basis}
-                                    boxSizing="border-box"
-                                    p={2} m={0}
-                                    bgcolor="white"
-                                >
-                                    <Box component="span" className="months">{date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}</Box>
-
-                                    <Box component="span" className="days hours minutes">{date.toLocaleDateString()}</Box>
-
-                                    <Box component="span" className="hours minutes"> {date.toLocaleTimeString()}</Box>
-
+                    {days_in_range.map(d => {
+                        let this_date:Date = new Date(this.start_date.getTime())
+                        this_date.setDate(d)
+                        return (
+                            <Box className="unit" flexGrow={1} flexShrink={1} flexBasis="auto" position="relative">
+                                <Box position="absolute" className="tick" width="1em" height={0} top={0} right="50%">
+                                    <Box className="rotater" whiteSpace="nowrap">
+                                        {this_date.toLocaleDateString()}
+                                        {/* {this_date.toLocaleTimeString()} */}
+                                    </Box>
                                 </Box>
-                            )
-                        })
-                    }
+                            </Box>
+                        )
+                    })}
                 </Box>
                 <Box
-                    position="relative" zIndex={1000}
                     className="time_view_scrollable_container"
-                    flexGrow={1} flexShrink={1} overflow="auto"
+                    position="relative" zIndex={10}
+                    flexGrow={1} flexShrink={1}
+                    width={1}
+                    mt={50}
                 >
                     {wcomponent_nodes.map(wc => {
                         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-                        const wc_percent = this.date_offset_percent(wc.created_at)
+                        const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
+
                         return (
-                            <Box m={2} id={`WC-${wc.id}`} position="relative">
-                                <Box className="wc" display="inline-block" position="relative" left={`${wc_percent}%`}>
-                                    {/* {wc_percent} {wc.created_at.toLocaleString()} */}
-                                    <WComponentCanvasNode id={wc.id} on_graph={false} />
+                            <Box textAlign="center">
+                                <Box
+                                    id={`WC-${wc.id}`} boxSizing="border-box"
+                                    className="wc"
+                                    display="inline-block"
+                                >
+                                    <Box visibility="hidden">
+                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
+                                    </Box>
+                                    <Box position="fixed" style="transform:translate(0, -100%)">
+                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
+                                    </Box>
                                 </Box>
-                                <Box m={2}>
-                                    {VAP_sets.map(VAP => {
-                                        const vap_percent = this.date_offset_percent(VAP.created_at)
-                                        return (
-                                            <Box className="vap" display="inline-block"  position="relative" left={`${vap_percent}%`}>
-                                                {/* {vap_percent} */}
-                                                <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
-                                            </Box>
-                                        )
-                                    })}
+                                <Box className="vaps"
+                                    overflow="visible"
+                                    minWidth={1} mx="auto"
+                                >
+                                    <Box className="vap_wrap"
+                                        p={3}
+                                        position="relative"
+                                    >
+                                        {VAP_sets.map((VAP, index) => {
+                                            const vap_percent = this.get_date_offset_percent(VAP.created_at)
+                                            return (
+                                                <Box className="visible_vap" display="inline-block" mx="auto" maxHeight="5rem" height="5rem" position="relative" left={`${vap_percent}%`}>
+                                                    <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
+                                                </Box>
+                                            )
+                                        })}
+                                    </Box>
                                 </Box>
                             </Box>
                         )
