@@ -1,9 +1,12 @@
 @use 'sass:math';
 $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
 
-
 .time_view {
     $grid_color:grey;
+    overflow-x: auto;
+    overflow-y:hidden;
+    border:2px red solid;
+
 
     .rotater {
         white-space: nowrap;
@@ -11,80 +14,22 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
         transform-origin:center bottom;
     }
 
+    .scroll_area_y {
+        overflow-y: auto;
+        overflow-x:hidden;
+    }
 
-    .visible_timeline {
-        position:absolute;
-        top:0; left:0;
-        overflow:visible;
 
+
+    .timeline {
         .unit {
-            text-align: center; vertical-align: middle; line-height: 100%;
-            overflow:visible;
-            // background-size: 50%, 100%;
-            // background-position:center top;
-            // background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px);
-
-
-
             &:before {
                 content:"";
                 position:absolute;
-                top:0; right:50%; bottom:-100vh;
+                top:0; right:50%; bottom:0;
                 width:0;
                 border-left:1px dotted rgba(black, 0.25)
             }
-
-            .tick {
-                transform:translate(-50%, 0);
-                position:relative;
-
-                // &:before {
-                //     content:"";
-                //     // position:fixed;
-                //     // top:0; bottom:0;
-                //     // width:1px; height:100vh;
-                //     // background:red;
-                //     // background-size: 100%, 1000%;
-                //     // background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
-                // }
-            }
-
-
-            // &:before, &:after {
-            //     content:"";
-            //     position:absolute;
-            //     top:0; right:0; bottom:0; left:0;
-            //     z-index:1;
-            //     background-size: 100%, 1000%;
-            //     background-image: linear-gradient(to right, rgba($grid_color, 0.25) 1px, transparent 1px)
-            // }
-            // &:after {
-            //     // background-image: linear-gradient(to right, rgba($grid_color, 0.125) 1px, transparent 1px)
-            // }
         }
-
-        // &.months .unit:after {
-        //     background-size: 25%, 100%;
-        // }
     }
-
-    // .wc { border:1px teal solid}
-    // .vap { border:1px yellowgreen solid}
-
-    // .wc {
-    //     transform:translate(-50%, 0);
-    //     // border-color:red !important;
-    // }
-
-    // .vaps {
-    //     border:1px yellowgreen solid;
-    // }
-    // .wc, .vaps {
-    //     &:empty { display:none !important }
-    // }
-
-    // .wc, .vap {
-    //     // zoom: 0.85;
-    //     transform:translate(-50%, 0)
-    // }
 }
