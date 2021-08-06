@@ -106,9 +106,13 @@ if (root) {
     {
         render(<SandBox />, root)
     }
-    else
+    else if (window.location.pathname === "/app/")
     {
         render(<Provider store={get_store({ load_state_from_server: true })}><App /></Provider>, root)
+    }
+    else
+    {
+        root.innerText = ("Unknown path: " + window.location.pathname)
     }
 }
 
