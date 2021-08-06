@@ -10,7 +10,8 @@ import {
 } from "../State"
 import { ACTIONS } from "../actions"
 import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { supported_keys } from "./supported_keys"
+import { LOCAL_STORAGE_STATE_KEY, supported_keys } from "./supported_keys"
+import { setItem } from "localforage"
 
 
 
@@ -23,21 +24,22 @@ export function save_state (dispatch: Dispatch, state: RootState)
     dispatch(ACTIONS.sync.update_sync_status("SAVING"))
 
 
-    const state_to_save = get_state_to_save(state)
-    const state_str = JSON.stringify(state_to_save)
+    // const state_to_save = get_state_to_save(state)
+    // const state_str = JSON.stringify(state_to_save)
 
     const specialised_state = get_specialised_state_to_save(state)
-    const specialised_state_str = JSON.stringify(specialised_state)
+    // const specialised_state_str = JSON.stringify(specialised_state)
 
 
-    fetch("http://localhost:4000/api/v1/state/", {
-        method: "post",
-        body: state_str,
-    })
-    .then(() => fetch("http://localhost:4000/api/v1/specialised_state/", {
-        method: "post",
-        body: specialised_state_str,
-    }))
+    // fetch("http://localhost:4000/api/v1/state/", {
+    //     method: "post",
+    //     body: state_str,
+    // })
+    // .then(() => fetch("http://localhost:4000/api/v1/specialised_state/", {
+    //     method: "post",
+    //     body: specialised_state_str,
+    // }))
+    setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
     .then(() => dispatch(ACTIONS.sync.update_sync_status(undefined)))
 }
 
@@ -45,27 +47,27 @@ export function save_state (dispatch: Dispatch, state: RootState)
 function needs_save (state: RootState, last_saved: RootState | undefined)
 {
     return (!last_saved ||
-        state.statements !== last_saved.statements ||
-        state.patterns !== last_saved.patterns ||
-        state.objects !== last_saved.objects ||
+        // state.statements !== last_saved.statements ||
+        // state.patterns !== last_saved.patterns ||
+        // state.objects !== last_saved.objects ||
         state.specialised_objects !== last_saved.specialised_objects
     )
 }
 
 
-function get_state_to_save (state: RootState)
-{
-    const state_to_save = {
-        statements: state.statements,
-        patterns: state.patterns,
-        objects: state.objects.map(convert_object_to_core),
-    }
-    Object.keys(state).forEach(k => {
-        if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state to save`)
-    })
+// function get_state_to_save (state: RootState)
+// {
+//     const state_to_save = {
+//         statements: state.statements,
+//         patterns: state.patterns,
+//         objects: state.objects.map(convert_object_to_core),
+//     }
+//     Object.keys(state).forEach(k => {
+//         if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state to save`)
+//     })
 
-    return state_to_save
-}
+//     return state_to_save
+// }
 
 
 function convert_object_to_core (object: ObjectWithCache): CoreObject

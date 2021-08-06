@@ -21,3 +21,6 @@ const root_state_keys: {[k in keyof RootState]: true} = {
     user_activity: true,
 }
 export const supported_keys = Object.keys(root_state_keys) as (keyof RootState)[]
+
+
+export const LOCAL_STORAGE_STATE_KEY = "data_curator_state"
