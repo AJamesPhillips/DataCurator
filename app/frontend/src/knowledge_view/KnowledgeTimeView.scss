@@ -7,6 +7,7 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
     overflow-y:hidden;
 
     .rotater {
+        border:1px pink solid;
         white-space: nowrap;
         transform:rotate(90deg);
         transform-origin:center bottom;
@@ -26,9 +27,10 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
     .timeline {
         .unit {
             &:before {
+                border:1px green solid;
                 content:"";
                 position:absolute;
-                top:0; right:50%; bottom:0;
+                top:0; right:auto; bottom:0; left:0;
                 width:0;
                 border-left:1px dotted rgba(black, 0.25)
             }

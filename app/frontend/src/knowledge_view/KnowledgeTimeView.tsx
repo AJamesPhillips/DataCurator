@@ -11,6 +11,7 @@ import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interf
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
+import type { TimeResolution } from "src/shared/utils/datetime"
 
 
 const map_state = (state: RootState) =>
@@ -32,9 +33,7 @@ const map_state = (state: RootState) =>
     {
         wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
     }
-    window.addEventListener('scroll', (e) => {
-        console.log(e)
-    })
+
 
 
     return {
@@ -44,7 +43,8 @@ const map_state = (state: RootState) =>
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
         cdate: cdate,
-        sdate: sdate
+        sdate: sdate,
+        time_resolution: state.display_options.time_resolution,
     }
 }
 
@@ -79,20 +79,16 @@ class DateRange {
         return new_date
     }
 
-    // get_range_dates_for(target_date:Date = this.cdate):Date[] {
-    //     let start_date = this.round_date(target_date)
-    //     let end_date = this.round_date(target_date, true)
-    //     return [start_date, end_date]
-    // }
-
     get range_dates():Date[] {
         let dates:Date[] = []
-        let start_date = this.round_date(this.start_date)
-        let end_date = this.round_date(this.end_date)
-        dates.push(start_date)
-        dates.push(end_date)
+        let end_date = this.round_date(this.end_date, true)
+        let current_date:Date = this.round_date(this.start_date)
+        dates.push(current_date)
+        while (current_date.getTime() <= end_date.getTime()) {
+            current_date = this.increment(current_date)
+            dates.push(current_date)
+        }
         return dates;
-
     }
 
     get start_date():Date {
@@ -168,28 +164,38 @@ class DateRange {
             }
         })
         if (round_up) {
-           rounded_date.setTime(rounded_date.getTime() - 1)
+            rounded_date.setTime(rounded_date.getTime() - 1)
         }
         return rounded_date
     }
 
     cdate:Date = new Date()
     sdate:Date = new Date()
+    time_resolution:TimeResolution
+
     constructor(dates:Date[], props: Props) {
-        this.dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
+        dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
+
         this.cdate = props.cdate;
         this.sdate = props.sdate;
+        this.time_resolution = props.time_resolution
+        this.scale = this.time_resolution + "s"
+
+        let d1 = this.round_date(this.cdate)
+        let d2 = this.round_date(this.cdate, true)
+        this.dates = dates.filter((date:Date) => {
+            return date.getTime() >= d1.getTime() && date.getTime() <= d2.getTime()
+        })
     }
     render(wcomponent_nodes:any[]) {
         let width_percent:number = 100 + (this.get_date_offset_percent(this.start_date) * -1) + this.get_date_offset_percent(this.end_date)
-        const container = window.document.getElementById('main_content')
+        // const container = window.document.getElementById('main_content')
         // const container_width:number = (container) ? container.offsetWidth : 0
 
         const days_in_range:number[] = Array.from(
             { length: (this.range_end_date.getTime() - this.range_start_date.getTime()) / this.single_time_units['days']},
             (v, i) => i
         )
-        console.log(days_in_range)
         return(
             <Box
                 id="knowledge_time_view"
@@ -206,10 +212,8 @@ class DateRange {
                             node.style.marginLeft = `${scrolled_offset}px`
                         }
                     }
-                    // console.log(scrolled_element.scrollLeft)
                 }}
             >
-
                 <Box className="timeline"
                     height={1} maxHeight={1}
                     position="absolute"
@@ -222,16 +226,13 @@ class DateRange {
                         height={1} maxHeight={1}
                         display="flex" flexDirection="row"
                     >
-                        {days_in_range.map(d => {
-                            let this_date:Date = new Date(this.range_start_date.getTime())
-                            this_date.setDate(this_date.getDate() + d)
+                        {this.range_dates.map(d => {
                             return (
                                 <Box className="unit" flexGrow={1} flexShrink={0} flexBasis="auto" position="relative" overflow="visible">
-                                    <Box position="absolute" className="tick" width="1em" height={0} top={0} right="50%">
+                                    <Box position="absolute" className="tick" width="1em" height={0} top={0} left={0}>
                                         <Box className="rotater" whiteSpace="nowrap" pl={3} pb={1}>
-                                            {this_date.toLocaleDateString()}
-
-                                            {/* {this_date.toLocaleTimeString()} */}
+                                            {d.toLocaleDateString()}
+                                            <Box component="span" className="days">{d.toLocaleTimeString()}</Box>
                                         </Box>
                                     </Box>
                                 </Box>
@@ -286,8 +287,8 @@ class DateRange {
                                                     minHeight="100%" height="100%" maxHeight="100%"
                                                     position="absolute" left={`${vap_percent}%`}
                                                 >
-                                                    {/* <Box component="small">{VAP.created_at.toLocaleDateString()}%</Box><br />
-                                                    <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                    <Box component="small">{VAP.created_at.toLocaleString()}</Box><br />
+                                                    {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
                                                     <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
                                                 </Box>
                                             )
