@@ -21,7 +21,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
     if (!needs_save(state, last_saved)) return
 
     last_saved = state
-    dispatch(ACTIONS.sync.update_sync_status("SAVING"))
+    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
 
     // const state_to_save = get_state_to_save(state)
@@ -40,7 +40,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
     //     body: specialised_state_str,
     // }))
     setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
-    .then(() => dispatch(ACTIONS.sync.update_sync_status(undefined)))
+    .then(() => dispatch(ACTIONS.sync.update_sync_status({ status: undefined })))
 }
 
 

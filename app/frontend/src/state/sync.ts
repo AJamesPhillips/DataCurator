@@ -1,6 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
-import type { RootState, SYNC_STATUS } from "./State"
+import { update_state } from "../utils/update_state"
+import type { RootState, SyncState, SYNC_STATUS } from "./State"
 
 
 
@@ -9,14 +10,16 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
     if (is_update_sync_status(action))
     {
-        state = {
-            ...state,
-            sync: {
-                ready: action.status !== "LOADING",
-                saving: action.status === "SAVING",
-                status: action.status,
-            }
+        const { status, error_message = "" } = action
+        const saving = status === "SAVING"
+        const sync: SyncState = {
+            ready: saving || status === undefined,
+            saving,
+            status,
+            error_message,
         }
+
+        state = update_state(state, "sync", sync)
     }
 
     return state
@@ -24,16 +27,19 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
 
 //
-
-interface ActionUpdateSyncStatusStatement extends Action {
+interface UpdateSyncStatusStatementArgs
+{
     status: SYNC_STATUS
+    error_message?: string
 }
+
+interface ActionUpdateSyncStatusStatement extends Action, UpdateSyncStatusStatementArgs {}
 
 const update_sync_status_type = "update_sync_status"
 
-export const update_sync_status = (status: SYNC_STATUS): ActionUpdateSyncStatusStatement =>
+export const update_sync_status = (args: UpdateSyncStatusStatementArgs): ActionUpdateSyncStatusStatement =>
 {
-    return { type: update_sync_status_type, status }
+    return { type: update_sync_status_type, ...args }
 }
 
 const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncStatusStatement => {

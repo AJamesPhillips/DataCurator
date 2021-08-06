@@ -150,7 +150,7 @@ export function get_starting_state (): RootState
         specialised_objects: get_specialised_objects_starting_state(),
         last_action: undefined,
         display_options: display_options_starting_state(),
-        sync: { ready: false, saving: false, status: "LOADING" },
+        sync: { ready: false, saving: false, status: "LOADING", error_message: "", },
         routing,
         global_keys: get_global_keys_starting_state(),
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },

@@ -11,7 +11,7 @@ import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
 
 export function load_state (dispatch: Dispatch)
 {
-    dispatch(ACTIONS.sync.update_sync_status("LOADING"))
+    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
 
     // fetch("http://localhost:4000/api/v1/state/", {
     //     method: "get",
@@ -49,7 +49,11 @@ export function load_state (dispatch: Dispatch)
 
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
 
-        dispatch(ACTIONS.sync.update_sync_status(undefined))
+        dispatch(ACTIONS.sync.update_sync_status({ status: undefined }))
+    })
+    .catch(err =>
+    {
+        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message: `${err}` }))
     })
 }
 

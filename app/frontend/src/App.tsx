@@ -7,6 +7,11 @@ import { TabsContainer } from "./layout/TabsContainer"
 import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 import { DefaultTheme } from "./ui_themes/material_default"
+import { ViewOptions } from "./views/ViewOptions"
+import { SyncInfo } from "./views/SyncInfo"
+import { UserInfo } from "./views/UserInfo"
+
+
 
 function App()
 {
@@ -17,7 +22,10 @@ function App()
                 <Box component="header" zIndex={1}>
                     <AppBar position="static">
                         <Toolbar variant="dense">
+                            <ViewOptions />
                             <ViewsBreadcrumb />
+                            <SyncInfo />
+                            <UserInfo />
                         </Toolbar>
                     </AppBar>
                 </Box>
@@ -35,4 +43,5 @@ function App()
         </ThemeProvider>
     )
 }
+
 export default App
