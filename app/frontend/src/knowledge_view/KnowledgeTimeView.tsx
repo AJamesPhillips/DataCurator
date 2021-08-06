@@ -170,6 +170,7 @@ class DateRange {
     cdate:Date = new Date()
     sdate:Date = new Date()
     time_resolution:TimeResolution = 'hour'
+    timeline_spacing:boolean = false
 
     constructor(dates:Date[], props: Props) {
         if (dates.length === 0) return
@@ -191,11 +192,11 @@ class DateRange {
             Object(current_date)[fns.set](current_value + 1)
             all_range_dates.push(new Date(current_date.getTime()))
         }
-        let max_width:string = `${100 + (all_range_dates.length * 1.42)}%`
+        let max_width:string = (this.timeline_spacing) ? `${100 + (all_range_dates.length * 1.42)}%` : "100%"
         return(
             <Box
                 id="knowledge_time_view"
-                className={`time_view scroll_area_x ${this.scale}`}
+                className={`time_view scroll_area_x ${this.scale} ${(this.timeline_spacing) ? "timeline_spacing" : "event_spacing" }`}
                 flexGrow={1} flexShrink={1}
                 position="relative"
                 onScroll={(e:Event) => {
@@ -210,7 +211,8 @@ class DateRange {
                     }
                 }}
             >
-                <Box className={`timeline ${this.scale}`}
+                <Box className={`timeline`}
+                    display={(this.timeline_spacing) ? "block" : "none" }
                     height={1} maxHeight={1}
                     position="absolute"
                     minWidth={max_width} width={max_width} maxWidth={max_width}
@@ -250,7 +252,7 @@ class DateRange {
                         position="relative" zIndex={10}
                         height={1} maxHeight={1}
                     >
-                        <Box className="contents" mt={50}>
+                        <Box className="contents" mt={(this.timeline_spacing) ? 50 : 0}>
                         {wcomponent_nodes.map(wc => {
                             const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
                             // const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
@@ -274,18 +276,22 @@ class DateRange {
                                     <Box className="vaps"
                                         width={1} maxWidth={1} overflow="hidden"
                                         minHeight="7em" height="7em" maxHeight="7em"
-                                        mx="auto"
+                                        p={(this.timeline_spacing) ? 0 : 3 }
                                         position="relative"
+                                        display={`${(this.timeline_spacing) ? "block" : "flex" }`}
+                                        flexDirection="row" justifyContent="start"
                                     >
                                         {VAP_sets.map((VAP, index) => {
                                             const vap_percent = this.get_date_offset_percent(VAP.created_at)
                                             return (
                                                 <Box className="vap"
+                                                    flexGrow={0} flexShrink={1} flexBasis="auto"
                                                     display="inline-block"
-                                                    mx="auto"
                                                     border={1}
                                                     minHeight="100%" height="100%" maxHeight="100%"
-                                                    position="absolute" left={`${vap_percent}%`}
+                                                    position={`${(this.timeline_spacing) ? "absolute" : "static" }`}
+                                                    zIndex={1}
+                                                    left={`${vap_percent}%`}
                                                 >
                                                     {/* <Box component="small">{VAP.created_at.toLocaleString()}</Box><br /> */}
                                                     {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}

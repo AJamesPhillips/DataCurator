@@ -1,11 +1,37 @@
 @use 'sass:math';
 $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
 
-.time_view {
-    $grid_color:grey;
+// overflowX and overflowX styleprops DO NOT WORK, setting these in jsx vs scss
+.scroll_area_x {
     overflow-x: auto;
     overflow-y:hidden;
+}
 
+.scroll_area_y {
+    overflow-y: auto;
+    overflow-x:hidden;
+}
+
+.time_view {
+   $grid_color:grey;
+    &.timeline_spacing {
+
+        .vaps {
+            .vap {
+                transform:translate(-50%, 0)
+            }
+        }
+    }
+
+    .rotater {
+        white-space: nowrap;
+        transform:translate(50%, 0) rotate(90deg);
+        transform-origin:center bottom;
+    }
+
+    .tick {
+        border-left:1px rgba($grid_color, 0.5) dashed;
+    }
 
     @each $scale in $scales {
         & .#{$scale} { display:none; }
@@ -15,42 +41,8 @@ $scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
         }
     }
 
-    .rotater {
-        // border-top:3px green solid;
-        // border-left:6px yellow solid;
-
-        white-space: nowrap;
-        transform:translate(50%, 0) rotate(90deg);
-        transform-origin:center bottom;
-    }
-
-    .tick {
-        border-left:1px $grid_color dashed;
-        // border:1px yellow solid;
-    }
-    .scroll_area_y {
-        // overflowX and overflowX styleprops DO NOT WORK, setting here
-        overflow-y: auto;
-        overflow-x:hidden;
-    }
-
-    .vaps .vap {
-        z-index:1;
-        &:hover { z-index:9; }
-        transform:translate(-50%, 0)
-    }
-
-    .timeline#NOPE {
-        .unit {
-            &:before, &:after {
-                content:"";
-                position:absolute;
-                top:0; right:auto; bottom:0; left:0;
-                width:0;
-            }
-            &:before {
-                border-left:1px dotted rgba(black, 0.25)
-            }
-        }
+    .vaps {
+        &:empty { display:none; }
+        .vap:hover { z-index:9; }
     }
 }
