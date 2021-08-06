@@ -5,7 +5,7 @@ import type { CoreObject, RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
 import { LinkButton } from "../../sharedf/Link"
 import { get_data_from_air_table, replace_temp_ids, temp_id_factory } from "./get_data_from_air_table"
-import { PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT } from "./_common"
+import { PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT } from "./common"
 
 
 

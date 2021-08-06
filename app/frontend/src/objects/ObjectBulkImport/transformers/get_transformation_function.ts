@@ -1,5 +1,5 @@
 import type { Pattern } from "../../../state/State"
-import { PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT } from "../_common"
+import { PATTERN_ID_ACTION_V2, PATTERN_ID_PRIORITY, PATTERN_ID_EVENT } from "../common"
 import { transform_airtable_action } from "./transform_airtable_action"
 import { transform_airtable_event } from "./transform_airtable_event"
 import { transform_airtable_priority } from "./transform_airtable_priority"

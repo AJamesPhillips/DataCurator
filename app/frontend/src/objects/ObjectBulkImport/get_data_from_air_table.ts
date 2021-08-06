@@ -3,7 +3,7 @@ import type { AirtableToTempIdsMap, TempIdFunc } from "./interfaces"
 import { get_bulk_import_settings } from "./ObjectBulkImportSetup"
 import { get_transformation_function } from "./transformers/get_transformation_function"
 import type { AirtableAction } from "./transformers/transform_airtable_action"
-import { EXTERNAL_ID_KEY } from "./_common"
+import { EXTERNAL_ID_KEY } from "./common"
 
 
 
