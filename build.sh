@@ -14,5 +14,6 @@ mkdir ../../../data-curator-build/app
 cp ../../../data-curator-build/index.html ../../../data-curator-build/app/index.html
 
 echo "datacurator.org" > ../../../data-curator-build/CNAME
+touch ../../../data-curator-build/.nojekyll
 
 cd -
