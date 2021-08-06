@@ -12,6 +12,7 @@ import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "src/shared/utils/datetime"
+import { TimeSlider } from "src/time_control/TimeSlider"
 
 
 const map_state = (state: RootState) =>
@@ -72,22 +73,19 @@ class DateRange {
 
     dates:Date[] = []
 
-    increment(date:Date, count:number = 1):Date {
+    increment(date:Date, count:number = 1, scale:string = this.scale):Date {
         let new_date = new Date(date.getTime())
-        let fn = this.get_date_prop_func_names(this.scale)
+        let fn = this.get_date_prop_func_names(scale)
         Object(new_date)[fn.set](Object(new_date)[fn.get]() + count)
         return new_date
     }
 
     get range_dates():Date[] {
-        let dates:Date[] = []
-        let end_date = this.round_date(this.end_date, true)
-        let current_date:Date = this.round_date(this.start_date)
+        const dates:Date[] = []
+        const end_date = this.round_date(this.increment(this.end_date, 1), true, this.scale)
+        let current_date:Date = this.round_date(this.increment(this.start_date, -1), false, this.scale)
         dates.push(current_date)
-        while (current_date.getTime() <= end_date.getTime()) {
-            current_date = this.increment(current_date)
-            dates.push(current_date)
-        }
+        dates.push(end_date)
         return dates;
     }
 
@@ -112,9 +110,9 @@ class DateRange {
 
     get_date_offset_percent(date:Date):number {
         let percent:number = 0;
-        let date_ms:number = date.getTime()
-        let start_ms:number = this.range_start_date.getTime()
-        let end_ms:number = this.range_end_date.getTime()
+        const date_ms:number = date.getTime()
+        const start_ms:number = this.range_start_date.getTime()
+        const end_ms:number = this.range_end_date.getTime()
         percent = ((date_ms - start_ms) / (end_ms - start_ms)) * 100
         return percent
     }
@@ -171,31 +169,29 @@ class DateRange {
 
     cdate:Date = new Date()
     sdate:Date = new Date()
-    time_resolution:TimeResolution
+    time_resolution:TimeResolution = 'hour'
 
     constructor(dates:Date[], props: Props) {
-        dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
-
-        this.cdate = props.cdate;
-        this.sdate = props.sdate;
+        if (dates.length === 0) return
         this.time_resolution = props.time_resolution
         this.scale = this.time_resolution + "s"
-
-        let d1 = this.round_date(this.cdate)
-        let d2 = this.round_date(this.cdate, true)
-        this.dates = dates.filter((date:Date) => {
-            return date.getTime() >= d1.getTime() && date.getTime() <= d2.getTime()
-        })
+        this.cdate = props.cdate;
+        this.sdate = props.sdate;
+        this.dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
     }
     render(wcomponent_nodes:any[]) {
-        let width_percent:number = 100 + (this.get_date_offset_percent(this.start_date) * -1) + this.get_date_offset_percent(this.end_date)
-        // const container = window.document.getElementById('main_content')
-        // const container_width:number = (container) ? container.offsetWidth : 0
 
-        const days_in_range:number[] = Array.from(
-            { length: (this.range_end_date.getTime() - this.range_start_date.getTime()) / this.single_time_units['days']},
-            (v, i) => i
-        )
+        if (wcomponent_nodes.length === 0) return
+        let current_date = new Date(this.range_start_date.getTime())
+        let all_range_dates:Date[] = []
+        all_range_dates.push(new Date(current_date.getTime()))
+        while (current_date.getTime() <= this.range_end_date.getTime()) {
+            let fns = this.get_date_prop_func_names(this.scale)
+            let current_value = Object(current_date)[fns.get]()
+            Object(current_date)[fns.set](current_value + 1)
+            all_range_dates.push(new Date(current_date.getTime()))
+        }
+        let max_width:string = `${100 + (all_range_dates.length * 1.42)}%`
         return(
             <Box
                 id="knowledge_time_view"
@@ -214,25 +210,28 @@ class DateRange {
                     }
                 }}
             >
-                <Box className="timeline"
+                <Box className={`timeline ${this.scale}`}
                     height={1} maxHeight={1}
                     position="absolute"
-                    minWidth={`${width_percent}%`} width={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                    minWidth={max_width} width={max_width} maxWidth={max_width}
                     top={0} right="auto" bottom={0} left={0}
                     zIndex={1}
                 >
                     <Box
-                        width={1} maxWidth={1} border={1}
+                        width={1} maxWidth={1}
                         height={1} maxHeight={1}
-                        display="flex" flexDirection="row"
+                        display="flex" flexDirection="row" flexWrap
                     >
-                        {this.range_dates.map(d => {
+                        {all_range_dates.map((d, i) => {
                             return (
-                                <Box className="unit" flexGrow={1} flexShrink={0} flexBasis="auto" position="relative" overflow="visible">
-                                    <Box position="absolute" className="tick" width="1em" height={0} top={0} left={0}>
-                                        <Box className="rotater" whiteSpace="nowrap" pl={3} pb={1}>
-                                            {d.toLocaleDateString()}
-                                            <Box component="span" className="days">{d.toLocaleTimeString()}</Box>
+                                <Box className="unit"
+                                    flexGrow={1} flexShrink={1} flexBasis="auto"
+                                    position="relative" overflow="visible"
+                                >
+                                    <Box position="absolute" className="tick" width={0} height={1} top={0} right={0} bottom={0} left={0}>
+                                        <Box className="rotater" whiteSpace="nowrap">
+                                            <Box component="small" className="days weeks months years">{d.toLocaleDateString()}</Box>
+                                            <Box component="small" className="hours">{d.toLocaleTimeString()}</Box>
                                         </Box>
                                     </Box>
                                 </Box>
@@ -241,7 +240,7 @@ class DateRange {
                     </Box>
                 </Box>
                 <Box
-                    minWidth={`${width_percent}%`} maxWidth={`${width_percent}%`}
+                    minWidth={max_width} width={max_width} maxWidth={max_width}
                     minHeight={1} height={1} maxHeight={1}
                     overflow="hidden"
                 >
@@ -254,7 +253,7 @@ class DateRange {
                         <Box className="contents" mt={50}>
                         {wcomponent_nodes.map(wc => {
                             const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-                            const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
+                            // const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
 
                             return (
                                 <Box
@@ -268,6 +267,7 @@ class DateRange {
                                         position="relative"
                                         top={0}
                                     >
+                                        {/* <Box component="small">{wc.created_at.toLocaleString()}</Box><br /> */}
                                         <WComponentCanvasNode id={wc.id} on_graph={false} />
                                     </Box>
 
@@ -287,7 +287,7 @@ class DateRange {
                                                     minHeight="100%" height="100%" maxHeight="100%"
                                                     position="absolute" left={`${vap_percent}%`}
                                                 >
-                                                    <Box component="small">{VAP.created_at.toLocaleString()}</Box><br />
+                                                    {/* <Box component="small">{VAP.created_at.toLocaleString()}</Box><br /> */}
                                                     {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
                                                     <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
                                                 </Box>
@@ -300,114 +300,8 @@ class DateRange {
                         </Box>
                     </Box>
                 </Box>
-                {/* <Box className={`visible_timeline ${this.scale}`}
-                    position="absolute"
-                    top={0} right={`${width_percent}%`} bottom={0} left={0}
-                    width={`${width_percent}%`} maxWidth={`${width_percent}%`}
-                    height={1} maxHeight={1}
-                    overflowX="auto" overflowY="hidden"
-                >
-                    VISIBLE TIMELINE!
-                </Box>
-                <Box className="scroll_area"
-                    minHeight={1} maxHeight={1}
-                    width={`${width_percent}%`} maxWidth={`${width_percent}%`}
-                >
-                    SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br />
-                    SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br /> SCROLLAREA <br />
-
-                </Box> */}
             </Box>
         )
-        // return(
-        //     <Box className={`time_view ${this.scale}`}
-        //         position="relative"
-        //         flexGrow={1} flexShrink="1"
-        //         display="flex" flexDirection="column" alignItems="stretch"
-        //         boxSizing="border-box"
-        //         width="100%"
-        //         overflow="auto"
-        //         style="border:2px red solid"
-        //     >
-        //         <Box className={`visible_timeline ${this.scale}`}
-        //             position="absolute"
-        //             top={0} right={0} bottom={0} left={0}
-        //             display="flex" flexDirection="row"
-        //             boxSizing="border-box"
-        //             width={`${width_percent}%`} maxWidth={`${width_percent}%`}
-        //             minHeight={1} maxHeight={1}
-        //             overflow="visible"
-        //             style="border:2px orange solid"
-        //         >
-        //             {days_in_range.map(d => {
-        //                 let this_date:Date = new Date(this.start_date.getTime())
-        //                 this_date.setDate(d)
-        //                 return (
-        //                     <Box className="unit" flexGrow={1} flexShrink={1} flexBasis="auto" position="relative" overflow="visible">
-        //                         <Box position="absolute" className="tick" width="1em" height={0} top={0} right="50%">
-        //                             <Box className="rotater" whiteSpace="nowrap" pl={3} pb={1}>
-        //                                 {this_date.toLocaleDateString()}
-        //                                 {/* {this_date.toLocaleTimeString()} */}
-        //                             </Box>
-        //                         </Box>
-        //                     </Box>
-        //                 )
-        //             })}
-        //         </Box>
-        //         <Box
-        //             className="time_view_scrollable_container"
-        //             position="relative" zIndex={10}
-        //             flexGrow={1} flexShrink={1}
-        //             width={1}
-        //             mt={50}
-        //         >
-        //             {wcomponent_nodes.map(wc => {
-        //                 const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-        //                 const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
-
-        //                 return (
-        //                     <Box
-        //                         width={`${width_percent}%`} maxWidth={`${width_percent}%`}
-        //                         overflow="hidden"
-        //                         position="relative"
-        //                     >
-        //                         <Box id={`WC-${wc.id}`}
-        //                             position="fixed" left={`${wc_percent}%`}
-        //                             className="wc"
-        //                         >
-        //                             <WComponentCanvasNode id={wc.id} on_graph={false} />
-        //                         </Box>
-        //                         <Box visibility="hidden" className="hidden_sizer">
-        //                             <WComponentCanvasNode id={wc.id} on_graph={false} />
-        //                         </Box>
-
-        //                         <Box className="vaps"
-        //                             width={1} maxWidth={1} overflow="hidden"
-        //                             mx="auto"
-        //                         >
-        //                             <Box className="vap_wrap"
-        //                                 p={3}
-        //                                 position="relative"
-        //                                 minHeight="10em" maxHeight="10em" height="10em"
-        //                             >
-        //                                 {VAP_sets.map((VAP, index) => {
-        //                                     const vap_percent = this.get_date_offset_percent(VAP.created_at)
-        //                                     return (
-        //                                         <Box className="vap" display="inline-block" mx="auto" minHeight="100%" height="100%" maxHeight="100%" border={1} position="absolute" left={`${vap_percent}%`}>
-        //                                             {/* <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} /> */}
-        //                                             <Box component="small">{VAP.created_at.toLocaleDateString()}</Box><br />
-        //                                             <Box component="small">{vap_percent.toFixed(2)}%</Box><br />
-        //                                         </Box>
-        //                                     )
-        //                                 })}
-        //                             </Box>
-        //                         </Box>
-        //                     </Box>
-        //                 )
-        //             })}
-        //         </Box>
-        //     </Box>
-        // )
     }
 }
 
@@ -436,60 +330,6 @@ function _KnowledgeTimeView (props: Props)
 }
 
 export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>
-
-// const no_children: h.JSX.Element[] = []
-// const get_children = (props: Props): ChildrenRawData =>
-// {
-//     const { sync_ready } = props
-//     let { wcomponent_nodes } = props
-//     if (!sync_ready || !wcomponent_nodes)
-//     {
-//         return no_children
-//     }
-
-
-//     const { selected_wcomponent_ids_map } = props
-//     const get_key = (wc: WComponent) =>
-//     {
-//         const entry = selected_wcomponent_ids_map[wc.id]
-
-//         if (entry !== undefined) return entry
-//         else return get_created_at_ms(wc)
-//     }
-
-//     wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending")
-
-
-//     const elements: h.JSX.Element[] = []
-//     wcomponent_nodes.map(wc =>
-//     {
-//         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-
-//         elements.push(
-//             <Box
-//                 display="flex" flexDirection="row" alignItems="stretch"
-//                 py="0.5em"
-//                 key={wc.id}
-//             >
-//                 <WComponentCanvasNode
-//                     id={wc.id}
-//                     on_graph={false}
-//                 />
-
-//                 {VAP_sets.length > 0 && (
-//                     <Box p="0.5em"
-//                         flexGrow={1} flexShrink={0}
-//                         display="flex" alignItems="stretch" alignContent="stretch">
-//                         {VAP_sets.map(VAP_set => <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />)}
-//                     </Box>
-//                 )}
-//             </Box>
-//         )
-//     })
-
-//     return elements
-// }
-
 
 const no_svg_upper_children: h.JSX.Element[] = []
 const get_svg_upper_children = ({ wcomponent_connections }: Props) =>
