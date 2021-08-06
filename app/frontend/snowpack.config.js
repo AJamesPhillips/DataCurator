@@ -22,6 +22,7 @@ module.exports = {
   buildOptions: {
     clean: false,
     out: "../../../data-curator-build",
+    metaUrlPath: "snowpack",
   },
   routes: [
     {
