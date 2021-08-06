@@ -3,7 +3,7 @@ import { parse_specialised_objects_fromto_server } from "../../shared/wcomponent
 
 
 
-export function parse_specialised_objects_from_server_data (data: SpecialisedObjectsFromToServer)
+export function parse_specialised_objects_from_server_data (data: SpecialisedObjectsFromToServer | null)
 {
     try
     {

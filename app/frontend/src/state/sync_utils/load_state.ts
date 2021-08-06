@@ -1,8 +1,10 @@
 import type { Dispatch } from "redux"
+import { getItem } from "localforage"
 
 import { ACTIONS } from "../actions"
 import { parse_specialised_objects_from_server_data } from "../specialised_objects/parse_server_data"
 import type { Statement, Pattern, ObjectWithCache } from "../State"
+import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -10,35 +12,36 @@ export function load_state (dispatch: Dispatch)
 {
     dispatch(ACTIONS.sync.update_sync_status("LOADING"))
 
-    fetch("http://localhost:4000/api/v1/state/", {
-        method: "get",
-    })
-    .then(resp => resp.json())
-    .then(data => {
+    // fetch("http://localhost:4000/api/v1/state/", {
+    //     method: "get",
+    // })
+    // .then(resp => resp.json())
+    // .then(data => {
 
-        // Object.keys(data).forEach(k => {
-        //     if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state from server`)
-        // })
+    //     // Object.keys(data).forEach(k => {
+    //     //     if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state from server`)
+    //     // })
 
-        let statements: Statement[] = data.statements
-        let patterns: Pattern[] = data.patterns
-        let objects: ObjectWithCache[] = data.objects
+    //     let statements: Statement[] = data.statements
+    //     let patterns: Pattern[] = data.patterns
+    //     let objects: ObjectWithCache[] = data.objects
 
-        if (!statements) throw new Error(`Expecting statements from server`)
-        if (!patterns) throw new Error(`Expecting patterns from server`)
-        if (!objects) throw new Error(`Expecting objects from server`)
+    //     if (!statements) throw new Error(`Expecting statements from server`)
+    //     if (!patterns) throw new Error(`Expecting patterns from server`)
+    //     if (!objects) throw new Error(`Expecting objects from server`)
 
-        statements = parse_datetimes(statements)
-        patterns = parse_datetimes(patterns)
-        objects = parse_datetimes(objects)
+    //     statements = parse_datetimes(statements)
+    //     patterns = parse_datetimes(patterns)
+    //     objects = parse_datetimes(objects)
 
-        dispatch(ACTIONS.statement.replace_all_statements({ statements }))
-        dispatch(ACTIONS.pattern.replace_all_patterns({ patterns }))
-        dispatch(ACTIONS.object.replace_all_core_objects({ objects }))
+    //     dispatch(ACTIONS.statement.replace_all_statements({ statements }))
+    //     dispatch(ACTIONS.pattern.replace_all_patterns({ patterns }))
+    //     dispatch(ACTIONS.object.replace_all_core_objects({ objects }))
 
-    })
-    .then(() => fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" }))
-    .then(resp => resp.json())
+    // })
+    getItem<SpecialisedObjectsFromToServer>("data_curator_state")
+    // fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
+    // .then(resp => resp.json())
     .then(data => {
 
         const specialised_objects = parse_specialised_objects_from_server_data(data)

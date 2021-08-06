@@ -6,7 +6,7 @@ import { parse_wcomponent } from "./parse_wcomponent"
 
 
 
-export function parse_specialised_objects_fromto_server (data: SpecialisedObjectsFromToServer)
+export function parse_specialised_objects_fromto_server (data: SpecialisedObjectsFromToServer | null)
 {
     const expected_specialised_object_keys = new Set([
         "perceptions",
@@ -14,18 +14,25 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         "knowledge_views",
     ])
 
-    const data_keys = Object.keys(data)
+    let perceptions: Perception[] = []
+    let wcomponents: WComponent[] = []
+    let knowledge_views: KnowledgeView[] = []
 
-    const extra = data_keys.filter(k => !expected_specialised_object_keys.has(k as any))
-    if (extra.length) throw new Error(`Unexpected keys "${extra.join(", ")}" in specialised objects state`)
+    if (data)
+    {
+        const data_keys = Object.keys(data)
 
-    const missing = Array.from(expected_specialised_object_keys).filter(k => !data.hasOwnProperty(k))
-    if (missing.length) throw new Error(`Expected keys "${missing.join(", ")}" missing in specialised objects state`)
+        const extra = data_keys.filter(k => !expected_specialised_object_keys.has(k as any))
+        if (extra.length) throw new Error(`Unexpected keys "${extra.join(", ")}" in specialised objects state`)
 
-    const perceptions: Perception[] = data.perceptions.map(parse_perception)
-    const wcomponents: WComponent[] = data.wcomponents.map(parse_wcomponent)
-    const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
-    const knowledge_views: KnowledgeView[] = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
+        const missing = Array.from(expected_specialised_object_keys).filter(k => !data.hasOwnProperty(k))
+        if (missing.length) throw new Error(`Expected keys "${missing.join(", ")}" missing in specialised objects state`)
+
+        perceptions = data.perceptions.map(parse_perception)
+        wcomponents = data.wcomponents.map(parse_wcomponent)
+        const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
+        knowledge_views = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
+    }
 
     const specialised_objects: SpecialisedObjectsFromToServer = {
         perceptions,
