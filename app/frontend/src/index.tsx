@@ -23,7 +23,7 @@ const title = document.getElementsByTagName("title")[0]
 
 
 if (root) {
-    const in_production = true || window.location.hostname.endsWith("datacurator.org")
+    const in_production = window.location.hostname.endsWith("datacurator.org")
 
     if (window.location.pathname === "" || window.location.pathname === "/")
     {
