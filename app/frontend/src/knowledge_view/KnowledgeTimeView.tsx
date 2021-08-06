@@ -170,7 +170,7 @@ class DateRange {
     cdate:Date = new Date()
     sdate:Date = new Date()
     time_resolution:TimeResolution = 'hour'
-    timeline_spacing:boolean = false
+    timeline_spacing:boolean = true
 
     constructor(dates:Date[], props: Props) {
         if (dates.length === 0) return
