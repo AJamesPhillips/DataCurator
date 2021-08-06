@@ -115,7 +115,7 @@ export function SandboxWComponentCanvasNode ()
         },
     }
 
-    const store = get_store({ load_state_from_server: false, override_preloaded_state })
+    const store = get_store({ load_state_from_storage: false, override_preloaded_state })
 
 
 

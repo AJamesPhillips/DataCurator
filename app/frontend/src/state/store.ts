@@ -22,14 +22,14 @@ interface ConfigStoreArgs
 {
     use_cache?: boolean
     override_preloaded_state?: Partial<RootState> | undefined
-    load_state_from_server?: boolean
+    load_state_from_storage?: boolean
 }
 export function get_store (args: ConfigStoreArgs = {})
 {
     const {
         use_cache = true,
         override_preloaded_state = {},
-        load_state_from_server = false,
+        load_state_from_storage = false,
     } = args
 
     if (cached_store && use_cache) return cached_store
@@ -43,7 +43,7 @@ export function get_store (args: ConfigStoreArgs = {})
     cached_store = store
 
 
-    if (load_state_from_server) load_state(store.dispatch)
+    if (load_state_from_storage) load_state(store.dispatch)
 
 
     const save = () =>
@@ -53,7 +53,7 @@ export function get_store (args: ConfigStoreArgs = {})
         ;(window as any).debug_state = state
 
         // for now, very simple logic for when to save
-        if (!state.sync.ready || !load_state_from_server) return
+        if (!state.sync.ready || !load_state_from_storage) return
 
         save_state(store.dispatch, state)
     }

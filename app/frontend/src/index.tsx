@@ -72,7 +72,7 @@ if (root) {
     }
     else if (window.location.pathname === "/project_dashboard")
     {
-        render(<Provider store={get_store({ load_state_from_server: true })}><DemoProjectDashboard /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: true })}><DemoProjectDashboard /></Provider>, root)
     }
     else if (window.location.pathname === "/prob_graph")
     {
@@ -84,15 +84,15 @@ if (root) {
     }
     else if (window.location.pathname === "/statement_probability")
     {
-        render(<Provider store={get_store({ load_state_from_server: true })}><DemoStatementProbability /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: true })}><DemoStatementProbability /></Provider>, root)
     }
     else if (window.location.pathname === "/statement_probability_explorer")
     {
-        render(<Provider store={get_store({ load_state_from_server: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox/editable_custom_datetime")
     {
-        render(<Provider store={get_store({ load_state_from_server: false })}><SandboxEditableCustomDateTime /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: false })}><SandboxEditableCustomDateTime /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox/canvas_nodes")
     {
@@ -100,7 +100,7 @@ if (root) {
     }
     else if (window.location.pathname === "/sandbox/connected")
     {
-        render(<Provider store={get_store({ load_state_from_server: false })}><SandBoxConnected /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: false })}><SandBoxConnected /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox")
     {
@@ -108,7 +108,7 @@ if (root) {
     }
     else if (window.location.pathname === "/app/")
     {
-        render(<Provider store={get_store({ load_state_from_server: true })}><App /></Provider>, root)
+        render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
     }
     else
     {
@@ -116,6 +116,8 @@ if (root) {
     }
 }
 
-if (title) {
+
+if (title)
+{
     title.innerHTML = APP_DETAILS.NAME
 }
