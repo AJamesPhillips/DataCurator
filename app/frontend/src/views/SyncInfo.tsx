@@ -1,3 +1,4 @@
+import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -28,7 +29,7 @@ function _SyncInfo (props: Props)
     const saved = props.status === undefined
 
 
-    return <div style={{ margin: 4 }}>
+    return <Box>
         {failed && <div title={props.error_message}>
             <WarningTriangle message={props.error_message} backgroundColor="red" />
             &nbsp;Save Failed
@@ -36,7 +37,7 @@ function _SyncInfo (props: Props)
 
         {saved && <div>Saved</div>}
         {saving && <div>Saving</div>}
-    </div>
+    </Box>
 }
 
 export const SyncInfo = connector(_SyncInfo) as FunctionalComponent<{}>

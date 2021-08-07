@@ -7,6 +7,7 @@ import PresentToAllIcon from "@material-ui/icons/PresentToAll"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
+import { Box } from "@material-ui/core"
 
 
 
@@ -34,13 +35,14 @@ function _ViewOptions (props: Props)
         exclusive
         onChange={props.toggle_consumption_formatting}
         value={props.presenting ? "presenting" : "editing"}
-        aria-label="text formatting">
-            <ToggleButton value="editing" aria-label="Editing">
-                <EditIcon />
-            </ToggleButton>
-            <ToggleButton value="presenting" aria-label="Presenting">
-                <PresentToAllIcon />
-            </ToggleButton>
+        aria-label="text formatting"
+    >
+        <ToggleButton value="editing" aria-label="Editing">
+            <EditIcon />
+        </ToggleButton>
+        <ToggleButton value="presenting" aria-label="Presenting">
+            <PresentToAllIcon />
+        </ToggleButton>
     </ToggleButtonGroup>
 }
 

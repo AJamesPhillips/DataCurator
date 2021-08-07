@@ -1,3 +1,4 @@
+import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -19,9 +20,9 @@ type Props = ConnectedProps<typeof connector>
 
 function _UserInfo (props: Props)
 {
-    return <div style={{ margin: 4 }}>
+    return <Box>
         LocalStorage
-    </div>
+    </Box>
 }
 
 export const UserInfo = connector(_UserInfo) as FunctionalComponent<{}>

@@ -84,7 +84,7 @@ function _ViewsBreadcrumb (props: Props)
         .map(calc_if_is_hidden)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
 
-    return  <Breadcrumbs aria-label="breadcrumb" style={{ margin: "auto 0 auto 10px" }}>
+    return <Breadcrumbs aria-label="breadcrumb" style={{ margin: "auto 0 auto 10px" }}>
         <label>
             View Type:&nbsp;
             <select name="select_view" onChange={e => navigate_view(e, props) }>
