@@ -5,13 +5,25 @@ import { ACTIONS } from "../actions"
 import { parse_specialised_objects_from_server_data } from "../specialised_objects/parse_server_data"
 import type { Statement, Pattern, ObjectWithCache } from "../State"
 import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
+import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE } from "./supported_keys"
 
 
 
 export function load_state (dispatch: Dispatch)
 {
     dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
+
+    let promise_data: Promise<SpecialisedObjectsFromToServer | null>
+
+    if (STORAGE_TYPE === "local_server")
+    {
+        promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
+            .then(resp => resp.json())
+    }
+    else
+    {
+        promise_data = getItem<SpecialisedObjectsFromToServer>(LOCAL_STORAGE_STATE_KEY)
+    }
 
     // fetch("http://localhost:4000/api/v1/state/", {
     //     method: "get",
@@ -40,9 +52,8 @@ export function load_state (dispatch: Dispatch)
     //     dispatch(ACTIONS.object.replace_all_core_objects({ objects }))
 
     // })
-    getItem<SpecialisedObjectsFromToServer>(LOCAL_STORAGE_STATE_KEY)
-    // fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
-    // .then(resp => resp.json())
+
+    promise_data
     .then(data =>
     {
         const specialised_objects = parse_specialised_objects_from_server_data(data)

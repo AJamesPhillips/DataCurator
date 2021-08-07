@@ -1,8 +1,10 @@
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { sentence_case } from "../shared/utils/sentence_case"
 
 import type { RootState } from "../state/State"
+import { STORAGE_TYPE } from "../state/sync_utils/supported_keys"
 
 
 
@@ -21,7 +23,8 @@ type Props = ConnectedProps<typeof connector>
 function _UserInfo (props: Props)
 {
     return <Box>
-        LocalStorage
+        &nbsp;
+        {sentence_case(STORAGE_TYPE.replaceAll("_", " "))}
     </Box>
 }
 

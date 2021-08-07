@@ -24,3 +24,7 @@ export const supported_keys = Object.keys(root_state_keys) as (keyof RootState)[
 
 
 export const LOCAL_STORAGE_STATE_KEY = "data_curator_state"
+
+
+type StorageType = "local_server" | "local_storage" | "solid"
+export const STORAGE_TYPE: StorageType = "local_server"

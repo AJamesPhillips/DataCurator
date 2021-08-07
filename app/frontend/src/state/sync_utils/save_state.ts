@@ -10,7 +10,7 @@ import {
 } from "../State"
 import { ACTIONS } from "../actions"
 import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY, supported_keys } from "./supported_keys"
+import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE, supported_keys } from "./supported_keys"
 import { setItem } from "localforage"
 
 
@@ -23,23 +23,32 @@ export function save_state (dispatch: Dispatch, state: RootState)
     last_saved = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
-
-    // const state_to_save = get_state_to_save(state)
-    // const state_str = JSON.stringify(state_to_save)
-
     const specialised_state = get_specialised_state_to_save(state)
-    // const specialised_state_str = JSON.stringify(specialised_state)
 
+    let promise_save_data: Promise<any>
 
-    // fetch("http://localhost:4000/api/v1/state/", {
-    //     method: "post",
-    //     body: state_str,
-    // })
-    // .then(() => fetch("http://localhost:4000/api/v1/specialised_state/", {
-    //     method: "post",
-    //     body: specialised_state_str,
-    // }))
-    setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
+    if (STORAGE_TYPE === "local_server")
+    {
+        // const state_to_save = get_state_to_save(state)
+        // const state_str = JSON.stringify(state_to_save)
+
+        // fetch("http://localhost:4000/api/v1/state/", {
+        //     method: "post",
+        //     body: state_str,
+        // })
+
+        const specialised_state_str = JSON.stringify(specialised_state)
+        promise_save_data = fetch("http://localhost:4000/api/v1/specialised_state/", {
+            method: "post",
+            body: specialised_state_str,
+        })
+    }
+    else
+    {
+        promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
+    }
+
+    promise_save_data
     .then(() => dispatch(ACTIONS.sync.update_sync_status({ status: undefined })))
 }
 
