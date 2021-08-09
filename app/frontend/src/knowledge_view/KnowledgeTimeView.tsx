@@ -11,8 +11,8 @@ import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interf
 import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
 import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
-import type { TimeResolution } from "src/shared/utils/datetime"
-import { TimeSlider } from "src/time_control/TimeSlider"
+import type { TimeResolution } from "../shared/utils/datetime"
+import { TimeSlider } from "../time_control/TimeSlider"
 
 
 const map_state = (state: RootState) =>
