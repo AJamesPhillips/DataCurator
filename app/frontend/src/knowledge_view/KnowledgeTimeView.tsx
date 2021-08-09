@@ -332,7 +332,8 @@ function _KnowledgeTimeView (props: Props)
         })
     })
     let date_range = new DateRange(dates, props)
-    return <MainArea main_content={date_range.render(wcomponent_nodes)} />
+    let content = date_range.render(wcomponent_nodes)
+    return <MainArea main_content={(content) ? content :  <Box></Box>} />
 }
 
 export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>
