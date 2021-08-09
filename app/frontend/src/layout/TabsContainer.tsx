@@ -33,11 +33,8 @@ function _TabsContainer (props: Props)
     const handleClose = () => {
         setAnchorEl(null)
     }
-
-
     const [show_all_routes, set_show_all_routes] = useState(!!localStorage.getItem("show_all_tabs"))
     localStorage.setItem("show_all_tabs", show_all_routes ? "1" : "")
-
 
     let routes = ALLOWED_ROUTES
     if (!show_all_routes)
@@ -53,7 +50,7 @@ function _TabsContainer (props: Props)
         routes = routes.filter(r => !hide_routes.has(r) || (props.editing && r === "creation_context"))
     }
 
-
+    // @TODO: Come back to this. We should NOT need the inline styles on MenuItems below
     return (
         <Box mb={5} display="flex" flexDirection="column" alignItems="end">
             <Button onClick={handleClick} aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
@@ -63,11 +60,11 @@ function _TabsContainer (props: Props)
                 </Box>
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
-                {routes.map(route => <MenuItem onClick={handleClose}>
+                {routes.map(route => <MenuItem onClick={handleClose} style="display:flex; justify-content:flex-start; padding:0.5em;">
                     <Tab id={route} on_pointer_down={handleClose} />
                 </MenuItem>)}
 
-                <MenuItem onClick={() => set_show_all_routes(!show_all_routes)}>
+                <MenuItem onClick={() => set_show_all_routes(!show_all_routes)}  style="display:flex; justify-content:flex-start; padding:0.5em;">
                     {show_all_routes ? "Hide" : "Show"} all options
                 </MenuItem>
             </Menu>
