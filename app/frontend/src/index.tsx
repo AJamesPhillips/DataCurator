@@ -43,7 +43,7 @@ if (root) {
         </div>
 
         <div>
-            To get started go to <a href="/app">/app</a> to create your first knowledge component.
+            To get started go to <a href="/app/">/app</a> to create your first knowledge component.
         </div>
 
         <!--div>
@@ -56,7 +56,7 @@ if (root) {
         if (!in_production)
         {
             content = `<ul>
-            <li><a href="/app">app</a></li>
+            <li><a href="/app/">app</a></li>
             <li><a href="/project_dashboard">Project dashboard</a></li>
             <li><a href="/prob_graph">Probability graph</a></li>
             <li><a href="/prob_badge">Probability badge</a></li>
@@ -106,7 +106,7 @@ if (root) {
     {
         render(<SandBox />, root)
     }
-    else if (window.location.pathname === "/app/")
+    else if (window.location.pathname === "/app/" || window.location.pathname === "/app")
     {
         render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
     }
