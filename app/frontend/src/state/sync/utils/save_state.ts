@@ -7,9 +7,9 @@ import {
     ObjectAttribute,
     ObjectWithCache,
     RootState,
-} from "../State"
-import { ACTIONS } from "../actions"
-import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../State"
+import { ACTIONS } from "../../actions"
+import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE, supported_keys } from "./supported_keys"
 import { setItem } from "localforage"
 

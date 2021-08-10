@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { sentence_case } from "../shared/utils/sentence_case"
 
 import type { RootState } from "../state/State"
-import { STORAGE_TYPE } from "../state/sync_utils/supported_keys"
+import { STORAGE_TYPE } from "../state/sync/utils/supported_keys"
 
 
 

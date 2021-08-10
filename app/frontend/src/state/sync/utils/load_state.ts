@@ -1,10 +1,10 @@
 import type { Dispatch } from "redux"
 import { getItem } from "localforage"
 
-import { ACTIONS } from "../actions"
-import { parse_specialised_objects_from_server_data } from "../specialised_objects/parse_server_data"
-import type { Statement, Pattern, ObjectWithCache } from "../State"
-import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { ACTIONS } from "../../actions"
+import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
+import type { Statement, Pattern, ObjectWithCache } from "../../State"
+import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE } from "./supported_keys"
 
 

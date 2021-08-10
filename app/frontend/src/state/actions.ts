@@ -11,7 +11,7 @@ import { display_at_created_datetime_actions } from "./routing/datetime/display_
 import { display_at_sim_datetime_actions } from "./routing/datetime/display_at_sim_datetime"
 import { specialised_object_actions } from "./specialised_objects/actions"
 import { statement_actions } from "./statements"
-import { sync_actions } from "./sync"
+import { sync_actions } from "./sync/actions_reducer"
 import { user_activity_actions } from "./user_activity/actions"
 
 

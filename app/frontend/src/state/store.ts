@@ -10,8 +10,8 @@ import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/me
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
-import { load_state } from "./sync_utils/load_state"
-import { save_state } from "./sync_utils/save_state"
+import { load_state } from "./sync/utils/load_state"
+import { save_state } from "./sync/utils/save_state"
 import { persist_all_state } from "./utils/persistence"
 
 

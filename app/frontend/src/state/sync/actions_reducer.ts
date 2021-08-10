@@ -1,7 +1,8 @@
 import type { Action, AnyAction } from "redux"
 
-import { update_state } from "../utils/update_state"
-import type { RootState, SyncState, SYNC_STATUS } from "./State"
+import { update_state } from "../../utils/update_state"
+import type { RootState } from "../State"
+import type { SyncState, SYNC_STATUS } from "./state"
 
 
 

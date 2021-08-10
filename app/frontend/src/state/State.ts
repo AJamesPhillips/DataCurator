@@ -9,6 +9,7 @@ import type { GlobalKeysState } from "./global_keys/state"
 import type { RoutingState } from "./routing/interfaces"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
+import type { SyncState } from "./sync/state"
 import type { UserActivityState } from "./user_activity/state"
 
 
@@ -80,17 +81,6 @@ export const is_value_attribute = (a: CoreObjectAttribute): a is CoreObjectValue
 
 
 export type Item = Statement | Pattern | ObjectWithCache
-
-
-
-export type SYNC_STATUS = "LOADING" | "SAVING" | "FAILED" | undefined
-export interface SyncState
-{
-    ready: boolean
-    saving: boolean
-    status: SYNC_STATUS
-    error_message: string
-}
 
 
 
