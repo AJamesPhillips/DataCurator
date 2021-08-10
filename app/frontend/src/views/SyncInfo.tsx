@@ -26,7 +26,7 @@ function _SyncInfo (props: Props)
 {
     const failed = props.status === "FAILED"
     const saving = props.status === "SAVING"
-    const saved = props.status === undefined
+    const saved = props.status === "SAVED"
 
 
     return <Box>

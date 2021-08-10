@@ -1,7 +1,7 @@
 
 
 
-export type SYNC_STATUS = "LOADING" | "SAVING" | "FAILED" | undefined
+export type SYNC_STATUS = "LOADING" | "SAVING" | "SAVED" | "FAILED" | undefined
 
 type StorageType = "local_server" | "local_storage" | "solid"
 
@@ -11,5 +11,5 @@ export interface SyncState
     saving: boolean
     status: SYNC_STATUS
     error_message: string
-    storage_type: StorageType
+    storage_type: StorageType | undefined
 }

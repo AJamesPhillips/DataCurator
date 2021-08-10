@@ -19,14 +19,13 @@ export function sync_persist (state: RootState)
 export function sync_starting_state (): SyncState
 {
     const obj = get_persisted_state_object<SyncState>("sync")
-    const storage_type = obj.storage_type || "local_storage"
 
     const state: SyncState = {
         ready: false,
         saving: false,
         status: undefined,
         error_message: "",
-        storage_type,
+        storage_type: undefined,
     }
 
     return state

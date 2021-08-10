@@ -14,6 +14,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
         const { status, error_message = "" } = action
         const saving = status === "SAVING"
         const sync: SyncState = {
+            ...state.sync,
             ready: saving || status === undefined,
             saving,
             status,
