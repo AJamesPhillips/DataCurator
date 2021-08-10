@@ -10,7 +10,7 @@ import {
 } from "../../State"
 import { ACTIONS } from "../../actions"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE, supported_keys } from "./supported_keys"
+import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
 import { setItem } from "localforage"
 
 
@@ -27,7 +27,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
 
     let promise_save_data: Promise<any>
 
-    if (STORAGE_TYPE === "local_server")
+    if (state.sync.storage_type === "local_server")
     {
         // const state_to_save = get_state_to_save(state)
         // const state_str = JSON.stringify(state_to_save)

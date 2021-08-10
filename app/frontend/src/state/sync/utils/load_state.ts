@@ -3,19 +3,19 @@ import { getItem } from "localforage"
 
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
-import type { Statement, Pattern, ObjectWithCache } from "../../State"
+import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY, STORAGE_TYPE } from "./supported_keys"
+import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
 
 
 
-export function load_state (dispatch: Dispatch)
+export function load_state (dispatch: Dispatch, state: RootState)
 {
     dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
 
     let promise_data: Promise<SpecialisedObjectsFromToServer | null>
 
-    if (STORAGE_TYPE === "local_server")
+    if (state.sync.storage_type === "local_server")
     {
         promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
             .then(resp => resp.json())

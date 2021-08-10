@@ -1,6 +1,12 @@
 
 
-type SupportedPersistenceKeys = "display_options" | "creation_context" | "filter_context" | "controls"
+type SupportedPersistenceKeys = (
+    "display_options"
+    | "creation_context"
+    | "filter_context"
+    | "controls"
+    | "sync"
+)
 
 
 export function persist_state_object (key: SupportedPersistenceKeys, obj: object)

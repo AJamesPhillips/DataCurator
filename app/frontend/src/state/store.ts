@@ -43,7 +43,7 @@ export function get_store (args: ConfigStoreArgs = {})
     cached_store = store
 
 
-    if (load_state_from_storage) load_state(store.dispatch)
+    if (load_state_from_storage) load_state(store.dispatch, store.getState())
 
 
     const save = () =>

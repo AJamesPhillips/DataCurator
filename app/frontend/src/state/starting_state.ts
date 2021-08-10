@@ -1,15 +1,16 @@
-import { CORE_IDS, STATEMENT_IDS } from "./core_data"
+import { controls_starting_state } from "./controls/persistance"
+import { STATEMENT_IDS, CORE_IDS } from "./core_data"
 import { creation_context_starting_state } from "./creation_context/persistance"
-import { filter_context_starting_state } from "./filter_context/persistance"
 import { get_derived_starting_state } from "./derived/starting_state"
 import { display_options_starting_state } from "./display_options/persistance"
+import { filter_context_starting_state } from "./filter_context/persistance"
+import { get_global_keys_starting_state } from "./global_keys/state"
 import { get_routing_starting_state } from "./routing/starting_state"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
-import type { ObjectWithCache, Pattern, RootState, Statement } from "./State"
+import type { RootState, Statement, Pattern, ObjectWithCache } from "./State"
+import { sync_starting_state } from "./sync/persistance"
 import { user_activity_starting_state } from "./user_activity/starting_state"
-import { get_global_keys_starting_state } from "./global_keys/state"
-import { controls_starting_state } from "./controls/persistance"
 
 
 
@@ -150,7 +151,7 @@ export function get_starting_state (): RootState
         specialised_objects: get_specialised_objects_starting_state(),
         last_action: undefined,
         display_options: display_options_starting_state(),
-        sync: { ready: false, saving: false, status: "LOADING", error_message: "", },
+        sync: sync_starting_state(),
         routing,
         global_keys: get_global_keys_starting_state(),
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },
