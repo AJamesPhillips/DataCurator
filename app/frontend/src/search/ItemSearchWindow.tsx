@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import "./SearchWindow.css"
+import "./ItemSearchWindow.css"
 import type { Item } from "../state/State"
 import { ITEM_FILTERS, ListOfTypes } from "./ListOfTypes"
 import { useState } from "preact/hooks"

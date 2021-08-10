@@ -1,6 +1,5 @@
 import { h } from "preact"
 
-import "./SearchWindow.css"
 import { Modal } from "../modal/Modal"
 import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 
@@ -8,7 +7,6 @@ import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/Autoco
 
 interface OwnProps extends AutocompleteProps {
     search_window_title: string
-    start_expanded?: undefined
     on_blur: () => void
 }
 

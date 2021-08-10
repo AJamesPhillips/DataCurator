@@ -10,6 +10,7 @@ import { DefaultTheme } from "./ui_themes/material_default"
 import { ViewOptions } from "./views/ViewOptions"
 import { SyncInfo } from "./sync/SyncInfo"
 import { UserInfo } from "./sync/UserInfo"
+import { StorageInfo } from "./sync/StorageInfo"
 
 
 
@@ -25,6 +26,7 @@ function App()
                             <ViewOptions />
                             <ViewsBreadcrumb />
                             <SyncInfo />
+                            <StorageInfo />
                             <UserInfo />
                         </Toolbar>
                     </AppBar>
