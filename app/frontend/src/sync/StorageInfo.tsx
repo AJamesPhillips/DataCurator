@@ -1,5 +1,6 @@
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
+import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { sentence_case } from "../shared/utils/sentence_case"
@@ -26,11 +27,21 @@ function _StorageInfo (props: Props)
 {
     const { storage_type } = props
 
-    if (!storage_type) return <SelectStorageType />
+    const [show_select_storage, set_show_select_storage] = useState(storage_type === undefined)
 
-    return <Box>
+
+    return <Box
+        style={{ cursor: "pointer" }}
+        onClick={() => set_show_select_storage(true)}
+    >
         &nbsp;
-        {sentence_case(storage_type.replaceAll("_", " "))}
+        {sentence_case((storage_type || "None").replaceAll("_", " "))}
+
+        {show_select_storage && <SelectStorageType on_close={e =>
+            {
+                e && e.stopImmediatePropagation()
+                set_show_select_storage(false)
+            }} />}
     </Box>
 }
 

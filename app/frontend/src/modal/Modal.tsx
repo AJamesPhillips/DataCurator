@@ -9,7 +9,7 @@ import type { RootState } from "../state/State"
 interface OwnProps
 {
     title: string | h.JSX.Element
-    on_close?: () => void
+    on_close?: (e?: h.JSX.TargetedMouseEvent<HTMLDivElement>) => void
     child: () => h.JSX.Element
     size?: "small" | "medium" | "large"
 }
@@ -44,11 +44,11 @@ function _ModalCore (props: Props)
     return <div
         id="modal_background"
         className={(props.size || "small") + "_modal"}
-        onClick={() => on_close && on_close()}
+        onClick={e => on_close && on_close(e)}
     >
         <div id="modal_container" onClick={e => e.stopPropagation()}>
             <div id="modal_title">{props.title}</div>
-            {on_close && <div id="modal_close" onClick={() => on_close()}><span>X</span></div>}
+            {on_close && <div id="modal_close" onClick={e => on_close(e)}><span>X</span></div>}
 
             {props.child()}
         </div>

@@ -15,7 +15,7 @@ import { ACTIONS } from "../state/actions"
 
 interface OwnProps
 {
-    on_close?: () => void
+    on_close: (e?: h.JSX.TargetedMouseEvent<HTMLDivElement>) => void
 }
 
 
@@ -38,7 +38,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _SelectStorageType (props: Props)
 {
-    const [show_advanced, set_show_advanced] = useState(false)
+    const [show_advanced, set_show_advanced] = useState(props.storage_type === "local_server")
     const [storage_type, set_storage_type] = useState(props.storage_type)
 
     const no_storage_type = storage_type === undefined
@@ -50,7 +50,7 @@ function _SelectStorageType (props: Props)
             <span>&nbsp; (You can change this at any time)</span>
         </div>}
         size="medium"
-        on_close={props.on_close}
+        on_close={e => props.on_close(e)}
 
         child={() => <div style={{ margin: 10 }}>
 
@@ -108,7 +108,12 @@ function _SelectStorageType (props: Props)
                 <Button
                     value={no_storage_type ? "Please select storage type first" : "Confirm"}
                     disabled={no_storage_type}
-                    onClick={() => storage_type && props.update_storage_type({ storage_type })}
+                    onClick={e =>
+                    {
+                        e.stopImmediatePropagation()
+                        storage_type && props.update_storage_type({ storage_type })
+                        props.on_close()
+                    }}
                 />
             </ButtonGroup>
 
