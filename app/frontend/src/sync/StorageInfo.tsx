@@ -3,9 +3,9 @@ import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { sentence_case } from "../shared/utils/sentence_case"
 import type { RootState } from "../state/State"
 import { SelectStorageType } from "./SelectStorageType"
+import { get_storage_type_name } from "./utils"
 
 
 
@@ -35,7 +35,7 @@ function _StorageInfo (props: Props)
         onClick={() => set_show_select_storage(true)}
     >
         &nbsp;
-        {sentence_case((storage_type || "None").replaceAll("_", " "))}
+        {get_storage_type_name(storage_type)}
 
         {show_select_storage && <SelectStorageType on_close={e =>
             {
