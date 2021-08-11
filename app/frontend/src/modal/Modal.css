@@ -7,7 +7,7 @@
     right: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(200, 200, 200, 0.3);
+    background-color: rgba(200, 200, 200, 0.7);
 }
 
 #modal_container
@@ -15,13 +15,35 @@
     position: fixed;
     left: 50%;
     top: 40%;
-    width: 600px;
-    margin-left: -300px;
-    height: 250px;
-    margin-top: -125px;
     background-color: white;
     border: thin solid #777;
-    /* overflow: scroll; */
+
+    overflow-y: scroll;
+}
+
+
+.small_modal #modal_container
+{
+    width: 42%;
+    margin-left: -21%;
+    height: 30%;
+    margin-top: -10%;
+}
+
+.medium_modal #modal_container
+{
+    width: 62%;
+    margin-left: -31%;
+    height: 64%;
+    margin-top: -12%;
+}
+
+.large_modal #modal_container
+{
+    width: 88%;
+    margin-left: -44%;
+    height: 80%;
+    margin-top: -14%;
 }
 
 #modal_close

@@ -26,6 +26,7 @@ export function sync_starting_state (): SyncState
         status: undefined,
         error_message: "",
         storage_type: undefined,
+        ...obj,
     }
 
     return state

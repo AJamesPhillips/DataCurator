@@ -26,7 +26,7 @@ function _StorageInfo (props: Props)
 {
     const { storage_type } = props
 
-    if (!storage_type) return <SelectStorageType on_blur={() => {}} />
+    if (!storage_type) return <SelectStorageType />
 
     return <Box>
         &nbsp;

@@ -1,0 +1,19 @@
+
+
+.storage_option
+{
+    cursor: pointer;
+}
+
+
+.storage_option.selected
+{
+    border: thin solid #290;
+    background-color: #efd;
+}
+
+
+.storage_option:hover
+{
+    border: thin solid #2f0;
+}

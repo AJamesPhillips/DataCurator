@@ -1,13 +1,15 @@
 import { h } from "preact"
 import { Button as MaterialButton } from "@material-ui/core"
 import type { ButtonProps } from "@material-ui/core/Button"
-import { Hidden } from '@material-ui/core';
+import { Hidden } from "@material-ui/core"
 
 
 interface SpecificProps
 {
     value?: string,
 	is_hidden?: boolean
+    onPointerDown?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
+    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
 }
 
 export function Button (props: ButtonProps & SpecificProps)

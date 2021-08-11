@@ -23,7 +23,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
     if (!option) return null
 
     return(
-        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true}  disableElevation={true}>
+        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
             <Button
                 onClick={(e: any) => pointer_down && pointer_down(e, option.id)}
                 disabled={!pointer_down}

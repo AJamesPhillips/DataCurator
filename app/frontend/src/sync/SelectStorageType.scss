@@ -1,0 +1,26 @@
+
+
+.storage_option_section
+{
+    border-radius: 4px;
+    padding: 5px;
+    margin: 25px 0;
+
+    border: thin solid #555;
+    background-color: #fafafa;
+}
+
+
+.advanced_options_title
+{
+    transition: background-color 200ms linear;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+}
+
+
+.advanced_options_title:hover
+{
+    background-color: #fafafa;
+}

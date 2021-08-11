@@ -3,7 +3,7 @@
 
 export type SYNC_STATUS = "LOADING" | "SAVING" | "SAVED" | "FAILED" | undefined
 
-type StorageType = "local_server" | "local_storage" | "solid"
+export type StorageType = "local_server" | "local_storage" | "solid"
 
 export interface SyncState
 {

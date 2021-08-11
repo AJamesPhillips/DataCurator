@@ -8,9 +8,10 @@ import type { RootState } from "../state/State"
 
 interface OwnProps
 {
-    title: string
-    on_close: () => void
+    title: string | h.JSX.Element
+    on_close?: () => void
     child: () => h.JSX.Element
+    size?: "small" | "medium" | "large"
 }
 interface ModalCoreOwnProps extends OwnProps
 {
@@ -36,12 +37,18 @@ type Props = PropsFromRedux & ModalCoreOwnProps
 
 function _ModalCore (props: Props)
 {
-    if (props.should_close) setTimeout(() => props.on_close(), 0)
+    const { on_close } = props
 
-    return <div id="modal_background" onClick={() => props.on_close()}>
+    if (on_close && props.should_close) setTimeout(() => on_close(), 0)
+
+    return <div
+        id="modal_background"
+        className={(props.size || "small") + "_modal"}
+        onClick={() => on_close && on_close()}
+    >
         <div id="modal_container" onClick={e => e.stopPropagation()}>
-            {props.title}
-            <div id="modal_close" onClick={() => props.on_close()}><span>X</span></div>
+            <div id="modal_title">{props.title}</div>
+            {on_close && <div id="modal_close" onClick={() => on_close()}><span>X</span></div>}
 
             {props.child()}
         </div>
@@ -54,6 +61,7 @@ const ModalCore = connector(_ModalCore) as FunctionalComponent<ModalCoreOwnProps
 
 export function Modal (props: OwnProps)
 {
+    // TODO replace this with useRef, or understand why useRef is unsuitable to use.
     const time_stamp_first_rendered = performance.now()
 
     return <ModalCore
