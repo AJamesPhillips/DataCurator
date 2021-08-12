@@ -12,6 +12,7 @@ import { ACTIONS } from "../../actions"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
 import { setItem } from "localforage"
+import { save_solid_data } from "./solid"
 
 
 
@@ -20,6 +21,15 @@ export function save_state (dispatch: Dispatch, state: RootState)
 {
     if (!needs_save(state, last_saved)) return
 
+
+    const { storage_type } = state.sync
+    if (!storage_type)
+    {
+        console.log("Returning early from save_state.  No storage_type set")
+        return
+    }
+
+
     last_saved = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
@@ -27,7 +37,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
 
     let promise_save_data: Promise<any>
 
-    if (state.sync.storage_type === "local_server")
+    if (storage_type === "local_server")
     {
         // const state_to_save = get_state_to_save(state)
         // const state_str = JSON.stringify(state_to_save)
@@ -43,9 +53,18 @@ export function save_state (dispatch: Dispatch, state: RootState)
             body: specialised_state_str,
         })
     }
-    else
+    else if (storage_type === "solid")
+    {
+        promise_save_data = save_solid_data(specialised_state)
+    }
+    else if (storage_type === "local_storage")
     {
         promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
+    }
+    else
+    {
+        console.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
+        return
     }
 
     promise_save_data

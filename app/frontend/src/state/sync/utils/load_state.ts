@@ -6,23 +6,41 @@ import { parse_specialised_objects_from_server_data } from "../../specialised_ob
 import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
+import { get_solid_data } from "./solid"
 
 
 
 export function load_state (dispatch: Dispatch, state: RootState)
 {
+    const { storage_type } = state.sync
+    if (!storage_type)
+    {
+        console.log("Returning early from load_state.  No storage_type set")
+        return
+    }
+
+
     dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
 
     let promise_data: Promise<SpecialisedObjectsFromToServer | null>
 
-    if (state.sync.storage_type === "local_server")
+    if (storage_type === "local_server")
     {
         promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
             .then(resp => resp.json())
     }
-    else
+    else if (storage_type === "solid")
+    {
+        promise_data = get_solid_data()
+    }
+    else if (storage_type === "local_storage")
     {
         promise_data = getItem<SpecialisedObjectsFromToServer>(LOCAL_STORAGE_STATE_KEY)
+    }
+    else
+    {
+        console.error(`Returning from load_state.  storage_type "${storage_type}" unsupported.`)
+        return
     }
 
     // fetch("http://localhost:4000/api/v1/state/", {
