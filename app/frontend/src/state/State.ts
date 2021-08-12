@@ -11,6 +11,7 @@ import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponent
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
 import type { SyncState } from "./sync/state"
 import type { UserActivityState } from "./user_activity/state"
+import type { UserInfoState } from "./user_info/state"
 
 
 
@@ -117,4 +118,5 @@ export interface RootState extends RootStateCore
     routing: RoutingState
     sync: SyncState
     user_activity: UserActivityState
+    user_info: UserInfoState
 }

@@ -2,7 +2,6 @@ import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { sentence_case } from "../shared/utils/sentence_case"
 import type { RootState } from "../state/State"
 
 
@@ -11,6 +10,7 @@ const map_state = (state: RootState) =>
 {
     return {
         storage_type: state.sync.storage_type,
+        solid_oidc_provider: state.user_info.solid_oidc_provider,
     }
 }
 
@@ -23,13 +23,14 @@ type Props = ConnectedProps<typeof connector>
 
 function _UserInfo (props: Props)
 {
-    const { storage_type } = props
+    const { storage_type, solid_oidc_provider } = props
 
-    if (!storage_type) return <div></div> // <SelectStorageType />
+    if (storage_type !== "solid") return null
+
 
     return <Box>
         &nbsp;
-        {sentence_case(storage_type.replaceAll("_", " "))}
+        {!solid_oidc_provider && <div>Show me</div>}
     </Box>
 }
 

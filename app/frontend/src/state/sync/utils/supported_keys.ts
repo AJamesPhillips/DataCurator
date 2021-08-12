@@ -19,6 +19,7 @@ const root_state_keys: {[k in keyof RootState]: true} = {
     meta_wcomponents: true,
     derived: true,
     user_activity: true,
+    user_info: true,
 }
 export const supported_keys = Object.keys(root_state_keys) as (keyof RootState)[]
 
