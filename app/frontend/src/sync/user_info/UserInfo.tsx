@@ -3,6 +3,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
+import { SelectSolidUser } from "./SelectSolidUser"
 
 
 
@@ -28,9 +29,11 @@ function _UserInfo (props: Props)
     if (storage_type !== "solid") return null
 
 
+    const need_solid_user_info = true
+
     return <Box>
         &nbsp;
-        {!solid_oidc_provider && <div>Show me</div>}
+        {need_solid_user_info && <SelectSolidUser />}
     </Box>
 }
 

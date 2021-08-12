@@ -1,27 +1,5 @@
 
 
-.storage_option_section
-{
-    border-radius: 4px;
-    padding: 5px;
-    margin: 25px 0;
-
-    border: thin solid #555;
-    background-color: #fafafa;
-
-    &.warning
-    {
-        border: thin solid #b4a905;
-        background-color: #fffed2;
-    }
-
-    &.danger
-    {
-        border: thin solid #b40505;
-        background-color: #ffd2d2;
-    }
-}
-
 
 .advanced_options_title
 {

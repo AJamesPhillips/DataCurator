@@ -1,38 +1,29 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ButtonGroup } from "@material-ui/core"
 
 import "../common.scss"
-import "./SelectStorageType.scss"
-import { CONTACT_EMAIL_ADDRESS_TAG } from "../../constants"
-import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
-import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import type { StorageType } from "../../state/sync/state"
-import { get_storage_type_name } from "./get_storage_type_name"
-import { StorageOption } from "./StorageOption"
 import { Modal } from "../../modal/Modal"
-import { Button } from "../../sharedf/Button"
+import { ACTIONS } from "../../state/actions"
 
 
 
 interface OwnProps
 {
-    on_close: () => void
+    // on_close: () => void
 }
 
 
 const map_state = (state: RootState) =>
 {
     return {
-        storage_type: state.sync.storage_type,
+        solid_oidc_provider: state.user_info.solid_oidc_provider,
     }
 }
 
 const map_dispatch = {
-    update_storage_type: ACTIONS.sync.update_storage_type,
+    // update_storage_type: ACTIONS.sync.update_storage_type,
+    update_solid_oidc_provider: ACTIONS.user_info.update_solid_oidc_provider,
 }
 
 
@@ -41,71 +32,74 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _SelectStorageType (props: Props)
+function _SelectSolidUser (props: Props)
 {
-    const initial_storage_type_defined = props.storage_type !== undefined
-
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2 style={{ display: "inline" }}>Where would you like to store your data?</h2>
-            <span>&nbsp; (You can change this at any time)</span>
+            <h2>Sign in to your Solid account</h2>
         </div>}
         size="medium"
 
-        // When there is not yet an initial_storage_type_defined, do not give the Modal a close function.
-        // If we don't give the Modal an on_close function, it prevents the Modal from being closed
-        // by the user before they choose & confirm a storage_type
-        on_close={!initial_storage_type_defined ? undefined : e =>
+
+        on_close={e =>
         {
             e?.stopImmediatePropagation()
-            props.on_close()
+            // props.on_close()
         }}
 
 
-        child={<StorageOptionsForm
-            initial_storage_type_defined={initial_storage_type_defined}
-            storage_type={props.storage_type}
-            on_close={props.on_close}
-            update_storage_type={storage_type => props.update_storage_type({ storage_type })}
+        child={<SolidSigninForm
+            solid_oidc_provider={props.solid_oidc_provider}
+            update_solid_oidc_provider={solid_oidc_provider => props.update_solid_oidc_provider({ solid_oidc_provider })}
         />}
     />
 }
 
-export const SelectStorageType = connector(_SelectStorageType) as FunctionalComponent<OwnProps>
+export const SelectSolidUser = connector(_SelectSolidUser) as FunctionalComponent<OwnProps>
 
 
 
-interface StorageOptionsFormProps
+interface SolidSigninFormProps
 {
-    initial_storage_type_defined: boolean
-    storage_type: StorageType | undefined
-    on_close: () => void
-    update_storage_type: (storage_type: StorageType) => void
+    solid_oidc_provider: string
+    // initial_storage_type_defined: boolean
+    // storage_type: StorageType | undefined
+    // on_close: () => void
+    update_solid_oidc_provider: (solid_oidc_provider: string) => void
 }
 
-function StorageOptionsForm (props: StorageOptionsFormProps)
+function SolidSigninForm (props: SolidSigninFormProps)
 {
-    const { initial_storage_type_defined } = props
+    // const { initial_storage_type_defined } = props
 
-    const [show_advanced, set_show_advanced] = useState(props.storage_type === "local_server")
-    const [storage_type, set_storage_type] = useState(props.storage_type)
-    const [copy_data, set_copy_data] = useState(false)
+    // const [show_advanced, set_show_advanced] = useState(props.storage_type === "local_server")
+    // const [storage_type, set_storage_type] = useState(props.storage_type)
+    // const [copy_data, set_copy_data] = useState(false)
 
-    const valid_storage_type = storage_type !== undefined
-    const changed_storage_type = initial_storage_type_defined && props.storage_type !== storage_type
+    // const valid_storage_type = storage_type !== undefined
+    // const changed_storage_type = initial_storage_type_defined && props.storage_type !== storage_type
 
-    const show_warning = changed_storage_type && !copy_data
-    const show_danger_warning = changed_storage_type && copy_data
-    const show_single_confirm_button = valid_storage_type && !copy_data
-    const show_double_confirm_button = valid_storage_type && copy_data
+    // const show_warning = changed_storage_type && !copy_data
+    // const show_danger_warning = changed_storage_type && copy_data
+    // const show_single_confirm_button = valid_storage_type && !copy_data
+    // const show_double_confirm_button = valid_storage_type && copy_data
 
 
-    const initial_storage_name = get_storage_type_name(props.storage_type)
-    const new_storage_name = get_storage_type_name(storage_type)
+    // const initial_storage_name = get_storage_type_name(props.storage_type)
+    // const new_storage_name = get_storage_type_name(storage_type)
 
     return <div style={{ margin: 10 }}>
+        <div className="section">
+            OIDC Provider
+            <input
+                type="text"
+                value={props.solid_oidc_provider}
+                onBlur={e => props.update_solid_oidc_provider(e.currentTarget.value)}
+            />
+        </div>
 
+{/*
         <StorageOption
             name={get_storage_type_name("local_storage")}
             description={<div>
@@ -138,7 +132,7 @@ function StorageOptionsForm (props: StorageOptionsFormProps)
 
 
         <div
-            className="section advanced_options_title"
+            className="storage_option_section advanced_options_title"
             onClick={() => set_show_advanced(!show_advanced)}
         >
             <span style={{ fontSize: 10 }}>{show_advanced ? "\u25BC" : "\u25B6"}</span>
@@ -157,7 +151,7 @@ function StorageOptionsForm (props: StorageOptionsFormProps)
 
 
         {(show_warning || show_danger_warning) && <div
-            className={`section ${show_warning ? "warning" : "danger"}`}
+            className={`storage_option_section ${show_warning ? "warning" : "danger"}`}
         >
             <WarningTriangle message="" backgroundColor={show_warning ? "" : "red"} />&nbsp;
             Swapping to a new data store ({new_storage_name}) will leave behind your
@@ -207,7 +201,7 @@ function StorageOptionsForm (props: StorageOptionsFormProps)
                     props.on_close()
                 }}
             />}
-        </ButtonGroup>
+        </ButtonGroup> */}
 
     </div>
 }
