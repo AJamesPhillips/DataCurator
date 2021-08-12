@@ -16,7 +16,7 @@ export function SearchWindow (props: OwnProps)
     return <Modal
         on_close={() => props.on_blur && props.on_blur()}
         title={props.search_window_title}
-        child={() => <div>
+        child={<div>
             <br />
             <br />
 

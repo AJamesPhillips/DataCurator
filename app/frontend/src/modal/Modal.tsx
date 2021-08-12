@@ -10,7 +10,7 @@ interface OwnProps
 {
     title: string | h.JSX.Element
     on_close?: (e?: h.JSX.TargetedMouseEvent<HTMLDivElement>) => void
-    child: () => h.JSX.Element
+    child: h.JSX.Element
     size?: "small" | "medium" | "large"
 }
 interface ModalCoreOwnProps extends OwnProps
@@ -50,7 +50,7 @@ function _ModalCore (props: Props)
             <div id="modal_title">{props.title}</div>
             {on_close && <div id="modal_close" onClick={e => on_close(e)}><span>X</span></div>}
 
-            {props.child()}
+            {props.child}
         </div>
     </div>
 }

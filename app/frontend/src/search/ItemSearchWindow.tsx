@@ -24,37 +24,30 @@ export function ItemSearchWindow (props: OwnProps)
     return <Modal
         on_close={props.on_close}
         title="Search"
-        child={() => {
+        child={<div id="search_container">
+            <input
+                type="text"
+                value={search_string}
+                onChange={e => set_search_string(e.currentTarget.value)}
+                ref={focus_search_box}
+            />
 
-            const id_search_box = "search_box"
-            setTimeout(() => focus_search_box(id_search_box), 0)
+            <br />
+            <br />
+            <hr />
 
-            return <div id="search_container">
-                <input
-                    id={id_search_box}
-                    type="text"
-                    value={search_string}
-                    onChange={e => set_search_string(e.currentTarget.value)}
-                ></input>
-
-                <br />
-                <br />
-                <hr />
-
-                <ListOfTypes
-                    specific_type_id={props.specific_type_id}
-                    filter_type={props.filter_type}
-                    filtered_by_string={search_string}
-                    on_click={(item: Item) => props.on_choose(item)}
-                />
-            </div>
-        }}
+            <ListOfTypes
+                specific_type_id={props.specific_type_id}
+                filter_type={props.filter_type}
+                filtered_by_string={search_string}
+                on_click={(item: Item) => props.on_choose(item)}
+            />
+        </div>}
     />
 }
 
 
-function focus_search_box (html_id: string)
+function focus_search_box (el: HTMLInputElement | null)
 {
-    const el = document.getElementById(html_id)
     if (el) el.focus()
 }

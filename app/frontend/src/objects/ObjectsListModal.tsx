@@ -18,6 +18,6 @@ export function ObjectsListModal (props: OwnProps)
     return <Modal
         on_close={props.on_close}
         title={props.title || "Objects"}
-        child={() => <ObjectsList object_ids={props.object_ids} />}
+        child={<ObjectsList object_ids={props.object_ids} />}
     />
 }
