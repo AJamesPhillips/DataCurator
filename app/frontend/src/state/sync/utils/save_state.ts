@@ -1,17 +1,17 @@
+import { setItem } from "localforage"
 import type { Dispatch } from "redux"
 
+import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
+import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { ACTIONS } from "../../actions"
 import {
+    RootState,
+    ObjectWithCache,
     CoreObject,
+    ObjectAttribute,
     CoreObjectAttribute,
     is_id_attribute,
-    ObjectAttribute,
-    ObjectWithCache,
-    RootState,
 } from "../../State"
-import { ACTIONS } from "../../actions"
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
-import { setItem } from "localforage"
 import { save_solid_data } from "./solid"
 
 
@@ -90,9 +90,6 @@ function needs_save (state: RootState, last_saved: RootState | undefined)
 //         patterns: state.patterns,
 //         objects: state.objects.map(convert_object_to_core),
 //     }
-//     Object.keys(state).forEach(k => {
-//         if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state to save`)
-//     })
 
 //     return state_to_save
 // }

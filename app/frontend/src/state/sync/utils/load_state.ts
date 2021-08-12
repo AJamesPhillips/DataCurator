@@ -1,11 +1,11 @@
 import type { Dispatch } from "redux"
 import { getItem } from "localforage"
 
+import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
+import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
 import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { LOCAL_STORAGE_STATE_KEY } from "./supported_keys"
 import { get_solid_data } from "./solid"
 
 
@@ -48,10 +48,6 @@ export function load_state (dispatch: Dispatch, state: RootState)
     // })
     // .then(resp => resp.json())
     // .then(data => {
-
-    //     // Object.keys(data).forEach(k => {
-    //     //     if (!supported_keys.includes(k as any)) throw new Error(`Unexpected key "${k}" in state from server`)
-    //     // })
 
     //     let statements: Statement[] = data.statements
     //     let patterns: Pattern[] = data.patterns

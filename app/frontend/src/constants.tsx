@@ -2,6 +2,9 @@ import { h } from "preact"
 
 
 
+export const LOCAL_STORAGE_STATE_KEY = "data_curator_state"
+
+
 export const CONTACT_EMAIL_ADDRESS = "ajp@centerofci.org"
 
 export const CONTACT_EMAIL_ADDRESS_TAG = (
