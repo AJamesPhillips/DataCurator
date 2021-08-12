@@ -2,8 +2,8 @@ import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WarningTriangle } from "../sharedf/WarningTriangle"
-import type { RootState } from "../state/State"
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import type { RootState } from "../../state/State"
 
 
 

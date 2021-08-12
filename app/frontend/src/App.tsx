@@ -8,9 +8,9 @@ import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 import { DefaultTheme } from "./ui_themes/material_default"
 import { ViewOptions } from "./views/ViewOptions"
-import { SyncInfo } from "./sync/SyncInfo"
-import { UserInfo } from "./sync/UserInfo"
-import { StorageInfo } from "./sync/StorageInfo"
+import { StorageInfo } from "./sync/storage_type/StorageInfo"
+import { SyncInfo } from "./sync/sync_info/SyncInfo"
+import { UserInfo } from "./sync/user_info/UserInfo"
 
 
 

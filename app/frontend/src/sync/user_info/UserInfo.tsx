@@ -2,7 +2,7 @@ import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { RootState } from "../state/State"
+import type { RootState } from "../../state/State"
 
 
 

@@ -1,5 +1,5 @@
-import { sentence_case } from "../shared/utils/sentence_case";
-import type { StorageType } from "../state/sync/state";
+import { sentence_case } from "../../shared/utils/sentence_case"
+import type { StorageType } from "../../state/sync/state"
 
 
 

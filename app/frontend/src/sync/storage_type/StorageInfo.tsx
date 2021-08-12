@@ -3,9 +3,9 @@ import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { RootState } from "../state/State"
+import type { RootState } from "../../state/State"
 import { SelectStorageType } from "./SelectStorageType"
-import { get_storage_type_name } from "./utils"
+import { get_storage_type_name } from "./get_storage_type_name"
 
 
 
