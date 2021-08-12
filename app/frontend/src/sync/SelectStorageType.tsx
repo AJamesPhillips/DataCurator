@@ -18,7 +18,7 @@ import { WarningTriangle } from "../sharedf/WarningTriangle"
 
 interface OwnProps
 {
-    on_close: (e?: h.JSX.TargetedMouseEvent<HTMLDivElement>) => void
+    on_close: () => void
 }
 
 
@@ -65,7 +65,15 @@ function _SelectStorageType (props: Props)
             <span>&nbsp; (You can change this at any time)</span>
         </div>}
         size="medium"
-        on_close={e => props.on_close(e)}
+
+        // When there is not yet an initial_storage_type_defined, do not give the Modal a close function.
+        // If we don't give the Modal an on_close function, it prevents the Modal from being closed
+        // by the user before they choose & confirm a storage_type
+        on_close={!initial_storage_type_defined ? undefined : e =>
+        {
+            e?.stopImmediatePropagation()
+            props.on_close()
+        }}
 
         child={() => <div style={{ margin: 10 }}>
 
@@ -74,7 +82,7 @@ function _SelectStorageType (props: Props)
                 description={<div>
                     The data is stored in your web browser. It never leaves your web browser. It is not available
                     in other web browsers, or on other computers. If you work in an incognito window you data will
-                    be lost. If you clear you cache &amp; cookies your data will be lost. We recommend using this
+                    be lost. If you clear your cache &amp; cookies your data will be lost. We recommend using this
                     for temporary demos <s>or if you are going to export to a file and reimport it after every
                     use</s> [feature not supported yet].
                 </div>}
@@ -112,7 +120,7 @@ function _SelectStorageType (props: Props)
             {show_advanced && <StorageOption
                 name={get_storage_type_name("local_server")}
                 description={<div>
-                    You will need to be running your local data curator server at localhost:4000 to use this option successfully. If you choose this option we assume you know what you are doing and have a copy of the code base. If not, please contact {CONTACT_EMAIL_ADDRESS_TAG}
+                    You will need to be running your local Data Curator server at localhost:4000 to use this option successfully. If you choose this option we assume you know what you are doing and have a copy of the code base. If not, please contact {CONTACT_EMAIL_ADDRESS_TAG}
                 </div>}
                 selected={storage_type === "local_server"}
                 on_click={() => set_storage_type("local_server")}

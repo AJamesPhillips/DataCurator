@@ -37,11 +37,7 @@ function _StorageInfo (props: Props)
         &nbsp;
         {get_storage_type_name(storage_type)}
 
-        {show_select_storage && <SelectStorageType on_close={e =>
-            {
-                e && e.stopImmediatePropagation()
-                set_show_select_storage(false)
-            }} />}
+        {show_select_storage && <SelectStorageType on_close={() => set_show_select_storage(false)} />}
     </Box>
 }
 
