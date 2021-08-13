@@ -248,6 +248,8 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
                 created_at_ms: state.routing.args.created_at_ms,
                 sim_ms: state.routing.args.sim_ms,
             })
+
+
             if (VAP_set)
             {
                 const value_args = get_props_for_get_counterfactual_v2_VAP_set(from_wc, state)

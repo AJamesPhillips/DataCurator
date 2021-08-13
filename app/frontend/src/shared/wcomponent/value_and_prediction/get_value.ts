@@ -2,18 +2,12 @@ import {
     ComposedCounterfactualStateValueAndPredictionV1,
     merge_all_counterfactuals_into_all_VAPs,
 } from "../../counterfactuals/merge"
-import { test } from "../../utils/test"
 import { CurrentValue, CurrentValueAndProbabilities, VAPsType } from "../interfaces/generic_value"
-import { WComponent, wcomponent_has_VAP_sets } from "../interfaces/SpecialisedObjects"
 import type {
-    WComponentNodeStateV2,
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
 } from "../interfaces/state"
 import type {
-    TemporalUncertainty,
-    VAP_id_counterfactual_map,
-    VAP_set_id_counterfactual_map,
     WComponentCounterfactuals,
 } from "../../uncertainty/uncertainty"
 import { calc_is_uncertain } from "../uncertainty_utils"
@@ -45,30 +39,6 @@ export function get_current_value (probabilities: CurrentValueAndProbabilities[]
 
 
 
-interface GetCurrentCounterfactualVAPSetsArgs
-{
-    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represent: VAPsType
-    wc_counterfactuals: WComponentCounterfactuals | undefined
-    created_at_ms: number
-    sim_ms: number
-}
-export function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): ComposedCounterfactualStateValueAndPredictionV1[]
-{
-    const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
-        created_at_ms, sim_ms } = args
-
-    const { present_items } = partition_and_prune_items_by_datetimes({
-        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
-    })
-
-    const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
-    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
-}
-
-
-
 interface GetCurrentValueAndProbabilitiesArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
@@ -81,6 +51,30 @@ export function get_current_values_and_probabilities (args: GetCurrentValueAndPr
 {
     const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args)
     return get_probable_VAP_values(counterfactual_VAPs, args.VAPs_represent)
+}
+
+
+
+interface GetCurrentCounterfactualVAPSetsArgs
+{
+    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
+    VAPs_represent: VAPsType
+    wc_counterfactuals: WComponentCounterfactuals | undefined
+    created_at_ms: number
+    sim_ms: number
+}
+function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): ComposedCounterfactualStateValueAndPredictionV1[]
+{
+    const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
+        created_at_ms, sim_ms } = args
+
+    const { present_items } = partition_and_prune_items_by_datetimes({
+        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
+    })
+
+    const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
+    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
+    return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
 }
 
 
