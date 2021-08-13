@@ -1,7 +1,15 @@
-import type { Perception, WComponent, WComponentsById } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeView, KnowledgeViewsById, KnowledgeViewSortType } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type {
+    Perception,
+    WComponent,
+    WComponentsById,
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type {
+    KnowledgeView,
+    KnowledgeViewsById,
+    KnowledgeViewSortType,
+} from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { RootState } from "../State"
-import type { NestedKnowledgeViewIds } from "../derived/State"
+import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
 import { wcomponent_id_to_wcomponent_kv_id } from "../../shared/utils/ids"
 
@@ -162,26 +170,31 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
 
 
 
-
 export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewIds)
 {
-    const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
-        priority: "0",
-        normal: "1",
-        hidden: "2",
-        archived: "3",
-    }
-
-    map.top_ids = sort_list(map.top_ids, id =>
-    {
-        const entry = map.map[id]!
-        return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
-    }, "ascending")
+    map.top_ids = sort_knowledge_map_ids_by_priority_then_title(map.top_ids, map.map)
 
     Object.values(map.map).forEach(entry =>
     {
-        entry.child_ids = sort_list(entry.child_ids, id => map.map[id]!.title.toLowerCase(), "ascending")
+        entry.child_ids = sort_knowledge_map_ids_by_priority_then_title(entry.child_ids, map.map)
     })
+}
+
+
+
+const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
+    priority: "0",
+    normal: "1",
+    hidden: "2",
+    archived: "3",
+}
+function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: NestedKnowledgeViewIdsMap)
+{
+    return sort_list(ids, id =>
+    {
+        const entry = map[id]!
+        return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
+    }, "ascending")
 }
 
 
