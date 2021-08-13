@@ -81,7 +81,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [temp_value_str, set_temp_value_str] = useState("")
     useEffect(() =>
     {
-        set_temp_value_str(props.initial_search_term || selected_title || "")
+        set_temp_value_str(props.initial_search_term || selected_title)
     }, [props.initial_search_term, selected_title])
     const { throttled: handle_on_change, flush: flush_temp_value_str } = throttle(set_temp_value_str, 300)
 
@@ -111,7 +111,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         const selected_option = get_selected_option(props, props.options)
 
-        return selected_option ? selected_option.title : "-"
+        return selected_option ? selected_option.title : ""
     }
 
 
@@ -205,20 +205,11 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             }}
             type="text"
             placeholder={placeholder}
-            value={temp_value_str}
+            value={temp_value_str || (editing_options ? "" : "-")}
             onFocus={e => {
                 setTimeout(() => set_editing_options(true), 0)
 
-                // Clear none's "-" value string if present
-                const none_value_selected = !final_value || final_value.id === undefined
-                if (none_value_selected && e.currentTarget.value === "-")
-                {
-                    set_temp_value_str("")
-                }
-                else
-                {
-                    e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-                }
+                e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
             }}
             onChange={e => handle_on_change(e.currentTarget.value)}
             onKeyDown={e => handle_key_down(e, options_to_display)}
