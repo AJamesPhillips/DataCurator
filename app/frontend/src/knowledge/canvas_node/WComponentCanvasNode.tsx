@@ -213,7 +213,7 @@ function _WComponentCanvasNode (props: Props)
         || props.have_judgements
 
 
-    const terminals = (!on_graph || !is_editing) ? [] : ((is_highlighted && is_editing) ? terminals_with_label : terminals_without_label)
+    const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
 
 
     const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
@@ -299,8 +299,8 @@ export const WComponentCanvasNode = connector(_WComponentCanvasNode) as Function
 
 
 
+const no_terminals: Terminal[] = []
 const terminals_with_label: Terminal[] = []
-const terminals_without_label: Terminal[] = []
 
 connection_terminal_attributes.forEach(attribute =>
 {
@@ -311,9 +311,19 @@ connection_terminal_attributes.forEach(attribute =>
         const label = type.attribute.slice(0, 1).toUpperCase()
 
         terminals_with_label.push({ type, style: connection_style, label })
-        terminals_without_label.push({ type, style: connection_style, label: "" })
     })
 })
+
+
+
+function get_terminals (args: { on_graph: boolean; is_editing: boolean; is_highlighted: boolean })
+{
+    if (!args.on_graph) return no_terminals
+    if (!args.is_editing) return no_terminals
+    if (!args.is_highlighted) return no_terminals
+
+    return terminals_with_label
+}
 
 
 
