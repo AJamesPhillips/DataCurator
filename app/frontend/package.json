@@ -16,13 +16,14 @@
     "access": "public"
   },
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
+    "start": "snowpack dev --polyfill-node",
+    "build": "snowpack build --polyfill-node",
     "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,ts,tsx}\"",
     "test": "web-test-runner \"src/**/*.test.tsx\""
   },
   "dependencies": {
+    "@inrupt/solid-client": "^1.11.0",
     "@inrupt/solid-client-authn-browser": "^1.11.0",
     "@material-ui/core": "4.11.4",
     "@material-ui/icons": "4.11.2",

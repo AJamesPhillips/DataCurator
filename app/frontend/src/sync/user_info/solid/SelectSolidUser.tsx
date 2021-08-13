@@ -7,7 +7,7 @@ import { SolidSigninForm } from "./SolidSigninForm"
 
 interface OwnProps
 {
-    // on_close: () => void
+    on_close: () => void
 }
 
 
@@ -24,10 +24,10 @@ export function SelectSolidUser (props: OwnProps)
         on_close={e =>
         {
             e?.stopImmediatePropagation()
-            // props.on_close()
+            props.on_close()
         }}
 
 
-        child={<SolidSigninForm />}
+        child={<SolidSigninForm on_close={props.on_close}/>}
     />
 }

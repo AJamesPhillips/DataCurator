@@ -1,5 +1,8 @@
+import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
+import { useEffect } from "preact/hooks"
+import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
@@ -11,7 +14,7 @@ const map_state = (state: RootState) =>
 {
     return {
         storage_type: state.sync.storage_type,
-        solid_oidc_provider: state.user_info.solid_oidc_provider,
+        user_name: state.user_info.user_name,
     }
 }
 
@@ -24,16 +27,34 @@ type Props = ConnectedProps<typeof connector>
 
 function _UserInfo (props: Props)
 {
-    const { storage_type, solid_oidc_provider } = props
+    const { storage_type, user_name } = props
+    const [show_solid_signin_form, set_show_solid_signin_form] = useState(false)
 
     if (storage_type !== "solid") return null
 
 
-    const need_solid_user_info = true
+    const solid_session = getDefaultSession()
+    useEffect(() =>
+    {
+        set_show_solid_signin_form(!solid_session.info.isLoggedIn)
+    }, [])
+
+
+    const on_close = () =>
+    {
+        set_show_solid_signin_form(false)
+    }
+
 
     return <Box>
         &nbsp;
-        {need_solid_user_info && <SelectSolidUser />}
+        <span
+            onClick={() => set_show_solid_signin_form(true)}
+            style={{ cursor: "pointer" }}
+        >
+            {user_name}
+        </span>
+        {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
     </Box>
 }
 

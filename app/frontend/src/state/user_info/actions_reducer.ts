@@ -14,6 +14,12 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
+    if (is_update_user_name_from_solid(action))
+    {
+        state = update_substate(state, "user_info", "user_name", action.user_name_from_solid)
+    }
+
+
     return state
 }
 
@@ -28,7 +34,7 @@ interface ActionUpdateSolidOidcProvider extends Action, UpdateSolidOidcProviderA
 
 const update_solid_oidc_provider_type = "update_solid_oidc_provider"
 
-export const update_solid_oidc_provider = (args: UpdateSolidOidcProviderArgs): ActionUpdateSolidOidcProvider =>
+const update_solid_oidc_provider = (args: UpdateSolidOidcProviderArgs): ActionUpdateSolidOidcProvider =>
 {
     return { type: update_solid_oidc_provider_type, ...args }
 }
@@ -39,6 +45,27 @@ const is_update_solid_oidc_provider = (action: AnyAction): action is ActionUpdat
 
 
 
+interface UpdateUserNameFromSolidArgs
+{
+    user_name_from_solid: string
+}
+
+interface ActionUpdateUserNameFromSolid extends Action, UpdateUserNameFromSolidArgs {}
+
+const update_user_name_from_solid_type = "update_user_name_from_solid"
+
+const update_user_name_from_solid = (args: UpdateUserNameFromSolidArgs): ActionUpdateUserNameFromSolid =>
+{
+    return { type: update_user_name_from_solid_type, ...args }
+}
+
+const is_update_user_name_from_solid = (action: AnyAction): action is ActionUpdateUserNameFromSolid => {
+    return action.type === update_user_name_from_solid_type
+}
+
+
+
 export const user_info_actions = {
     update_solid_oidc_provider,
+    update_user_name_from_solid,
 }
