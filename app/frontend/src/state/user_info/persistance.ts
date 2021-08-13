@@ -1,3 +1,5 @@
+import { Session } from "@inrupt/solid-client-authn-browser"
+
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../utils/persistence_utils"
