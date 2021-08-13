@@ -43,7 +43,7 @@ function _ModalCore (props: Props)
 
     return <div
         id="modal_background"
-        className={(props.size || "small") + "_modal"}
+        className={(props.size || "medium") + "_modal"}
         onClick={e => on_close && on_close(e)}
     >
         <div id="modal_container" onClick={e => e.stopPropagation()}>
