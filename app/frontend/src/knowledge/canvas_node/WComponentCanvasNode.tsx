@@ -209,7 +209,7 @@ function _WComponentCanvasNode (props: Props)
         || wcomponent_is_judgement_or_objective(wcomponent)
         || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
         // || is_highlighted
-        || is_current_item
+        // || is_current_item
         || props.have_judgements
 
 
