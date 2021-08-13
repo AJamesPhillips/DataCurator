@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
-import { SelectSolidUser } from "./SelectSolidUser"
+import { SelectSolidUser } from "./solid/SelectSolidUser"
 
 
 

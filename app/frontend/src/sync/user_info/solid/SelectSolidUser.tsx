@@ -1,10 +1,11 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
-import type { RootState } from "../../state/State"
-import { Modal } from "../../modal/Modal"
-import { ACTIONS } from "../../state/actions"
+import "../../common.scss"
+import type { RootState } from "../../../state/State"
+import { Modal } from "../../../modal/Modal"
+import { ACTIONS } from "../../../state/actions"
+import { AutoFillOIDC } from "./AutoFillOIDC"
 
 
 
@@ -91,15 +92,21 @@ function SolidSigninForm (props: SolidSigninFormProps)
 
     return <div style={{ margin: 10 }}>
         <div className="section">
-            OIDC Provider
+            OIDC Provider&nbsp;
             <input
                 type="text"
+                style={{ width: 250 }}
                 value={props.solid_oidc_provider}
                 onBlur={e => props.update_solid_oidc_provider(e.currentTarget.value)}
             />
+
+            &nbsp;&nbsp;
+            Use:
+            &nbsp;<AutoFillOIDC solid_oidc_provider_root="solidcommunity.net" />
+            &nbsp;<AutoFillOIDC solid_oidc_provider_root="inrupt.com" />
         </div>
 
-{/*
+        {/*
         <StorageOption
             name={get_storage_type_name("local_storage")}
             description={<div>
