@@ -32,3 +32,10 @@ export function sync_starting_state (): SyncState
 
     return state
 }
+
+
+
+export function is_using_solid_for_storage ()
+{
+    return sync_starting_state().storage_type === "solid"
+}

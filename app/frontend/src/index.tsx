@@ -19,6 +19,7 @@ import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanv
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
+import { is_using_solid_for_storage } from "./state/sync/persistance"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -110,12 +111,9 @@ if (root) {
     }
     else if (window.location.pathname === "/app/" || window.location.pathname === "/app")
     {
-        root.innerHTML = "Attempting to restore logged in Solid session"
-
-        finish_login(getDefaultSession())
+        restore_session(root)
         .then(() =>
         {
-            root.innerHTML = ""
             render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
         })
     }
@@ -129,4 +127,25 @@ if (root) {
 if (title)
 {
     title.innerHTML = APP_DETAILS.NAME
+}
+
+
+
+// TODO move this function somewhere else
+function restore_session (root_el: HTMLElement)
+{
+    const using_solid_for_storage = is_using_solid_for_storage()
+
+    if (using_solid_for_storage)
+    {
+        root_el.innerHTML = "Attempting to restore logged in Solid session"
+
+        return finish_login(getDefaultSession())
+        .then(() =>
+        {
+            root_el.innerHTML = ""
+        })
+    }
+
+    return Promise.resolve()
 }
