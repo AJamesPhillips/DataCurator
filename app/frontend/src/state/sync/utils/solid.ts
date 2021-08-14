@@ -1,5 +1,4 @@
 import {
-    addInteger,
     addStringNoLocale,
     createSolidDataset,
     createThing,
@@ -47,20 +46,22 @@ export async function save_solid_data (state: RootState, data: SpecialisedObject
     let dataset_kv1 = createSolidDataset()
     let thing_kv1 = createThing({ name: "kv" })
     thing_kv1 = addStringNoLocale(thing_kv1, "http://datacurator.org/schema/v1/title", kv1.title)
+    // thing_kv1 = addBoolean(thing_kv1, "http://datacurator.org/schema/v1/is_base", kv1.is_base)
+    thing_kv1 = addStringNoLocale(thing_kv1, "http://datacurator.org/schema/v1/knowledge_view_json", JSON.stringify(kv1))
     dataset_kv1 = setThing(dataset_kv1, thing_kv1)
 
 
     try {
         const knowledge_view_url = knowledge_views_url + kv1.id + ".ttl"
 
-        console.log("Saving...")
+        // console .log("Saving...")
         // Save the SolidDataset
         /* let saved_dataset_kv1 = */ await saveSolidDatasetAt(
             knowledge_view_url,
             dataset_kv1,
             { fetch: solid_fetch }
         )
-        console.log("Saved!")
+        //console .log("Saved!")
 
         return Promise.resolve()
     } catch (err) {

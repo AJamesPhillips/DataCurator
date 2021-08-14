@@ -37,7 +37,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
 const MAX_ATTEMPTS = 5
 function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
 {
-    console.log("attempt_save", attempt)
+    //console .log("attempt_save", attempt)
 
     const { storage_type } = state.sync
     if (!storage_type)
@@ -120,7 +120,7 @@ function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
 
             setTimeout(() =>
             {
-                console.log(`retrying, attempt ${attempt}`)
+                //console .log(`retrying, attempt ${attempt}`)
                 const potentially_newer_state = get_store().getState()
                 attempt_save(potentially_newer_state, dispatch, attempt)
             }, 1000)
