@@ -1,15 +1,15 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { getDefaultSession, handleIncomingRedirect, Session } from "@inrupt/solid-client-authn-browser"
+import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 
 import "../../common.scss"
 import type { RootState } from "../../../state/State"
 import { ACTIONS } from "../../../state/actions"
 import { AutoFillOIDC } from "./AutoFillOIDC"
-import { CLIENT_NAME } from "../../../constants"
 import { useState } from "preact/hooks"
 import { Button } from "../../../sharedf/Button"
 import { get_solid_username } from "./get_solid_username"
+import { finish_login, start_login } from "./handle_login"
 
 
 
@@ -116,33 +116,6 @@ function _SolidSigninForm (props: Props)
 }
 
 export const SolidSigninForm = connector(_SolidSigninForm) as FunctionalComponent<OwnProps>
-
-
-
-function start_login (session: Session, oidcIssuer: string)
-{
-    if (oidcIssuer && !session.info.isLoggedIn)
-    {
-        session.login({
-            oidcIssuer,
-            clientName: CLIENT_NAME,
-            redirectUrl: window.location.href,
-        });
-    }
-}
-
-
-
-async function finish_login (session: Session)
-{
-    const logged_in = session.info.isLoggedIn
-
-    await handleIncomingRedirect({ restorePreviousSession: true })
-
-    const logged_in_status_changed = logged_in !== session.info.isLoggedIn
-
-    return logged_in_status_changed
-}
 
 
 

@@ -17,6 +17,8 @@ import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCust
 import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
+import { finish_login } from "./sync/user_info/solid/handle_login"
+import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -108,7 +110,14 @@ if (root) {
     }
     else if (window.location.pathname === "/app/" || window.location.pathname === "/app")
     {
-        render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
+        root.innerHTML = "Attempting to restore logged in Solid session"
+
+        finish_login(getDefaultSession())
+        .then(() =>
+        {
+            root.innerHTML = ""
+            render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
+        })
     }
     else
     {

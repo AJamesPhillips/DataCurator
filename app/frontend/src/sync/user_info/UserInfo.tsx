@@ -6,6 +6,7 @@ import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
+import { finish_login } from "./solid/handle_login"
 import { SelectSolidUser } from "./solid/SelectSolidUser"
 
 
@@ -36,7 +37,8 @@ function _UserInfo (props: Props)
     const solid_session = getDefaultSession()
     useEffect(() =>
     {
-        set_show_solid_signin_form(!solid_session.info.isLoggedIn)
+        finish_login(solid_session)
+        .then(() => set_show_solid_signin_form(!solid_session.info.isLoggedIn))
     }, [])
 
 
