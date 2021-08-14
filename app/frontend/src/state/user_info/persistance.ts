@@ -25,6 +25,7 @@ export function user_info_starting_state (): UserInfoState
     const state: UserInfoState = {
         solid_oidc_provider: "",
         user_name: "",
+        solid_pod_URL: "",
         ...obj,
     }
 

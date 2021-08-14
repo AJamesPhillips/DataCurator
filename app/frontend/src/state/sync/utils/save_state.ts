@@ -12,26 +12,42 @@ import {
     CoreObjectAttribute,
     is_id_attribute,
 } from "../../State"
+import { get_store } from "../../store"
+import type { StorageType } from "../state"
+import type { SyncError } from "./errors"
 import { save_solid_data } from "./solid"
 
 
 
 let last_saved: RootState | undefined = undefined
+let attempting_save: boolean = false
 export function save_state (dispatch: Dispatch, state: RootState)
 {
-    if (!needs_save(state, last_saved)) return
+    if (!needs_save(state, last_saved) || attempting_save) return
+    attempting_save = true
 
+    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
+
+
+    attempt_save(state, dispatch, 1)
+}
+
+
+
+const MAX_ATTEMPTS = 5
+function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
+{
+    console.log("attempt_save", attempt)
 
     const { storage_type } = state.sync
     if (!storage_type)
     {
-        console.log("Returning early from save_state.  No storage_type set")
+        const error_message = "Can not save.  No storage_type set"
+        const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, retry_attempt: 0 })
+        dispatch(action)
         return
     }
 
-
-    last_saved = state
-    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
     const specialised_state = get_specialised_state_to_save(state)
 
@@ -55,7 +71,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
     }
     else if (storage_type === "solid")
     {
-        promise_save_data = save_solid_data(specialised_state)
+        promise_save_data = save_solid_data(state, specialised_state)
     }
     else if (storage_type === "local_storage")
     {
@@ -67,9 +83,51 @@ export function save_state (dispatch: Dispatch, state: RootState)
         return
     }
 
+
     promise_save_data
-    .then(() => dispatch(ACTIONS.sync.update_sync_status({ status: undefined })))
+    .then(() =>
+    {
+        attempting_save = false
+        last_saved = state
+        dispatch(ACTIONS.sync.update_sync_status({ status: undefined }))
+    })
+    .catch((error: SyncError) =>
+    {
+        let error_message = error.type + ": " + (error.message || "<no message>")
+
+        if (attempt >= MAX_ATTEMPTS)
+        {
+            error_message = `Stopping attempt at resaving after ${attempt} attempts ${error_message}`
+            console.error(error_message)
+
+            attempting_save = false
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, retry_attempt: 0 })
+            dispatch(action)
+        }
+        else
+        {
+            attempt += 1
+
+            error_message = `Retrying, attempt ${attempt}; ${error_message}`
+            console.error(error_message)
+
+            const action = ACTIONS.sync.update_sync_status({
+                status: "FAILED",
+                error_message,
+                retry_attempt: attempt,
+            })
+            dispatch(action)
+
+            setTimeout(() =>
+            {
+                console.log(`retrying, attempt ${attempt}`)
+                const potentially_newer_state = get_store().getState()
+                attempt_save(potentially_newer_state, dispatch, attempt)
+            }, 1000)
+        }
+    })
 }
+
 
 
 function needs_save (state: RootState, last_saved: RootState | undefined)

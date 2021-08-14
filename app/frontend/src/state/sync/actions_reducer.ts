@@ -11,7 +11,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
     if (is_update_sync_status(action))
     {
-        const { status, error_message = "" } = action
+        const { status, error_message = "", retry_attempt } = action
         const saving = status === "SAVING"
         const sync: SyncState = {
             ...state.sync,
@@ -19,6 +19,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
             saving,
             status,
             error_message,
+            retry_attempt,
         }
 
         state = update_state(state, "sync", sync)
@@ -40,6 +41,7 @@ interface UpdateSyncStatusStatementArgs
 {
     status: SYNC_STATUS
     error_message?: string
+    retry_attempt?: number
 }
 
 interface ActionUpdateSyncStatusStatement extends Action, UpdateSyncStatusStatementArgs {}

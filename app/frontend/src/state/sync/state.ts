@@ -12,4 +12,5 @@ export interface SyncState
     status: SYNC_STATUS
     error_message: string
     storage_type: StorageType | undefined
+    retry_attempt: number | undefined
 }

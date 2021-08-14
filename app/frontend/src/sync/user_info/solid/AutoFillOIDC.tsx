@@ -3,14 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../../state/State"
 import { ACTIONS } from "../../../state/actions"
-
-
-
-type OIDC_ProviderRoot = "solidcommunity.net" | "inrupt.com"
-const OIDC_provider_map: {[P in OIDC_ProviderRoot]: string} = {
-    "solidcommunity.net": "https://solidcommunity.net",
-    "inrupt.com": "https://broker.pod.inrupt.com",
-}
+import { OIDC_ProviderRoot, OIDC_provider_map } from "./urls"
 
 
 
