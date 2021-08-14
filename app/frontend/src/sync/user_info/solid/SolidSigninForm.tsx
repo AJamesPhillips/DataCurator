@@ -43,9 +43,9 @@ function _SolidSigninForm (props: Props)
     const [logged_in, _set_logged_in] = useState(solid_session.info.isLoggedIn)
     const set_logged_in = () => _set_logged_in(solid_session.info.isLoggedIn)
 
-    finish_login(solid_session).then(logged_in_status_changed =>
+    finish_login(solid_session).then(() =>
     {
-        if (logged_in_status_changed) update_user_name(props.update_user_name_from_solid)
+        update_user_name(props.update_user_name_from_solid)
         set_logged_in()
     })
 

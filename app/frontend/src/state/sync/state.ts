@@ -7,9 +7,10 @@ export type StorageType = "local_server" | "local_storage" | "solid"
 
 export interface SyncState
 {
+    status: SYNC_STATUS
+    progress: number | undefined
     ready: boolean
     saving: boolean
-    status: SYNC_STATUS
     error_message: string
     storage_type: StorageType | undefined
     retry_attempt: number | undefined

@@ -11,6 +11,10 @@ export function user_info_persist (state: RootState)
 {
     const to_persist = pick([
         "solid_oidc_provider",
+        // This smells like a hack.  Putting it in so that
+        // load_solid_data works on first load
+        "user_name",
+        "solid_pod_URL",
     ], state.user_info)
 
     persist_state_object("user_info", to_persist)

@@ -6,7 +6,7 @@ import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
 import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
-import { get_solid_data } from "./solid"
+import { load_solid_data } from "./solid"
 
 
 
@@ -31,7 +31,7 @@ export function load_state (dispatch: Dispatch, state: RootState)
     }
     else if (storage_type === "solid")
     {
-        promise_data = get_solid_data()
+        promise_data = load_solid_data(state, dispatch)
     }
     else if (storage_type === "local_storage")
     {

@@ -21,9 +21,10 @@ export function sync_starting_state (): SyncState
     const obj = get_persisted_state_object<SyncState>("sync")
 
     const state: SyncState = {
+        status: undefined,
+        progress: undefined,
         ready: false,
         saving: false,
-        status: undefined,
         error_message: "",
         storage_type: undefined,
         retry_attempt: undefined,

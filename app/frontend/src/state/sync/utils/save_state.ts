@@ -13,7 +13,6 @@ import {
     is_id_attribute,
 } from "../../State"
 import { get_store } from "../../store"
-import type { StorageType } from "../state"
 import type { SyncError } from "./errors"
 import { save_solid_data } from "./solid"
 
@@ -21,8 +20,10 @@ import { save_solid_data } from "./solid"
 
 let last_saved: RootState | undefined = undefined
 let attempting_save: boolean = false
-export function save_state (dispatch: Dispatch, state: RootState)
+export function save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
+    if (!state.sync.ready || !load_state_from_storage) return
+
     if (!needs_save(state, last_saved) || attempting_save) return
     attempting_save = true
 
@@ -37,7 +38,7 @@ export function save_state (dispatch: Dispatch, state: RootState)
 const MAX_ATTEMPTS = 5
 function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
 {
-    //console .log("attempt_save", attempt)
+    console .log("attempt_save", attempt)
 
     const { storage_type } = state.sync
     if (!storage_type)

@@ -52,10 +52,7 @@ export function get_store (args: ConfigStoreArgs = {})
         persist_all_state(state)
         ;(window as any).debug_state = state
 
-        // for now, very simple logic for when to save
-        if (!state.sync.ready || !load_state_from_storage) return
-
-        save_state(store.dispatch, state)
+        save_state(load_state_from_storage, store.dispatch, state)
     }
     store.subscribe(save)
     window.onbeforeunload = save
