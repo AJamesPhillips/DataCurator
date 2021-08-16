@@ -35,7 +35,7 @@ function App()
                     <Box id="app_content">
                         <MainAreaRouter />
                     </Box>
-                    <Box id="side_panel" component="aside" p={5} mt={1}>
+                    <Box component="aside" id="side_panel" bgcolor="#fafafa"  p={5} mt={1} position="relative" zIndex={10}>
                         <TabsContainer />
                         <SidePanel />
                     </Box>

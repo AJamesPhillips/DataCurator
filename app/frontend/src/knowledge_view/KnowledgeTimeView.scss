@@ -1,12 +1,48 @@
+@use 'sass:math';
+$scales: 'seconds', 'minutes', 'hours', 'days', 'weeks', 'months', 'years';
 
+// overflowX and overflowX styleprops DO NOT WORK, setting these in jsx vs scss
+.scroll_area_x {
+    overflow-x: auto;
+    overflow-y:hidden;
+}
 
-.knowledge_time_view
-{
-    .node_container
-    {
-        .value_and_prediction_set_summaries_container
-        {
-            display: inline-flex;
+.scroll_area_y {
+    overflow-y: auto;
+    overflow-x:hidden;
+}
+
+.time_view {
+   $grid_color:grey;
+    &.timeline_spacing {
+
+        .vaps {
+            .vap {
+                transform:translate(-50%, 0)
+            }
         }
+    }
+
+    .rotater {
+        white-space: nowrap;
+        transform:translate(50%, 0) rotate(90deg);
+        transform-origin:center bottom;
+    }
+
+    .tick {
+        border-left:1px rgba($grid_color, 0.5) dashed;
+    }
+
+    @each $scale in $scales {
+        & .#{$scale} { display:none; }
+
+        &.#{$scale} .#{$scale} {
+            display:initial;
+        }
+    }
+
+    .vaps {
+        &:empty { display:none; }
+        .vap:hover { z-index:9; }
     }
 }
