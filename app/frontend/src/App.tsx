@@ -20,7 +20,7 @@ function App()
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
             <Box id="app" className="app">
-                <Box component="header" zIndex={1}>
+                <Box component="header" zIndex={100}>
                     <AppBar position="static">
                         <Toolbar variant="dense">
                             <ViewOptions />
@@ -31,7 +31,7 @@ function App()
                         </Toolbar>
                     </AppBar>
                 </Box>
-                <Box component="main">
+                <Box component="main" position="relative" zIndex={1}>
                     <Box id="app_content">
                         <MainAreaRouter />
                     </Box>
