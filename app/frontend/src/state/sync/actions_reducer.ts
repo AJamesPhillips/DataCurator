@@ -32,6 +32,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     if (is_update_storage_type(action))
     {
         state = update_substate(state, "sync", "storage_type", action.storage_type)
+        state = update_substate(state, "sync", "copy_from_storage_type", action.copy_from)
     }
 
 
@@ -65,6 +66,7 @@ const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncSta
 interface UpdateStorageTypeArgs
 {
     storage_type: StorageType
+    copy_from: StorageType | false
 }
 
 interface ActionUpdateStorageType extends Action, UpdateStorageTypeArgs {}

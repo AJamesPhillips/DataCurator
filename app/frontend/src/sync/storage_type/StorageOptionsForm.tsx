@@ -16,22 +16,22 @@ import { Button } from "../../sharedf/Button"
 
 interface OwnProps
 {
-    initial_storage_type_defined: boolean
     storage_type: StorageType | undefined
     on_close: () => void
-    update_storage_type: (storage_type: StorageType) => void
+    update_storage_type: (args: { storage_type: StorageType, copy_from: StorageType | false }) => void
 }
 
 export function StorageOptionsForm (props: OwnProps)
 {
-    const { initial_storage_type_defined } = props
+    const { storage_type: initial_storage_type } = props
 
-    const [show_advanced, set_show_advanced] = useState(props.storage_type === "local_server")
-    const [storage_type, set_storage_type] = useState(props.storage_type)
+    const [show_advanced, set_show_advanced] = useState(initial_storage_type === "local_server")
+    const [storage_type, set_storage_type] = useState(initial_storage_type)
     const [copy_data, set_copy_data] = useState(false)
+    const copy_from: StorageType | false = (copy_data && is_initial_storage_type_defined(initial_storage_type)) ? initial_storage_type : false
 
     const valid_storage_type = storage_type !== undefined
-    const changed_storage_type = initial_storage_type_defined && props.storage_type !== storage_type
+    const changed_storage_type = is_initial_storage_type_defined(initial_storage_type) && initial_storage_type !== storage_type
 
     const show_warning = changed_storage_type && !copy_data
     const show_danger_warning = changed_storage_type && copy_data
@@ -39,7 +39,7 @@ export function StorageOptionsForm (props: OwnProps)
     const show_double_confirm_button = valid_storage_type && copy_data
 
 
-    const initial_storage_name = get_storage_type_name(props.storage_type)
+    const initial_storage_name = get_storage_type_name(initial_storage_type)
     const new_storage_name = get_storage_type_name(storage_type)
 
     return <div style={{ margin: 10 }}>
@@ -100,7 +100,7 @@ export function StorageOptionsForm (props: OwnProps)
             <WarningTriangle message="" backgroundColor={show_warning ? "" : "red"} />&nbsp;
             Swapping to a new data store ({new_storage_name}) will leave behind your
             current data (in {initial_storage_name}).
-            To copy your current data to the new storage location please check this box
+            To copy your current data ({initial_storage_name}) to the new storage location ({new_storage_name}) please check this box
 
             &nbsp;<input type="checkbox" checked={copy_data} onClick={e =>
             {
@@ -109,7 +109,7 @@ export function StorageOptionsForm (props: OwnProps)
             }} />&nbsp;
 
             {show_danger_warning && <div>
-                DANGER: you may overwrite some or all of the current data
+                DANGER: you will overwrite the current data
                 in '{new_storage_name}' with the data in '{initial_storage_name}'.
             </div>}
         </div>}
@@ -118,10 +118,11 @@ export function StorageOptionsForm (props: OwnProps)
         <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true}  disableElevation={true}>
             {show_single_confirm_button && <Button
                 value="Confirm"
+                disabled={!changed_storage_type}
                 onClick={e =>
                 {
                     e.stopImmediatePropagation()
-                    storage_type && props.update_storage_type(storage_type)
+                    storage_type && props.update_storage_type({ storage_type, copy_from })
                     props.on_close()
                 }}
             />}
@@ -129,9 +130,10 @@ export function StorageOptionsForm (props: OwnProps)
 
             {show_double_confirm_button && <ConfirmatoryButton
                 button_text="Confirm"
+                disabled={!changed_storage_type}
                 on_click={() =>
                 {
-                    storage_type && props.update_storage_type(storage_type)
+                    storage_type && props.update_storage_type({ storage_type, copy_from })
                     props.on_close()
                 }}
             />}
@@ -148,4 +150,11 @@ export function StorageOptionsForm (props: OwnProps)
         </ButtonGroup>
 
     </div>
+}
+
+
+
+function is_initial_storage_type_defined (initial_storage_type: StorageType | undefined): initial_storage_type is StorageType
+{
+    return initial_storage_type !== undefined
 }

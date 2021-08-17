@@ -54,10 +54,9 @@ function _SelectStorageType (props: Props)
 
 
         child={<StorageOptionsForm
-            initial_storage_type_defined={initial_storage_type_defined}
             storage_type={props.storage_type}
             on_close={props.on_close}
-            update_storage_type={storage_type => props.update_storage_type({ storage_type })}
+            update_storage_type={props.update_storage_type}
         />}
     />
 }

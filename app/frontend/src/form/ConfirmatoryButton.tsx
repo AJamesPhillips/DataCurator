@@ -13,6 +13,7 @@ interface OwnProps
     button_text: string
     button_icon?: h.JSX.Element
     tooltip_text?: string
+    disabled?: boolean
 }
 
 
@@ -27,6 +28,7 @@ export function ConfirmatoryButton (props: OwnProps)
             <ThemeProvider theme={WarningTheme}>
                 <Button
                     color="secondary"
+                    disabled={props.disabled}
                     is_hidden={!progressing}
                     onClick={e =>
                     {

@@ -9,6 +9,7 @@ export function sync_persist (state: RootState)
 {
     const to_persist = pick([
         "storage_type",
+        "copy_from_storage_type",
     ], state.sync)
 
     persist_state_object("sync", to_persist)
@@ -26,6 +27,7 @@ export function sync_starting_state (): SyncState
         saving: false,
         error_message: "",
         storage_type: undefined,
+        copy_from_storage_type: false,
         retry_attempt: undefined,
         ...obj,
     }

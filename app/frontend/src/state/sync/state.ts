@@ -12,5 +12,6 @@ export interface SyncState
     saving: boolean
     error_message: string
     storage_type: StorageType | undefined
+    copy_from_storage_type: StorageType | false
     retry_attempt: number | undefined
 }
