@@ -97,5 +97,3 @@ async function get_items <I> (items_url: string, dispatch: Dispatch): Promise<{ 
 
     return { items, error }
 }
-
-
