@@ -8,7 +8,7 @@ import { MainArea } from "../layout/MainArea"
 import { connect, ConnectedProps } from "react-redux"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+import { get_created_at_ms, get_sim_datetime_ms } from "../shared/wcomponent/utils_datetime"
 import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
@@ -281,23 +281,29 @@ class DateRange {
                                         display={`${(this.timeline_spacing) ? "block" : "flex" }`}
                                         flexDirection="row" justifyContent="start"
                                     >
-                                        {VAP_sets.map((VAP, index) => {
-                                            const vap_percent = this.get_date_offset_percent(VAP.created_at)
-                                            return (
-                                                <Box className="vap"
-                                                    flexGrow={0} flexShrink={1} flexBasis="auto"
-                                                    display="inline-block"
-                                                    border={1}
-                                                    minHeight="100%" height="100%" maxHeight="100%"
-                                                    position={`${(this.timeline_spacing) ? "absolute" : "static" }`}
-                                                    zIndex={1}
-                                                    left={`${vap_percent}%`}
-                                                >
-                                                    {/* <Box component="small">{VAP.created_at.toLocaleString()}</Box><br /> */}
-                                                    {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
-                                                    <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
-                                                </Box>
-                                            )
+                                        {VAP_sets.map(VAP => {
+                                            const sim_datetime_ms = get_sim_datetime_ms(VAP);
+                                            if (sim_datetime_ms) {
+                                                const sim_datetime:Date = new Date(sim_datetime_ms);
+                                                const vap_percent = this.get_date_offset_percent(sim_datetime);
+                                                return (
+                                                    <Box className="vap"
+                                                        flexGrow={0} flexShrink={1} flexBasis="auto"
+                                                        display="inline-block"
+                                                        border={1}
+                                                        minHeight="100%" height="100%" maxHeight="100%"
+                                                        position={`${(this.timeline_spacing) ? "absolute" : "static" }`}
+                                                        zIndex={1}
+                                                        left={`${vap_percent}%`}
+                                                    >
+                                                        {/* <Box component="small">{sim_datetime.toLocaleString()}</Box><br /> */}
+                                                        {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                        <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
+                                                    </Box>
+                                                )
+                                            } else {
+                                                return;
+                                            }
                                         })}
                                     </Box>
                                 </Box>
