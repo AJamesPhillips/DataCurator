@@ -22,7 +22,6 @@ export function sync_starting_state (): SyncState
 
     const state: SyncState = {
         status: undefined,
-        progress: undefined,
         ready: false,
         saving: false,
         error_message: "",

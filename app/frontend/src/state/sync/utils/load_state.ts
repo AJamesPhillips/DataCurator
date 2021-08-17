@@ -6,7 +6,8 @@ import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
 import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
-import { load_solid_data } from "./solid"
+import { error_to_string, SyncError } from "./errors"
+import { load_solid_data } from "./solid_load_data"
 
 
 
@@ -76,9 +77,11 @@ export function load_state (dispatch: Dispatch, state: RootState)
 
         dispatch(ACTIONS.sync.update_sync_status({ status: undefined }))
     })
-    .catch(err =>
+    .catch((error: SyncError | Error) =>
     {
-        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message: `${err}` }))
+        const error_message = error_to_string(error)
+        console.error(error)
+        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message }))
     })
 }
 

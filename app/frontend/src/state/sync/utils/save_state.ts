@@ -13,8 +13,8 @@ import {
     is_id_attribute,
 } from "../../State"
 import { get_store } from "../../store"
-import type { SyncError } from "./errors"
-import { save_solid_data } from "./solid"
+import { error_to_string, SyncError } from "./errors"
+import { save_solid_data } from "./solid_save_data"
 
 
 
@@ -92,9 +92,9 @@ function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
         last_saved = state
         dispatch(ACTIONS.sync.update_sync_status({ status: undefined }))
     })
-    .catch((error: SyncError) =>
+    .catch((error: SyncError | Error) =>
     {
-        let error_message = error.type + ": " + (error.message || "<no message>")
+        let error_message = error_to_string(error)
 
         if (attempt >= MAX_ATTEMPTS)
         {
