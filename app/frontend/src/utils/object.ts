@@ -23,3 +23,13 @@ export function safe_merge<
 ): O1 & O2 & O3 & O4 & O5 & O6 & O7 & O8 & O9 {
     return { ...o1, ...o2, ...o3, ...o4, ...o5, ...o6, ...o7, ...o8, ...o9 }
 }
+
+
+
+export function find_match_by_inclusion_of_key <O extends object> (str: string, dictionary: O): undefined | [keyof O, O[keyof O]]
+{
+    const pair = Object.entries(dictionary)
+        .find(([root]) => str.includes(root))
+
+    return pair as any
+}

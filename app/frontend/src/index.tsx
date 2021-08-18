@@ -21,9 +21,10 @@ import { finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_username } from "./sync/user_info/solid/get_solid_username"
-import { get_pod_URL } from "./sync/user_info/solid/urls"
+import { get_pod_URL, OIDC_provider_map } from "./sync/user_info/solid/urls"
 import type { UserInfoState } from "./state/user_info/state"
 import { get_persisted_state_object, persist_state_object } from "./state/utils/persistence_utils"
+import { find_match_by_inclusion_of_key } from "./utils/object"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -154,9 +155,16 @@ function restore_session (root_el: HTMLElement)
         {
             console .log("Signed in as user name: " + user_name_from_solid)
 
-            const solid_oidc_provider = solid_session.info.webId
+            let solid_oidc_provider = (
+                // Will be something like `https://<user name>.solidcommunity.net/profile/card#me`
+                solid_session.info.webId
+                // Will be something like `https://solidcommunity.net`
                 || (get_persisted_state_object<UserInfoState>("user_info").solid_oidc_provider)
                 || ""
+            )
+
+            const match = find_match_by_inclusion_of_key(solid_oidc_provider, OIDC_provider_map)
+            solid_oidc_provider = match ? match[1] : ""
 
             const solid_pod_URL = get_pod_URL({
                 user_name: user_name_from_solid,

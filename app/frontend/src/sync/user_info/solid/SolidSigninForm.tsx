@@ -94,10 +94,7 @@ function _SolidSigninForm (props: Props)
                         if (logged_in)
                         {
                             await solid_session.logout()
-
-                            // Force reload due to https://github.com/inrupt/solid-client-authn-js/issues/1624
-                            window.location.reload()
-                            // set_logged_in()
+                            set_logged_in()
                         }
                         else
                         {

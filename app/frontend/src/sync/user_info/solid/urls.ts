@@ -1,3 +1,4 @@
+import { find_match_by_inclusion_of_key } from "../../../utils/object"
 
 
 
@@ -21,8 +22,7 @@ export function get_pod_URL (args: { solid_oidc_provider: string, user_name: str
 
     if (!solid_oidc_provider || !user_name) return undefined
 
-    const pod_URL_template_pair = Object.entries(pod_URL_template_map)
-    .find(([root]) => solid_oidc_provider.includes(root))
+    const pod_URL_template_pair = find_match_by_inclusion_of_key(solid_oidc_provider, pod_URL_template_map)
 
     if (!pod_URL_template_pair) return undefined
 
