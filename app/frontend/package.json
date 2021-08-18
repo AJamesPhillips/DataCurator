@@ -18,8 +18,8 @@
   "scripts": {
     "start": "snowpack dev",
     "build": "snowpack build",
-    "format": "prettier --write \"src/**/*.{js,jsx}\"",
-    "lint": "prettier --check \"src/**/*.{js,jsx}\"",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+    "lint:fix": "eslint --fix \"src/**/*.{js,ts,tsx}\"",
     "test": "web-test-runner \"src/**/*.test.tsx\""
   },
   "dependencies": {
@@ -48,9 +48,14 @@
     "@types/luxon": "1.26.3",
     "@types/markdown-to-jsx": "6.11.3",
     "@types/react-redux": "7.1.12",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
     "@web/test-runner": "0.10.0",
     "chai": "4.2.0",
-    "prettier": "2.0.5",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.0.5",
     "snowpack": "3.8.3",
     "typescript": "4.2.4"
   },
