@@ -10,6 +10,7 @@ import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/me
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
+import { sync_subscribers } from "./sync/subscribers"
 import { load_state } from "./sync/utils/load_state"
 import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
 import { save_state } from "./sync/utils/save_state"
@@ -76,6 +77,8 @@ export function get_store (args: ConfigStoreArgs = {})
     periodically_change_display_at_created_datetime(store)
 
     record_keyupdown_activity(store)
+
+    sync_subscribers(store)
 
     return store
 }
