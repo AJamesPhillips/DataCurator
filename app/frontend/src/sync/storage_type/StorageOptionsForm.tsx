@@ -28,13 +28,15 @@ export function StorageOptionsForm (props: OwnProps)
     const [show_advanced, set_show_advanced] = useState(initial_storage_type === "local_server")
     const [storage_type, set_storage_type] = useState(initial_storage_type)
     const [copy_data, set_copy_data] = useState(false)
+
     const copy_from: StorageType | false = (copy_data && is_initial_storage_type_defined(initial_storage_type)) ? initial_storage_type : false
 
     const valid_storage_type = storage_type !== undefined
-    const changed_storage_type = is_initial_storage_type_defined(initial_storage_type) && initial_storage_type !== storage_type
+    const changed_storage_type = initial_storage_type !== storage_type
+    const changed_storage_type_from_defined = is_initial_storage_type_defined(initial_storage_type) && changed_storage_type
 
-    const show_warning = changed_storage_type && !copy_data
-    const show_danger_warning = changed_storage_type && copy_data
+    const show_warning = changed_storage_type_from_defined && !copy_data
+    const show_danger_warning = changed_storage_type_from_defined && copy_data
     const show_single_confirm_button = valid_storage_type && !copy_data
     const show_double_confirm_button = valid_storage_type && copy_data
 
