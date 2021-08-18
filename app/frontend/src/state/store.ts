@@ -11,7 +11,9 @@ import { specialised_objects_subscribers } from "./specialised_objects/subscribe
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
 import { load_state } from "./sync/utils/load_state"
+import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
 import { save_state } from "./sync/utils/save_state"
+import { swap_storage_type } from "./sync/utils/swap_storage"
 import { persist_all_state } from "./utils/persistence"
 
 
@@ -43,7 +45,10 @@ export function get_store (args: ConfigStoreArgs = {})
     cached_store = store
 
 
-    if (load_state_from_storage) load_state(store.dispatch, store.getState())
+    if (load_state_from_storage)
+    {
+        optionally_copy_then_load_data(store)
+    }
 
 
     const save = () =>

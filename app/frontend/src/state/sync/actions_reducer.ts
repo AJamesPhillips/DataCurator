@@ -11,16 +11,15 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
     if (is_update_sync_status(action))
     {
-        const { status, error_message = "", retry_attempt } = action
-        const saving = status === "SAVING"
-        const loaded_successfully = status === undefined
-        const ready = saving || loaded_successfully
+        const { status, error_message = "", attempt: retry_attempt } = action
+        const saved = status === "SAVED"
+        const loaded_successfully = status === "LOADED"
+        const ready = saved || loaded_successfully
 
         const sync: SyncState = {
             ...state.sync,
             status,
             ready,
-            saving,
             error_message,
             retry_attempt,
         }
@@ -36,6 +35,12 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     }
 
 
+    if (is_clear_storage_type_copy_from(action))
+    {
+        state = update_substate(state, "sync", "copy_from_storage_type", false)
+    }
+
+
     return state
 }
 
@@ -45,7 +50,7 @@ interface UpdateSyncStatusStatementArgs
 {
     status: SYNC_STATUS
     error_message?: string
-    retry_attempt?: number
+    attempt?: number
 }
 
 interface ActionUpdateSyncStatusStatement extends Action, UpdateSyncStatusStatementArgs {}
@@ -84,7 +89,22 @@ const is_update_storage_type = (action: AnyAction): action is ActionUpdateStorag
 
 
 
+interface ActionClearStorageTypeCopyFrom extends Action {}
+
+const clear_storage_type_copy_from_type = "clear_storage_type_copy_from"
+
+export const clear_storage_type_copy_from = (args: {}): ActionClearStorageTypeCopyFrom =>
+{
+    return { type: clear_storage_type_copy_from_type }
+}
+
+const is_clear_storage_type_copy_from = (action: AnyAction): action is ActionClearStorageTypeCopyFrom => {
+    return action.type === clear_storage_type_copy_from_type
+}
+
+
 export const sync_actions = {
     update_sync_status,
     update_storage_type,
+    clear_storage_type_copy_from,
 }

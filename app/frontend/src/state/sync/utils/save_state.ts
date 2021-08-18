@@ -12,7 +12,8 @@ import {
     CoreObjectAttribute,
     is_id_attribute,
 } from "../../State"
-import { get_store } from "../../store"
+import type { UserInfoState } from "../../user_info/state"
+import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
 import { save_solid_data } from "./solid_save_data"
 
@@ -27,30 +28,39 @@ export function save_state (load_state_from_storage: boolean, dispatch: Dispatch
     if (!needs_save(state, last_saved) || attempting_save) return
     attempting_save = true
 
+    const { storage_type } = state.sync
+    if (!storage_type)
+    {
+        const error_message = "Can not save.  No storage_type set"
+        const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
+        dispatch(action)
+        return
+    }
+
+    const specialised_state = get_specialised_state_to_save(state)
+
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
-
-    attempt_save(state, dispatch, 1)
+    attempt_save(storage_type, specialised_state, state.user_info, dispatch)
+    .then(() =>
+    {
+        last_saved = state
+        // Move this here so that attempt_save can be used by swap_storage and not trigger front end
+        // code to prematurely think that application is ready
+        dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED" }))
+    })
+    .finally(() => attempting_save = false)
 }
 
 
 
 const MAX_ATTEMPTS = 5
-function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
+export function attempt_save (storage_type: StorageType, data: SpecialisedObjectsFromToServer, user_info: UserInfoState, dispatch: Dispatch, max_attempts: number = MAX_ATTEMPTS, attempt: number = 0)
 {
-    console .log("attempt_save", attempt)
+    attempt += 1
 
-    const { storage_type } = state.sync
-    if (!storage_type)
-    {
-        const error_message = "Can not save.  No storage_type set"
-        const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, retry_attempt: 0 })
-        dispatch(action)
-        return
-    }
+    console .log("attempt_save, attempt: ", attempt)
 
-
-    const specialised_state = get_specialised_state_to_save(state)
 
     let promise_save_data: Promise<any>
 
@@ -64,7 +74,7 @@ function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
         //     body: state_str,
         // })
 
-        const specialised_state_str = JSON.stringify(specialised_state)
+        const specialised_state_str = JSON.stringify(data)
         promise_save_data = fetch("http://localhost:4000/api/v1/specialised_state/", {
             method: "post",
             body: specialised_state_str,
@@ -72,59 +82,56 @@ function attempt_save (state: RootState, dispatch: Dispatch, attempt: number)
     }
     else if (storage_type === "solid")
     {
-        promise_save_data = save_solid_data(state, specialised_state)
+        promise_save_data = save_solid_data(user_info, data)
     }
     else if (storage_type === "local_storage")
     {
-        promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, specialised_state)
+        promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, data)
     }
     else
     {
         console.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
-        return
+        return Promise.reject()
     }
 
 
-    promise_save_data
-    .then(() =>
-    {
-        attempting_save = false
-        last_saved = state
-        dispatch(ACTIONS.sync.update_sync_status({ status: undefined }))
-    })
+    return promise_save_data
     .catch((error: SyncError | Error) =>
     {
         let error_message = error_to_string(error)
 
-        if (attempt >= MAX_ATTEMPTS)
+        if (attempt >= max_attempts)
         {
-            error_message = `Stopping attempt at resaving after ${attempt} attempts ${error_message}`
+            error_message = `Stopping after ${attempt} attempts at resaving: ${error_message}`
             console.error(error_message)
 
-            attempting_save = false
-            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, retry_attempt: 0 })
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
             dispatch(action)
+
+            return Promise.reject()
         }
         else
         {
-            attempt += 1
-
-            error_message = `Retrying, attempt ${attempt}; ${error_message}`
+            error_message = `Retrying attempt ${attempt}; ${error_message}`
             console.error(error_message)
 
             const action = ACTIONS.sync.update_sync_status({
                 status: "FAILED",
                 error_message,
-                retry_attempt: attempt,
+                attempt,
             })
             dispatch(action)
 
-            setTimeout(() =>
+            return new Promise((resolve, reject) =>
             {
-                //console .log(`retrying, attempt ${attempt}`)
-                const potentially_newer_state = get_store().getState()
-                attempt_save(potentially_newer_state, dispatch, attempt)
-            }, 1000)
+                setTimeout(() =>
+                {
+                    //console .log(`retrying, attempt ${attempt}`)
+                    // const potentially_newer_state = get_store().getState().user_info
+                    attempt_save(storage_type, data, user_info, dispatch, max_attempts, attempt)
+                    .then(resolve).catch(reject)
+                }, 1000)
+            })
         }
     })
 }
@@ -181,6 +188,7 @@ function convert_attribute_to_core (attribute: ObjectAttribute): CoreObjectAttri
         value: attribute.value,
     }
 }
+
 
 
 function get_specialised_state_to_save (state: RootState)

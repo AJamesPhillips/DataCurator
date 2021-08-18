@@ -1,6 +1,7 @@
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { sentence_case } from "../../shared/utils/sentence_case"
 
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import type { RootState } from "../../state/State"
@@ -24,9 +25,8 @@ type Props = ConnectedProps<typeof connector>
 
 function _SyncInfo (props: Props)
 {
-    const failed = props.status === "FAILED"
-    const saving = props.status === "SAVING"
-    const saved = props.status === "SAVED"
+    const { status } = props
+    const failed = status === "FAILED"
 
 
     return <Box>
@@ -35,8 +35,7 @@ function _SyncInfo (props: Props)
             &nbsp;Save Failed
         </div>}
 
-        {saved && <div>Saved</div>}
-        {saving && <div>Saving</div>}
+        {(!failed && status) && <div>{sentence_case(status)}</div>}
     </Box>
 }
 

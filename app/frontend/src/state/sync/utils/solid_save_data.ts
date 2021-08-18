@@ -12,15 +12,15 @@ import type {
     SpecialisedObjectsFromToServer,
     WComponent,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../../State"
+import type { UserInfoState } from "../../user_info/state"
 import type { SyncError } from "./errors"
 import { get_knowledge_views_url, get_wcomponents_url, V1 } from "./solid"
 
 
 
-export async function save_solid_data (state: RootState, data: SpecialisedObjectsFromToServer)
+export async function save_solid_data (user_info: UserInfoState, data: SpecialisedObjectsFromToServer)
 {
-    const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(state)
+    const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info)
     if (!solid_pod_URL) return promised_error
 
 
@@ -30,9 +30,9 @@ export async function save_solid_data (state: RootState, data: SpecialisedObject
 
 
 
-function get_solid_pod_URL_or_error (state: RootState)
+function get_solid_pod_URL_or_error (user_info: UserInfoState)
 {
-    const { solid_pod_URL } = state.user_info
+    const { solid_pod_URL } = user_info
     let promised_error: Promise<SpecialisedObjectsFromToServer> | undefined = undefined
 
     if (!solid_pod_URL)
