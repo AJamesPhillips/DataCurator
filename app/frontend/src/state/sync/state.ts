@@ -9,6 +9,7 @@ export interface SyncState
 {
     status: SYNC_STATUS | undefined
     ready: boolean
+    saving: boolean
     error_message: string
     storage_type: StorageType | undefined
     copy_from_storage_type: StorageType | false

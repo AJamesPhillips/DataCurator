@@ -24,6 +24,7 @@ export function sync_starting_state (): SyncState
     const state: SyncState = {
         status: undefined,
         ready: false,
+        saving: false,
         error_message: "",
         storage_type: undefined,
         copy_from_storage_type: false,

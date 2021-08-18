@@ -18,6 +18,7 @@ const map_state = (state: RootState) =>
 
     return {
         ready: state.sync.ready,
+        saving: state.sync.saving,
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
         kv_id,
@@ -48,7 +49,7 @@ function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, pr
 
 function _ViewsBreadcrumb (props: Props)
 {
-    if (!props.ready) return null
+    if (!props.ready && !props.saving) return null
 
     const { kv_id, nested_kv_ids_map } = props
     let nested_kv = nested_kv_ids_map.map[kv_id]

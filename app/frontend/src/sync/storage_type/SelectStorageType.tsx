@@ -21,12 +21,7 @@ const map_state = (state: RootState) =>
     }
 }
 
-const map_dispatch = {
-    update_storage_type: ACTIONS.sync.update_storage_type,
-}
-
-
-const connector = connect(map_state, map_dispatch)
+const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -56,7 +51,6 @@ function _SelectStorageType (props: Props)
         child={<StorageOptionsForm
             storage_type={props.storage_type}
             on_close={props.on_close}
-            update_storage_type={props.update_storage_type}
         />}
     />
 }

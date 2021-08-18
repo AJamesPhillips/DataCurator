@@ -15,12 +15,8 @@ interface ReplaceAllSpecialisedObjectsProps
     specialised_objects: SpecialisedObjectsFromToServer
 }
 const replace_all_specialised_objects = (args: ReplaceAllSpecialisedObjectsProps): ActionReplaceAllSpecialisedObjects =>
-{
-    return {
-        type: replace_all_specialised_objects_type,
-        specialised_objects: args.specialised_objects,
-    }
-}
+    ({ type: replace_all_specialised_objects_type, ...args })
+
 
 export const is_replace_all_specialised_objects = (action: AnyAction): action is ActionReplaceAllSpecialisedObjects => {
     return action.type === replace_all_specialised_objects_type
@@ -28,6 +24,19 @@ export const is_replace_all_specialised_objects = (action: AnyAction): action is
 
 
 
+interface ActionDeleteAllSpecialisedObjects extends Action {}
+
+const delete_all_specialised_objects_type = "delete_all_specialised_objects"
+
+const delete_all_specialised_objects = (): ActionDeleteAllSpecialisedObjects =>
+    ({ type: delete_all_specialised_objects_type })
+
+export const is_delete_all_specialised_objects = (action: AnyAction): action is ActionDeleteAllSpecialisedObjects => {
+    return action.type === delete_all_specialised_objects_type
+}
+
+
 export const syncing_actions = {
     replace_all_specialised_objects,
+    delete_all_specialised_objects,
 }

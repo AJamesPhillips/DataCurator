@@ -10,7 +10,7 @@ import { attempt_save } from "./save_state"
 export async function swap_storage_type (dispatch: Dispatch, state: RootState)
 {
 
-    const { copy_from_storage_type, storage_type } = state.sync
+    const { storage_type, copy_from_storage_type } = state.sync
 
     if (!copy_from_storage_type) return
     if (!storage_type)

@@ -11,6 +11,7 @@ import type { StorageType } from "../../state/sync/state"
 import { get_storage_type_name } from "./get_storage_type_name"
 import { StorageOption } from "./StorageOption"
 import { Button } from "../../sharedf/Button"
+import { change_storage_type } from "../../state/sync/utils/change_storage_type"
 
 
 
@@ -18,7 +19,6 @@ interface OwnProps
 {
     storage_type: StorageType | undefined
     on_close: () => void
-    update_storage_type: (args: { storage_type: StorageType, copy_from: StorageType | false }) => void
 }
 
 export function StorageOptionsForm (props: OwnProps)
@@ -26,13 +26,13 @@ export function StorageOptionsForm (props: OwnProps)
     const { storage_type: initial_storage_type } = props
 
     const [show_advanced, set_show_advanced] = useState(initial_storage_type === "local_server")
-    const [storage_type, set_storage_type] = useState(initial_storage_type)
+    const [new_storage_type, set_new_storage_type] = useState(initial_storage_type)
     const [copy_data, set_copy_data] = useState(false)
 
     const copy_from: StorageType | false = (copy_data && is_initial_storage_type_defined(initial_storage_type)) ? initial_storage_type : false
 
-    const valid_storage_type = storage_type !== undefined
-    const changed_storage_type = initial_storage_type !== storage_type
+    const valid_storage_type = new_storage_type !== undefined
+    const changed_storage_type = initial_storage_type !== new_storage_type
     const changed_storage_type_from_defined = is_initial_storage_type_defined(initial_storage_type) && changed_storage_type
 
     const show_warning = changed_storage_type_from_defined && !copy_data
@@ -42,7 +42,7 @@ export function StorageOptionsForm (props: OwnProps)
 
 
     const initial_storage_name = get_storage_type_name(initial_storage_type)
-    const new_storage_name = get_storage_type_name(storage_type)
+    const new_storage_name = get_storage_type_name(new_storage_type)
 
     return <div style={{ margin: 10 }}>
 
@@ -55,8 +55,8 @@ export function StorageOptionsForm (props: OwnProps)
                 for temporary demos <s>or if you are going to export to a file and reimport it after every
                 use</s> [feature not supported yet].
             </div>}
-            selected={storage_type === "local_storage"}
-            on_click={() => set_storage_type("local_storage")}
+            selected={new_storage_type === "local_storage"}
+            on_click={() => set_new_storage_type("local_storage")}
         />
 
 
@@ -72,8 +72,8 @@ export function StorageOptionsForm (props: OwnProps)
                 &nbsp; or here:
                 &nbsp; <a href="https://signup.pod.inrupt.com/" target="_blank">inrupt.com</a>
             </div>}
-            selected={storage_type === "solid"}
-            on_click={() => set_storage_type("solid")}
+            selected={new_storage_type === "solid"}
+            on_click={() => set_new_storage_type("solid")}
         />
 
 
@@ -91,8 +91,8 @@ export function StorageOptionsForm (props: OwnProps)
             description={<div>
                 You will need to be running your local Data Curator server at localhost:4000 to use this option successfully. If you choose this option we assume you know what you are doing and have a copy of the code base. If not, please contact {CONTACT_EMAIL_ADDRESS_TAG}
             </div>}
-            selected={storage_type === "local_server"}
-            on_click={() => set_storage_type("local_server")}
+            selected={new_storage_type === "local_server"}
+            on_click={() => set_new_storage_type("local_server")}
         />}
 
 
@@ -124,7 +124,7 @@ export function StorageOptionsForm (props: OwnProps)
                 onClick={e =>
                 {
                     e.stopImmediatePropagation()
-                    storage_type && props.update_storage_type({ storage_type, copy_from })
+                    new_storage_type && change_storage_type({ new_storage_type, copy_from })
                     props.on_close()
                 }}
             />}
@@ -135,7 +135,7 @@ export function StorageOptionsForm (props: OwnProps)
                 disabled={!changed_storage_type}
                 on_click={() =>
                 {
-                    storage_type && props.update_storage_type({ storage_type, copy_from })
+                    new_storage_type && change_storage_type({ new_storage_type, copy_from })
                     props.on_close()
                 }}
             />}

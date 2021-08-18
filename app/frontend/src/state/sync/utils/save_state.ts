@@ -59,7 +59,7 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
 {
     attempt += 1
 
-    console .log("attempt_save, attempt: ", attempt)
+    console .log(`attempt_save to "${storage_type}" with data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
 
 
     let promise_save_data: Promise<any>
@@ -126,7 +126,7 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
             {
                 setTimeout(() =>
                 {
-                    //console .log(`retrying, attempt ${attempt}`)
+                    console .log(`retrying save to ${storage_type}, attempt ${attempt}`)
                     // const potentially_newer_state = get_store().getState().user_info
                     attempt_save(storage_type, data, user_info, dispatch, max_attempts, attempt)
                     .then(resolve).catch(reject)
