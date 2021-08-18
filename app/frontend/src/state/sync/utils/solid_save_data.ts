@@ -14,34 +14,18 @@ import type {
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { UserInfoState } from "../../user_info/state"
 import type { SyncError } from "./errors"
-import { get_knowledge_views_url, get_wcomponents_url, V1 } from "./solid"
+import { get_knowledge_views_url, get_solid_pod_URL_or_error, get_wcomponents_url, V1 } from "./solid"
 
 
 
 export async function save_solid_data (user_info: UserInfoState, data: SpecialisedObjectsFromToServer)
 {
-    const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info)
+    const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info, "save")
     if (!solid_pod_URL) return promised_error
 
 
     return save_knowledge_views(solid_pod_URL, data.knowledge_views)
     .then(() => save_wcomponents(solid_pod_URL, data.wcomponents))
-}
-
-
-
-function get_solid_pod_URL_or_error (user_info: UserInfoState)
-{
-    const { solid_pod_URL } = user_info
-    let promised_error: Promise<SpecialisedObjectsFromToServer> | undefined = undefined
-
-    if (!solid_pod_URL)
-    {
-        const error: SyncError = { type: "insufficient_information", message: "Lacking solid_pod_URL" }
-        promised_error = Promise.reject(error)
-    }
-
-    return { solid_pod_URL, promised_error }
 }
 
 
