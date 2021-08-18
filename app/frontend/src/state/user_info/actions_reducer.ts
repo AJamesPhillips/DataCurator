@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
-import { get_pod_URL } from "../../sync/user_info/solid/urls"
 
+import { get_pod_URL } from "../../sync/user_info/solid/urls"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 
@@ -18,7 +18,7 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_update_user_name_from_solid(action))
     {
         state = update_substate(state, "user_info", "user_name", action.user_name_from_solid)
-        const pod_URL = get_pod_URL(state) || ""
+        const pod_URL = get_pod_URL(state.user_info) || ""
         state = update_substate(state, "user_info", "solid_pod_URL", pod_URL)
     }
 

@@ -8,8 +8,9 @@ import { ACTIONS } from "../../../state/actions"
 import { AutoFillOIDC } from "./AutoFillOIDC"
 import { useState } from "preact/hooks"
 import { Button } from "../../../sharedf/Button"
-import { get_solid_username } from "./get_solid_username"
+import { update_user_name } from "./get_solid_username"
 import { finish_login, start_login } from "./handle_login"
+import { OIDC_provider_map } from "./urls"
 
 
 
@@ -21,7 +22,7 @@ interface OwnProps {
 const map_state = (state: RootState) =>
 {
     return {
-        solid_oidc_provider: state.user_info.solid_oidc_provider,
+        solid_oidc_provider: state.user_info.solid_oidc_provider || OIDC_provider_map["solidcommunity.net"],
         user_name: state.user_info.user_name,
     }
 }
@@ -93,7 +94,10 @@ function _SolidSigninForm (props: Props)
                         if (logged_in)
                         {
                             await solid_session.logout()
-                            set_logged_in()
+
+                            // Force reload due to https://github.com/inrupt/solid-client-authn-js/issues/1624
+                            window.location.reload()
+                            // set_logged_in()
                         }
                         else
                         {
@@ -116,12 +120,3 @@ function _SolidSigninForm (props: Props)
 }
 
 export const SolidSigninForm = connector(_SolidSigninForm) as FunctionalComponent<OwnProps>
-
-
-
-async function update_user_name (update_user_name_from_solid: (args: { user_name_from_solid: string }) => void)
-{
-    const user_name_from_solid = (await get_solid_username()) || ""
-
-    update_user_name_from_solid({ user_name_from_solid })
-}

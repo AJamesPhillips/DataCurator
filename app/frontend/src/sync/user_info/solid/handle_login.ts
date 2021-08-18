@@ -7,11 +7,13 @@ export function start_login (session: Session, oidcIssuer: string)
 {
     if (oidcIssuer && !session.info.isLoggedIn)
     {
-        session.login({
+        const args = {
             oidcIssuer,
             clientName: CLIENT_NAME,
             redirectUrl: window.location.href,
-        });
+        }
+        console .log("Logging into solid session with: ", args)
+        session.login(args)
     }
 }
 

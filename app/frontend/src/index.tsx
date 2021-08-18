@@ -20,12 +20,17 @@ import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { is_using_solid_for_storage } from "./state/sync/persistance"
+import { get_solid_username } from "./sync/user_info/solid/get_solid_username"
+import { get_pod_URL } from "./sync/user_info/solid/urls"
+import type { UserInfoState } from "./state/user_info/state"
+import { get_persisted_state_object, persist_state_object } from "./state/utils/persistence_utils"
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
 
 
-if (root) {
+if (root)
+{
     const in_production = window.location.hostname.endsWith("datacurator.org")
 
     if (window.location.pathname === "" || window.location.pathname === "/")
@@ -140,7 +145,34 @@ function restore_session (root_el: HTMLElement)
     {
         root_el.innerHTML = "Attempting to restore logged in Solid session"
 
-        return finish_login(getDefaultSession())
+        const solid_session = getDefaultSession()
+
+        return finish_login(solid_session)
+        .then(() => get_solid_username())
+        // This whole function has a smell
+        .then((user_name_from_solid: string | undefined = "") =>
+        {
+            console .log("Signed in as user name: " + user_name_from_solid)
+
+            const solid_oidc_provider = solid_session.info.webId
+                || (get_persisted_state_object<UserInfoState>("user_info").solid_oidc_provider)
+                || ""
+
+            const solid_pod_URL = get_pod_URL({
+                user_name: user_name_from_solid,
+                solid_oidc_provider,
+            })
+
+            const partial_user_info: Partial<UserInfoState> = {
+                solid_oidc_provider,
+                user_name: user_name_from_solid,
+                solid_pod_URL,
+            }
+
+            persist_state_object("user_info", partial_user_info)
+
+            console .log("Persisted user_info: ", get_persisted_state_object("user_info"))
+        })
         .then(() =>
         {
             root_el.innerHTML = ""

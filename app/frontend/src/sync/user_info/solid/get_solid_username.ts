@@ -7,6 +7,16 @@ import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 
 
 
+
+export async function update_user_name (update_user_name_from_solid: (args: { user_name_from_solid: string }) => void)
+{
+    const user_name_from_solid = (await get_solid_username()) || ""
+
+    update_user_name_from_solid({ user_name_from_solid })
+}
+
+
+
 export async function get_solid_username (): Promise<string | undefined>
 {
     const session = getDefaultSession()

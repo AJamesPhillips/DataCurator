@@ -1,4 +1,3 @@
-import type { RootState } from "../../../state/State"
 
 
 
@@ -16,9 +15,9 @@ const pod_URL_template_map: {[P in OIDC_ProviderRoot]: string} = {
     "inrupt.com": "https://pod.inrupt.com/<user_name>",
 }
 
-export function get_pod_URL (state: RootState)
+export function get_pod_URL (args: { solid_oidc_provider: string, user_name: string })
 {
-    const { solid_oidc_provider, user_name } = state.user_info
+    const { solid_oidc_provider, user_name } = args
 
     if (!solid_oidc_provider || !user_name) return undefined
 
