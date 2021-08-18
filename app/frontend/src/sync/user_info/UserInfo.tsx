@@ -54,7 +54,7 @@ function _UserInfo (props: Props)
             onClick={() => set_show_solid_signin_form(true)}
             style={{ cursor: "pointer" }}
         >
-            {user_name || "user name"}
+            {user_name || "Sign in"}
         </span>
         {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
     </Box>
