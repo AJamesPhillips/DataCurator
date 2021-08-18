@@ -13,11 +13,11 @@ import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObje
 
 const map_state = (state: RootState) =>
 {
-    const sync_ready = state.sync.ready
+    const { ready } = state.sync
 
     const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
-    if (sync_ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
+    if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
@@ -31,7 +31,7 @@ const map_state = (state: RootState) =>
 
 
     return {
-        sync_ready,
+        ready,
         wcomponent_nodes,
         wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
@@ -66,9 +66,9 @@ export const KnowledgeGraphView = connector(_KnowledgeGraphView) as FunctionalCo
 const no_children: h.JSX.Element[] = []
 const get_children = (props: Props): ChildrenRawData =>
 {
-    const { sync_ready } = props
+    const { ready } = props
     let { wcomponent_nodes } = props
-    if (!sync_ready || !wcomponent_nodes) return no_children
+    if (!ready || !wcomponent_nodes) return no_children
 
 
     const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode

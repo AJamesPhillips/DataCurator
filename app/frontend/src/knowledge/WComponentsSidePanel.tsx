@@ -16,8 +16,8 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
-    const ready = state.sync.ready
-    const sub_route = state.routing.sub_route
+    const { ready } = state.sync
+    const { sub_route } = state.routing
     const id = state.routing.item_id
     const wcomponent = get_wcomponent_from_state(state, id)
     const selected_ids = state.meta_wcomponents.selected_wcomponent_ids_list

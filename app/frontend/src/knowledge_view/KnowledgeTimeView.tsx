@@ -17,11 +17,11 @@ import { TimeSlider } from "../time_control/TimeSlider"
 
 const map_state = (state: RootState) =>
 {
-    const sync_ready = state.sync.ready
+    const { ready } = state.sync
 
     const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
-    if (sync_ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
+    if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
 
@@ -38,7 +38,7 @@ const map_state = (state: RootState) =>
 
 
     return {
-        sync_ready,
+        ready,
         wcomponent_nodes,
         wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,

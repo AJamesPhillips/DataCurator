@@ -12,7 +12,7 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
-    const ready = state.sync.ready
+    const { ready } = state.sync
     const id = state.routing.item_id
     const perception = get_perception_from_state(state, id)
 
