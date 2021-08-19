@@ -1,0 +1,25 @@
+
+.sync_info
+{
+    cursor: pointer;
+}
+
+.async_save
+{
+    .manual_save
+    {
+        display: none;
+    }
+}
+
+.async_save:hover
+{
+    .next_save_info
+    {
+        display: none;
+    }
+    .manual_save
+    {
+        display: initial;
+    }
+}

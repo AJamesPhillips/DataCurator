@@ -13,7 +13,7 @@ import { save_solid_data } from "./solid_save_data"
 
 
 
-let last_saved_state: RootState | undefined = undefined
+let last_attempted_state_to_save: RootState | undefined = undefined
 export function conditionally_save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
     if (!load_state_from_storage) return
@@ -21,7 +21,8 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
     const { status, storage_type } = state.sync
     if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED") return
 
-    if (!needs_save(state, last_saved_state)) return
+
+    if (!needs_save(state, last_attempted_state_to_save)) return
 
     if (!storage_type)
     {
@@ -30,6 +31,7 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
         dispatch(action)
         return
     }
+
 
     const next_call_at_ms = throttled_save_state.throttled({ dispatch, state })
     // Have to use conditional otherwise store.subscribe fires every time even when state does not change
@@ -40,12 +42,32 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
 }
 
 
+
+let ctrl_s_flush_saving = false
+export function conditional_ctrl_s_save (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
+{
+    if (!load_state_from_storage) return
+
+    const ctrl_s_flush_save = is_ctrl_s_flush_save(state)
+    if (ctrl_s_flush_save && !ctrl_s_flush_saving)
+    {
+        ctrl_s_flush_saving = true
+        throttled_save_state.throttled({ dispatch, state })
+        throttled_save_state.flush()
+        dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
+        ctrl_s_flush_saving = false
+    }
+}
+
+
+
 const THROTTLE = 60000
 export const throttled_save_state = min_throttle(save_state, THROTTLE)
 
 
 function save_state ({ dispatch, state }: { dispatch: Dispatch, state: RootState })
 {
+    last_attempted_state_to_save = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
     const storage_type = state.sync.storage_type!
@@ -54,11 +76,11 @@ function save_state ({ dispatch, state }: { dispatch: Dispatch, state: RootState
     return attempt_save(storage_type, specialised_state, state.user_info, dispatch)
     .then(() =>
     {
-        last_saved_state = state
         // Move this here so that attempt_save can be used by swap_storage and not trigger front end
         // code to prematurely think that application is ready
         dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED" }))
     })
+    .catch(() => last_attempted_state_to_save = undefined)
 }
 
 
@@ -147,14 +169,22 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
 
 
 
-function needs_save (state: RootState, last_saved: RootState | undefined)
+function needs_save (state: RootState, last_attempted_state_to_save: RootState | undefined)
 {
-    return (!last_saved ||
+    return (!last_attempted_state_to_save
+        || last_attempted_state_to_save.specialised_objects !== state.specialised_objects
         // state.statements !== last_saved.statements ||
         // state.patterns !== last_saved.patterns ||
         // state.objects !== last_saved.objects ||
-        state.specialised_objects !== last_saved.specialised_objects
     )
+}
+
+
+
+function is_ctrl_s_flush_save (state: RootState)
+{
+    // Ctrl+s to save
+    return state.global_keys.keys_down.has("s") && state.global_keys.keys_down.has("Control")
 }
 
 

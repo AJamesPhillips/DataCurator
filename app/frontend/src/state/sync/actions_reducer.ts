@@ -78,7 +78,7 @@ const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncSta
 
 interface SetNextSyncMsArgs
 {
-    next_save_ms: number
+    next_save_ms: number | undefined
 }
 
 interface ActionSetNextSyncMs extends Action, SetNextSyncMsArgs {}

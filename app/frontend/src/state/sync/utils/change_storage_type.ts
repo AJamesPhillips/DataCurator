@@ -18,6 +18,7 @@ export async function change_storage_type ({ new_storage_type, copy_from }: Chan
     const store = get_store()
 
     const promise_flush = throttled_save_state.flush()
+    store.dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
 
     if (promise_flush) await promise_flush
 
