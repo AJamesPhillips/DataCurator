@@ -36,14 +36,15 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
     if (is_delete_wcomponent(action))
     {
         const { wcomponent_id } = action
-        const map = { ...state.specialised_objects.wcomponents_by_id }
-        const existing = map[wcomponent_id]
+        let { wcomponents_by_id } = state.specialised_objects
+        const existing = wcomponents_by_id[wcomponent_id]
 
 
         if (existing)
         {
-            delete map[wcomponent_id]
-            state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
+            wcomponents_by_id = { ...wcomponents_by_id }
+            delete wcomponents_by_id[wcomponent_id]
+            state = update_substate(state, "specialised_objects", "wcomponents_by_id", wcomponents_by_id)
 
             // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
             // state = update_wcomponent_ids_by_type_on_deleting_wcomponent(state, existing)
