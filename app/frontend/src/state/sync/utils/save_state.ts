@@ -3,15 +3,9 @@ import type { Dispatch } from "redux"
 
 import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { min_throttle } from "../../../utils/throttle"
 import { ACTIONS } from "../../actions"
-import {
-    RootState,
-    ObjectWithCache,
-    CoreObject,
-    ObjectAttribute,
-    CoreObjectAttribute,
-    is_id_attribute,
-} from "../../State"
+import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
@@ -19,16 +13,16 @@ import { save_solid_data } from "./solid_save_data"
 
 
 
-let last_saved: RootState | undefined = undefined
-let attempting_save: boolean = false
+let last_saved_state: RootState | undefined = undefined
 export function conditionally_save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
-    if (!state.sync.ready || !load_state_from_storage) return
+    if (!load_state_from_storage) return
 
-    if (!needs_save(state, last_saved) || attempting_save) return
-    attempting_save = true
+    const { status, storage_type } = state.sync
+    if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED") return
 
-    const { storage_type } = state.sync
+    if (!needs_save(state, last_saved_state)) return
+
     if (!storage_type)
     {
         const error_message = "Can not save.  No storage_type set"
@@ -37,19 +31,34 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
         return
     }
 
-    const specialised_state = get_specialised_state_to_save(state)
+    const next_call_at_ms = throttled_save_state.throttled({ dispatch, state })
+    // Have to use conditional otherwise store.subscribe fires every time even when state does not change
+    if (state.sync.next_save_ms !== next_call_at_ms)
+    {
+        dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: next_call_at_ms }))
+    }
+}
 
+
+const THROTTLE = 60000
+export const throttled_save_state = min_throttle(save_state, THROTTLE)
+
+
+function save_state ({ dispatch, state }: { dispatch: Dispatch, state: RootState })
+{
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
-    attempt_save(storage_type, specialised_state, state.user_info, dispatch)
+    const storage_type = state.sync.storage_type!
+    const specialised_state = get_specialised_state_to_save(state)
+
+    return attempt_save(storage_type, specialised_state, state.user_info, dispatch)
     .then(() =>
     {
-        last_saved = state
+        last_saved_state = state
         // Move this here so that attempt_save can be used by swap_storage and not trigger front end
         // code to prematurely think that application is ready
         dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED" }))
     })
-    .finally(() => attempting_save = false)
 }
 
 
@@ -161,33 +170,33 @@ function needs_save (state: RootState, last_saved: RootState | undefined)
 // }
 
 
-function convert_object_to_core (object: ObjectWithCache): CoreObject
-{
-    return {
-        id: object.id,
-        datetime_created: object.datetime_created,
-        labels: object.labels,
-        attributes: object.attributes.map(convert_attribute_to_core),
-        pattern_id: object.pattern_id,
-        external_ids: object.external_ids,
-    }
-}
+// function convert_object_to_core (object: ObjectWithCache): CoreObject
+// {
+//     return {
+//         id: object.id,
+//         datetime_created: object.datetime_created,
+//         labels: object.labels,
+//         attributes: object.attributes.map(convert_attribute_to_core),
+//         pattern_id: object.pattern_id,
+//         external_ids: object.external_ids,
+//     }
+// }
 
-function convert_attribute_to_core (attribute: ObjectAttribute): CoreObjectAttribute
-{
-    if (is_id_attribute(attribute))
-    {
-        return {
-            pidx: attribute.pidx,
-            id: attribute.id,
-        }
-    }
+// function convert_attribute_to_core (attribute: ObjectAttribute): CoreObjectAttribute
+// {
+//     if (is_id_attribute(attribute))
+//     {
+//         return {
+//             pidx: attribute.pidx,
+//             id: attribute.id,
+//         }
+//     }
 
-    return {
-        pidx: attribute.pidx,
-        value: attribute.value,
-    }
-}
+//     return {
+//         pidx: attribute.pidx,
+//         value: attribute.value,
+//     }
+// }
 
 
 

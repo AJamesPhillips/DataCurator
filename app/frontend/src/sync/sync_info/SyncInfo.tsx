@@ -13,6 +13,7 @@ const map_state = (state: RootState) =>
     return {
         status: state.sync.status,
         error_message: state.sync.error_message,
+        next_save_ms: state.sync.next_save_ms,
     }
 }
 
@@ -25,8 +26,9 @@ type Props = ConnectedProps<typeof connector>
 
 function _SyncInfo (props: Props)
 {
-    const { status } = props
+    const { status, next_save_ms } = props
     const failed = status === "FAILED"
+    const next_save = next_save_ms && next_save_ms - performance.now()
 
 
     return <Box>
@@ -36,6 +38,11 @@ function _SyncInfo (props: Props)
         </div>}
 
         {(!failed && status) && <div>{sentence_case(status)}</div>}
+
+        {next_save !== undefined && next_save > 0 && <div>
+            <WarningTriangle message={props.error_message} backgroundColor="yellow" />
+            &nbsp;Will save in {Math.round(next_save / 1000)} seconds
+        </div>}
     </Box>
 }
 

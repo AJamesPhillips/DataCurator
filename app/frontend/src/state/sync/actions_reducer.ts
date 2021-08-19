@@ -30,6 +30,12 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     }
 
 
+    if (is_set_next_sync_ms(action))
+    {
+        state = update_substate(state, "sync", "next_save_ms", action.next_save_ms)
+    }
+
+
     if (is_update_storage_type(action))
     {
         state = update_substate(state, "sync", "storage_type", action.storage_type)
@@ -48,24 +54,44 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
 
 
-interface UpdateSyncStatusStatementArgs
+interface UpdateSyncStatusArgs
 {
     status: SYNC_STATUS
     error_message?: string
     attempt?: number
 }
 
-interface ActionUpdateSyncStatusStatement extends Action, UpdateSyncStatusStatementArgs {}
+interface ActionUpdateSyncStatus extends Action, UpdateSyncStatusArgs {}
 
 const update_sync_status_type = "update_sync_status"
 
-export const update_sync_status = (args: UpdateSyncStatusStatementArgs): ActionUpdateSyncStatusStatement =>
+export const update_sync_status = (args: UpdateSyncStatusArgs): ActionUpdateSyncStatus =>
 {
     return { type: update_sync_status_type, ...args }
 }
 
-const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncStatusStatement => {
+const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncStatus => {
     return action.type === update_sync_status_type
+}
+
+
+
+interface SetNextSyncMsArgs
+{
+    next_save_ms: number
+}
+
+interface ActionSetNextSyncMs extends Action, SetNextSyncMsArgs {}
+
+const set_next_sync_ms_type = "set_next_sync_ms"
+
+export const set_next_sync_ms = (args: SetNextSyncMsArgs): ActionSetNextSyncMs =>
+{
+    return { type: set_next_sync_ms_type, ...args }
+}
+
+const is_set_next_sync_ms = (action: AnyAction): action is ActionSetNextSyncMs => {
+    return action.type === set_next_sync_ms_type
 }
 
 
@@ -107,6 +133,7 @@ const is_clear_storage_type_copy_from = (action: AnyAction): action is ActionCle
 
 export const sync_actions = {
     update_sync_status,
+    set_next_sync_ms,
     update_storage_type,
     clear_storage_type_copy_from,
 }

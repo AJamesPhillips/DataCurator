@@ -29,6 +29,7 @@ export function sync_starting_state (): SyncState
         storage_type: undefined,
         copy_from_storage_type: false,
         retry_attempt: undefined,
+        next_save_ms: undefined,
         ...obj,
     }
 

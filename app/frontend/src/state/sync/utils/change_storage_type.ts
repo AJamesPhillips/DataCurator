@@ -4,6 +4,7 @@ import { ACTIONS } from "../../actions"
 import { get_store } from "../../store"
 import type { StorageType } from "../state"
 import { optionally_copy_then_load_data } from "./optionally_copy_then_load_data"
+import { throttled_save_state } from "./save_state"
 
 
 
@@ -12,9 +13,13 @@ interface ChangeStorageTypeArgs
     new_storage_type: StorageType
     copy_from: StorageType | false
 }
-export function change_storage_type ({ new_storage_type, copy_from }: ChangeStorageTypeArgs)
+export async function change_storage_type ({ new_storage_type, copy_from }: ChangeStorageTypeArgs)
 {
     const store = get_store()
+
+    const promise_flush = throttled_save_state.flush()
+
+    if (promise_flush) await promise_flush
 
     // Set to LOADING so that the sync.ready is false and the save function is not triggered
     // mid way through `optionally_copy_then_load_data` that would then delete all the data

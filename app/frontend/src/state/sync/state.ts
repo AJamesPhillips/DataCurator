@@ -14,4 +14,5 @@ export interface SyncState
     storage_type: StorageType | undefined
     copy_from_storage_type: StorageType | false
     retry_attempt: number | undefined
+    next_save_ms: number | undefined
 }
