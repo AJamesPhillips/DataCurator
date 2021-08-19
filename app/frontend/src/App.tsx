@@ -11,6 +11,7 @@ import { ViewOptions } from "./views/ViewOptions"
 import { StorageInfo } from "./sync/storage_type/StorageInfo"
 import { SyncInfo } from "./sync/sync_info/SyncInfo"
 import { UserInfo } from "./sync/user_info/UserInfo"
+import { BackupInfo } from "./sync/backup_info/BackupInfo"
 
 
 
@@ -27,6 +28,7 @@ function App()
                             <ViewsBreadcrumb />
                             <SyncInfo />
                             <StorageInfo />
+                            <BackupInfo />
                             <UserInfo />
                         </Toolbar>
                     </AppBar>

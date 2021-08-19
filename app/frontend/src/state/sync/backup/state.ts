@@ -1,7 +1,7 @@
 
 
 
-export type BACKUP_STATUS = "SAVING" | "SAVED"
+export type BACKUP_STATUS = "SAVING" | "SAVED" | "FAILED"
 
 export interface BackupState
 {

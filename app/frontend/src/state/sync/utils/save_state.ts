@@ -78,9 +78,9 @@ function save_state ({ dispatch, state }: SaveStateArgs)
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
     const storage_type = state.sync.storage_type!
-    const specialised_state = get_specialised_state_to_save(state)
+    const data = get_specialised_state_to_save(state)
 
-    return attempt_save(storage_type, specialised_state, state.user_info, dispatch)
+    return attempt_save({ storage_type, data, user_info: state.user_info, dispatch })
     .then(() =>
     {
         // Move this here so that attempt_save can be used by swap_storage and not trigger front end
@@ -93,11 +93,32 @@ function save_state ({ dispatch, state }: SaveStateArgs)
 
 
 const MAX_ATTEMPTS = 5
-export function attempt_save (storage_type: StorageType, data: SpecialisedObjectsFromToServer, user_info: UserInfoState, dispatch: Dispatch, max_attempts: number = MAX_ATTEMPTS, attempt: number = 0)
+interface AttemptSaveArgs
 {
+    storage_type: StorageType
+    data: SpecialisedObjectsFromToServer
+    user_info: UserInfoState
+    dispatch: Dispatch
+    max_attempts?: number
+    attempt?: number
+    is_backup?: boolean
+}
+export function attempt_save (args: AttemptSaveArgs)
+{
+    const {
+        storage_type,
+        data,
+        user_info,
+        dispatch,
+        max_attempts = MAX_ATTEMPTS,
+        is_backup,
+    } = args
+    let { attempt = 0 } = args
+
     attempt += 1
 
-    console .log(`attempt_save to "${storage_type}" with data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
+    const is_backup_str = is_backup ? " (backup)" : ""
+    console .log(`attempt_save${is_backup_str} to "${storage_type}" with data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
 
 
     let promise_save_data: Promise<any>
@@ -128,7 +149,7 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
     }
     else
     {
-        console.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
+        console.error(`Returning from save_state${is_backup_str}.  storage_type "${storage_type}" unsupported.`)
         return Promise.reject()
     }
 
@@ -140,33 +161,37 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
 
         if (attempt >= max_attempts)
         {
-            error_message = `Stopping after ${attempt} attempts at resaving: ${error_message}`
+            error_message = `Stopping after ${attempt} attempts at resaving${is_backup_str}: ${error_message}`
             console.error(error_message)
 
-            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
+            const action = is_backup
+                ? ACTIONS.backup.update_backup_status({ status: "FAILED" })
+                : ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
             dispatch(action)
 
             return Promise.reject()
         }
         else
         {
-            error_message = `Retrying attempt ${attempt}; ${error_message}`
+            error_message = `Retrying${is_backup_str} attempt ${attempt}; ${error_message}`
             console.error(error_message)
 
-            const action = ACTIONS.sync.update_sync_status({
-                status: "FAILED",
-                error_message,
-                attempt,
-            })
+            const action = is_backup
+                ? ACTIONS.backup.update_backup_status({ status: "FAILED" })
+                : ACTIONS.sync.update_sync_status({
+                    status: "FAILED",
+                    error_message,
+                    attempt,
+                })
             dispatch(action)
 
             return new Promise((resolve, reject) =>
             {
                 setTimeout(() =>
                 {
-                    console .log(`retrying save to ${storage_type}, attempt ${attempt}`)
+                    console .log(`retrying save${is_backup_str} to ${storage_type}, attempt ${attempt}`)
                     // const potentially_newer_state = get_store().getState().user_info
-                    attempt_save(storage_type, data, user_info, dispatch, max_attempts, attempt)
+                    attempt_save({ storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup })
                     .then(resolve).catch(reject)
                 }, 1000)
             })

@@ -30,7 +30,7 @@ export function periodically_backup_solid_data (store: Store<RootState>)
 
         const user_info: UserInfoState = { ...state.user_info }
         const datetime_str = date2str(new Date(), "yyyy-MM-dd_hh-mm-ss")
-        user_info.solid_pod_URL += `/data_curator_v1_backups/${datetime_str}`
+        user_info.solid_pod_URL += `/data_curator_backups/${datetime_str}`
 
         backup_throttled_save_state.throttled({ dispatch, state, user_info })
     })
@@ -53,16 +53,19 @@ export function save_state ({ dispatch, state, user_info }: SaveStateArgs)
     dispatch(ACTIONS.backup.update_backup_status({ status: "SAVING" }))
 
     const storage_type = state.sync.storage_type!
-    const specialised_state = get_specialised_state_to_save(state)
+    const data = get_specialised_state_to_save(state)
 
-    return attempt_save(storage_type, specialised_state, user_info, dispatch)
+    return attempt_save({ storage_type, data, user_info, dispatch, is_backup: true })
     .then(() =>
     {
         dispatch(ACTIONS.backup.update_backup_status({ status: "SAVED" }))
 
         prune_backups()
     })
-    .catch(() => last_attempted_state_to_backup = undefined)
+    .catch(() =>
+    {
+        last_attempted_state_to_backup = undefined
+    })
 }
 
 
