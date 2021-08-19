@@ -21,7 +21,7 @@ import { save_solid_data } from "./solid_save_data"
 
 let last_saved: RootState | undefined = undefined
 let attempting_save: boolean = false
-export function save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
+export function conditionally_save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
     if (!state.sync.ready || !load_state_from_storage) return
 

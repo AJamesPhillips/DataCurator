@@ -144,7 +144,7 @@ function restore_session (root_el: HTMLElement)
 
     if (using_solid_for_storage)
     {
-        root_el.innerHTML = "Attempting to restore logged in Solid session"
+        root_el.innerHTML = "Requesting Solid login session..."
 
         const solid_session = getDefaultSession()
 

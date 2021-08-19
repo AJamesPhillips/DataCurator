@@ -11,7 +11,7 @@ import { specialised_objects_subscribers } from "./specialised_objects/subscribe
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
 import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
-import { save_state } from "./sync/utils/save_state"
+import { conditionally_save_state } from "./sync/utils/save_state"
 import { persist_all_state } from "./utils/persistence"
 
 
@@ -55,7 +55,7 @@ export function get_store (args: ConfigStoreArgs = {})
         persist_all_state(state)
         ;(window as any).debug_state = state
 
-        save_state(load_state_from_storage, store.dispatch, state)
+        conditionally_save_state(load_state_from_storage, store.dispatch, state)
     }
     store.subscribe(save)
     window.onbeforeunload = save

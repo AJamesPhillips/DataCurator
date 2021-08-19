@@ -6,6 +6,7 @@ import {
     setThing,
 } from "@inrupt/solid-client"
 import { fetch as solid_fetch } from "@inrupt/solid-client-authn-browser"
+import type { Base } from "../../../shared/wcomponent/interfaces/base"
 
 import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import type {
@@ -34,69 +35,41 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 {
 
     const knowledge_views_url = get_knowledge_views_url(solid_pod_URL)
-
-
-    let knowledge_views_dataset = createSolidDataset()
-    knowledge_views.forEach(kv =>
-    {
-        let thing_kv = createThing({ name: kv.id })
-        thing_kv = addStringNoLocale(thing_kv, V1.title, kv.title)
-        // thing_kv = addBoolean(thing_kv, "http://datacurator.org/schema/v1/is_base", kv.is_base)
-        thing_kv = addStringNoLocale(thing_kv, V1.json, JSON.stringify(kv))
-        knowledge_views_dataset = setThing(knowledge_views_dataset, thing_kv)
-    })
-
-
-    try {
-        // console .log("Saving...")
-        // Save the SolidDataset
-        /* let saved_knowledge_views_dataset = */ await saveSolidDatasetAt(
-            knowledge_views_url,
-            knowledge_views_dataset,
-            { fetch: solid_fetch }
-        )
-        //console .log("Saved!")
-
-        return Promise.resolve()
-    } catch (err) {
-        console.error("error saving knowledge_views", err)
-        const error: SyncError = { type: "general", message: err }
-        return Promise.reject(error)
-    }
+    return await save_items(knowledge_views_url, knowledge_views)
 }
 
 
 
 async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[])
 {
-
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
+    return await save_items(wcomponents_url, wcomponents)
+}
 
 
-    let wcomponents_dataset = createSolidDataset()
-    wcomponents.forEach(kv =>
+
+async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[])
+{
+    let items_dataset = createSolidDataset()
+    items.forEach(item =>
     {
-        let thing_kv = createThing({ name: kv.id })
-        thing_kv = addStringNoLocale(thing_kv, V1.title, kv.title)
-        // thing_kv = addBoolean(thing_kv, "http://datacurator.org/schema/v1/is_base", kv.is_base)
-        thing_kv = addStringNoLocale(thing_kv, V1.json, JSON.stringify(kv))
-        wcomponents_dataset = setThing(wcomponents_dataset, thing_kv)
+        let thing = createThing({ name: item.id })
+        thing = addStringNoLocale(thing, V1.title, item.title)
+        // thing = addBoolean(thing, "http://datacurator.org/schema/v1/is_base", kv.is_base)
+        thing = addStringNoLocale(thing, V1.json, JSON.stringify(item))
+        items_dataset = setThing(items_dataset, thing)
     })
 
 
     try {
         // console .log("Saving...")
         // Save the SolidDataset
-        /* let saved_wcomponents_dataset = */ await saveSolidDatasetAt(
-            wcomponents_url,
-            wcomponents_dataset,
-            { fetch: solid_fetch }
-        )
+        /* let saved_items_dataset = */ await saveSolidDatasetAt(items_URL, items_dataset, { fetch: solid_fetch })
         //console .log("Saved!")
 
         return Promise.resolve()
     } catch (err) {
-        console.error("error saving wcomponents", err)
+        console.error(`error saving items to "${items_URL}" :`, err)
         const error: SyncError = { type: "general", message: err }
         return Promise.reject(error)
     }

@@ -7,7 +7,7 @@ const _V1 = "http://datacurator.org/schema/v1/"
 
 export const V1 = {
     title: _V1 + "title",
-    json: _V1 + "knowledge_view_json",
+    json: _V1 + "json",
 }
 
 
