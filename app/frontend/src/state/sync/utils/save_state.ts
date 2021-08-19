@@ -62,8 +62,8 @@ export function conditional_ctrl_s_save (load_state_from_storage: boolean, dispa
 
 
 
-const THROTTLE = 60000
-export const throttled_save_state = min_throttle(save_state, THROTTLE)
+const SAVE_THROTTLE_MS = 60000
+export const throttled_save_state = min_throttle(save_state, SAVE_THROTTLE_MS)
 
 
 

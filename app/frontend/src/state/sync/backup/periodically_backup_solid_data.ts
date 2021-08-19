@@ -49,8 +49,8 @@ export function periodically_backup_solid_data (store: Store<RootState>)
 }
 
 
-const THROTTLE = 60000 * 5
-const backup_throttled_save_state = min_throttle(save_state, THROTTLE)
+const BACKUP_THROTTLE_MS = 60000 * 5
+const backup_throttled_save_state = min_throttle(save_state, BACKUP_THROTTLE_MS)
 
 
 interface SaveStateArgs
