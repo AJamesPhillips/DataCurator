@@ -9,6 +9,7 @@ import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
+import { get_specialised_state_to_save, needs_save } from "./needs_save"
 import { save_solid_data } from "./solid_save_data"
 
 
@@ -65,7 +66,13 @@ const THROTTLE = 60000
 export const throttled_save_state = min_throttle(save_state, THROTTLE)
 
 
-function save_state ({ dispatch, state }: { dispatch: Dispatch, state: RootState })
+
+interface SaveStateArgs
+{
+    dispatch: Dispatch
+    state: RootState
+}
+function save_state ({ dispatch, state }: SaveStateArgs)
 {
     last_attempted_state_to_save = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
@@ -169,18 +176,6 @@ export function attempt_save (storage_type: StorageType, data: SpecialisedObject
 
 
 
-function needs_save (state: RootState, last_attempted_state_to_save: RootState | undefined)
-{
-    return (!last_attempted_state_to_save
-        || last_attempted_state_to_save.specialised_objects !== state.specialised_objects
-        // state.statements !== last_saved.statements ||
-        // state.patterns !== last_saved.patterns ||
-        // state.objects !== last_saved.objects ||
-    )
-}
-
-
-
 function is_ctrl_s_flush_save (state: RootState)
 {
     // Ctrl+s to save
@@ -227,16 +222,3 @@ function is_ctrl_s_flush_save (state: RootState)
 //         value: attribute.value,
 //     }
 // }
-
-
-
-function get_specialised_state_to_save (state: RootState)
-{
-    const specialised_state: SpecialisedObjectsFromToServer = {
-        perceptions: state.derived.perceptions,
-        wcomponents: state.derived.wcomponents,
-        knowledge_views: state.derived.knowledge_views,
-    }
-
-    return specialised_state
-}
