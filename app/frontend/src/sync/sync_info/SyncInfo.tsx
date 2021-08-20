@@ -8,6 +8,7 @@ import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import type { RootState } from "../../state/State"
 import { throttled_save_state } from "../../state/sync/utils/save_state"
 import { ACTIONS } from "../../state/actions"
+import { useState } from "preact/hooks"
 
 
 
@@ -31,9 +32,15 @@ type Props = ConnectedProps<typeof connector>
 
 function _SyncInfo (props: Props)
 {
+    const [, update_state] = useState({})
+
     const { status, next_save_ms } = props
     const failed = status === "FAILED"
     const next_save = next_save_ms && next_save_ms - performance.now()
+    const will_save_in_future = next_save !== undefined && next_save >= 0
+    const save_in_seconds = next_save !== undefined && next_save >= 0 && Math.round(next_save / 1000)
+
+    if (will_save_in_future) setTimeout(() => update_state({}), 500)
 
 
     return <Box className="sync_info">
@@ -44,12 +51,12 @@ function _SyncInfo (props: Props)
 
         {(!failed && status) && <div>{sentence_case(status)}</div>}
 
-        {next_save !== undefined && next_save > 0 && <div
+        {will_save_in_future && <div
             className="async_save"
         >
             <WarningTriangle message={props.error_message} backgroundColor="yellow" />
             &nbsp;
-            <span className="next_save_info">Save in {Math.round(next_save / 1000)}s</span>
+            <span className="next_save_info">Save in {save_in_seconds}s</span>
             <span
                 className="manual_save"
                 onClick={() =>
