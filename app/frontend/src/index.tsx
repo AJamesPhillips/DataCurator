@@ -18,7 +18,7 @@ import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { finish_login } from "./sync/user_info/solid/handle_login"
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
+import { getDefaultSession, onSessionRestore } from "@inrupt/solid-client-authn-browser"
 import { is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_username } from "./sync/user_info/solid/get_solid_username"
 import { get_pod_URL, OIDC_provider_map } from "./sync/user_info/solid/urls"
@@ -145,6 +145,11 @@ function restore_session (root_el: HTMLElement)
     if (using_solid_for_storage)
     {
         root_el.innerHTML = "Requesting Solid login session..."
+
+        // See https://github.com/inrupt/solid-client-authn-js/issues/1473#issuecomment-902808449
+        onSessionRestore(url => {
+            if (document.location.toString() !== url) history.replaceState(null, "", url)
+        })
 
         const solid_session = getDefaultSession()
 
