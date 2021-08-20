@@ -8,6 +8,7 @@ import { FiltersSidePanel } from "../filter_context/FiltersSidePanel"
 import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
 import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
+import { SearchSidePanel } from "../search/SearchSidePanel"
 import type { RootState } from "../state/State"
 import { Objects } from "./Objects"
 import { Patterns } from "./Patterns"
@@ -61,6 +62,8 @@ function _SidePanel (props: Props)
         {props.route === "wcomponents" && <WComponentsSidePanel />}
 
         {props.route === "about" && <AboutSidePanel />}
+
+        {props.route === "search" && <SearchSidePanel />}
     </div>
 }
 
