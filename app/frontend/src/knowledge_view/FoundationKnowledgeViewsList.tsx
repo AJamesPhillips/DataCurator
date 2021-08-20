@@ -58,7 +58,7 @@ function _FoundationKnowledgeViewsList (props: Props)
     const total = foundation_knowledge_views.length
 
     return <div>
-        {editing ? "Foundational Knowledge Views" : (foundation_knowledge_views.length > 0 && "Foundations" )}
+        {editing ? "Foundational Views" : (foundation_knowledge_views.length > 0 && "Foundations" )}
         {editing && <span>({total})</span>}
 
         {editing && <SelectKnowledgeView

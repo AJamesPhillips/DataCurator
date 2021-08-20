@@ -40,7 +40,7 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
             calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props),
         },
 
-        debug_item_descriptor: "Knowledge View",
+        debug_item_descriptor: "View",
     })
 
 
@@ -52,14 +52,14 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
         return <ExpandableList
             items_count={knowledge_views.length}
             content={render_list_content}
-            item_descriptor={sentence_case(sort_type) + " " + (props.item_descriptor || "Knowledge View")}
+            item_descriptor={sentence_case(sort_type) + " " + (props.item_descriptor || "View")}
             disable_collapsed={false}
             expanded_initial_state={expanded_initial_state}
         />
     }
 
 
-    const item_descriptor = (sort_type === "priority" ? "Priority " : "") + (props.item_descriptor || "Knowledge View")
+    const item_descriptor = (sort_type === "priority" ? "Priority " : "") + (props.item_descriptor || "View")
 
 
     return <ExpandableListWithAddButton
