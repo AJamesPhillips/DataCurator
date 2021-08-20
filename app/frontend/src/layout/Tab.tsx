@@ -26,6 +26,7 @@ function get_title (id: ROUTE_TYPES)
     else if (id === "perceptions") return "Perceptions"
     else if (id === "wcomponents") return "Components"
     else if (id === "about") return "About"
+    else if (id === "search") return "Search"
     else return "?" + id
 }
 

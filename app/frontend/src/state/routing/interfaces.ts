@@ -13,18 +13,20 @@ export type ROUTE_TYPES = (
     | "wcomponents"
     //- specialised objects
     | "about"
+    | "search"
 )
 export type SUB_ROUTE_TYPES = "objects_bulk_import" | "objects_bulk_import/setup" | "wcomponents_edit_multiple" | null
 export const ALLOWED_SUB_ROUTES: {[k in ROUTE_TYPES]: SUB_ROUTE_TYPES[]} = {
+    "views": [],
+    "wcomponents": ["wcomponents_edit_multiple"],
+    "search": [],
     "filter": [],
     "display": [],
     "statements": [],
     "objects": ["objects_bulk_import", "objects_bulk_import/setup"],
     "patterns": [],
     "creation_context": [],
-    "views": [],
     "perceptions": [],
-    "wcomponents": ["wcomponents_edit_multiple"],
     "about": [],
 }
 export const ALLOWED_ROUTES: ROUTE_TYPES[] = Object.keys(ALLOWED_SUB_ROUTES) as ROUTE_TYPES[]
