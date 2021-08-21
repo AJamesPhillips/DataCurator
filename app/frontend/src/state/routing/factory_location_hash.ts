@@ -89,7 +89,7 @@ function record_location_hash_change (store: Store<RootState>)
     window.onhashchange = (e: HashChangeEvent) =>
     {
         const state = store.getState()
-        if (!state.sync.ready)
+        if (!state.sync.ready_for_reading)
         {
             // if (promise_state_ready) return
             // promise_state_ready = new Promise<void>(resolve =>

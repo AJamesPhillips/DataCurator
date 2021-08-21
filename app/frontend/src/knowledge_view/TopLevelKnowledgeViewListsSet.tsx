@@ -13,7 +13,7 @@ interface OwnProps {}
 
 
 const map_state = (state: RootState) => ({
-    ready: state.sync.ready,
+    ready: state.sync.ready_for_reading,
     base_knowledge_view: state.derived.base_knowledge_view,
     knowledge_views: state.derived.knowledge_views,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,

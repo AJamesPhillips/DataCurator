@@ -71,7 +71,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 
 
     return {
-        ready: state.sync.ready,
+        ready: state.sync.ready_for_reading,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_id_counterfactuals_map,
         from_wcomponent,

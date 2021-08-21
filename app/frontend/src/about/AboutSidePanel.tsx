@@ -9,7 +9,7 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
-    const { ready } = state.sync
+    const { ready_for_reading: ready } = state.sync
 
     return { ready }
 }

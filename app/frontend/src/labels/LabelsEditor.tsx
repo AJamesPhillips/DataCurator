@@ -22,7 +22,7 @@ interface OwnProps
 const map_state = (state: RootState, { }: OwnProps) =>
 {
     return {
-        ready: state.sync.ready,
+        ready: state.sync.ready_for_reading,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
         created_at_ms: state.routing.args.created_at_ms,

@@ -17,7 +17,7 @@ import { TimeSlider } from "../time_control/TimeSlider"
 
 const map_state = (state: RootState) =>
 {
-    const { ready } = state.sync
+    const { ready_for_reading: ready } = state.sync
 
     const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 

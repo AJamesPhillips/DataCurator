@@ -23,7 +23,8 @@ export function sync_starting_state (): SyncState
 
     const state: SyncState = {
         status: undefined,
-        ready: false,
+        ready_for_reading: false,
+        ready_for_writing: false,
         saving: false,
         error_message: "",
         storage_type: undefined,

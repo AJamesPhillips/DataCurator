@@ -17,7 +17,7 @@ const map_state = (state: RootState) => {
     const pattern_priority = state.patterns.find(({ id }) => id === PATTERN_ID_PRIORITY)
     const pattern_event = state.patterns.find(({ id }) => id === PATTERN_ID_EVENT)
 
-    const { ready } = state.sync
+    const { ready_for_reading: ready } = state.sync
     if (!pattern_action && ready) throw new Error(`Pattern "Action v2" for id: ${PATTERN_ID_ACTION_V2} not found`)
     if (!pattern_priority && ready) throw new Error(`Pattern "Priority" for id: ${PATTERN_ID_PRIORITY} not found`)
     if (!pattern_event && ready) throw new Error(`Pattern "Event" for id: ${PATTERN_ID_EVENT} not found`)

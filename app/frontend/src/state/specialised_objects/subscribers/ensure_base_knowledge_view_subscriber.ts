@@ -13,7 +13,7 @@ export function ensure_base_knowledge_view_subscriber (store: Store<RootState>)
     {
         const state = store.getState()
 
-        if (!state.sync.ready) return
+        if (!state.sync.ready_for_reading) return
 
         if (state.derived.base_knowledge_view) return
 

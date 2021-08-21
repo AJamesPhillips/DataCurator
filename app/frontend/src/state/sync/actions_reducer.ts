@@ -15,12 +15,14 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
         const saving = status === "SAVING"
         const saved = status === "SAVED"
         const loaded_successfully = status === "LOADED"
-        const ready = saved || loaded_successfully
+        const ready_for_reading = status !== undefined && status !== "LOADING"
+        const ready_for_writing = saved || loaded_successfully
 
         const sync: SyncState = {
             ...state.sync,
             status,
-            ready,
+            ready_for_reading,
+            ready_for_writing,
             saving,
             error_message,
             retry_attempt,

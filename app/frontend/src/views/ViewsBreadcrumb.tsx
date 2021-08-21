@@ -17,7 +17,7 @@ const map_state = (state: RootState) =>
     const kv_id = state.routing.args.subview_id
 
     return {
-        ready: state.sync.ready,
+        ready: state.sync.ready_for_reading,
         saving: state.sync.saving,
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
