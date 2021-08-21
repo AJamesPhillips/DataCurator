@@ -35,9 +35,13 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
 
 
     const next_call_at_ms = throttled_save_state.throttled({ dispatch, state })
-    // Have to use conditional otherwise store.subscribe fires every time even when state does not change
-    if (state.sync.next_save_ms !== next_call_at_ms)
+    if (storage_type !== "solid")
     {
+        // If not saving to solid then save immediately and do not throttle
+        throttled_save_state.flush()
+    } else if (state.sync.next_save_ms !== next_call_at_ms)
+    {
+        // Have to use conditional otherwise store.subscribe fires every time even when state does not change
         dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: next_call_at_ms }))
     }
 }
