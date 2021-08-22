@@ -77,7 +77,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         })
 
         options.current = limited_new_internal_options
-    })
+    }, [props.options, props.search_fields])
 
 
     const actively_selected_option = useRef<ActivelyChosenId>({ actively_chosen: false, id: undefined })
