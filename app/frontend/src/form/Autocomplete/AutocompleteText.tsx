@@ -65,7 +65,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const results = prepare_options_and_targets(props.options)
+        const results = prepare_options_and_targets(props.options, 200)
         prepared_targets.current = results.prepared_targets
 
         results.new_internal_options.forEach(o =>
@@ -269,7 +269,7 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 
 
-function prepare_options_and_targets (options: AutocompleteOption[], limit?: number)
+function prepare_options_and_targets (options: AutocompleteOption[], limit: number)
 {
     let id_num = 1
 
@@ -277,6 +277,7 @@ function prepare_options_and_targets (options: AutocompleteOption[], limit?: num
         .filter(({ is_hidden }) => !is_hidden)
         .map(o =>
         {
+            // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
             const total_text = limit_string_length(o.title, limit)
                 + (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
 

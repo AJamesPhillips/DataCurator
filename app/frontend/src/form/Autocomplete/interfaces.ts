@@ -12,6 +12,7 @@ interface BaseAutocompleteOption
     title: string
     is_hidden?: boolean
     jsx?: h.JSX.Element
+    raw_title?: string
     subtitle?: string
     color?: Color
 }
