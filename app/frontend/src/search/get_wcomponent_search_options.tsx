@@ -7,6 +7,7 @@ import {
     WComponent,
     WComponentsById,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_plain_connection,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 
@@ -42,8 +43,12 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
 
 
             // For now we use raw description but perhaps better to use rendered one?
-            const subtitle = `@@${wcomponent.id} -- ${wcomponent.title} -- ${wcomponent.description}`
+            let subtitle = `@@${wcomponent.id} -- ${wcomponent.title} -- ${wcomponent.description}`
 
+            if (wcomponent_is_plain_connection(wcomponent))
+            {
+                subtitle += ` -- @@${wcomponent.from_id} -> @@${wcomponent.to_id}`
+            }
 
             let jsx: h.JSX.Element | undefined = undefined
             if (wcomponent_is_judgement_or_objective(wcomponent))
