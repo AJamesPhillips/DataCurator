@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { Modal } from "../modal/Modal"
-import { AutocompleteProps, AutocompleteText, SearchType } from "../form/Autocomplete/AutocompleteText"
+import { AutocompleteProps, AutocompleteText, SearchFields, SearchType } from "../form/Autocomplete/AutocompleteText"
 import { useState } from "preact/hooks"
 
 
@@ -14,8 +14,11 @@ interface OwnProps extends AutocompleteProps {
 
 export function SearchWindow (props: OwnProps)
 {
+    const [search_fields, set_search_fields] = useState<SearchFields>("all")
     const [search_type, set_search_type] = useState<SearchType>("either")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
+
+    const toggle_search_fields = () => set_search_fields(search_fields === "all" ? "title" : "all")
     const toggle_search_type = () => set_search_type(search_type === "exact" ? "fuzzy" : (search_type === "fuzzy" ? "either" : "exact"))
 
     return <Modal
@@ -30,6 +33,12 @@ export function SearchWindow (props: OwnProps)
                 <input type="radio" checked={search_type === "exact"} />Exact
                 <input type="radio" checked={search_type === "fuzzy"} />Approximate (slow &amp; title only)
                 <input type="radio" checked={search_type === "either"} />Best (exact then approximate)
+            </div>
+
+            <div onClick={toggle_search_fields} style={{ cursor: "pointer" }}>
+                Search over:
+                <input type="radio" checked={search_fields === "all"} />All fields
+                <input type="radio" checked={search_fields === "title"} />Title only
             </div>
 
             <div style={{ opacity: search_type_used ? 0.7 : 0 }}>
@@ -51,6 +60,7 @@ export function SearchWindow (props: OwnProps)
                 on_mouse_leave_option={props.on_mouse_leave_option}
                 extra_styles={props.extra_styles}
                 start_expanded={true}
+                search_fields={search_fields}
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
             />
