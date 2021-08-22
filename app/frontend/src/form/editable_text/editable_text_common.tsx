@@ -109,12 +109,14 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_conditional_on_change = (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
     {
+        if (id_insertion_point !== undefined) return
         handle_text_field_change({ e, set_id_insertion_point, conditional_on_change })
     }
 
 
     const wrapped_on_blur = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
+        if (id_insertion_point !== undefined) return
         handle_text_field_blur({ e, initial_value: props.value, conditional_on_blur, always_on_blur, set_editing_text_flag })
     }
 
