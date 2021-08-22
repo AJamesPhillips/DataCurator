@@ -30,7 +30,8 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
-    always_allow_editing?: boolean
+    allow_editing_when_presenting?: boolean
+    retain_invalid_search_term_on_blur?: boolean
     search_fields?: SearchFields
     search_type?: SearchType
     set_search_type_used?: (search_type_used: SearchType | undefined) => void
@@ -64,7 +65,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const prepared_targets = useRef<(Fuzzysort.Prepared | undefined)[]>([])
     const flexsearch_index = useRef<Index<{}>>(((FlexSearch as any).Index as typeof FlexSearch.create)())
-    const options = useRef<InternalAutocompleteOption[]>([])
+    const internal_options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
         const limited_new_internal_options = prepare_options(props.options, 200, props.search_fields)
@@ -76,7 +77,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.total_text)
         })
 
-        options.current = limited_new_internal_options
+        internal_options.current = limited_new_internal_options
     }, [props.options, props.search_fields])
 
 
@@ -105,11 +106,11 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const result = get_options_to_display(temp_value_str, !!props.allow_none, options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "either")
+        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "either")
         set_options_to_display(result.options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
-    }, [temp_value_str])
+    }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type])
 
 
 
@@ -158,7 +159,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const set_to_not_editing = () =>
     {
         set_editing_options(false)
-        set_temp_value_str(get_selected_option_title_str())
+        !props.retain_invalid_search_term_on_blur && set_temp_value_str(get_selected_option_title_str())
         set_highlighted_option_index(0)
     }
 
@@ -205,7 +206,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         style={props.extra_styles}
     >
         <input
-            disabled={props.always_allow_editing ? false : props.presenting}
+            disabled={props.allow_editing_when_presenting ? false : props.presenting}
             ref={r =>
             {
                 if (!r) return

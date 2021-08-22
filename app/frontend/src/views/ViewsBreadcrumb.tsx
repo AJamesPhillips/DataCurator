@@ -100,7 +100,7 @@ function _ViewsBreadcrumb (props: Props)
             options={level.options}
             on_change={subview_id => props.change_route({ args: { subview_id } })}
             on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
-            always_allow_editing={true}
+            allow_editing_when_presenting={true}
         />
         )}
     </Breadcrumbs>

@@ -18,8 +18,6 @@ export function SearchWindow (props: OwnProps)
     const [search_type, set_search_type] = useState<SearchType>("either")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
 
-    const toggle_search_fields = () => set_search_fields(search_fields === "all" ? "title" : "all")
-    const toggle_search_type = () => set_search_type(search_type === "exact" ? "fuzzy" : (search_type === "fuzzy" ? "either" : "exact"))
 
     return <Modal
         on_close={() => props.on_blur && props.on_blur()}
@@ -28,17 +26,42 @@ export function SearchWindow (props: OwnProps)
             <br />
             <br />
 
-            <div onClick={toggle_search_type} style={{ cursor: "pointer" }}>
+            <div>
                 Search type:
-                <input type="radio" checked={search_type === "exact"} />Exact
-                <input type="radio" checked={search_type === "fuzzy"} />Approximate (slow &amp; title only)
-                <input type="radio" checked={search_type === "either"} />Best (exact then approximate)
+                <RadioOption
+                    selected_option={search_type}
+                    option="exact"
+                    set_option={set_search_type}
+                    option_text="Exact"
+                />
+                <RadioOption
+                    selected_option={search_type}
+                    option="fuzzy"
+                    set_option={set_search_type}
+                    option_text="Approximate (slow &amp; title only)"
+                />
+                <RadioOption
+                    selected_option={search_type}
+                    option="either"
+                    set_option={set_search_type}
+                    option_text="Best (exact then approximate)"
+                />
             </div>
 
-            <div onClick={toggle_search_fields} style={{ cursor: "pointer" }}>
+            <div>
                 Search over:
-                <input type="radio" checked={search_fields === "all"} />All fields
-                <input type="radio" checked={search_fields === "title"} />Title only
+                <RadioOption
+                    selected_option={search_fields}
+                    option="all"
+                    set_option={set_search_fields}
+                    option_text="All fields"
+                />
+                <RadioOption
+                    selected_option={search_fields}
+                    option="title"
+                    set_option={set_search_fields}
+                    option_text="Title only"
+                />
             </div>
 
             <div style={{ opacity: search_type_used ? 0.7 : 0 }}>
@@ -60,10 +83,27 @@ export function SearchWindow (props: OwnProps)
                 on_mouse_leave_option={props.on_mouse_leave_option}
                 extra_styles={props.extra_styles}
                 start_expanded={true}
+                retain_invalid_search_term_on_blur={true}
                 search_fields={search_fields}
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
             />
         </div>}
     />
+}
+
+
+
+interface RadioOptionProps<O>
+{
+    selected_option: O
+    option: O
+    option_text: string
+    set_option: (option: O) => void
+}
+function RadioOption <O> (props: RadioOptionProps<O>)
+{
+    return <span onClick={() => props.set_option(props.option)} style={{ cursor: "pointer" }}>
+        <input type="radio" checked={props.selected_option === props.option} />{props.option_text}
+    </span>
 }
