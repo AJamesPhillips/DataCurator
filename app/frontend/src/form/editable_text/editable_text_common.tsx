@@ -130,13 +130,15 @@ function _EditableTextCommon (props: Props)
             on_blur: wrapped_on_blur,
         })}
 
-        {id_insertion_point !== undefined && <ConditionalWComponentSearchWindow
-            value={value}
-            id_insertion_point={id_insertion_point}
-            set_id_insertion_point={set_id_insertion_point}
-            on_focus_set_selection={on_focus_set_selection}
-            conditional_on_change={conditional_on_change}
-        />}
+        {id_insertion_point !== undefined && <div style={{ fontSize: "initial", fontWeight: "initial" }}>
+            <ConditionalWComponentSearchWindow
+                value={value}
+                id_insertion_point={id_insertion_point}
+                set_id_insertion_point={set_id_insertion_point}
+                on_focus_set_selection={on_focus_set_selection}
+                conditional_on_change={conditional_on_change}
+            />
+        </div>}
     </div>
 }
 
