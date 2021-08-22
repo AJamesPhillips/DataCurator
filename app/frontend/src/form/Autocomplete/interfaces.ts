@@ -18,6 +18,7 @@ interface BaseAutocompleteOption
 export interface InternalAutocompleteOption extends BaseAutocompleteOption
 {
     total_text: string
+    id_num: number
 }
 export interface AutocompleteOption extends BaseAutocompleteOption
 {

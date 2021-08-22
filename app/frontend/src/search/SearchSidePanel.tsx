@@ -15,7 +15,7 @@ import { WComponentSearchWindow } from "./WComponentSearchWindow"
 const map_state = (state: RootState) =>
 {
     return {
-        ctrl_f_search: is_ctrl_f_search(state)
+        ctrl_f_search: is_ctrl_f_search(state),
     }
 }
 

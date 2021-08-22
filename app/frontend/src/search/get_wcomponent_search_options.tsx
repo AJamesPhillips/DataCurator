@@ -41,14 +41,8 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
             })
 
 
-            // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
-            const limit = 150
-            let limited_title = title.slice(0, limit)
-            let limited_subtitle = wcomponent.title.slice(0, limit)
-
-            if (limited_title.length !== title.length) limited_title += "..."
-            if (limited_subtitle.length !== wcomponent.title.length) limited_subtitle += "..."
-            limited_subtitle += `-- @@${wcomponent.id}`
+            // For now we use raw description but perhaps better to use rendered one?
+            const subtitle = `@@${wcomponent.id} -- ${wcomponent.title} -- ${wcomponent.description}`
 
 
             let jsx: h.JSX.Element | undefined = undefined
@@ -62,12 +56,22 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
 
             return {
                 id: wcomponent.id,
-                title: limited_title,
+                title,
                 jsx,
-                subtitle: limited_subtitle,
+                subtitle,
                 color: wcomponent.label_color,
             }
         })
 
     return options
 }
+
+
+
+            // // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
+            // const limit = 150
+            // let limited_title = title.slice(0, limit)
+            // let limited_subtitle = wcomponent.title.slice(0, limit)
+
+            // if (limited_title.length !== title.length) limited_title += "..."
+            // if (limited_subtitle.length !== wcomponent.title.length) limited_subtitle += "..."

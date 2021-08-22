@@ -1,4 +1,5 @@
 import { h } from "preact"
+import FlexSearch, { Index } from "flexsearch"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
@@ -10,6 +11,9 @@ import type { AutocompleteOption, InternalAutocompleteOption } from "./interface
 import { throttle } from "../../utils/throttle"
 import { useEffect, useRef, useState } from "preact/hooks"
 
+
+
+export type SearchType = "exact" | "fuzzy" | "either"
 
 
 export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
@@ -26,19 +30,13 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
     always_allow_editing?: boolean
+    search_type?: SearchType
+    set_search_type_used?: (search_type_used: SearchType | undefined) => void
 }
 
 
 
 interface OwnProps <E extends AutocompleteOption> extends AutocompleteProps <E> {}
-
-
-interface State
-{
-    temp_value_str: string
-    editing: boolean
-    highlighted_option_index: number
-}
 
 
 
@@ -63,11 +61,18 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
 
     const prepared_targets = useRef<(Fuzzysort.Prepared | undefined)[]>([])
+    const flexsearch_index = useRef<Index<{}>>(((FlexSearch as any).Index as typeof FlexSearch.create)())
     const options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
         const results = prepare_options_and_targets(props.options)
         prepared_targets.current = results.prepared_targets
+
+        results.new_internal_options.forEach(o =>
+        {
+            flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.total_text)
+        })
+
         options.current = results.new_internal_options
     })
 
@@ -97,8 +102,9 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const options_to_display = get_options_to_display(temp_value_str, !!props.allow_none, options.current, prepared_targets.current)
-        set_options_to_display(options_to_display)
+        const result = get_options_to_display(temp_value_str, !!props.allow_none, options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "either")
+        set_options_to_display(result.options)
+        props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
     }, [temp_value_str])
 
@@ -263,52 +269,94 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 
 
-function prepare_options_and_targets (options: AutocompleteOption[])
+function prepare_options_and_targets (options: AutocompleteOption[], limit?: number)
 {
+    let id_num = 1
+
     const new_internal_options: InternalAutocompleteOption[] = options
         .filter(({ is_hidden }) => !is_hidden)
-        .map(o => ({
-            ...o, total_text: o.title + (o.subtitle ? (" " + o.subtitle) : "")
-        }))
+        .map(o =>
+        {
+            const total_text = limit_string_length(o.title, limit)
+                + (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
+
+            return { ...o, total_text, id_num: id_num++ }
+        })
 
     const prepared_targets = new_internal_options.map(({ total_text }) =>
     {
         return fuzzysort.prepare(total_text)
     })
 
-    return { new_internal_options, prepared_targets}
+    return { new_internal_options, prepared_targets }
 }
 
 
 
-function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[]): InternalAutocompleteOption[]
+function limit_string_length (str: string, limit?: number)
 {
-    // allow user to clear the current value / select none
-    const option_none: InternalAutocompleteOption = { id: undefined, title: "-", total_text: "" }
+    if (!limit) return str
+
+    return str.slice(0, limit) + (str.length > limit ? "..." : "")
+}
+
+
+
+const OPTION_NONE: InternalAutocompleteOption = { id: undefined, id_num: 0, title: "-", total_text: "" }
+
+function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[], flexsearch_index: Index<{}>, search_type: SearchType): { options: InternalAutocompleteOption[], search_type_used: SearchType | undefined }
+{
+
+    let search_type_used: SearchType | undefined = undefined
 
     if (!temp_value_str)
     {
-        if (allow_none) return [option_none, ...options]
-        else return options
+        // allow user to clear the current value / select none
+        if (allow_none) return { options: [OPTION_NONE, ...options], search_type_used }
+        else return { options, search_type_used }
     }
 
 
-    const search_options = {
-        limit: 100, // don't return more results than we need
-        allowTypo: true,
-        threshold: -10000, // don't return bad results
+    let option_to_score = (option: InternalAutocompleteOption) => 0
+    let exact_results = 0
+
+    if (search_type === "either" || search_type === "exact")
+    {
+        search_type_used = "exact"
+
+        const results = (flexsearch_index as any).search(temp_value_str) as number[]
+        exact_results = results.length
+        const id_num_to_score: { [id_num: number]: number } = {}
+        results.forEach((id, index) => id_num_to_score[id] = 10000 - index)
+        option_to_score = o => id_num_to_score[o.id_num] || -10000
     }
 
-    const results = fuzzysort.go(temp_value_str, prepared_targets, search_options)
+    // Do a fuzzy search (note: at the moment it's over less content)
+    if (exact_results === 0 && (search_type === "either" || search_type === "fuzzy"))
+    {
+        search_type_used = "fuzzy"
 
-    const map_target_to_score: { [target: string]: number } = {}
-    results.forEach(({ target, score }) => map_target_to_score[target] = score)
+        const search_options = {
+            limit: 100, // don't return more results than we need
+            allowTypo: true,
+            threshold: -10000, // don't return bad results
+        }
 
-    const options_to_display: InternalAutocompleteOption[] = sort_list(options, o =>
+        const results = fuzzysort.go(temp_value_str, prepared_targets, search_options)
+
+        const map_target_to_score: { [target: string]: number } = {}
+        results.forEach(({ target, score }) => map_target_to_score[target] = score)
+
+        option_to_score = o =>
         {
             const score = map_target_to_score[o.total_text]
             return score === undefined ? -10000 : score
-        }, "descending")
+        }
+    }
 
-    return options_to_display
+
+    const filterd_options = options.filter(o => option_to_score(o) > -1000)
+    const options_to_display: InternalAutocompleteOption[] = sort_list(filterd_options, option_to_score, "descending")
+
+    return { options: options_to_display, search_type_used }
 }
