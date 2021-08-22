@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "preact/hooks"
 
 
 
+export type SearchFields = "title" | "all"
 export type SearchType = "exact" | "fuzzy" | "either"
 
 
@@ -30,6 +31,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
     always_allow_editing?: boolean
+    search_fields?: SearchFields
     search_type?: SearchType
     set_search_type_used?: (search_type_used: SearchType | undefined) => void
 }
@@ -65,15 +67,16 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const results = prepare_options_and_targets(props.options, 200)
-        prepared_targets.current = results.prepared_targets
+        const limited_new_internal_options = prepare_options(props.options, 200, props.search_fields)
+        const _prepared_targets = prepare_targets(limited_new_internal_options)
+        prepared_targets.current = _prepared_targets
 
-        results.new_internal_options.forEach(o =>
+        limited_new_internal_options.forEach(o =>
         {
             flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.total_text)
         })
 
-        options.current = results.new_internal_options
+        options.current = limited_new_internal_options
     })
 
 
@@ -269,27 +272,32 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 
 
 
-function prepare_options_and_targets (options: AutocompleteOption[], limit: number)
+function prepare_options (options: AutocompleteOption[], limit: number, search_fields: SearchFields = "all")
 {
     let id_num = 1
+    const all = search_fields === "all"
 
     const new_internal_options: InternalAutocompleteOption[] = options
         .filter(({ is_hidden }) => !is_hidden)
         .map(o =>
         {
             // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
-            const total_text = limit_string_length(o.title, limit)
-                + (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
+            let total_text = limit_string_length(o.title, limit)
+
+            if (all) total_text += (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
+            else total_text += (o.raw_title ? (" " + limit_string_length(o.raw_title, limit)) : "")
 
             return { ...o, total_text, id_num: id_num++ }
         })
 
-    const prepared_targets = new_internal_options.map(({ total_text }) =>
-    {
-        return fuzzysort.prepare(total_text)
-    })
+    return new_internal_options
+}
 
-    return { new_internal_options, prepared_targets }
+
+
+function prepare_targets (new_internal_options: InternalAutocompleteOption[])
+{
+    return new_internal_options.map(({ total_text }) => fuzzysort.prepare(total_text))
 }
 
 
