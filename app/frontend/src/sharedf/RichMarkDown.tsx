@@ -1,11 +1,12 @@
-import { Component, FunctionalComponent, h } from "preact"
+import { Component, FunctionalComponent, h, ComponentChildren } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import Markdown from "markdown-to-jsx"
+import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 
 import type { RootState } from "../state/State"
 import { add_newlines_to_markdown } from "../form/utils"
 import { replace_ids_in_text } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
+import { AnchorTag } from "./AnchorTag"
 
 
 
@@ -40,10 +41,14 @@ class _RichMarkDown extends Component <Props>
         const value = replace_ids_in_text({
             text, rich_text, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms
         })
-        return <Markdown>
+        return <Markdown options={MARKDOWN_OPTIONS}>
             {(value && add_newlines_to_markdown(value)) || placeholder}
         </Markdown>
     }
 }
 
 export const RichMarkDown = connector(_RichMarkDown) as FunctionalComponent<OwnProps>
+
+
+
+export const MARKDOWN_OPTIONS: MarkdownToJSX.Options = { overrides: { a: { component: AnchorTag } } }

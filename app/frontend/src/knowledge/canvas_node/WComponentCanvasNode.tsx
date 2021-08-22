@@ -39,6 +39,7 @@ import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
 import { Box } from "@material-ui/core"
+import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 
 
 
@@ -227,7 +228,7 @@ function _WComponentCanvasNode (props: Props)
                     <WarningTriangle message="Missing from this knowledge view" />
                     &nbsp;
                 </span>}
-                {(is_editing || !wcomponent.hide_title) && <Markdown options={{ forceInline: true }}>{title}</Markdown>}
+                {(is_editing || !wcomponent.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
             </div>
 
             {show_validity_value && <div className="node_validity_container">

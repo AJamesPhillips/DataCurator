@@ -7,6 +7,7 @@ import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { color_to_opposite, color_to_string } from "../sharedf/color"
+import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
 
 
 
@@ -65,7 +66,7 @@ function _LabelV2 (props: Props)
         // onPointerLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}
         // onPointerDown={e => pointer_down && pointer_down(e, option.id)}
     >
-        <Markdown>
+        <Markdown options={MARKDOWN_OPTIONS}>
             {title}
         </Markdown>
     </div>
