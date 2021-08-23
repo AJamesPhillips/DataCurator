@@ -9,9 +9,9 @@ import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 import { DefaultTheme } from "./ui_themes/material_default"
 import { ViewOptions } from "./views/ViewOptions"
 import { StorageInfo } from "./sync/storage_type/StorageInfo"
-import { SyncInfo } from "./sync/sync_info/SyncInfo"
+import { SyncBackupInfo } from "./sync/sync_backup_info/SyncBackupInfo"
 import { UserInfo } from "./sync/user_info/UserInfo"
-import { BackupInfo } from "./sync/backup_info/BackupInfo"
+import { BackupInfo } from "./sync/sync_backup_info/BackupInfo"
 
 function App()
 {
@@ -25,9 +25,8 @@ function App()
                             <ViewOptions />
                             <ViewsBreadcrumb />
                             <Box flexGrow={1} display="flex" justifyContent="flex-end">
-                                <SyncInfo />
+                                <SyncBackupInfo />
                                 <StorageInfo />
-                                <BackupInfo />
                                 <UserInfo />
                             </Box>
                         </Toolbar>
