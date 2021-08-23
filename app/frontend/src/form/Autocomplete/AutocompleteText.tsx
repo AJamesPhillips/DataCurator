@@ -10,11 +10,8 @@ import { Options } from "./Options"
 import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
 import { throttle } from "../../utils/throttle"
 import { useEffect, useRef, useState } from "preact/hooks"
+import type { SearchFields, SearchType } from "../../state/search/state"
 
-
-
-export type SearchFields = "title" | "all"
-export type SearchType = "exact" | "fuzzy" | "either"
 
 
 export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteOption>
@@ -74,7 +71,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
         limited_new_internal_options.forEach(o =>
         {
-            flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.total_text)
+            flexsearch_index.current = flexsearch_index.current.add(o.id_num, o.unlimited_total_text)
         })
 
         internal_options.current = limited_new_internal_options
@@ -106,7 +103,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "either")
+        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "best")
         set_options_to_display(result.options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
@@ -283,12 +280,10 @@ function prepare_options (options: AutocompleteOption[], limit: number, search_f
         .map(o =>
         {
             // limiting length due to: https://github.com/farzher/fuzzysort/issues/80
-            let total_text = limit_string_length(o.title, limit)
+            const limited_total_text = get_total_text(o, limit, all)
+            const unlimited_total_text = get_total_text(o, 0, all)
 
-            if (all) total_text += (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
-            else total_text += (o.raw_title ? (" " + limit_string_length(o.raw_title, limit)) : "")
-
-            return { ...o, total_text, id_num: id_num++ }
+            return { ...o, limited_total_text, unlimited_total_text, id_num: id_num++ }
         })
 
     return new_internal_options
@@ -296,9 +291,14 @@ function prepare_options (options: AutocompleteOption[], limit: number, search_f
 
 
 
-function prepare_targets (new_internal_options: InternalAutocompleteOption[])
+function get_total_text (o: AutocompleteOption, limit: number, all: boolean)
 {
-    return new_internal_options.map(({ total_text }) => fuzzysort.prepare(total_text))
+    let total_text = limit_string_length(o.title, limit)
+
+    if (all) total_text += (o.subtitle ? (" " + limit_string_length(o.subtitle, limit)) : "")
+    else total_text += (o.raw_title ? (" " + limit_string_length(o.raw_title, limit)) : "")
+
+    return total_text
 }
 
 
@@ -312,7 +312,20 @@ function limit_string_length (str: string, limit?: number)
 
 
 
-const OPTION_NONE: InternalAutocompleteOption = { id: undefined, id_num: 0, title: "-", total_text: "" }
+function prepare_targets (new_internal_options: InternalAutocompleteOption[])
+{
+    return new_internal_options.map(({ limited_total_text: total_text }) => fuzzysort.prepare(total_text))
+}
+
+
+
+const OPTION_NONE: InternalAutocompleteOption = {
+    id: undefined,
+    id_num: 0,
+    title: "-",
+    limited_total_text: "",
+    unlimited_total_text: "",
+}
 
 function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[], flexsearch_index: Index<{}>, search_type: SearchType): { options: InternalAutocompleteOption[], search_type_used: SearchType | undefined }
 {
@@ -330,7 +343,7 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
     let option_to_score = (option: InternalAutocompleteOption) => 0
     let exact_results = 0
 
-    if (search_type === "either" || search_type === "exact")
+    if (search_type === "best" || search_type === "exact")
     {
         search_type_used = "exact"
 
@@ -341,8 +354,8 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
         option_to_score = o => id_num_to_score[o.id_num] || -10000
     }
 
-    // Do a fuzzy search (note: at the moment it's over less content)
-    if (exact_results === 0 && (search_type === "either" || search_type === "fuzzy"))
+
+    if (exact_results === 0 && (search_type === "best" || search_type === "fuzzy"))
     {
         search_type_used = "fuzzy"
 
@@ -359,7 +372,7 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
 
         option_to_score = o =>
         {
-            const score = map_target_to_score[o.total_text]
+            const score = map_target_to_score[o.limited_total_text]
             return score === undefined ? -10000 : score
         }
     }

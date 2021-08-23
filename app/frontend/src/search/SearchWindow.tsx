@@ -1,8 +1,9 @@
 import { h } from "preact"
-
-import { Modal } from "../modal/Modal"
-import { AutocompleteProps, AutocompleteText, SearchFields, SearchType } from "../form/Autocomplete/AutocompleteText"
 import { useState } from "preact/hooks"
+
+import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
+import { Modal } from "../modal/Modal"
+import type { SearchFields, SearchType } from "../state/search/state"
 
 
 
@@ -15,7 +16,7 @@ interface OwnProps extends AutocompleteProps {
 export function SearchWindow (props: OwnProps)
 {
     const [search_fields, set_search_fields] = useState<SearchFields>("all")
-    const [search_type, set_search_type] = useState<SearchType>("either")
+    const [search_type, set_search_type] = useState<SearchType>("best")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
 
 
@@ -42,7 +43,7 @@ export function SearchWindow (props: OwnProps)
                 />
                 <RadioOption
                     selected_option={search_type}
-                    option="either"
+                    option="best"
                     set_option={set_search_type}
                     option_text="Best (exact then approximate)"
                 />
