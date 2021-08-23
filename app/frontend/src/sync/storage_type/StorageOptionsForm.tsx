@@ -50,9 +50,11 @@ export function StorageOptionsForm (props: OwnProps)
             name={get_storage_type_name("local_storage")}
             description={<div>
                 The data is stored in your web browser. It never leaves your web browser. It is not available
-                in other web browsers, or on other computers. If you work in an incognito window you data will
+                in other web browsers, or on other computers. If you work in an incognito window your data will
                 be lost. If you clear your cache &amp; cookies your data will be lost. We recommend using this
-                for temporary demos <s>or if you are going to export to a file and reimport it after every
+                for temporary demos, or if you are going to periodically save it
+                to <a href="https://solidproject.org/">Solid</a>, a local server (advanced options) <s>or if
+                you are going to export to a file and reimport it after every
                 use</s> [feature not supported yet].
             </div>}
             selected={new_storage_type === "local_storage"}
@@ -63,7 +65,8 @@ export function StorageOptionsForm (props: OwnProps)
         <StorageOption
             name={get_storage_type_name("solid")}
             description={<div>
-                Solid is a data storage platform which puts you back in control of your
+                <a href="https://solidproject.org/">Solid</a> is a data storage platform which puts
+                you back in control of your
                 data.  Once you retake ownership of your own data it enables you to use your data
                 with any other application and do useful things;
                 something the big tech companies don't let you do.
