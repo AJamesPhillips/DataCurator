@@ -7,7 +7,6 @@ import {
     ALLOWED_SUB_ROUTES,
     RoutingStateArgs,
     is_routing_view_types,
-    is_route_string_arg_number,
     RoutingStringArgKey,
 } from "./interfaces"
 import { routing_arg_datetime_strings_to_datetime } from "./datetime/routing_datetime"
@@ -44,7 +43,7 @@ export function routing_args_to_string (routing_args: RoutingStateArgs)
     const routing_args_str = (Object.keys(routing_args) as (keyof typeof data)[])
         .filter(k => !exclude_routing_keys.has(k))
         .sort()
-        .reverse() // used so we can see x, y, zoom more easily
+        // .reverse() // used so we can see x, y, zoom more easily
         // Put cdate and ctime at the end so they are easiest to manually remove from url
         .concat(["sdate", "stime", "cdate", "ctime"])
         .map(key => `&${key}=${data[key]}`)
@@ -107,12 +106,12 @@ function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]):
 
     args_from_url.forEach(part => {
         const [key, value] = part.split("=") as [RoutingStringArgKey, string]
-        update_args_with_value(key, value, args)
 
         if (key === "cdate") cdate = value
         else if (key === "ctime") ctime = value
         else if (key === "sdate") sdate = value
         else if (key === "stime") stime = value
+        else update_args_with_value(args, key, value)
     })
 
     args.created_at_datetime = routing_arg_datetime_strings_to_datetime(cdate, ctime)
@@ -123,14 +122,23 @@ function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]):
     return args
 }
 
-function update_args_with_value (key: RoutingStringArgKey, value: string, args: RoutingStateArgs)
+function update_args_with_value (args: RoutingStateArgs, key: RoutingStringArgKey, value: string)
 {
     if (key === "view")
     {
         if (is_routing_view_types(value)) args.view = value
     }
+    else if (routing_arg_is_a_number(key)) args[key] = parseInt(value)
     else if (key === "subview_id") args.subview_id = value
-    else if (is_route_string_arg_number(key)) args[key] = parseInt(value)
+    else if (key === "storage_location") args.storage_location = value
+}
+
+
+
+const ROUTING_ARGS_WHICH_ARE_NUMBERS = new Set(["x", "y", "zoom"])
+function routing_arg_is_a_number (key: string): key is "x" | "y" | "zoom"
+{
+    return ROUTING_ARGS_WHICH_ARE_NUMBERS.has(key)
 }
 
 
@@ -152,6 +160,7 @@ function run_tests ()
             zoom: 100,
             x: 101,
             y: 158,
+            storage_location: "",
             created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
             created_at_ms: 1603299864000,
             sim_datetime: new Date("2021-04-26T09:23:13.000Z"),

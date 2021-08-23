@@ -52,8 +52,8 @@ function run_tests ()
     const dt2 = new Date("2022-01-01 01:01:01")
     const dt3 = new Date("2023-01-01 01:01:01")
     const current_routing_state: RoutingState = {
-        route: "wcomponents" as ROUTE_TYPES,
-        sub_route: null as SUB_ROUTE_TYPES,
+        route: "wcomponents",
+        sub_route: null,
         item_id: "wc53611570523449304",
         args:
         {
@@ -61,11 +61,13 @@ function run_tests ()
             created_at_ms: dt.getTime(),
             sim_datetime: dt,
             sim_ms: dt.getTime(),
-            view: "knowledge" as ViewType,
+
+            view: "knowledge",
             subview_id: "kv7207606403961189",
             zoom: 100,
             x: 0,
             y: 0,
+            storage_location: "",
         }
     }
 

@@ -14,6 +14,7 @@ export function get_routing_starting_state (): RoutingState
         zoom: 100,
         x: 0,
         y: 0,
+        storage_location: "",
 
         created_at_datetime: now,
         created_at_ms: now_ms,

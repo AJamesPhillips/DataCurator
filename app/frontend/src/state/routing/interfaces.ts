@@ -59,6 +59,7 @@ export interface RoutingStateArgs
     zoom: number
     x: number
     y: number
+    storage_location: string
 
     created_at_datetime: Date
     created_at_ms: number
@@ -74,6 +75,8 @@ interface RoutingStringArgs {
     zoom: string
     x: string
     y: string
+    storage_location: string
+
     order: string
     rotation: string
 
@@ -89,15 +92,13 @@ const ALLOWED_ROUTE_ARG_KEYS: RoutingStringArgKey[] = [
     "zoom",
     "x",
     "y",
+    "storage_location",
+
     "order",
     "rotation",
+
     "cdate",
     "ctime",
     "sdate",
     "stime",
 ]
-
-export function is_route_string_arg_number (key: string): key is "x" | "y" | "zoom"
-{
-    return ["x", "y", "zoom"].includes(key)
-}
