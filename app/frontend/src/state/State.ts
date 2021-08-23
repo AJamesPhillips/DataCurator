@@ -7,6 +7,7 @@ import type { DisplayOptionsState } from "./display_options/state"
 import type { FilterContextState } from "./filter_context/state"
 import type { GlobalKeysState } from "./global_keys/state"
 import type { RoutingState } from "./routing/interfaces"
+import type { SearchState } from "./search/state"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
 import type { BackupState } from "./sync/backup/state"
@@ -118,6 +119,7 @@ export interface RootState extends RootStateCore
     meta_wcomponents: MetaWComponentsState
     objectives: ObjectivesState
     routing: RoutingState
+    search: SearchState
     sync: SyncState
     user_activity: UserActivityState
     user_info: UserInfoState

@@ -5,6 +5,7 @@ type SupportedPersistenceKeys = (
     | "creation_context"
     | "filter_context"
     | "controls"
+    | "search"
     | "sync"
     | "user_info"
 )

@@ -9,6 +9,7 @@ import { pattern_actions } from "./pattern_actions"
 import { routing_actions } from "./routing/actions"
 import { display_at_created_datetime_actions } from "./routing/datetime/display_at_created"
 import { display_at_sim_datetime_actions } from "./routing/datetime/display_at_sim_datetime"
+import { search_actions } from "./search/actions_reducer"
 import { specialised_object_actions } from "./specialised_objects/actions"
 import { statement_actions } from "./statements"
 import { sync_actions } from "./sync/actions_reducer"
@@ -33,6 +34,7 @@ export const ACTIONS = {
     display_at_created_datetime: display_at_created_datetime_actions,
     display_at_sim_datetime: display_at_sim_datetime_actions,
     objectives: objectives_actions,
+    search: search_actions,
     specialised_object: specialised_object_actions,
     user_activity: user_activity_actions,
     user_info: user_info_actions,

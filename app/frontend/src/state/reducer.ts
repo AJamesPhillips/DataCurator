@@ -14,6 +14,7 @@ import { patterns_reducer } from "./patterns"
 import { display_at_created_datetime_reducer } from "./routing/datetime/display_at_created"
 import { display_at_sim_datetime_reducer } from "./routing/datetime/display_at_sim_datetime"
 import { routing_reducer } from "./routing/reducer"
+import { search_reducer } from "./search/actions_reducer"
 import { derived_meta_wcomponents_state_reducer } from "./specialised_objects/meta_wcomponents/selecting/derived"
 import { specialised_objects_reducer } from "./specialised_objects/reducer"
 import type { RootState } from "./State"
@@ -46,6 +47,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = user_activity_reducer(state, action)
     state = user_info_reducer(state, action)
     state = backup_reducer(state, action)
+    state = search_reducer(state, action)
 
     state = { ...state, last_action: action }
 
