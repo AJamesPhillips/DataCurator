@@ -159,9 +159,10 @@ export function get_starting_state (): RootState
         global_keys: get_global_keys_starting_state(),
         objectives: { selected_objective_ids: new Set(), priority_selected_objective_ids: new Set() },
         meta_wcomponents: get_meta_wcomponents_starting_state(),
-        derived: get_derived_starting_state(),
         user_activity: user_activity_starting_state(),
         user_info: user_info_starting_state(),
+
+        derived: get_derived_starting_state(),
     }
 
     return starting_state

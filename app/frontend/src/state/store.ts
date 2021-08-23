@@ -14,7 +14,7 @@ import type { RootState } from "./State"
 import { periodically_backup_solid_data } from "./sync/backup/periodically_backup_solid_data"
 import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
 import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/save_state"
-import { persist_all_state } from "./utils/persistence"
+import { persist_all_state } from "./persistence/persistence"
 
 
 

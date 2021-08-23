@@ -23,7 +23,7 @@ import { is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_username } from "./sync/user_info/solid/get_solid_username"
 import { get_pod_URL, OIDC_provider_map } from "./sync/user_info/solid/urls"
 import type { UserInfoState } from "./state/user_info/state"
-import { get_persisted_state_object, persist_state_object } from "./state/utils/persistence_utils"
+import { get_persisted_state_object, persist_state_object } from "./state/persistence/persistence_utils"
 import { find_match_by_inclusion_of_key } from "./utils/object"
 
 const root = document.getElementById("root")

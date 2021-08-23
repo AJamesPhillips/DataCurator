@@ -1,6 +1,6 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../utils/persistence_utils"
+import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import type { DisplayOptionsState } from "./state"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
