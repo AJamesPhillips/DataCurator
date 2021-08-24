@@ -29,7 +29,6 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _TimeResolutionOptions (props: Props)
 {
-    console.log(props)
     return (
         (!props.display_by_simulated_time) && <ToggleButtonGroup
             exclusive
