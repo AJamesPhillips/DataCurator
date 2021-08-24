@@ -31,9 +31,15 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
-    if (is_update_use_custom_solid_pod_URL(action))
+    if (is_update_custom_solid_pod_URLs(action))
     {
-        state = update_substate(state, "user_info", "chosen_solid_pod_URL_index", action.use_custom_pod_URL)
+        state = update_substate(state, "user_info", "custom_solid_pod_URLs", action.custom_solid_pod_URLs)
+    }
+
+
+    if (is_update_chosen_custom_solid_pod_URL_index(action))
+    {
+        state = update_substate(state, "user_info", "chosen_custom_solid_pod_URL_index", action.chosen_custom_solid_pod_URL_index)
     }
 
 
@@ -82,22 +88,42 @@ const is_update_user_name_from_solid = (action: AnyAction): action is ActionUpda
 
 
 
-interface UpdateUseCustomSolidPodUrlArgs
+interface UpdateCustomSolidPodUrlsArgs
 {
-    use_custom_pod_URL: number
+    custom_solid_pod_URLs: string[]
 }
 
-interface ActionUpdateUseCustomSolidPodUrl extends Action, UpdateUseCustomSolidPodUrlArgs {}
+interface ActionUpdateCustomSolidPodUrls extends Action, UpdateCustomSolidPodUrlsArgs {}
 
-const update_use_custom_solid_pod_URL_type = "update_use_custom_solid_pod_URL"
+const update_custom_solid_pod_URLs_type = "update_custom_solid_pod_URLs"
 
-const update_use_custom_solid_pod_URL = (args: UpdateUseCustomSolidPodUrlArgs): ActionUpdateUseCustomSolidPodUrl =>
+const update_custom_solid_pod_URLs = (args: UpdateCustomSolidPodUrlsArgs): ActionUpdateCustomSolidPodUrls =>
 {
-    return { type: update_use_custom_solid_pod_URL_type, ...args }
+    return { type: update_custom_solid_pod_URLs_type, ...args }
 }
 
-const is_update_use_custom_solid_pod_URL = (action: AnyAction): action is ActionUpdateUseCustomSolidPodUrl => {
-    return action.type === update_use_custom_solid_pod_URL_type
+const is_update_custom_solid_pod_URLs = (action: AnyAction): action is ActionUpdateCustomSolidPodUrls => {
+    return action.type === update_custom_solid_pod_URLs_type
+}
+
+
+
+interface UpdateChosenCustomSolidPodUrlIndexArgs
+{
+    chosen_custom_solid_pod_URL_index: number
+}
+
+interface ActionUpdateChosenCustomSolidPodUrlIndex extends Action, UpdateChosenCustomSolidPodUrlIndexArgs {}
+
+const update_chosen_custom_solid_pod_URL_index_type = "update_chosen_custom_solid_pod_URL_index"
+
+const update_chosen_custom_solid_pod_URL_index = (args: UpdateChosenCustomSolidPodUrlIndexArgs): ActionUpdateChosenCustomSolidPodUrlIndex =>
+{
+    return { type: update_chosen_custom_solid_pod_URL_index_type, ...args }
+}
+
+const is_update_chosen_custom_solid_pod_URL_index = (action: AnyAction): action is ActionUpdateChosenCustomSolidPodUrlIndex => {
+    return action.type === update_chosen_custom_solid_pod_URL_index_type
 }
 
 
@@ -105,5 +131,6 @@ const is_update_use_custom_solid_pod_URL = (action: AnyAction): action is Action
 export const user_info_actions = {
     update_solid_oidc_provider,
     update_user_name_from_solid,
-    update_use_custom_solid_pod_URL,
+    update_custom_solid_pod_URLs,
+    update_chosen_custom_solid_pod_URL_index,
 }

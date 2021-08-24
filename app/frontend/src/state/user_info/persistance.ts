@@ -19,7 +19,7 @@ export function user_info_persist (state: RootState)
         // "default_solid_pod_URL",
 
         "custom_solid_pod_URLs",
-        "chosen_solid_pod_URL_index",
+        "chosen_custom_solid_pod_URL_index",
     ], state.user_info)
 
     persist_state_object("user_info", to_persist)
@@ -36,7 +36,7 @@ export function user_info_starting_state (): UserInfoState
         user_name: "",
         default_solid_pod_URL: "",
         custom_solid_pod_URLs: [],
-        chosen_solid_pod_URL_index: 0,
+        chosen_custom_solid_pod_URL_index: 0,
         ...obj,
     }
 

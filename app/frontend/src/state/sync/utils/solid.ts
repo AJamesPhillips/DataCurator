@@ -18,9 +18,14 @@ export const get_wcomponents_url = (pod_URL: string) => `${pod_URL}/data_curator
 
 export function get_solid_pod_URL_or_error (user_info: UserInfoState, purpose: "save" | "load")
 {
-    const { default_solid_pod_URL } = user_info
+    const { default_solid_pod_URL, chosen_custom_solid_pod_URL_index, custom_solid_pod_URLs } = user_info
     let promised_error: Promise<any> | undefined = undefined
-    const solid_pod_URL = default_solid_pod_URL
+    let solid_pod_URL = default_solid_pod_URL
+
+    if (chosen_custom_solid_pod_URL_index)
+    {
+        solid_pod_URL = custom_solid_pod_URLs[chosen_custom_solid_pod_URL_index - 1] || ""
+    }
 
     if (!solid_pod_URL)
     {

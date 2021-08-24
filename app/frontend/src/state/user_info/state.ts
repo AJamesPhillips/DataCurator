@@ -7,5 +7,5 @@ export interface UserInfoState
     user_name: string
     default_solid_pod_URL: string
     custom_solid_pod_URLs: string[]
-    chosen_solid_pod_URL_index: number
+    chosen_custom_solid_pod_URL_index: number
 }
