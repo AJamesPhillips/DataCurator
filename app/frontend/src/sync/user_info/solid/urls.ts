@@ -12,7 +12,7 @@ export const OIDC_provider_map: {[P in OIDC_ProviderRoot]: string} = {
 
 
 const pod_URL_template_map: {[P in OIDC_ProviderRoot]: string} = {
-    "solidcommunity.net": "https://<user_name>.solidcommunity.net",
+    "solidcommunity.net": "https://pegnott.solidcommunity.net",
     "inrupt.com": "https://pod.inrupt.com/<user_name>",
 }
 

@@ -24,11 +24,23 @@ function App()
                         <Toolbar variant="dense" >
                             <ViewOptions />
                             <ViewsBreadcrumb />
-                            <Box flexGrow={1} display="flex" justifyContent="flex-end">
-                                <SyncInfo />
-                                <StorageInfo />
-                                <BackupInfo />
-                                <UserInfo />
+                            <Box flexGrow={1} display="flex" justifyContent="flex-end" alignItems="stretch">
+
+                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                                    <BackupInfo />
+                                </Box>
+                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                                    <SyncInfo />
+                                </Box>
+
+                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                                    <StorageInfo />
+                                </Box>
+
+                                <Box display="flex" flexDirection="column" alignItems="stretch">
+                                    <UserInfo />
+                                </Box>
+
                             </Box>
                         </Toolbar>
                     </AppBar>

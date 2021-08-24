@@ -1,5 +1,5 @@
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
-import { Box } from "@material-ui/core"
+import { Box, Button } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useEffect } from "preact/hooks"
 import { useState } from "preact/hooks"
@@ -8,9 +8,8 @@ import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { finish_login } from "./solid/handle_login"
 import { SelectSolidUser } from "./solid/SelectSolidUser"
-
-
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import GetAppIcon from '@material-ui/icons/GetApp';
 const map_state = (state: RootState) =>
 {
     return {
@@ -47,16 +46,17 @@ function _UserInfo (props: Props)
         set_show_solid_signin_form(false)
     }
 
-
-    return <Box>
-        &nbsp;
-        <span
+    return <Box display="flex" height={1} alignItems="center">
+        <Button
+            disableElevation={true}
+            variant="contained"
+            color="primary"
+            endIcon={<ExitToAppIcon />}
             onClick={() => set_show_solid_signin_form(true)}
-            style={{ cursor: "pointer" }}
         >
             {user_name || "Sign in"}
-        </span>
-        {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
+            {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
+        </Button>
     </Box>
 }
 

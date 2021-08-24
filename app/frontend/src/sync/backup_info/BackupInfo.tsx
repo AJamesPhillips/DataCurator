@@ -1,9 +1,9 @@
-import { Box } from "@material-ui/core"
+import { Box, Paper } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useRef } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import WarningIcon from '@material-ui/icons/Warning';
 import type { RootState } from "../../state/State"
 
 
@@ -41,18 +41,20 @@ function _BackupInfo (props: Props)
         allow_showing.current = true
     }
 
-
     if (!allow_showing.current) return null
 
-
-    return <Box className="backup_info">
-        {failed && <div title="Back up failed">
-            <WarningTriangle message={"Back up failed"} backgroundColor="red" />
-            &nbsp;Backup Failed
-        </div>}
-
-        {(!failed && status) && <div>&nbsp;{status_str}</div>}
-    </Box>
+    return (
+        (failed || status) &&  <Box display="flex" height={1} alignItems="stretch">
+            <Box display="flex" alignItems="center">
+                <Box component="strong">Backup Status: </Box>
+                {failed && <Box component="span" display="inline-flex" alignItems="center">
+                    <WarningIcon color="error" titleAccess="Back up failed"  />
+                    <Box component="span">Backup Failed</Box>
+                </Box>}
+                {(!failed && status) && <Box component="span">{status_str}</Box>}
+            </Box>
+        </Box>
+    )
 }
 
 export const BackupInfo = connector(_BackupInfo) as FunctionalComponent<{}>
