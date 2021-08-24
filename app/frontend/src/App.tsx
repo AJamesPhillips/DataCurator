@@ -13,8 +13,6 @@ import { SyncInfo } from "./sync/sync_info/SyncInfo"
 import { UserInfo } from "./sync/user_info/UserInfo"
 import { BackupInfo } from "./sync/backup_info/BackupInfo"
 
-
-
 function App()
 {
     return (
@@ -23,13 +21,15 @@ function App()
             <Box id="app" className="app">
                 <Box component="header" zIndex={100}>
                     <AppBar position="static">
-                        <Toolbar variant="dense">
+                        <Toolbar variant="dense" >
                             <ViewOptions />
                             <ViewsBreadcrumb />
-                            <SyncInfo />
-                            <StorageInfo />
-                            <BackupInfo />
-                            <UserInfo />
+                            <Box flexGrow={1} display="flex" justifyContent="flex-end">
+                                <SyncInfo />
+                                <StorageInfo />
+                                <BackupInfo />
+                                <UserInfo />
+                            </Box>
                         </Toolbar>
                     </AppBar>
                 </Box>

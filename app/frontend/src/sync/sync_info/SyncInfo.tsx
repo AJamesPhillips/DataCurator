@@ -43,7 +43,7 @@ function _SyncInfo (props: Props)
     if (will_save_in_future) setTimeout(() => update_state({}), 500)
 
 
-    return <Box className="sync_info">
+    return <Box className="sync_info" display="flex">
         {failed && <div title={props.error_message}>
             <WarningTriangle message={props.error_message} backgroundColor="red" />
             &nbsp;Save Failed
