@@ -163,10 +163,11 @@ function restore_session (root_el: HTMLElement): Promise<void>
         const solid_session = getDefaultSession()
 
         return finish_login()
-        .then(() => get_solid_username())
         // This whole function has a smell
-        .then((user_name_from_solid: string | undefined = "") =>
+        .then(() =>
         {
+            const user_name_from_solid = get_solid_username()
+
             console .log("Signed in as user name: " + user_name_from_solid)
 
             let solid_oidc_provider = (

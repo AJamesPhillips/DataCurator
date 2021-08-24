@@ -4,20 +4,51 @@ import {
     getStringNoLocale,
 } from "@inrupt/solid-client"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
+import { find_match_by_inclusion_of_key } from "../../../utils/object"
+import type { OIDC_ProviderRoot } from "./urls"
 
 
 
-
-export async function update_user_name (update_user_name_from_solid: (args: { user_name_from_solid: string }) => void)
+export function update_user_name (update_user_name_from_solid: (args: { user_name_from_solid: string }) => void)
 {
-    const user_name_from_solid = (await get_solid_username()) || ""
+    const user_name_from_solid = get_solid_username()
 
     update_user_name_from_solid({ user_name_from_solid })
 }
 
 
 
-export async function get_solid_username (): Promise<string | undefined>
+const solid_username_URL_regex_map: {[P in OIDC_ProviderRoot]: RegExp} = {
+    "solidcommunity.net": /https?:\/\/([^.]+)/,
+    "inrupt.com": /https?:\/\/[^\/]+\/(.+)/,
+}
+
+export function get_solid_username (): string
+{
+    const session = getDefaultSession()
+
+    const web_id = session.info.webId
+
+    if (!session.info.isLoggedIn || !web_id) return ""
+
+    const match = find_match_by_inclusion_of_key(web_id, solid_username_URL_regex_map)
+    const regexp = match ? match[1] : undefined
+    if (!regexp) return ""
+
+    const regexp_match = web_id.match(regexp)
+    const username = regexp_match && regexp_match[1]
+    if (!username)
+    {
+        console.error(`Failure to extract username from web_id: "${web_id}" using: "${regexp_match}"`)
+        return ""
+    }
+
+    return username
+}
+
+
+
+export async function get_solid_users_name (): Promise<string | undefined>
 {
     const session = getDefaultSession()
 
@@ -29,6 +60,7 @@ export async function get_solid_username (): Promise<string | undefined>
     // in the profile dataset. If we strip the hash, we get the URL of the full
     // dataset.
     const profile_document_url = new URL(web_id)
+
     profile_document_url.hash = ""
 
     // To write to a profile, you must be authenticated. That is the role of the fetch
