@@ -1,14 +1,15 @@
+import { Box, Button } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
 
 import "./SyncInfo.scss"
 import { sentence_case } from "../../shared/utils/sentence_case"
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import type { RootState } from "../../state/State"
 import { throttled_save_state } from "../../state/sync/utils/save_state"
 import { ACTIONS } from "../../state/actions"
-
+import WarningIcon from '@material-ui/icons/Warning';
+import SaveIcon from '@material-ui/icons/Save';
 
 
 const map_state = (state: RootState) =>
@@ -41,40 +42,39 @@ function _SyncInfo (props: Props)
     const save_in_seconds = next_save !== undefined && next_save >= 0 && Math.round(next_save / 1000)
 
     if (will_save_in_future) setTimeout(() => update_state({}), 500)
+    return(
+        <Box display="flex" height={1} alignItems="stretch">
+            {(failed || status) && <Box display="flex" alignItems="center">
+                 <Box component="strong">Sync Status: </Box>
+                {failed && <Box component="span" display="inline-flex" alignItems="center">
+                    <WarningIcon color="error" titleAccess={props.error_message}  />
+                    <Box component="span">Save Failed</Box>
+                </Box>}
+                {(!failed && status) && <Box component="span">{sentence_case(status)}</Box>}
+            </Box>}
 
-
-    if (failed)
-    {
-        return <div title={props.error_message}>
-            <WarningTriangle message={props.error_message} backgroundColor="red" />
-            &nbsp;Save Failed
-        </div>
-    }
-    else if (will_save_in_future)
-    {
-        return <div className="async_save">
-            <WarningTriangle message={props.error_message} backgroundColor="yellow" />
-            &nbsp;
-            <span className="next_save_info">Save in {save_in_seconds}s</span>
-            <span
-                className="manual_save"
-                onClick={() =>
-                {
-                    throttled_save_state.flush()
-                    props.set_next_sync_ms({ next_save_ms: undefined })
-                }}
-            >Manual save</span>
-        </div>
-    }
-    else if (status)
-    {
-        return <div>
-            {saving && <span><WarningTriangle message="Saving" backgroundColor="yellow" />&nbsp;</span>}
-            {sentence_case(status)}
-        </div>
-    }
-
-    return null
+            {will_save_in_future && <Box ml={5}>
+                <Button
+                    id="save_timer_manual_save_trigger"
+                    disableElevation={true}
+                    variant="contained"
+                    color="primary"
+                    endIcon={<SaveIcon />}
+                    onClick={() =>{
+                        throttled_save_state.flush()
+                        props.set_next_sync_ms({ next_save_ms: undefined })
+                    }}>
+                    <Box component="span" className="spacer">&nbsp;</Box>
+                    <Box component="span" id="save_timer">
+                        Save in {save_in_seconds}s {props.error_message}
+                    </Box>
+                    <Box component="span" id="trigger_manual_save" fontSize={0}>
+                        Manual Save
+                    </Box>
+                </Button>
+            </Box>}
+        </Box>
+    )
 }
 
 export const SyncInfo = connector(_SyncInfo) as FunctionalComponent<{}>

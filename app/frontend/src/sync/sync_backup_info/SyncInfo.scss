@@ -1,21 +1,12 @@
-
-.async_save
-{
-    .manual_save
-    {
-        display: none;
-        cursor: pointer;
+#save_timer_manual_save_trigger {
+    #save_timer,
+    #trigger_manual_save {
+        transition-property: all;
+        transition-duration: 0.23s;
     }
-}
 
-.async_save:hover
-{
-    .next_save_info
-    {
-        display: none;
-    }
-    .manual_save
-    {
-        display: initial;
+    &:hover {
+        #save_timer { font-size:0; }
+        #trigger_manual_save { font-size:inherit;  }
     }
 }
