@@ -15,6 +15,7 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     time_resolution: state.display_options.time_resolution,
+    display_by_simulated_time: state.display_options.display_by_simulated_time,
 })
 
 const map_dispatch = {
@@ -29,7 +30,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _TimeResolutionOptions (props: Props)
 {
     return (
-        <ToggleButtonGroup
+        (!props.display_by_simulated_time) && <ToggleButtonGroup
             exclusive
             size="small"
             value={props.time_resolution}
