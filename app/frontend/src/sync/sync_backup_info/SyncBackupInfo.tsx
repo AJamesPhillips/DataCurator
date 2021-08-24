@@ -8,7 +8,7 @@ import { SyncInfo } from "./SyncInfo"
 
 export function SyncBackupInfo (props: {})
 {
-    return <Box display="flex">
+    return <Box>
         <SyncInfo />
         <BackupInfo />
     </Box>
