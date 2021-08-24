@@ -21,10 +21,12 @@ import { finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession, onSessionRestore } from "@inrupt/solid-client-authn-browser"
 import { is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_username } from "./sync/user_info/solid/get_solid_username"
-import { get_pod_URL, OIDC_provider_map } from "./sync/user_info/solid/urls"
+import { make_default_solid_pod_URL, OIDC_provider_map } from "./sync/user_info/solid/urls"
 import type { UserInfoState } from "./state/user_info/state"
 import { get_persisted_state_object, persist_state_object } from "./state/persistence/persistence_utils"
 import { find_match_by_inclusion_of_key } from "./utils/object"
+
+
 
 const root = document.getElementById("root")
 const title = document.getElementsByTagName("title")[0]
@@ -120,7 +122,8 @@ if (root)
         restore_session(root)
         .then(() =>
         {
-            render(<Provider store={get_store({ load_state_from_storage: true })}><App /></Provider>, root)
+            const store = get_store({ load_state_from_storage: true })
+            render(<Provider store={store}><App /></Provider>, root)
         })
     }
     else
@@ -137,8 +140,14 @@ if (title)
 
 
 
+interface RestoredUserInfo extends Partial<UserInfoState>
+{
+    solid_oidc_provider: string
+    user_name: string
+    default_solid_pod_URL: string
+}
 // TODO move this function somewhere else
-function restore_session (root_el: HTMLElement)
+function restore_session (root_el: HTMLElement): Promise<void>
 {
     const using_solid_for_storage = is_using_solid_for_storage()
 
@@ -153,7 +162,7 @@ function restore_session (root_el: HTMLElement)
 
         const solid_session = getDefaultSession()
 
-        return finish_login(solid_session)
+        return finish_login()
         .then(() => get_solid_username())
         // This whole function has a smell
         .then((user_name_from_solid: string | undefined = "") =>
@@ -171,26 +180,25 @@ function restore_session (root_el: HTMLElement)
             const match = find_match_by_inclusion_of_key(solid_oidc_provider, OIDC_provider_map)
             solid_oidc_provider = match ? match[1] : ""
 
-            const solid_pod_URL = get_pod_URL({
+            const default_solid_pod_URL = make_default_solid_pod_URL({
                 user_name: user_name_from_solid,
                 solid_oidc_provider,
             })
 
-            const partial_user_info: Partial<UserInfoState> = {
+            const partial_user_info: RestoredUserInfo = {
                 solid_oidc_provider,
                 user_name: user_name_from_solid,
-                solid_pod_URL,
+                default_solid_pod_URL,
             }
 
             persist_state_object("user_info", partial_user_info)
 
             console .log("Persisted user_info: ", get_persisted_state_object("user_info"))
-        })
-        .then(() =>
-        {
+
             root_el.innerHTML = ""
         })
     }
+
 
     return Promise.resolve()
 }

@@ -44,7 +44,7 @@ function _SolidSigninForm (props: Props)
     const [logged_in, _set_logged_in] = useState(solid_session.info.isLoggedIn)
     const set_logged_in = () => _set_logged_in(solid_session.info.isLoggedIn)
 
-    finish_login(solid_session).then(() =>
+    finish_login().then(() =>
     {
         update_user_name(props.update_user_name_from_solid)
         set_logged_in()
@@ -56,7 +56,7 @@ function _SolidSigninForm (props: Props)
 
     return <div style={{ margin: 10 }}>
         <div className="section">
-            OIDC Provider&nbsp;
+            OIDC (Open ID Connect) Provider (they all you to prove who you say you are)&nbsp;
             <input
                 type="text"
                 style={{ width: 250 }}

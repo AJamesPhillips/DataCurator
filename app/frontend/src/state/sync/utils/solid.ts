@@ -18,8 +18,9 @@ export const get_wcomponents_url = (pod_URL: string) => `${pod_URL}/data_curator
 
 export function get_solid_pod_URL_or_error (user_info: UserInfoState, purpose: "save" | "load")
 {
-    const { solid_pod_URL } = user_info
+    const { default_solid_pod_URL } = user_info
     let promised_error: Promise<any> | undefined = undefined
+    const solid_pod_URL = default_solid_pod_URL
 
     if (!solid_pod_URL)
     {

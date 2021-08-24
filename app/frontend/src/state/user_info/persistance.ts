@@ -11,10 +11,15 @@ export function user_info_persist (state: RootState)
 {
     const to_persist = pick([
         "solid_oidc_provider",
-        // This smells like a hack.  Putting it in so that
-        // load_solid_data works on first load
-        "user_name",
-        "solid_pod_URL",
+        // // Persisting user_name and default_solid_pod_URL smells like a hack.
+        // // Putting it in so that load_solid_data works on first load.
+        // // Alternative is to instantiate the store twice, once first for the
+        // // restore_session code and then for the app
+        // "user_name",
+        // "default_solid_pod_URL",
+
+        "custom_solid_pod_URLs",
+        "chosen_solid_pod_URL_index",
     ], state.user_info)
 
     persist_state_object("user_info", to_persist)
@@ -29,7 +34,9 @@ export function user_info_starting_state (): UserInfoState
     const state: UserInfoState = {
         solid_oidc_provider: "",
         user_name: "",
-        solid_pod_URL: "",
+        default_solid_pod_URL: "",
+        custom_solid_pod_URLs: [],
+        chosen_solid_pod_URL_index: 0,
         ...obj,
     }
 

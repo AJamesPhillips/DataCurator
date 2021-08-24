@@ -1,8 +1,7 @@
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { Box } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
-import { useEffect } from "preact/hooks"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
@@ -37,7 +36,7 @@ function _UserInfo (props: Props)
     const solid_session = getDefaultSession()
     useEffect(() =>
     {
-        finish_login(solid_session)
+        finish_login()
         .then(() => set_show_solid_signin_form(!solid_session.info.isLoggedIn))
     }, [])
 

@@ -19,13 +19,7 @@ export function start_login (session: Session, oidcIssuer: string)
 
 
 
-export async function finish_login (session: Session)
+export async function finish_login ()
 {
-    const logged_in = session.info.isLoggedIn
-
     await handleIncomingRedirect({ restorePreviousSession: true })
-
-    const logged_in_status_changed = logged_in !== session.info.isLoggedIn
-
-    return logged_in_status_changed
 }

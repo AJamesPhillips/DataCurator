@@ -33,3 +33,13 @@ export function find_match_by_inclusion_of_key <O extends object> (str: string, 
 
     return pair as any
 }
+
+
+
+// https://stackoverflow.com/a/56403542/539490
+// https://github.com/joonhocho/tsdef/blob/9956206/src/index.ts#L222-L226
+export type DeepPartial<T> = {
+    [P in keyof T]?: T[P] extends Array<infer I>
+        ? Array<DeepPartial<I>>
+        : DeepPartial<T[P]>
+}

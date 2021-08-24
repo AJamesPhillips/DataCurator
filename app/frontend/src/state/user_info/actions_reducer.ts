@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
-import { get_pod_URL } from "../../sync/user_info/solid/urls"
+import { make_default_solid_pod_URL } from "../../sync/user_info/solid/urls"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 
@@ -17,9 +17,23 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
 
     if (is_update_user_name_from_solid(action))
     {
-        state = update_substate(state, "user_info", "user_name", action.user_name_from_solid)
-        const pod_URL = get_pod_URL(state.user_info) || ""
-        state = update_substate(state, "user_info", "solid_pod_URL", pod_URL)
+        const { user_name_from_solid: user_name } = action
+        state = update_substate(state, "user_info", "user_name", user_name)
+        const default_solid_pod_URL = make_default_solid_pod_URL(state.user_info)
+        state = update_substate(state, "user_info", "default_solid_pod_URL", default_solid_pod_URL)
+
+        let { custom_solid_pod_URLs } = state.user_info
+        if (default_solid_pod_URL && !custom_solid_pod_URLs.includes(default_solid_pod_URL))
+        {
+            custom_solid_pod_URLs = [...custom_solid_pod_URLs, default_solid_pod_URL]
+            state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
+        }
+    }
+
+
+    if (is_update_use_custom_solid_pod_URL(action))
+    {
+        state = update_substate(state, "user_info", "chosen_solid_pod_URL_index", action.use_custom_pod_URL)
     }
 
 
@@ -68,7 +82,28 @@ const is_update_user_name_from_solid = (action: AnyAction): action is ActionUpda
 
 
 
+interface UpdateUseCustomSolidPodUrlArgs
+{
+    use_custom_pod_URL: number
+}
+
+interface ActionUpdateUseCustomSolidPodUrl extends Action, UpdateUseCustomSolidPodUrlArgs {}
+
+const update_use_custom_solid_pod_URL_type = "update_use_custom_solid_pod_URL"
+
+const update_use_custom_solid_pod_URL = (args: UpdateUseCustomSolidPodUrlArgs): ActionUpdateUseCustomSolidPodUrl =>
+{
+    return { type: update_use_custom_solid_pod_URL_type, ...args }
+}
+
+const is_update_use_custom_solid_pod_URL = (action: AnyAction): action is ActionUpdateUseCustomSolidPodUrl => {
+    return action.type === update_use_custom_solid_pod_URL_type
+}
+
+
+
 export const user_info_actions = {
     update_solid_oidc_provider,
     update_user_name_from_solid,
+    update_use_custom_solid_pod_URL,
 }

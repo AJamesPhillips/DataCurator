@@ -2,7 +2,7 @@ import { createStore, Action, Store } from "redux"
 
 import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
-import { render_all_objects, render_all_objects_and_update_store } from "./objects/rendering"
+import { persist_all_state } from "./persistence/persistence"
 import { root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
@@ -14,7 +14,7 @@ import type { RootState } from "./State"
 import { periodically_backup_solid_data } from "./sync/backup/periodically_backup_solid_data"
 import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
 import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/save_state"
-import { persist_all_state } from "./persistence/persistence"
+
 
 
 
@@ -37,10 +37,10 @@ export function get_store (args: ConfigStoreArgs = {})
     if (cached_store && use_cache) return cached_store
 
 
-    const preloaded_state: RootState = render_all_objects({
+    const preloaded_state: RootState = {
         ...get_starting_state(),
         ...override_preloaded_state,
-    })
+    }
     const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state)
     cached_store = store
 
@@ -63,8 +63,6 @@ export function get_store (args: ConfigStoreArgs = {})
     store.subscribe(save)
     window.onbeforeunload = save
 
-
-    store.subscribe(render_all_objects_and_update_store(store))
 
     store.subscribe(factory_location_hash(store))
 
