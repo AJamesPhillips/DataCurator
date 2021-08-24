@@ -12,8 +12,6 @@ import { get_created_at_ms, get_sim_datetime_ms } from "../shared/wcomponent/uti
 import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
-import { TimeSlider } from "../time_control/TimeSlider"
-
 
 const map_state = (state: RootState) =>
 {
@@ -24,9 +22,15 @@ const map_state = (state: RootState) =>
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
-
     const cdate:Date = new Date(state.routing.args.created_at_ms)
     const sdate:Date = new Date(state.routing.args.sim_ms)
+    const minute_time_resolution:TimeResolution = 'minute';
+    const default_time_resolution:TimeResolution = 'day';
+
+    // let current_time_resolution:TimeResolution =  state.display_options.time_resolution;
+    // if (current_time_resolution === minute_time_resolution) {
+    //     current_time_resolution = default_time_resolution;
+    // }
 
     let wcomponent_nodes: WComponent[] = []
 
@@ -34,8 +38,6 @@ const map_state = (state: RootState) =>
     {
         wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
     }
-
-
 
     return {
         ready,
@@ -45,7 +47,7 @@ const map_state = (state: RootState) =>
         selected_wcomponent_ids_map,
         cdate: cdate,
         sdate: sdate,
-        time_resolution: state.display_options.time_resolution,
+        time_resolution: default_time_resolution,
     }
 }
 
