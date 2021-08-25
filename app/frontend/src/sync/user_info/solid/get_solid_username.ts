@@ -1,60 +1,30 @@
 import {
+    getIri,
     getSolidDataset,
     getThing,
     getStringNoLocale,
 } from "@inrupt/solid-client"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
-import { find_match_by_inclusion_of_key } from "../../../utils/object"
-import type { OIDC_ProviderRoot } from "./urls"
 
 
 
-export function update_user_name (update_user_name_from_solid: (args: { user_name_from_solid: string }) => void)
+interface UserNameAndPodURL
 {
-    const user_name_from_solid = get_solid_username()
-
-    update_user_name_from_solid({ user_name_from_solid })
+    user_name: string
+    default_solid_pod_URL: string
 }
+const empty: UserNameAndPodURL = { user_name: "", default_solid_pod_URL: "" }
 
 
-
-const solid_username_URL_regex_map: {[P in OIDC_ProviderRoot]: RegExp} = {
-    "solidcommunity.net": /https?:\/\/([^.]+)/,
-    "inrupt.com": /https?:\/\/[^\/]+\/(.+)/,
-}
-
-export function get_solid_username (): string
+export async function get_solid_users_name_and_pod_URL (): Promise<UserNameAndPodURL>
 {
     const session = getDefaultSession()
 
     const web_id = session.info.webId
 
-    if (!session.info.isLoggedIn || !web_id) return ""
+    debugger
 
-    const match = find_match_by_inclusion_of_key(web_id, solid_username_URL_regex_map)
-    const regexp = match ? match[1] : undefined
-    if (!regexp) return ""
-
-    const regexp_match = web_id.match(regexp)
-    const username = regexp_match && regexp_match[1]
-    if (!username)
-    {
-        console.error(`Failure to extract username from web_id: "${web_id}" using: "${regexp_match}"`)
-        return ""
-    }
-
-    return username
-}
-
-
-
-export async function get_solid_users_name (): Promise<string | undefined>
-{
-    const session = getDefaultSession()
-
-    const web_id = session.info.webId
-
-    if (!session.info.isLoggedIn || !web_id) return undefined
+    if (!session.info.isLoggedIn || !web_id) return empty
 
     // The web_id can contain a hash fragment (e.g. `#me`) to refer to profile data
     // in the profile dataset. If we strip the hash, we get the URL of the full
@@ -73,18 +43,24 @@ export async function get_solid_users_name (): Promise<string | undefined>
     // The profile data is a "Thing" in the profile dataset.
     const profile = getThing(user_profile_dataset, web_id)
 
-    if (!profile) return undefined
+    if (!profile) return empty
 
     // Using the name provided in text field, update the name in your profile.
     // VCARD.fn object from "@inrupt/vocab-common-rdf" is a convenience object that
     // includes the identifier string "http://www.w3.org/2006/vcard/ns#fn".
     // As an alternative, you can pass in the "http://www.w3.org/2006/vcard/ns#fn" string instead of VCARD.fn.
-    let name = getStringNoLocale(profile, "http://www.w3.org/2006/vcard/ns#fn")
+    let user_name = getStringNoLocale(profile, "http://www.w3.org/2006/vcard/ns#fn") || ""
 
-    if (name === null)
+    if (!user_name)
     {
-        name = getStringNoLocale(profile, "http://xmlns.com/foaf/0.1/name")
+        user_name = getStringNoLocale(profile, "http://xmlns.com/foaf/0.1/name") || ""
     }
 
-    return name || ""
+    const default_solid_pod_URL = getIri(profile, "http://www.w3.org/ns/pim/space#storage") || ""
+
+
+    return {
+        user_name,
+        default_solid_pod_URL,
+    }
 }

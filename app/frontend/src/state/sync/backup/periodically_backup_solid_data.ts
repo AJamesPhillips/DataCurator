@@ -18,7 +18,7 @@ import { attempt_save } from "../utils/save_state"
 
 
 
-const BACKUPS_PATH = "/data_curator_backups/"
+const BACKUPS_PATH = "data_curator_backups/"
 
 
 let last_attempted_state_to_backup: RootState | undefined = undefined

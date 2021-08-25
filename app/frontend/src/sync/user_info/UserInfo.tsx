@@ -53,7 +53,7 @@ function _UserInfo (props: Props)
             endIcon={<ExitToAppIcon />}
             onClick={() => set_show_solid_signin_form(true)}
         >
-            {user_name || "Sign in"}
+            {user_name || (solid_session.info.isLoggedIn ? "(No user name)" : "Sign in")}
             {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
         </Button>
     </Box>

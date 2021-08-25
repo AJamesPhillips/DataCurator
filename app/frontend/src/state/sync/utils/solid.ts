@@ -11,8 +11,8 @@ export const V1 = {
 }
 
 
-export const get_knowledge_views_url = (pod_URL: string) => `${pod_URL}/data_curator_v1/knowledge_views.ttl`
-export const get_wcomponents_url = (pod_URL: string) => `${pod_URL}/data_curator_v1/world_components.ttl`
+export const get_knowledge_views_url = (pod_URL: string) => `${pod_URL}data_curator_v1/knowledge_views.ttl`
+export const get_wcomponents_url = (pod_URL: string) => `${pod_URL}data_curator_v1/world_components.ttl`
 
 
 
