@@ -22,8 +22,6 @@ export async function get_solid_users_name_and_pod_URL (): Promise<UserNameAndPo
 
     const web_id = session.info.webId
 
-    debugger
-
     if (!session.info.isLoggedIn || !web_id) return empty
 
     // The web_id can contain a hash fragment (e.g. `#me`) to refer to profile data
