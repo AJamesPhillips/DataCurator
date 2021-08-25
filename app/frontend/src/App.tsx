@@ -1,5 +1,8 @@
 import { h } from "preact"
-import { AppBar, Box, CssBaseline, ThemeProvider, Toolbar } from "@material-ui/core"
+import { CssBaseline, ThemeProvider} from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Box from "@material-ui/core/Box";
+import Toolbar from "@material-ui/core/Toolbar";
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
