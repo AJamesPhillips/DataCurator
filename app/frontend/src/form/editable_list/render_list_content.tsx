@@ -57,6 +57,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                         const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
                         update_items(new_items)
                     }}
+                    delete_button_text="Delete Value &amp; Prediction"
                     delete_item={() =>
                     {
                         const predicate_by_id = (other: T) => get_id(item) === get_id(other)

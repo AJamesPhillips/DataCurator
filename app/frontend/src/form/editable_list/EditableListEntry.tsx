@@ -27,6 +27,7 @@ interface OwnProps<U> extends EditableListEntryTopProps<U>
     disable_collapsable?: boolean
     on_change: (item: U) => void
     delete_item?: () => void
+    delete_button_text?: string
 }
 
 
@@ -72,6 +73,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             disable_collapsable,
             on_change,
             delete_item,
+            delete_button_text,
         } = this.props
 
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined
@@ -110,7 +112,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                 </div>
 
                 <div>
-                    <ConfirmatoryDeleteButton on_delete={delete_item} />
+                    <ConfirmatoryDeleteButton on_delete={delete_item} button_text={delete_button_text} />
 
                     {(get_created_at || get_custom_created_at) && <div
                         style={{ display: "inline-flex" }}
