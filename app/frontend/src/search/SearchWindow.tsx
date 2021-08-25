@@ -1,11 +1,25 @@
+import Accordion from "@material-ui/core/Accordion"
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary"
+import Box from "@material-ui/core/Box"
+import Button from "@material-ui/core/Button";
+import yellow from "@material-ui/core/colors/yellow";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Typography from "@material-ui/core/Typography";
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import WarningIcon from '@material-ui/icons/Warning';
+
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { Modal } from "../modal/Modal"
 import type { SearchFields, SearchType } from "../state/search/state"
-
-
 
 interface OwnProps extends AutocompleteProps {
     search_window_title: string
@@ -18,56 +32,75 @@ export function SearchWindow (props: OwnProps)
     const [search_fields, set_search_fields] = useState<SearchFields>("all")
     const [search_type, set_search_type] = useState<SearchType>("best")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
-
+    const [is_accordion_open, set_is_accordion_open] = useState<boolean>(false);
+    const warning_icon_basic_search =  <WarningIcon  titleAccess="You might be getting sub optimal search results!" style={{ color: yellow[600] }}  />
+    const is_default_search = () => (search_type == 'best' && search_fields == 'all')
 
     return <Modal
         on_close={() => props.on_blur && props.on_blur()}
         title={props.search_window_title}
-        child={<div>
-            <br />
-            <br />
+        child={<Box p={5}>
+            <Accordion onChange={(e, expanded) => {
+                set_is_accordion_open(expanded);
+            }}>
+                <AccordionSummary expandIcon={(!is_default_search() && !is_accordion_open) ? warning_icon_basic_search : <ExpandMoreIcon /> }>
+                    <Typography component="h2">
+                        {(is_accordion_open) ? "Hide " : "Show " }
+                        Advanced Search Options
+                    </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Box width={1}>
+                        <Box display="flex" justifyContent="flex-start" alignItems="stretch">
+                            <Box mr={10} flexGrow={1} flexShrink={0}>
+                                <FormControl component="fieldset" fullWidth={true}>
+                                    <FormLabel component="legend">Search Type: </FormLabel>
+                                    <RadioGroup
+                                        name="search_type"
+                                        value={search_type}
+                                        onChange={(e) => set_search_type(e.target.value)}
+                                    >
+                                        <FormControlLabel value="exact" control={<Radio />} label="Exact" />
+                                        <FormControlLabel value="fuzzy" control={<Radio />} label="Fuzzy" />
+                                        <FormControlLabel value="best" control={<Radio />} label="Best" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Box>
+                            <Box mr={10} flexGrow={1} flexShrink={0}>
+                                <FormControl component="fieldset" fullWidth={true}>
+                                    <FormLabel component="legend">Search Over: </FormLabel>
+                                    <RadioGroup
+                                        name="search_fields"
+                                        value={search_fields}
+                                        onChange={(e) => set_search_fields(e.target.value)}
+                                    >
+                                        <FormControlLabel value="all" control={<Radio />} label="All" />
+                                        <FormControlLabel value="title" control={<Radio />} label="Title Only" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Box>
+                            <Box flexGrow={1} flexShrink={0} alignSelf="flex-end" textAlign="right">
+                                {(!is_default_search()) && <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => {
+                                        set_search_type('best');
+                                        set_search_fields('all');
+                                    }}
+                                    endIcon={<RefreshIcon />}
+                                >
+                                    Reset Search Options
+                                </Button>}
+                            </Box>
+                        </Box>
 
-            <div>
-                Search type:
-                <RadioOption
-                    selected_option={search_type}
-                    option="exact"
-                    set_option={set_search_type}
-                    option_text="Exact"
-                />
-                <RadioOption
-                    selected_option={search_type}
-                    option="fuzzy"
-                    set_option={set_search_type}
-                    option_text="Approximate (slow &amp; title only)"
-                />
-                <RadioOption
-                    selected_option={search_type}
-                    option="best"
-                    set_option={set_search_type}
-                    option_text="Best (exact then approximate)"
-                />
-            </div>
 
-            <div>
-                Search over:
-                <RadioOption
-                    selected_option={search_fields}
-                    option="all"
-                    set_option={set_search_fields}
-                    option_text="All fields"
-                />
-                <RadioOption
-                    selected_option={search_fields}
-                    option="title"
-                    set_option={set_search_fields}
-                    option_text="Title only"
-                />
-            </div>
-
-            <div style={{ opacity: search_type_used ? 0.7 : 0 }}>
-                Used: {search_type_used}
-            </div>
+                        <Box style={{ opacity: search_type_used ? 0.7 : 0 }}>
+                            Used: {search_type_used}
+                        </Box>
+                    </Box>
+                </AccordionDetails>
+            </Accordion>
 
             <AutocompleteText
                 placeholder={props.placeholder}
@@ -89,22 +122,6 @@ export function SearchWindow (props: OwnProps)
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
             />
-        </div>}
+        </Box>}
     />
-}
-
-
-
-interface RadioOptionProps<O>
-{
-    selected_option: O
-    option: O
-    option_text: string
-    set_option: (option: O) => void
-}
-function RadioOption <O> (props: RadioOptionProps<O>)
-{
-    return <span onClick={() => props.set_option(props.option)} style={{ cursor: "pointer" }}>
-        <input type="radio" checked={props.selected_option === props.option} />{props.option_text}
-    </span>
 }
