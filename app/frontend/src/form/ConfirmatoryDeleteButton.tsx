@@ -29,7 +29,7 @@ function _ConfirmatoryDeleteButton (props: Props)
 
     return <ConfirmatoryButton
         on_click={props.on_delete}
-        button_text={props.button_text || "Delete"}
+        button_text={props.button_text ?? "Delete"}
         button_icon={<DeleteIcon />}
         tooltip_text={props.tooltip_text}
     />

@@ -21,25 +21,28 @@ export function upsert_entry<I> (existing: I[], new_item: I, predicate: (element
     {
         const match = predicate(item)
         if (match) matched_index = index
+
         return match
     })
 
     if (matches.length > 1)
     {
-        throw new Error(`During upsert_entry multiple "${debug_item_descriptor}" items matching predicate: "${predicate.toString()}"`)
+        throw new Error(`During upsert_entry multiple (${matches.length}) "${debug_item_descriptor}" items matching predicate: "${predicate.toString()}"`)
     }
 
     let new_list = existing
 
     if (matches.length === 1)
     {
-        // TODO could compare new and matched item to see if different
-
-        new_list = [
-            ...existing.slice(0, matched_index),
-            new_item,
-            ...existing.slice(matched_index + 1)
-        ]
+        // Compare new and matched item to see if different
+        if (matches[0] !== new_item)
+        {
+            new_list = [
+                ...existing.slice(0, matched_index),
+                new_item,
+                ...existing.slice(matched_index + 1)
+            ]
+        }
     }
     else
     {
@@ -76,4 +79,21 @@ export function toggle_item_in_list <I> (list: I[], item: I, predicate?: (i: I) 
     if (new_list.length === list.length) new_list.push(item)
 
     return new_list
+}
+
+
+
+export function unique_list <I> (items: I[]): I[]
+{
+    const contained = new Set<I>()
+    const filtered: I[] = []
+
+    items.forEach(item =>
+    {
+        if (contained.has(item)) return
+        contained.add(item)
+        filtered.push(item)
+    })
+
+    return filtered.length === items.length ? items : filtered
 }
