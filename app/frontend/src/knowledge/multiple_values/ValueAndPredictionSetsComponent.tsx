@@ -19,6 +19,7 @@ import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlder
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
+import Box from "@material-ui/core/Box"
 
 
 
@@ -251,7 +252,6 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                 <hr className="entries_horizontal_dividers" />
                 <EditableListEntry
                     item={item}
-
                     get_created_at={get_latest_created_at}
                     get_custom_created_at={get_latest_custom_created_at}
                     set_custom_created_at={set_latest_custom_created_at}
@@ -264,6 +264,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
                     on_change={factory_handle_change({ all_VAP_sets, item, update_items })}
+                    delete_button_text="Delete Set of Value &amp; Predictions"
                     delete_item={() =>
                     {
                         update_items(remove_from_list_by_predicate(all_VAP_sets, predicate_by_id(item.latest)))
@@ -322,7 +323,7 @@ const get_details2 = (VAPs_represent: VAPsType, editing: boolean) => (versioned_
 
 const get_details3 = (VAPs_represent: VAPsType, creation_context: CreationContextState, editing: boolean) => (versioned_VAP_set: VersionedStateVAPsSet, on_change: (item: VersionedStateVAPsSet) => void): h.JSX.Element =>
 {
-    return <div className="VAP_set_details">
+    return <Box className="VAP_set_details">
         <br />
 
         <ValueAndPredictionSetOlderVersions
@@ -335,7 +336,7 @@ const get_details3 = (VAPs_represent: VAPsType, creation_context: CreationContex
         <br />
 
         <br />
-    </div>
+    </Box>
 }
 
 
