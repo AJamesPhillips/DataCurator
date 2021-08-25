@@ -1,6 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import { make_default_solid_pod_URL } from "../../sync/user_info/solid/urls"
+import { unique_list, upsert_entry } from "../../utils/list"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 
@@ -25,7 +26,8 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         let { custom_solid_pod_URLs } = state.user_info
         if (default_solid_pod_URL && !custom_solid_pod_URLs.includes(default_solid_pod_URL))
         {
-            custom_solid_pod_URLs = [...custom_solid_pod_URLs, default_solid_pod_URL]
+            custom_solid_pod_URLs = upsert_entry(custom_solid_pod_URLs, default_solid_pod_URL, url => url === default_solid_pod_URL, "custom_solid_pod_URLs")
+            custom_solid_pod_URLs = unique_list(custom_solid_pod_URLs)
             state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
         }
     }
@@ -33,7 +35,8 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
 
     if (is_update_custom_solid_pod_URLs(action))
     {
-        state = update_substate(state, "user_info", "custom_solid_pod_URLs", action.custom_solid_pod_URLs)
+        const custom_solid_pod_URLs = unique_list(action.custom_solid_pod_URLs)
+        state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
     }
 
 

@@ -1,15 +1,17 @@
-import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
+import { Button } from "@material-ui/core"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
+import { FunctionalComponent, h } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
 import "../../common.scss"
-import type { RootState } from "../../../state/State"
 import { ACTIONS } from "../../../state/actions"
+import type { RootState } from "../../../state/State"
+import { remove_index, replace_element } from "../../../utils/list"
 import { AutoFillOIDC } from "./AutoFillOIDC"
-import { useState } from "preact/hooks"
-import { Button } from "../../../sharedf/Button"
 import { update_user_name } from "./get_solid_username"
 import { finish_login, start_login } from "./handle_login"
+import { PodProviderRow } from "./PodProviderRow"
 import { OIDC_provider_map } from "./urls"
 
 
@@ -24,12 +26,17 @@ const map_state = (state: RootState) =>
     return {
         solid_oidc_provider: state.user_info.solid_oidc_provider || OIDC_provider_map["solidcommunity.net"],
         user_name: state.user_info.user_name,
+        default_solid_pod_URL: state.user_info.default_solid_pod_URL,
+        custom_solid_pod_URLs: state.user_info.custom_solid_pod_URLs,
+        chosen_custom_solid_pod_URL_index: state.user_info.chosen_custom_solid_pod_URL_index,
     }
 }
 
 const map_dispatch = {
     update_solid_oidc_provider: ACTIONS.user_info.update_solid_oidc_provider,
     update_user_name_from_solid: ACTIONS.user_info.update_user_name_from_solid,
+    update_custom_solid_pod_URLs: ACTIONS.user_info.update_custom_solid_pod_URLs,
+    update_chosen_custom_solid_pod_URL_index: ACTIONS.user_info.update_chosen_custom_solid_pod_URL_index,
 }
 
 
@@ -44,8 +51,9 @@ function _SolidSigninForm (props: Props)
     const [logged_in, _set_logged_in] = useState(solid_session.info.isLoggedIn)
     const set_logged_in = () => _set_logged_in(solid_session.info.isLoggedIn)
 
-    finish_login().then(() =>
+    finish_login(solid_session).then(changed_login_state =>
     {
+        if (!changed_login_state) return // defensive against infinite loops
         update_user_name(props.update_user_name_from_solid)
         set_logged_in()
     })
@@ -106,6 +114,56 @@ function _SolidSigninForm (props: Props)
                 </button>
             </div>}
 
+        </div>
+
+
+        <div className="section">
+            Pod provider (where you want to get data from / save data to)
+
+            <table>
+            <tbody>
+
+
+            <PodProviderRow
+                solid_pod_URL_index={0}
+                value="Use default Pod provider"
+            />
+
+
+            {props.custom_solid_pod_URLs.map((url, index) =>
+            {
+                const on_delete = url === props.default_solid_pod_URL ? undefined : () =>
+                {
+                    const custom_solid_pod_URLs = remove_index(props.custom_solid_pod_URLs, index)
+                    props.update_custom_solid_pod_URLs({ custom_solid_pod_URLs })
+                }
+
+                return <PodProviderRow
+                    solid_pod_URL_index={index + 1}
+                    value={url}
+                    on_change_value={value =>
+                    {
+                        const custom_solid_pod_URLs = replace_element(props.custom_solid_pod_URLs, value, url1 => url1 === url)
+                        props.update_custom_solid_pod_URLs({ custom_solid_pod_URLs })
+                    }}
+                    on_delete={on_delete}
+                />
+            }
+            )}
+
+
+            <PodProviderRow
+                on_change_value={() => {}}
+                on_add={url =>
+                {
+                    const custom_solid_pod_URLs = [...props.custom_solid_pod_URLs, url]
+                    props.update_custom_solid_pod_URLs({ custom_solid_pod_URLs })
+                }}
+            />
+
+
+            </tbody>
+            </table>
         </div>
 
 

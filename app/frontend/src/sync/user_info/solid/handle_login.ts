@@ -1,4 +1,4 @@
-import { Session, handleIncomingRedirect } from "@inrupt/solid-client-authn-browser"
+import { Session, handleIncomingRedirect, getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { CLIENT_NAME } from "../../../constants"
 
 
@@ -19,7 +19,14 @@ export function start_login (session: Session, oidcIssuer: string)
 
 
 
-export async function finish_login ()
+export async function finish_login (session?: Session)
 {
+    session = session || getDefaultSession()
+    const logged_in = session.info.isLoggedIn
+
     await handleIncomingRedirect({ restorePreviousSession: true })
+
+    const logged_in_status_changed = logged_in !== session.info.isLoggedIn
+
+    return logged_in_status_changed
 }
