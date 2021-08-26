@@ -51,7 +51,7 @@ async function main()
             chosen_custom_solid_pod_URL_index: 0,
         }
     } as any
-    debugger
+
     await save_solid_data(state.user_info, {
         knowledge_views: knowledge_views.map(j => JSON.parse(j)),
         wcomponents: wcomponents.map(j => JSON.parse(j)),
