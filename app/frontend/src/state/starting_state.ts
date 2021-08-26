@@ -141,8 +141,8 @@ export function get_starting_state (): RootState
 
     const objects: ObjectWithCache[] = []
 
-
     const routing = get_routing_starting_state()
+    const user_info = user_info_starting_state(routing.args.storage_location)
 
     const starting_state: RootState = {
         backup: backup_starting_state(),
@@ -162,7 +162,7 @@ export function get_starting_state (): RootState
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         search: search_starting_state(),
         user_activity: user_activity_starting_state(),
-        user_info: user_info_starting_state(),
+        user_info,
 
         derived: get_derived_starting_state(),
     }
