@@ -54,7 +54,7 @@ function _PodProviderRow (props: Props)
                 onClick={e => props.update_chosen_pod_URL_index({ chosen_custom_solid_pod_URL_index: index })}
             />}
         </td>
-        <td>
+        <td style={{ userSelect: "initial", textTransform: "initial" }}>
             {!on_change_value && props.value}
             {on_change_value && <input
                 type="text"

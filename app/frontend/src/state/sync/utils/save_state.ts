@@ -69,20 +69,27 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
 
 
 
-let ctrl_s_flush_saving = false
+let allow_ctrl_s_to_flush_save = true
 export function conditional_ctrl_s_save (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
     if (!load_state_from_storage) return
 
     const ctrl_s_flush_save = is_ctrl_s_flush_save(state)
-    if (ctrl_s_flush_save && !ctrl_s_flush_saving)
+    if (ctrl_s_flush_save && allow_ctrl_s_to_flush_save)
     {
-        ctrl_s_flush_saving = true
-        throttled_save_state.throttled({ dispatch, state })
-        throttled_save_state.flush()
-        dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
-        ctrl_s_flush_saving = false
+        allow_ctrl_s_to_flush_save = false
+
+        if (getDefaultSession().info.isLoggedIn)
+        {
+            throttled_save_state.throttled({ dispatch, state })
+            throttled_save_state.flush()
+            dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
+        }
     }
+
+    // Only reset it to true once `is_ctrl_s_flush_save` is no longer true
+    // which should occur as soon as the ctrl or s key are released
+    allow_ctrl_s_to_flush_save = !ctrl_s_flush_save
 }
 
 

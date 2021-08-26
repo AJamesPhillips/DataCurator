@@ -128,7 +128,7 @@ function _SolidSigninForm (props: Props)
 
             <PodProviderRow
                 solid_pod_URL_index={0}
-                value="Use default Pod provider"
+                value={`Use default Pod provider "${props.default_solid_pod_URL}"`}
             />
 
 
