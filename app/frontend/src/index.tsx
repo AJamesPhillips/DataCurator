@@ -17,7 +17,7 @@ import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCust
 import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
-import { finish_login } from "./sync/user_info/solid/handle_login"
+import { correct_path, finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession, onSessionRestore } from "@inrupt/solid-client-authn-browser"
 import { is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_users_name_and_pod_URL } from "./sync/user_info/solid/get_solid_username"
@@ -25,6 +25,8 @@ import { OIDC_provider_map } from "./sync/user_info/solid/urls"
 import type { UserInfoState } from "./state/user_info/state"
 import { get_persisted_state_object, persist_state_object } from "./state/persistence/persistence_utils"
 import { find_match_by_inclusion_of_key } from "./utils/object"
+import { SandBoxSolid } from "./scratch_pad/SandBoxSolid"
+import { LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL } from "./constants"
 
 
 
@@ -75,6 +77,7 @@ if (root)
             <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
             <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
             <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
+            <li><a href="/sandbox/solid">Sandbox - Solid</a></li>
             <li><a href="/sandbox">Sandbox</a></li>
             </ul>`
         }
@@ -112,6 +115,14 @@ if (root)
     else if (window.location.pathname === "/sandbox/connected")
     {
         render(<Provider store={get_store({ load_state_from_storage: false })}><SandBoxConnected /></Provider>, root)
+    }
+    else if (window.location.pathname === "/sandbox/solid")
+    {
+        restore_session(root)
+        .then(() =>
+        {
+            render(<SandBoxSolid />, root)
+        })
     }
     else if (window.location.pathname === "/sandbox")
     {
@@ -157,12 +168,17 @@ function restore_session (root_el: HTMLElement): Promise<void>
 
         // See https://github.com/inrupt/solid-client-authn-js/issues/1473#issuecomment-902808449
         onSessionRestore(url => {
-            if (document.location.toString() !== url) history.replaceState(null, "", url)
+            if (document.location.toString() !== url)
+            {
+                if (document.location.pathname !== new URL(url).pathname) document.location.href = url
+                else history.replaceState(null, "", url)
+            }
         })
 
         const solid_session = getDefaultSession()
 
-        return finish_login()
+        return correct_path()
+        .then(() => finish_login())
         .then(() => get_solid_users_name_and_pod_URL())
         // This whole function has a smell
         .then(args =>

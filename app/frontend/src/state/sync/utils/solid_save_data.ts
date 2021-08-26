@@ -2,8 +2,11 @@ import {
     addStringNoLocale,
     createSolidDataset,
     createThing,
+    deleteSolidDataset,
+    getSolidDataset,
     saveSolidDatasetAt,
     setThing,
+    SolidDataset,
 } from "@inrupt/solid-client"
 import { fetch as solid_fetch } from "@inrupt/solid-client-authn-browser"
 import type { Base } from "../../../shared/wcomponent/interfaces/base"
@@ -51,11 +54,20 @@ async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[
 async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[])
 {
     let items_dataset = createSolidDataset()
+    try
+    {
+        items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
+    }
+    catch (err)
+    {
+        if (!err || (err.statusCode !== 404)) console.error(`Error deleting "${items_URL}"`, err)
+    }
+
+
     items.forEach(item =>
     {
         let thing = createThing({ name: item.id })
         thing = addStringNoLocale(thing, V1.title, item.title)
-        // thing = addBoolean(thing, "http://datacurator.org/schema/v1/is_base", kv.is_base)
         thing = addStringNoLocale(thing, V1.json, JSON.stringify(item))
         items_dataset = setThing(items_dataset, thing)
     })

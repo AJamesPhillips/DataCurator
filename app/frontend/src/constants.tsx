@@ -16,3 +16,8 @@ export const CONTACT_EMAIL_ADDRESS_TAG = (
         {CONTACT_EMAIL_ADDRESS}
     </a>
 )
+
+
+
+// The process offered by Solid is terrible, buggy, does not work
+export const LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL = "solid_session_restore_url"
