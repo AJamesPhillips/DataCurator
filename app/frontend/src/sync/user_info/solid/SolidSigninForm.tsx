@@ -13,6 +13,7 @@ import { get_solid_users_name_and_pod_URL } from "./get_solid_username"
 import { finish_login, start_login } from "./handle_login"
 import { PodProviderRow } from "./PodProviderRow"
 import { OIDC_provider_map } from "./urls"
+import { signout } from "../../../state/user_info/signout"
 
 
 
@@ -102,7 +103,7 @@ function _SolidSigninForm (props: Props)
 
                         if (logged_in)
                         {
-                            await solid_session.logout()
+                            await signout()
                             set_logged_in()
                         }
                         else

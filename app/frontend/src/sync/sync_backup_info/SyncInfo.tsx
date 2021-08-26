@@ -35,6 +35,7 @@ function _SyncInfo (props: Props)
     const [, update_state] = useState({})
 
     const { status, next_save_ms } = props
+    console.log("next_save_ms...", next_save_ms)
     const failed = status === "FAILED"
     const saving = status === "SAVING"
     const next_save = next_save_ms && next_save_ms - performance.now()

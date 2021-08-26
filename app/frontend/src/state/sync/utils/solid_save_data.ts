@@ -2,11 +2,9 @@ import {
     addStringNoLocale,
     createSolidDataset,
     createThing,
-    deleteSolidDataset,
     getSolidDataset,
     saveSolidDatasetAt,
     setThing,
-    SolidDataset,
 } from "@inrupt/solid-client"
 import { fetch as solid_fetch } from "@inrupt/solid-client-authn-browser"
 import type { Base } from "../../../shared/wcomponent/interfaces/base"
