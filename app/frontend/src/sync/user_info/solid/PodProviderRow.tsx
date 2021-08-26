@@ -41,6 +41,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _PodProviderRow (props: Props)
 {
     const [value, set_value] = useState(props.value || "")
+    const [valid, set_valid] = useState(true)
     useEffect(() => set_value(props.value || ""), [props.value])
 
     const { solid_pod_URL_index: index, on_change_value, on_delete, on_add } = props
@@ -54,7 +55,7 @@ function _PodProviderRow (props: Props)
                 onClick={e => props.update_chosen_pod_URL_index({ chosen_custom_solid_pod_URL_index: index })}
             />}
         </td>
-        <td style={{ userSelect: "text", textTransform: "initial" }}>
+        <td style={{ userSelect: "text", textTransform: "initial", backgroundColor: valid ? "" : "pink" }}>
             {!on_change_value && props.value}
             {on_change_value && <input
                 type="text"
@@ -62,11 +63,18 @@ function _PodProviderRow (props: Props)
                 value={value}
                 onChange={e =>
                 {
-                    set_value(e.currentTarget.value)
+                    const new_value = e.currentTarget.value
+                    set_value(new_value)
+                    const valid = ensure_valid_value(new_value)
+                    set_valid(!!valid)
                 }}
                 onBlur={e =>
                 {
-                    on_change_value(value)
+                    const new_value = ensure_valid_value(value)
+                    if (!new_value) return
+
+                    if (new_value !== value) set_value(new_value)
+                    on_change_value(new_value)
                 }}
             />}
         </td>
@@ -79,7 +87,9 @@ function _PodProviderRow (props: Props)
                 button_text=""
                 on_click={() =>
                 {
-                    on_add(value)
+                    const new_value = ensure_valid_value(value)
+                    if (!new_value) return
+                    on_add(new_value)
                     set_value("")
                 }}
             />}
@@ -88,3 +98,28 @@ function _PodProviderRow (props: Props)
 }
 
 export const PodProviderRow = connector(_PodProviderRow) as FunctionalComponent<OwnProps>
+
+
+
+function ensure_valid_value (value: string)
+{
+    if (!value) return ""
+
+    if (!value.startsWith("http://") && !value.startsWith("https://")) value = "https://" + value
+
+    try
+    {
+        const url = new URL(value)
+        url.protocol = "https:"
+        value = url.toString()
+
+        if (!value.endsWith("/")) value += "/"
+
+        return value
+    }
+    catch (e)
+    {
+        console.warn("error parsing user URL: ", e)
+        return ""
+    }
+}
