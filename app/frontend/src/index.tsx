@@ -150,12 +150,6 @@ if (title)
 
 
 
-interface RestoredUserInfo extends Partial<UserInfoState>
-{
-    solid_oidc_provider: string
-    user_name: string
-    default_solid_pod_URL: string
-}
 // TODO move this function somewhere else
 function restore_session (root_el: HTMLElement): Promise<void>
 {
@@ -195,7 +189,8 @@ function restore_session (root_el: HTMLElement): Promise<void>
             const match = find_match_by_inclusion_of_key(solid_oidc_provider, OIDC_provider_map)
             solid_oidc_provider = match ? match[1] : ""
 
-            const partial_user_info: RestoredUserInfo = {
+            const partial_user_info: Partial<UserInfoState> = {
+                ...get_persisted_state_object<UserInfoState>("user_info"),
                 ...args,
                 solid_oidc_provider,
             }
