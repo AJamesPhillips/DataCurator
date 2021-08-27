@@ -1,16 +1,13 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { Box } from "@material-ui/core"
-import { ToggleButtonGroup, ToggleButton } from "@material-ui/lab"
+import { Box, ButtonGroup, Button } from "@material-ui/core"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
-import { Button } from "../Button"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
-
 
 
 interface OwnProps
@@ -43,6 +40,10 @@ function _ContentControls (props: Props)
 {
     const { created_events, sim_events, move_to_component_id } = props
 
+    const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
+        const display_by_simulated_time = JSON.parse(e.currentTarget.value);
+        props.set_display_by_simulated_time({ display_by_simulated_time });
+    }
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
             {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
@@ -58,25 +59,28 @@ function _ContentControls (props: Props)
                 </Box>
 
                 <Box component="label">
-                    {/* <Box component="span" pr={1}>Display by:</Box> */}
-                    <ToggleButtonGroup
-                        size="small"
-                        exclusive
-                        onChange={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
-                        {
-                            const display_by_simulated_time = JSON.parse(e.currentTarget.value)
-                            props.set_display_by_simulated_time({ display_by_simulated_time })
-                        }}
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
                         value={props.display_by_simulated_time}
-                        aria-label="text formatting"
                     >
-                        <ToggleButton value={true} aria-label="Display by simulated time">
+                        <Button
+                            value={true}
+                            onClick={set_knowledge_view_type}
+                            aria-label="Display by simulated time"
+                            disabled={props.display_by_simulated_time}
+                        >
                             Time
-                        </ToggleButton>
-                        <ToggleButton value={false} aria-label="Display by relationships">
+                        </Button>
+                        <Button
+                            value={false}
+                            onClick={set_knowledge_view_type}
+                            aria-label="Display by relationships"
+                            disabled={!props.display_by_simulated_time}
+                        >
                             Relationships
-                        </ToggleButton>
-                    </ToggleButtonGroup>
+                        </Button>
+                    </ButtonGroup>
                 </Box>
             </Box>
             <Box display="flex" flexDirection="row" alignItems="center" alignContent="center">
