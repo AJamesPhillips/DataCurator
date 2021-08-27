@@ -168,7 +168,6 @@ function restore_session (root_el: HTMLElement): Promise<void>
             }
         })
 
-        const solid_session = getDefaultSession()
 
         return correct_path()
         .then(() => finish_login())
@@ -178,6 +177,7 @@ function restore_session (root_el: HTMLElement): Promise<void>
         {
             console .log("Signed in as user name: " + args.user_name)
 
+            const solid_session = getDefaultSession()
             let solid_oidc_provider = (
                 // Will be something like `https://<user name>.solidcommunity.net/profile/card#me`
                 solid_session.info.webId
