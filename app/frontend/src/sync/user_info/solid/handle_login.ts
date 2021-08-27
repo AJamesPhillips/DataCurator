@@ -1,5 +1,10 @@
-import { Session, handleIncomingRedirect, getDefaultSession } from "@inrupt/solid-client-authn-browser"
-import { CLIENT_NAME, LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL } from "../../../constants"
+import { Session, handleIncomingRedirect } from "@inrupt/solid-client-authn-browser"
+import { CLIENT_NAME } from "../../../constants"
+
+
+
+// The process offered by Solid is terrible, buggy, does not work
+const LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL = "solid_session_restore_url"
 
 
 
@@ -37,18 +42,11 @@ export async function correct_path ()
 
 
 
-export async function finish_login (session?: Session)
+export async function finish_login ()
 {
     // The process offered by Solid is terrible, buggy, does not work
     localStorage.setItem(LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL, window.location.toString())
 
-    session = session || getDefaultSession()
-    const logged_in = session.info.isLoggedIn
-
     await handleIncomingRedirect({ restorePreviousSession: true })
     localStorage.setItem(LOCAL_STORAGE_KEY__SOLID_SESSION_RESTORE_URL, "")
-
-    const logged_in_status_changed = logged_in !== session.info.isLoggedIn
-
-    return logged_in_status_changed
 }
