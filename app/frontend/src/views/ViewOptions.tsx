@@ -3,10 +3,9 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { Button, ButtonGroup, makeStyles, Typography } from "@material-ui/core";
+import { Button, ButtonGroup } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
-import { grey, teal, yellow } from "@material-ui/core/colors";
 
 const map_state = (state: RootState) =>
 {
