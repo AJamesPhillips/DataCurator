@@ -49,7 +49,7 @@ import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
-import { Box, FormControl } from "@material-ui/core"
+import { Box, FormControl, FormControlLabel, FormLabel, Typography } from "@material-ui/core"
 
 
 
@@ -132,7 +132,7 @@ function _WComponentForm (props: Props)
 
     return <Box  className={`editable-${wcomponent_id}`}>
 
-        <FormControl fullWidth={true}>
+        <FormControl fullWidth={true} margin="normal">
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
@@ -151,28 +151,23 @@ function _WComponentForm (props: Props)
             <DisplayValue UI_value={UI_value} />
         </div>}
 
+        <FormControl fullWidth={true} margin="normal">
+            <AutocompleteText
+                placeholder={"Type..."}
+                selected_option_id={wcomponent.type}
+                options={wcomponent_type_options}
+                on_change={type =>
+                {
+                    if (!type) return
 
-        <p>
-            <span className="description_label">Type</span>&nbsp;
-            <div style={{ width: "60%", display: "inline-block" }}>
-                <AutocompleteText
-                    placeholder={"Type..."}
-                    selected_option_id={wcomponent.type}
-                    options={wcomponent_type_options}
-                    on_change={type =>
-                    {
-                        if (!type) return
-
-                        // This ensures it will always have the fields it is expected to have
-                        const vanilla = get_contextless_new_wcomponent_object({ type }) as WComponent
-                        const new_wcomponent = { ...vanilla, ...wcomponent }
-                        new_wcomponent.type = type
-                        upsert_wcomponent(new_wcomponent)
-                    }}
-                />
-            </div>
-        </p>
-
+                    // This ensures it will always have the fields it is expected to have
+                    const vanilla = get_contextless_new_wcomponent_object({ type }) as WComponent
+                    const new_wcomponent = { ...vanilla, ...wcomponent }
+                    new_wcomponent.type = type
+                    upsert_wcomponent(new_wcomponent)
+                }}
+            />
+        </FormControl>
 
         {wcomponent_is_statev2(wcomponent) &&
         <p>
@@ -188,14 +183,13 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(editing || wcomponent.description) && <FormControl fullWidth={true}>
+        {(editing || wcomponent.description) &&  <FormControl fullWidth={true} margin="normal">
             <EditableText
                 placeholder="Description..."
                 value={wcomponent.description}
                 conditional_on_blur={description => upsert_wcomponent({ description })}
             />
         </FormControl>}
-
 
         {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) &&
         <p>
@@ -254,12 +248,13 @@ function _WComponentForm (props: Props)
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
 
-        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <p>
+        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) &&  <FormControl component="fieldset" fullWidth={true} margin="normal">
+            <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
                 on_change={label_ids => upsert_wcomponent({ label_ids })}
             />
-        </p>}
+        </FormControl>}
 
 
         {wcomponent_is_event(wcomponent)&& <WComponentEventAtFormField
