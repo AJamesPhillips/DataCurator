@@ -1,4 +1,4 @@
-import type { Dispatch } from "redux"
+import type { Store } from "redux"
 import { getItem } from "localforage"
 
 import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
@@ -12,8 +12,12 @@ import type { StorageType } from "../state"
 
 
 
-export function load_state (dispatch: Dispatch, state: RootState)
+export function load_state (store: Store<RootState>)
 {
+    let state = store.getState()
+    const { dispatch } = store
+
+
     const { storage_type } = state.sync
     if (!storage_type)
     {
@@ -36,9 +40,13 @@ export function load_state (dispatch: Dispatch, state: RootState)
     .then(specialised_objects =>
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
+        state = store.getState()
 
-        const a_knowledge_view_id = specialised_objects.knowledge_views[0]?.id
-        dispatch(ACTIONS.routing.change_route({ args: { subview_id: a_knowledge_view_id } }))
+        if (!current_knowledge_view_supported(state))
+        {
+            const a_knowledge_view_id = specialised_objects.knowledge_views[0]?.id
+            dispatch(ACTIONS.routing.change_route({ args: { subview_id: a_knowledge_view_id } }))
+        }
 
         dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED" }))
     })
@@ -83,4 +91,13 @@ export function get_state_data (storage_type: StorageType, state: RootState)
 function parse_datetimes<T extends { datetime_created: Date }> (items: T[]): T[]
 {
     return items.map(i => ({ ...i, datetime_created: new Date(i.datetime_created) }))
+}
+
+
+
+function current_knowledge_view_supported (state: RootState)
+{
+    const { subview_id } = state.routing.args
+
+    return !!state.specialised_objects.knowledge_views_by_id[subview_id]
 }
