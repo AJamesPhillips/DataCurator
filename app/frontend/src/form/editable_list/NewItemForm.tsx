@@ -4,7 +4,7 @@ import { useEffect, useState } from "preact/hooks"
 import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"
 import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
-import { Box, Dialog, DialogTitle } from "@material-ui/core"
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 
 
 
@@ -42,7 +42,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
         <Box>
             <Dialog  aria-labelledby="new_item_title" open={true} onClose={() => set_new_item(undefined)}>
                 <DialogTitle id="new_item_title">New {item_descriptor}</DialogTitle>
-                <Box>
+                <DialogContent>
                     <EditableListEntry
                         item={new_item}
                         {...item_top_props}
@@ -52,15 +52,15 @@ export function NewItemForm <T> (props: NewItemForm<T>)
                             set_new_item(item)
                         }}
                     />
-                </Box>
-				<Box p={2} display="flex" justifyContent="space-between">
-					<Button onClick={() =>set_adding_item(true)}>
-						{`Add ${item_descriptor}`}
-					</Button>
-					<Button onClick={() => set_new_item(undefined)}>
-						Cancel
-					</Button>
-				</Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() =>set_adding_item(true)}>
+                        {`Add ${item_descriptor}`}
+                    </Button>
+                    <Button onClick={() => set_new_item(undefined)}>
+                        Cancel
+                    </Button>
+                </DialogActions>
             </Dialog>
         </Box>
     )
