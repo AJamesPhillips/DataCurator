@@ -16,11 +16,13 @@ export function sync_storage_location_subscriber (store: Store<RootState>)
     {
         const state = store.getState()
 
-        const new_solid_pod_URL = get_solid_pod_URL_or_error(state.user_info, "reducer-sync").solid_pod_URL
+        const { solid_pod_URL: new_solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(state.user_info, "reducer-sync")
+        if (promised_error) return
 
         const new_routing_args_storage_location = state.routing.args.storage_location
 
-        console .log("new_solid_pod_URL", new_solid_pod_URL, "new_routing_args_storage_location", new_routing_args_storage_location)
+        // console .log("new_solid_pod_URL", new_solid_pod_URL, "new_routing_args_storage_location", new_routing_args_storage_location)
+
 
         if (!new_routing_args_storage_location)
         {
