@@ -2,6 +2,7 @@ import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import type { UserInfoState } from "./state"
+import { ensure_chosen_index_is_valid } from "./utils"
 
 
 
@@ -29,7 +30,7 @@ export function user_info_starting_state (storage_location: string): UserInfoSta
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
 
-    const state: UserInfoState = {
+    let state: UserInfoState = {
         solid_oidc_provider: "",
         user_name: "",
         default_solid_pod_URL: "",
@@ -58,6 +59,10 @@ export function user_info_starting_state (storage_location: string): UserInfoSta
             state.chosen_custom_solid_pod_URL_index = state.custom_solid_pod_URLs.length
         }
     }
+
+
+    state = ensure_chosen_index_is_valid(state)
+
 
     return state
 }

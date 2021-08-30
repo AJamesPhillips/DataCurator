@@ -1,10 +1,16 @@
 import type { AnyAction } from "redux"
-import { bounded } from "../../shared/utils/bounded"
 
 import { unique_list, upsert_entry } from "../../utils/list"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
-import { is_update_solid_oidc_provider, is_update_users_name_and_solid_pod_URL, is_update_custom_solid_pod_URLs, is_update_chosen_custom_solid_pod_URL_index, is_ensure_solid_pod_URL_is_chosen } from "./actions"
+import {
+    is_update_solid_oidc_provider,
+    is_update_users_name_and_solid_pod_URL,
+    is_update_custom_solid_pod_URLs,
+    is_update_chosen_custom_solid_pod_URL_index,
+    is_ensure_solid_pod_URL_is_chosen,
+} from "./actions"
+import { ensure_chosen_index_is_valid_using_root } from "./utils"
 
 
 
@@ -30,7 +36,7 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
             custom_solid_pod_URLs = unique_list(custom_solid_pod_URLs)
             state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
 
-            state = ensure_chosen_index_is_valid(state)
+            state = ensure_chosen_index_is_valid_using_root(state)
         }
     }
 
@@ -40,13 +46,13 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         const custom_solid_pod_URLs = unique_list(action.custom_solid_pod_URLs)
         state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
 
-        state = ensure_chosen_index_is_valid(state)
+        state = ensure_chosen_index_is_valid_using_root(state)
     }
 
 
     if (is_update_chosen_custom_solid_pod_URL_index(action))
     {
-        state = ensure_chosen_index_is_valid(state, action.chosen_custom_solid_pod_URL_index)
+        state = ensure_chosen_index_is_valid_using_root(state, action.chosen_custom_solid_pod_URL_index)
     }
 
 
@@ -79,15 +85,5 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
-    return state
-}
-
-
-
-function ensure_chosen_index_is_valid (state: RootState, new_index?: number)
-{
-    let index = new_index === undefined ? state.user_info.chosen_custom_solid_pod_URL_index : new_index
-    index = bounded(index, 0, state.user_info.custom_solid_pod_URLs.length)
-    state = update_substate(state, "user_info", "chosen_custom_solid_pod_URL_index", index)
     return state
 }
