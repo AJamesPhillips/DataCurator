@@ -1,7 +1,7 @@
 
 
 
-export type SYNC_STATUS = "LOADING" | "LOADED" | "SAVING" | "SAVED" | "FAILED" | "OVERWRITING"
+export type SYNC_STATUS = "LOADING" | "LOADED" | "SAVING" | "SAVED" | "FAILED" | "RETRYING" | "OVERWRITING"
 
 export type StorageType = "local_server" | "local_storage" | "solid"
 
