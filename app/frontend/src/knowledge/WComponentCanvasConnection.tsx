@@ -241,6 +241,10 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
     // TODO move all of this into a derived reducer
     if (wcomponent_is_causal_link(wcomponent))
     {
+        // Default connection_effect to effect_when_true
+        connection_effect = wcomponent.effect_when_true
+
+
         if (wcomponent_is_statev2(from_wc))
         {
             const VAP_set = get_current_VAP_set({
