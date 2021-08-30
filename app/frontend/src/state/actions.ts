@@ -15,7 +15,7 @@ import { statement_actions } from "./statements"
 import { sync_actions } from "./sync/actions_reducer"
 import { backup_actions } from "./sync/backup/actions_reducer"
 import { user_activity_actions } from "./user_activity/actions"
-import { user_info_actions } from "./user_info/actions_reducer"
+import { user_info_actions } from "./user_info/actions"
 
 
 

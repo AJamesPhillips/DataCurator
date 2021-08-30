@@ -23,6 +23,7 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     set_next_sync_ms: ACTIONS.sync.set_next_sync_ms,
+    update_sync_status: ACTIONS.sync.update_sync_status,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -44,27 +45,44 @@ function _SyncInfo (props: Props)
 
     if (will_save_in_future) setTimeout(() => update_state({}), 500)
     return(
-        <Box display="flex" height={1} alignItems="stretch">
+        <Box display="flex" height={1} alignItems="stretch" id="save_info_and_retries">
             {(failed || status) && <Box display="flex" alignItems="center">
                  <Box component="strong">Sync Status: </Box>
                 {failed && <Box component="span" display="inline-flex" alignItems="center">
                     <WarningIcon color="error" titleAccess={props.error_message}  />
-                    <Box component="span">Save Failed</Box>
+
+                    <Button
+                        disableElevation={true}
+                        variant="contained"
+                        color="primary"
+                        onClick={() =>
+                        {
+                            props.update_sync_status({ status: "RETRYING" })
+                        }}
+                    >
+                        <Box component="span" className="spacer">&nbsp;</Box>
+                        <Box component="span" id="save_failed_message">Save Failed</Box>
+                        <Box component="span" id="trigger_manual_save" fontSize={0}>
+                            Retry Save
+                        </Box>
+                    </Button>
+
                 </Box>}
                 {(!failed && status) && <Box component="span">{sentence_case(status)}</Box>}
             </Box>}
 
             {will_save_in_future && <Box ml={5}>
                 <Button
-                    id="save_timer_manual_save_trigger"
                     disableElevation={true}
                     variant="contained"
                     color="primary"
                     endIcon={<SaveIcon />}
-                    onClick={() =>{
+                    onClick={() =>
+                    {
                         throttled_save_state.flush()
                         props.set_next_sync_ms({ next_save_ms: undefined })
-                    }}>
+                    }}
+                >
                     <Box component="span" className="spacer">&nbsp;</Box>
                     <Box component="span" id="save_timer">
                         Save in {save_in_seconds}s {props.error_message}

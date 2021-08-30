@@ -22,7 +22,7 @@ import { statements_reducer } from "./statements"
 import { sync_reducer } from "./sync/actions_reducer"
 import { backup_reducer } from "./sync/backup/actions_reducer"
 import { user_activity_reducer } from "./user_activity/reducer"
-import { user_info_reducer } from "./user_info/actions_reducer"
+import { user_info_reducer } from "./user_info/reducer"
 
 
 

@@ -1,12 +1,13 @@
-#save_timer_manual_save_trigger {
+#save_info_and_retries {
     #save_timer,
+    #save_failed_message,
     #trigger_manual_save {
         transition-property: all;
         transition-duration: 0.23s;
     }
 
     &:hover {
-        #save_timer { font-size:0; }
+        #save_timer, #save_failed_message { font-size:0; }
         #trigger_manual_save { font-size:inherit;  }
     }
 }

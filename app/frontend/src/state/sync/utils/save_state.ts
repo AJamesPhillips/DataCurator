@@ -21,16 +21,14 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
     if (!load_state_from_storage) return
 
     const { status, storage_type } = state.sync
-    if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED") return
-
+    if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED" && status !== "RETRYING") return
 
     if (!needs_save(state, last_attempted_state_to_save)) return
 
     if (!storage_type)
     {
         const error_message = "Can not save.  No storage_type set"
-        const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
-        dispatch(action)
+        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 }))
         return
     }
 
@@ -47,6 +45,9 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
         if (!solid_session.info.isLoggedIn)
         {
             throttled_save_state.cancel()
+
+            const error_message = "Can not save.  Not logged in"
+            dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 }))
 
             if (state.sync.next_save_ms !== undefined)
             {

@@ -6,6 +6,7 @@ import { persist_all_state } from "./persistence/persistence"
 import { root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
+import routing_subscribers from "./routing/subscribers"
 import { conditional_ctrl_f_search } from "./search/conditional_ctrl_f_search"
 import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/meta_wcomponents/selecting/subscribers"
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
@@ -79,6 +80,8 @@ export function get_store (args: ConfigStoreArgs = {})
     periodically_backup_solid_data(store)
 
     conditional_ctrl_f_search(store)
+
+    routing_subscribers.sync_storage_location_subscriber(store)
 
     return store
 }
