@@ -6,7 +6,7 @@ import { get_solid_pod_URL_or_error } from "../../sync/utils/solid"
 
 
 
-export function sync_store_location_subscriber (store: Store<RootState>)
+export function sync_storage_location_subscriber (store: Store<RootState>)
 {
     const starting_state = store.getState()
     let solid_pod_URL = get_solid_pod_URL_or_error(starting_state.user_info, "reducer-sync").solid_pod_URL

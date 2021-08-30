@@ -37,6 +37,9 @@ export function load_state (dispatch: Dispatch, state: RootState)
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
 
+        const a_knowledge_view_id = specialised_objects.knowledge_views[0]?.id
+        dispatch(ACTIONS.routing.change_route({ args: { subview_id: a_knowledge_view_id } }))
+
         dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED" }))
     })
     .catch((error: SyncError | Error) =>
