@@ -67,28 +67,24 @@ const prepare_new_item = (creation_context: CreationContextState) => (): StateVa
 
 function get_summary (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
 {
-    return  <FormControl>
-        <TextField
-            size="small"
-            label="Value"
-            variant="outlined"
-            conditional_on_change={(new_value:any) => {
-                const value = new_value && new_value.trim()
-                if (on_change) on_change({ ...item, value })
-            }}
-        />
-    </FormControl>
+    return <TextField
+        size="small"
+        label="Value"
+        variant="outlined"
+        conditional_on_change={(new_value:any) => {
+            const value = new_value && new_value.trim()
+            if (on_change) on_change({ ...item, value })
+        }}
+    />
 }
 
 
 function get_details (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
 {
-    return <FormControl>
-        <TextField
-            size="small"
-            label="Description"
-            variant="outlined"
-            conditional_on_change={on_change && ((new_d:any) => on_change({ ...item, description: new_d }))}
-        />
-    </FormControl>
+    return <TextField
+        size="small"
+        label="Description"
+        variant="outlined"
+        conditional_on_change={on_change && ((new_d:any) => on_change({ ...item, description: new_d }))}
+    />
 }
