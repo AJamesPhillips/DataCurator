@@ -49,6 +49,7 @@ import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
+import { Box, FormControl } from "@material-ui/core"
 
 
 
@@ -129,15 +130,16 @@ function _WComponentForm (props: Props)
     }
 
 
-    return <div key={wcomponent_id}>
-        <h2>
+    return <Box  className={`editable-${wcomponent_id}`}>
+
+        <FormControl fullWidth={true}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={previous_id.current !== wcomponent_id}
             />
-        </h2>
+        </FormControl>
 
 
         <WComponentLatestPrediction wcomponent={wcomponent} />
@@ -186,13 +188,13 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(editing || wcomponent.description) && <p>
+        {(editing || wcomponent.description) && <FormControl fullWidth={true}>
             <EditableText
                 placeholder="Description..."
                 value={wcomponent.description}
                 conditional_on_blur={description => upsert_wcomponent({ description })}
             />
-        </p>}
+        </FormControl>}
 
 
         {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) &&
@@ -338,19 +340,16 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
-
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
-
-        <p title={(wcomponent.custom_created_at ? "Custom " : "") + "Created at"} style={{ display: "inline-flex" }}>
-            <span className="description_label">Created at</span> &nbsp; <EditableCustomDateTime
+        <FormControl fullWidth={true}>
+            <EditableCustomDateTime
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
                 on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
             />
-        </p>
-
+        </FormControl>
 
         {editing && <p>
             <span className="description_label">Label color</span>
@@ -387,7 +386,7 @@ function _WComponentForm (props: Props)
         <div style={{ float: "right" }}>(Disabled)&nbsp;</div> */}
 
         <br />
-    </div>
+    </Box>
 }
 
 export const WComponentForm = connector(_WComponentForm) as FunctionComponent<OwnProps>
