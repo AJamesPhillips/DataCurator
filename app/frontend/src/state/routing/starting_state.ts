@@ -1,5 +1,5 @@
 import type { RoutingState, RoutingStateArgs } from "./interfaces"
-import { merge_route_params_prioritising_window_location } from "./routing"
+import { merge_route_params_prioritising_url_over_state } from "./routing"
 
 
 
@@ -29,5 +29,5 @@ export function get_routing_starting_state (): RoutingState
         args: routing_args,
     }
 
-    return merge_route_params_prioritising_window_location(window.location.toString(), default_routing_state)
+    return merge_route_params_prioritising_url_over_state(window.location.toString(), default_routing_state)
 }

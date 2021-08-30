@@ -54,7 +54,7 @@ export function routing_args_to_string (routing_args: RoutingStateArgs)
 
 
 
-export function merge_route_params_prioritising_window_location (url: string, routing_state: RoutingState): RoutingState
+export function merge_route_params_prioritising_url_over_state (url: string, routing_state: RoutingState): RoutingState
 {
     const hash = url.split("#")[1] || ""
 

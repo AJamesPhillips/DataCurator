@@ -4,7 +4,7 @@ import { throttle } from "../../utils/throttle"
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
 import type { RoutingState } from "./interfaces"
-import { merge_route_params_prioritising_window_location, routing_state_to_string } from "./routing"
+import { merge_route_params_prioritising_url_over_state, routing_state_to_string } from "./routing"
 
 
 
@@ -120,7 +120,7 @@ function record_location_hash_change (store: Store<RootState>)
             if (window.DEBUG_ROUTING) console .log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state)
 
             store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
-            const routing_params = merge_route_params_prioritising_window_location(e.newURL, state.routing)
+            const routing_params = merge_route_params_prioritising_url_over_state(e.newURL, state.routing)
             store.dispatch(ACTIONS.routing.change_route(routing_params))
         }
     }

@@ -1,0 +1,93 @@
+import type { AnyAction } from "redux"
+import { bounded } from "../../shared/utils/bounded"
+
+import { unique_list, upsert_entry } from "../../utils/list"
+import { update_substate } from "../../utils/update_state"
+import type { RootState } from "../State"
+import { is_update_solid_oidc_provider, is_update_users_name_and_solid_pod_URL, is_update_custom_solid_pod_URLs, is_update_chosen_custom_solid_pod_URL_index, is_ensure_solid_pod_URL_is_chosen } from "./actions"
+
+
+
+export const user_info_reducer = (state: RootState, action: AnyAction): RootState =>
+{
+
+    if (is_update_solid_oidc_provider(action))
+    {
+        state = update_substate(state, "user_info", "solid_oidc_provider", action.solid_oidc_provider)
+    }
+
+
+    if (is_update_users_name_and_solid_pod_URL(action))
+    {
+        const { user_name, default_solid_pod_URL } = action
+        state = update_substate(state, "user_info", "user_name", user_name)
+        state = update_substate(state, "user_info", "default_solid_pod_URL", default_solid_pod_URL)
+
+        let { custom_solid_pod_URLs } = state.user_info
+        if (default_solid_pod_URL && !custom_solid_pod_URLs.includes(default_solid_pod_URL))
+        {
+            custom_solid_pod_URLs = upsert_entry(custom_solid_pod_URLs, default_solid_pod_URL, url => url === default_solid_pod_URL, "custom_solid_pod_URLs")
+            custom_solid_pod_URLs = unique_list(custom_solid_pod_URLs)
+            state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
+
+            state = ensure_chosen_index_is_valid(state)
+        }
+    }
+
+
+    if (is_update_custom_solid_pod_URLs(action))
+    {
+        const custom_solid_pod_URLs = unique_list(action.custom_solid_pod_URLs)
+        state = update_substate(state, "user_info", "custom_solid_pod_URLs", custom_solid_pod_URLs)
+
+        state = ensure_chosen_index_is_valid(state)
+    }
+
+
+    if (is_update_chosen_custom_solid_pod_URL_index(action))
+    {
+        state = ensure_chosen_index_is_valid(state, action.chosen_custom_solid_pod_URL_index)
+    }
+
+
+
+    if (is_ensure_solid_pod_URL_is_chosen(action))
+    {
+        const { chosen_solid_pod_URL } = action
+        const { default_solid_pod_URL, custom_solid_pod_URLs } = state.user_info
+
+        let index: number
+        if (default_solid_pod_URL === chosen_solid_pod_URL)
+        {
+            // no operation needed on default_solid_pod_URL or custom_solid_pod_URLs
+            index = 0
+        }
+        else
+        {
+            index = custom_solid_pod_URLs.findIndex(url => url === chosen_solid_pod_URL)
+            if (index >= 0) index += 1 // +1 as it is one based
+            else
+            {
+                const new_custom_URLs = [...custom_solid_pod_URLs, chosen_solid_pod_URL]
+                index = new_custom_URLs.length
+                state = update_substate(state, "user_info", "custom_solid_pod_URLs", new_custom_URLs)
+            }
+        }
+
+
+        state = update_substate(state, "user_info", "chosen_custom_solid_pod_URL_index", index)
+    }
+
+
+    return state
+}
+
+
+
+function ensure_chosen_index_is_valid (state: RootState, new_index?: number)
+{
+    let index = new_index === undefined ? state.user_info.chosen_custom_solid_pod_URL_index : new_index
+    index = bounded(index, 0, state.user_info.custom_solid_pod_URLs.length)
+    state = update_substate(state, "user_info", "chosen_custom_solid_pod_URL_index", index)
+    return state
+}
