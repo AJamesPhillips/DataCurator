@@ -9,6 +9,7 @@ import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSin
 import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
+import { Box, FormControl, FormHelperText, TextField } from "@material-ui/core"
 
 
 
@@ -66,30 +67,28 @@ const prepare_new_item = (creation_context: CreationContextState) => (): StateVa
 
 function get_summary (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
 {
-    return <div style={{ display: "inline-flex"}}>
-        Value: &nbsp; <EditableTextSingleLine
-            placeholder="value..."
-            value={item.value || ""}
-            conditional_on_change={new_value =>
-            {
+    return  <FormControl>
+        <TextField
+            size="small"
+            label="Value"
+            variant="outlined"
+            conditional_on_change={(new_value:any) => {
                 const value = new_value && new_value.trim()
                 if (on_change) on_change({ ...item, value })
             }}
         />
-    </div>
+    </FormControl>
 }
 
 
 function get_details (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
 {
-    return <div>
-        <br />
-        <div>
-            Description: <EditableText
-                placeholder="Description..."
-                value={item.description}
-                conditional_on_change={on_change && (new_d => on_change({ ...item, description: new_d }))}
-            />
-        </div>
-    </div>
+    return <FormControl>
+        <TextField
+            size="small"
+            label="Description"
+            variant="outlined"
+            conditional_on_change={on_change && ((new_d:any) => on_change({ ...item, description: new_d }))}
+        />
+    </FormControl>
 }
