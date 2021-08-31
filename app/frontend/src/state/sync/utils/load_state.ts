@@ -40,7 +40,6 @@ export function load_state (store: Store<RootState>)
     promise_data
     .then(specialised_objects =>
     {
-        debugger
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
 
         ensure_any_knowledge_view_displayed(store)
