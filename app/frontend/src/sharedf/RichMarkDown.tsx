@@ -57,5 +57,7 @@ export const MARKDOWN_OPTIONS: MarkdownToJSX.Options =
     {
         a: { component: AnchorTag },
         script: (props: { children: string }) => props.children,
+        // This allows us to render `<auto generated>` as an empty string
+        auto: (props: { children: string }) => "",
     },
 }
