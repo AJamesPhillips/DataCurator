@@ -23,7 +23,7 @@ import { get_knowledge_views_url, get_solid_pod_URL_or_error, get_wcomponents_ur
 export async function save_solid_data (user_info: UserInfoState, data: SpecialisedObjectsFromToServer)
 {
     const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info, "save")
-    if (!solid_pod_URL) return promised_error
+    if (!solid_pod_URL) return Promise.reject(promised_error)
 
 
     return save_knowledge_views(solid_pod_URL, data.knowledge_views)

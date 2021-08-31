@@ -151,7 +151,7 @@ export function attempt_save (args: AttemptSaveArgs)
     attempt += 1
 
     const is_backup_str = is_backup ? " (backup)" : ""
-    console .log(`attempt_save${is_backup_str} to "${storage_type}" with data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
+    console .log(`attempt_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
 
 
     let promise_save_data: Promise<any>
