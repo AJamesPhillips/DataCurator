@@ -23,6 +23,14 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
+const hide_routes = new Set<ROUTE_TYPES>([
+    "objects",
+    "patterns",
+    "perceptions",
+    "statements",
+])
+const base_allowed_routes = ALLOWED_ROUTES.filter(r => !hide_routes.has(r))
+
 
 function _AppMenuItemsContainer (props: Props)
 {
@@ -33,17 +41,12 @@ function _AppMenuItemsContainer (props: Props)
     const handleClose = () => {
         setAnchorEl(null)
     }
-    const [show_all_routes, set_show_all_routes] = useState(!!localStorage.getItem("show_all_tabs"))
-    localStorage.setItem("show_all_tabs", show_all_routes ? "1" : "")
+    const [show_all_routes, set_show_all_routes] = useState(false)
 
-    let routes = ALLOWED_ROUTES
+    let routes = base_allowed_routes
     if (!show_all_routes)
     {
         const hide_routes = new Set<ROUTE_TYPES>([
-            "objects",
-            "patterns",
-            "perceptions",
-            "statements",
             "about",
             "creation_context",
         ])

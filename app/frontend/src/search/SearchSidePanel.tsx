@@ -36,7 +36,7 @@ function _SearchSidePanel (props: Props)
         if (props.ctrl_f_search) set_show_search(props.ctrl_f_search)
     }, [props.ctrl_f_search])
 
-    if (!show_search) return <div><Button value="Search" onClick={() => set_show_search(true)} /></div>
+    if (!show_search) return <div><Button value="New Search" onClick={() => set_show_search(true)} /></div>
 
     return <WComponentSearchWindow
         on_change={wcomponent_id =>
