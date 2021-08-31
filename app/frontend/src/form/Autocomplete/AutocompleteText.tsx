@@ -101,14 +101,16 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
 
 
+    const { threshold_minimum_score = false } = props
+
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "fuzzy", props.threshold_minimum_score ?? -1000)
+        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "fuzzy", threshold_minimum_score)
         set_options_to_display(result.options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
-    }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type])
+    }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score])
 
 
 

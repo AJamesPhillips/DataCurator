@@ -124,6 +124,7 @@ export function SearchWindow (props: OwnProps)
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
                 allow_editing_when_presenting={true}
+                threshold_minimum_score={-1000}
             />
         </Box>}
     />
