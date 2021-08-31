@@ -33,8 +33,8 @@ function _WComponentSearchWindow (props: Props)
     const options = get_wcomponent_search_options(props)
 
     return <SearchWindow
-        search_window_title="Search for Component"
-        placeholder="WComponent..."
+        search_window_title="Search for a Component"
+        placeholder="Search for a Component..."
         selected_option_id={""}
         initial_search_term={props.initial_search_term}
         allow_none={true}

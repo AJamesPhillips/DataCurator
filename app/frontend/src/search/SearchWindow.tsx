@@ -21,6 +21,8 @@ import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/Autoco
 import { Modal } from "../modal/Modal"
 import type { SearchFields, SearchType } from "../state/search/state"
 
+
+
 interface OwnProps extends AutocompleteProps {
     search_window_title: string
     on_blur: () => void
@@ -121,6 +123,7 @@ export function SearchWindow (props: OwnProps)
                 search_fields={search_fields}
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
+                allow_editing_when_presenting={true}
             />
         </Box>}
     />
