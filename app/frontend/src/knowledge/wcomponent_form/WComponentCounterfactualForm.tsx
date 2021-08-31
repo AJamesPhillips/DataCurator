@@ -217,7 +217,7 @@ function _WComponentCounterfactualForm (props: Props)
 
 
         {counterfactual_VAP_set && knowledge_view && <p>
-            <span className="description_label">Counterfactual activity on this knowledge view</span> &nbsp;
+            <span className="description_label">Apply counterfactual in this knowledge view</span> &nbsp;
             <EditableCheckbox
                 disabled={!props.editing}
                 value={counterfactual_active_for_current_knowledge_view}
