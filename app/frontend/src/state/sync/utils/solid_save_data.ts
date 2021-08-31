@@ -38,7 +38,7 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 {
 
     const knowledge_views_url = get_knowledge_views_url(solid_pod_URL)
-    const result = await save_items(knowledge_views_url, knowledge_views, solid_dataset_cache.knowledge_views_dataset)
+    const result = await save_items(knowledge_views_url, knowledge_views, undefined) //solid_dataset_cache.knowledge_views_dataset)
     solid_dataset_cache.knowledge_views_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
@@ -48,7 +48,7 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[])
 {
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
-    const result = await save_items(wcomponents_url, wcomponents, solid_dataset_cache.wcomponents_dataset)
+    const result = await save_items(wcomponents_url, wcomponents, undefined) //, solid_dataset_cache.wcomponents_dataset)
     solid_dataset_cache.wcomponents_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
