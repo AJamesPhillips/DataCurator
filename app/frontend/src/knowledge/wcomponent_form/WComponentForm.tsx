@@ -49,7 +49,7 @@ import { ColorPicker } from "../../sharedf/ColorPicker"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
-import { Box, FormControl, FormControlLabel, FormLabel, Typography } from "@material-ui/core"
+import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
 
 
 
@@ -151,9 +151,9 @@ function _WComponentForm (props: Props)
             <DisplayValue UI_value={UI_value} />
         </div>}
 
-        <FormControl fullWidth={true} margin="normal">
+        <FormControl component="fieldset" fullWidth={true} margin="normal">
             <AutocompleteText
-                placeholder={"Type..."}
+                placeholder="Type: "
                 selected_option_id={wcomponent.type}
                 options={wcomponent_type_options}
                 on_change={type =>
@@ -191,23 +191,25 @@ function _WComponentForm (props: Props)
             />
         </FormControl>}
 
-        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str || wcomponent.boolean_false_str) &&
-        <p>
-            <div style={{ display: "inline-flex" }}>
-                <span className="description_label">Boolean representation</span>&nbsp;
-                <EditableTextSingleLine
-                    placeholder="True..."
-                    value={wcomponent.boolean_true_str || ""}
-                    conditional_on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
-                />
-                {!editing && <div>&nbsp; | &nbsp;</div>}
-                <EditableTextSingleLine
-                    placeholder="False..."
-                    value={wcomponent.boolean_false_str || ""}
-                    conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
-                />
-            </div>
-        </p>}
+        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) &&
+        <FormControl fullWidth={true} margin="normal">
+            <EditableTextSingleLine
+                placeholder="True..."
+                value={wcomponent.boolean_true_str || ""}
+                conditional_on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
+            />
+
+        </FormControl>}
+
+        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_false_str) &&
+        <FormControl fullWidth={true} margin="normal">
+           <EditableTextSingleLine
+                placeholder="False..."
+                value={wcomponent.boolean_false_str || ""}
+                conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
+            />
+        </FormControl>}
+
 
 
         {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
