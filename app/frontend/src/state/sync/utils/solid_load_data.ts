@@ -2,6 +2,7 @@ import {
     getSolidDataset,
     getStringNoLocale,
     getThingAll,
+    SolidDataset,
 } from "@inrupt/solid-client"
 import { fetch as solid_fetch } from "@inrupt/solid-client-authn-browser"
 
@@ -14,6 +15,7 @@ import type {
 import type { RootState } from "../../State"
 import type { SyncError } from "./errors"
 import { get_knowledge_views_url, get_solid_pod_URL_or_error, get_wcomponents_url, V1 } from "./solid"
+import { solid_dataset_cache } from "./solid_dataset_cache"
 
 
 
@@ -41,7 +43,9 @@ export async function load_solid_data (state: RootState)
 async function get_knowledge_views (solid_pod_URL: string)
 {
     const knowledge_views_url = get_knowledge_views_url(solid_pod_URL)
-    return get_items<KnowledgeView>(knowledge_views_url)
+    const result = await get_items<KnowledgeView>(knowledge_views_url)
+    solid_dataset_cache.knowledge_views_dataset = result.items_dataset
+    return result
 }
 
 
@@ -49,13 +53,22 @@ async function get_knowledge_views (solid_pod_URL: string)
 async function get_wcomponents (solid_pod_URL: string)
 {
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
-    return get_items<WComponent>(wcomponents_url)
+    const result = await get_items<WComponent>(wcomponents_url)
+    solid_dataset_cache.wcomponents_dataset = result.items_dataset
+    return result
 }
 
 
 
-async function get_items <I> (items_url: string): Promise<{ items: I[], error: SyncError | undefined }>
+interface GetItemsReturn<I>
 {
+    items_dataset: SolidDataset | undefined
+    items: I[]
+    error: SyncError | undefined
+}
+async function get_items <I> (items_url: string): Promise<GetItemsReturn<I>>
+{
+    let items_dataset: SolidDataset | undefined = undefined
     let items: I[] = []
     let error: SyncError | undefined = undefined
 
@@ -76,5 +89,5 @@ async function get_items <I> (items_url: string): Promise<{ items: I[], error: S
         }
     }
 
-    return { items, error }
+    return { items_dataset, items, error }
 }
