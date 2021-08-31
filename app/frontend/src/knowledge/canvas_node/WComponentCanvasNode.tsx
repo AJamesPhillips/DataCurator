@@ -2,6 +2,7 @@ import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { Box } from "@material-ui/core"
 
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
@@ -38,7 +39,6 @@ import { factory_on_pointer_down } from "../canvas_common"
 import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
-import { Box } from "@material-ui/core"
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 
 

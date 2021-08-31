@@ -51,4 +51,11 @@ export const RichMarkDown = connector(_RichMarkDown) as FunctionalComponent<OwnP
 
 
 
-export const MARKDOWN_OPTIONS: MarkdownToJSX.Options = { overrides: { a: { component: AnchorTag } } }
+export const MARKDOWN_OPTIONS: MarkdownToJSX.Options =
+{
+    overrides:
+    {
+        a: { component: AnchorTag },
+        script: (props: { children: string }) => props.children,
+    },
+}
