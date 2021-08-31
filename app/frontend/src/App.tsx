@@ -1,8 +1,5 @@
 import { h } from "preact"
-import { CssBaseline, ThemeProvider} from "@material-ui/core";
-import AppBar from "@material-ui/core/AppBar";
-import Box from "@material-ui/core/Box";
-import Toolbar from "@material-ui/core/Toolbar";
+import { AppBar, Box, CssBaseline, makeStyles, ThemeProvider, Toolbar, Typography} from "@material-ui/core";
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -18,32 +15,57 @@ import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
 
 function App()
 {
+    const useStyles = makeStyles(theme => ({
+        toolbar: {
+            justifyContent:"space-between",
+        },
+        toolbar_section: {
+            display:"inherit",
+            flexGrow:0,
+            flexShrink:1,
+            flexBasis:"auto",
+            marginRight:5,
+            "&:last-child": { marginRight:0 }
+        },
+        toolbar_item: {
+            marginRight:5,
+            "&:last-child": { marginRight:0 }
+        },
+        grow: {
+            flexGrow:1,
+        }
+
+      }));
+    const classes = useStyles();
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
             <Box id="app" className="app">
                 <Box component="header" zIndex={100}>
                     <AppBar position="static">
-                        <Toolbar variant="dense" >
-                            <ViewOptions />
-                            <ViewsBreadcrumb />
-                            <Box flexGrow={1} display="flex" justifyContent="flex-end" alignItems="stretch">
-                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                        <Toolbar variant="dense" className={classes.toolbar}>
+                            <Box className={`${classes.toolbar_section} ${classes.grow}`}>
+                                <ViewsBreadcrumb />
+                            </Box>
+
+                            <Box className={classes.toolbar_section}>
+                                <ViewOptions />
+                            </Box>
+
+                            <Box className={`${classes.toolbar_section}`}>
+                                <Box className={`${classes.toolbar_item}`}>
+                                    {/* display="flex" flexDirection="column" justifyContent="center" */}
                                     <BackupInfo />
                                 </Box>
-
-                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                                <Box className={`${classes.toolbar_item}`}>
                                     <SyncInfo />
                                 </Box>
-
-                                <Box mr={10} display="flex" flexDirection="column" alignItems="stretch">
+                                <Box className={`${classes.toolbar_item}`}>
                                     <StorageInfo />
                                 </Box>
-
-                                <Box display="flex" flexDirection="column" alignItems="stretch">
+                                <Box className={`${classes.toolbar_item}`}>
                                     <UserInfo />
                                 </Box>
-
                             </Box>
                         </Toolbar>
                     </AppBar>
