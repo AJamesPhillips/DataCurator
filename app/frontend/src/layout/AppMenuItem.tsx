@@ -1,11 +1,13 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { MenuItem as MaterialMenuItem } from "@material-ui/core"
 
 import type { RootState } from "../state/State"
 import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
+import { ACTIONS } from "../state/actions"
 
 
 interface OwnProps
@@ -31,14 +33,24 @@ function get_title (id: ROUTE_TYPES)
 }
 
 const map_state = (state: RootState) => ({ current_route: state.routing.route })
-const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
-type Props = PropsFromRedux & OwnProps
+const map_dispatch = { change_route: ACTIONS.routing.change_route }
 
-function _Tab (props: Props)
+const connector = connect(map_state, map_dispatch)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+function _AppMenuItem (props: Props)
 {
     const title = get_title(props.id)
-    return (
+    return <MaterialMenuItem
+        style="display:flex; justify-content:flex-start; padding:0.5em;"
+        onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+        {
+            e.stopImmediatePropagation()
+            // TODO remove this function once the <Button /> in <Link /> takes up all the horizontal space
+            props.change_route({ route: props.id })
+            props.on_pointer_down()
+        }}
+    >
         <Link
             route={props.id}
             sub_route={null}
@@ -48,7 +60,7 @@ function _Tab (props: Props)
         >
             {title}
         </Link>
-    )
+    </MaterialMenuItem>
 }
 
-export const Tab = connector(_Tab) as FunctionComponent<OwnProps>
+export const AppMenuItem = connector(_AppMenuItem) as FunctionComponent<OwnProps>

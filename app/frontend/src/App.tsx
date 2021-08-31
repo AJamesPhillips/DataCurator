@@ -6,7 +6,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
-import { TabsContainer } from "./layout/TabsContainer"
+import { AppMenuItemsContainer } from "./layout/AppMenuItemsContainer"
 import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 import { DefaultTheme } from "./ui_themes/material_default"
@@ -53,7 +53,7 @@ function App()
                         <MainAreaRouter />
                     </Box>
                     <Box component="aside" id="side_panel" bgcolor="#fafafa"  p={5} mt={1} position="relative" zIndex={10}>
-                        <TabsContainer />
+                        <AppMenuItemsContainer />
                         <SidePanel />
                     </Box>
                 </Box>
