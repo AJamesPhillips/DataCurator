@@ -77,9 +77,9 @@ function _SyncInfo (props: Props)
                     variant="contained"
                     color="primary"
                     endIcon={<SaveIcon />}
-                    onClick={() =>
+                    onClick={async () =>
                     {
-                        throttled_save_state.flush()
+                        await throttled_save_state.flush()
                         props.set_next_sync_ms({ next_save_ms: undefined })
                     }}
                 >
