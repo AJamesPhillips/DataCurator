@@ -1,16 +1,13 @@
-import { Box, Button } from "@material-ui/core"
+import { Box, Button, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
-
-import "./SyncInfo.scss"
 import { sentence_case } from "../../shared/utils/sentence_case"
 import type { RootState } from "../../state/State"
 import { throttled_save_state } from "../../state/sync/utils/save_state"
 import { ACTIONS } from "../../state/actions"
-import WarningIcon from '@material-ui/icons/Warning';
 import SaveIcon from '@material-ui/icons/Save';
-
+import SyncProblemIcon from '@material-ui/icons/SyncProblem';
 
 const map_state = (state: RootState) =>
 {
@@ -29,14 +26,11 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
-
-
 function _SyncInfo (props: Props)
 {
     const [, update_state] = useState({})
 
     const { status, next_save_ms } = props
-    // console .log("next_save_ms...", next_save_ms)
     const failed = status === "FAILED"
     const saving = status === "SAVING"
     const next_save = next_save_ms && next_save_ms - performance.now()
@@ -44,55 +38,75 @@ function _SyncInfo (props: Props)
     const save_in_seconds = next_save !== undefined && next_save >= 0 && Math.round(next_save / 1000)
 
     if (will_save_in_future) setTimeout(() => update_state({}), 500)
-    return(
-        <Box display="flex" height={1} alignItems="stretch" id="save_info_and_retries">
-            {(failed || status) && <Box display="flex" alignItems="center">
-                 <Box component="strong">Sync Status: </Box>
-                {failed && <Box component="span" display="inline-flex" alignItems="center">
-                    <WarningIcon color="error" titleAccess={props.error_message}  />
+    const useStyles = makeStyles(theme => ({
+        button: {
+            textTransform:"none",
+            "&:hover .show": { fontSize:0 },
+            "&:focus .show": { fontSize:0 },
+            "&:hover .hide": { fontSize:"initial" },
+            "&:focus .hide": { fontSize:"initial" }
+        },
+        animate: {
+            transitionProperty: "all",
+            transitionDuration: "0.23s"
+        },
 
-                    <Button
-                        disableElevation={true}
-                        variant="contained"
-                        color="primary"
-                        onClick={() =>
-                        {
+        initially_hidden: {
+            fontSize:0,
+        },
+        initially_shown: {
+            fontSize:"initial",
+        }
+      }));
+    //
+    const classes = useStyles();
+    return (
+        <Typography component="span">
+            {(!failed && !will_save_in_future && status) && <IconButton component="span" size="small">
+                <SaveIcon
+                    className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""}
+                    titleAccess={sentence_case(status)}
+                />
+            </IconButton>}
+            {(will_save_in_future || failed) && <Button
+                    className={classes.button}
+                    size="small"
+                    onClick={() => {
+                        if (failed) {
                             props.update_sync_status({ status: "RETRYING" })
-                        }}
-                    >
-                        <Box component="span" className="spacer">&nbsp;</Box>
-                        <Box component="span" id="save_failed_message">Save Failed</Box>
-                        <Box component="span" id="trigger_manual_save" fontSize={0}>
-                            Retry Save
-                        </Box>
-                    </Button>
-
-                </Box>}
-                {(!failed && status) && <Box component="span">{sentence_case(status)}</Box>}
-            </Box>}
-
-            {will_save_in_future && <Box ml={5}>
-                <Button
-                    disableElevation={true}
-                    variant="contained"
-                    color="primary"
-                    endIcon={<SaveIcon />}
-                    onClick={() =>
-                    {
-                        throttled_save_state.flush()
-                        props.set_next_sync_ms({ next_save_ms: undefined })
+                        } else {
+                            throttled_save_state.flush()
+                            props.set_next_sync_ms({ next_save_ms: undefined })
+                        }
                     }}
+                    startIcon={(failed)
+                        ? <SyncProblemIcon color="error" />
+                        : (status)
+                            ? <SaveIcon className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""} titleAccess={sentence_case(status)} />
+                            : <SaveIcon />
+                    }
                 >
-                    <Box component="span" className="spacer">&nbsp;</Box>
-                    <Box component="span" id="save_timer">
-                        Save in {save_in_seconds}s {props.error_message}
-                    </Box>
-                    <Box component="span" id="trigger_manual_save" fontSize={0}>
-                        Manual Save
-                    </Box>
-                </Button>
-            </Box>}
-        </Box>
+                    <Typography
+                        className={`${classes.animate} ${classes.initially_shown} show`}
+                        color={(failed) ? "error" : "initial" }
+                        component="span"
+                        noWrap={true}
+                    >
+                        {(!failed) && `Save in ${save_in_seconds}s`}
+                        {(failed) && `Failed!`}
+                    </Typography>
+                    <Typography
+                        className={`${classes.animate} ${classes.initially_hidden} hide`}
+                        component="span"
+                        noWrap={true}
+                    >
+                        {(!failed) && `Save Now`}
+                        {(failed) && `Retry Now`}
+                    </Typography>
+                    <Typography component="span">&nbsp;</Typography>
+
+                </Button> }
+        </Typography>
     )
 }
 

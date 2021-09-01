@@ -1,7 +1,5 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import Breadcrumbs from "@material-ui/core/Breadcrumbs"
-
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
@@ -9,6 +7,7 @@ import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import type { Color } from "../shared/interfaces"
+import { Box, Breadcrumbs, FormControl, InputLabel, makeStyles, MenuItem, Select, Typography } from "@material-ui/core"
 
 
 
@@ -83,25 +82,30 @@ function _ViewsBreadcrumb (props: Props)
         .filter(is_defined)
         .map(calc_if_is_hidden)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
-
-    return <Breadcrumbs aria-label="breadcrumb" style={{ margin: "auto 0 auto 10px" }}>
-        <label>
-            View Type:&nbsp;
-            <select name="select_view" onChange={e => navigate_view(e, props) }>
+    return <Breadcrumbs>
+        <Box>
+            <Select
+                label={<Typography noWrap={true}>View Type:</Typography>}
+                name="select_view"
+                onChange={e => navigate_view(e, props) }
+                value={props.view}
+            >
                 {view_options.map(opt =>
-                    <option value={opt.id} selected={opt.id === props.view}>{opt.title}</option>
+                    <MenuItem value={opt.id} selected={opt.id === props.view}>{opt.title}</MenuItem>
                 )}
-            </select>
-        </label>
-        {levels.map(level => <AutocompleteText
-            allow_none={level.allow_none}
-            selected_option_id={level.selected_id}
-            options={level.options}
-            on_change={subview_id => props.change_route({ args: { subview_id } })}
-            on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
-            allow_editing_when_presenting={true}
-            threshold_minimum_score={false}
-        />
+            </Select>
+        </Box>
+        {levels.map(level => <Box>
+            <AutocompleteText
+                allow_none={level.allow_none}
+                selected_option_id={level.selected_id}
+                options={level.options}
+                on_change={subview_id => props.change_route({ args: { subview_id } })}
+                on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
+                allow_editing_when_presenting={true}
+                threshold_minimum_score={false}
+            />
+        </Box>
         )}
     </Breadcrumbs>
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Menu, MenuItem } from "@material-ui/core"
+import { Box, Button, Menu, MenuItem as MaterialMenuItem } from "@material-ui/core"
 import MenuIcon from '@material-ui/icons/Menu'
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
@@ -6,7 +6,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ALLOWED_ROUTES, ROUTE_TYPES } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
-import { Tab } from "./Tab"
+import { AppMenuItem } from "./AppMenuItem"
 
 
 
@@ -23,8 +23,16 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
+const hide_routes = new Set<ROUTE_TYPES>([
+    "objects",
+    "patterns",
+    "perceptions",
+    "statements",
+])
+const base_allowed_routes = ALLOWED_ROUTES.filter(r => !hide_routes.has(r))
 
-function _TabsContainer (props: Props)
+
+function _AppMenuItemsContainer (props: Props)
 {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const handleClick = (event: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
@@ -33,17 +41,12 @@ function _TabsContainer (props: Props)
     const handleClose = () => {
         setAnchorEl(null)
     }
-    const [show_all_routes, set_show_all_routes] = useState(!!localStorage.getItem("show_all_tabs"))
-    localStorage.setItem("show_all_tabs", show_all_routes ? "1" : "")
+    const [show_all_routes, set_show_all_routes] = useState(false)
 
-    let routes = ALLOWED_ROUTES
+    let routes = base_allowed_routes
     if (!show_all_routes)
     {
         const hide_routes = new Set<ROUTE_TYPES>([
-            "objects",
-            "patterns",
-            "perceptions",
-            "statements",
             "about",
             "creation_context",
         ])
@@ -60,19 +63,17 @@ function _TabsContainer (props: Props)
                 </Box>
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
-                {routes.map(route => <MenuItem onClick={handleClose} style="display:flex; justify-content:flex-start; padding:0.5em;">
-                    <Tab id={route} on_pointer_down={handleClose} />
-                </MenuItem>)}
+                {routes.map(route => <AppMenuItem id={route} on_pointer_down={handleClose} />)}
 
-                <MenuItem onClick={() => set_show_all_routes(!show_all_routes)}  style="display:flex; justify-content:flex-start; padding:0.5em;">
+                <MaterialMenuItem onClick={() => set_show_all_routes(!show_all_routes)}  style="display:flex; justify-content:flex-start; padding:0.5em;">
                     {show_all_routes ? "Hide" : "Show"} all options
-                </MenuItem>
+                </MaterialMenuItem>
             </Menu>
         </Box>
     )
 }
 
-export const TabsContainer = connector(_TabsContainer) as FunctionalComponent<OwnProps>
+export const AppMenuItemsContainer = connector(_AppMenuItemsContainer) as FunctionalComponent<OwnProps>
 
 
 

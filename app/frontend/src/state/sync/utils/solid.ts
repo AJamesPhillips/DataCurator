@@ -19,7 +19,7 @@ export const get_wcomponents_url = (pod_URL: string) => `${pod_URL}data_curator_
 export function get_solid_pod_URL_or_error (user_info: UserInfoState, purpose: "save" | "load" | "reducer-sync")
 {
     const { default_solid_pod_URL, chosen_custom_solid_pod_URL_index, custom_solid_pod_URLs } = user_info
-    let promised_error: Promise<any> | undefined = undefined
+    let promised_error: SyncError | undefined = undefined
     let solid_pod_URL = default_solid_pod_URL
 
     if (chosen_custom_solid_pod_URL_index)
@@ -29,8 +29,7 @@ export function get_solid_pod_URL_or_error (user_info: UserInfoState, purpose: "
 
     if (!solid_pod_URL)
     {
-        const error: SyncError = { type: "insufficient_information", message: `Lacking solid_pod_URL for ${purpose}` }
-        promised_error = Promise.reject(error)
+        promised_error = { type: "insufficient_information", message: `Lacking solid_pod_URL for ${purpose}` }
     }
 
     return { solid_pod_URL, promised_error }

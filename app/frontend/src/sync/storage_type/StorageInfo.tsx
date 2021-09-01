@@ -1,4 +1,4 @@
-import { Box, Button } from "@material-ui/core"
+import { Box, Button, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
@@ -25,18 +25,20 @@ function _StorageInfo (props: Props)
     const [show_select_storage, set_show_select_storage] = useState(storage_type === undefined)
 
     return (
-        <Box display="flex" height={1} alignItems="stretch">
+        <Typography component="span">
             <Button
-                disableElevation={true}
-                variant="contained"
                 color="primary"
+                disableElevation={true}
                 onClick={() => set_show_select_storage(true)}
+                size="small"
                 endIcon={<PermDataSettingIcon titleAccess="Set Data Storage Location" />}
+                style={{textTransform: 'none'}}
+                variant="contained"
             >
                 {get_storage_type_name(storage_type)}
             </Button>
             {show_select_storage && <SelectStorageType on_close={() => set_show_select_storage(false)} />}
-        </Box>
+        </Typography>
     )
 }
 
