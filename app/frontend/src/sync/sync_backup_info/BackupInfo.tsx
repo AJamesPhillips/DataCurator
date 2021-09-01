@@ -1,10 +1,16 @@
-import { Box } from "@material-ui/core"
+import { Box, Button, IconButton, Tooltip, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+
 import "./BackupInfo.scss"
 import WarningIcon from '@material-ui/icons/Warning';
+import BackupIcon from '@material-ui/icons/Backup';
+import CloudIcon from '@material-ui/icons/Cloud';
+import CloudCircleIcon from '@material-ui/icons/CloudCircle';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
 import type { RootState } from "../../state/State"
 
 const map_state = (state: RootState) =>
@@ -39,20 +45,16 @@ function _BackupInfo (props: Props)
     {
         set_allow_showing(true)
     }
-
-
+    // (failed || status) && (
 
     return (
-        (failed || status) &&  <Box display="flex" height={1} alignItems="stretch">
-            <Box display="flex" alignItems="center">
-                <Box component="strong">Backup Status: </Box>
-                {failed && <Box component="span" display="inline-flex" alignItems="center">
-                    <WarningIcon color="error" titleAccess="Back up failed"  />
-                    <Box component="span">Backup Failed</Box>
-                </Box>}
-                {(!failed && status) && <Box component="span">{status_str}</Box>}
-            </Box>
-        </Box>
+        (failed || status) && <Tooltip title={status_str}>
+            <IconButton component="span" size="small" aria-label={status_str}>
+                {(failed) &&  <CloudUploadIcon  color="error" titleAccess={status_str} />}
+                {/* {(status && status.toLowerCase().endsWith('ing')) && <CloudUploadIcon color="action"  titleAccess={status_str} />} */}
+                {(status) && <CloudIcon titleAccess={status_str} className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""} />}
+            </IconButton>
+        </Tooltip>
     )
 }
 

@@ -6,6 +6,7 @@ import {
     EditableTextComponentArgs,
 } from "./editable_text_common"
 import { adjust_height } from "../utils"
+import { TextField } from "@material-ui/core"
 
 
 
@@ -15,20 +16,32 @@ export function EditableText (props: EditableTextCommonOwnProps)
         {...props}
 
         component={({ value, on_render, on_focus, on_change, on_blur }: EditableTextComponentArgs) =>
-            <textarea
-                style={{ height: "auto" }}
-                placeholder={props.placeholder}
+            <TextField
+                fullWidth={true}
+                size="small"
+                variant="outlined"
+                label={props.placeholder}
+                multiline
                 value={value}
-                ref={el =>
-                {
-                    if (!el) return
-                    adjust_height(el)
-                    on_render(el)
-                }}
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
             />
+            // @TODO: Check if ref is still needed and convert to Material syntax if so.
+            // <textarea
+            //     style={{ height: "auto" }}
+            //     placeholder={props.placeholder}
+            //     value={value}
+            //     ref={el =>
+            //     {
+            //         if (!el) return
+            //         adjust_height(el)
+            //         on_render(el)
+            //     }}
+            //     onFocus={on_focus}
+            //     onChange={on_change}
+            //     onBlur={on_blur}
+            // />
         }
     />
 }

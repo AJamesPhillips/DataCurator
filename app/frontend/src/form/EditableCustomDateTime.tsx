@@ -8,6 +8,7 @@ import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../state/State"
 import type { TimeResolution } from "../shared/utils/datetime"
+import { Box, TextField } from "@material-ui/core"
 
 
 
@@ -42,59 +43,70 @@ function _EditableCustomDateTime (props: Props)
 
     const { on_change } = props
     if (!on_change) return <div className={no_entry_class_name}>{display_value}</div>
-
-
     const { invariant_value, show_now_shortcut_button = false, show_today_shortcut_button = true } = props
-
 
     const valid = is_value_valid(display_value)
 
     const not_editable = props.always_allow_editing ? false : props.presenting
     const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
+    return <TextField
+        className={class_name}
+        label={title}
+        size="small"
+        variant="outlined"
+        disabled={not_editable}
+        value={display_value}
+        type="date"
+        onChange={(e:any) => {
+            const valid = is_value_valid(e.currentTarget.value)
+            if (valid) e.currentTarget.classList.remove("invalid")
+            else e.currentTarget.classList.add("invalid")
+        }}
+    />
+    // @TODO: Check if ref is still needed and convert to Material syntax if so.
+    // return <div className={class_name} title={title}>
+    //     <input
+    //         disabled={not_editable}
+    //         type="text"
+    //         value={display_value}
+    //         onFocus={() => set_editing(true)}
+    //         ref={r =>
+    //         {
+    //             if (!r || !editing) return
+    //             // Because we do not dispatch any state changes to react on changing the value
+    //             // this code block should only be run **once** on the render cycle immediately
+    //             // after focusing the input element
+    //             const date = props_value(props)
+    //             const new_working_value = date_to_string({ date, time_resolution: "minute", trim_midnight: false })
+    //             r.value = new_working_value
 
-    return <div className={class_name} title={title}>
-        <input
-            disabled={not_editable}
-            type="text"
-            value={display_value}
-            onFocus={() => set_editing(true)}
-            ref={r =>
-            {
-                if (!r || !editing) return
-                // Because we do not dispatch any state changes to react on changing the value
-                // this code block should only be run **once** on the render cycle immediately
-                // after focusing the input element
-                const date = props_value(props)
-                const new_working_value = date_to_string({ date, time_resolution: "minute", trim_midnight: false })
-                r.value = new_working_value
-
-                r.setSelectionRange(0, r.value.length)
-            }}
-            onChange={e =>
-            {
-                const valid = is_value_valid(e.currentTarget.value)
-                if (valid) e.currentTarget.classList.remove("invalid")
-                else e.currentTarget.classList.add("invalid")
-            }}
-            onBlur={e => {
-                const working_value = e.currentTarget.value
-                const new_value = handle_on_blur({ working_value, invariant_value })
-                on_change(new_value)
-                set_editing(false)
-            }}
-        />
-        {editing && show_now_shortcut_button && <NowButton
-            on_change={on_change}
-        />}
-        {editing && show_today_shortcut_button && <Button
-            value="Today"
-            onClick={() => {
-                const today_dt_str = get_today_str()
-                on_change(new Date(today_dt_str))
-            }}
-        />}
-    </div>
+    //             r.setSelectionRange(0, r.value.length)
+    //         }}
+    //         onChange={e =>
+    //         {
+    //             const valid = is_value_valid(e.currentTarget.value)
+    //             if (valid) e.currentTarget.classList.remove("invalid")
+    //             else e.currentTarget.classList.add("invalid")
+    //         }}
+    //         onBlur={e => {
+    //             const working_value = e.currentTarget.value
+    //             const new_value = handle_on_blur({ working_value, invariant_value })
+    //             on_change(new_value)
+    //             set_editing(false)
+    //         }}
+    //     />
+    //     {editing && show_now_shortcut_button && <NowButton
+    //         on_change={on_change}
+    //     />}
+    //     {editing && show_today_shortcut_button && <Button
+    //         value="Today"
+    //         onClick={() => {
+    //             const today_dt_str = get_today_str()
+    //             on_change(new Date(today_dt_str))
+    //         }}
+    //     />}
+    // </div>
 }
 
 export const EditableCustomDateTime = connector(_EditableCustomDateTime) as FunctionalComponent<OwnProps>

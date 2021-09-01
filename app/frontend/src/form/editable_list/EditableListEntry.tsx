@@ -3,6 +3,7 @@ import { Component, h } from "preact"
 import "./EditableListEntry.css"
 import { ConfirmatoryDeleteButton } from "../ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../EditableCustomDateTime"
+import { FormControl } from "@material-ui/core"
 
 
 
@@ -114,17 +115,14 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                 <div>
                     <ConfirmatoryDeleteButton on_delete={delete_item} button_text={delete_button_text} />
 
-                    {(get_created_at || get_custom_created_at) && <div
-                        style={{ display: "inline-flex" }}
-                    >
-                        <span className="description_label">Created at</span> &nbsp;
+                    {(get_created_at || get_custom_created_at) && <FormControl>
                         <EditableCustomDateTime
                             title="Created at"
                             invariant_value={get_created_at && get_created_at(item)}
                             value={custom_created_at}
                             on_change={date_on_change}
                         />
-                    </div>}
+                    </FormControl>}
                 </div>
 
                 <div className="details3">

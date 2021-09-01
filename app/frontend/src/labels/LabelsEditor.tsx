@@ -58,22 +58,19 @@ function _LabelsEditor (props: Props)
     })
 
     return (
-        <Box>
-            <Typography component="h3">Labels</Typography>
-            <MultiAutocompleteText
-                placeholder="Labels..."
-                selected_option_ids={label_ids || []}
-                options={wcomponent_id_options}
-                allow_none={true}
-                on_change={labels_ids =>
-                {
-                    props.on_change(labels_ids.filter(id => !!id))
-                }}
-                on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
-                on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
-                always_allow_editing={props.always_allow_editing}
-            />
-        </Box>
+        <MultiAutocompleteText
+            placeholder="Add Label"
+            selected_option_ids={label_ids || []}
+            options={wcomponent_id_options}
+            allow_none={true}
+            on_change={labels_ids =>
+            {
+                props.on_change(labels_ids.filter(id => !!id))
+            }}
+            on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
+            on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
+            always_allow_editing={props.always_allow_editing}
+        />
     )
 }
 
