@@ -29,7 +29,7 @@ export function sync_storage_location_subscriber (store: Store<RootState>)
             if (new_solid_pod_URL)
             {
                 const storage_location = new_solid_pod_URL
-                console .log("Change route as no query param: ", storage_location)
+                console .log(`Change storage_location in route to "${storage_location}" as nothing was set`)
                 store.dispatch(ACTIONS.routing.change_route({ args: { storage_location } }))
             }
         }

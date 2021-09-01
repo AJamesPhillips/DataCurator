@@ -161,12 +161,16 @@ function restore_session (root_el: HTMLElement): Promise<void>
 
         // See https://github.com/inrupt/solid-client-authn-js/issues/1473#issuecomment-902808449
         onSessionRestore(url => {
+            console .log("onSessionRestore url ", url)
             if (document.location.toString() !== url)
             {
                 if (document.location.pathname !== new URL(url).pathname) document.location.href = url
                 else history.replaceState(null, "", url)
             }
         })
+
+
+        console .log("starting `restore_session` at " + document.location.toString())
 
 
         return correct_path()
