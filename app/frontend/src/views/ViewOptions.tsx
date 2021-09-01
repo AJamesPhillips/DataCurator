@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { Button, ButtonGroup } from "@material-ui/core";
+import { ButtonGroup, IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
 
@@ -23,25 +23,25 @@ type Props = ConnectedProps<typeof connector>
 function _ViewOptions (props: Props)
 {
     return (
-        <ButtonGroup size="small"
-            disableElevation
-            variant="contained"
+        // @TODO: This might be better as a switch component
+        <ButtonGroup
+            size="small"
             value={props.presenting ? "presenting" : "editing"}
         >
-            <Button
-                value="editing"
-                onClick={props.toggle_consumption_formatting}
+            <IconButton
                 disabled={(!props.presenting) ? true : false }
-            >
-                <EditIcon />
-            </Button>
-            <Button
-                value="presenting"
                 onClick={props.toggle_consumption_formatting}
+                value="editing"
+            >
+                <EditIcon color="inherit" />
+            </IconButton>
+            <IconButton
                 disabled={(props.presenting) ? true : false }
+                onClick={props.toggle_consumption_formatting}
+                value="presenting"
             >
                 <PresentToAllIcon />
-            </Button>
+            </IconButton>
         </ButtonGroup>
     )
 }
