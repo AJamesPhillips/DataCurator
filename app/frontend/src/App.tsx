@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { AppBar, Box, CssBaseline, makeStyles, ThemeProvider, Toolbar, Typography} from "@material-ui/core";
+import { AppBar, Box, CssBaseline, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core";
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -45,11 +45,6 @@ function App()
             [theme.breakpoints.down('sm')]: {
                 flexGrow:0, flexShrink:1, flexBasis:"100%",
                 margin: 0,
-                // justifyContent:"flex-end",
-                // "& > *:last-child": {
-                //     border:"1px purple solid",
-                //     // flexGrow:1,
-                // },
             }
         }
 
@@ -70,9 +65,6 @@ function App()
                                     <ViewsBreadcrumb />
                                 </Box>
                             </Box>
-                            {/* <Box className={`${classes.toolbar_section} ${classes.grow}`} justifyContent="space-between">
-
-                            </Box> */}
                             <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
                                 <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                                 <Box className={`${classes.toolbar_item}`}>
