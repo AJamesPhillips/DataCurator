@@ -48,7 +48,7 @@ function _BackupInfo (props: Props)
     // (failed || status) && (
 
     return (
-        <Tooltip title={status_str}>
+        (failed || status) && <Tooltip title={status_str}>
             <IconButton component="span" size="small" aria-label={status_str}>
                 {(failed) &&  <CloudUploadIcon  color="error" titleAccess={status_str} />}
                 {/* {(status && status.toLowerCase().endsWith('ing')) && <CloudUploadIcon color="action"  titleAccess={status_str} />} */}
