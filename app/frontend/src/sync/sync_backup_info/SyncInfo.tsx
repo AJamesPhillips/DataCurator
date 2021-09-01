@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, Typography } from "@material-ui/core"
+import { Box, Button, IconButton, makeStyles, Tooltip, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useState } from "preact/hooks"
@@ -6,7 +6,7 @@ import { sentence_case } from "../../shared/utils/sentence_case"
 import type { RootState } from "../../state/State"
 import { throttled_save_state } from "../../state/sync/utils/save_state"
 import { ACTIONS } from "../../state/actions"
-import SyncIcon from '@material-ui/icons/Sync';
+import SaveIcon from '@material-ui/icons/Save';
 import SyncProblemIcon from '@material-ui/icons/SyncProblem';
 
 const map_state = (state: RootState) =>
@@ -41,9 +41,10 @@ function _SyncInfo (props: Props)
     const useStyles = makeStyles(theme => ({
         button: {
             textTransform:"none",
-
             "&:hover .show": { fontSize:0 },
-            "&:hover .hide": { fontSize:"initial" }
+            "&:focus .show": { fontSize:0 },
+            "&:hover .hide": { fontSize:"initial" },
+            "&:focus .hide": { fontSize:"initial" }
         },
         animate: {
             transitionProperty: "all",
@@ -57,13 +58,16 @@ function _SyncInfo (props: Props)
             fontSize:"initial",
         }
       }));
+    //
     const classes = useStyles();
-
     return (
-        <Typography m={0} noWrap={true}>
-            {(!failed && status && !will_save_in_future) &&
-                <SyncIcon className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""} titleAccess={sentence_case(status)} />
-            }
+        <Typography component="span">
+            {(!failed && !will_save_in_future && status) && <IconButton component="span" size="small">
+                <SaveIcon
+                    className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""}
+                    titleAccess={sentence_case(status)}
+                />
+            </IconButton>}
             {(will_save_in_future || failed) && <Button
                     className={classes.button}
                     size="small"
@@ -78,21 +82,29 @@ function _SyncInfo (props: Props)
                     startIcon={(failed)
                         ? <SyncProblemIcon color="error" />
                         : (status)
-                            ? <SyncIcon className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""} titleAccess={sentence_case(status)} />
-                            : <SyncIcon />
+                            ? <SaveIcon className={(status?.toLowerCase().endsWith('ing')) ? "animate spinning" : ""} titleAccess={sentence_case(status)} />
+                            : <SaveIcon />
                     }
                 >
-                    <Box component="span">
-                        <Typography component="span" color={(failed) ? "error" : "initial" } className={`${classes.animate} ${classes.initially_shown} show`}>
-                            {(!failed) && `Save in ${save_in_seconds}s`}
-                            {(failed) && `Failed!`}
-                        </Typography>
-                        <Typography  component="span" className={`${classes.animate} ${classes.initially_hidden} hide`}>
-                            {(!failed) && `Save Now`}
-                            {(failed) && `Retry Now`}
-                        </Typography>
-                        <Typography component="span">&nbsp;</Typography>
-                    </Box>
+                    <Typography
+                        className={`${classes.animate} ${classes.initially_shown} show`}
+                        color={(failed) ? "error" : "initial" }
+                        component="span"
+                        noWrap={true}
+                    >
+                        {(!failed) && `Save in ${save_in_seconds}s`}
+                        {(failed) && `Failed!`}
+                    </Typography>
+                    <Typography
+                        className={`${classes.animate} ${classes.initially_hidden} hide`}
+                        component="span"
+                        noWrap={true}
+                    >
+                        {(!failed) && `Save Now`}
+                        {(failed) && `Retry Now`}
+                    </Typography>
+                    <Typography component="span">&nbsp;</Typography>
+
                 </Button> }
         </Typography>
     )

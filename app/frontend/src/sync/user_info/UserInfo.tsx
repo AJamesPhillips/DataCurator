@@ -1,5 +1,5 @@
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
-import { Box, Button } from "@material-ui/core"
+import { Box, Button, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
@@ -45,18 +45,24 @@ function _UserInfo (props: Props)
         set_show_solid_signin_form(false)
     }
 
-    return <Box display="flex" height={1} alignItems="center">
+    return (
         <Button
-            disableElevation={true}
-            variant="contained"
             color="primary"
             endIcon={<ExitToAppIcon />}
+            fullWidth={true}
+            disableElevation={true}
             onClick={() => set_show_solid_signin_form(true)}
+            size="small"
+            style={{textTransform: 'none'}}
+            variant="contained"
         >
-            {user_name || (solid_session.info.isLoggedIn ? "(No user name)" : "Sign in")}
+            <Typography noWrap={true}>
+                {user_name || (solid_session.info.isLoggedIn ? "(No user name)" : "Sign in")}
+            </Typography>
+
             {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
         </Button>
-    </Box>
+    )
 }
 
 export const UserInfo = connector(_UserInfo) as FunctionalComponent<{}>
