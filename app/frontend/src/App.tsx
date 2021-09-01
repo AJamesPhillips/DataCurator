@@ -44,17 +44,14 @@ function App()
                 <Box component="header" zIndex={100}>
                     <AppBar position="static">
                         <Toolbar variant="dense" className={classes.toolbar}>
+                            <Box className={`${classes.toolbar_section}`}>
+                                <ViewOptions />
+                            </Box>
                             <Box className={`${classes.toolbar_section} ${classes.grow}`}>
                                 <ViewsBreadcrumb />
                             </Box>
-
-                            <Box className={classes.toolbar_section}>
-                                <ViewOptions />
-                            </Box>
-
                             <Box className={`${classes.toolbar_section}`}>
                                 <Box className={`${classes.toolbar_item}`}>
-                                    {/* display="flex" flexDirection="column" justifyContent="center" */}
                                     <BackupInfo />
                                 </Box>
                                 <Box className={`${classes.toolbar_item}`}>
