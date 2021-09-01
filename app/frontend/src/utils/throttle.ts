@@ -62,6 +62,7 @@ export function min_throttle <A extends any[], B extends any> (func: (...args: A
     let next_call_at_ms: number | undefined = undefined
     const throttled = (...args: A) =>
     {
+
         pending_args.args = args
         if (!timeout)
         {
@@ -79,18 +80,33 @@ export function min_throttle <A extends any[], B extends any> (func: (...args: A
     }
 
 
+    let will_flush: Promise<B | undefined> | undefined = undefined
     const flush = () =>
     {
-        cancel()
-
-        if (pending_args.args)
+        if (!will_flush)
         {
-            const args = pending_args.args
-            pending_args.args = undefined
-            return func(...args)
+            will_flush = new Promise(resolve =>
+            {
+
+                setTimeout(() =>
+                {
+                    will_flush = undefined
+                    cancel()
+
+                    if (pending_args.args)
+                    {
+                        const args = pending_args.args
+                        pending_args.args = undefined
+                        resolve(func(...args))
+                    }
+
+                    resolve(undefined)
+                }, 0)
+
+            })
         }
 
-        return undefined
+        return will_flush
     }
 
 

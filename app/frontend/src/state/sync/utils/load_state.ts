@@ -9,6 +9,7 @@ import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State
 import { error_to_string, SyncError } from "./errors"
 import { load_solid_data } from "./solid_load_data"
 import type { StorageType } from "../state"
+import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
 
 
 
@@ -40,13 +41,8 @@ export function load_state (store: Store<RootState>)
     .then(specialised_objects =>
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
-        state = store.getState()
 
-        if (!current_knowledge_view_supported(state))
-        {
-            const a_knowledge_view_id = specialised_objects.knowledge_views[0]?.id
-            dispatch(ACTIONS.routing.change_route({ args: { subview_id: a_knowledge_view_id } }))
-        }
+        ensure_any_knowledge_view_displayed(store)
 
         dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED" }))
     })
@@ -91,13 +87,4 @@ export function get_state_data (storage_type: StorageType, state: RootState)
 function parse_datetimes<T extends { datetime_created: Date }> (items: T[]): T[]
 {
     return items.map(i => ({ ...i, datetime_created: new Date(i.datetime_created) }))
-}
-
-
-
-function current_knowledge_view_supported (state: RootState)
-{
-    const { subview_id } = state.routing.args
-
-    return !!state.specialised_objects.knowledge_views_by_id[subview_id]
 }
