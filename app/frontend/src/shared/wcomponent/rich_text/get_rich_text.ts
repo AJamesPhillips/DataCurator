@@ -54,11 +54,10 @@ export function get_title (args: GetFieldTextArgs): string
         }
         else if (wcomponent_is_counterfactual_v2(wcomponent))
         {
-            const target_wc = args.wcomponents_by_id[wcomponent.target_wcomponent_id || ""]
-            const current_depth = (args.current_depth || 0) + 1
-            const target_title = target_wc ? get_title({ ...args, current_depth, wcomponent: target_wc }) : "_"
+            title = `Counterfactual (no target set) <auto generated>`
 
-            title = `Counterfactual of: ${target_title} <auto generated>`
+            const target_wc_id = wcomponent.target_wcomponent_id
+            if (target_wc_id) title = `Counterfactual of: @@${target_wc_id} <auto generated>`
         }
     }
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
