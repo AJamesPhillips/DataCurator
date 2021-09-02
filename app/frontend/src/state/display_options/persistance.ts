@@ -30,7 +30,7 @@ export function display_options_starting_state (): DisplayOptionsState
     const derived_certainty_formatting = derive_certainty_formatting(certainty_formatting)
 
     const state: DisplayOptionsState = {
-        consumption_formatting: false,
+        consumption_formatting: true,
         focused_mode: false,
         time_resolution: "hour",
         display_by_simulated_time: false,
