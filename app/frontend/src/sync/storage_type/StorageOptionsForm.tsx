@@ -71,8 +71,8 @@ export function StorageOptionsForm (props: OwnProps)
                 with any other application and do useful things;
                 something the big tech companies don't let you do.
                 Sign up for a free account here:
-                &nbsp; <a href="https://solidcommunity.net/" target="_blank">solidcommunity.net</a>
-                &nbsp; or here:
+                {/* &nbsp; <a href="https://solidcommunity.net/" target="_blank">solidcommunity.net</a>
+                &nbsp; or here: */}
                 &nbsp; <a href="https://signup.pod.inrupt.com/" target="_blank">inrupt.com</a>
             </div>}
             selected={new_storage_type === "solid"}

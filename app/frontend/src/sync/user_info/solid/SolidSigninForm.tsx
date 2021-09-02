@@ -79,7 +79,7 @@ function _SolidSigninForm (props: Props)
             &nbsp;&nbsp;
             Use:
             &nbsp;<AutoFillOIDC solid_oidc_provider_root="inrupt.com" />
-            &nbsp;<AutoFillOIDC solid_oidc_provider_root="solidcommunity.net" />
+            {/* &nbsp;<AutoFillOIDC solid_oidc_provider_root="solidcommunity.net" /> */}
 
 
             {logged_in && <div>
