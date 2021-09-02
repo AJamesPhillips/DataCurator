@@ -19,7 +19,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
             <TextField
                 fullWidth={true}
                 size="small"
-                variant="outlined"
+                variant="standard"
                 label={props.placeholder}
                 multiline
                 value={value}
