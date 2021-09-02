@@ -11,6 +11,7 @@ import type { AutocompleteOption, InternalAutocompleteOption } from "./interface
 import { throttle } from "../../utils/throttle"
 import { useEffect, useRef, useState } from "preact/hooks"
 import type { SearchFields, SearchType } from "../../state/search/state"
+import { TextField } from "@material-ui/core"
 
 
 
@@ -205,24 +206,23 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         class={"editable_field autocomplete " + (valid ? "" : "invalid ")}
         style={props.extra_styles}
     >
-        <input
+        <TextField
             disabled={props.allow_editing_when_presenting ? false : props.presenting}
-            ref={r =>
-            {
-                if (!r) return
-                else if (!editing_options) setTimeout(() => r.blur(), 0)
-                else setTimeout(() => r.focus(), 0)
-            }}
-            type="text"
+            // ref={r =>
+            // {
+            //     if (!r) return
+            //     else if (!editing_options) setTimeout(() => r.blur(), 0)
+            //     else setTimeout(() => r.focus(), 0)
+            // }}
+            // type="text"
             placeholder={placeholder}
             value={temp_value_str || (editing_options ? "" : "-")}
-            onFocus={e => {
+            onFocus={(e:any) => {
                 setTimeout(() => set_editing_options(true), 0)
-
                 e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
             }}
-            onChange={e => handle_on_change(e.currentTarget.value)}
-            onKeyDown={e => handle_key_down(e, options_to_display)}
+            onChange={(e:any) => handle_on_change(e.currentTarget.value)}
+            onKeyDown={(e:any) => handle_key_down(e, options_to_display)}
             onBlur={() => handle_on_blur()}
         />
 
