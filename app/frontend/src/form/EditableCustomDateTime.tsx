@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent, h, Ref } from "preact"
 
 import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"
@@ -8,8 +8,8 @@ import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../state/State"
 import type { TimeResolution } from "../shared/utils/datetime"
-import { Box, TextField } from "@material-ui/core"
-
+import { Box, IconButton, TextField } from "@material-ui/core"
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 
 interface OwnProps
@@ -50,20 +50,33 @@ function _EditableCustomDateTime (props: Props)
     const not_editable = props.always_allow_editing ? false : props.presenting
     const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
-    return <TextField
-        className={class_name}
-        label={title}
-        size="small"
-        variant="outlined"
-        disabled={not_editable}
-        value={display_value}
-        type="datetime-local"
-        onChange={(e:any) => {
-            const valid = is_value_valid(e.currentTarget.value)
-            if (valid) e.currentTarget.classList.remove("invalid")
-            else e.currentTarget.classList.add("invalid")
-        }}
-    />
+    const set_textfield_input_value = (d?:Date) => {
+        if (!d) return;
+        let date_string = d.toISOString().split('.').shift();
+        return date_string?.slice(0, -3);
+    }
+    console.log(props.value?.toISOString())
+    return (
+        <Box>
+            <TextField
+                className={class_name}
+                value={set_textfield_input_value(props.value)}
+                disabled={not_editable}
+                label={title}
+                size="small"
+                type="datetime-local"
+                variant="outlined"
+                onChange={(e:any, value:any) => {
+                    const valid = is_value_valid(e.currentTarget.value)
+                    if (valid) e.currentTarget.classList.remove("invalid")
+                    else e.currentTarget.classList.add("invalid")
+                }}
+            />
+            {/* <IconButton>
+                <FileCopyIcon />
+            </IconButton> */}
+        </Box>
+    )
     // @TODO: Check if ref is still needed and convert to Material syntax if so.
     // return <div className={class_name} title={title}>
     //     <input
