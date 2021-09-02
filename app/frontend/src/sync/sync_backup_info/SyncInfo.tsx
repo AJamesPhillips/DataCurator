@@ -79,8 +79,9 @@ function _SyncInfo (props: Props)
         <Button
             className={classes.button}
             size="small"
-            onClick={async () =>
+            onClick={async (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
             {
+                e.currentTarget.blur()
                 const store = get_store()
                 const state = store.getState()
                 const throttled_save_state = storage_dependent_save(store.dispatch, state)
