@@ -31,6 +31,10 @@ function _MaterialAutoComplete <E> (props: Props<E>)
     return (
         <Autocomplete
             autoComplete={true}
+            blurOnSelect={true}
+            clearOnBlur={true}
+            clearOnEscape={true}
+            // debug={true}
             disabled={props.allow_editing_when_presenting ? false : props.presenting}
             disableClearable={props.disableClearable || false}
             disableListWrap={true}
@@ -38,22 +42,35 @@ function _MaterialAutoComplete <E> (props: Props<E>)
             freeSolo={false}
             fullWidth={true}
             getOptionLabel={(option:any) => { return option.title || option.id || "none" }}
-            includeInputInList={true}
+            //includeInputInList={true}
             onChange={props.onChange || (() => null)}
+            openOnFocus={true}
             options={props.options}
-            renderInput={(params) => {
-                return (
-                    <TextField
-                        size="small"
-                        {...params}
-                        label={props.label || null}
-                    />
-                )
-            }}
-            style={{ width: 200 }}
+            renderInput={(params) => (
+                <TextField
+                    {...params}
+                    size="small"
+                    label={props.label || null}
+                    placeholder="+"
+                />
+            )}
+            selectOnFocus={true}
+            style={{ width: 175 }}
+            value={props.selected_option}
         />
     )
 }
+// <MaterialAutoComplete
+//     disableClearable={true}
+//     onChange={(e, v) => {
+//         const subview_id:string = v.id;
+//         if (subview_id) {
+//             props.change_route({ args: { subview_id }})
+//         }
+//     }}
+//     options={level.options}
+//     selected_option={level.options.find(o => o.id === level.selected_id)}
+// />
 const ConnectedAutocompleteText = connector(_MaterialAutoComplete)
 export function MaterialAutoComplete<E>(props: OwnProps<E>)
 {
