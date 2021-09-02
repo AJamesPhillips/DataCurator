@@ -1,41 +1,7 @@
-
-.editable_field
-{
-    /* So that the div expands to contain the input element otherwise the input overlaps
-       with other elements.  Usually not a problem unless it's a date in which case the
-       "invalid" nature and it's background colour of pink is obviously overlapping other
-       things.
-    */
-    display: flex;
-}
-
-.editable_field input[type="text"], .editable_field textarea {
-    border: none;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    padding: 0px 2px;
-    color: inherit;
-    background-color: inherit;
-    width: 100%;
-    max-width: 100%;
-}
-
-.editable_field input[type="text"]
-{
-    height: 1.15em;
-}
-
-.editable_field.placeholder
-{
-    color: grey;
-}
-
 .editable_field.invalid input[type="text"]:focus, .editable_field.invalid textarea:focus
 {
     background-color: pink;
 }
-
 
 .editable_percentage
 {

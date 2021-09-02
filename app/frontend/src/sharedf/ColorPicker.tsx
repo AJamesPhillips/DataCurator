@@ -35,27 +35,27 @@ export function ColorPicker (props: OwnProps)
 
 
     return <div className="color_picker">
-        <span className="description_label">r</span>
+        {/* <span className="description_label">r</span> */}
         <EditableNumber
-            placeholder=""
+            placeholder="r"
             value={color.r}
             allow_undefined={false}
             conditional_on_change={r => set_color({ r })}
             always_on_blur={r => on_blur({ r })}
         />
 
-        <span className="description_label">g</span>
+        {/* <span className="description_label">g</span> */}
         <EditableNumber
-            placeholder=""
+            placeholder="g"
             value={color.g}
             allow_undefined={false}
             conditional_on_change={g => set_color({ g })}
             always_on_blur={g => on_blur({ g })}
         />
 
-        <span className="description_label">b</span>
+        {/* <span className="description_label">b</span> */}
         <EditableNumber
-            placeholder=""
+            placeholder="b"
             value={color.b}
             allow_undefined={false}
             conditional_on_change={b => set_color({ b })}
