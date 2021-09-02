@@ -204,7 +204,7 @@ function _WComponentCanvasNode (props: Props)
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = show_all_details && wcomponent_can_have_validity_predictions(wcomponent)
+    const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && (is_editing || (is_current_item && wcomponent.validity.length > 0))
     const show_state_value = (is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
