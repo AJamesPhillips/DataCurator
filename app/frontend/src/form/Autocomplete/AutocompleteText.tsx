@@ -208,12 +208,15 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     >
         <TextField
             disabled={props.allow_editing_when_presenting ? false : props.presenting}
-            // ref={r =>
-            // {
-            //     if (!r) return
-            //     else if (!editing_options) setTimeout(() => r.blur(), 0)
-            //     else setTimeout(() => r.focus(), 0)
-            // }}
+            ref={((el: HTMLDivElement) =>
+            {
+                if (!el) return
+                const input_el = el.getElementsByTagName("input")[0]
+                if (!input_el) return
+
+                if (!editing_options) setTimeout(() => input_el.blur(), 0)
+                else setTimeout(() => input_el.focus(), 0)
+            }) as any}
             // type="text"
             placeholder={placeholder}
             value={temp_value_str || (editing_options ? "" : "-")}
