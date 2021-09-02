@@ -51,6 +51,7 @@ import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
 import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 
 
 
@@ -374,14 +375,16 @@ function _WComponentForm (props: Props)
         </p>
 
 
-        {/*
         <hr />
 
-        <ConfirmatoryDeleteButton
-            // on_delete={() => props.delete_wcomponent({ wcomponent_id })}
-            on_delete={() => alert("Deleting disabled: need to implement tombstones.  Either remove node from this view or use for something useful.")}
-        />
-        <div style={{ float: "right" }}>(Disabled)&nbsp;</div> */}
+
+        {editing && <div>
+            <ConfirmatoryDeleteButton
+                button_text="Permanently delete"
+                tooltip_text="Permanently remove from all knowledge views"
+                on_delete={() => props.delete_wcomponent({ wcomponent_id })}
+            />
+        </div>}
 
         <br />
     </Box>
