@@ -30,7 +30,7 @@ function handle_ctrl_a (store: Store<RootState>)
         if (!viewing_knowledge) return
 
         const ids = Object.keys(kv.composed_wc_id_map)
-            .filter(id => !kv.wc_ids_by_type.any_link.has(id))
+            // .filter(id => !kv.wc_ids_by_type.any_link.has(id))
 
         store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
         store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple", item_id: null }))

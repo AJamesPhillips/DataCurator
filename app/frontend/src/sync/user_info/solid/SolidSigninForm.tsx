@@ -130,7 +130,7 @@ function _SolidSigninForm (props: Props)
 
             <PodProviderRow
                 solid_pod_URL_index={0}
-                value={`Use default Pod provider "${props.default_solid_pod_URL}"`}
+                value={`Use default Pod provider ${quote_or_empty(props.default_solid_pod_URL)}`}
             />
 
 
@@ -179,3 +179,10 @@ function _SolidSigninForm (props: Props)
 }
 
 export const SolidSigninForm = connector(_SolidSigninForm) as FunctionalComponent<OwnProps>
+
+
+
+function quote_or_empty (str: string)
+{
+    return str ? `"${str}"` : ""
+}

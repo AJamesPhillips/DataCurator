@@ -2,7 +2,7 @@ import type { CreationContextState } from "../../creation_context/state"
 import { test } from "../../utils/test"
 import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
-import { WComponentsById, WComponent, wcomponent_is_plain_connection } from "../interfaces/SpecialisedObjects"
+import { WComponentsById, WComponent, wcomponent_is_plain_connection, wcomponent_is_counterfactual_v2 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
 import type { WcIdCounterfactualsMap } from "../../uncertainty/uncertainty"
 import { replace_function_ids_in_text } from "./replace_function_ids"
@@ -40,15 +40,25 @@ export function get_title (args: GetFieldTextArgs): string
     if (!args.rich_text) return wcomponent.title
 
     let title = wcomponent.title
-    if (!title && wcomponent_is_plain_connection(wcomponent))
+    if (!title)
     {
-        const from_wc = args.wcomponents_by_id[wcomponent.from_id]
-        const to_wc = args.wcomponents_by_id[wcomponent.to_id]
-        const current_depth = (args.current_depth || 0) + 1
-        const from_title = from_wc ? get_title({ ...args, current_depth, wcomponent: from_wc }) : "_"
-        const to_title = to_wc ? get_title({ ...args, current_depth, wcomponent: to_wc }) : "_"
+        if (wcomponent_is_plain_connection(wcomponent))
+        {
+            const from_wc = args.wcomponents_by_id[wcomponent.from_id]
+            const to_wc = args.wcomponents_by_id[wcomponent.to_id]
+            const current_depth = (args.current_depth || 0) + 1
+            const from_title = from_wc ? get_title({ ...args, current_depth, wcomponent: from_wc }) : "_"
+            const to_title = to_wc ? get_title({ ...args, current_depth, wcomponent: to_wc }) : "_"
 
-        title = `${from_title} -> ${to_title} <auto generated>`
+            title = `${from_title} -> ${to_title} <auto generated>`
+        }
+        else if (wcomponent_is_counterfactual_v2(wcomponent))
+        {
+            title = `Counterfactual (no target set) <auto generated>`
+
+            const target_wc_id = wcomponent.target_wcomponent_id
+            if (target_wc_id) title = `Counterfactual of: @@${target_wc_id} <auto generated>`
+        }
     }
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
 

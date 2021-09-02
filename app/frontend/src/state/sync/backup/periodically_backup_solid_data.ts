@@ -14,7 +14,7 @@ import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import { get_specialised_state_to_save, needs_save } from "../utils/needs_save"
-import { attempt_save } from "../utils/save_state"
+import { retryable_save } from "../utils/save_state"
 
 
 
@@ -68,7 +68,7 @@ export function save_state ({ dispatch, state, user_info, original_solid_pod_URL
     const storage_type = state.sync.storage_type!
     const data = get_specialised_state_to_save(state)
 
-    return attempt_save({ storage_type, data, user_info, dispatch, is_backup: true })
+    return retryable_save({ storage_type, data, user_info, dispatch, is_backup: true })
     .then(() =>
     {
         dispatch(ACTIONS.backup.update_backup_status({ status: "SAVED" }))

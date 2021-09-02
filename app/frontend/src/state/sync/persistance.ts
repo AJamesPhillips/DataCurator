@@ -27,7 +27,7 @@ export function sync_starting_state (): SyncState
         ready_for_writing: false,
         saving: false,
         error_message: "",
-        storage_type: undefined,
+        storage_type: "local_storage",
         copy_from_storage_type: false,
         retry_attempt: undefined,
         next_save_ms: undefined,
