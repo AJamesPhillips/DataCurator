@@ -74,6 +74,7 @@ function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | un
 {
     last_attempted_state_to_save.state = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
+    dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
 
     const storage_type = state.sync.storage_type!
     const data = get_specialised_state_to_save(state)

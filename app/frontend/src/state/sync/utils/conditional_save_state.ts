@@ -12,7 +12,7 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
     if (!load_state_from_storage) return
 
     const { status, storage_type } = state.sync
-    if (status === undefined || status === "FAILED") return
+    if (status === undefined || status === "FAILED" || status === "SAVING") return
 
     if (!needs_save(state, last_attempted_state_to_save.state)) return
 

@@ -83,8 +83,8 @@ function _SyncInfo (props: Props)
             {
                 const store = get_store()
                 const state = store.getState()
-                await storage_dependent_save(store.dispatch, state).flush()
-                props.set_next_sync_ms({ next_save_ms: undefined })
+                const throttled_save_state = storage_dependent_save(store.dispatch, state)
+                await throttled_save_state.flush()
             }}
             startIcon={failed
                 ? <SyncProblemIcon color="error" />
