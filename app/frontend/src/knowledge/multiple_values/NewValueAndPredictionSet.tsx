@@ -1,9 +1,9 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
-import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 
-import { uncertain_datetime_is_eternal } from "../../form/datetime_utils"
-import { get_today_date } from "../../shared/utils/date_helpers"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { get_uncertain_datetime } from "../../shared/utils/datetime"
+import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { ACTION_OPTIONS, get_action_status_of_VAP_set } from "../../shared/wcomponent/value_and_prediction/actions_value"
@@ -68,6 +68,9 @@ function SimplifiedBooleanForm (props: SimplifiedBooleanFormProps)
 
 
     return <div>
+        {is_true && "True"}
+        {is_false && "False"}
+        <br />
         {!is_true && <Button
             value="Set to True"
             onClick={() =>
@@ -142,10 +145,14 @@ function SimplifiedDatetimeForm (props: SimplifiedDatetimeFormProps)
     if (!entry) return null
 
 
-    const is_eternal = uncertain_datetime_is_eternal(VAP_set.datetime)
+    const datetime = get_uncertain_datetime(VAP_set.datetime)
+    const is_eternal = datetime === undefined
 
 
     return <div>
+        {datetime ? date2str_auto({ date: datetime, time_resolution: undefined }) : "Is Eternal"}
+        <br />
+
         {is_eternal && <Button
             value="Set to 'From today'"
             onClick={() => on_change({ ...VAP_set, datetime: { min: get_today_date() } })}

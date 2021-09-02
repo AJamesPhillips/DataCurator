@@ -3,6 +3,7 @@ import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
 import type { HasVersion } from "./interfaces/base"
 import type { HasDateTime } from "../uncertainty/uncertainty"
+import { get_uncertain_datetime } from "../utils/datetime"
 
 
 
@@ -15,7 +16,7 @@ export function get_created_at_ms (obj: { created_at: Date, custom_created_at?: 
 
 export function get_sim_datetime (item: HasDateTime)
 {
-    return (item.datetime.min || item.datetime.value || item.datetime.max)
+    return get_uncertain_datetime(item.datetime)
 }
 
 export function get_sim_datetime_ms (item: HasDateTime)

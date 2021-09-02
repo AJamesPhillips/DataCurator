@@ -1,4 +1,5 @@
 import type { CreationContextState } from "../creation_context/state"
+import type { TemporalUncertainty } from "../uncertainty/uncertainty"
 import { date2str_auto } from "./date_helpers"
 
 
@@ -41,4 +42,18 @@ export function get_new_created_ats (creation_context_state?: CreationContextSta
     }
 
     return { created_at, custom_created_at }
+}
+
+
+
+export function get_uncertain_datetime (datetime: TemporalUncertainty)
+{
+    return (datetime.min || datetime.value || datetime.max)
+}
+
+
+
+export function uncertain_datetime_is_eternal (datetime: TemporalUncertainty)
+{
+    return get_uncertain_datetime(datetime) === undefined
 }
