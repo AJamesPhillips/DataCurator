@@ -50,6 +50,7 @@ import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
+import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 
 
 
@@ -389,5 +390,5 @@ function _WComponentForm (props: Props)
 export const WComponentForm = connector(_WComponentForm) as FunctionComponent<OwnProps>
 
 
-const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: type }))
+const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
 const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map(type => ({ id: type, title: type }))
