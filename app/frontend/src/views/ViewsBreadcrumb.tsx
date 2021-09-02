@@ -79,19 +79,6 @@ function _ViewsBreadcrumb (props: Props)
         .filter(is_defined)
         .map(calc_if_is_hidden)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
-    // <Box>
-    //     {/* <AutocompleteText
-    //         allow_none={level.allow_none}
-    //         selected_option_id={level.selected_id}
-    //         options={level.options}
-    //         on_change={subview_id => props.change_route({ args: { subview_id } })}
-    //         on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
-    //         allow_editing_when_presenting={true}
-    //         threshold_minimum_score={false}
-    //     /> */}
-    // </Box>
-    // )}
-
     return (
         <Breadcrumbs>
             <Select
@@ -110,8 +97,10 @@ function _ViewsBreadcrumb (props: Props)
             {levels.map((level) => {
                 const selected_option = level.options.find(o => o.id === level.selected_id);
                 return (
+
                     <Select
-                        autoWidth={true}
+                        style={{ maxWidth: 175 }}
+                        autoWidth={false}
                         fullWidth={false}
                         label={<Typography noWrap={true}>View Type:</Typography>}
                         onChange={(event) => {
@@ -125,9 +114,14 @@ function _ViewsBreadcrumb (props: Props)
                         value={selected_option?.id}
                     >
                         {level.options.map(opt =>
-                            <MenuItem value={opt.id} selected={opt.id === props.view}>{opt.title}</MenuItem>
+                            <MenuItem value={opt.id} selected={opt.id === props.view}>
+                                <Typography noWrap={true}>
+                                    {opt.title}
+                                </Typography>
+                            </MenuItem>
                         )}
                     </Select>
+
                 )
             })}
         </Breadcrumbs>
