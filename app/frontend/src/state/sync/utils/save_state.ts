@@ -10,28 +10,14 @@ import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
-import { get_specialised_state_to_save, needs_save } from "./needs_save"
+import { get_specialised_state_to_save } from "./needs_save"
 import { save_solid_data } from "./solid_save_data"
 
 
 
-let last_attempted_state_to_save: RootState | undefined = undefined
-export function conditionally_save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
+export function storage_dependent_save (dispatch: Dispatch, state: RootState)
 {
-    if (!load_state_from_storage) return
-
-    const { status, storage_type } = state.sync
-    if (status !== "SAVED" && status !== "SAVING" && status !== "LOADED" && status !== "RETRYING") return
-
-    if (!needs_save(state, last_attempted_state_to_save)) return
-
-    if (!storage_type)
-    {
-        const error_message = "Can not save.  No storage_type set"
-        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 }))
-        return
-    }
-
+    const { storage_type } = state.sync
 
     if (storage_type !== "solid")
     {
@@ -66,37 +52,16 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
         }
 
     }
-}
 
 
-
-let allow_ctrl_s_to_flush_save = true
-export function conditional_ctrl_s_save (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
-{
-    if (!load_state_from_storage) return
-
-    const ctrl_s_flush_save = is_ctrl_s_flush_save(state)
-    if (ctrl_s_flush_save && allow_ctrl_s_to_flush_save)
-    {
-        allow_ctrl_s_to_flush_save = false
-
-        if (getDefaultSession().info.isLoggedIn)
-        {
-            throttled_save_state.throttled({ dispatch, state })
-            throttled_save_state.flush()
-            dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
-        }
-    }
-
-    // Only reset it to true once `is_ctrl_s_flush_save` is no longer true
-    // which should occur as soon as the ctrl or s key are released
-    allow_ctrl_s_to_flush_save = !ctrl_s_flush_save
+    return throttled_save_state
 }
 
 
 
 const SAVE_THROTTLE_MS = 60000
 export const throttled_save_state = min_throttle(save_state, SAVE_THROTTLE_MS)
+export const last_attempted_state_to_save: { state: RootState | undefined } = { state: undefined }
 
 
 
@@ -105,22 +70,23 @@ interface SaveStateArgs
     dispatch: Dispatch
     state: RootState
 }
-function save_state ({ dispatch, state }: SaveStateArgs)
+function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | undefined>
 {
-    last_attempted_state_to_save = state
+    last_attempted_state_to_save.state = state
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
 
     const storage_type = state.sync.storage_type!
     const data = get_specialised_state_to_save(state)
 
-    return attempt_save({ storage_type, data, user_info: state.user_info, dispatch })
+    return retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
     .then(() =>
     {
-        // Move this here so that attempt_save can be used by swap_storage and not trigger front end
+        // Move this here so that retryable_save can be used by swap_storage and not trigger front end
         // code to prematurely think that application is ready
         dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED" }))
+        return state
     })
-    .catch(() => last_attempted_state_to_save = undefined)
+    .catch(() => last_attempted_state_to_save.state = undefined)
 }
 
 
@@ -136,7 +102,7 @@ interface AttemptSaveArgs
     attempt?: number
     is_backup?: boolean
 }
-export function attempt_save (args: AttemptSaveArgs)
+export function retryable_save (args: AttemptSaveArgs)
 {
     const {
         storage_type,
@@ -151,7 +117,7 @@ export function attempt_save (args: AttemptSaveArgs)
     attempt += 1
 
     const is_backup_str = is_backup ? " (backup)" : ""
-    console .log(`attempt_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
+    console .log(`retryable_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
 
 
     let promise_save_data: Promise<any>
@@ -224,59 +190,10 @@ export function attempt_save (args: AttemptSaveArgs)
                 {
                     console .log(`retrying save${is_backup_str} to ${storage_type}, attempt ${attempt}`)
                     // const potentially_newer_state = get_store().getState().user_info
-                    attempt_save({ storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup })
+                    retryable_save({ storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup })
                     .then(resolve).catch(reject)
                 }, 1000)
             })
         }
     })
 }
-
-
-
-function is_ctrl_s_flush_save (state: RootState)
-{
-    // Ctrl+s to save
-    return state.global_keys.keys_down.has("s") && state.global_keys.keys_down.has("Control")
-}
-
-
-// function get_state_to_save (state: RootState)
-// {
-//     const state_to_save = {
-//         statements: state.statements,
-//         patterns: state.patterns,
-//         objects: state.objects.map(convert_object_to_core),
-//     }
-
-//     return state_to_save
-// }
-
-
-// function convert_object_to_core (object: ObjectWithCache): CoreObject
-// {
-//     return {
-//         id: object.id,
-//         datetime_created: object.datetime_created,
-//         labels: object.labels,
-//         attributes: object.attributes.map(convert_attribute_to_core),
-//         pattern_id: object.pattern_id,
-//         external_ids: object.external_ids,
-//     }
-// }
-
-// function convert_attribute_to_core (attribute: ObjectAttribute): CoreObjectAttribute
-// {
-//     if (is_id_attribute(attribute))
-//     {
-//         return {
-//             pidx: attribute.pidx,
-//             id: attribute.id,
-//         }
-//     }
-
-//     return {
-//         pidx: attribute.pidx,
-//         value: attribute.value,
-//     }
-// }

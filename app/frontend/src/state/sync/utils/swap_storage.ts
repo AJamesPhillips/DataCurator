@@ -3,7 +3,7 @@ import type { Dispatch } from "redux"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import { get_state_data } from "./load_state"
-import { attempt_save } from "./save_state"
+import { retryable_save } from "./save_state"
 
 
 
@@ -36,7 +36,7 @@ export async function swap_storage_type (dispatch: Dispatch, state: RootState)
 
     console .log(`swap_storage_type got data, saving to: ${storage_type}`, data)
 
-    await attempt_save({ storage_type, data, user_info: state.user_info, dispatch })
+    await retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
 
     console .log(`swap_storage_type finished copying data`)
 

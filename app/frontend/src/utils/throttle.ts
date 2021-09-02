@@ -90,7 +90,6 @@ export function min_throttle <A extends any[], B extends any> (func: (...args: A
 
                 setTimeout(() =>
                 {
-                    will_flush = undefined
                     cancel()
 
                     if (pending_args.args)
