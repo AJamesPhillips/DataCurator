@@ -26,6 +26,13 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                ref={((el: HTMLDivElement) =>
+                {
+                    if (!el) return
+                    const textarea = el.getElementsByTagName("textarea")[0]
+                    if (!textarea) return
+                    on_render(textarea)
+                }) as any}
             />
             // @TODO: Check if ref is still needed and convert to Material syntax if so.
             // <textarea
