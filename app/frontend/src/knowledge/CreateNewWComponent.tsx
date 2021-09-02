@@ -41,7 +41,8 @@ function _CreateNewWComponent (props: Props)
     </div>
 
 
-    const exclude: Set<WComponentType> = new Set(["counterfactual"])
+    const exclude: Set<WComponentType> = new Set(["counterfactual", "state"])
+
     const types = wcomponent_types.filter(t => !exclude.has(t))
 
     return <div class="create_mew_wcomponent">
@@ -49,7 +50,7 @@ function _CreateNewWComponent (props: Props)
             Create new component
         </h3>
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
-            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>{type}</Button>)}
+            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>{type_to_text(type)}</Button>)}
         </ButtonGroup>
         {/* {types.map(type => <Button
             value={type}
@@ -67,4 +68,15 @@ export const CreateNewWComponent = connector(_CreateNewWComponent) as Functional
 function create_wcomponent_type (type: WComponentType, creation_context: CreationContextState)
 {
     create_wcomponent({ wcomponent: { type }, creation_context })
+}
+
+
+
+function type_to_text (type: WComponentType)
+{
+    if (type === "counterfactual") return "counterfactualv1"
+    if (type === "counterfactualv2") return "counterfactual"
+    if (type === "state") return "statev1"
+    if (type === "statev2") return "state"
+    return type.replaceAll("_", " ")
 }
