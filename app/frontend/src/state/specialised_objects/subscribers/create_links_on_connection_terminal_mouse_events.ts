@@ -38,10 +38,13 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
 
 
         const { attribute: start_type, direction: start_direction } = start_terminal_type
-        const { attribute: end_type, direction: end_direction } = end_terminal_type
+        let { attribute: end_type, direction: end_direction } = end_terminal_type
 
         // This prevents connecting "from" to a "from" or "to" to a "to"
-        if (start_direction === end_direction) return
+        if (start_direction === end_direction)
+        {
+            end_direction = end_direction === "from" ? "to" : "from"
+        }
         const start_is_effector = start_direction === "from"
 
 
