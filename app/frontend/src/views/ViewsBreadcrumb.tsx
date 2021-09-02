@@ -110,8 +110,10 @@ function _ViewsBreadcrumb (props: Props)
             {levels.map((level) => {
                 const selected_option = level.options.find(o => o.id === level.selected_id);
                 return (
+
                     <Select
-                        autoWidth={true}
+                        style={{ maxWidth: 175 }}
+                        autoWidth={false}
                         fullWidth={false}
                         label={<Typography noWrap={true}>View Type:</Typography>}
                         onChange={(event) => {
@@ -125,9 +127,14 @@ function _ViewsBreadcrumb (props: Props)
                         value={selected_option?.id}
                     >
                         {level.options.map(opt =>
-                            <MenuItem value={opt.id} selected={opt.id === props.view}>{opt.title}</MenuItem>
+                            <MenuItem value={opt.id} selected={opt.id === props.view}>
+                                <Typography noWrap={true}>
+                                    {opt.title}
+                                </Typography>
+                            </MenuItem>
                         )}
                     </Select>
+
                 )
             })}
         </Breadcrumbs>
