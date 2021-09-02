@@ -57,7 +57,7 @@ function _EditableCustomDateTime (props: Props)
         variant="outlined"
         disabled={not_editable}
         value={display_value}
-        type="date"
+        type="datetime-local"
         onChange={(e:any) => {
             const valid = is_value_valid(e.currentTarget.value)
             if (valid) e.currentTarget.classList.remove("invalid")
