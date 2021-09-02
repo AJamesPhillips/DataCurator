@@ -50,6 +50,7 @@ import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
+import { MaterialDateTime } from "../../form/MaterialDatetime"
 
 
 
@@ -338,13 +339,25 @@ function _WComponentForm (props: Props)
         </div>}
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
-
+        {console.log(wcomponent.custom_created_at)}
         <FormControl fullWidth={true}>
-            <EditableCustomDateTime
+
+            {/* <EditableCustomDateTime
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
-                on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
+                on_change={new_custom_created_at => {
+                    console.log(new_custom_created_at instanceof Date)
+                    console.log(new_custom_created_at)
+                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
+                }}
+            /> */}
+            <MaterialDateTime
+                title="Created at"
+                value={wcomponent.custom_created_at}
+                on_change={new_custom_created_at => {
+                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
+                }}
             />
         </FormControl>
 
