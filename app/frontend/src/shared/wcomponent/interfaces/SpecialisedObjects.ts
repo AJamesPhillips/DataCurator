@@ -233,7 +233,7 @@ const types_without_validity: Set<WComponentType> = new Set([
     "prioritisation",
     "counterfactual",
 ])
-export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
+export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & Partial<ValidityPredictions>)
 {
     return !types_without_validity.has(wcomponent.type)
 }

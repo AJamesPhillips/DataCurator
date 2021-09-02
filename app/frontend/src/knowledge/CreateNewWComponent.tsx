@@ -1,14 +1,17 @@
-import { ButtonGroup } from "@material-ui/core"
-import { Button } from "../sharedf/Button"
+import { Button, ButtonGroup } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { CreationContextState } from "../shared/creation_context/state"
 
+import "./CreateNewWComponent.css"
+import type { CreationContextState } from "../shared/creation_context/state"
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
+import { wcomponent_type_to_text } from "../shared/wcomponent/wcomponent_type_to_text"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import "./CreateNewWComponent.css"
 import { create_wcomponent } from "./create_wcomponent_type"
+
+
+
 
 const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
@@ -50,7 +53,9 @@ function _CreateNewWComponent (props: Props)
             Create new component
         </h3>
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
-            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>{type_to_text(type)}</Button>)}
+            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>
+                {wcomponent_type_to_text(type)}
+            </Button>)}
         </ButtonGroup>
         {/* {types.map(type => <Button
             value={type}
@@ -68,15 +73,4 @@ export const CreateNewWComponent = connector(_CreateNewWComponent) as Functional
 function create_wcomponent_type (type: WComponentType, creation_context: CreationContextState)
 {
     create_wcomponent({ wcomponent: { type }, creation_context })
-}
-
-
-
-function type_to_text (type: WComponentType)
-{
-    if (type === "counterfactual") return "counterfactualv1"
-    if (type === "counterfactualv2") return "counterfactual"
-    if (type === "state") return "statev1"
-    if (type === "statev2") return "state"
-    return type.replaceAll("_", " ")
 }
