@@ -98,9 +98,8 @@ function _MaterialDateTime (props: Props)
                     <TextField
                         error={!is_valid_date}
                         helperText="Manually type or paste a date or date/time. Many formats are accepted."
-                        InputProps={{
-                            endAdornment: (<CalendarTodayIcon />)
-                        }}
+                        // https://developer.mozilla.org/en-US/docs/Web/HTML/Date_and_time_formats
+                        InputProps={{ endAdornment: (<CalendarTodayIcon />) }}
                         onChange={on_popover_value_changed}
                         label="Date / DateTime"
                         size="small"
