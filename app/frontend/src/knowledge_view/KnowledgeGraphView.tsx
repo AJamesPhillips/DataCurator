@@ -15,7 +15,7 @@ const map_state = (state: RootState) =>
 {
     const { ready_for_reading: ready } = state.sync
 
-    const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
+    const { current_composed_knowledge_view } = state.derived
 
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
