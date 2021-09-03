@@ -33,7 +33,7 @@ export function periodically_backup_solid_data (store: Store<RootState>)
         const { storage_type, ready_for_writing, status } = state.sync
         if (storage_type !== "solid") return
         if (!ready_for_writing) return
-        if (status !== "FAILED") return // Although the app is ready to save do not try to if it failed before
+        if (status === "FAILED") return // Although the app is ready to save do not try to if it failed before
 
 
         if (!needs_save(state, last_attempted_state_to_backup)) return

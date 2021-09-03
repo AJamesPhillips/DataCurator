@@ -13,7 +13,7 @@ export function conditionally_save_state (load_state_from_storage: boolean, disp
 
     const { ready_for_writing, storage_type, status } = state.sync
     if (!ready_for_writing) return
-    if (status !== "FAILED") return // Although the app is ready to save do not try to if it failed before
+    if (status === "FAILED") return // Although the app is ready to save do not try to if it failed before
 
     if (!needs_save(state, last_attempted_state_to_save.state)) return
 
