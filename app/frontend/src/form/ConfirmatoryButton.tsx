@@ -48,6 +48,7 @@ export function ConfirmatoryButton (props: OwnProps)
             <ThemeProvider theme={DefaultTheme}>
                 <Button
                     color="primary"
+                    disabled={props.disabled}
                     fullWidth={!progressing}
                     is_hidden={!props.on_click}
                     onClick={e =>

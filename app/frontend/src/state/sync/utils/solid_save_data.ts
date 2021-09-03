@@ -2,7 +2,9 @@ import {
     addStringNoLocale,
     createSolidDataset,
     createThing,
+    deleteSolidDataset,
     getSolidDataset,
+    removeThing,
     saveSolidDatasetAt,
     setThing,
     SolidDataset,
@@ -27,9 +29,10 @@ export async function save_solid_data (user_info: UserInfoState, data: Specialis
     const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info, "save")
     if (!solid_pod_URL) return Promise.reject(promised_error)
 
+    const wcomponent_ids_to_delete = Array.from(data.wcomponent_ids_to_delete || [])
 
     return save_knowledge_views(solid_pod_URL, data.knowledge_views)
-    .then(() => save_wcomponents(solid_pod_URL, data.wcomponents))
+    .then(() => save_wcomponents(solid_pod_URL, data.wcomponents, wcomponent_ids_to_delete))
 }
 
 
@@ -38,24 +41,24 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 {
 
     const knowledge_views_url = get_knowledge_views_url(solid_pod_URL)
-    const result = await save_items(knowledge_views_url, knowledge_views, undefined) //solid_dataset_cache.knowledge_views_dataset)
+    const result = await save_items(knowledge_views_url, knowledge_views, [], undefined) //solid_dataset_cache.knowledge_views_dataset)
     solid_dataset_cache.knowledge_views_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
 
 
 
-async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[])
+async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[], wcomponent_ids_to_delete: string[])
 {
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
-    const result = await save_items(wcomponents_url, wcomponents, undefined) //, solid_dataset_cache.wcomponents_dataset)
+    const result = await save_items(wcomponents_url, wcomponents, wcomponent_ids_to_delete, undefined) //, solid_dataset_cache.wcomponents_dataset)
     solid_dataset_cache.wcomponents_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
 
 
 
-async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[], cached_items_dataset: SolidDataset | undefined)
+async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[], item_ids_to_remove: string[], cached_items_dataset: SolidDataset | undefined)
 {
     let items_dataset = createSolidDataset()
     let error: SyncError | undefined = undefined
@@ -68,7 +71,8 @@ async function save_items <I extends Base & { title: string }> (items_URL: strin
     {
         try
         {
-            items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
+            await deleteSolidDataset(items_URL, { fetch: solid_fetch })
+            // items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
         }
         catch (err)
         {
@@ -84,6 +88,13 @@ async function save_items <I extends Base & { title: string }> (items_URL: strin
         thing = addStringNoLocale(thing, V1.json, JSON.stringify(item))
         items_dataset = setThing(items_dataset, thing)
     })
+
+
+    // item_ids_to_remove.forEach(id =>
+    // {
+    //     const thing = createThing({ name: id })
+    //     items_dataset = removeThing(items_dataset, thing)
+    // })
 
 
     try {

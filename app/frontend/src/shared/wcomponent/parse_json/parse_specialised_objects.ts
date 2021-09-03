@@ -38,6 +38,7 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         perceptions,
         wcomponents,
         knowledge_views,
+        wcomponent_ids_to_delete: data?.wcomponent_ids_to_delete,
     }
 
     return specialised_objects

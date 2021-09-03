@@ -2,7 +2,7 @@ import type { AnyAction } from "redux"
 
 import type { RootState } from "../../State"
 import { get_items_by_id } from "../../../shared/utils/get_items"
-import { is_delete_all_specialised_objects, is_replace_all_specialised_objects } from "./actions"
+import { is_clear_from_mem_all_specialised_objects, is_replace_all_specialised_objects } from "./actions"
 
 
 
@@ -27,12 +27,13 @@ export const syncing_reducer = (state: RootState, action: AnyAction): RootState 
                 perceptions_by_id,
                 wcomponents_by_id,
                 knowledge_views_by_id,
+                wcomponent_ids_deleted: new Set(),
             }
         }
     }
 
 
-    if (is_delete_all_specialised_objects(action))
+    if (is_clear_from_mem_all_specialised_objects(action))
     {
         state = {
             ...state,
@@ -40,6 +41,7 @@ export const syncing_reducer = (state: RootState, action: AnyAction): RootState 
                 perceptions_by_id: {},
                 wcomponents_by_id: {},
                 knowledge_views_by_id: {},
+                wcomponent_ids_deleted: new Set(),
             }
         }
     }

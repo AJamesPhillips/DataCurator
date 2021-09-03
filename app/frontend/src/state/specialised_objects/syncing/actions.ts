@@ -26,17 +26,17 @@ export const is_replace_all_specialised_objects = (action: AnyAction): action is
 
 interface ActionDeleteAllSpecialisedObjects extends Action {}
 
-const delete_all_specialised_objects_type = "delete_all_specialised_objects"
+const clear_from_mem_all_specialised_objects_type = "clear_from_mem_all_specialised_objects"
 
-const delete_all_specialised_objects = (): ActionDeleteAllSpecialisedObjects =>
-    ({ type: delete_all_specialised_objects_type })
+const clear_from_mem_all_specialised_objects = (): ActionDeleteAllSpecialisedObjects =>
+    ({ type: clear_from_mem_all_specialised_objects_type })
 
-export const is_delete_all_specialised_objects = (action: AnyAction): action is ActionDeleteAllSpecialisedObjects => {
-    return action.type === delete_all_specialised_objects_type
+export const is_clear_from_mem_all_specialised_objects = (action: AnyAction): action is ActionDeleteAllSpecialisedObjects => {
+    return action.type === clear_from_mem_all_specialised_objects_type
 }
 
 
 export const syncing_actions = {
     replace_all_specialised_objects,
-    delete_all_specialised_objects,
+    clear_from_mem_all_specialised_objects,
 }

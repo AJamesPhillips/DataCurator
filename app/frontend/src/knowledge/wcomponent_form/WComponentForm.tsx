@@ -83,6 +83,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
+        storage_type_supports_delete: state.sync.storage_type !== "local_server",
     }
 }
 
@@ -375,12 +376,15 @@ function _WComponentForm (props: Props)
         </p>
 
 
-        <hr />
+        <br />
+        {/* <hr /> */}
+        <br />
 
 
         {editing && <div>
             <ConfirmatoryDeleteButton
-                button_text="Permanently delete"
+                disabled={!props.storage_type_supports_delete}
+                button_text={"Permanently delete" + (props.storage_type_supports_delete ? "" : " (currently unsupported for local server)")}
                 tooltip_text="Permanently remove from all knowledge views"
                 on_delete={() => props.delete_wcomponent({ wcomponent_id })}
             />
