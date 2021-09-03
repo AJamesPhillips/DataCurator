@@ -52,6 +52,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { current_composed_knowledge_view: composed_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
+    const is_editing = !state.display_options.consumption_formatting
 
     let validity_value: false | { display_certainty: number } = false
     let from_wc: WComponent | undefined = undefined
@@ -71,7 +72,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
 
             validity_value = calc_connection_wcomponent_should_display({
-                force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
+                is_editing, force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
 
             // TODO move all of this into a derived reducer
@@ -82,7 +83,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
 
             validity_value = calc_judgement_connection_wcomponent_should_display({
-                force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
+                is_editing, force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
         }
     }
@@ -99,7 +100,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_current_item: state.routing.item_id === own_props.id,
         is_selected,
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
-        is_editing: !state.display_options.consumption_formatting,
+        is_editing,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         shift_or_control_keys_are_down,
         focused_mode: state.display_options.focused_mode,

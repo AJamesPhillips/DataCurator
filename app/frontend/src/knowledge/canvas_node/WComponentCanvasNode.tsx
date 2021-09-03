@@ -135,7 +135,7 @@ function _WComponentCanvasNode (props: Props)
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
     const validity_value = calc_wcomponent_should_display({
-        force_displaying, is_selected, wcomponent, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
+        is_editing, force_displaying, is_selected, wcomponent, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
 
