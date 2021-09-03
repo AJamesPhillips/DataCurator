@@ -23,7 +23,7 @@ export async function swap_storage_type (dispatch: Dispatch, state: RootState)
     console .log(`swap_storage_type from ${copy_from_storage_type} to ${storage_type}`)
 
 
-    dispatch(ACTIONS.sync.update_sync_status({ status: "OVERWRITING" }))
+    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
 
     const data = await get_state_data(copy_from_storage_type, state)
 

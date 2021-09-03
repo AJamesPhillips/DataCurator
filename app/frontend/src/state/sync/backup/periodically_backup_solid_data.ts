@@ -30,8 +30,10 @@ export function periodically_backup_solid_data (store: Store<RootState>)
     {
         const state = store.getState()
 
-        const { storage_type } = state.sync
+        const { storage_type, ready_for_writing, status } = state.sync
         if (storage_type !== "solid") return
+        if (!ready_for_writing) return
+        if (status !== "FAILED") return // Although the app is ready to save do not try to if it failed before
 
 
         if (!needs_save(state, last_attempted_state_to_backup)) return
@@ -63,6 +65,13 @@ interface SaveStateArgs
 export function save_state ({ dispatch, state, user_info, original_solid_pod_URL }: SaveStateArgs)
 {
     last_attempted_state_to_backup = state
+
+    if (!state.sync.ready_for_writing)
+    {
+        console.error(`State machine violation.  (Backing up) Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
+        return Promise.reject()
+    }
+
     dispatch(ACTIONS.backup.update_backup_status({ status: "SAVING" }))
 
     const storage_type = state.sync.storage_type!

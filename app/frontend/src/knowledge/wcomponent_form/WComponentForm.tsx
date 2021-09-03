@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
