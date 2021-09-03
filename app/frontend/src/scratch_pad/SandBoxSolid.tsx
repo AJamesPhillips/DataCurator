@@ -56,6 +56,7 @@ async function main()
         knowledge_views: knowledge_views.map(j => JSON.parse(j)),
         wcomponents: wcomponents.map(j => JSON.parse(j)),
         perceptions: [],
+        wcomponent_ids_to_delete: new Set(),
     })
     const items = await load_solid_data(state)
     console.log("got items", items)

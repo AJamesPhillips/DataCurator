@@ -359,7 +359,7 @@ export interface SpecialisedObjectsFromToServer
     perceptions: Perception[]
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
-    wcomponent_ids_to_delete?: Set<string>
+    wcomponent_ids_to_delete: Set<string>
 }
 
 // Used on the server
