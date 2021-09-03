@@ -1,12 +1,11 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { ButtonGroup, IconButton, ThemeProvider } from "@material-ui/core";
+import { ButtonGroup, IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
-import { ButtonToggleTheme } from "../ui_themes/material_default";
+import { invertDisabledAppearance } from "src/ui_themes/invert_disabled";
 
 const map_state = (state: RootState) =>
 {
@@ -24,28 +23,29 @@ type Props = ConnectedProps<typeof connector>
 
 function _ViewOptions (props: Props)
 {
+    const classes = invertDisabledAppearance();
     return (
-        <ThemeProvider theme={ButtonToggleTheme}>
-            <ButtonGroup
-                size="small"
-                value={props.presenting ? "presenting" : "editing"}
+        <ButtonGroup
+            size="small"
+            value={props.presenting ? "presenting" : "editing"}
+        >
+            <IconButton
+                className={classes.inverse_disabled}
+                disabled={(!props.presenting) ? true : false }
+                onClick={props.toggle_consumption_formatting}
+                value="editing"
             >
-                <IconButton
-                    disabled={(!props.presenting) ? true : false }
-                    onClick={props.toggle_consumption_formatting}
-                    value="editing"
-                >
-                    <EditIcon color="inherit" />
-                </IconButton>
-                <IconButton
-                    disabled={(props.presenting) ? true : false }
-                    onClick={props.toggle_consumption_formatting}
-                    value="presenting"
-                >
-                    <PresentToAllIcon />
-                </IconButton>
-            </ButtonGroup>
-        </ThemeProvider>
+                <EditIcon color="inherit" />
+            </IconButton>
+            <IconButton
+                className={classes.inverse_disabled}
+                disabled={(props.presenting) ? true : false }
+                onClick={props.toggle_consumption_formatting}
+                value="presenting"
+            >
+                <PresentToAllIcon />
+            </IconButton>
+        </ButtonGroup>
     )
 }
 
