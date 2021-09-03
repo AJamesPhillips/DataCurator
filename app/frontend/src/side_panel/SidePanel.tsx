@@ -9,6 +9,8 @@ import { WComponentsSidePanel } from "../knowledge/WComponentsSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
 import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
 import { SearchSidePanel } from "../search/SearchSidePanel"
+import { Button } from "../sharedf/Button"
+import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { Objects } from "./Objects"
 import { Patterns } from "./Patterns"
@@ -26,10 +28,14 @@ const map_state = (state: RootState) => ({
 })
 
 
-const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
+const map_dispatch = {
+    toggle_consumption_formatting: ACTIONS.display.toggle_consumption_formatting,
+}
 
-type Props = PropsFromRedux & OwnProps
+
+const connector = connect(map_state, map_dispatch)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
 
 
 function _SidePanel (props: Props)
@@ -38,7 +44,14 @@ function _SidePanel (props: Props)
     {
         if (props.route === "wcomponents")
         {
-            if (!props.item_id) return <div>TODO: can hide this</div>
+            if (!props.item_id)
+            {
+                return <Button
+                    onClick={() => props.toggle_consumption_formatting({})}
+                >
+                    Swap to editing
+                </Button>
+            }
         }
     }
 
