@@ -95,23 +95,30 @@ export function state_routes (server: Server)
         handler: async function (request, h) {
 
             server.log(LOG_TAGS.INFO, "Got specialised state to save")
-
-            const raw_data = JSON.parse(request.payload.toString()) as SpecialisedObjectsFromToServer
-
-            save_latest_specialised_state(raw_data, server)
-            if (config.output_markdown_directory)
+            try
             {
-                const to_save = parse_specialised_objects_fromto_server(raw_data)
-                output_latest_specialised_state_as_markdown({
-                    data: to_save,
-                    output_markdown_directory: config.output_markdown_directory,
-                    server,
-                })
+                const raw_data = JSON.parse(request.payload.toString()) as SpecialisedObjectsFromToServer
+
+                save_latest_specialised_state(raw_data, server)
+                if (config.output_markdown_directory)
+                {
+                    const to_save = parse_specialised_objects_fromto_server(raw_data)
+                    output_latest_specialised_state_as_markdown({
+                        data: to_save,
+                        output_markdown_directory: config.output_markdown_directory,
+                        server,
+                    })
+                }
+
+                server.log(LOG_TAGS.INFO, "Saved state")
+            }
+            catch (err)
+            {
+                server.log(LOG_TAGS.ERROR, `Got error saving specialised state, ${err}`)
+                throw err
             }
 
-            server.log(LOG_TAGS.INFO, "Saved state")
             const response = h.response("{}")
-
             response.header("Access-Control-Allow-Origin", "*")
 
             return response

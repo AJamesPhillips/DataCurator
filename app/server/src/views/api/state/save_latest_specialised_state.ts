@@ -16,6 +16,10 @@ export function save_latest_specialised_state (to_save: SpecialisedObjectsFromTo
     specialised_objects_from_to_server_expected_keys.forEach(data_key =>
     {
         if (!to_save[data_key]) server.log(LOG_TAGS.EXCEPTION, `Missing key "${data_key}" to save`)
+        else if (data_key === 'wcomponent_ids_to_delete')
+        {
+            // TODO delete wcomponents by id
+        }
         else
         {
             const files_data = to_save[data_key]

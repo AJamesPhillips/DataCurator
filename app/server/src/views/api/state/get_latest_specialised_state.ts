@@ -13,6 +13,7 @@ export function get_latest_specialised_state (): SpecialisedObjectsFromToServer
         wcomponents,
         perceptions,
         knowledge_views,
+        wcomponent_ids_to_delete: [],
     }
 }
 
