@@ -135,7 +135,7 @@ function _WComponentForm (props: Props)
 
     return <Box  className={`editable-${wcomponent_id}`}>
 
-        <FormControl fullWidth={true} margin="normal">
+        <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
