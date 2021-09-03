@@ -22,6 +22,8 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
 
     if (data)
     {
+        data.wcomponent_ids_to_delete = data.wcomponent_ids_to_delete || new Set()
+
         const data_keys = Object.keys(data)
 
         const extra = data_keys.filter(k => !expected_specialised_object_keys.has(k as any))
@@ -35,7 +37,7 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
         knowledge_views = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
 
-        wcomponent_ids_to_delete = new Set(data.wcomponent_ids_to_delete || [])
+        wcomponent_ids_to_delete = new Set(data.wcomponent_ids_to_delete)
     }
 
     const specialised_objects: SpecialisedObjectsFromToServer = {
