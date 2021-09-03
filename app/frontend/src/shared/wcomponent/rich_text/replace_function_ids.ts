@@ -3,9 +3,12 @@ import { format_wcomponent_url, format_wcomponent_link } from "./templates"
 
 
 
-export function replace_function_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean, root_url: string, get_title: (wcomponent: WComponent) => string)
+export function replace_function_ids_in_text (text: string, wcomponents_by_id: WComponentsById, depth_limit: number, current_depth: number, render_links: boolean, root_url: string, get_title: (wcomponent: WComponent) => string)
 {
     const functional_ids = get_functional_ids_from_text(text)
+    if (functional_ids.length === 0) return text
+
+
     functional_ids.forEach(({ id, funktion }) =>
     {
         const referenced_wcomponent = wcomponents_by_id[id]
@@ -28,6 +31,13 @@ export function replace_function_ids_in_text (text: string, wcomponents_by_id: W
         const replacer = new RegExp(`@@${id}\.${funktion}`, "g")
         text = text.replace(replacer, replacement)
     })
+
+
+    if (current_depth < depth_limit)
+    {
+        text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth + 1, render_links, root_url, get_title)
+    }
+
 
     return text
 }
