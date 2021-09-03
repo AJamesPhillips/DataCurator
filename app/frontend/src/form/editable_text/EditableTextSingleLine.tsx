@@ -22,6 +22,13 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                ref={((el: HTMLDivElement) =>
+                {
+                    if (!el) return
+                    const input_el = el.getElementsByTagName("input")[0]
+                    if (!input_el) return
+                    on_render(input_el)
+                }) as any}
             />
             // @TODO: Check if ref is still needed and convert to Material syntax if so.
             // <input

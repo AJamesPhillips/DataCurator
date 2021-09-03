@@ -227,13 +227,14 @@ export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is 
 
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
-    return (wcomponent as ValidityPredictions).validity !== undefined
+    const { validity } = wcomponent as ValidityPredictions
+    return validity !== undefined && validity.length > 0
 }
 const types_without_validity: Set<WComponentType> = new Set([
     "prioritisation",
     "counterfactual",
 ])
-export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
+export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & Partial<ValidityPredictions>)
 {
     return !types_without_validity.has(wcomponent.type)
 }
@@ -358,6 +359,7 @@ export interface SpecialisedObjectsFromToServer
     perceptions: Perception[]
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
+    wcomponent_ids_to_delete: Set<string>
 }
 
 // Used on the server
@@ -366,6 +368,7 @@ const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjec
     perceptions: true,
     wcomponents: true,
     knowledge_views: true,
+    wcomponent_ids_to_delete: true
 }
 // Used on the server
 export const specialised_objects_from_to_server_expected_keys: (SpecialisedObjectsFromToServerKeys)[] = Object.keys(_specialised_objects_from_to_server_expected_keys) as any

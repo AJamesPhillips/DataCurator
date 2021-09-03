@@ -12,11 +12,13 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         "perceptions",
         "wcomponents",
         "knowledge_views",
+        "wcomponent_ids_to_delete",
     ])
 
     let perceptions: Perception[] = []
     let wcomponents: WComponent[] = []
     let knowledge_views: KnowledgeView[] = []
+    let wcomponent_ids_to_delete = new Set<string>()
 
     if (data)
     {
@@ -32,12 +34,15 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         wcomponents = data.wcomponents.map(parse_wcomponent)
         const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
         knowledge_views = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
+
+        wcomponent_ids_to_delete = new Set(data.wcomponent_ids_to_delete || [])
     }
 
     const specialised_objects: SpecialisedObjectsFromToServer = {
         perceptions,
         wcomponents,
         knowledge_views,
+        wcomponent_ids_to_delete,
     }
 
     return specialised_objects

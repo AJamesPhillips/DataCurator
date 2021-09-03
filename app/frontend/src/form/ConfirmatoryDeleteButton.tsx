@@ -9,6 +9,7 @@ import { ConfirmatoryButton } from "./ConfirmatoryButton"
 
 interface OwnProps
 {
+    disabled?: boolean
     on_delete?: () => void,
     button_text?: string
     tooltip_text?: string
@@ -28,6 +29,7 @@ function _ConfirmatoryDeleteButton (props: Props)
     if (props.consumption_formatting) return null
 
     return <ConfirmatoryButton
+        disabled={props.disabled}
         on_click={props.on_delete}
         button_text={props.button_text ?? "Delete"}
         button_icon={<DeleteIcon />}

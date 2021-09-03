@@ -33,7 +33,7 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
-
+/*
 function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, props: Props)
 {
     const select_el = event.currentTarget
@@ -42,7 +42,7 @@ function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, pr
     const view = select_el.value as ViewType
     props.change_route({ args: { view } })
 }
-
+*/
 
 
 function _ViewsBreadcrumb (props: Props)
@@ -87,12 +87,20 @@ function _ViewsBreadcrumb (props: Props)
             <Select
                 label={<Typography noWrap={true}>View Type:</Typography>}
                 name="select_view"
-                onChange={e => navigate_view(e, props) }
+                // onChange={e => navigate_view(e, props) }
                 value={props.view}
             >
-                {view_options.map(opt =>
-                    <MenuItem value={opt.id} selected={opt.id === props.view}>{opt.title}</MenuItem>
-                )}
+                {view_options.map(opt => <MenuItem
+                    value={opt.id}
+                    selected={opt.id === props.view}
+                    onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+                    {
+                        e.stopImmediatePropagation()
+                        props.change_route({ args: { view: opt.id } })
+                    }}
+                >
+                    {opt.title}
+                </MenuItem>)}
             </Select>
         </Box>
         {levels.map(level => <Box>
@@ -116,7 +124,7 @@ export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponen
 
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
-    { id: "priorities", title: "Priorities" },
+    // { id: "priorities", title: "Priorities" }, // disabled for now until view is rebuilt
     { id: "priorities_list", title: "Priorities list" },
 ]
 

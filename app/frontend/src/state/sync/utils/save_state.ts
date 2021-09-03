@@ -73,6 +73,13 @@ interface SaveStateArgs
 function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | undefined>
 {
     last_attempted_state_to_save.state = state
+
+    if (!state.sync.ready_for_writing)
+    {
+        console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
+        return Promise.reject()
+    }
+
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
     dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
 

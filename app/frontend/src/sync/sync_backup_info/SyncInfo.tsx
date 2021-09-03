@@ -38,8 +38,8 @@ function _SyncInfo (props: Props)
     const failed = status === "FAILED"
     const loading = status === "LOADING"
     const saving = status === "SAVING"
-    const overwriting = status === "OVERWRITING"
-    const sending_or_recieving = loading || saving || overwriting
+    // const overwriting = status === "OVERWRITING"
+    const sending_or_recieving = loading || saving //|| overwriting
 
     const next_save = next_save_ms && next_save_ms - performance.now()
     const will_save_in_future = next_save !== undefined && next_save >= 0

@@ -25,9 +25,9 @@ export async function change_storage_type ({ new_storage_type, copy_from }: Chan
     // Set to LOADING so that the sync.ready is false and the save function is not triggered
     // mid way through `optionally_copy_then_load_data` that would then delete all the data
     // present in the new_storage_type location, because the state has been changed by
-    // `delete_all_specialised_objects`
+    // `clear_from_mem_all_specialised_objects`
     store.dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
-    store.dispatch(ACTIONS.specialised_object.delete_all_specialised_objects())
+    store.dispatch(ACTIONS.specialised_object.clear_from_mem_all_specialised_objects())
     store.dispatch(ACTIONS.sync.update_storage_type({ storage_type: new_storage_type, copy_from }))
 
     if (new_storage_type === "solid" && !getDefaultSession().info.isLoggedIn)

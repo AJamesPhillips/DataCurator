@@ -1,14 +1,17 @@
-import { ButtonGroup } from "@material-ui/core"
-import { Button } from "../sharedf/Button"
+import { Button, ButtonGroup } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { CreationContextState } from "../shared/creation_context/state"
 
+import "./CreateNewWComponent.css"
+import type { CreationContextState } from "../shared/creation_context/state"
 import { WComponentType, wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
+import { wcomponent_type_to_text } from "../shared/wcomponent/wcomponent_type_to_text"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import "./CreateNewWComponent.css"
 import { create_wcomponent } from "./create_wcomponent_type"
+
+
+
 
 const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
@@ -41,7 +44,8 @@ function _CreateNewWComponent (props: Props)
     </div>
 
 
-    const exclude: Set<WComponentType> = new Set(["counterfactual"])
+    const exclude: Set<WComponentType> = new Set(["counterfactual", "state"])
+
     const types = wcomponent_types.filter(t => !exclude.has(t))
 
     return <div class="create_mew_wcomponent">
@@ -49,7 +53,9 @@ function _CreateNewWComponent (props: Props)
             Create new component
         </h3>
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
-            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>{type}</Button>)}
+            {types.map(type => <Button onClick={() => create_wcomponent_type(type, creation_context)}>
+                {wcomponent_type_to_text(type)}
+            </Button>)}
         </ButtonGroup>
         {/* {types.map(type => <Button
             value={type}

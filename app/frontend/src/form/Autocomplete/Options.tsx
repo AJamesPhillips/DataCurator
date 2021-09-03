@@ -24,7 +24,7 @@ export function Options (props: OwnProps)
 
     if (options_to_display.length === 0 || !editing_options) return null
 
-    return <div className="options_outer">
+    return <div className="options_outer" style={{ marginTop: 15 }}>
         <div className="options_inner">
             {options_to_display.map((option, index) => <div
                 className={"option_wrapper " + (is_option_wrapper_highlighted(option, index) ? " highlighted " : "")}

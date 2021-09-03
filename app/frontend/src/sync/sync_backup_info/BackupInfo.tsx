@@ -17,6 +17,7 @@ const map_state = (state: RootState) =>
 {
     return {
         status: state.backup.status,
+        not_solid: state.sync.storage_type !== "solid",
     }
 }
 
@@ -30,7 +31,10 @@ function _BackupInfo (props: Props)
     clearTimeout(timeout.current)
     const [allow_showing, set_allow_showing] = useState<boolean | "fade">(true)
 
-    const { status } = props
+    const { status, not_solid } = props
+
+    if (!not_solid) return null
+
     const failed = status === "FAILED"
     const saved = status === "SAVED"
     const saving = status === "SAVING"
@@ -45,7 +49,7 @@ function _BackupInfo (props: Props)
     {
         set_allow_showing(true)
     }
-    // (failed || status) && (
+
 
     return (
         (failed || status) && <Tooltip title={status_str}>

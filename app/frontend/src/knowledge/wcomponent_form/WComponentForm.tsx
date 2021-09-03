@@ -1,30 +1,40 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { useEffect, useState } from "preact/hooks"
+import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
-import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { EditableCheckbox } from "../../form/EditableCheckbox"
+// import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
-import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
+import { LabelsEditor } from "../../labels/LabelsEditor"
+import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
 import { get_updated_wcomponent } from "../../shared/wcomponent/get_updated_wcomponent"
 import { get_wcomponent_state_UI_value } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
+import { UIValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_plain_connection,
-    wcomponent_is_statev1,
-    wcomponent_is_judgement_or_objective,
-    wcomponent_is_statev2,
-    wcomponent_has_existence_predictions,
-    wcomponent_is_event,
-    wcomponent_is_causal_link,
-    wcomponent_should_have_state_VAP_sets,
-    wcomponent_is_goal,
     wcomponent_can_have_validity_predictions,
-    wcomponent_is_prioritisation,
+    wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_statev2,
     wcomponent_is_counterfactual_v2,
+    wcomponent_is_causal_link,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_event,
+    wcomponent_is_prioritisation,
+    wcomponent_has_existence_predictions,
+    wcomponent_is_statev1,
+    wcomponent_is_goal,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
+import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
+import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
@@ -34,23 +44,15 @@ import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSet
 import { PredictionList } from "../predictions/PredictionList"
 import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
-import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
-import { JudgementFormFields } from "./JudgementFormFields"
-import { useEffect, useRef } from "preact/hooks"
-import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
-import { UIValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { GoalFormFields } from "./GoalFormFields"
-import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
-import { get_contextless_new_wcomponent_object } from "../../shared/wcomponent/get_new_wcomponent_object"
-import { LabelsEditor } from "../../labels/LabelsEditor"
-import { ColorPicker } from "../../sharedf/ColorPicker"
-import { EditableCheckbox } from "../../form/EditableCheckbox"
-import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
+import { JudgementFormFields } from "./JudgementFormFields"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
-import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
 import { MaterialDateTime } from "../../form/MaterialDatetime"
+import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
+import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
+import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
+import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 
 
 
@@ -82,6 +84,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
+        storage_type_supports_delete: state.sync.storage_type !== "local_server",
     }
 }
 
@@ -98,17 +101,34 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentForm (props: Props)
 {
-    const previous_id = useRef<undefined | string>(undefined)
+    const [previous_id, set_previous_id] = useState<undefined | string>(undefined)
+    const [focus_title, set_focus_title] = useState(true)
+
+    const wcomponent_id = props.wcomponent.id
+
+    useEffect(() =>
+    {
+        set_previous_id(wcomponent_id)
+        set_focus_title(true)
+    }, [wcomponent_id])
 
     if (!props.ready) return <div>Loading...</div>
 
+
     const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent,
         editing, created_at_ms, sim_ms, creation_context } = props
-    const wcomponent_id = wcomponent.id
     const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
 
 
-    useEffect(() => { previous_id.current = wcomponent_id }, [wcomponent_id])
+    if (previous_id !== wcomponent_id && previous_id !== undefined)
+    {
+        // Force the form to unmount all the components and trigger any conditional_on_blur handlers to fire.
+        // TODO research if better way of clearing old forms.  We're using a controlled component but hooking
+        // into the onBlur instead of onChange handler otherwise performance of the app is heavily degraded
+        return null
+    }
+
+    if (focus_title) set_focus_title(false) // we only want to focus the title once per new wcomponent form rendering
 
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
@@ -133,12 +153,12 @@ function _WComponentForm (props: Props)
 
     return <Box  className={`editable-${wcomponent_id}`}>
 
-        <FormControl fullWidth={true} margin="normal">
+        <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
-                force_focus={previous_id.current !== wcomponent_id}
+                force_focus={focus_title}
             />
         </FormControl>
 
@@ -384,14 +404,19 @@ function _WComponentForm (props: Props)
         </p>
 
 
-        {/*
-        <hr />
+        <br />
+        {/* <hr /> */}
+        <br />
 
-        <ConfirmatoryDeleteButton
-            // on_delete={() => props.delete_wcomponent({ wcomponent_id })}
-            on_delete={() => alert("Deleting disabled: need to implement tombstones.  Either remove node from this view or use for something useful.")}
-        />
-        <div style={{ float: "right" }}>(Disabled)&nbsp;</div> */}
+
+        {editing && <div>
+            <ConfirmatoryDeleteButton
+                disabled={!props.storage_type_supports_delete}
+                button_text={"Permanently delete" + (props.storage_type_supports_delete ? "" : " (currently unsupported for local server)")}
+                tooltip_text="Permanently remove from all knowledge views"
+                on_delete={() => props.delete_wcomponent({ wcomponent_id })}
+            />
+        </div>}
 
         <br />
     </Box>
@@ -400,5 +425,5 @@ function _WComponentForm (props: Props)
 export const WComponentForm = connector(_WComponentForm) as FunctionComponent<OwnProps>
 
 
-const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: type }))
+const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
 const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map(type => ({ id: type, title: type }))

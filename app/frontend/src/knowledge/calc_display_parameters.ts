@@ -10,6 +10,7 @@ import {
     WComponent,
     WComponentConnection,
     wcomponent_has_event_at,
+    wcomponent_is_judgement_or_objective,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms, get_tense_of_item } from "../shared/wcomponent/utils_datetime"
 import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
@@ -18,6 +19,7 @@ import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/d
 
 interface CalcWcomponentShouldDisplayArgs
 {
+    is_editing: boolean
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponent
@@ -28,7 +30,7 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters } = args
+    const { is_editing, force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters } = args
 
 
     if (force_displaying || is_selected) return { display_certainty: 1 }
@@ -40,6 +42,10 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     // Do not show nodes if they do no exist yet
     const is_not_created = wcomponent_is_not_yet_created(wcomponent, args.created_at_ms)
     if (is_not_created) return false
+
+
+    // Do not show judgements / objectives unless in editing or they are selected
+    if (!is_editing && !is_selected && wcomponent_is_judgement_or_objective(wcomponent)) return false
 
 
     const validity_value = get_wcomponent_validity_value(args)
@@ -115,6 +121,7 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
 
 interface CalculateConnectionCertaintyArgs
 {
+    is_editing: boolean
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentConnection
@@ -157,6 +164,7 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 
 interface CalculateJudgementCertaintyArgs
 {
+    is_editing: boolean
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentJudgement

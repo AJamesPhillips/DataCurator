@@ -13,6 +13,7 @@ import {
     WComponent,
     wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state,
+    wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
@@ -40,6 +41,7 @@ import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_store } from "../../state/store"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
+import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 
 
 
@@ -133,7 +135,7 @@ function _WComponentCanvasNode (props: Props)
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
     const validity_value = calc_wcomponent_should_display({
-        force_displaying, is_selected, wcomponent, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
+        is_editing, force_displaying, is_selected, wcomponent, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
 
@@ -204,7 +206,7 @@ function _WComponentCanvasNode (props: Props)
     const color = get_wcomponent_color(wcomponent)
 
 
-    const show_validity_value = wcomponent_can_have_validity_predictions(wcomponent) && (is_editing || (is_current_item && wcomponent.validity.length > 0))
+    const show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
     const show_state_value = (is_editing && wcomponent_should_have_state(wcomponent))
         || wcomponent_has_legitimate_non_empty_state(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
@@ -232,7 +234,7 @@ function _WComponentCanvasNode (props: Props)
             </div>
 
             {show_validity_value && <div className="node_validity_container">
-                <div className="description_label">validity</div>
+                {is_editing && <div className="description_label">validity</div>}
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
@@ -250,7 +252,7 @@ function _WComponentCanvasNode (props: Props)
             </Box>}
 
             <div className="description_label">
-                {(is_editing || wcomponent.type === "actor") && wcomponent.type}
+                {(is_editing || wcomponent.type === "actor") && wcomponent_type_to_text(wcomponent.type)}
             </div>
 
             <LabelsListV2 label_ids={wcomponent.label_ids} />

@@ -3,7 +3,7 @@
 import type { TemporalUncertainty } from "../shared/uncertainty/uncertainty"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import { test } from "../shared/utils/test"
-import type { TimeResolution } from "../shared/utils/datetime"
+import { TimeResolution, uncertain_datetime_is_eternal } from "../shared/utils/datetime"
 
 
 
@@ -31,13 +31,6 @@ export function date_to_string (args: DateToStringArgs)
     const { date, time_resolution, trim_midnight } = args
     const as_string = (date && valid_date(date)) ? date2str_auto({ date, time_resolution, trim_midnight }) : ""
     return as_string
-}
-
-
-
-export function uncertain_datetime_is_eternal (datetime: TemporalUncertainty)
-{
-    return (datetime.min || datetime.value || datetime.max) === undefined
 }
 
 

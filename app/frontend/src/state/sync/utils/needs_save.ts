@@ -21,6 +21,7 @@ export function get_specialised_state_to_save (state: RootState)
         perceptions: state.derived.perceptions,
         wcomponents: state.derived.wcomponents,
         knowledge_views: state.derived.knowledge_views,
+        wcomponent_ids_to_delete: state.specialised_objects.wcomponent_ids_deleted,
     }
 
     return specialised_state
