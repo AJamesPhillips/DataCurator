@@ -33,7 +33,9 @@ export function output_latest_specialised_state_as_markdown(args: OutputLatestSp
         if (!data[data_key]) server.log(LOG_TAGS.EXCEPTION, `Missing key "${data_key}" to save`)
         else
         {
+            if (data_key === 'wcomponent_ids_to_delete') return
             const files_data = data[data_key]
+
             const directory_path = output_markdown_directory + data_key + "/"
             ensure_directory(directory_path)
             write_directory_data(directory_path, files_data, data_key)

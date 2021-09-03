@@ -27,11 +27,13 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
     const wcomponents: WComponent[] = data.wcomponents.map(parse_wcomponent)
     const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
     const knowledge_views: KnowledgeView[] = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
+    const wcomponent_ids_to_delete = data.wcomponent_ids_to_delete
 
     const specialised_objects: SpecialisedObjectsFromToServer = {
         perceptions,
         wcomponents,
         knowledge_views,
+        wcomponent_ids_to_delete,
     }
 
     return specialised_objects
