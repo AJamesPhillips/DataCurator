@@ -94,10 +94,13 @@ async function setup_server ()
 
         if ((request.response as Boom.BoomError).isBoom) {
             const err_output = (request.response as Boom.BoomError).output as Boom.Output
-            const errName = err_output.payload.error
+            const err_name = err_output.payload.error
             const statusCode = err_output.payload.statusCode
+            const error_message = err_output.payload.message
 
-            return h.response(`Error encounted`).code(statusCode)
+            base_server.log(LOG_TAGS.ERROR, `Got error: ${statusCode} ${err_name} ${error_message}`)
+
+            return h.response(`Error encounted`).header("Access-Control-Allow-Origin", "*").code(statusCode)
         }
 
         return h.continue
