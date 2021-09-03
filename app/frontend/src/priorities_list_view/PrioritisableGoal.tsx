@@ -46,9 +46,8 @@ function _PrioritisableGoal (props: Props)
 
         {selected_prioritisation && (editing || !!effort) && <div>
             <br />
-            <span class="description_label">Effort</span> &nbsp;
             <EditableNumber
-                placeholder="..."
+                placeholder="Effort"
                 allow_undefined={true}
                 value={effort}
                 conditional_on_blur={new_effort =>

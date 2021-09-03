@@ -124,7 +124,7 @@ export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponen
 
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
-    { id: "priorities", title: "Priorities" },
+    // { id: "priorities", title: "Priorities" }, // disabled for now until view is rebuilt
     { id: "priorities_list", title: "Priorities list" },
 ]
 
