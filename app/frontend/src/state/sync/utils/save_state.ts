@@ -145,6 +145,17 @@ export function retryable_save (args: AttemptSaveArgs)
             method: "post",
             body: specialised_state_str,
         })
+        .then((res) =>
+        {
+            if (res.ok) return ""
+
+            return res.text()
+            .then(text =>
+            {
+                const error: SyncError = { type: "general", message: text }
+                return Promise.reject(error)
+            })
+        })
     }
     else if (storage_type === "solid")
     {
