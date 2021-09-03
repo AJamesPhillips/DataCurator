@@ -8,6 +8,7 @@ import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
+import { invertDisabledAppearance } from "../../ui_themes/invert_disabled"
 
 
 interface OwnProps
@@ -38,8 +39,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ContentControls (props: Props)
 {
+    const classes = invertDisabledAppearance();
     const { created_events, sim_events, move_to_component_id } = props
-
     const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         const display_by_simulated_time = JSON.parse(e.currentTarget.value);
         props.set_display_by_simulated_time({ display_by_simulated_time });
@@ -68,6 +69,7 @@ function _ContentControls (props: Props)
                             value={true}
                             onClick={set_knowledge_view_type}
                             aria-label="Display by simulated time"
+                            className={classes.inverse_disabled}
                             disabled={props.display_by_simulated_time}
                         >
                             Time
@@ -76,6 +78,7 @@ function _ContentControls (props: Props)
                             value={false}
                             onClick={set_knowledge_view_type}
                             aria-label="Display by relationships"
+                            className={classes.inverse_disabled}
                             disabled={!props.display_by_simulated_time}
                         >
                             Relationships

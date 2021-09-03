@@ -1,11 +1,11 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { ButtonGroup, IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
+import { invertDisabledAppearance } from "../ui_themes/invert_disabled";
 
 const map_state = (state: RootState) =>
 {
@@ -20,15 +20,17 @@ const map_dispatch = {
 }
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
+
 function _ViewOptions (props: Props)
 {
+    const classes = invertDisabledAppearance();
     return (
-        // @TODO: This might be better as a switch component
         <ButtonGroup
             size="small"
             value={props.presenting ? "presenting" : "editing"}
         >
             <IconButton
+                className={classes.inverse_disabled}
                 disabled={(!props.presenting) ? true : false }
                 onClick={props.toggle_consumption_formatting}
                 value="editing"
@@ -36,6 +38,7 @@ function _ViewOptions (props: Props)
                 <EditIcon color="inherit" />
             </IconButton>
             <IconButton
+                className={`${classes.inverse_disabled} HI`}
                 disabled={(props.presenting) ? true : false }
                 onClick={props.toggle_consumption_formatting}
                 value="presenting"

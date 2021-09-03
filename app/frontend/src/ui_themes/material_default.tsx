@@ -12,8 +12,8 @@ const _default_theme_options: ThemeOptions = {
     },
     palette: {
         type: 'light',
-	primary: {
-            main: '#e0e0e0',
+	    primary: {
+            main: '#cecece',
         },
         secondary: {
             main: '#b3e5fc',
