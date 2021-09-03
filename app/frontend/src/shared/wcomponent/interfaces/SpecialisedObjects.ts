@@ -227,7 +227,8 @@ export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is 
 
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
-    return (wcomponent as ValidityPredictions).validity !== undefined
+    const { validity } = wcomponent as ValidityPredictions
+    return validity !== undefined && validity.length > 0
 }
 const types_without_validity: Set<WComponentType> = new Set([
     "prioritisation",
