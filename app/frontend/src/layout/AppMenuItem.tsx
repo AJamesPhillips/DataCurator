@@ -47,7 +47,7 @@ function _AppMenuItem (props: Props)
         {
             e.stopImmediatePropagation()
             // TODO remove this function once the <Button /> in <Link /> takes up all the horizontal space
-            props.change_route({ route: props.id })
+            props.change_route({ route: props.id, sub_route: null, item_id: null })
             props.on_pointer_down()
         }}
     >
