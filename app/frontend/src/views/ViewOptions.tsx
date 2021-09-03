@@ -3,9 +3,10 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { ButtonGroup, IconButton } from "@material-ui/core";
+import { ButtonGroup, IconButton, ThemeProvider } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
+import { ButtonToggleTheme } from "../ui_themes/material_default";
 
 const map_state = (state: RootState) =>
 {
@@ -20,29 +21,31 @@ const map_dispatch = {
 }
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
+
 function _ViewOptions (props: Props)
 {
     return (
-        // @TODO: This might be better as a switch component
-        <ButtonGroup
-            size="small"
-            value={props.presenting ? "presenting" : "editing"}
-        >
-            <IconButton
-                disabled={(!props.presenting) ? true : false }
-                onClick={props.toggle_consumption_formatting}
-                value="editing"
+        <ThemeProvider theme={ButtonToggleTheme}>
+            <ButtonGroup
+                size="small"
+                value={props.presenting ? "presenting" : "editing"}
             >
-                <EditIcon color="inherit" />
-            </IconButton>
-            <IconButton
-                disabled={(props.presenting) ? true : false }
-                onClick={props.toggle_consumption_formatting}
-                value="presenting"
-            >
-                <PresentToAllIcon />
-            </IconButton>
-        </ButtonGroup>
+                <IconButton
+                    disabled={(!props.presenting) ? true : false }
+                    onClick={props.toggle_consumption_formatting}
+                    value="editing"
+                >
+                    <EditIcon color="inherit" />
+                </IconButton>
+                <IconButton
+                    disabled={(props.presenting) ? true : false }
+                    onClick={props.toggle_consumption_formatting}
+                    value="presenting"
+                >
+                    <PresentToAllIcon />
+                </IconButton>
+            </ButtonGroup>
+        </ThemeProvider>
     )
 }
 

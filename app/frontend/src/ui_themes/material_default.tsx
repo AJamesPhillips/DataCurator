@@ -12,8 +12,8 @@ const _default_theme_options: ThemeOptions = {
     },
     palette: {
         type: 'light',
-	primary: {
-            main: '#e0e0e0',
+	    primary: {
+            main: '#cecece',
         },
         secondary: {
             main: '#b3e5fc',
@@ -56,3 +56,22 @@ export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary
 export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } });
 export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } });
 export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } });
+
+export const ButtonToggleTheme = createMuiTheme({
+    ...DefaultTheme,
+    props: {
+        MuiButtonBase: {
+
+        }
+    },
+    overrides: {
+        MuiIconButton: {
+            root: {
+                color: DefaultTheme.palette.text.disabled,
+                "&$disabled": {
+                    color: DefaultTheme.palette.text.primary
+                }
+            },
+        }
+    }
+});
