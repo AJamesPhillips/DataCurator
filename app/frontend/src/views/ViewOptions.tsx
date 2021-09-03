@@ -5,7 +5,7 @@ import type { RootState } from "../state/State"
 import { ButtonGroup, IconButton } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
-import { invertDisabledAppearance } from "src/ui_themes/invert_disabled";
+import { invertDisabledAppearance } from "../ui_themes/invert_disabled";
 
 const map_state = (state: RootState) =>
 {
@@ -38,7 +38,7 @@ function _ViewOptions (props: Props)
                 <EditIcon color="inherit" />
             </IconButton>
             <IconButton
-                className={classes.inverse_disabled}
+                className={`${classes.inverse_disabled} HI`}
                 disabled={(props.presenting) ? true : false }
                 onClick={props.toggle_consumption_formatting}
                 value="presenting"
