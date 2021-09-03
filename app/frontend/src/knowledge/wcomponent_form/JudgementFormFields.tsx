@@ -40,6 +40,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         target_counterfactuals,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
+        is_editing: !state.display_options.consumption_formatting,
     }
 }
 
@@ -128,7 +129,7 @@ function _JudgementFormFields (props: Props)
             </div>
         </p>
 
-        <p>
+        {(props.is_editing || selected_option_id_for_manual !== undefined) && <p>
             <div style={{ display: "inline-flex" }}>
                 Manual: &nbsp; <AutocompleteText
                     placeholder={"Manual override..."}
@@ -141,7 +142,7 @@ function _JudgementFormFields (props: Props)
                     }}
                     />
             </div>
-        </p>
+        </p>}
 
         <p>
             <div style={{ display: "inline-flex" }}>
