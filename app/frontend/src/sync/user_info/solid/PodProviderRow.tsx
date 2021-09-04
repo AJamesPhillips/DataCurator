@@ -59,7 +59,7 @@ function _PodProviderRow (props: Props)
             {!on_change_value && props.value}
             {on_change_value && <input
                 type="text"
-                style={{ width: 250 }}
+                style={{ width: 400 }}
                 value={value}
                 onChange={e =>
                 {

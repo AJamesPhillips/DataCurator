@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useMemo, useState } from "preact/hooks"
 import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
@@ -33,7 +33,7 @@ import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
-import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { DEPRECATED_WCOMPONENT_TYPES, wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
@@ -111,6 +111,18 @@ function _WComponentForm (props: Props)
         set_focus_title(true)
     }, [wcomponent_id])
 
+
+    const filtered_wcomponent_type_options = useMemo(() =>
+    {
+        return wcomponent_type_options.filter(option =>
+        {
+            const not_deprecated = !DEPRECATED_WCOMPONENT_TYPES.has(option.id)
+            const current_type = option.id === props.wcomponent.type
+            return not_deprecated || current_type
+        })
+    }, [props.wcomponent.type])
+
+
     if (!props.ready) return <div>Loading...</div>
 
 
@@ -175,7 +187,7 @@ function _WComponentForm (props: Props)
             <AutocompleteText
                 placeholder="Type: "
                 selected_option_id={wcomponent.type}
-                options={wcomponent_type_options}
+                options={filtered_wcomponent_type_options}
                 on_change={type =>
                 {
                     if (!type) return
