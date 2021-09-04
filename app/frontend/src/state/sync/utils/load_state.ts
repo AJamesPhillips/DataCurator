@@ -63,7 +63,19 @@ export function get_state_data (storage_type: StorageType, state: RootState)
     if (storage_type === "local_server")
     {
         promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
-            .then(resp => resp.json())
+        .then(resp =>
+        {
+            if (resp.ok) return resp.json()
+
+            return resp.text().then(text => Promise.reject(text))
+        })
+        .catch(err =>
+        {
+            if (err && err.message === "Failed to fetch") err = "local server not running or connection problem"
+
+            const error: SyncError = { type: "general", message: "Error from server: " + err }
+            return Promise.reject(error)
+        })
     }
     else if (storage_type === "solid")
     {
