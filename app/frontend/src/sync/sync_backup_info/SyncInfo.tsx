@@ -91,9 +91,9 @@ function _SyncInfo (props: Props)
                 ? <SyncProblemIcon color="error" />
                 : <SaveIcon
                     className={sending_or_recieving ? "animate spinning" : ""}
-                    titleAccess={sentence_case(status)}
                 />
             }
+            title={failed ? props.error_message : sentence_case(status)}
         >
             <Typography
                 className={`${classes.animate} ${classes.initially_shown} show`}
