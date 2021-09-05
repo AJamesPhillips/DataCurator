@@ -20,7 +20,6 @@ const possible_d3_dice_rolling: WComponentNodeStateV2 = {
     values_and_prediction_sets: [
         {
             id: "1",
-            version: 1,
             created_at: d0,
             datetime: {}, // note it does not need a sim datetime value, just marked as future
             // though actually we do not even need to set this value?  What does it add?  This data of relative
@@ -38,8 +37,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2 = {
         },
         {
             id: "2",
-            version: 2,
-            created_at: d0,
+            created_at: d1,
             datetime: {},
             entries: [
                 { ...default_VAP, relative_probability: 1 }, // fix error
@@ -71,7 +69,6 @@ const specific_dice_roll: WComponentNodeStateV2 = {
     values_and_prediction_sets: [
         {
             id: "1",
-            version: 1,
             created_at: d0,
             datetime: {
                 // future: true, // this future === true can be computed from the fact min > now
@@ -95,7 +92,6 @@ const specific_dice_roll: WComponentNodeStateV2 = {
         // the probabilities of its options to give similar data as below.
         {
             id: "2",
-            version: 1,
             created_at: d1,
             datetime: { value: d1 },
             shared_entry_values: {

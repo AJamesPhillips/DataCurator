@@ -50,7 +50,6 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets
 
     const new_VAP_set = {
         id: get_new_value_and_prediction_set_id(),
-        version: 1,
         ...dates,
         datetime: {}, // min: now },
         entries: entries_with_probabilities,
@@ -100,7 +99,6 @@ function clone_VAP_set (VAP_set: StateValueAndPredictionsSet, creation_context: 
 {
     const clone: StateValueAndPredictionsSet = {
         ...VAP_set,
-        version: VAP_set.version + 1,
         ...get_new_created_ats(creation_context),
         entries: VAP_set.entries.map(e => ({ ...e, explanation: "" })),
         shared_entry_values: {
@@ -159,7 +157,6 @@ function run_tests ()
     versioned_VAP_set = {
         latest: {
             id: "1",
-            version: 2,
             created_at: date1,
             datetime: {},
             entries: [],
@@ -167,7 +164,6 @@ function run_tests ()
         older: [
             {
                 id: "1",
-                version: 1,
                 created_at: date1,
                 datetime: {},
                 entries: [],
@@ -184,7 +180,6 @@ function run_tests ()
     test(latest.created_at.getTime() >= date1.getTime(), true)
     test({ ...latest, created_at: date1 }, {
         id: "1",
-        version: 3,
         created_at: date1,
         datetime: {},
         entries: [],

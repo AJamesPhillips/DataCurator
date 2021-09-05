@@ -1,4 +1,4 @@
-import type { Base, HasVersion } from "./base"
+import type { Base } from "./base"
 import type { TemporalUncertainty, PredictionBase } from "../../uncertainty/uncertainty"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
@@ -56,7 +56,7 @@ export interface StateValueString extends StateValueBase
 //
 // The values from Partial<PredictionBase> will be used as the default values for these fields
 // in all the entries.
-export interface StateValueAndPredictionsSet extends Base, HasVersion
+export interface StateValueAndPredictionsSet extends Base
 {
     datetime: TemporalUncertainty
     entries: StateValueAndPrediction[]

@@ -117,9 +117,9 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
 
     if (wcomponent_has_VAP_sets(wcomponent)) return wcomponent
 
-    const values_and_prediction_sets: StateValueAndPredictionsSet[] = wcomponent.existence.map(e =>
+    const values_and_prediction_sets = wcomponent.existence.map(e =>
     {
-        return {
+        const vap_set: StateValueAndPredictionsSet = {
             id: e.id.replace("pr", "vps"),
             created_at: e.created_at,
             custom_created_at: e.custom_created_at,
@@ -134,8 +134,9 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
                     conviction: e.conviction,
                 }
             ],
-            version: 1,
         }
+
+        return vap_set
     })
 
     const upgraded_wcomponent = {

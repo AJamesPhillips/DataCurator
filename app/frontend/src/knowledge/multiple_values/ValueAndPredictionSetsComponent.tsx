@@ -20,6 +20,7 @@ import type { CreationContextState } from "../../shared/creation_context/state"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 import Box from "@material-ui/core/Box"
+import { get_created_at_ms } from "../../shared/wcomponent/utils_datetime"
 
 
 
@@ -281,7 +282,7 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<StateV
 
 
 const predicate_by_id = (i1: StateValueAndPredictionsSet) => (i2: StateValueAndPredictionsSet) => {
-    return i1.id === i2.id && i1.version === i2.version
+    return i1.id === i2.id && get_created_at_ms(i1) === get_created_at_ms(i2)
 }
 
 const get_latest_id = (item: VersionedStateVAPsSet) => item.latest.id
@@ -393,21 +394,18 @@ function run_tests ()
     const created_at = new Date("2021-04-30T10:51:06.041Z")
     const v1: StateValueAndPredictionsSet = {
         id: "vps20",
-        version: 1,
         created_at,
         datetime: {},
         entries: []
     }
     const v2: StateValueAndPredictionsSet = {
         id: "vps20",
-        version: 2,
         created_at,
         datetime: {},
         entries: []
     }
     const another_VAP_set: StateValueAndPredictionsSet = {
         id: "vps10",
-        version: 1,
         created_at,
         datetime: {},
         entries: []
@@ -416,7 +414,7 @@ function run_tests ()
 
     function get_unique_id (item: StateValueAndPredictionsSet)
     {
-        return `${item.id} ${item.version}`
+        return `${item.id} ${get_created_at_ms(item)}`
     }
 
     factory_handle_change({

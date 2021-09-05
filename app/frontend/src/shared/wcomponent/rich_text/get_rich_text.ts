@@ -224,7 +224,6 @@ function test_rendering_title ()
     {
         const VAP_set: StateValueAndPredictionsSet = {
             id: "vps" + args.id,
-            version: 1,
             created_at: dt,
             datetime: {},
             entries: [{

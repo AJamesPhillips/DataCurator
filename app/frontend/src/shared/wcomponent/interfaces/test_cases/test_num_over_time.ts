@@ -36,7 +36,6 @@ const political_pressure_on_state_dph: WComponentNodeStateV2 = {
     values_and_prediction_sets: [
         {
             id: "1",
-            version: 1,
             created_at: april20th,
             datetime: {
                 // future: false,
@@ -55,7 +54,6 @@ const political_pressure_on_state_dph: WComponentNodeStateV2 = {
         },
         {
             id: "1",
-            version: 2,
             created_at: april21st,
             datetime: {
                 // future: false,
@@ -87,7 +85,6 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
     values_and_prediction_sets: [
         {
             id: "1",
-            version: 1,
             created_at: april20th,
             datetime: {
                 // future: false,
@@ -106,7 +103,6 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
         },
         {
             id: "1",
-            version: 2,
             created_at: april28th,
             datetime: {
                 // future: false,
@@ -197,7 +193,6 @@ const number_of_testsv2: WComponentNodeStateV2 = {
     values_and_prediction_sets: [
         {
             id: "1",
-            version: 1,
             created_at: march1st,
             datetime: {
                 // future: false,
@@ -219,7 +214,6 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         },
         {
             id: "1",
-            version: 2,
             created_at: april1st,
             datetime: {
                 // future: false,
@@ -247,7 +241,6 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         },
         {
             id: "2",
-            version: 1,
             created_at: april1st,
             datetime: {
                 // future: false,
@@ -267,7 +260,6 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         },
         {
             id: "1",
-            version: 3,
             created_at: april20th,
             datetime: {
                 // future: false,
@@ -302,7 +294,6 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         },
         {
             id: "2",
-            version: 2,
             created_at: april20th,
             datetime: {
                 // future: false,

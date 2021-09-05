@@ -1,7 +1,6 @@
 import { test } from "../utils/test"
 import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
-import type { HasVersion } from "./interfaces/base"
 import type { HasDateTime } from "../uncertainty/uncertainty"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
 
@@ -74,7 +73,7 @@ interface PartitionItemsByDatetimeFuturesReturn<U>
     present_items: U[]
     future_items: U[]
 }
-function partition_items_by_datetimes <U extends Base & HasDateTime & Partial<HasVersion>> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
+function partition_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
 {
     const { items, created_at_ms, sim_ms } = args
 
@@ -109,9 +108,7 @@ function partition_items_by_datetimes <U extends Base & HasDateTime & Partial<Ha
         for (let i = 1; i < item_versions.length; ++i) {
             const item = item_versions[i]!
 
-            if (item.version === undefined || latest_item.version === undefined) continue
-
-            if (item.version > latest_item.version)
+            if (get_created_at_ms(item) > get_created_at_ms(latest_item))
             {
                 invalid_past_items.push(latest_item)
                 latest_item = item
@@ -167,7 +164,7 @@ function prune_present_by_temporal_and_logical_relations <U extends Base & HasDa
 
 
 
-export function partition_and_prune_items_by_datetimes <U extends Base & HasDateTime & Partial<HasVersion>> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
+export function partition_and_prune_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionItemsByDatetimeFuturesReturn<U>
 {
     const result = partition_items_by_datetimes(args)
     const pruned = prune_present_by_temporal_and_logical_relations(result.present_items)
@@ -384,7 +381,7 @@ function test_partition_and_prune_items_by_datetimes ()
 {
     console .log("running tests of partition_and_prune_items_by_datetimes")
 
-    interface Simple extends Base, HasDateTime, Partial<HasVersion> {}
+    interface Simple extends Base, HasDateTime {}
 
     function ids_partition_and_prune_items_by_datetimes (args: PartitionItemsByDatetimeFuturesArgs<Simple>): PartitionItemsByDatetimeFuturesReturn<string>
     {

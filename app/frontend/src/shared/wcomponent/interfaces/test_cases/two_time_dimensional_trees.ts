@@ -22,7 +22,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         //      and you think it will be B on day 2
         {
             id: "VAP_set_id1",
-            version: 1,
             created_at: day1,
             datetime: { value: day1 },
             entries: [{
@@ -36,7 +35,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id2",
-            version: 1,
             created_at: day1,
             datetime: { value: day2 },
             entries: [{
@@ -53,7 +51,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         //      and you set its new value on day 2 to be D
         {
             id: "VAP_set_id1",
-            version: 2,
             created_at: day2,
             datetime: { value: day1 },
             entries: [{
@@ -67,7 +64,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id2",
-            version: 2,
             created_at: day2,
             datetime: { value: day2 },
             entries: [{
@@ -84,7 +80,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         //      and you think its value on day 5 will be I
         {
             id: "VAP_set_id3",
-            version: 1,
             created_at: day3,
             datetime: { value: day4 },
             entries: [{
@@ -107,7 +102,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id4",
-            version: 1,
             created_at: day3,
             datetime: { value: day4 },
             entries: [{
@@ -130,7 +124,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id5",
-            version: 1,
             created_at: day3,
             datetime: { value: day5 },
             entries: [{
@@ -147,7 +140,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         //      and you revise your prediction for I to become J
         {
             id: "VAP_set_id3",
-            version: 2,
             created_at: day4,
             datetime: { value: day4 },
             entries: [{
@@ -170,7 +162,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id4",
-            version: 2,
             created_at: day4,
             datetime: { value: day4 },
             entries: [{
@@ -193,7 +184,6 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         },
         {
             id: "VAP_set_id5",
-            version: 2,
             created_at: day4,
             datetime: { value: day5 },
             entries: [{

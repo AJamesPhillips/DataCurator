@@ -2,14 +2,7 @@ import type { Color } from "../../interfaces"
 
 
 
-export interface HasVersion
-{
-    version: number
-}
-
-
-
-export interface Base // extends HasVersion
+export interface Base
 {
     id: string
     created_at: Date
