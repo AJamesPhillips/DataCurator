@@ -103,10 +103,3 @@ export interface StateValueAndPrediction extends PredictionBase
     // solution to this but for now we can use this solution.
     relative_probability?: number
 }
-
-
-export interface VersionedStateVAPsSet
-{
-    latest: StateValueAndPredictionsSet
-    older: StateValueAndPredictionsSet[]
-}

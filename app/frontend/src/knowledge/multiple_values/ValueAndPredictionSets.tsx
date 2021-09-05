@@ -3,12 +3,12 @@ import { FunctionalComponent, h } from "preact"
 import type {
     StateValueAndPredictionsSet,
 } from "../../shared/wcomponent/interfaces/state"
-import { partition_and_prune_items_by_datetimes } from "../../shared/wcomponent/utils_datetime"
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
 import { get_wcomponent_VAP_set_counterfactuals } from "../../state/derived/accessor"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -43,7 +43,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ValueAndPredictionSets (props: Props)
 {
     const { wcomponent_id, VAP_set_counterfactuals_map, values_and_prediction_sets, VAPs_represent } = props
-    const { invalid_future_items, invalid_past_items, past_items, present_items, future_items } = partition_and_prune_items_by_datetimes({
+
+    const { invalid_future_items, past_items, present_items, future_items, previous_versions_by_id } = partition_and_prune_items_by_datetimes_and_versions({
         items: values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
@@ -59,10 +60,10 @@ function _ValueAndPredictionSets (props: Props)
 
         values_and_prediction_sets={values_and_prediction_sets}
         invalid_future_items={invalid_future_items}
-        invalid_past_items={invalid_past_items}
         past_items={past_items}
         present_items={present_items}
         future_items={future_items}
+        previous_versions_by_id={previous_versions_by_id}
 
         creation_context={props.creation_context}
         editing={props.editing}

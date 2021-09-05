@@ -4,7 +4,7 @@ import "./common.css"
 import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/editable_text/EditableText"
 import type {
-    StateValueAndPredictionsSet,
+    StateValueAndPredictionsSet as VAPSet,
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
 import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
@@ -15,10 +15,11 @@ import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { set_VAP_probabilities } from "./utils"
+import type { ListItemCRUD } from "../../form/editable_list/EditableListEntry"
 
 
 
-export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
@@ -39,7 +40,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
 
 
-export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
@@ -48,7 +49,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcompon
         <br />
         <UncertainDateTime
             datetime={VAP_set.datetime}
-            on_change={datetime => on_change({ ...VAP_set, datetime })}
+            on_change={datetime => crud.update_item({ ...VAP_set, datetime })}
         />
         <br />
         <div>
@@ -65,7 +66,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcompon
                     const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
 
                     const new_VAP_set = { ...VAP_set, entries: entries_with_probabilities }
-                    on_change(new_VAP_set)
+                    crud.update_item(new_VAP_set)
                 }}
             />
         </div>
@@ -76,7 +77,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcompon
 
 
 
-export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editing: boolean) => (VAP_set: StateValueAndPredictionsSet, on_change: (item: StateValueAndPredictionsSet) => void): h.JSX.Element =>
+export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editing: boolean) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     const shared_entry_values = VAP_set.shared_entry_values || {}
     // Provide the explanations from exist VAPs
@@ -103,7 +104,7 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
                         const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
                         // Overwrite all the existing convictions with this conviction
                         const entries = VAP_set.entries.map(e => ({ ...e, conviction }))
-                        on_change({ ...VAP_set, entries, shared_entry_values })
+                        crud.update_item({ ...VAP_set, entries, shared_entry_values })
                     }}
                 />
             </div>}
@@ -114,7 +115,7 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
             conditional_on_blur={explanation =>
             {
                 const shared_entry_values = { ...VAP_set.shared_entry_values, explanation }
-                on_change({ ...VAP_set, shared_entry_values })
+                crud.update_item({ ...VAP_set, shared_entry_values })
             }}
         />}
 
@@ -124,12 +125,12 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
 
 
 
-const get_created_at = (item: StateValueAndPredictionsSet) => item.created_at
-const get_custom_created_at = (item: StateValueAndPredictionsSet) => item.custom_created_at
+const get_created_at = (item: VAPSet) => item.created_at
+const get_custom_created_at = (item: VAPSet) => item.custom_created_at
 
 
 
-function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+function get_VAPs_from_set (VAP_set: VAPSet, VAPs_represent: VAPsType)
 {
     let VAPs = VAP_set.entries
 
@@ -144,7 +145,7 @@ function get_VAPs_from_set (VAP_set: StateValueAndPredictionsSet, VAPs_represent
 
 
 
-function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+function merge_entries (VAPs: StateValueAndPrediction[], VAP_set: VAPSet, VAPs_represent: VAPsType)
 {
     if (VAPs_represent === VAPsType.boolean)
     {

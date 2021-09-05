@@ -48,9 +48,7 @@ export function NewItemForm <T> (props: NewItemForm<T>)
                         {...item_top_props}
                         expanded={true}
                         disable_collapsable={true}
-                        on_change={item => {
-                            set_new_item(item)
-                        }}
+                        update_item={item => set_new_item(item)}
                     />
                 </DialogContent>
                 <DialogActions>

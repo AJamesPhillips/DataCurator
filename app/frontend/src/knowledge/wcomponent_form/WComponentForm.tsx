@@ -360,8 +360,9 @@ function _WComponentForm (props: Props)
             <p>
                 <ValueList
                     values={wcomponent.values || []}
-                    update_values={new_values => upsert_wcomponent({ values: new_values }) }
-                    creation_context={creation_context}
+                    // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
+                    // update_values={new_values => upsert_wcomponent({ values: new_values }) }
+                    // creation_context={creation_context}
                 />
             </p>
 

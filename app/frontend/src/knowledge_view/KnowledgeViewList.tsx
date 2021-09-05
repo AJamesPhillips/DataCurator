@@ -11,6 +11,7 @@ import { ExpandableList, ExpandedListStates } from "../form/editable_list/Expand
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { KnowledgeViewListProps } from "./interfaces"
 import { factory_get_kv_details, make_default_kv_title } from "./common"
+import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
 
 
 
@@ -88,7 +89,7 @@ function factory_get_summary (current_view: ViewType)
 {
     const view = optional_view_type(current_view)
 
-    return (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) => <Link
+    return (knowledge_view: KnowledgeView, crud: ListItemCRUD<KnowledgeView>) => <Link
         route={undefined}
         sub_route={undefined}
         item_id={undefined}

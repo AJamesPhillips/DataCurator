@@ -1,6 +1,7 @@
 import { h } from "preact"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
+import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { get_today_str } from "../shared/utils/date_helpers"
@@ -33,7 +34,7 @@ export const make_default_kv_title = () => get_today_str(false)
 
 
 
-export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, on_change: (new_kv: KnowledgeView) => void) =>
+export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, crud: ListItemCRUD<KnowledgeView>) =>
 {
     const { editing, nested_knowledge_view_ids } = props
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
@@ -48,7 +49,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 value={knowledge_view.title}
                 conditional_on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "Base" : make_default_kv_title()
-                    on_change({ ...knowledge_view, title: new_title || default_title })
+                    crud.update_item({ ...knowledge_view, title: new_title || default_title })
                 }}
             />
         </p>
@@ -60,7 +61,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 placeholder="..."
                 value={knowledge_view.description}
                 conditional_on_blur={description => {
-                    on_change({ ...knowledge_view, description })
+                    crud.update_item({ ...knowledge_view, description })
                 }}
             />
         </p>}
@@ -70,7 +71,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             <span className="description_label">Active assumptions (counterfactuals)</span>
             <KnowledgeViewActiveCounterFactuals
                 knowledge_view_id={knowledge_view.id}
-                on_change={ids => on_change({ ...knowledge_view, active_counterfactual_v2_ids: ids })}
+                on_change={ids => crud.update_item({ ...knowledge_view, active_counterfactual_v2_ids: ids })}
             />
         </div>
 
@@ -80,7 +81,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 owner_knowledge_view={knowledge_view}
                 on_change={foundation_knowledge_view_ids =>
                 {
-                    on_change({ ...knowledge_view, foundation_knowledge_view_ids })
+                    crud.update_item({ ...knowledge_view, foundation_knowledge_view_ids })
                 }}
             />
         </p>
@@ -99,7 +100,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 options={props.possible_parent_knowledge_view_options.filter(({ id }) => id !== knowledge_view.id)}
                 on_change={parent_knowledge_view_id =>
                 {
-                    on_change({ ...knowledge_view, parent_knowledge_view_id })
+                    crud.update_item({ ...knowledge_view, parent_knowledge_view_id })
                 }}
             />
         </p>}
@@ -111,7 +112,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 selected_option_id={knowledge_view.sort_type}
                 options={knowledge_view_sort_types.map(type => ({ id: type, title: type }))}
                 allow_none={false}
-                on_change={sort_type => sort_type && on_change({ ...knowledge_view, sort_type })}
+                on_change={sort_type => sort_type && crud.update_item({ ...knowledge_view, sort_type })}
             />
         </p>}
 

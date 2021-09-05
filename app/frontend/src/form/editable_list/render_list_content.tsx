@@ -10,7 +10,9 @@ export interface FactoryRenderListContentProps <U>
 {
     items: U[]
     get_id: (item: U) => string
-    update_items: (items: U[]) => void
+    update_items?: (items: U[]) => void
+    update_item?: (items: U) => void
+    delete_item?: (items: U) => void
 
     item_top_props: EditableListEntryTopProps<U>
     delete_button_text?: string
@@ -24,6 +26,8 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
         items,
         get_id,
         update_items,
+        update_item,
+        delete_item,
 
         item_top_props,
 
@@ -52,18 +56,28 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
-                    on_change={item =>
+                    update_item={item =>
                     {
-                        const predicate_by_id = (other: T) => get_id(item) === get_id(other)
-                        const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
-                        update_items(new_items)
+                        update_item && update_item(item)
+
+                        if (update_items)
+                        {
+                            const predicate_by_id = (other: T) => get_id(item) === get_id(other)
+                            const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
+                            update_items(new_items)
+                        }
                     }}
                     delete_button_text={own_props.delete_button_text}
                     delete_item={() =>
                     {
-                        const predicate_by_id = (other: T) => get_id(item) === get_id(other)
-                        const new_items = remove_from_list_by_predicate(items, predicate_by_id)
-                        update_items(new_items)
+                        delete_item && delete_item(item)
+
+                        if (update_items)
+                        {
+                            const predicate_by_id = (other: T) => get_id(item) === get_id(other)
+                            const new_items = remove_from_list_by_predicate(items, predicate_by_id)
+                            update_items(new_items)
+                        }
                     }}
                 />
             </div>)}

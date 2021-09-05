@@ -3,7 +3,7 @@ import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertai
 import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry, TargetVAPIdCounterfactualMap, WComponentCounterfactualV2 } from "../interfaces/counterfactual"
 import type { KnowledgeViewsById } from "../interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
-import { partition_and_prune_items_by_datetimes } from "../utils_datetime"
+import { partition_and_prune_items_by_datetimes_and_versions } from "./utils"
 
 
 
@@ -20,7 +20,7 @@ export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs):
         created_at_ms, sim_ms,
     } = args
 
-    const { present_items } = partition_and_prune_items_by_datetimes({
+    const { present_items } = partition_and_prune_items_by_datetimes_and_versions({
         items: values_and_prediction_sets || [], created_at_ms, sim_ms,
     })
 

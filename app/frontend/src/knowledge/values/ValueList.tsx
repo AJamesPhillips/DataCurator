@@ -1,22 +1,19 @@
 import { h } from "preact"
 import { useMemo } from "preact/hooks"
+import { TextField } from "@material-ui/core"
 
 import type { StateValueString } from "../../shared/wcomponent/interfaces/state"
 import { get_new_value_id } from "../../shared/utils/ids"
 import { EditableList } from "../../form/editable_list/EditableList"
-import { EditableText } from "../../form/editable_text/EditableText"
-import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
-import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import type { EditableListEntryTopProps, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
 import { get_new_created_ats } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../shared/creation_context/state"
-import { Box, FormControl, FormHelperText, TextField } from "@material-ui/core"
 
 
 
 interface OwnProps {
     values: StateValueString[]
-    update_values: (values: StateValueString[]) => void
-    creation_context: CreationContextState
+    // update_values: (values: StateValueString[]) => void
+    // creation_context: CreationContextState
 }
 
 
@@ -39,8 +36,8 @@ export function ValueList (props: OwnProps)
         item_descriptor="Value"
         get_id={get_id}
         item_top_props={item_top_props}
-        prepare_new_item={prepare_new_item(props.creation_context)}
-        update_items={items => props.update_values(items)}
+        prepare_new_item={prepare_new_item}
+        update_items={items => {}}
         disable_collapsed={true}
     />
 }
@@ -51,9 +48,9 @@ const get_created_at = (item: StateValueString) => item.created_at
 const get_custom_created_at = (item: StateValueString) => item.custom_created_at
 
 
-const prepare_new_item = (creation_context: CreationContextState) => (): StateValueString =>
+const prepare_new_item = (): StateValueString =>
 {
-    const created_ats = get_new_created_ats(creation_context)
+    const created_ats = get_new_created_ats()
 
     return {
         id: get_new_value_id(),
@@ -65,26 +62,30 @@ const prepare_new_item = (creation_context: CreationContextState) => (): StateVa
 }
 
 
-function get_summary (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
+function get_summary (item: StateValueString, crud: ListItemCRUD<StateValueString>): h.JSX.Element
 {
     return <TextField
         size="small"
         label="Value"
         variant="outlined"
-        conditional_on_change={(new_value:any) => {
-            const value = new_value && new_value.trim()
-            if (on_change) on_change({ ...item, value })
-        }}
+        value={item.value}
+        // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
+        // conditional_on_change={(new_value:any) => {
+        //     const value = new_value && new_value.trim()
+        //     crud.update_item({ ...item, value })
+        // }}
     />
 }
 
 
-function get_details (item: StateValueString, on_change?: (item: StateValueString) => void): h.JSX.Element
+function get_details (item: StateValueString, crud: ListItemCRUD<StateValueString>): h.JSX.Element
 {
     return <TextField
         size="small"
         label="Description"
         variant="outlined"
-        conditional_on_change={on_change && ((new_d:any) => on_change({ ...item, description: new_d }))}
+        value={item.description}
+        // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
+        // conditional_on_change={(description: string) => crud.update_item({ ...item, description }))}
     />
 }

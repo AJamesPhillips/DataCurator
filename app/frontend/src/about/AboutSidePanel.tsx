@@ -17,9 +17,7 @@ const map_state = (state: RootState) =>
 
 
 const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
-
-type Props = PropsFromRedux & OwnProps
+type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 function _AboutSidePanel (props: Props)

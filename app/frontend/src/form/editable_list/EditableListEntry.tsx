@@ -1,10 +1,19 @@
 import { Component, h } from "preact"
+import { useMemo } from "preact/hooks"
+import { FormControl } from "@material-ui/core"
 
 import "./EditableListEntry.css"
 import { ConfirmatoryDeleteButton } from "../ConfirmatoryDeleteButton"
 import { EditableCustomDateTime } from "../EditableCustomDateTime"
-import { FormControl } from "@material-ui/core"
 
+
+
+export interface ListItemCRUD<U>
+{
+    create_item: (item: U) => void
+    update_item: (item: U) => void
+    delete_item: (item: U) => void
+}
 
 
 export interface EditableListEntryTopProps<U>
@@ -12,10 +21,10 @@ export interface EditableListEntryTopProps<U>
     get_created_at?: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
     set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
-    get_summary: (item: U, on_change: (item: U) => void) => h.JSX.Element
-    get_details: (item: U, on_change: (item: U) => void) => h.JSX.Element
-    get_details2?: (item: U, on_change: (item: U) => void) => h.JSX.Element
-    get_details3?: (item: U, on_change: (item: U) => void) => h.JSX.Element
+    get_summary: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
+    get_details: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
+    get_details2?: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
+    get_details3?: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
     calc_initial_custom_expansion_state?: (item: U) => boolean | undefined
     extra_class_names?: string
 }
@@ -26,7 +35,8 @@ interface OwnProps<U> extends EditableListEntryTopProps<U>
     item: U
     expanded?: boolean
     disable_collapsable?: boolean
-    on_change: (item: U) => void
+    create_item?: (item: U) => void
+    update_item: (item: U) => void
     delete_item?: () => void
     delete_button_text?: string
 }
@@ -72,10 +82,19 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             get_details2,
             get_details3,
             disable_collapsable,
-            on_change,
+            create_item,
+            update_item,
             delete_item,
             delete_button_text,
         } = this.props
+
+
+        const crud: ListItemCRUD<T> = useMemo(() => ({
+            create_item: create_item || (item => { throw new Error(`Not implemented create for "${JSON.stringify(item)}"`) }),
+            update_item,
+            delete_item: delete_item || (item => { throw new Error(`Not implemented delete for "${JSON.stringify(item)}"`) }),
+        }), [create_item, update_item, delete_item])
+
 
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined
 
@@ -90,13 +109,13 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
 
         const date_on_change = (new_custom_created_at: Date | undefined) =>
         {
-            on_change(set_custom_created_at(item, new_custom_created_at))
+            update_item(set_custom_created_at(item, new_custom_created_at))
         }
 
         return <div className={class_name}>
             <div className="summary_header">
                 <div className="summary">
-                    {get_summary(item, on_change)}
+                    {get_summary(item, crud)}
                 </div>
 
                 <div
@@ -106,10 +125,10 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             </div>
 
             <div className="details">
-                {get_details(item, on_change)}
+                {get_details(item, crud)}
 
                 <div className="details2">
-                    {get_details2 && get_details2(item, on_change)}
+                    {get_details2 && get_details2(item, crud)}
                 </div>
 
                 <div>
@@ -126,7 +145,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                 </div>
 
                 <div className="details3">
-                    {get_details3 && get_details3(item, on_change)}
+                    {get_details3 && get_details3(item, crud)}
                 </div>
             </div>
 

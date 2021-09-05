@@ -5,7 +5,7 @@ import { EditableNumber } from "../../form/EditableNumber"
 import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
-import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
+import type { EditableListEntryTopProps, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
@@ -138,7 +138,7 @@ interface GetSummaryArgs
     creation_context: CreationContextState
     editing: boolean
 }
-const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUD<StateValueAndPrediction>): h.JSX.Element =>
 {
     const { VAPs_represent, VAP_counterfactuals_map, knowledge_view_id,
         wcomponent_id, VAP_set_id, upsert_counterfactual, creation_context, editing } = args
@@ -163,7 +163,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                 <div className="description_label">min</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.min || ""}
-                    conditional_on_blur={min => on_change({ ...VAP, min })}
+                    conditional_on_blur={min => crud.update_item({ ...VAP, min })}
                 />
             </div>}
             {(editing || VAP.value) && <div>
@@ -171,14 +171,14 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={is_boolean}
                     placeholder="..."
                     value={is_boolean ? "True" : VAP.value}
-                    conditional_on_blur={value => on_change({ ...VAP, value })}
+                    conditional_on_blur={value => crud.update_item({ ...VAP, value })}
                 />
             </div>}
             {is_number && (editing || VAP.max) && <div>
                 <div className="description_label">max</div> &nbsp; <EditableTextSingleLine
                     placeholder="..."
                     value={VAP.max || ""}
-                    conditional_on_blur={max => on_change({ ...VAP, max })}
+                    conditional_on_blur={max => crud.update_item({ ...VAP, max })}
                 />
             </div>}
         </div>
@@ -188,7 +188,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={disabled_prob}
                     placeholder="..."
                     value={probability}
-                    conditional_on_blur={probability => on_change({ ...VAP, probability })}
+                    conditional_on_blur={probability => crud.update_item({ ...VAP, probability })}
                 />
             </div>}
             {!is_boolean && VAP.relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
@@ -197,7 +197,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     placeholder="..."
                     value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
-                    conditional_on_blur={relative_probability => on_change({ ...VAP, relative_probability })}
+                    conditional_on_blur={relative_probability => crud.update_item({ ...VAP, relative_probability })}
                 />
             </div>}
             {is_boolean && <div className={disabled_conviction ? "disabled" : ""}>
@@ -205,7 +205,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
                     disabled={disabled_conviction}
                     placeholder="..."
                     value={conviction}
-                    conditional_on_blur={conviction => on_change({ ...VAP, conviction })}
+                    conditional_on_blur={conviction => crud.update_item({ ...VAP, conviction })}
                 />
             </div>}
 
@@ -236,7 +236,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, on_
 }
 
 
-const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, on_change: (item: StateValueAndPrediction) => void): h.JSX.Element =>
+const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, crud: ListItemCRUD<StateValueAndPrediction>): h.JSX.Element =>
 {
     if (VAPs_represent === VAPsType.boolean) return <div></div>
 
@@ -247,7 +247,7 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
         <EditableText
             placeholder="..."
             value={item.description}
-            conditional_on_blur={description => on_change({ ...item, description })}
+            conditional_on_blur={description => crud.update_item({ ...item, description })}
         />
     </div>
 }

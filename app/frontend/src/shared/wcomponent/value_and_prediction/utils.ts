@@ -1,96 +1,72 @@
-import { make_graph, find_leaf_groups } from "../../utils/graph"
+import type { HasDateTime } from "../../uncertainty/uncertainty"
 import { sort_list } from "../../utils/sort"
+import type { Base } from "../interfaces/base"
 import { VAPsType } from "../interfaces/generic_value"
 import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
 import type {
-    StateValueAndPredictionsSet,
-    VersionedStateVAPsSet,
     StateValueAndPrediction,
     WComponentStateV2SubType,
 } from "../interfaces/state"
-import { get_created_at_ms, get_sim_datetime } from "../utils_datetime"
+import { get_created_at_ms, partition_items_by_created_at_datetime, partition_items_by_datetimes } from "../utils_datetime"
 
 
 
-const get_id = (VAP_set: StateValueAndPredictionsSet) => `${VAP_set.id}.${VAP_set.version}`
-const get_head_ids = (VAP_set: StateValueAndPredictionsSet) => []
-const get_tail_ids = (VAP_set: StateValueAndPredictionsSet) =>
+interface PartitionItemsByDatetimeFuturesArgs<U>
 {
-    return (VAP_set.version > 1) ? [get_id({ ...VAP_set, version: VAP_set.version - 1 })] : []
+    items: U[]
+    created_at_ms: number
+    sim_ms: number
 }
-
-export function group_VAP_sets_by_version (VAP_sets: StateValueAndPredictionsSet[]): VersionedStateVAPsSet[]
+interface PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 {
-    const graph = make_graph({ items: VAP_sets, get_id, get_head_ids, get_tail_ids })
-
-    const groups = find_leaf_groups({ graph })
-    const versioned: VersionedStateVAPsSet[] = groups.map(group =>
-        {
-            return {
-                latest: group[0]!,
-                older: group.slice(1),
-            }
-        })
-
-    return versioned
+    invalid_future_items: U[]
+    past_items: U[]
+    present_items: U[]
+    future_items: U[]
+    previous_versions_by_id: {[id: string]: U[]}
 }
-
-
-
-export function sort_grouped_VAP_sets (grouped_VAP_sets: VersionedStateVAPsSet[]): VersionedStateVAPsSet[]
+export function partition_and_prune_items_by_datetimes_and_versions <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 {
-    const get_sort_key = (grouped_VAP_set: VersionedStateVAPsSet) =>
-    {
-        return get_VAP_datetime_sort_key(grouped_VAP_set.latest)
+    const result = partition_items_by_created_at_datetime(args)
+    const { latest, previous_versions_by_id } = group_versions_by_id(result.current_items)
+    const partition_by_temporal = partition_items_by_datetimes({ items: latest, sim_ms: args.sim_ms })
+
+    return {
+        invalid_future_items: result.invalid_future_items,
+        ...partition_by_temporal,
+        previous_versions_by_id,
     }
-
-    return sort_list(grouped_VAP_sets, get_sort_key, "descending")
 }
 
 
 
-export function ungroup_VAP_sets_by_version (grouped_VAP_sets: VersionedStateVAPsSet[]): StateValueAndPredictionsSet[]
+interface GroupVersionsByIdReturn <U>
 {
-    const VAP_sets: StateValueAndPredictionsSet[] = []
-    grouped_VAP_sets.forEach(grouped_VAP_set =>
+    latest: U[]
+    previous_versions_by_id: {[id: string]: U[]}
+}
+function group_versions_by_id <U extends Base> (items: U[]): GroupVersionsByIdReturn<U>
+{
+    const by_id: {[id: string]: U[]} = {}
+    items.forEach(item =>
     {
-        VAP_sets.push(grouped_VAP_set.latest, ...grouped_VAP_set.older)
+        const sub_items = by_id[item.id] || []
+        sub_items.push(item)
+        by_id[item.id] = sub_items
     })
-    return VAP_sets
-}
 
+    const previous_versions_by_id: {[id: string]: U[]} = {}
+    const latest: U[] = Object.values(by_id).map(sub_items =>
+    {
+        const sorted = sort_list(sub_items, get_created_at_ms, "descending")
 
+        const latest = sorted[0]!
+        previous_versions_by_id[latest.id] = sorted.slice(1)
 
-export function get_latest_versions_of_VAP_sets (VAP_sets: StateValueAndPredictionsSet[]): VersionedStateVAPsSet[]
-{
-    const graph = make_graph({ items: VAP_sets, get_id, get_head_ids, get_tail_ids })
+        return latest
+    })
 
-    const groups = find_leaf_groups({ graph })
-    const versioned: VersionedStateVAPsSet[] = groups.map(group =>
-        {
-            return {
-                latest: group[0]!,
-                older: group.slice(1),
-            }
-        })
-
-    return versioned
-}
-
-
-// // groups
-
-// const latest_version_VAPs = values_and_predictions.filter(VAP => !VAP.next_version_id)
-
-// const ordered_latest_version_VAPs = sort_list(latest_version_VAPs, get_VAP_datetime_sort_key, "descending")
-//     .map(VAP => [VAP])
-
-
-function get_VAP_datetime_sort_key (VAP: StateValueAndPredictionsSet)
-{
-    const dt = get_sim_datetime(VAP)
-    if (dt !== undefined) return dt.getTime()
-    return get_created_at_ms(VAP)
+    return { latest, previous_versions_by_id }
 }
 
 

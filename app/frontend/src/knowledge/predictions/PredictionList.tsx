@@ -4,8 +4,7 @@ import { useMemo, useState } from "preact/hooks"
 import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
-import type { EditableListEntryTopProps } from "../../form/editable_list/EditableListEntry"
-import { partition_and_prune_items_by_datetimes } from "../../shared/wcomponent/utils_datetime"
+import type { EditableListEntryTopProps, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
@@ -15,6 +14,7 @@ import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
+import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -54,8 +54,8 @@ function _PredictionList (props: Props)
 
 
     const {
-        invalid_future_items, invalid_past_items, future_items, present_items, past_items,
-    } = partition_and_prune_items_by_datetimes({ items: predictions, created_at_ms, sim_ms })
+        invalid_future_items, future_items, present_items, past_items,
+    } = partition_and_prune_items_by_datetimes_and_versions({ items: predictions, created_at_ms, sim_ms })
 
 
     function everything_but (predictions_subset: Prediction[]): Prediction[]
@@ -120,9 +120,9 @@ function _PredictionList (props: Props)
             }}
         />
 
-        {invalid_future_items.length || invalid_past_items.length ? <div>
-            Hidden ({invalid_future_items.length}, {invalid_past_items.length})
-        </div> : null}
+        {invalid_future_items.length > 0 && <div>
+            Hidden ({invalid_future_items.length})
+        </div>}
 
         {predictions.length > 0 && <div>
             {show_futures && <ExpandableList
@@ -171,20 +171,20 @@ const get_created_at = (item: Prediction) => item.created_at
 const get_custom_created_at = (item: Prediction) => item.custom_created_at
 
 
-function get_summary (item: Prediction, on_change?: (item: Prediction) => void): h.JSX.Element
+function get_summary (item: Prediction, crud: ListItemCRUD<Prediction>): h.JSX.Element
 {
     return <PredictionViewSummary
         prediction={item}
-        on_change={prediction => on_change && on_change(prediction) }
+        on_change={crud.update_item}
     />
 }
 
 
 function factory_get_details (editing: boolean)
 {
-    return (item: Prediction, on_change?: (item: Prediction) => void): h.JSX.Element => <PredictionViewDetails
+    return (item: Prediction, crud: ListItemCRUD<Prediction>): h.JSX.Element => <PredictionViewDetails
         prediction={item}
-        on_change={prediction => on_change && on_change(prediction) }
+        on_change={crud.update_item}
         editing={editing}
     />
 }
