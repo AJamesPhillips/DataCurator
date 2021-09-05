@@ -1,2 +1,2 @@
 
-export enum Tense { "past", "present", "future" }
+export enum Tense { "past", "present", "future", "eternal" }

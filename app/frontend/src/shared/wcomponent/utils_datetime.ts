@@ -60,7 +60,7 @@ export function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
         if (value_ms > sim_ms) return Tense.future
     }
 
-    return Tense.present // is eternal
+    return Tense.eternal
 }
 
 
@@ -154,7 +154,7 @@ function test_get_tense_of_item ()
     const date5_ms = date5.getTime()
 
     result = get_tense_of_item({ datetime: {} }, date1_ms)
-    test(result, Tense.present)
+    test(result, Tense.eternal)
 
     result = get_tense_of_item({ datetime: { min: date2 } }, date1_ms)
     test(result, Tense.future)
@@ -219,6 +219,8 @@ function test_partition_items_by_created_at_datetime ()
     let items: Simple[]
     let result: PartitionItemsByCreatedAtDatetimeReturn<string>
 
+    const date0 = new Date("2021-04-01 00:00")
+    const date0_ms = date0.getTime()
     const date1 = new Date("2021-04-01 00:01")
     const date1_ms = date1.getTime()
     const date2 = new Date("2021-04-01 00:02")
@@ -245,11 +247,17 @@ function test_partition_items_by_created_at_datetime ()
 
     result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date2_ms })
     test(result, {
+        invalid_future_items: [],
+        current_items: [c1.id, c2.id],
+    })
+
+    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date1_ms })
+    test(result, {
         invalid_future_items: [c2.id],
         current_items: [c1.id],
     })
 
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date1_ms })
+    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date0_ms })
     test(result, {
         invalid_future_items: [c1.id, c2.id],
         current_items: [],
@@ -278,6 +286,8 @@ function test_partition_items_by_datetimes ()
     let items: Simple[]
     let result: PartitionItemsByDatetimeReturn<string>
 
+    const date0 = new Date("2021-04-01 00:00")
+    const date0_ms = date0.getTime()
     const date1 = new Date("2021-04-01 00:01")
     const date1_ms = date1.getTime()
     const date2 = new Date("2021-04-01 00:02")
@@ -297,33 +307,33 @@ function test_partition_items_by_datetimes ()
         future_items: [],
     })
 
-    items = [s1, s2, s1, s2, s_eternal]
+    items = [s1, s2, s_eternal]
     result = ids_partition_items_by_datetimes({ items, sim_ms: date3_ms })
     test(result, {
-        past_items: [s1.id, s2.id, s1.id, s2.id],
+        past_items: [s1.id, s2.id],
         present_items: [s_eternal.id],
         future_items: [],
     })
 
-    result = ids_partition_items_by_datetimes({ items, sim_ms: date1_ms })
+    result = ids_partition_items_by_datetimes({ items, sim_ms: date2_ms })
     test(result, {
-        past_items: [],
-        present_items: [s1.id, s1.id, s_eternal.id],
-        future_items: [s2.id, s2.id],
-    })
-
-    result = ids_partition_items_by_datetimes({ items, sim_ms: date3_ms })
-    test(result, {
-        past_items: [s1.id, s2.id],
-        present_items: [],
+        past_items: [s1.id],
+        present_items: [s2.id, s_eternal.id],
         future_items: [],
     })
 
     result = ids_partition_items_by_datetimes({ items, sim_ms: date1_ms })
     test(result, {
         past_items: [],
-        present_items: [s1.id],
+        present_items: [s1.id, s_eternal.id],
         future_items: [s2.id],
+    })
+
+    result = ids_partition_items_by_datetimes({ items, sim_ms: date0_ms })
+    test(result, {
+        past_items: [],
+        present_items: [s_eternal.id],
+        future_items: [s1.id, s2.id],
     })
 }
 
@@ -336,4 +346,4 @@ function run_tests ()
     test_partition_items_by_datetimes()
 }
 
-run_tests()
+// run_tests()
