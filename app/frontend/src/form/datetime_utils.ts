@@ -3,7 +3,8 @@
 import type { TemporalUncertainty } from "../shared/uncertainty/uncertainty"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import { test } from "../shared/utils/test"
-import { TimeResolution, uncertain_datetime_is_eternal } from "../shared/utils/datetime"
+import type { TimeResolution } from "../shared/utils/datetime"
+import { uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
 
 
 

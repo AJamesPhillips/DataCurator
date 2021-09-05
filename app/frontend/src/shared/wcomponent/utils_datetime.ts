@@ -3,7 +3,7 @@ import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
 import type { HasVersion } from "./interfaces/base"
 import type { HasDateTime } from "../uncertainty/uncertainty"
-import { get_uncertain_datetime } from "../utils/datetime"
+import { get_uncertain_datetime } from "../uncertainty/datetime"
 
 
 

@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
-import { get_uncertain_datetime } from "../../shared/utils/datetime"
+import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
