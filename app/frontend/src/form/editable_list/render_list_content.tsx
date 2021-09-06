@@ -58,9 +58,11 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                     disable_collapsable={disable_partial_collapsed}
                     update_item={item =>
                     {
-                        update_item && update_item(item)
-
-                        if (update_items)
+                        if (update_item)
+                        {
+                            update_item(item)
+                        }
+                        else if (update_items)
                         {
                             const predicate_by_id = (other: T) => get_id(item) === get_id(other)
                             const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
@@ -70,9 +72,11 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                     delete_button_text={own_props.delete_button_text}
                     delete_item={() =>
                     {
-                        delete_item && delete_item(item)
-
-                        if (update_items)
+                        if (delete_item)
+                        {
+                            delete_item(item)
+                        }
+                        else if (update_items)
                         {
                             const predicate_by_id = (other: T) => get_id(item) === get_id(other)
                             const new_items = remove_from_list_by_predicate(items, predicate_by_id)

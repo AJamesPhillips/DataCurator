@@ -7,7 +7,6 @@ import type {
     StateValueAndPredictionsSet as VAPSet,
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
-import type { VAP_id_counterfactual_map, VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge"
 import { SummaryForPrediction } from "../predictions/common"
@@ -19,10 +18,12 @@ import type { ListItemCRUD } from "../../form/editable_list/EditableListEntry"
 
 
 
-export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_created_at: boolean, VAP_counterfactuals_map: VAP_id_counterfactual_map | undefined) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_created_at: boolean) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
-    VAPs = merge_counterfactuals_into_VAPs(VAPs, VAP_counterfactuals_map)
+    // leaving this for now in case we want to merge in and render v2 counterfactuals
+    VAPs = merge_counterfactuals_into_VAPs(VAPs)
+
     VAP_set = { ...VAP_set, entries: VAPs }
 
     const values = get_probable_VAP_set_values(VAP_set, VAPs_represent)
@@ -40,10 +41,9 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
 
 
-export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcomponent_id?: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
-    const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[VAP_set.id]
 
     return <div className="VAP_set_details">
         <br />
@@ -51,15 +51,14 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcompon
             datetime={VAP_set.datetime}
             on_change={datetime => crud.update_item({ ...VAP_set, datetime })}
         />
-        <br />
+
+        {/* Experimented with hiding list of VAPs when VAP set represents a boolean as it would/should only ever contain one value */}
+        {/* {VAPs_represent !== VAPsType.boolean && */}
         <div>
+            <br />
             <ValueAndPredictions
-                wcomponent_id={wcomponent_id}
-                VAP_set_id={VAP_set.id}
-                created_at={get_custom_created_at(VAP_set) || get_created_at(VAP_set)}
                 VAPs_represent={VAPs_represent}
                 values_and_predictions={VAPs}
-                VAP_counterfactuals_map={VAP_counterfactuals_map}
                 update_values_and_predictions={VAPs =>
                 {
                     const vanilla_entries = merge_entries(VAPs, VAP_set, VAPs_represent)
@@ -69,8 +68,10 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType, wcompon
                     crud.update_item(new_VAP_set)
                 }}
             />
+            <br />
         </div>
-        <br />
+        {/* } */}
+
         <br />
     </div>
 }

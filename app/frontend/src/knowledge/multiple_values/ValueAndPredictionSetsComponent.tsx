@@ -2,7 +2,11 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 import Box from "@material-ui/core/Box"
 
-import { EditableListEntryTopProps, EditableListEntry, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
+import {
+    EditableListEntryTopProps,
+    EditableListEntry,
+    ListItemCRUD,
+} from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
 import type { ExpandableListContentProps } from "../../form/editable_list/interfaces"
 import { ListHeader } from "../../form/editable_list/ListHeader"
@@ -178,6 +182,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
 
 
+// TODO reintegrate this warning function for development work
 function validate_VAP_sets_for_VAPs_represent (VAP_sets: VAPSet[], VAPs_represent: VAPsType): VAPSet[]
 {
     if (VAPs_represent === VAPsType.boolean)
@@ -249,10 +254,10 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<VAPSet
                     item={item}
                     get_created_at={item => item.created_at}
                     get_custom_created_at={get_created_at_datetime}
-                    get_summary={get_summary(VAPs_represent, args.VAP_set_counterfactuals_map)}
-                    get_details={get_details(VAPs_represent, args.wcomponent_id, args.VAP_set_counterfactuals_map)}
-                    get_details2={get_details2(VAPs_represent, editing)}
-                    get_details3={get_details3(VAPs_represent, previous_versions_by_id, args.creation_context, editing)}
+                    get_summary={get_summary_for_single_VAP_set(VAPs_represent, false)}
+                    get_details={get_details_for_single_VAP_set(VAPs_represent)}
+                    get_details2={get_details2_for_single_VAP_set(VAPs_represent, editing)}
+                    get_details3={get_details3(VAPs_represent, previous_versions_by_id)}
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
                     expanded={expanded_item_rows}
@@ -286,40 +291,18 @@ const predicate_by_id = (i1: VAPSet) => (i2: VAPSet) => {
 
 
 
-const get_summary = (VAPs_represent: VAPsType, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
-{
-    const VAP_counterfactuals_map = VAP_set_counterfactuals_map && VAP_set_counterfactuals_map[latest_VAP_set.id]
-
-    return get_summary_for_single_VAP_set(VAPs_represent, false, VAP_counterfactuals_map)(latest_VAP_set, crud)
-}
-
-
-
-const get_details = (VAPs_represent: VAPsType, wcomponent_id: string, VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
-{
-    return get_details_for_single_VAP_set(VAPs_represent, wcomponent_id, VAP_set_counterfactuals_map)(latest_VAP_set, crud)
-}
-
-
-
-const get_details2 = (VAPs_represent: VAPsType, editing: boolean) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
-{
-    return get_details2_for_single_VAP_set(VAPs_represent, editing)(latest_VAP_set, crud)
-}
-
-
-
-const get_details3 = (VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}, creation_context: CreationContextState, editing: boolean) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+const get_details3 = (VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
 {
     return <Box className="VAP_set_details">
         <br />
 
         <ValueAndPredictionSetOlderVersions
             VAPs_represent={VAPs_represent}
+            current_VAP_set={latest_VAP_set}
             older_VAP_sets={previous_versions_by_id[latest_VAP_set.id] || []}
+            create_item={crud.create_item}
             update_item={crud.update_item}
             delete_item={crud.delete_item}
-            editing={editing}
         />
         <br />
 
