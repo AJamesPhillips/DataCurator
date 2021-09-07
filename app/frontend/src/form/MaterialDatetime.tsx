@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 import { date2str } from "../shared/utils/date_helpers"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../state/State"
-import { Box, InputAdornment, makeStyles, Popover, TextField } from "@material-ui/core"
+import { Box, makeStyles, Popover, TextField } from "@material-ui/core"
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 
@@ -15,14 +15,15 @@ interface OwnProps
     always_allow_editing?: boolean
     fullWidth?: boolean
     required?: boolean
+    type?:string,
 }
 
 const map_state = (state: RootState) => ({
     time_resolution: state.display_options.time_resolution,
     presenting: state.display_options.consumption_formatting,
 })
-
 const connector = connect(map_state)
+
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _MaterialDateTime (props: Props)
@@ -58,7 +59,27 @@ function _MaterialDateTime (props: Props)
             cursor: "pointer",
         }
     }))
-    const classes = useStyles()
+    const classes = useStyles();
+    const date_format: string = "yyyy-MM-dd";
+    const time_format: string = "hh:mm";
+    const date_time_format:string = `${date_format}T${time_format}`;
+    let current_type:string = "date";
+    let current_format_str:string = date_format;
+    switch (props.type) {
+        case "time": {
+            current_format_str = time_format;
+            current_type = "time";
+            break;
+        }
+        case "datetime": {
+            current_format_str = date_time_format;
+            current_type = "datetime-local"
+            break;
+        }
+    }
+    console.group(current_type);
+    console.log(current_format_str);
+    console.groupEnd();
     return (
         <Box display="flex" justifyContent="space-between">
             <TextField
@@ -69,7 +90,7 @@ function _MaterialDateTime (props: Props)
                         <FileCopyIcon
                             className={classes.open_popover_icon}
                             onClick={handle_manual_date_click}
-                    />),
+                    />)
                 }}
                 label={props.title || null}
                 onChange={(e:any) => {
@@ -78,8 +99,8 @@ function _MaterialDateTime (props: Props)
                 }}
                 required={props.required || false}
                 size="small"
-                type="datetime-local"
-                value={(the_date) ? date2str(the_date, "yyyy-MM-ddThh:mm") : null}
+                type={current_type}
+                value={(the_date) ? date2str(the_date, current_format_str) : null}
                 variant="outlined"
             />
             <Popover
