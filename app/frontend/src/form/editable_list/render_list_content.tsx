@@ -11,8 +11,9 @@ export interface FactoryRenderListContentProps <U>
     items: U[]
     get_id: (item: U) => string
     update_items?: (items: U[]) => void
-    update_item?: (items: U) => void
-    delete_item?: (items: U) => void
+    create_item?: (item: U) => void
+    update_item?: (item: U) => void
+    delete_item?: (item: U) => void
 
     item_top_props: EditableListEntryTopProps<U>
     delete_button_text?: string
@@ -26,6 +27,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
         items,
         get_id,
         update_items,
+        create_item,
         update_item,
         delete_item,
 
@@ -56,6 +58,17 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
+                    create_item={item =>
+                    {
+                        if (create_item)
+                        {
+                            create_item(item)
+                        }
+                        else if (update_items)
+                        {
+                            update_items([...items, item])
+                        }
+                    }}
                     update_item={item =>
                     {
                         if (update_item)

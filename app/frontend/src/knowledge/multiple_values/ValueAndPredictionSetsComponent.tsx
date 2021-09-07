@@ -254,14 +254,20 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<VAPSet
                     item={item}
                     get_created_at={item => item.created_at}
                     get_custom_created_at={get_created_at_datetime}
+
                     get_summary={get_summary_for_single_VAP_set(VAPs_represent, false)}
                     get_details={get_details_for_single_VAP_set(VAPs_represent)}
                     get_details2={get_details2_for_single_VAP_set(VAPs_represent, editing)}
                     get_details3={get_details3(VAPs_represent, previous_versions_by_id)}
+
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
+                    create_item={item =>
+                    {
+                        update_items([...VAP_sets, item])
+                    }}
                     update_item={modified_VAP_set =>
                     {
                         const predicate = predicate_by_id(modified_VAP_set)

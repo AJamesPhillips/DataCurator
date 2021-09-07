@@ -35,9 +35,9 @@ interface OwnProps<U> extends EditableListEntryTopProps<U>
     item: U
     expanded?: boolean
     disable_collapsable?: boolean
-    create_item?: (item: U) => void
+    create_item: (item: U) => void
     update_item: (item: U) => void
-    delete_item?: () => void
+    delete_item: () => void
     delete_button_text?: string
 }
 
@@ -89,11 +89,9 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
         } = this.props
 
 
-        const crud: ListItemCRUD<T> = useMemo(() => ({
-            create_item: create_item || (item => { throw new Error(`Not implemented create for "${JSON.stringify(item)}"`) }),
-            update_item,
-            delete_item: delete_item || (item => { throw new Error(`Not implemented delete for "${JSON.stringify(item)}"`) }),
-        }), [create_item, update_item, delete_item])
+        const crud: ListItemCRUD<T> = useMemo(() => (
+            { create_item, update_item, delete_item }
+        ), [create_item, update_item, delete_item])
 
 
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined

@@ -46,7 +46,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictionSetOlderVersions (props: Props)
 {
-    const { VAPs_represent, older_VAP_sets, update_item, delete_item, editing } = props
+    const { VAPs_represent, older_VAP_sets, create_item, update_item, delete_item, editing } = props
     const item_descriptor = "Older version"
 
     const make_new_version = useMemo(() => () =>
@@ -56,27 +56,30 @@ function _ValueAndPredictionSetOlderVersions (props: Props)
     }, [props.current_VAP_set, props.creation_context, props.create_item])
 
 
+    const content = factory_render_list_content(
+    {
+        items: older_VAP_sets,
+        get_id,
+        create_item,
+        update_item,
+        delete_item,
+        debug_item_descriptor: item_descriptor,
+
+        item_top_props: {
+            get_created_at,
+            get_custom_created_at,
+            get_summary: get_summary_for_single_VAP_set(VAPs_represent, true),
+            get_details: get_details_for_single_VAP_set(VAPs_represent),
+            get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
+            extra_class_names: "value_and_prediction_set",
+        },
+    })
+
     return <ExpandableListWithAddButton
         items_count={older_VAP_sets.length}
         item_descriptor={item_descriptor}
         new_item_descriptor="Version"
-        content={factory_render_list_content(
-        {
-            items: older_VAP_sets,
-            get_id,
-            update_item,
-            delete_item,
-            debug_item_descriptor: item_descriptor,
-
-            item_top_props: {
-                get_created_at,
-                get_custom_created_at,
-                get_summary: get_summary_for_single_VAP_set(VAPs_represent, true),
-                get_details: get_details_for_single_VAP_set(VAPs_represent),
-                get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
-                extra_class_names: "value_and_prediction_set",
-            },
-        })}
+        content={content}
         on_click_new_item={make_new_version}
     />
 }
