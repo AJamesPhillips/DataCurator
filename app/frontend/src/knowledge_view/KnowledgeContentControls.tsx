@@ -16,7 +16,7 @@ const map_state = (state: RootState) => ({
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
-    display_created_at_time_slider: state.controls.display_created_at_time_slider,
+    display_time_sliders: state.controls.display_time_sliders,
     editing: !state.display_options.consumption_formatting,
 })
 

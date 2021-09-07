@@ -22,7 +22,7 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
-    display_created_at_time_slider: state.controls.display_created_at_time_slider,
+    display_time_sliders: state.controls.display_time_sliders,
     editing: !state.display_options.consumption_formatting,
 })
 
@@ -30,6 +30,7 @@ const map_dispatch = {
     change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime,
     change_display_at_sim_datetime: ACTIONS.display_at_sim_datetime.change_display_at_sim_datetime,
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
+    set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
 }
 
@@ -45,6 +46,9 @@ function _ContentControls (props: Props)
         const display_by_simulated_time = JSON.parse(e.currentTarget.value);
         props.set_display_by_simulated_time({ display_by_simulated_time });
     }
+
+    const display_sliders = props.editing || props.display_time_sliders
+
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
             {/* <div style={{ width: 40, display: "inline-block" }}></div> */}
@@ -52,6 +56,14 @@ function _ContentControls (props: Props)
             <Box mb={2}  display="flex" flexDirection="row" justifyContent="space-between">
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
+                </Box>
+
+                <Box component="label">
+                    {!props.editing && <Button
+                        onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
+                    >
+                        {display_sliders ? "Hide" : "Show"} time sliders
+                    </Button>}
                 </Box>
 
                 <Box component="label">
@@ -86,18 +98,21 @@ function _ContentControls (props: Props)
                     </ButtonGroup>
                 </Box>
             </Box>
-            <Box display="flex" flexDirection="row" alignItems="center" alignContent="center">
-                    {(props.editing || props.display_created_at_time_slider) && <Button
-                        onClick={() => props.toggle_linked_datetime_sliders()}
-                    >{props.linked_datetime_sliders ? "Unlink" : "Link"}</Button>}
+
+            {display_sliders && <Box
+                display="flex" flexDirection="row" alignItems="center" alignContent="center"
+            >
+                <Button onClick={() => props.toggle_linked_datetime_sliders()}>
+                    {props.linked_datetime_sliders ? "Unlink" : "Link"}
+                </Button>
                 <Box flexGrow={1}>
-                    {(props.editing || props.display_created_at_time_slider) && <TimeSlider
+                    <TimeSlider
                         events={created_events}
                         get_handle_ms={state => state.routing.args.created_at_ms}
                         change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
                         data_set_name="content_controls_created_at_datetimes"
                         title="Created at"
-                    />}
+                    />
                     <TimeSlider
                         events={sim_events}
                         get_handle_ms={state => state.routing.args.sim_ms}
@@ -106,7 +121,7 @@ function _ContentControls (props: Props)
                         title="Simulation"
                     />
                 </Box>
-            </Box>
+            </Box>}
         </Box>
     )
 }

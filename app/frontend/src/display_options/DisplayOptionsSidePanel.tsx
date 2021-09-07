@@ -15,7 +15,7 @@ const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
     certainty_formatting: state.display_options.certainty_formatting,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
-    display_created_at_time_slider: state.controls.display_created_at_time_slider,
+    display_time_sliders: state.controls.display_time_sliders,
 })
 
 
@@ -23,7 +23,7 @@ const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
-    set_display_created_at_time_slider: ACTIONS.controls.set_display_created_at_time_slider,
+    set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
 }
 
 
@@ -127,13 +127,13 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Whilst presenting, display time slider for "created at time"</b>
+            <b>Whilst presenting, display time sliders for "created at" and "simulated" time</b>
 
             <EditableCheckbox
-                value={props.display_created_at_time_slider}
-                on_change={display_created_at_time_slider =>
+                value={props.display_time_sliders}
+                on_change={display_time_sliders =>
                 {
-                    props.set_display_created_at_time_slider(display_created_at_time_slider)
+                    props.set_display_time_sliders(display_time_sliders)
                 }}
             />
         </p>
