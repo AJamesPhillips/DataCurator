@@ -1,12 +1,12 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useEffect, useMemo, useState } from "preact/hooks"
-import { Box, FormControl, FormControlLabel, FormLabel, InputLabel, Typography } from "@material-ui/core"
+import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
-import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+// import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { LabelsEditor } from "../../labels/LabelsEditor"
@@ -48,6 +48,7 @@ import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { GoalFormFields } from "./GoalFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
+import { MaterialDateTime } from "../../form/MaterialDatetime"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
@@ -371,13 +372,23 @@ function _WComponentForm (props: Props)
         </div>}
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
-
         <FormControl fullWidth={true}>
-            <EditableCustomDateTime
+            {/* <EditableCustomDateTime
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
-                on_change={new_custom_created_at => upsert_wcomponent({ custom_created_at: new_custom_created_at })}
+                on_change={new_custom_created_at => {
+                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
+                }}
+            /> */}
+
+            <MaterialDateTime
+                fullWidth={true}
+                on_change={new_custom_created_at => {
+                   upsert_wcomponent({ custom_created_at: new_custom_created_at })
+                }}
+                title="Created at"
+                value={wcomponent.custom_created_at}
             />
         </FormControl>
 
