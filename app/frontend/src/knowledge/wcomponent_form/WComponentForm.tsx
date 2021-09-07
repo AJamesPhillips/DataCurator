@@ -388,6 +388,7 @@ function _WComponentForm (props: Props)
                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
                 title="Created at"
+                type="datetime"
                 value={wcomponent.custom_created_at}
             />
         </FormControl>
