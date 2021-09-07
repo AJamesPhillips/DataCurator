@@ -69,10 +69,11 @@ function _MaterialDateTime (props: Props)
                         <FileCopyIcon
                             className={classes.open_popover_icon}
                             onClick={handle_manual_date_click}
-                    />)
+                    />),
                 }}
                 label={props.title || null}
                 onChange={(e:any) => {
+                    set_the_date(new Date(e.target.value))
                     if (props.on_change) props.on_change(new Date(e.target.value))
                 }}
                 required={props.required || false}
