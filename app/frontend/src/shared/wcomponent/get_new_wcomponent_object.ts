@@ -5,7 +5,7 @@ import { get_new_wcomponent_id } from "../utils/ids"
 import type { WComponentNodeGoal } from "./interfaces/goal"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponentPrioritisation } from "./interfaces/priorities"
-import type { WComponent, WComponentConnection, WComponentNode } from "./interfaces/SpecialisedObjects"
+import { WComponent, WComponentConnection, WComponentNode, wcomponent_is_causal_link } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "./interfaces/state"
 import type { WComponentBase } from "./interfaces/wcomponent_base"
 
@@ -30,7 +30,7 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
 
     if (partial_wcomponent.type === "causal_link" || partial_wcomponent.type === "relation_link")
     {
-        const causal_link: WComponentConnection = {
+        let link: WComponentConnection = {
             from_id: "",
             to_id: "",
             from_type: "state",
@@ -39,7 +39,17 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
         }
-        wcomponent = causal_link
+
+        if (wcomponent_is_causal_link(link))
+        {
+            link = {
+                effect_when_true: 1,
+                effect_when_false: -1,
+                ...link,
+            }
+        }
+
+        wcomponent = link
     }
     else if (partial_wcomponent.type === "judgement" || partial_wcomponent.type === "objective")
     {
