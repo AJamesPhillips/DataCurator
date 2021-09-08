@@ -38,7 +38,14 @@ export function Button (props: ButtonProps & SpecificProps)
                     e.preventDefault()
                     // Using onPointerDown otherwise other onPointerDown on parent elements fire
                     // and the onClick here never gets to fire
-                    props.onPointerDown ? props.onPointerDown(e) : (props.onClick && props.onClick(e))
+                    props.onPointerDown && props.onPointerDown(e)
+                }}
+                onClick={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+                {
+                    // Not sure we want to put this here
+                    e.stopImmediatePropagation()
+                    e.preventDefault()
+                    props.onClick && props.onClick(e)
                 }}
             >
                 { props.children || props.value }

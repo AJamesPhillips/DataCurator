@@ -18,7 +18,14 @@ export function ListHeaderAddButton (props: OwnProps)
 
     return (
         <Box mb={2}>
-            <Button fullWidth={true} onClick={() => on_pointer_down_new_list_entry()}>
+            <Button
+                fullWidth={true}
+                onClick={e =>
+                {
+                    e.stopImmediatePropagation() // otherwise the list of items will change its expanded state
+                    on_pointer_down_new_list_entry()
+                }}
+            >
                 {`New ${new_item_descriptor}`}
             </Button>
         </Box>
