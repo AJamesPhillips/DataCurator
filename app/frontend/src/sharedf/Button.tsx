@@ -33,12 +33,25 @@ export function Button (props: ButtonProps & SpecificProps)
                 variant={props.variant || "contained"}
                 onPointerDown={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
                 {
+                    // Causes button focus and other elements to blur & their form onblur handlers to
+                    // fire, triggering any ob_change handlers
+                    e.currentTarget.focus()
                     // Not sure we want to put this here
                     e.stopImmediatePropagation()
                     e.preventDefault()
                     // Using onPointerDown otherwise other onPointerDown on parent elements fire
                     // and the onClick here never gets to fire
-                    props.onPointerDown ? props.onPointerDown(e) : (props.onClick && props.onClick(e))
+                    props.onPointerDown && props.onPointerDown(e)
+                }}
+                onClick={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+                {
+                    // Causes button focus and other elements to blur & their form onblur handlers to
+                    // fire, triggering any ob_change handlers
+                    e.currentTarget.focus()
+                    // Not sure we want to put this here
+                    e.stopImmediatePropagation()
+                    e.preventDefault()
+                    props.onClick && props.onClick(e)
                 }}
             >
                 { props.children || props.value }

@@ -1,6 +1,6 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
+import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
 
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
 import { ACTIONS } from "../state/actions"
@@ -46,7 +46,7 @@ function _KnowledgeViewForm (props: Props)
     const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id)
 
     const update_item = (knowledge_view: KnowledgeView) => upsert_knowledge_view({ knowledge_view })
-    const crud: ListItemCRUD<KnowledgeView> = {
+    const crud: ListItemCRUDRequiredU<KnowledgeView> = {
         create_item: () => { throw new Error("Not implemented create knowledge view") },
         update_item,
         delete_item: () => { throw new Error("Not implemented delete knowledge view") },

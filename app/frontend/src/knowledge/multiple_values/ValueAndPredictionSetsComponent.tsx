@@ -3,9 +3,11 @@ import { useState } from "preact/hooks"
 import Box from "@material-ui/core/Box"
 
 import {
-    EditableListEntryTopProps,
+    EditableListEntryItemProps,
     EditableListEntry,
-    ListItemCRUD,
+    ListItemCRUDRequiredCUD,
+    ListItemCRUDRequiredC,
+    ListItemCRUDRequiredCU,
 } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
 import type { ExpandableListContentProps } from "../../form/editable_list/interfaces"
@@ -15,7 +17,7 @@ import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import type { VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { Tense } from "../../shared/wcomponent/interfaces/datetime"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
 import { get_created_at_datetime } from "../../shared/wcomponent/utils_datetime"
 import { replace_element, remove_from_list_by_predicate } from "../../utils/list"
@@ -57,64 +59,77 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
     const {
         wcomponent_id, VAP_set_counterfactuals_map,
-        item_descriptor, values_and_prediction_sets, VAPs_represent,
-        invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
-        editing
+        item_descriptor, VAPs_represent, update_items,
+        values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
+        creation_context, editing
     } = props
 
 
-    const render_future_list_content = factory_render_list_content2({
-        VAP_sets: future_items,
+    const render_future_list_content = factory_render_VAP_set_list_content({
+        subset_VAP_sets: future_items,
         previous_versions_by_id,
-        all_VAP_sets: values_and_prediction_sets,
-        update_items: props.update_items,
+        all_VAP_sets,
+        update_items,
         wcomponent_id,
         VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.future,
-        creation_context: props.creation_context,
+        creation_context,
         editing,
     })
 
-    const render_present_list_content = factory_render_list_content2({
-        VAP_sets: present_items,
+    const render_present_list_content = factory_render_VAP_set_list_content({
+        subset_VAP_sets: present_items,
         previous_versions_by_id,
-        all_VAP_sets: values_and_prediction_sets,
-        update_items: props.update_items,
+        all_VAP_sets,
+        update_items,
         wcomponent_id,
         VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.present,
-        creation_context: props.creation_context,
+        creation_context,
         editing,
     })
 
-    const render_past_list_content = factory_render_list_content2({
-        VAP_sets: past_items,
+    const render_past_list_content = factory_render_VAP_set_list_content({
+        subset_VAP_sets: past_items,
         previous_versions_by_id,
-        all_VAP_sets: values_and_prediction_sets,
-        update_items: props.update_items,
+        all_VAP_sets,
+        update_items,
         wcomponent_id,
         VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.past,
-        creation_context: props.creation_context,
+        creation_context,
         editing,
     })
 
 
-    const new_VAP_set_form_top_props: EditableListEntryTopProps<VAPSet> = {
-        get_created_at: v => v.created_at,
-        get_custom_created_at: v => v.custom_created_at,
+    const new_VAP_set_form_item_props: EditableListEntryItemProps<VAPSet, ListItemCRUDRequiredCU<VAPSet>> = {
+        get_created_at: get_actual_created_at_datetime,
+        get_custom_created_at: get_actual_custom_created_at_datetime,
         get_summary: new_value_and_prediction_set(VAPs_represent),
         get_details: () => <div />, // get_details_for_single_VAP_set(VAPs_represent),
         get_details2: () => <div />, // get_details2_for_single_VAP_set(VAPs_represent, editing),
-        extra_class_names: `value_and_prediction_set new`
+        extra_class_names: `value_and_prediction_set new`,
+        crud: {
+            create_item: new_VAP_set =>
+            {
+                update_items([...all_VAP_sets, new_VAP_set])
+                set_new_item(undefined)
+            },
+            update_item: modified_VAP_set =>
+            {
+                const predicate = predicate_by_id_and_created_at(modified_VAP_set)
+                const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate)
+                update_items(updated_VAP_sets)
+            },
+        },
     }
 
 
     const title = editing
-        ? get_items_descriptor(item_descriptor, values_and_prediction_sets.length, editing)
+        ? get_items_descriptor(item_descriptor, all_VAP_sets.length, editing)
         : item_descriptor
 
 
@@ -131,7 +146,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
-                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, values_and_prediction_sets, props.creation_context)
+                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, all_VAP_sets, props.creation_context)
                     set_new_item(new_VAP_set)
                 }}
             />}
@@ -140,13 +155,8 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         <NewItemForm
             new_item={new_item}
             set_new_item={set_new_item}
-            item_top_props={new_VAP_set_form_top_props}
+            item_props={new_VAP_set_form_item_props}
             item_descriptor={item_descriptor}
-            add_item={new_item =>
-            {
-                props.update_items([...values_and_prediction_sets, new_item])
-                set_new_item(undefined)
-            }}
         />
 
         {invalid_future_items.length > 0 && <div>
@@ -182,7 +192,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
 
 
-// TODO reintegrate this warning function for development work
+/* TODO reintegrate this warning function for development work
 function validate_VAP_sets_for_VAPs_represent (VAP_sets: VAPSet[], VAPs_represent: VAPsType): VAPSet[]
 {
     if (VAPs_represent === VAPsType.boolean)
@@ -199,7 +209,7 @@ function validate_VAP_sets_for_VAPs_represent (VAP_sets: VAPSet[], VAPs_represen
 
     return VAP_sets
 }
-
+*/
 
 
 function count_and_versions (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: {}[]}, editing: boolean)
@@ -221,9 +231,9 @@ function count_and_versions (title: string, all_latest: {id: string}[], previous
 
 interface FactoryRenderListContentArgs <U>
 {
-    VAP_sets: U[]
-    previous_versions_by_id: {[id: string]: U[]},
+    subset_VAP_sets: U[]
     all_VAP_sets: U[]
+    previous_versions_by_id: {[id: string]: U[]},
     update_items: (items: U[]) => void
     wcomponent_id: string
     VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
@@ -232,11 +242,11 @@ interface FactoryRenderListContentArgs <U>
     creation_context: CreationContextState
     editing: boolean
 }
-function factory_render_list_content2 (args: FactoryRenderListContentArgs<VAPSet>)
+function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs<VAPSet>)
 {
-    const { VAP_sets, previous_versions_by_id, all_VAP_sets, update_items, VAPs_represent, tense, editing } = args
+    const { subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_items, VAPs_represent, tense, editing } = args
 
-    const render_list_content = (list_content_props: ExpandableListContentProps) =>
+    const render_VAP_set_list_content = (list_content_props: ExpandableListContentProps) =>
     {
         const {
             disable_partial_collapsed,
@@ -244,16 +254,34 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<VAPSet
             expanded_item_rows,
         } = list_content_props
 
+
+        const crud: ListItemCRUDRequiredCUD<VAPSet> = {
+            create_item: item => update_items([...all_VAP_sets, item]),
+            update_item: modified_VAP_set =>
+            {
+                const predicate = predicate_by_id_and_created_at(modified_VAP_set)
+                const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate)
+                update_items(updated_VAP_sets)
+            },
+            delete_item: item =>
+            {
+                const predicate = predicate_by_id_and_created_at(item)
+                const updated_VAP_sets = remove_from_list_by_predicate(all_VAP_sets, predicate)
+                update_items(updated_VAP_sets)
+            },
+        }
+
+
         return <div
             style={{ display: expanded_items ? "" : "none", cursor: "initial" }}
             onClick={e => e.stopPropagation()}
         >
-            {VAP_sets.map(item => <div key={item.id}>
+            {subset_VAP_sets.map(item => <div key={item.id}>
                 <hr className="entries_horizontal_dividers" />
                 <EditableListEntry
                     item={item}
-                    get_created_at={item => item.created_at}
-                    get_custom_created_at={get_created_at_datetime}
+                    get_created_at={get_actual_created_at_datetime}
+                    get_custom_created_at={get_actual_custom_created_at_datetime}
 
                     get_summary={get_summary_for_single_VAP_set(VAPs_represent, false)}
                     get_details={get_details_for_single_VAP_set(VAPs_represent)}
@@ -264,40 +292,30 @@ function factory_render_list_content2 (args: FactoryRenderListContentArgs<VAPSet
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
-                    create_item={item =>
-                    {
-                        update_items([...VAP_sets, item])
-                    }}
-                    update_item={modified_VAP_set =>
-                    {
-                        const predicate = predicate_by_id(modified_VAP_set)
-                        const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate)
-                        update_items(updated_VAP_sets)
-                    }}
+                    crud={crud}
                     delete_button_text="Delete Set of Value &amp; Predictions"
-                    delete_item={() =>
-                    {
-                        update_items(remove_from_list_by_predicate(all_VAP_sets, predicate_by_id(item)))
-                    }}
                 />
             </div>
             )}
         </div>
     }
 
-    return render_list_content
+    return render_VAP_set_list_content
 }
 
 
+const get_actual_created_at_datetime = (item: VAPSet) => item.created_at
+const get_actual_custom_created_at_datetime = (item: VAPSet) => item.custom_created_at
 
-const predicate_by_id = (i1: VAPSet) => (i2: VAPSet) => {
+
+const predicate_by_id_and_created_at = (i1: VAPSet) => (i2: VAPSet) => {
     // Can not use `get_created_at_ms` in case the user sets or changes the custom datetime
     return i1.id === i2.id && (i1.created_at.getTime()) === (i2.created_at.getTime())
 }
 
 
 
-const get_details3 = (VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}) => (latest_VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+const get_details3 = (VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}) => (latest_VAP_set: VAPSet, crud: ListItemCRUDRequiredCUD<VAPSet>): h.JSX.Element =>
 {
     return <Box className="VAP_set_details">
         <br />

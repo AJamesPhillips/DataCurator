@@ -75,6 +75,7 @@ function _FiltersSidePanel (props: Props)
                 placeholder=""
                 selected_option_ids={props.filters.exclude_by_component_types}
                 options={wcomponent_type_options()}
+                allow_none={true}
                 on_change={exclude_by_component_types =>
                 {
                     props.set_filters({ filters: { ...props.filters, exclude_by_component_types } })
@@ -91,6 +92,7 @@ function _FiltersSidePanel (props: Props)
                 placeholder=""
                 selected_option_ids={props.filters.include_by_component_types}
                 options={wcomponent_type_options()}
+                allow_none={true}
                 on_change={include_by_component_types =>
                 {
                     props.set_filters({ filters: { ...props.filters, include_by_component_types } })

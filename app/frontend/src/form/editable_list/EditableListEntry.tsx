@@ -8,7 +8,35 @@ import { EditableCustomDateTime } from "../EditableCustomDateTime"
 
 
 
+/*
+ * This is not CRUD as it lacks the R for Read but it's close enough semantically
+ * to be useful to people developing against this interface / component API etc.
+ */
 export interface ListItemCRUD<U>
+{
+    create_item?: (item: U) => void
+    update_item?: (item: U) => void
+    delete_item?: (item: U) => void
+}
+export interface ListItemCRUDRequiredU<U> extends ListItemCRUD<U>
+{
+    create_item?: (item: U) => void
+    update_item: (item: U) => void
+    delete_item?: (item: U) => void
+}
+export interface ListItemCRUDRequiredC<U> extends ListItemCRUD<U>
+{
+    create_item: (item: U) => void
+    update_item?: (item: U) => void
+    delete_item?: (item: U) => void
+}
+export interface ListItemCRUDRequiredCU<U> extends ListItemCRUDRequiredU<U>, ListItemCRUDRequiredC<U>
+{
+    create_item: (item: U) => void
+    update_item: (item: U) => void
+    delete_item?: (item: U) => void
+}
+export interface ListItemCRUDRequiredCUD<U> extends ListItemCRUD<U>
 {
     create_item: (item: U) => void
     update_item: (item: U) => void
@@ -16,29 +44,28 @@ export interface ListItemCRUD<U>
 }
 
 
-export interface EditableListEntryTopProps<U>
+export interface EditableListEntryItemProps<U, Crud>
 {
     get_created_at?: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
     set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
-    get_summary: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
-    get_details: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
-    get_details2?: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
-    get_details3?: (item: U, crud: ListItemCRUD<U>) => h.JSX.Element
+    get_summary: (item: U, crud: Crud) => h.JSX.Element
+    get_details: (item: U, crud: Crud) => h.JSX.Element
+    get_details2?: (item: U, crud: Crud) => h.JSX.Element
+    get_details3?: (item: U, crud: Crud) => h.JSX.Element
     calc_initial_custom_expansion_state?: (item: U) => boolean | undefined
     extra_class_names?: string
+    delete_button_text?: string
+    crud: Crud
 }
 
 
-interface OwnProps<U> extends EditableListEntryTopProps<U>
+interface OwnProps<U, Crud extends ListItemCRUDRequiredU<U>> extends EditableListEntryItemProps<U, Crud>
 {
     item: U
     expanded?: boolean
     disable_collapsable?: boolean
-    create_item: (item: U) => void
-    update_item: (item: U) => void
-    delete_item: () => void
-    delete_button_text?: string
+    crud: Crud
 }
 
 
@@ -49,9 +76,9 @@ interface State
 }
 
 
-export class EditableListEntry <T> extends Component<OwnProps<T>, State>
+export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extends Component<OwnProps<T, Crud>, State>
 {
-    constructor (props: OwnProps<T>)
+    constructor (props: OwnProps<T, Crud>)
     {
         super(props)
 
@@ -62,7 +89,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
         this.state = { internal__expanded }
     }
 
-    componentDidUpdate (prev_props: OwnProps<T>, prev_state: State)
+    componentDidUpdate (prev_props: OwnProps<T, Crud>, prev_state: State)
     {
         if (this.props.expanded !== prev_props.expanded)
         {
@@ -82,16 +109,10 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
             get_details2,
             get_details3,
             disable_collapsable,
-            create_item,
-            update_item,
-            delete_item,
+            crud,
             delete_button_text,
         } = this.props
-
-
-        const crud: ListItemCRUD<T> = useMemo(() => (
-            { create_item, update_item, delete_item }
-        ), [create_item, update_item, delete_item])
+        const { update_item, delete_item } = crud
 
 
         const custom_created_at = get_custom_created_at ? get_custom_created_at(item) : undefined
@@ -105,10 +126,14 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
         const class_name = `editable_list_entry ${class_name__not_collapsable} ${class_name__expanded} ${extra_class_names}`
 
 
+        const on_delete = useMemo(() => delete_item && (() => delete_item(item)), [delete_item, item])
+
+
         const date_on_change = (new_custom_created_at: Date | undefined) =>
         {
             update_item(set_custom_created_at(item, new_custom_created_at))
         }
+
 
         return <div className={class_name}>
             <div className="summary_header">
@@ -130,7 +155,7 @@ export class EditableListEntry <T> extends Component<OwnProps<T>, State>
                 </div>
 
                 <div>
-                    <ConfirmatoryDeleteButton on_delete={delete_item} button_text={delete_button_text} />
+                    {on_delete && <ConfirmatoryDeleteButton on_delete={on_delete} button_text={delete_button_text} />}
 
                     {(get_created_at || get_custom_created_at) && <FormControl>
                         <EditableCustomDateTime

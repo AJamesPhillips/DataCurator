@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
-import type { ListItemCRUD } from "../../form/editable_list/EditableListEntry"
+import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
@@ -20,7 +20,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType) =>
     const [show_advanced, set_show_advanced] = useState(false)
     // useEffect(() => {}, [VAPs_represent])
 
-    return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUD<StateValueAndPredictionsSet>) =>
+    return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUDRequiredU<StateValueAndPredictionsSet>) =>
 {
     const { update_item } = crud
 
@@ -28,7 +28,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType) =>
         {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={update_item} />}
         {VAPs_represent === VAPsType.action && <SimplifiedActionForm VAP_set={VAP_set} on_change={update_item} />}
 
-        {<SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />}
+        <SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />
 
         <Button
             value={(show_advanced ? "Hide" : "Show") + " advanced options"}

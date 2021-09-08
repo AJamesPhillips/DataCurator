@@ -1,37 +1,27 @@
 import { h } from "preact"
 
-import { upsert_entry, remove_from_list_by_predicate } from "../../utils/list"
-import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
+import { EditableListEntry, EditableListEntryItemProps, ListItemCRUDRequiredU } from "./EditableListEntry"
 import type { ExpandableListContentProps } from "./interfaces"
 
 
 
-export interface FactoryRenderListContentProps <U>
+export interface FactoryRenderListContentProps <U, Crud>
 {
     items: U[]
     get_id: (item: U) => string
-    update_items?: (items: U[]) => void
-    create_item?: (item: U) => void
-    update_item?: (item: U) => void
-    delete_item?: (item: U) => void
 
-    item_top_props: EditableListEntryTopProps<U>
-    delete_button_text?: string
+    item_props: EditableListEntryItemProps<U, Crud>
 
     debug_item_descriptor?: string
 }
 
-export function factory_render_list_content <T> (own_props: FactoryRenderListContentProps<T>)
+export function factory_render_list_content <U, Crud extends ListItemCRUDRequiredU<U>> (own_props: FactoryRenderListContentProps<U, Crud>)
 {
     const {
         items,
         get_id,
-        update_items,
-        create_item,
-        update_item,
-        delete_item,
 
-        item_top_props,
+        item_props,
 
         debug_item_descriptor = "",
     } = own_props
@@ -45,6 +35,7 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
             expanded_item_rows,
         } = list_content_props
 
+
         return <div
             style={{ display: expanded_items ? "" : "none", cursor: "initial" }}
             onClick={e => e.stopPropagation()}
@@ -54,48 +45,10 @@ export function factory_render_list_content <T> (own_props: FactoryRenderListCon
                 <EditableListEntry
                     item={item}
 
-                    {...item_top_props}
+                    {...item_props}
 
                     expanded={expanded_item_rows}
                     disable_collapsable={disable_partial_collapsed}
-                    create_item={item =>
-                    {
-                        if (create_item)
-                        {
-                            create_item(item)
-                        }
-                        else if (update_items)
-                        {
-                            update_items([...items, item])
-                        }
-                    }}
-                    update_item={item =>
-                    {
-                        if (update_item)
-                        {
-                            update_item(item)
-                        }
-                        else if (update_items)
-                        {
-                            const predicate_by_id = (other: T) => get_id(item) === get_id(other)
-                            const new_items = upsert_entry(items, item, predicate_by_id, debug_item_descriptor)
-                            update_items(new_items)
-                        }
-                    }}
-                    delete_button_text={own_props.delete_button_text}
-                    delete_item={() =>
-                    {
-                        if (delete_item)
-                        {
-                            delete_item(item)
-                        }
-                        else if (update_items)
-                        {
-                            const predicate_by_id = (other: T) => get_id(item) === get_id(other)
-                            const new_items = remove_from_list_by_predicate(items, predicate_by_id)
-                            update_items(new_items)
-                        }
-                    }}
                 />
             </div>)}
         </div>

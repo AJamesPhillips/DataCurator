@@ -108,13 +108,12 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {(editing || label_ids.length > 0) && <p>
+            Label
             <LabelsEditor
                 label_ids={label_ids}
                 on_change={label_ids => bulk_edit_wcomponents({ wcomponent_ids, change: { label_ids } })}
             />
         </p>}
-
-        <hr />
 
         {editing && <p>
             Add to knowledge view

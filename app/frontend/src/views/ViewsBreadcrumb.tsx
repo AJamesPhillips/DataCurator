@@ -1,5 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@material-ui/core"
+
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
@@ -7,7 +9,6 @@ import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import type { Color } from "../shared/interfaces"
-import { Box, Breadcrumbs, FormControl, InputLabel, makeStyles, MenuItem, Select, Typography } from "@material-ui/core"
 
 
 

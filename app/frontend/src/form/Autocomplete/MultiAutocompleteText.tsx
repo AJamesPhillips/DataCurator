@@ -31,7 +31,7 @@ interface OwnProps <E extends AutocompleteOption = AutocompleteOption>
 
 
 const map_state = (state: RootState, own_props: OwnProps) => ({
-    editing: own_props.always_allow_editing || !state.display_options.consumption_formatting,
+    editable: own_props.always_allow_editing || !state.display_options.consumption_formatting,
 })
 
 const map_dispatch = {
@@ -44,7 +44,7 @@ type Props<E extends AutocompleteOption> = ConnectedProps<typeof connector> & Ow
 
 function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
-    const { editing, options, selected_option_ids } = props
+    const { editable, options, selected_option_ids } = props
 
     const filtered_options = options.filter(({ id }) => !selected_option_ids.includes(id))
 
@@ -54,22 +54,22 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     return (
         <Box width="100%" overflowX="hidden">
-            {
-                editing && <AutocompleteText
-                    {...props}
-                    selected_option_id={undefined}
-                    options={filtered_options}
-                    on_change={id =>
-                    {
-                        if (id === undefined) return
-                        props.on_change([...selected_option_ids, id])
-                    }}
-                />
-            }
+            {editable && <AutocompleteText
+                {...props}
+                selected_option_id={undefined}
+                options={filtered_options}
+                on_change={id =>
+                {
+                    if (id === undefined) return
+                    props.on_change([...selected_option_ids, id])
+                }}
+                allow_editing_when_presenting={editable}
+            />}
+
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {selected_option_ids.map(id => <Box p={1} flexGrow={1} flexShrink={1} flexBasis="30%" maxWidth="100%">
                     <SelectedOption
-                        editing={editing}
+                        editing={editable}
                         option={option_by_id[id]}
                         on_remove_option={removed_id =>
                         {

@@ -55,8 +55,8 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
     {
         const judgement: WComponentJudgement = {
             judgement_target_wcomponent_id: "",
-            judgement_operator: "!=",
-            judgement_comparator_value: "",
+            judgement_operator: "==",
+            judgement_comparator_value: "True",
             judgement_manual: undefined,
             ...base,
             ...partial_wcomponent,

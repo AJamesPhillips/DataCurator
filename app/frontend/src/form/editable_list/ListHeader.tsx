@@ -19,7 +19,11 @@ export function ListHeader (props: OwnProps)
 
 
     return <div
-        onClick={on_click_header}
+        onClick={e =>
+        {
+            e.stopImmediatePropagation()
+            on_click_header && on_click_header()
+        }}
         style={{ cursor: on_click_header ? "pointer" : "default" }}
     >
         {other_content()}
