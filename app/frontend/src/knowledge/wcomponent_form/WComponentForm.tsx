@@ -52,6 +52,7 @@ import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
+import { WComponentImageForm } from "./WComponentImageForm"
 
 
 
@@ -163,7 +164,6 @@ function _WComponentForm (props: Props)
 
 
     return <Box  className={`editable-${wcomponent_id}`}>
-
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
@@ -242,8 +242,6 @@ function _WComponentForm (props: Props)
             />
         </FormControl>}
 
-
-
         {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
@@ -289,7 +287,6 @@ function _WComponentForm (props: Props)
                 on_change={label_ids => upsert_wcomponent({ label_ids })}
             />
         </FormControl>}
-
 
         {wcomponent_is_event(wcomponent)&& <WComponentEventAtFormField
             wcomponent={wcomponent}
@@ -389,6 +386,10 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
+        {editing && <WComponentImageForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
 
         {editing && <p>
             <span className="description_label">Hide (node) title</span>
