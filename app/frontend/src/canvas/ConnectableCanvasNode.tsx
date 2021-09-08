@@ -82,6 +82,7 @@ export function ConnectableCanvasNode (props: OwnProps)
         },
       }));
     const classes = useStyles();
+
     return <CanvasNode
         get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
@@ -93,15 +94,11 @@ export function ConnectableCanvasNode (props: OwnProps)
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}
     >
-        {/* <div className="node_main_content" style={main_content_styles}>
-            {props.node_main_content}
-        </div> */}
-        {/* <CardHeader>
-                <h1>HIHIHII</h1>
-            </CardHeader> */}
-
     {/* <Box className="node_main_content" style={main_content_styles}> */}
-        <Card raised={true} elevation={3} variant="outlined" className="node_main_content">
+        <Card
+            className="node_main_content"
+            variant="outlined" style={main_content_styles}
+        >
             {(props.cover_image) && <CardMedia
                 className={classes.media}
                 image={props.cover_image}
