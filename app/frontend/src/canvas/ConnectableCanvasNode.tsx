@@ -9,11 +9,12 @@ import type {
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
 import { useState } from "preact/hooks"
-
+import { Box, Card, CardContent, CardHeader, CardMedia, makeStyles } from "@material-ui/core"
 
 
 interface OwnProps
 {
+    cover_image?: string
     get_ref?: (ref: HTMLDivElement) => void
     position?: CanvasPoint
     node_main_content: h.JSX.Element
@@ -74,7 +75,13 @@ export function ConnectableCanvasNode (props: OwnProps)
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
 
-
+    const useStyles = makeStyles(theme => ({
+        media: {
+            height: 0,
+            paddingTop: '56.25%', // 16:9
+        },
+      }));
+    const classes = useStyles();
     return <CanvasNode
         get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
@@ -86,9 +93,24 @@ export function ConnectableCanvasNode (props: OwnProps)
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}
     >
-        <div className="node_main_content" style={main_content_styles}>
+        {/* <div className="node_main_content" style={main_content_styles}>
             {props.node_main_content}
-        </div>
+        </div> */}
+        {/* <CardHeader>
+                <h1>HIHIHII</h1>
+            </CardHeader> */}
+
+    {/* <Box className="node_main_content" style={main_content_styles}> */}
+        <Card raised={true} elevation={3} variant="outlined" className="node_main_content">
+            {(props.cover_image) && <CardMedia
+                className={classes.media}
+                image="http://upload.wikimedia.org/wikipedia/commons/e/ec/Short-horned_chameleon_%28Calumma_brevicorne%29_female_Andasibe.jpg"
+            />}
+            <CardContent>
+                {props.node_main_content}
+            </CardContent>
+        </Card>
+    {/* </Box> */}
 
         {props.terminals.map(({ type, style, label }) =>
         {
