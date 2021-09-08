@@ -4,7 +4,7 @@ import { useMemo, useState } from "preact/hooks"
 import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
-import type { EditableListEntryTopProps, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
+import type { EditableListEntryItemProps, ListItemCRUD, ListItemCRUDRequiredC, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
@@ -15,6 +15,7 @@ import { factory_render_list_content } from "../../form/editable_list/render_lis
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
+import { remove_from_list_by_predicate, replace_element } from "../../utils/list"
 
 
 
@@ -39,18 +40,45 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _PredictionList (props: Props)
 {
     const [new_item, set_new_item] = useState<Prediction | undefined>(undefined)
-    const { item_descriptor, predictions, created_at_ms, sim_ms, editing } = props
+    const { item_descriptor, predictions, update_predictions, created_at_ms, sim_ms, editing } = props
 
-    const item_top_props = useMemo(() => {
-        const props2: EditableListEntryTopProps<Prediction> = {
-            get_created_at,
-            get_custom_created_at,
-            get_summary,
-            get_details: factory_get_details(editing),
+    const new_item_props = useMemo<EditableListEntryItemProps<Prediction, ListItemCRUDRequiredC<Prediction>>>(() => ({
+        get_created_at,
+        get_custom_created_at,
+        get_summary,
+        get_details: factory_get_details(editing),
+        crud: {
+            create_item: new_prediction =>
+            {
+                update_predictions([...predictions, new_prediction])
+                set_new_item(undefined)
+            }
         }
+    }), [editing, predictions, update_predictions])
 
-        return props2
-    }, [editing])
+
+    const item_props = useMemo<EditableListEntryItemProps<Prediction, ListItemCRUDRequiredU<Prediction>>>(() => ({
+
+        get_created_at,
+        get_custom_created_at,
+        get_summary,
+        get_details: factory_get_details(editing),
+        crud: {
+            update_item: updated_prediction =>
+            {
+                const predicate = (prediction: Prediction) => get_id(prediction) === get_id(updated_prediction)
+                const updated_predictions = replace_element(predictions, updated_prediction, predicate)
+                update_predictions(updated_predictions)
+            },
+            delete_item: prediction =>
+            {
+                const predicate = (p: Prediction) => get_id(p) === get_id(prediction)
+                const updated_predictions = remove_from_list_by_predicate(predictions, predicate)
+                update_predictions(updated_predictions)
+            },
+        },
+        delete_button_text: "Delete " + item_descriptor
+    }), [editing, predictions, update_predictions, item_descriptor])
 
 
     const {
@@ -58,34 +86,9 @@ function _PredictionList (props: Props)
     } = partition_and_prune_items_by_datetimes_and_versions({ items: predictions, created_at_ms, sim_ms })
 
 
-    function everything_but (predictions_subset: Prediction[]): Prediction[]
-    {
-        const to_exclude = new Set<string>()
-        predictions_subset.forEach(({ id }) => to_exclude.add(id))
-        return predictions.filter(({ id }) => !to_exclude.has(id))
-    }
-
-
-    const render_future_list_content = factory_render_list_content({
-        items: future_items,
-        get_id,
-        update_items: new_items => props.update_predictions([...new_items, ...everything_but(future_items)]),
-        item_top_props,
-    })
-
-    const render_present_list_content = factory_render_list_content({
-        items: present_items,
-        get_id,
-        update_items: new_items => props.update_predictions([...new_items, ...everything_but(present_items)]),
-        item_top_props,
-    })
-
-    const render_past_list_content = factory_render_list_content({
-        items: past_items,
-        get_id,
-        update_items: new_items => props.update_predictions([...new_items, ...everything_but(past_items)]),
-        item_top_props,
-    })
+    const render_future_list_content = factory_render_list_content({ items: future_items, get_id, item_props })
+    const render_present_list_content = factory_render_list_content({ items: present_items, get_id, item_props })
+    const render_past_list_content = factory_render_list_content({ items: past_items, get_id, item_props })
 
 
     const title = editing
@@ -111,13 +114,8 @@ function _PredictionList (props: Props)
         <NewItemForm
             new_item={new_item}
             set_new_item={set_new_item}
-            item_top_props={item_top_props}
+            item_props={new_item_props}
             item_descriptor={item_descriptor}
-            add_item={new_item =>
-            {
-                props.update_predictions([...predictions, new_item])
-                set_new_item(undefined)
-            }}
         />
 
         {invalid_future_items.length > 0 && <div>
@@ -156,7 +154,7 @@ function _PredictionList (props: Props)
     //     items={sorted_predictions}
     //     item_descriptor={`${props.item_descriptor} Prediction`}
     //     get_id={get_id}
-    //     item_top_props={item_top_props}
+    //     item_props={item_props}
     //     prepare_new_item={prepare_new_item}
     //     update_items={items => props.update_predictions(items)}
     //     disable_collapsed={true}

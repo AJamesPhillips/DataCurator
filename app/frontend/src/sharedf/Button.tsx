@@ -33,6 +33,9 @@ export function Button (props: ButtonProps & SpecificProps)
                 variant={props.variant || "contained"}
                 onPointerDown={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
                 {
+                    // Causes button focus and other elements to blur & their form onblur handlers to
+                    // fire, triggering any ob_change handlers
+                    e.currentTarget.focus()
                     // Not sure we want to put this here
                     e.stopImmediatePropagation()
                     e.preventDefault()
@@ -42,6 +45,9 @@ export function Button (props: ButtonProps & SpecificProps)
                 }}
                 onClick={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
                 {
+                    // Causes button focus and other elements to blur & their form onblur handlers to
+                    // fire, triggering any ob_change handlers
+                    e.currentTarget.focus()
                     // Not sure we want to put this here
                     e.stopImmediatePropagation()
                     e.preventDefault()

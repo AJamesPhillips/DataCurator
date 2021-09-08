@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
+import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { get_today_str } from "../shared/utils/date_helpers"
@@ -34,7 +34,7 @@ export const make_default_kv_title = () => get_today_str(false)
 
 
 
-export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, crud: ListItemCRUD<KnowledgeView>) =>
+export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, crud: ListItemCRUDRequiredU<KnowledgeView>) =>
 {
     const { editing, nested_knowledge_view_ids } = props
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]

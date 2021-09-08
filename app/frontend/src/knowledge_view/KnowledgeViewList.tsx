@@ -26,19 +26,18 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
     const render_list_content = factory_render_list_content({
         items: knowledge_views,
         get_id: kv => kv.id,
-        update_items: new_kvs =>
-        {
-            const changed_kv = new_kvs.find((new_kv, index) => knowledge_views[index] !== new_kv)
-            if (!changed_kv) return
 
-            props.upsert_knowledge_view({ knowledge_view: changed_kv })
-        },
-
-        item_top_props: {
+        item_props: {
             get_summary: factory_get_summary(current_view),
             get_details: factory_get_kv_details(props),
             get_details3,
             calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props),
+            crud: {
+                update_item: modified_kv =>
+                {
+                    props.upsert_knowledge_view({ knowledge_view: modified_kv })
+                }
+            }
         },
 
         debug_item_descriptor: "View",

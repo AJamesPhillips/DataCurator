@@ -1,4 +1,7 @@
-import { h } from "preact"
+import { h, FunctionalComponent } from "preact"
+import { useMemo } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
+
 import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
 import {
     get_summary_for_single_VAP_set,
@@ -9,22 +12,17 @@ import { factory_render_list_content } from "../../form/editable_list/render_lis
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
 import { create_new_VAP_set_version } from "./utils"
-import type { CreationContextState } from "../../shared/creation_context/state"
-import type { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-import { useMemo } from "preact/hooks"
+import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 
 
 
-interface OwnProps
+interface OwnProps extends ListItemCRUDRequiredU<VAPSet>
 {
     VAPs_represent: VAPsType
     current_VAP_set: VAPSet
     older_VAP_sets: VAPSet[]
-    create_item: (vap_set: VAPSet) => void
-    update_item: (vap_set: VAPSet) => void
-    delete_item: (vap_set: VAPSet) => void
+    create_item: (item: VAPSet) => void
 }
 
 
@@ -52,28 +50,31 @@ function _ValueAndPredictionSetOlderVersions (props: Props)
     const make_new_version = useMemo(() => () =>
     {
         const new_versioned_VAP_set = create_new_VAP_set_version(props.current_VAP_set, props.creation_context)
-        props.create_item(new_versioned_VAP_set)
-    }, [props.current_VAP_set, props.creation_context, props.create_item])
+        create_item(new_versioned_VAP_set)
+    }, [props.current_VAP_set, props.creation_context, create_item])
 
 
-    const content = factory_render_list_content(
+    const content = useMemo(() => factory_render_list_content(
     {
         items: older_VAP_sets,
         get_id,
-        create_item,
-        update_item,
-        delete_item,
         debug_item_descriptor: item_descriptor,
 
-        item_top_props: {
+        item_props: {
             get_created_at,
             get_custom_created_at,
             get_summary: get_summary_for_single_VAP_set(VAPs_represent, true),
             get_details: get_details_for_single_VAP_set(VAPs_represent),
             get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
             extra_class_names: "value_and_prediction_set",
+            crud: {
+                create_item,
+                update_item,
+                delete_item,
+            },
+            delete_button_text: "Delete Older Set of Value & Predictions",
         },
-    })
+    }), [older_VAP_sets, item_descriptor, VAPs_represent, editing, create_item, update_item, delete_item])
 
     return <ExpandableListWithAddButton
         items_count={older_VAP_sets.length}

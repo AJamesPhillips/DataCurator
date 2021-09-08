@@ -5,7 +5,12 @@ import { TextField } from "@material-ui/core"
 import type { StateValueString } from "../../shared/wcomponent/interfaces/state"
 import { get_new_value_id } from "../../shared/utils/ids"
 import { EditableList } from "../../form/editable_list/EditableList"
-import type { EditableListEntryTopProps, ListItemCRUD } from "../../form/editable_list/EditableListEntry"
+import type {
+    EditableListEntryItemProps,
+    ListItemCRUD,
+    ListItemCRUDRequiredC,
+    ListItemCRUDRequiredCU,
+} from "../../form/editable_list/EditableListEntry"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 
 
@@ -20,24 +25,25 @@ interface OwnProps {
 
 export function ValueList (props: OwnProps)
 {
-    const item_top_props = useMemo(() => {
-        const props2: EditableListEntryTopProps<StateValueString> = {
-            get_created_at,
-            get_custom_created_at,
-            get_summary,
-            get_details,
-        }
-
-        return props2
-    }, [])
+    const item_props = useMemo<EditableListEntryItemProps<StateValueString, ListItemCRUDRequiredCU<StateValueString>>>(() => ({
+        get_created_at,
+        get_custom_created_at,
+        get_summary,
+        get_details,
+        crud: {
+            // noop as we're deprecating Statev1 and it's ValueList
+            update_item: () => {},
+            // noop as we're deprecating Statev1 and it's ValueList
+            create_item: () => {},
+        },
+    }), [])
 
     return <EditableList
         items={props.values}
         item_descriptor="Value"
         get_id={get_id}
-        item_top_props={item_top_props}
+        item_props={item_props}
         prepare_new_item={prepare_new_item}
-        update_items={items => {}}
         disable_collapsed={true}
     />
 }

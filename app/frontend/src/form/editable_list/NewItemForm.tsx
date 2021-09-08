@@ -1,43 +1,34 @@
 import { h } from "preact"
-import { useEffect, useState } from "preact/hooks"
+import { useMemo } from "preact/hooks"
 
 import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"
-import { EditableListEntry, EditableListEntryTopProps } from "./EditableListEntry"
+import { EditableListEntry, EditableListEntryItemProps, ListItemCRUDRequiredC } from "./EditableListEntry"
 import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 
 
 
-export interface NewItemForm<U>
+export interface NewItemFormProps<U, Crud>
 {
     new_item: U | undefined
     set_new_item: (new_item: U | undefined) => void
     item_descriptor: string
-    item_top_props: EditableListEntryTopProps<U>
-    add_item: (new_item: U) => void
+    item_props: EditableListEntryItemProps<U, Crud>
 }
 
 
 
-export function NewItemForm <T> (props: NewItemForm<T>)
+export function NewItemForm <T, Crud extends ListItemCRUDRequiredC<T>> (props: NewItemFormProps<T, Crud>)
 {
-    const { new_item, set_new_item, item_descriptor, item_top_props, add_item } = props
+    const { new_item, set_new_item, item_descriptor, item_props } = props
+    const { crud } = item_props
 
-    const [adding_item, set_adding_item] = useState(false)
 
-    // call add_item if necessary
-    // Using effect because various form elements
-    // will issue on_change events when they blur.  And they will blur when the
-    // add (or cancel) buttons are pressed.  If we do not allow them to finish
-    // then the item added will be a stale version.
-    useEffect(() =>
-    {
-        if (!adding_item) return
-        if (new_item) add_item(new_item)
-        set_adding_item(false)
-    }, [add_item, adding_item])
+    const modified_crud = useMemo(() => ({ ...crud, update_item: set_new_item }), [crud, set_new_item])
+
 
     if (!new_item) return null
+
     return (
         <Box>
             <Dialog  aria-labelledby="new_item_title" open={true} onClose={() => set_new_item(undefined)}>
@@ -45,15 +36,19 @@ export function NewItemForm <T> (props: NewItemForm<T>)
                 <DialogContent>
                     <EditableListEntry
                         item={new_item}
-                        {...item_top_props}
+                        {...item_props}
                         expanded={true}
                         disable_collapsable={true}
-                        update_item={item => set_new_item(item)}
+                        crud={modified_crud}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() =>set_adding_item(true)}>
-                        {`Add ${item_descriptor}`}
+                    <Button onClick={() =>
+                    {
+                        // Defensive in case any of the form input elements onBlur handlers have not fired yet
+                        setTimeout(() => crud.create_item(new_item), 0)
+                    }}>
+                        Add {item_descriptor}
                     </Button>
                     <Button onClick={() => set_new_item(undefined)}>
                         Cancel

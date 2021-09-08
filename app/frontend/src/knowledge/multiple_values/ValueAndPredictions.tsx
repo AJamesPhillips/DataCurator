@@ -6,8 +6,8 @@ import { EditablePercentage } from "../../form/EditablePercentage"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import type {
-    EditableListEntryTopProps,
-    ListItemCRUD,
+    EditableListEntryItemProps,
+    ListItemCRUDRequiredU,
 } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"
@@ -20,6 +20,7 @@ import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { replace_element } from "../../utils/list"
 
 
 
@@ -50,12 +51,21 @@ function _ValueAndPredictions (props: Props)
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (VAPs_represent === VAPsType.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
 
-    const item_top_props: EditableListEntryTopProps<StateValueAndPrediction> = {
+    const item_props: EditableListEntryItemProps<StateValueAndPrediction, ListItemCRUDRequiredU<StateValueAndPrediction>> = {
         // Do not show created_at of VAPs when in VAP set
         // get_created_at: () => props.created_at,
         get_summary: get_summary({ VAPs_represent, editing }),
         get_details: get_details(VAPs_represent, editing),
         extra_class_names: "value_and_prediction",
+        crud: {
+            update_item: modified_VAP =>
+            {
+                const id = get_id(modified_VAP)
+                const updated_VAPs = replace_element(VAPs, modified_VAP, item => get_id(item) === id)
+                props.update_values_and_predictions(updated_VAPs)
+            },
+        },
+        delete_button_text: "Delete Value & Prediction",
     }
 
     const item_descriptor = "Value and prediction"
@@ -77,10 +87,8 @@ function _ValueAndPredictions (props: Props)
         {factory_render_list_content({
             items: VAPs,
             get_id,
-            item_top_props,
-            delete_button_text: "Delete Value & Prediction",
+            item_props,
             debug_item_descriptor: item_descriptor,
-            update_items: props.update_values_and_predictions,
         })({ expanded_item_rows: true, expanded_items: true, disable_partial_collapsed: false })}
     </div>
 }
@@ -98,7 +106,7 @@ interface GetSummaryArgs
     VAPs_represent: VAPsType
     editing: boolean
 }
-const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUD<StateValueAndPrediction>): h.JSX.Element =>
+const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>): h.JSX.Element =>
 {
     const { VAPs_represent, editing } = args
 
@@ -178,7 +186,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
 
 
-const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, crud: ListItemCRUD<StateValueAndPrediction>): h.JSX.Element =>
+const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>): h.JSX.Element =>
 {
     if (VAPs_represent === VAPsType.boolean) return <div></div>
 

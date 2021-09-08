@@ -14,7 +14,7 @@ import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { set_VAP_probabilities } from "./utils"
-import type { ListItemCRUD } from "../../form/editable_list/EditableListEntry"
+import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 
 
 
@@ -41,7 +41,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
 
 
-export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP_set: VAPSet, crud: ListItemCRUDRequiredU<VAPSet>): h.JSX.Element =>
 {
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
 
@@ -78,7 +78,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP
 
 
 
-export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editing: boolean) => (VAP_set: VAPSet, crud: ListItemCRUD<VAPSet>): h.JSX.Element =>
+export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editing: boolean) => (VAP_set: VAPSet, crud: ListItemCRUDRequiredU<VAPSet>): h.JSX.Element =>
 {
     const shared_entry_values = VAP_set.shared_entry_values || {}
     // Provide the explanations from exist VAPs
@@ -88,13 +88,13 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
         .join("\n\n")
     const explanation = shared_entry_values.explanation || VAP_explanations || ""
     const conviction = shared_entry_values.conviction || 1
-
+    const VAPs_not_boolean = VAPs_represent !== VAPsType.boolean
     const display_explanation = !!(editing || explanation)
 
     return <div className="shared_VAP_set_details">
         <div className="row_one">
             <div className="description_label">{display_explanation && "Explanation:"}</div>
-            {VAPs_represent !== VAPsType.boolean && <div>
+            {VAPs_not_boolean && <div>
                 <div className="description_label" style={{ display: "inline"}}>Cn:</div> &nbsp;
                 <EditablePercentage
                     disabled={false}
