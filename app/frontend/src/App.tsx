@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { AppBar, Box, CssBaseline, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core";
+import { AppBar, Box, CssBaseline, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -12,6 +12,9 @@ import { StorageInfo } from "./sync/storage_type/StorageInfo"
 import { UserInfo } from "./sync/user_info/UserInfo"
 import { BackupInfo } from "./sync/sync_backup_info/BackupInfo"
 import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
+import { HelpMenu } from "./help_menu/HelpMenu"
+
+
 
 function App()
 {
@@ -87,6 +90,7 @@ function App()
                     <Box component="aside" id="side_panel" bgcolor="#fafafa"  p={5} mt={1} position="relative" zIndex={10}>
                         <AppMenuItemsContainer />
                         <SidePanel />
+                        <HelpMenu />
                     </Box>
                 </Box>
                 <Box component="footer"></Box>

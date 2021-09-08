@@ -111,6 +111,25 @@ export const is_set_display_by_simulated_time = (action: AnyAction): action is A
 
 
 
+interface SetShowHelpMenuArgs
+{
+    show: boolean
+}
+interface ActionSetShowHelpMenu extends Action, SetShowHelpMenuArgs {}
+
+const set_show_help_menu_type = "set_show_help_menu"
+
+const set_show_help_menu = (args: SetShowHelpMenuArgs): ActionSetShowHelpMenu =>
+{
+    return { type: set_show_help_menu_type, ...args }
+}
+
+export const is_set_show_help_menu = (action: AnyAction): action is ActionSetShowHelpMenu => {
+    return action.type === set_show_help_menu_type
+}
+
+
+
 export const display_actions = {
     toggle_consumption_formatting,
     toggle_focused_mode,
@@ -118,4 +137,5 @@ export const display_actions = {
     set_validity_filter,
     set_certainty_formatting,
     set_display_by_simulated_time,
+    set_show_help_menu,
 }

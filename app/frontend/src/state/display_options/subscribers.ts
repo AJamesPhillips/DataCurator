@@ -25,5 +25,15 @@ function toggle_consumption_formatting_on_key_press (store: Store<RootState>)
         {
             store.dispatch(ACTIONS.display.toggle_focused_mode({}))
         }
+
+        const show_help_menu = e.shift_key && e.key === "?"
+        if (show_help_menu)
+        {
+            const state = store.getState()
+            if (!state.display_options.show_help_menu && !state.user_activity.is_editing_text)
+            {
+                store.dispatch(ACTIONS.display.set_show_help_menu({ show: show_help_menu }))
+            }
+        }
     })
 }

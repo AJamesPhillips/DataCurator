@@ -36,6 +36,7 @@ export function display_options_starting_state (): DisplayOptionsState
         time_resolution: "hour",
         display_by_simulated_time: false,
         collapsed_side_panel: false,
+        show_help_menu: false,
 
         validity_filter,
         certainty_formatting,

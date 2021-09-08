@@ -25,6 +25,7 @@ export interface DisplayOptionsState
     time_resolution: TimeResolution
     display_by_simulated_time: boolean
     collapsed_side_panel: boolean
+    show_help_menu: boolean
 
     // Validity
     validity_filter: ValidityFilterTypes
