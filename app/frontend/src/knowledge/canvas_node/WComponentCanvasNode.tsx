@@ -215,15 +215,13 @@ function _WComponentCanvasNode (props: Props)
         // || is_current_item
         || props.have_judgements
 
-
     const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
-
 
     const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
 
-
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
+        cover_image={wcomponent.summary_image}
         node_main_content={<div>
             <div className="node_title">
                 {kv_entry_maybe === undefined && <span>
