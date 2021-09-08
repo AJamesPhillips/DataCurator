@@ -15,21 +15,25 @@ export function DragDropUploader(props:OwnProps) {
     const [unsupportedFiles, setUnsupportedFiles] = useState([] as File[]);
     const [errorMessage, setErrorMessage] = useState('');
 
-    // const interceptAndDoNothing = (e:DragEvent) => e.preventDefault();
-    // const drop = (e:any) => {
-    //     e.preventDefault();
-    //     const files:FileList = e.dataTransfer.files;
-    //     if (files.length) {
-    //         handle_files(files)
-    //     }
-    // }
+    const interceptAndDoNothing = (e:DragEvent) => e.preventDefault();
+    const drop = (e:any) => {
+        e.preventDefault();
+        const files:FileList = e.dataTransfer.files;
+        if (files.length) {
+            handle_files(files)
+        }
+    }
 
     const handle_files = (files:FileList) => {
         for(let i = 0; i < files.length; i++) {
-            const file = files.item(i)!;
-            setSelectedFiles((prevArray:any[]) => [...prevArray, file]);
+            const file:File = files.item(i)!;
+            // setSelectedFiles((prevArray:any[]) => [...prevArray, file]);
             if (validate_file(file)) {
-                setValidFiles((prevArray:any[]) => [...prevArray, file]);
+                if (props.allow_multiple) {
+                    setValidFiles((prevArray:any[]) => [...prevArray, file]);
+                } else {
+                    setValidFiles([file]);
+                }
             } else {
                 setUnsupportedFiles(prevArray => [...prevArray, file]);
                 setErrorMessage('File type not permitted');
@@ -42,6 +46,12 @@ export function DragDropUploader(props:OwnProps) {
             return false;
         }
         return true;
+    }
+
+    const filesSelected = () => {
+        if (fileInputRef?.current?.files?.length) {
+            handle_files(fileInputRef.current.files);
+        }
     }
 
     const file_size = (size:number) => {
@@ -59,12 +69,6 @@ export function DragDropUploader(props:OwnProps) {
     const fileInputRef:Ref<HTMLInputElement> = useRef();
     const progressRef = useRef();
 
-    // const filesSelected = () => {
-    //     if (fileInputRef.current.files.length) {
-    //         handle_files(fileInputRef.current.files);
-    //     }
-    // }
-
     const useStyles = makeStyles(theme => ({
         container: {
             borderColor:"red",
@@ -81,10 +85,7 @@ export function DragDropUploader(props:OwnProps) {
     // onDragLeave={interceptAndDoNothing}
     // onDrop={drop}
     return (
-        <Box
-            className={`${classes.container}`}
-
-        >
+        <Box className={`${classes.container}`} >
             <TextField
                 inputProps={{
                     accept:props.valid_file_types,
@@ -93,15 +94,9 @@ export function DragDropUploader(props:OwnProps) {
                 multiple={props.allow_multiple || false}
                 type="file"
                 variant="outlined"
-                onChange={() => {
-                    if (fileInputRef.current.files) {
-                        handle_files(fileInputRef.current.files);
-                    }
-                }}
+                onChange={filesSelected}
             />
-            {selectedFiles.map((file:File, i) => {
-                console.log(file);
-                console.log(fileInputRef);
+            {validFiles.map((file:File, i) => {
                 return (
                     <Box>
                         <LinearProgress variant="determinate" color="primary" value={89} ref={progressRef} />
