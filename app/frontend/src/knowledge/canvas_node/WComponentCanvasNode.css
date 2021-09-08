@@ -49,13 +49,13 @@
 
 .node_is_type_action > .node_main_content
 {
-    box-shadow: orange 0px 0px 4px 2px;
+    box-shadow: inset orange 0px 0px 4px 2px;
 }
 .node_is_type_goal > .node_main_content
 , .node_is_type_judgement > .node_main_content
 , .node_is_type_objective > .node_main_content
 {
-    box-shadow: #67c767 0px 0px 4px 2px;
+    box-shadow: inset #67c767 0px 0px 4px 2px;
 }
 
 .wcomponent_canvas_node.compact_title .node_main_content .node_title
