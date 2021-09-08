@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
+import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { get_composed_wc_id_map } from "../state/specialised_objects/knowledge_views/derived_reducer"
 import type { RootState } from "../state/State"
@@ -49,8 +50,18 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
         .filter(({ type }) => type === "counterfactualv2")
-        .map(({ id, title }) => ({ id, title }))
-
+        .map(wcomponent => ({
+            id: wcomponent.id,
+            title: get_title({
+                wcomponent,
+                rich_text: true,
+                render_links: false,
+                wcomponents_by_id,
+                wc_id_counterfactuals_map: {},
+                created_at_ms: FUTURE_TIME_MS,
+                sim_ms: FUTURE_TIME_MS,
+            }),
+        }))
 
     if (editing)
     {
@@ -76,3 +87,7 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
 }
 
 export const KnowledgeViewActiveCounterFactuals = connector(_KnowledgeViewActiveCounterFactuals) as FunctionalComponent<OwnProps>
+
+
+
+const FUTURE_TIME_MS = new Date().getTime() + 1e11
