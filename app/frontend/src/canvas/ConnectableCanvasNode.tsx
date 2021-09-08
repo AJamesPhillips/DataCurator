@@ -75,14 +75,6 @@ export function ConnectableCanvasNode (props: OwnProps)
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
 
-    const useStyles = makeStyles(theme => ({
-        media: {
-            height: 0,
-            paddingTop: '56.25%', // 16:9
-        },
-      }));
-    const classes = useStyles();
-
     return <CanvasNode
         get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
@@ -99,8 +91,7 @@ export function ConnectableCanvasNode (props: OwnProps)
             className="node_main_content"
             variant="outlined" style={main_content_styles}
         >
-            {(props.cover_image) && <CardMedia
-                className={classes.media}
+            {(props.cover_image) && <CardMedia component="img"
                 image={props.cover_image}
             />}
             <CardContent>
