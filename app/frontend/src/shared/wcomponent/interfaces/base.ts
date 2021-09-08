@@ -9,4 +9,5 @@ export interface Base
     custom_created_at?: Date
     label_ids?: string[]
     label_color?: Color
+    summary_image?: string,
 }
