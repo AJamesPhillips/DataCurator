@@ -16,8 +16,8 @@ export interface Terminal
 
 const connection_diameter = 12
 export const connection_radius = connection_diameter / 2
-const connection_left = 3
-const connection_right = 250 + 3
+const connection_left = -8
+const connection_right = 250 - 8
 const connection_top = 27
 const connection_top_increment = 22
 
