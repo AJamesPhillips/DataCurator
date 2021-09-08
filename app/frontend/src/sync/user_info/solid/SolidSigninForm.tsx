@@ -68,7 +68,7 @@ function _SolidSigninForm (props: Props)
 
     return <div style={{ margin: 10 }}>
         <div className="section">
-            OIDC (Open ID Connect) Provider (they allow you to prove who you are)&nbsp;
+            Identity Provider (they allow you to prove who you are)&nbsp;
             <input
                 type="text"
                 style={{ width: 250 }}
@@ -122,7 +122,7 @@ function _SolidSigninForm (props: Props)
 
 
         <div className="section">
-            Pod provider (where you want to get data from / save data to)
+            Pod directory (where you want to get data from / save data to)
 
             <table>
             <tbody>
@@ -130,7 +130,7 @@ function _SolidSigninForm (props: Props)
 
             <PodProviderRow
                 solid_pod_URL_index={0}
-                value={`Use default Pod provider ${quote_or_empty(props.default_solid_pod_URL)}`}
+                value={`Use default Pod directory ${quote_or_empty(props.default_solid_pod_URL)}`}
             />
 
 
