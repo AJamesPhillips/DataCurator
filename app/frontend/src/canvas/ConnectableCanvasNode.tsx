@@ -104,7 +104,7 @@ export function ConnectableCanvasNode (props: OwnProps)
         <Card raised={true} elevation={3} variant="outlined" className="node_main_content">
             {(props.cover_image) && <CardMedia
                 className={classes.media}
-                image="http://upload.wikimedia.org/wikipedia/commons/e/ec/Short-horned_chameleon_%28Calumma_brevicorne%29_female_Andasibe.jpg"
+                image={props.cover_image}
             />}
             <CardContent>
                 {props.node_main_content}
