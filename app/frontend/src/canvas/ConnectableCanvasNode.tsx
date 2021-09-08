@@ -75,6 +75,12 @@ export function ConnectableCanvasNode (props: OwnProps)
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
 
+    const useStyles = makeStyles(theme => ({
+        card: {
+            borderColor: "black"
+        }
+      }));
+    const classes = useStyles();
     return <CanvasNode
         get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
@@ -88,7 +94,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     >
     {/* <Box className="node_main_content" style={main_content_styles}> */}
         <Card
-            className="node_main_content"
+            className={`node_main_content ${classes.card}`}
             variant="outlined" style={main_content_styles}
         >
             {(props.cover_image) && <CardMedia component="img"
