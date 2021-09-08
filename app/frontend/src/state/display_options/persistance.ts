@@ -14,6 +14,7 @@ export function display_options_persist (state: RootState)
         "display_by_simulated_time",
         "validity_filter",
         "certainty_formatting",
+        "collapsed_side_panel",
     ], state.display_options)
 
     persist_state_object("display_options", to_persist)
@@ -34,6 +35,7 @@ export function display_options_starting_state (): DisplayOptionsState
         focused_mode: false,
         time_resolution: "hour",
         display_by_simulated_time: false,
+        collapsed_side_panel: false,
 
         validity_filter,
         certainty_formatting,
