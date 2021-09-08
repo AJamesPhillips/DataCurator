@@ -28,7 +28,7 @@ export function _WComponentImageForm(props: Props)
             label="Summary Image URL"
             onChange={(e:any) => {
                 let url = (e.target?.value) ? e.target?.value : null
-                if (url) {
+                if (url !== undefined) {
                     upsert_wcomponent({ summary_image: url })
                 }
             }}
