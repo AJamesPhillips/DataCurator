@@ -3,7 +3,6 @@
 {
     box-sizing: content-box;
     width: 250px;
-    padding: 6px 10px;
 }
 
 .connectable_canvas_node.node .node_main_content
