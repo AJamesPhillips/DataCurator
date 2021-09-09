@@ -21,7 +21,11 @@ type Props = ConnectedProps<typeof connector>
 
 function _HelpMenu (props: Props)
 {
-    const [expanded, setExpanded] = useState<string | false>('panel1');
+    const [expanded, setExpanded] = useState<string | false>('kbd-shortcuts');
+    // React.ChangeEvent<{}>
+    const handleChange = (panel: string) => (event:any, newExpanded: boolean) => {
+        setExpanded(newExpanded ? panel : false);
+      };
     if (!props.show) return null
 
     return <Modal
@@ -30,10 +34,14 @@ function _HelpMenu (props: Props)
         on_close={() => props.set_show_help_menu({ show: false })}
         child={(
             <Box>
-                <Typography component="h1" variant="h4">Commands to help you use DataCurator</Typography>
-                <Accordion>
+                <Typography component="h1" variant="h5">Commands to help you use DataCurator</Typography>
+                <Accordion
+                    expanded={expanded === 'kbd-shortcuts'}
+                    onChange={handleChange('kbd-shortcuts')}
+                    expandIcon={<ExpandMoreIcon />}
+                >
                     <AccordionSummary>
-                        <Typography component="h2" variant="subtitle1"> When on canvas and not in a form element:</Typography>
+                        <Typography component="h2" variant="h6"> When on canvas and not in a form element:</Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
@@ -42,65 +50,64 @@ function _HelpMenu (props: Props)
                         </Box>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion>
+                <Accordion
+                    expanded={expanded === 'linking-tips'}
+                    onChange={handleChange('linking-tips')}
+                >
                     <AccordionSummary>
-                        <Typography component="h2"> Tips on Linking</Typography>
+                        <Typography  component="h2" variant="h6"> Tips on Linking</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box>
-                            <Typography component="p" gutterBottom>
+                            <Typography component="p" paragraph>
                                 Type "@@" in any text field to access a menu to link to any other component.
                                 This will insert the id of that component, e.g. @@wc123.
                             </Typography>
-                            <Typography component="p" gutterBottom>
+                            <Typography component="p" paragraph>
                                 Follow "@@some-id" with .url, .title and .description to get the attributes
                                 of that component e.g. "@@wc123.title"
                             </Typography>
-                            <Typography component="p" gutterBottom>
+                            <Typography component="p" paragraph>
                                 Markdown is available so you can use things like <b>**some text**</b>
                                 to make it bold once it is rendered during presentation mode.
                                 Other Markdown syntax like "1. some text" will give you numbered lists.
                                 See the full <a href="https://www.markdownguide.org/basic-syntax/">Markdown guide here</a>
                             </Typography>
-                            <Typography component="p" gutterBottom>
+                            <Typography component="p" paragraph>
                                 Type "@@" in any text field to access a menu to link to any other component.  This will insert the id of that component, e.g. @@wc123.
                             </Typography>
                         </Box>
                     </AccordionDetails>
                 </Accordion>
-                {/* <Typography component="h2"> When on canvas and not in a form element:</Typography>
-                {commands.map(args => <Command {...args} />)} */}
+                <Accordion
+                    expanded={expanded === 'general-tips'}
+                    onChange={handleChange('general-tips')}
+                    expandIcon={<ExpandMoreIcon />}
+                >
+                    <AccordionSummary>
+                        <Typography component="h2" variant="h6">General tips:</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                        <Box>
+                            <Typography component="p" paragraph>
+                                If you yourself writing states with should, e.g. "People should listen more and be less reductionist" then you might consider seperating this out into it's 4 seperate parts and phrasing as the positive or desired state.  Specifically:
+                            </Typography>
+                            <Typography component="ol">
+                                <Typography component="li">the attribute, e.g.: "People listen more and are less reductionist"</Typography>
+                                <Typography component="li">the current value, e.g.: "False"</Typography>
+                                <Typography component="li">the other possibilities, e.g.: whilst adding a value and if it's not boolean i.e. not True/False and is instead a type of number or other, then add the other different possible values.</Typography>
+                                <Typography component="li">the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator</Typography>
+
+                            </Typography>
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
             </Box>
         )}
-        // child={<div>
-        //     Commands to help you use DataCurator <br />
-
-        //     When on canvas and not in a form element <br/>
-        //     {commands.map(args => <Command {...args} />)}
-
-        //     <hr />
-        //     Tips on Linking<br/><br/>
-
-        //     Type "@@" in any text field to access a menu to link to any other component.  This will insert the id of that component, e.g. @@wc123. <br/>
-        //     Follow "@@some-id" with .url, .title and .description to get the attributes of that component e.g. "@@wc123.title"<br/>
-        //     Markdown is available so you can use things like <b>**some text**</b> to make it bold once it is rendered during presentation mode.  Other Markdown syntax like "1. some text" will give you numbered lists.  See the full <a href="https://www.markdownguide.org/basic-syntax/">Markdown guide here</a><br/>
-
-        //     <hr />
-        //     General tips<br/><br/>
-
-        //     If you yourself writing states with should, e.g. "People should listen more and be less reductionist" then you might consider seperating this out into it's 4 seperate parts and phrasing as the positive or desired state.  Specifically:
-        //     <ol>
-        //         <li>the attribute, e.g.: "People listen more and are less reductionist"</li>
-        //         <li>the current value, e.g.: "False"</li>
-        //         <li>the other possibilities, e.g.: whilst adding a value and if it's not boolean i.e. not True/False and is instead a type of number or other, then add the other different possible values.</li>
-        //         <li>the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator</li>
-        //     </ol>
-        // </div>}
     />
 }
 export const HelpMenu = connector(_HelpMenu)
-
-
 
 const commands: CommandArgs[] = [
     { commands: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
@@ -133,7 +140,7 @@ function Command (props: CommandArgs)
         <Typography component="dt" className={classes.command}>
             {props.commands.map((command, index:number) => {
                 return (
-                    <Typography component="kbd">
+                    <Typography component="kbd" variant="body1">
                         {command}
                         {(index < (props.commands.length - 1)) &&  <Typography component="span"> + </Typography>}
                     </Typography>
