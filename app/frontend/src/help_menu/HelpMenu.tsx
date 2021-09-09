@@ -49,7 +49,7 @@ function _HelpMenu (props: Props)
 
                     <AccordionDetails>
                         <Box>
-                            {commands.map(args => <Command {...args} />)}
+                            {keyboard_shortcut.map(args => <Command {...args} />)}
                         </Box>
                     </AccordionDetails>
                 </Accordion>
@@ -89,22 +89,23 @@ export const HelpMenu = connector(_HelpMenu)
 
 
 
-const commands: CommandArgs[] = [
-    { commands: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
-    { commands: ["Ctrl", "d"], outcome: `Toggle "focused" mode on and off` },
-    { commands: ["Shift"], outcome: "shows all nodes" },
-    { commands: ["Shift", "click", "drag"], outcome: "select multiple nodes" },
-    { commands: ["Ctrl", "click", "drag"], outcome: "deselect multiple nodes" },
-    { commands: ["Ctrl", "a"], outcome: "select all nodes on knowledge view" },
+const keyboard_shortcut: KeyboardShortcut[] = [
+    { keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
+    { keyboard_shortcut: ["Ctrl", "d"], outcome: `Toggle "focused" mode on and off` },
+    { keyboard_shortcut: ["Shift"], outcome: "shows all nodes" },
+    { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "select multiple nodes" },
+    { keyboard_shortcut: ["Ctrl", "click", "drag"], outcome: "deselect multiple nodes" },
+    { keyboard_shortcut: ["Ctrl", "a"], outcome: "select all nodes on knowledge view" },
+    { keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
 ]
 
-interface CommandArgs
+interface KeyboardShortcut
 {
-    commands: string[]
+    keyboard_shortcut: string[]
     outcome: string
 }
 
-function Command (props: CommandArgs)
+function Command (props: KeyboardShortcut)
 {
     const useStyles = makeStyles(theme => ({
         command: {
@@ -118,11 +119,11 @@ function Command (props: CommandArgs)
     const classes = useStyles()
     return <Box component="dl">
         <Typography component="dt" className={classes.command}>
-            {props.commands.map((command, index:number) => {
+            {props.keyboard_shortcut.map((command, index:number) => {
                 return (
                     <Typography component="kbd" variant="body1">
                         {command}
-                        {(index < (props.commands.length - 1)) &&  <Typography component="span"> + </Typography>}
+                        {(index < (props.keyboard_shortcut.length - 1)) &&  <Typography component="span"> + </Typography>}
                     </Typography>
                 )
             })}
