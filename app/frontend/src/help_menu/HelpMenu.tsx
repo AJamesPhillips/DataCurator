@@ -29,11 +29,11 @@ function _HelpMenu (props: Props)
     if (!props.show) return null
 
     return <Modal
-        size="large"
+        size="medium"
         title="Help Menu"
         on_close={() => props.set_show_help_menu({ show: false })}
         child={(
-            <Box>
+            <Box p={10}>
                 <Typography component="h1" variant="h5">Commands to help you use DataCurator</Typography>
                 <Accordion
                     expanded={expanded === 'kbd-shortcuts'}
