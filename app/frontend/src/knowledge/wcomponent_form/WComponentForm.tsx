@@ -378,7 +378,7 @@ function _WComponentForm (props: Props)
                 on_change={new_custom_created_at => {
                     upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
-            />
+            /><br/>
 
             <MaterialDateTime
                 fullWidth={true}
@@ -387,6 +387,7 @@ function _WComponentForm (props: Props)
                 }}
                 title="Created at"
                 type="datetime"
+                invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
             />
         </FormControl>
