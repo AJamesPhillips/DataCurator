@@ -44,7 +44,7 @@ export function periodically_backup_solid_data (store: Store<RootState>)
         const user_info: UserInfoState = { ...state.user_info }
         const datetime_str = date2str(new Date(), "yyyy-MM-dd_hh-mm-ss")
         const original_solid_pod_URL = user_info.default_solid_pod_URL
-        user_info.default_solid_pod_URL += `${BACKUPS_PATH}${datetime_str}`
+        user_info.default_solid_pod_URL += `${BACKUPS_PATH}${datetime_str}/`
 
         backup_throttled_save_state.throttled({ dispatch, state, user_info, original_solid_pod_URL })
     })
