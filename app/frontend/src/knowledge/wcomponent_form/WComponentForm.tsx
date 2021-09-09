@@ -54,6 +54,7 @@ import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
+import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 
 
 
@@ -370,14 +371,14 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
         <FormControl fullWidth={true}>
-            {/* <EditableCustomDateTime
+            <EditableCustomDateTime
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
                 on_change={new_custom_created_at => {
                     upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
-            /> */}
+            />
 
             <MaterialDateTime
                 fullWidth={true}
