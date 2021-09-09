@@ -1,4 +1,5 @@
 import { h } from "preact"
+import { Card, CardContent, CardMedia, makeStyles } from "@material-ui/core"
 
 import "./ConnectableCanvasNode.css"
 import { CanvasNode } from "./CanvasNode"
@@ -8,8 +9,6 @@ import type {
     ConnectionTerminalType,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
-import { useState } from "preact/hooks"
-import { Box, Card, CardContent, CardHeader, CardMedia, makeStyles } from "@material-ui/core"
 
 
 interface OwnProps
@@ -74,13 +73,9 @@ export function ConnectableCanvasNode (props: OwnProps)
     } = props
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
+    const classes = useStyles()
 
-    const useStyles = makeStyles(theme => ({
-        card: {
-            borderColor: "black"
-        }
-      }));
-    const classes = useStyles();
+
     return <CanvasNode
         get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
@@ -99,6 +94,13 @@ export function ConnectableCanvasNode (props: OwnProps)
         >
             {(props.cover_image) && <CardMedia component="img"
                 image={props.cover_image}
+                className={classes.image}
+                onContextMenu={(e: h.JSX.TargetedMouseEvent<HTMLImageElement>) =>
+                {
+                    // This allows the right click default action to happen and offer users the
+                    // menu to open the image in a new tab
+                    e.stopImmediatePropagation()
+                }}
             />}
             <CardContent>
                 {props.node_main_content}
@@ -119,6 +121,20 @@ export function ConnectableCanvasNode (props: OwnProps)
         {props.other_children}
     </CanvasNode>
 }
+
+
+
+const useStyles = makeStyles(theme => ({
+    card: {
+        borderColor: "black"
+    },
+    image: {
+        maxHeight: "200px",
+        maxWidth: "100%",
+        margin: "0 auto",
+        width: "initial",
+    },
+}))
 
 
 
