@@ -1,4 +1,4 @@
-import type { HasUncertainDateTime } from "../../uncertainty/uncertainty"
+import type { HasUncertainDatetime } from "../../uncertainty/uncertainty"
 import type { WComponentBase } from "./wcomponent_base"
 
 
@@ -17,7 +17,7 @@ export interface PrioritisedGoalAttributes
 
 
 
-export interface WComponentPrioritisation extends WComponentBase, HasUncertainDateTime
+export interface WComponentPrioritisation extends WComponentBase, HasUncertainDatetime
 {
     type: "prioritisation"
     goals: PrioritisedGoalAttributes

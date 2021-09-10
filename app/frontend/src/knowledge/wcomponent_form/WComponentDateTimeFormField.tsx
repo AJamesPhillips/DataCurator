@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { HasUncertainDateTime } from "../../shared/uncertainty/uncertainty"
+import type { HasUncertainDatetime } from "../../shared/uncertainty/uncertainty"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
 import { UncertainDateTime } from "../uncertainty/datetime"
@@ -10,7 +10,7 @@ import { UncertainDateTime } from "../uncertainty/datetime"
 
 interface OwnProps
 {
-    wcomponent: Partial<HasUncertainDateTime>
+    wcomponent: Partial<HasUncertainDatetime>
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
