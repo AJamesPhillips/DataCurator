@@ -1,6 +1,6 @@
 import { test } from "../utils/test"
-import type { Base } from "./interfaces/base"
-import { Tense } from "./interfaces/datetime"
+import type { Base } from "../wcomponent/interfaces/base"
+import { Tense } from "../wcomponent/interfaces/datetime"
 import type { HasUncertainDateTime as HasUncertainDatetime } from "../uncertainty/uncertainty"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
 

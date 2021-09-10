@@ -7,7 +7,7 @@ import {
     wcomponent_has_VAP_sets,
     wcomponent_is_statev1,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../../../shared/wcomponent/utils_datetime"
+import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 
 
 

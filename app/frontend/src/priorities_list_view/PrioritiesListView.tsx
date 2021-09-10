@@ -16,7 +16,7 @@ import { Prioritisation } from "./Prioritisation"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableGoal } from "./PrioritisableGoal"
 import { sort_list } from "../shared/utils/sort"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 
 
 

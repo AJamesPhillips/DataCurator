@@ -9,7 +9,7 @@ import {
     wcomponent_is_state,
     wcomponent_is_statev2,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/wcomponent/utils_datetime"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
 import {

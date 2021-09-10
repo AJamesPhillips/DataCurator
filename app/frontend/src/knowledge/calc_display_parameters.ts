@@ -12,7 +12,7 @@ import {
     wcomponent_has_event_at,
     wcomponent_is_judgement_or_objective,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms, get_tense_of_uncertain_datetime } from "../shared/wcomponent/utils_datetime"
+import { get_created_at_ms, get_tense_of_uncertain_datetime } from "../shared/utils_datetime/utils_datetime"
 import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
 
 
