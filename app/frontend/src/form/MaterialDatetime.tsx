@@ -90,7 +90,7 @@ function _MaterialDateTime (props: Props)
                 disabled={not_editable}
                 fullWidth={(props.fullWidth || false)}
                 InputProps={{
-                    endAdornment: (
+                    endAdornment: (!not_editable) &&  (
                         <FileCopyIcon
                             className={classes.open_popover_icon}
                             onClick={handle_manual_date_click}
