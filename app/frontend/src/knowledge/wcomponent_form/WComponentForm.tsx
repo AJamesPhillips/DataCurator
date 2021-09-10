@@ -85,6 +85,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
         storage_type_supports_delete: state.sync.storage_type !== "local_server",
+        time_resolution: state.display_options.time_resolution,
     }
 }
 
@@ -162,7 +163,7 @@ function _WComponentForm (props: Props)
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
     }
 
-
+    // let input_type = (props.time_resolution === 'day') ? "date" : "datetime";
     return <Box  className={`editable-${wcomponent_id}`}>
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
@@ -367,6 +368,7 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
+
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
         <FormControl fullWidth={true}>
             <EditableCustomDateTime
@@ -385,7 +387,7 @@ function _WComponentForm (props: Props)
                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
                 title="Created at"
-                type="datetime"
+                type={(props.time_resolution === 'day') ? "date" : "datetime"}
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
             />
