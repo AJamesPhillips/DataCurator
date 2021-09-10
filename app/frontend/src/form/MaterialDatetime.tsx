@@ -96,7 +96,7 @@ function _MaterialDateTime (props: Props)
                             onClick={handle_manual_date_click}
                     />)
                 }}
-                label={title}
+                label={(the_date) ? title : null}
                 onChange={(e:any) => {
                     set_the_date(new Date(e.target.value))
                     if (props.on_change) props.on_change(new Date(e.target.value))
