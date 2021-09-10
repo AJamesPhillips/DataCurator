@@ -1,7 +1,7 @@
 import { test } from "../utils/test"
 import type { Base } from "./interfaces/base"
 import { Tense } from "./interfaces/datetime"
-import type { HasDateTime } from "../uncertainty/uncertainty"
+import type { HasUncertainDateTime as HasUncertainDatetime } from "../uncertainty/uncertainty"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
 
 
@@ -19,12 +19,12 @@ export function get_created_at_ms (obj: { created_at: Date, custom_created_at?: 
 
 
 
-export function get_sim_datetime (item: HasDateTime)
+export function get_sim_datetime (item: HasUncertainDatetime)
 {
     return get_uncertain_datetime(item.datetime)
 }
 
-export function get_sim_datetime_ms (item: HasDateTime)
+export function get_sim_datetime_ms (item: HasUncertainDatetime)
 {
     const dt = get_sim_datetime(item)
     return dt === undefined ? undefined : dt.getTime()
@@ -32,7 +32,7 @@ export function get_sim_datetime_ms (item: HasDateTime)
 
 
 
-export function get_tense_of_item (item: HasDateTime, sim_ms: number): Tense
+export function get_tense_of_uncertain_datetime (item: HasUncertainDatetime, sim_ms: number): Tense
 {
     const { min, value, max } = (item.datetime || {})
 
@@ -112,7 +112,7 @@ interface PartitionItemsByDatetimeReturn<U>
     present_items: U[]
     future_items: U[]
 }
-export function partition_items_by_datetimes <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeArgs<U>): PartitionItemsByDatetimeReturn<U>
+export function partition_items_by_datetimes <U extends Base & HasUncertainDatetime> (args: PartitionItemsByDatetimeArgs<U>): PartitionItemsByDatetimeReturn<U>
 {
     const { items, sim_ms } = args
 
@@ -123,7 +123,7 @@ export function partition_items_by_datetimes <U extends Base & HasDateTime> (arg
 
     items.forEach(item =>
     {
-        const tense = get_tense_of_item(item, sim_ms)
+        const tense = get_tense_of_uncertain_datetime(item, sim_ms)
 
         if (tense === Tense.past) past_items.push(item)
         else if (tense === Tense.future) future_items.push(item)
@@ -153,49 +153,49 @@ function test_get_tense_of_item ()
     const date5 = new Date("2021-04-01 00:05")
     const date5_ms = date5.getTime()
 
-    result = get_tense_of_item({ datetime: {} }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: {} }, date1_ms)
     test(result, Tense.eternal)
 
-    result = get_tense_of_item({ datetime: { min: date2 } }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2 } }, date1_ms)
     test(result, Tense.future)
-    result = get_tense_of_item({ datetime: { min: date2 } }, date2_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2 } }, date2_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { min: date2 } }, date3_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2 } }, date3_ms)
     test(result, Tense.present)
 
-    result = get_tense_of_item({ datetime: { value: date2 } }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { value: date2 } }, date1_ms)
     test(result, Tense.future)
-    result = get_tense_of_item({ datetime: { value: date2 } }, date2_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { value: date2 } }, date2_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { value: date2 } }, date3_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { value: date2 } }, date3_ms)
     test(result, Tense.past)
 
-    result = get_tense_of_item({ datetime: { max: date2 } }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { max: date2 } }, date1_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { max: date2 } }, date2_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { max: date2 } }, date2_ms)
     test(result, Tense.past)
-    result = get_tense_of_item({ datetime: { max: date2 } }, date3_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { max: date2 } }, date3_ms)
     test(result, Tense.past)
 
 
-    result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, max: date3 } }, date1_ms)
     test(result, Tense.future)
-    result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date2_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, max: date3 } }, date2_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date3_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, max: date3 } }, date3_ms)
     test(result, Tense.past)
-    result = get_tense_of_item({ datetime: { min: date2, max: date3 } }, date4_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, max: date3 } }, date4_ms)
     test(result, Tense.past)
 
-    result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date1_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date1_ms)
     test(result, Tense.future)
-    result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date2_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date2_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date3_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date3_ms)
     test(result, Tense.present)
-    result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date4_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date4_ms)
     test(result, Tense.past)
-    result = get_tense_of_item({ datetime: { min: date2, value: date3, max: date4 } }, date5_ms)
+    result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date5_ms)
     test(result, Tense.past)
 }
 
@@ -270,7 +270,7 @@ function test_partition_items_by_datetimes ()
 {
     console .log("running tests of partition_items_by_datetimes")
 
-    interface Simple extends Base, HasDateTime {}
+    interface Simple extends Base, HasUncertainDatetime {}
 
     function ids_partition_items_by_datetimes (args: PartitionItemsByDatetimeArgs<Simple>): PartitionItemsByDatetimeReturn<string>
     {
