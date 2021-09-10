@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
-// import "./ColorPicker.css"
+import "./ColorPicker.css"
 import { EditableNumber } from "../form/EditableNumber"
 import type { Color } from "../shared/interfaces"
 import { bounded } from "../shared/utils/bounded"
