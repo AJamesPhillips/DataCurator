@@ -92,26 +92,22 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
     const display_explanation = !!(editing || explanation)
 
     return <div className="shared_VAP_set_details">
-        <div className="row_one">
-            <div className="description_label">{display_explanation && "Explanation:"}</div>
-            {VAPs_not_boolean && <div>
-                <div className="description_label" style={{ display: "inline"}}>Cn:</div> &nbsp;
-                <EditablePercentage
-                    disabled={false}
-                    placeholder="..."
-                    value={conviction}
-                    conditional_on_blur={conviction =>
-                    {
-                        const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
-                        // Overwrite all the existing convictions with this conviction
-                        const entries = VAP_set.entries.map(e => ({ ...e, conviction }))
-                        crud.update_item({ ...VAP_set, entries, shared_entry_values })
-                    }}
-                />
-            </div>}
-        </div>
+        {VAPs_not_boolean && <div>
+            <EditablePercentage
+                disabled={false}
+                placeholder="Confidence"
+                value={conviction}
+                conditional_on_blur={conviction =>
+                {
+                    const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
+                    // Overwrite all the existing convictions with this conviction
+                    const entries = VAP_set.entries.map(e => ({ ...e, conviction }))
+                    crud.update_item({ ...VAP_set, entries, shared_entry_values })
+                }}
+            />
+        </div>}
         {display_explanation && <EditableText
-            placeholder="..."
+            placeholder="Explanation"
             value={explanation}
             conditional_on_blur={explanation =>
             {

@@ -121,59 +121,67 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
 
     return <div className="value_and_prediction_summary">
+        <br />
         <div className="temporal_uncertainty">
             {is_number && (editing || VAP.min) && <div>
-                <div className="description_label">min</div> &nbsp; <EditableTextSingleLine
-                    placeholder="..."
+                <EditableTextSingleLine
+                    placeholder="Min"
                     value={VAP.min || ""}
                     conditional_on_blur={min => crud.update_item({ ...VAP, min })}
                 />
+                <br />
             </div>}
             {(editing || VAP.value) && <div>
-                <div className="description_label">value</div> &nbsp; <EditableTextSingleLine
+                <EditableTextSingleLine
                     disabled={is_boolean}
-                    placeholder="..."
+                    placeholder="Value"
                     value={is_boolean ? (VAP.probability > 0.5 ? "True" : "False") : VAP.value}
                     conditional_on_blur={value => crud.update_item({ ...VAP, value })}
                 />
+                <br />
             </div>}
             {is_number && (editing || VAP.max) && <div>
-                <div className="description_label">max</div> &nbsp; <EditableTextSingleLine
-                    placeholder="..."
+                <EditableTextSingleLine
+                    placeholder="Max"
                     value={VAP.max || ""}
                     conditional_on_blur={max => crud.update_item({ ...VAP, max })}
                 />
+                <br />
             </div>}
         </div>
 
         <div className="probabilities">
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
-                <div className="description_label">Prob</div> &nbsp; <EditablePercentage
+                <EditablePercentage
                     disabled={disabled_prob}
-                    placeholder="..."
+                    placeholder="probability"
                     value={probability}
                     conditional_on_blur={probability => crud.update_item({ ...VAP, probability })}
                 />
+                <br />
             </div>}
 
             {!is_boolean && VAP.relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
-                <div className="description_label">Rel prob</div> &nbsp; <EditableNumber
+                <EditableNumber
                     disabled={disabled_rel_prob}
-                    placeholder="..."
+                    placeholder="Relative probability"
                     value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
                     conditional_on_blur={relative_probability => crud.update_item({ ...VAP, relative_probability })}
                 />
+                <br />
             </div>}
 
             {is_boolean && <div>
-                <div className="description_label">Cn</div> &nbsp; <EditablePercentage
-                    placeholder="..."
+                <EditablePercentage
+                    placeholder="Confidence"
                     value={conviction}
                     conditional_on_blur={conviction => crud.update_item({ ...VAP, conviction })}
                 />
+                <br />
             </div>}
 
+            <br />
             <PredictionBadge
                 disabled={true}
                 size={20}
