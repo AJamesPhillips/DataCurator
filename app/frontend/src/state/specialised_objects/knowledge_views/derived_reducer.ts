@@ -26,7 +26,7 @@ import type {
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 import { is_knowledge_view_id } from "../../../shared/utils/ids"
 import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
-import { get_sim_datetime_ms } from "../../../shared/wcomponent/utils_datetime"
+import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { is_defined } from "../../../shared/utils/is_defined"
 import type { WComponentType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
 

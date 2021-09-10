@@ -1,4 +1,4 @@
-import type { HasDateTime } from "../../uncertainty/uncertainty"
+import type { HasUncertainDatetime } from "../../uncertainty/uncertainty"
 import { sort_list } from "../../utils/sort"
 import type { Base } from "../interfaces/base"
 import { VAPsType } from "../interfaces/generic_value"
@@ -7,7 +7,7 @@ import type {
     StateValueAndPrediction,
     WComponentStateV2SubType,
 } from "../interfaces/state"
-import { get_created_at_ms, partition_items_by_created_at_datetime, partition_items_by_datetimes } from "../utils_datetime"
+import { get_created_at_ms, partition_items_by_created_at_datetime, partition_items_by_datetimes } from "../../utils_datetime/utils_datetime"
 
 
 
@@ -25,7 +25,7 @@ interface PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
     future_items: U[]
     previous_versions_by_id: {[id: string]: U[]}
 }
-export function partition_and_prune_items_by_datetimes_and_versions <U extends Base & HasDateTime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
+export function partition_and_prune_items_by_datetimes_and_versions <U extends Base & HasUncertainDatetime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 {
     const result = partition_items_by_created_at_datetime(args)
     const { latest, previous_versions_by_id } = group_versions_by_id(result.current_items)

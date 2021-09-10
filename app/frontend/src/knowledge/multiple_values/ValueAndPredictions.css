@@ -15,24 +15,3 @@
 {
     border-color: rgba(0, 0, 0, 0);
 }
-
-
-.value_and_prediction_summary .temporal_uncertainty
-{
-    flex: 6;
-}
-
-.value_and_prediction_summary .probabilities
-{
-    flex: 5;
-}
-
-.value_and_prediction_summary .temporal_uncertainty > div {
-    display: inline-flex;
-    height: 1em;
-}
-
-.value_and_prediction_summary .probabilities > div > div
-{
-    display: inline-flex;
-}

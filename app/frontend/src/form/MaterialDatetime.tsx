@@ -10,6 +10,7 @@ import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 interface OwnProps
 {
     title?: string
+    invariant_value?: Date | undefined
     value?: Date | undefined
     on_change?: (new_datetime: Date | undefined) => void
     always_allow_editing?: boolean
@@ -77,6 +78,9 @@ function _MaterialDateTime (props: Props)
             break;
         }
     }
+
+    const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
+
     console.group(current_type);
     console.log(current_format_str);
     console.groupEnd();
@@ -92,7 +96,7 @@ function _MaterialDateTime (props: Props)
                             onClick={handle_manual_date_click}
                     />)
                 }}
-                label={props.title || null}
+                label={title}
                 onChange={(e:any) => {
                     set_the_date(new Date(e.target.value))
                     if (props.on_change) props.on_change(new Date(e.target.value))

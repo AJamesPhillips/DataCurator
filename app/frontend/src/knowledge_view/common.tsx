@@ -43,9 +43,8 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
-            {editing && <span className="description_label">Title</span>} &nbsp;
             <EditableTextSingleLine
-                placeholder="Title..."
+                placeholder="Title"
                 value={knowledge_view.title}
                 conditional_on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "Base" : make_default_kv_title()

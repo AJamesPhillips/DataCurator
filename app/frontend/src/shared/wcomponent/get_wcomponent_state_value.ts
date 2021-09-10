@@ -8,7 +8,7 @@ import {
     wcomponent_should_have_state_VAP_sets,
 } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeState } from "./interfaces/state"
-import { get_created_at_ms } from "./utils_datetime"
+import { get_created_at_ms } from "../utils_datetime/utils_datetime"
 import { get_current_values_and_probabilities } from "./value_and_prediction/get_value"
 import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
