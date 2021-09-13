@@ -6,7 +6,7 @@ import { Box, FormControl, FormLabel } from "@material-ui/core"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
-// import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { LabelsEditor } from "../../labels/LabelsEditor"
@@ -48,13 +48,11 @@ import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { GoalFormFields } from "./GoalFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
-import { MaterialDateTime } from "../../form/MaterialDatetime"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
-import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 
 
 
@@ -380,6 +378,7 @@ function _WComponentForm (props: Props)
                 }}
             /><br/>
 
+            {/*
             <MaterialDateTime
                 fullWidth={true}
                 on_change={new_custom_created_at => {
@@ -390,6 +389,7 @@ function _WComponentForm (props: Props)
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
             />
+            */}
         </FormControl>
 
         {editing && <p>
