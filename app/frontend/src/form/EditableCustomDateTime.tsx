@@ -55,6 +55,7 @@ function _EditableCustomDateTime (props: Props)
         <TextField
             disabled={not_editable}
             type="text"
+            label={title}
             value={display_value}
             onFocus={() => set_editing(true)}
             inputRef={((r: HTMLInputElement | null) =>
