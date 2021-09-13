@@ -1,13 +1,16 @@
-import { FunctionalComponent, h, Ref } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+import { TextField } from "@material-ui/core"
 
 import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"
 import { useState } from "preact/hooks"
 import { Button } from "../sharedf/Button"
 import { date2str, get_today_str } from "../shared/utils/date_helpers"
-import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../state/State"
 import type { TimeResolution } from "../shared/utils/datetime"
+
+
 
 interface OwnProps
 {
@@ -49,12 +52,12 @@ function _EditableCustomDateTime (props: Props)
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
 
     return <div className={class_name} title={title}>
-        <input
+        <TextField
             disabled={not_editable}
             type="text"
             value={display_value}
             onFocus={() => set_editing(true)}
-            ref={r =>
+            inputRef={((r: HTMLInputElement | null) =>
             {
                 if (!r || !editing) return
                 // Because we do not dispatch any state changes to react on changing the value
@@ -65,19 +68,28 @@ function _EditableCustomDateTime (props: Props)
                 r.value = new_working_value
 
                 r.setSelectionRange(0, r.value.length)
-            }}
-            onChange={e =>
+            }) as any}
+            onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) =>
             {
                 const valid = is_value_valid(e.currentTarget.value)
                 if (valid) e.currentTarget.classList.remove("invalid")
                 else e.currentTarget.classList.add("invalid")
             }}
-            onBlur={e => {
+            onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
                 const working_value = e.currentTarget.value
                 const new_value = handle_on_blur({ working_value, invariant_value })
                 on_change(new_value)
                 set_editing(false)
             }}
+            size="small"
+            variant="outlined"
+            fullWidth={true}
+            // InputProps={{
+            //     endAdornment: <CalendarTodayIcon
+            //         // className={classes.open_popover_icon}
+            //         onClick={() => {}}
+            //     />
+            // }}
         />
         {editing && show_now_shortcut_button && <NowButton
             on_change={on_change}
