@@ -85,7 +85,6 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
         storage_type_supports_delete: state.sync.storage_type !== "local_server",
-        time_resolution: state.display_options.time_resolution,
     }
 }
 
@@ -163,7 +162,7 @@ function _WComponentForm (props: Props)
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
     }
 
-    // let input_type = (props.time_resolution === 'day') ? "date" : "datetime";
+
     return <Box  className={`editable-${wcomponent_id}`}>
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
