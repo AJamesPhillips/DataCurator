@@ -7,7 +7,10 @@ import type {
     StateValueAndPrediction,
     WComponentStateV2SubType,
 } from "../interfaces/state"
-import { get_created_at_ms, partition_items_by_created_at_datetime, partition_items_by_datetimes } from "../../utils_datetime/utils_datetime"
+import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../utils_datetime/utils_datetime"
+import {
+    partition_and_sort_by_uncertain_event_datetimes,
+} from "../../utils_datetime/partition_by_uncertain_datetime"
 
 
 
@@ -29,7 +32,7 @@ export function partition_and_prune_items_by_datetimes_and_versions <U extends B
 {
     const result = partition_items_by_created_at_datetime(args)
     const { latest, previous_versions_by_id } = group_versions_by_id(result.current_items)
-    const partition_by_temporal = partition_items_by_datetimes({ items: latest, sim_ms: args.sim_ms })
+    const partition_by_temporal = partition_and_sort_by_uncertain_event_datetimes({ items: latest, sim_ms: args.sim_ms })
 
     return {
         invalid_future_items: result.invalid_future_items,
