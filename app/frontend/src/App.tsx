@@ -79,7 +79,10 @@ function App()
         side_panel_content: {
             marginTop:10, padding:10,
         },
-
+        sidebar_toolbar: {
+            flexGrow:1,
+            justifyContent:"flex-end"
+        },
         toolbar: {
             flexGrow: 1,
             justifyContent:"space-between",
@@ -160,8 +163,8 @@ function App()
                     variant="persistent"
                 >
                     <Box component="aside" className={classes.side_panel} id="side_panel">
-                        <AppBar elevation={1}  position="sticky" >
-                            <Toolbar variant="dense">
+                        <AppBar elevation={1}  position="sticky">
+                            <Toolbar variant="dense" className={classes.sidebar_toolbar}>
                                 <IconButton
                                     color="inherit"
                                     aria-label="Close side panel"
