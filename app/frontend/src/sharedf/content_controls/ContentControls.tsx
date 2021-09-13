@@ -58,12 +58,13 @@ function _ContentControls (props: Props)
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                 </Box>
 
-                <Box component="label">
-                    {!props.editing && <Button
+                <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
+                    <Button
+                        disabled={props.editing}
                         onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
                     >
                         {display_sliders ? "Hide" : "Show"} time sliders
-                    </Button>}
+                    </Button>
                 </Box>
 
                 <Box component="label">
