@@ -9,8 +9,7 @@ import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invertDisabledAppearance } from "../../ui_themes/invert_disabled"
-import { Alert } from "@material-ui/lab"
-import WarningIcon from '@material-ui/icons/Warning';
+import { FilterStatus } from "../../knowledge_view/FilterStatus"
 
 interface OwnProps
 {
@@ -47,7 +46,6 @@ function _ContentControls (props: Props)
         props.set_display_by_simulated_time({ display_by_simulated_time });
     }
 
-
     const display_sliders = props.editing || props.display_time_sliders
     let are_any_component_dates_within_filter:boolean = false;
     let how_many_components_are_visible:number = 0;
@@ -72,13 +70,7 @@ function _ContentControls (props: Props)
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                 </Box>
-                {(!are_any_component_dates_within_filter) && (
-                    <Tooltip placement="top" title="WARNING: No components are visible due to create_at filter!">
-                        <Alert severity="warning" icon={<WarningIcon />}>
-                            {how_many_components_are_visible}
-                        </Alert>
-                    </Tooltip>
-                )}
+                <FilterStatus />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
                         disabled={props.editing}
