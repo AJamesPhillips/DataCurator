@@ -1,22 +1,17 @@
-import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
+import { Box, IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { FunctionalComponent, h } from "preact";
 import { connect, ConnectedProps } from "react-redux";
 import type { RootState } from "../state/State";
-import type { TimeSliderEvent } from "../time_control/interfaces";
-import WarningIcon from '@material-ui/icons/Warning';
+import FilterIcon from '@material-ui/icons/Filter';
+
 import { useMemo } from "react";
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent";
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors";
-
-interface OwnProps
-{
-    events?: TimeSliderEvent[]
-}
+interface OwnProps {}
 
 const map_state = (state: RootState) => ({
     created_at_ms: state.routing.args.created_at_ms,
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
-    selected_component_id: state.routing.item_id,
     wcomponents: state.derived.wcomponents,
 })
 
@@ -65,7 +60,7 @@ function _FilterStatus (props: Props)
                 component="span" disableRipple disableElevation
                 size="small"
             >
-                <WarningIcon className={classes.warning_icon} />
+                <FilterIcon className={classes.warning_icon} />
                 {/* {how_many_components_are_visible} */}
             </IconButton>
         </Tooltip>
