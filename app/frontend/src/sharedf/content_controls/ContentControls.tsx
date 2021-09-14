@@ -40,7 +40,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ContentControls (props: Props)
 {
-    const intvert_classes = invertDisabledAppearance();
+    const invert_classes = invertDisabledAppearance();
     const { created_events, sim_events, move_to_component_id } = props
     const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         const display_by_simulated_time = JSON.parse(e.currentTarget.value);
@@ -103,7 +103,7 @@ function _ContentControls (props: Props)
                             value={true}
                             onClick={set_knowledge_view_type}
                             aria-label="Display by simulated time"
-                            className={intvert_classes.inverse_disabled}
+                            className={invert_classes.inverse_disabled}
                             disabled={props.display_by_simulated_time}
                         >
                             Time
@@ -112,7 +112,7 @@ function _ContentControls (props: Props)
                             value={false}
                             onClick={set_knowledge_view_type}
                             aria-label="Display by relationships"
-                            className={intvert_classes.inverse_disabled}
+                            className={invert_classes.inverse_disabled}
                             disabled={!props.display_by_simulated_time}
                         >
                             Relationships
