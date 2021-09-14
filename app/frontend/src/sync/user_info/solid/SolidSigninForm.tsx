@@ -57,9 +57,9 @@ function _SolidSigninForm (props: Props)
     .then(() =>
     {
         set_logged_in()
-        const changed_login_state = started_logged_in !== solid_session.info.isLoggedIn
-        if (!changed_login_state) return // defensive against infinite loops
-        get_solid_users_name_and_pod_URL().then(args => props.update_users_name_and_solid_pod_URL(args))
+        // const changed_login_state = started_logged_in !== solid_session.info.isLoggedIn
+        // if (!changed_login_state) return // defensive against infinite loops
+        // get_solid_users_name_and_pod_URL().then(args => props.update_users_name_and_solid_pod_URL(args))
     })
 
 

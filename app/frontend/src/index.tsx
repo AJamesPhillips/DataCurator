@@ -179,7 +179,7 @@ function restore_session (root_el: HTMLElement): Promise<void>
         // This whole function has a smell
         .then(args =>
         {
-            console .log("Signed in as user name: " + args.user_name)
+            console .log(`Signed in as user name: "${args.user_name}"`)
 
             const solid_session = getDefaultSession()
             let solid_oidc_provider = (
@@ -202,7 +202,13 @@ function restore_session (root_el: HTMLElement): Promise<void>
             persist_state_object("user_info", partial_user_info)
 
             console .log("Persisted user_info: ", get_persisted_state_object("user_info"))
-
+        })
+        .catch(err =>
+        {
+            console.warn("Error restoring session: ", err)
+        })
+        .finally(() =>
+        {
             root_el.innerHTML = ""
         })
     }

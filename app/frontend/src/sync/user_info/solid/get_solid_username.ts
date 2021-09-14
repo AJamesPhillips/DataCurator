@@ -22,7 +22,7 @@ export async function get_solid_users_name_and_pod_URL (): Promise<UserNameAndPo
 
     const web_id = session.info.webId
 
-    if (!session.info.isLoggedIn || !web_id) return empty
+    if (!session.info.isLoggedIn || !web_id) return Promise.reject()
 
     // The web_id can contain a hash fragment (e.g. `#me`) to refer to profile data
     // in the profile dataset. If we strip the hash, we get the URL of the full
