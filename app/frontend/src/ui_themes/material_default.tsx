@@ -19,7 +19,7 @@ const _default_theme_options: ThemeOptions = {
             main: '#b3e5fc',
         },
         warning: {
-            main: '#f57c00',
+            main: '#e56717',
         },
 
         error: {
