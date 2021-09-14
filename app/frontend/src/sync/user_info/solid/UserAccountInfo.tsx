@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { Modal } from "../../../modal/Modal"
-import { SolidSigninForm } from "./SolidSigninForm"
+import { UserAccountInfoForm } from "./UserAccountInfoForm"
 
 
 
@@ -11,12 +11,12 @@ interface OwnProps
 }
 
 
-export function SelectSolidUser (props: OwnProps)
+export function UserAccountInfo (props: OwnProps)
 {
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2>Sign in to your Solid account</h2>
+            <h2>Your account</h2>
         </div>}
         size="medium"
 
@@ -28,6 +28,6 @@ export function SelectSolidUser (props: OwnProps)
         }}
 
 
-        child={<SolidSigninForm on_close={props.on_close}/>}
+        child={<UserAccountInfoForm on_close={props.on_close}/>}
     />
 }

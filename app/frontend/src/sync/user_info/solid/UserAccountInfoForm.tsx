@@ -46,7 +46,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _SolidSigninForm (props: Props)
+function _UserAccountInfoForm (props: Props)
 {
     const solid_session = getDefaultSession()
     const [logged_in, _set_logged_in] = useState(solid_session.info.isLoggedIn)
@@ -178,7 +178,7 @@ function _SolidSigninForm (props: Props)
     </div>
 }
 
-export const SolidSigninForm = connector(_SolidSigninForm) as FunctionalComponent<OwnProps>
+export const UserAccountInfoForm = connector(_UserAccountInfoForm) as FunctionalComponent<OwnProps>
 
 
 

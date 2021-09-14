@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
 import { finish_login } from "./solid/handle_login"
-import { SelectSolidUser } from "./solid/SelectSolidUser"
+import { UserAccountInfo } from "./solid/UserAccountInfo"
 
 
 
@@ -65,7 +65,7 @@ function _UserInfo (props: Props)
                 }
             </Typography>
 
-            {show_solid_signin_form && <SelectSolidUser on_close={on_close} />}
+            {show_solid_signin_form && <UserAccountInfo on_close={on_close} />}
         </Button>
     )
 }
