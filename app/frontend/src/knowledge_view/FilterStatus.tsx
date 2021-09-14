@@ -1,4 +1,4 @@
-import { Box, Tooltip } from "@material-ui/core";
+import { Box, Button, IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { FunctionalComponent, h } from "preact";
 import { connect, ConnectedProps } from "react-redux";
@@ -50,11 +50,25 @@ function _FilterStatus (props: Props)
             how_many_components_are_visible++
         }
     })
+    const useStyles = makeStyles(theme => ({
+        warning_button: {
+            cursor:"help",
+        },
+        warning_icon: {
+            color: theme.palette.warning.main
+        },
+    }))
+    const classes = useStyles()
     return (!are_any_component_dates_within_filter) && (
         <Tooltip placement="top" title="WARNING: No components are visible due to created_at filter!">
-            <Alert severity="warning" icon={<WarningIcon />}>
-                {how_many_components_are_visible}
-            </Alert>
+            <IconButton
+                className={classes.warning_button}
+                component="span" disableRipple disableElevation
+                size="small"
+            >
+                <WarningIcon className={classes.warning_icon} />
+                {/* {how_many_components_are_visible} */}
+            </IconButton>
         </Tooltip>
     )
 }
