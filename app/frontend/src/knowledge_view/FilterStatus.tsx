@@ -1,5 +1,4 @@
-import { Box, Button, IconButton, makeStyles, Tooltip } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
+import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { FunctionalComponent, h } from "preact";
 import { connect, ConnectedProps } from "react-redux";
 import type { RootState } from "../state/State";
