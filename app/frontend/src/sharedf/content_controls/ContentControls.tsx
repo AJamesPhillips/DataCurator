@@ -1,8 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import clsx from 'clsx';
-import { Box, ButtonGroup, Button, Toolbar, makeStyles, Tooltip, Drawer, Collapse } from "@material-ui/core"
+import { Box, ButtonGroup, Button, Toolbar, makeStyles, Tooltip, Drawer, Collapse, IconButton } from "@material-ui/core"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
@@ -11,6 +10,7 @@ import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invertDisabledAppearance } from "../../ui_themes/invert_disabled"
 import { FilterStatus } from "../../knowledge_view/FilterStatus"
+
 
 interface OwnProps
 {
@@ -66,8 +66,10 @@ function _ContentControls (props: Props)
         drawer_content: {
             display:"flex", flexDirection:"row",
             alignItems:"center", alignContent:"center",
-        }
-
+        },
+        warning_icon: {
+            color: theme.palette.warning.main
+        },
     }))
     const classes = useStyles()
     return (
