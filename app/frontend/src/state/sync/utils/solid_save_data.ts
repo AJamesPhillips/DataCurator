@@ -71,8 +71,7 @@ async function save_items <I extends Base & { title: string }> (items_URL: strin
     {
         try
         {
-            await deleteSolidDataset(items_URL, { fetch: solid_fetch })
-            // items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
+            items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
         }
         catch (err)
         {
@@ -90,11 +89,11 @@ async function save_items <I extends Base & { title: string }> (items_URL: strin
     })
 
 
-    // item_ids_to_remove.forEach(id =>
-    // {
-    //     const thing = createThing({ name: id })
-    //     items_dataset = removeThing(items_dataset, thing)
-    // })
+    item_ids_to_remove.forEach(id =>
+    {
+        const thing_URL = items_URL + "#" + id
+        items_dataset = removeThing(items_dataset, thing_URL)
+    })
 
 
     try {
