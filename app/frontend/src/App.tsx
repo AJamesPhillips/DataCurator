@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useState } from "react"
 import clsx from 'clsx';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
+import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar, Tooltip } from "@material-ui/core"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -18,6 +18,7 @@ import { HelpMenu } from "./help_menu/HelpMenu"
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import { FilterStatus } from "./knowledge_view/FilterStatus";
+import { CreationContextWarning } from "./sharedf/CreationContextWarning";
 
 function App()
 {
@@ -113,13 +114,13 @@ function App()
         },
         grow: { flexGrow:1 },
         hide: { display: 'none' },
+        warning_icon: { color: theme.palette.warning.main }
       }));
 
     const classes = useStyles();
     const [side_panel_open, set_side_panel_open] = useState(true);
     const handle_open_side_panel = () => { set_side_panel_open(true); console.log("open"); }
     const handle_close_side_panel = () => { set_side_panel_open(false); console.log("closed"); }
-
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
@@ -127,9 +128,6 @@ function App()
                 <AppBar elevation={1} id="header" position="fixed" className={clsx(classes.app_bar, { [classes.app_bar_with_open_side_panel]: side_panel_open })}>
                     <Toolbar variant="dense" className={classes.toolbar}>
                         <Box className={`${classes.toolbar_section} ${classes.grow} ${classes.small_full_width}`}>
-                            {/* <Box className={`${classes.toolbar_item}`}>
-                                <FilterStatus />
-                            </Box> */}
                             <Box className={`${classes.toolbar_item}`}>
                                 <ViewOptions />
                             </Box>
@@ -139,6 +137,7 @@ function App()
                         </Box>
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
                             <Box className={`${classes.toolbar_item}`}><FilterStatus /></Box>
+                            <Box className={`${classes.toolbar_item}`}><CreationContextWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
