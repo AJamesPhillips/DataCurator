@@ -37,22 +37,24 @@ function _HelpMenu (props: Props)
         on_close={() => props.set_show_help_menu({ show: false })}
         child={(
             <Box p={10}>
-                <Typography component="h1" variant="h5">Commands to help you use DataCurator</Typography>
+                <Typography component="h1" variant="h5">Tips for using DataCurator</Typography>
                 <Accordion
                     expanded={expanded === "kbd-shortcuts"}
                     onChange={handle_change("kbd-shortcuts")}
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6"> When on canvas and not in a form element:</Typography>
+                        <Typography component="h2" variant="h6">Commands / shortcuts</Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
                         <Box>
-                            {keyboard_shortcut.map(args => <Command {...args} />)}
+                            These shortcuts only work when you are not editing text.  Some may only work when you are on the Map (Knowledge) canvas view.
+                            {keyboard_shortcuts.map(args => <KeyboardShortcutCommand {...args} />)}
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+
                 <Accordion
                     expanded={expanded === "linking-tips"}
                     onChange={handle_change("linking-tips")}
@@ -66,6 +68,7 @@ function _HelpMenu (props: Props)
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+
                 <Accordion
                     expanded={expanded === "general-tips"}
                     onChange={handle_change("general-tips")}
@@ -81,6 +84,22 @@ function _HelpMenu (props: Props)
                         </Box>
                     </AccordionDetails>
                 </Accordion>
+
+                <Accordion
+                    expanded={expanded === "detailed-tips"}
+                    onChange={handle_change("detailed-tips")}
+                    expandIcon={<ExpandMoreIcon />}
+                >
+                    <AccordionSummary>
+                        <Typography component="h2" variant="h6">Detailed tips:</Typography>
+                    </AccordionSummary>
+
+                    <AccordionDetails>
+                        <Box>
+                            {detailed_tips.map(tip => <Typography component="p" paragraph>{tip}</Typography>)}
+                        </Box>
+                    </AccordionDetails>
+                </Accordion>
             </Box>
         )}
     />
@@ -89,7 +108,8 @@ export const HelpMenu = connector(_HelpMenu)
 
 
 
-const keyboard_shortcut: KeyboardShortcut[] = [
+const keyboard_shortcuts: KeyboardShortcutProps[] = [
+    { keyboard_shortcut: ["?"], outcome: "Opens this help menu" },
     { keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
     { keyboard_shortcut: ["Ctrl", "d"], outcome: `Toggle "focused" mode on and off` },
     { keyboard_shortcut: ["Shift"], outcome: "shows all nodes" },
@@ -99,13 +119,13 @@ const keyboard_shortcut: KeyboardShortcut[] = [
     { keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
 ]
 
-interface KeyboardShortcut
+interface KeyboardShortcutProps
 {
     keyboard_shortcut: string[]
     outcome: string
 }
 
-function Command (props: KeyboardShortcut)
+function KeyboardShortcutCommand (props: KeyboardShortcutProps)
 {
     const useStyles = makeStyles(theme => ({
         command: {
@@ -156,21 +176,78 @@ const tips_on_linking: (string | h.JSX.Element)[] = [
 
 const general_tips: (string | h.JSX.Element)[] = [
     <div>
-        If you yourself writing states with should, e.g. "People should listen more and be less reductionist" then you might consider seperating this out into it"s 4 seperate parts and phrasing as the positive or desired state.  Specifically:
-        <Typography component="ol">
-            <Typography component="li">
-                the attribute, e.g.: "People listen more and are less reductionist"
-            </Typography>
-            <Typography component="li">
+        <Typography component="h3" variant="h6">"Should" word usage</Typography>
+
+        If you yourself writing states with "should", e.g. "People <b>should</b> listen more and be less reductionist" then you might consider seperating this out into its 4 seperate parts and phrasing as the positive or desired state.  Specifically:
+        <ol>
+            <li>
+                the attribute, e.g.: "People listen more and be less reductionist".  Note it's usually easier to express this as the desired state instead of the pure attribute of "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".
+            </li>
+            <li>
                 the current value, e.g.: "False"
-            </Typography>
-            <Typography component="li">
-                the other possibilities, e.g.: whilst adding a value and if it"s not boolean i.e. not True/False and is instead a type of number or other, then add the other different possible values.
-            </Typography>
-            <Typography component="li">
+            </li>
+            <li>
+                the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values.
+            </li>
+            <li>
                 the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator
-            </Typography>
-        </Typography>
+            </li>
+        </ol>
+    </div>
+    ,
+]
+
+
+
+const detailed_tips: (string | h.JSX.Element)[] = [
+    <div>
+        <Typography component="h3" variant="h6">State subtypes</Typography>
+
+        There are three State subtypes:
+
+        <ol>
+            <li>
+                boolean, e.g. True / False
+            </li>
+            <li>
+                number
+            </li>
+            <li>
+                other
+            </li>
+        </ol>
+
+        Often you can represent the same attribute in different ways and this will depend on what level of detail is salient to the conversation / the model of the scenario you are interested in.
+
+        <ol>
+            <li>
+                a boolean, with title "The medical response was fast" or "The medical response time was adequate"
+            </li>
+            <li>
+                "other" with title "The medical response", with values of "Very slow", "Slow", "Medium", "Fast", "Very fast" etc.
+            </li>
+            <li>
+                "number" with title "The medical response speed", where the value perhaps represents the time in minutes until aid was first administered.
+            </li>
+        </ol>
+
+    </div>
+    ,
+    <div>
+        <Typography component="h3" variant="h6">Multidimensional states</Typography>
+
+        Often there can be attributes / concepts which have two dimensions to them which are salient together, e.g. "The medical response was fast and effective".  These can be modelled using states with titles and subtypes in many ways, for example:
+
+        <ol>
+            <li>
+                a boolean, with title "The medical response was (adequately) fast and effective"
+            </li>
+            <li>
+                "number" with title "The medical response speed and effectiveness", where the value is derived from some formula to calculate a single number based of the two attributes of speed and effectiveness.
+            </li>
+        </ol>
+
+        If the concept later needs to be analysed / comprehended / explored in greater detail it can be decomposed.  Either it could be change to a subtype of "other" with title "The medical response speed and effectiveness", with values of "fast and effective", "fast but ineffective", "slow but effective", "slow and ineffective".  Or replaced by two new seperate states, one for "Medical response speed" and one for "Medical response effectiveness".  In the latter case deleting the first node from the knowledge views would be best.  In the former case, <a href="https://github.com/centerofci/data-curator2/issues/36">versioning the whole component</a> would make this easier from a user's perspective.
     </div>
     ,
 ]
