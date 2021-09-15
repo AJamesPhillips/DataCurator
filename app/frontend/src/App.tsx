@@ -19,6 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
 import { FilterStatus } from "./knowledge_view/FilterStatus";
 import { CreationContextWarning } from "./sharedf/CreationContextWarning";
+import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning";
 
 function App()
 {
@@ -149,6 +150,7 @@ function App()
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
                             <Box className={`${classes.toolbar_item}`}><FilterStatus /></Box>
                             <Box className={`${classes.toolbar_item}`}><CreationContextWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
