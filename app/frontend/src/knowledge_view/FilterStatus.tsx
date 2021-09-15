@@ -1,12 +1,15 @@
-import { Box, IconButton, makeStyles, Tooltip } from "@material-ui/core";
-import { FunctionalComponent, h } from "preact";
-import { connect, ConnectedProps } from "react-redux";
-import type { RootState } from "../state/State";
-import FilterIcon from '@material-ui/icons/Filter';
+import { IconButton, makeStyles, Tooltip } from "@material-ui/core"
+import FilterIcon from "@material-ui/icons/Filter"
+import { FunctionalComponent, h } from "preact"
+import { useMemo } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-import { useMemo } from "react";
-import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent";
-import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors";
+import type { RootState } from "../state/State"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
+
+
+
 interface OwnProps {}
 
 const map_state = (state: RootState) => ({
@@ -21,10 +24,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _FilterStatus (props: Props)
 {
     const { current_composed_knowledge_view, wcomponents  } = props
-    if (!current_composed_knowledge_view) return null;
-
-    let are_any_component_dates_within_filter:boolean = false;
-    let how_many_components_are_visible:number = 0;
+    if (!current_composed_knowledge_view) return null
 
     const wcomponents_on_kv = useMemo(() =>
         wcomponents
@@ -32,25 +32,19 @@ function _FilterStatus (props: Props)
         .filter(wc => wc.type !== "counterfactual")
     , [wcomponents, current_composed_knowledge_view])
 
-    const { created_events, sim_events } = useMemo(() =>
-        get_wcomponent_time_slider_data(wcomponents_on_kv)
-    , [wcomponents_on_kv])
+    const components_excluded_by_created_at_datetime_filter = useMemo(() =>
+        wcomponents_on_kv.filter(kv => get_created_at_ms(kv) > props.created_at_ms).length
+    , [wcomponents_on_kv, props.created_at_ms])
 
-    created_events.forEach(e => {
-        const filtered_created_at_datetime: Date = new Date(props.created_at_ms);
-        const component_created_date = e.datetime;
-        if (filtered_created_at_datetime.getTime() >= component_created_date.getTime()) {
-            are_any_component_dates_within_filter = true;
-            how_many_components_are_visible++
-        }
-    })
     const useStyles = makeStyles(theme => ({
         warning_button: { cursor:"help" },
         warning_icon: { color: theme.palette.warning.main }
     }))
     const classes = useStyles()
-    return (!are_any_component_dates_within_filter) && (
-        <Tooltip placement="top" title="WARNING: No components are visible due to created_at filter!">
+
+
+    return (components_excluded_by_created_at_datetime_filter > 0) && (
+        <Tooltip placement="top" title={`WARNING: ${components_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter!`}>
             <IconButton
                 className={classes.warning_button}
                 component="span"
