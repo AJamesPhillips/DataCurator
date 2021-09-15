@@ -7,6 +7,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { ERRORS } from "../../shared/errors"
 
 import type { RootState } from "../../state/State"
+import { no_user_name } from "./constants"
 import { finish_login } from "./solid/handle_login"
 import { UserAccountInfo } from "./solid/UserAccountInfo"
 
@@ -51,7 +52,7 @@ function _UserInfo (props: Props)
     }
 
 
-    const user_name_or_none = user_name || "(No user name)"
+    const user_name_or_none = user_name || no_user_name
 
 
     return (

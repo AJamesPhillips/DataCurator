@@ -27,6 +27,7 @@ import { get_persisted_state_object, persist_state_object } from "./state/persis
 import { find_match_by_inclusion_of_key } from "./utils/object"
 import { SandBoxSolid } from "./scratch_pad/SandBoxSolid"
 import { ERRORS } from "./shared/errors"
+import { ensure_user_name } from "./state/user_info/persistance"
 
 
 
@@ -180,14 +181,17 @@ function restore_session (root_el: HTMLElement): Promise<void>
         // This whole function has a smell
         .then(args =>
         {
-            console .log(`Signed in as user name: "${args.user_name}"`)
+            const persisted_user_info = get_persisted_state_object<UserInfoState>("user_info")
+            const user_name = ensure_user_name(args.user_name || persisted_user_info.user_name)
+            const msg_diff_user_name = args.user_name !== user_name ? `Using different username: "${user_name}"` : ""
+            console .log(`Signed in as user name: "${args.user_name}" ${msg_diff_user_name}`)
 
             const solid_session = getDefaultSession()
             let solid_oidc_provider = (
                 // Will be something like `https://<user name>.solidcommunity.net/profile/card#me`
                 solid_session.info.webId
                 // Will be something like `https://solidcommunity.net`
-                || (get_persisted_state_object<UserInfoState>("user_info").solid_oidc_provider)
+                || persisted_user_info.solid_oidc_provider
                 || ""
             )
 
@@ -195,9 +199,10 @@ function restore_session (root_el: HTMLElement): Promise<void>
             solid_oidc_provider = match ? match[1] : ""
 
             const partial_user_info: Partial<UserInfoState> = {
-                ...get_persisted_state_object<UserInfoState>("user_info"),
+                ...persisted_user_info,
                 ...args,
                 solid_oidc_provider,
+                user_name,
             }
 
             persist_state_object("user_info", partial_user_info)

@@ -15,6 +15,7 @@ import { OIDC_provider_map } from "./urls"
 import { signout } from "../../../state/user_info/signout"
 import { EditableTextSingleLine } from "../../../form/editable_text/EditableTextSingleLine"
 import { set_using_solid } from "./set_using_solid"
+import { no_user_name } from "../constants"
 
 
 
@@ -80,7 +81,7 @@ function _UserAccountInfoForm (props: Props)
                 <EditableTextSingleLine
                     disabled={using_solid}
                     placeholder="User name"
-                    value={props.user_name}
+                    value={props.user_name || (using_solid ? no_user_name : "")}
                     always_allow_editing={true}
                     select_all_on_focus={true}
                     conditional_on_change={user_name => props.update_users_name({ user_name })}

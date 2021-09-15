@@ -1,4 +1,5 @@
 import type { Action, AnyAction } from "redux"
+import { ensure_user_name } from "./persistance"
 
 
 
@@ -33,7 +34,8 @@ const update_users_name_type = "update_users_name"
 
 const update_users_name = (args: UpdateUsersNameArgs): ActionUpdateUsersName =>
 {
-    return { type: update_users_name_type, ...args }
+    const user_name = ensure_user_name(args.user_name)
+    return { type: update_users_name_type, user_name }
 }
 
 export const is_update_users_name = (action: AnyAction): action is ActionUpdateUsersName => {
@@ -54,7 +56,8 @@ const update_users_name_and_solid_pod_URL_type = "update_users_name_and_solid_po
 
 const update_users_name_and_solid_pod_URL = (args: UpdateUsersNameAndSolidPodUrlArgs): ActionUpdateUsersNameAndSolidPodUrl =>
 {
-    return { type: update_users_name_and_solid_pod_URL_type, ...args }
+    const user_name = ensure_user_name(args.user_name)
+    return { type: update_users_name_and_solid_pod_URL_type, ...args, user_name }
 }
 
 export const is_update_users_name_and_solid_pod_URL = (action: AnyAction): action is ActionUpdateUsersNameAndSolidPodUrl => {
