@@ -11,6 +11,7 @@ import {
 
 export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
 {
+
     return <EditableTextCommon
         {...props}
         component={({ value, on_render, on_focus, on_change, on_blur }: EditableTextComponentArgs) =>

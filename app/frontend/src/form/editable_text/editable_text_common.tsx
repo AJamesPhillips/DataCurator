@@ -21,6 +21,7 @@ export interface EditableTextCommonOwnProps
     always_on_blur?: (value: string) => void
     force_focus?: boolean
     always_allow_editing?: boolean
+    select_all_on_focus?: boolean
 }
 
 
@@ -74,6 +75,7 @@ function _EditableTextCommon (props: Props)
         disabled,
         presenting,
         always_allow_editing,
+        select_all_on_focus,
         force_focus,
         set_editing_text_flag,
     } = props
@@ -105,7 +107,7 @@ function _EditableTextCommon (props: Props)
 
     const on_focus = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        handle_text_field_focus({ e, set_editing_text_flag })
+        handle_text_field_focus({ e, set_editing_text_flag, select_all_on_focus })
     }
 
 
@@ -180,10 +182,21 @@ interface HandleTextFieldFocusArgs
 {
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
     set_editing_text_flag: (value: boolean) => void
+    select_all_on_focus?: boolean
 }
 function handle_text_field_focus (args: HandleTextFieldFocusArgs)
 {
     args.set_editing_text_flag(true)
+    if (args.select_all_on_focus)
+    {
+        const el: HTMLInputElement | HTMLTextAreaElement = args.e.currentTarget
+        // Something else is interfering with this function.  It correctly runs on every focus event but
+        // the 2nd, 4th, 6th, etc focus events result in all the text being selected followed by
+        // being immediately deselected.
+        // The setTimeout works but feels too hacky to justify.
+        // setTimeout(() => el.setSelectionRange(0, el.value.length), 200)
+        el.setSelectionRange(0, el.value.length)
+    }
 }
 
 
