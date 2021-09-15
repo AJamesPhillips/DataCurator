@@ -19,6 +19,7 @@ import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
 import { HelpMenu } from "./help_menu/HelpMenu"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
 import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
+import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 
 
 
@@ -151,6 +152,7 @@ function App()
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
                             <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
