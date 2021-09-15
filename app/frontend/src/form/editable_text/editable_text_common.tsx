@@ -192,9 +192,8 @@ function handle_text_field_focus (args: HandleTextFieldFocusArgs)
         const el: HTMLInputElement | HTMLTextAreaElement = args.e.currentTarget
         // Something else is interfering with this function.  It correctly runs on every focus event but
         // the 2nd, 4th, 6th, etc focus events result in all the text being selected followed by
-        // being immediately deselected.
-        // The setTimeout works but feels too hacky to justify.
-        // setTimeout(() => el.setSelectionRange(0, el.value.length), 200)
+        // being immediately deselected.  This only occurs when using `conditional_on_change` and not
+        // when using `conditional_on_blur`
         el.setSelectionRange(0, el.value.length)
     }
 }

@@ -84,7 +84,7 @@ function _UserAccountInfoForm (props: Props)
                     value={props.user_name || (using_solid ? no_user_name : "")}
                     always_allow_editing={true}
                     select_all_on_focus={true}
-                    conditional_on_change={user_name => props.update_users_name({ user_name })}
+                    conditional_on_blur={user_name => props.update_users_name({ user_name })}
                 />
             </div>
 
