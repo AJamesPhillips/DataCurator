@@ -4,6 +4,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { ERRORS } from "../../shared/errors"
 
 import type { RootState } from "../../state/State"
 import { finish_login } from "./solid/handle_login"
@@ -40,6 +41,7 @@ function _UserInfo (props: Props)
 
         finish_login()
         .then(() => set_show_solid_signin_form(!solid_session.info.isLoggedIn))
+        .catch(err => console.error("UserInfo finish_login got error: ", err))
     }, [storage_type])
 
 

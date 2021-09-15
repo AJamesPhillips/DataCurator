@@ -14,6 +14,7 @@ import { PodProviderRow } from "./PodProviderRow"
 import { OIDC_provider_map } from "./urls"
 import { signout } from "../../../state/user_info/signout"
 import { EditableTextSingleLine } from "../../../form/editable_text/EditableTextSingleLine"
+import { set_using_solid } from "./set_using_solid"
 
 
 
@@ -36,11 +37,8 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     update_users_name: ACTIONS.user_info.update_users_name,
-    set_used_storage_type: ACTIONS.sync.set_used_storage_type,
     update_solid_oidc_provider: ACTIONS.user_info.update_solid_oidc_provider,
-    update_users_name_and_solid_pod_URL: ACTIONS.user_info.update_users_name_and_solid_pod_URL,
     update_custom_solid_pod_URLs: ACTIONS.user_info.update_custom_solid_pod_URLs,
-    update_chosen_custom_solid_pod_URL_index: ACTIONS.user_info.update_chosen_custom_solid_pod_URL_index,
 }
 
 
@@ -68,6 +66,7 @@ function _UserAccountInfoForm (props: Props)
             // if (!changed_login_state) return // defensive against infinite loops
             // get_solid_users_name_and_pod_URL().then(args => props.update_users_name_and_solid_pod_URL(args))
         })
+        .catch(err => console.warn(`Failed to complete login in UserAccountInfoForm`, err))
     }
 
 
@@ -88,9 +87,7 @@ function _UserAccountInfoForm (props: Props)
                 />
             </div>
 
-            <Button
-                onClick={() => props.set_used_storage_type({ storage_type: "solid", using: !using_solid })}
-            >
+            <Button onClick={() => set_using_solid(!using_solid)}>
                 {using_solid ? "Disable using" : "Or use"} Solid
             </Button>
         </div>

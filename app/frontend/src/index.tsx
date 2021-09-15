@@ -26,6 +26,7 @@ import type { UserInfoState } from "./state/user_info/state"
 import { get_persisted_state_object, persist_state_object } from "./state/persistence/persistence_utils"
 import { find_match_by_inclusion_of_key } from "./utils/object"
 import { SandBoxSolid } from "./scratch_pad/SandBoxSolid"
+import { ERRORS } from "./shared/errors"
 
 
 
@@ -205,7 +206,8 @@ function restore_session (root_el: HTMLElement): Promise<void>
         })
         .catch(err =>
         {
-            console.warn("Error restoring session: ", err)
+            if (err === ERRORS.NOT_LOGGED_IN || err === ERRORS.NO_SOLID_WEB_ID) return console .log("restore_session " + err)
+            console.error("Error restoring session: ", err)
         })
         .finally(() =>
         {

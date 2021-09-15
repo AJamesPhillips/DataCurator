@@ -5,6 +5,7 @@ import {
     getStringNoLocale,
 } from "@inrupt/solid-client"
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
+import { ERRORS } from "../../../shared/errors"
 
 
 
@@ -19,10 +20,10 @@ const empty: UserNameAndPodURL = { user_name: "", default_solid_pod_URL: "" }
 export async function get_solid_users_name_and_pod_URL (): Promise<UserNameAndPodURL>
 {
     const session = getDefaultSession()
+    if (!session.info.isLoggedIn) return Promise.reject(ERRORS.NOT_LOGGED_IN)
 
     const web_id = session.info.webId
-
-    if (!session.info.isLoggedIn || !web_id) return Promise.reject()
+    if (!web_id) return Promise.reject(ERRORS.NO_SOLID_WEB_ID)
 
     // The web_id can contain a hash fragment (e.g. `#me`) to refer to profile data
     // in the profile dataset. If we strip the hash, we get the URL of the full

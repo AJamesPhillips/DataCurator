@@ -2,6 +2,7 @@ import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import type { SyncState } from "./state"
+import { selector_is_using_solid_for_storage } from "./selector"
 
 
 
@@ -43,5 +44,5 @@ export function sync_starting_state (): SyncState
 
 export function onload_is_using_solid_for_storage ()
 {
-    return sync_starting_state().use_solid_storage
+    return selector_is_using_solid_for_storage({ sync: sync_starting_state() })
 }
