@@ -20,6 +20,7 @@ export interface EditableTextCommonOwnProps
     conditional_on_blur?: (value: string) => void
     always_on_blur?: (value: string) => void
     force_focus?: boolean
+    always_allow_editing?: boolean
 }
 
 
@@ -72,11 +73,12 @@ function _EditableTextCommon (props: Props)
         always_on_blur,
         disabled,
         presenting,
+        always_allow_editing,
         force_focus,
         set_editing_text_flag,
     } = props
 
-    if ((!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || presenting)
+    if ((!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || (presenting && !always_allow_editing))
     {
         const class_name = (disabled ? "disabled" : "")
         return <div className={class_name}>
