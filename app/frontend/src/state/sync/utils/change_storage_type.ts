@@ -1,3 +1,5 @@
+// TODO: remove whole file
+
 import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 
 import { ACTIONS } from "../../actions"
@@ -28,7 +30,7 @@ export async function change_storage_type ({ new_storage_type, copy_from }: Chan
     // `clear_from_mem_all_specialised_objects`
     store.dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
     store.dispatch(ACTIONS.specialised_object.clear_from_mem_all_specialised_objects())
-    store.dispatch(ACTIONS.sync.update_storage_type({ storage_type: new_storage_type, copy_from }))
+    // store.dispatch(ACTIONS.sync.update_storage_type({ storage_type: new_storage_type, copy_from }))
 
     if (new_storage_type === "solid" && !getDefaultSession().info.isLoggedIn)
     {

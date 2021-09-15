@@ -1,3 +1,5 @@
+// TODO: remove whole file (probably: we might be able to repurpose it)
+
 import type { Dispatch } from "redux"
 
 import { ACTIONS } from "../../actions"
@@ -40,7 +42,7 @@ export async function swap_storage_type (dispatch: Dispatch, state: RootState)
 
     console .log(`swap_storage_type finished copying data`)
 
-    dispatch(ACTIONS.sync.clear_storage_type_copy_from({}))
+    // dispatch(ACTIONS.sync.clear_storage_type_copy_from({}))
 
     return
 }

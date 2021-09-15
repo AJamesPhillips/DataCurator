@@ -22,6 +22,26 @@ export const is_update_solid_oidc_provider = (action: AnyAction): action is Acti
 
 
 
+interface UpdateUsersNameArgs
+{
+    user_name: string
+}
+
+interface ActionUpdateUsersName extends Action, UpdateUsersNameArgs {}
+
+const update_users_name_type = "update_users_name"
+
+const update_users_name = (args: UpdateUsersNameArgs): ActionUpdateUsersName =>
+{
+    return { type: update_users_name_type, ...args }
+}
+
+export const is_update_users_name = (action: AnyAction): action is ActionUpdateUsersName => {
+    return action.type === update_users_name_type
+}
+
+
+
 interface UpdateUsersNameAndSolidPodUrlArgs
 {
     user_name: string
@@ -105,6 +125,7 @@ export const is_ensure_solid_pod_URL_is_chosen = (action: AnyAction): action is 
 
 export const user_info_actions = {
     update_solid_oidc_provider,
+    update_users_name,
     update_users_name_and_solid_pod_URL,
     update_custom_solid_pod_URLs,
     update_chosen_custom_solid_pod_URL_index,

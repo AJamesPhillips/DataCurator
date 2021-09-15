@@ -16,6 +16,7 @@ const map_state = (state: RootState) =>
     return {
         storage_type: state.sync.storage_type,
         user_name: state.user_info.user_name,
+        using_solid: state.sync.use_solid_storage,
     }
 }
 
@@ -28,24 +29,28 @@ type Props = ConnectedProps<typeof connector>
 
 function _UserInfo (props: Props)
 {
-    const { storage_type, user_name } = props
+    const { storage_type, user_name, using_solid } = props
     const [show_solid_signin_form, set_show_solid_signin_form] = useState(false)
-
-    if (storage_type !== "solid") return null
 
 
     const solid_session = getDefaultSession()
     useEffect(() =>
     {
+        if (storage_type !== "solid") return
+
         finish_login()
         .then(() => set_show_solid_signin_form(!solid_session.info.isLoggedIn))
-    }, [])
+    }, [storage_type])
 
 
     const on_close = () =>
     {
         set_show_solid_signin_form(false)
     }
+
+
+    const user_name_or_none = user_name || "(No user name)"
+
 
     return (
         <Button
@@ -60,8 +65,8 @@ function _UserInfo (props: Props)
         >
             <Typography noWrap={true}>
                 {solid_session.info.isLoggedIn
-                    ? (user_name || "(No user name)")
-                    : ("Sign in" + (user_name && ` as ${user_name}`))
+                    ? user_name_or_none
+                    : (using_solid ? "Sign in" + (user_name && ` as ${user_name}`) : user_name_or_none)
                 }
             </Typography>
 

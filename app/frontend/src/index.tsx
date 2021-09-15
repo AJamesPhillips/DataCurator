@@ -19,7 +19,7 @@ import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanv
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { correct_path, finish_login } from "./sync/user_info/solid/handle_login"
 import { getDefaultSession, onSessionRestore } from "@inrupt/solid-client-authn-browser"
-import { is_using_solid_for_storage } from "./state/sync/persistance"
+import { onload_is_using_solid_for_storage } from "./state/sync/persistance"
 import { get_solid_users_name_and_pod_URL } from "./sync/user_info/solid/get_solid_username"
 import { OIDC_provider_map } from "./sync/user_info/solid/urls"
 import type { UserInfoState } from "./state/user_info/state"
@@ -153,7 +153,7 @@ if (title)
 // TODO move this function somewhere else
 function restore_session (root_el: HTMLElement): Promise<void>
 {
-    const using_solid_for_storage = is_using_solid_for_storage()
+    const using_solid_for_storage = onload_is_using_solid_for_storage()
 
     if (using_solid_for_storage)
     {

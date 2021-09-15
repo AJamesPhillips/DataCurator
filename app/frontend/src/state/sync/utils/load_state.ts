@@ -22,7 +22,7 @@ export function load_state (store: Store<RootState>)
     const { storage_type } = state.sync
     if (!storage_type)
     {
-        console.log("Returning early from load_state.  No storage_type set")
+        console .log("Returning early from load_state.  No storage_type set")
         return
     }
 
