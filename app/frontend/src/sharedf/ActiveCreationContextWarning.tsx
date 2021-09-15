@@ -16,7 +16,7 @@ const map_state = (state: RootState) => ({
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>  & OwnProps
 
-function _CreationContextWarning (props: Props)
+function _ActiveCreationContextWarning (props: Props)
 {
     const { creation_context, editing } = props
     const useStyles = makeStyles(theme => ({
@@ -39,4 +39,4 @@ function _CreationContextWarning (props: Props)
     )
 }
 
-export const CreationContextWarning = connector(_CreationContextWarning) as FunctionalComponent<OwnProps>
+export const ActiveCreationContextWarning = connector(_ActiveCreationContextWarning) as FunctionalComponent<OwnProps>

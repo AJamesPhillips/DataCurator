@@ -21,7 +21,7 @@ const map_state = (state: RootState) => ({
 const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
-function _FilterStatus (props: Props)
+function _ActiveCreatedAtFilterWarning (props: Props)
 {
     const { current_composed_knowledge_view, wcomponents  } = props
     if (!current_composed_knowledge_view) return null
@@ -57,4 +57,4 @@ function _FilterStatus (props: Props)
     )
 }
 
-export const FilterStatus = connector(_FilterStatus) as FunctionalComponent<OwnProps>
+export const ActiveCreatedAtFilterWarning = connector(_ActiveCreatedAtFilterWarning) as FunctionalComponent<OwnProps>

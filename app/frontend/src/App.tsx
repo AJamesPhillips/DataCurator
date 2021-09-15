@@ -1,7 +1,9 @@
 import { h } from "preact"
 import { useState } from "react"
-import clsx from 'clsx';
-import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar, Tooltip } from "@material-ui/core"
+import clsx from "clsx"
+import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
+import MenuIcon from "@material-ui/icons/Menu"
+import CloseIcon from "@material-ui/icons/Close"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -15,10 +17,10 @@ import { UserInfo } from "./sync/user_info/UserInfo"
 import { BackupInfo } from "./sync/sync_backup_info/BackupInfo"
 import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
 import { HelpMenu } from "./help_menu/HelpMenu"
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
-import { FilterStatus } from "./knowledge_view/FilterStatus";
-import { CreationContextWarning } from "./sharedf/CreationContextWarning";
+import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
+import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
+
+
 
 function App()
 {
@@ -136,8 +138,8 @@ function App()
                             </Box>
                         </Box>
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
-                            <Box className={`${classes.toolbar_item}`}><FilterStatus /></Box>
-                            <Box className={`${classes.toolbar_item}`}><CreationContextWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
