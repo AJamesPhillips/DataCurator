@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse } from "@material-ui/core"
 
-import { Box, ButtonGroup, Button, Toolbar, makeStyles, Tooltip, Drawer, Collapse, IconButton } from "@material-ui/core"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
@@ -9,7 +9,9 @@ import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invertDisabledAppearance } from "../../ui_themes/invert_disabled"
-import { FilterStatus } from "../../knowledge_view/FilterStatus"
+import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
+
+
 
 interface OwnProps
 {
@@ -39,22 +41,22 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ContentControls (props: Props)
 {
-    const invert_classes = invertDisabledAppearance();
+    const invert_classes = invertDisabledAppearance()
     const { created_events, sim_events, move_to_component_id } = props
     const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
-        const display_by_simulated_time = JSON.parse(e.currentTarget.value);
-        props.set_display_by_simulated_time({ display_by_simulated_time });
+        const display_by_simulated_time = JSON.parse(e.currentTarget.value)
+        props.set_display_by_simulated_time({ display_by_simulated_time })
     }
 
     const display_sliders = props.editing || props.display_time_sliders
-    let are_any_component_dates_within_filter:boolean = false;
-    let how_many_components_are_visible:number = 0;
+    let are_any_component_dates_within_filter = false
+    let how_many_components_are_visible = 0
 
     created_events.forEach(e => {
-        const filtered_created_at_datetime: Date = new Date(props.created_at_ms);
-        const component_created_date = e.datetime;
-        if (filtered_created_at_datetime.getTime() >= component_created_date.getTime()) {
-            are_any_component_dates_within_filter = true;
+
+        const component_created_date = e.datetime
+        if (props.created_at_ms >= component_created_date.getTime()) {
+            are_any_component_dates_within_filter = true
             how_many_components_are_visible++
         }
     })
@@ -71,6 +73,8 @@ function _ContentControls (props: Props)
         },
     }))
     const classes = useStyles()
+
+
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main" position="relative">
             <Collapse in={display_sliders}>
@@ -100,7 +104,7 @@ function _ContentControls (props: Props)
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                 </Box>
-                <FilterStatus />
+                <ActiveCreatedAtFilterWarning />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
                         variant="contained"

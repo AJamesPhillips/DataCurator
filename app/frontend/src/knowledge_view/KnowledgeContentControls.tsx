@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
@@ -6,7 +7,6 @@ import { get_current_composed_knowledge_view_from_state } from "../state/special
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { ContentControls } from "../sharedf/content_controls/ContentControls"
-import { useMemo } from "preact/hooks"
 
 
 
