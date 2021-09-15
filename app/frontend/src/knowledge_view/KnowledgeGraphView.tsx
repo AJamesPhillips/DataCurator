@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
@@ -6,7 +7,6 @@ import { WComponentCanvasConnection } from "../knowledge/WComponentCanvasConnect
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
-import { connect, ConnectedProps } from "react-redux"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -68,7 +68,7 @@ const get_children = (props: Props): ChildrenRawData =>
 {
     const { ready } = props
     let { wcomponent_nodes } = props
-    if (!ready || !wcomponent_nodes) return no_children
+    if (!ready || wcomponent_nodes.length === 0) return no_children
 
 
     const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode

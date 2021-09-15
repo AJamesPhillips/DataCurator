@@ -76,6 +76,7 @@ function App()
         side_panel: {
             backgroundColor:theme.palette.background.paper,
             width: drawerWidth,
+            position:"relative",
         },
 
         side_panel_content: {
@@ -106,6 +107,13 @@ function App()
             marginRight:5,
             "&:last-child": { marginRight:0 }
         },
+
+        help_popup: {
+            position:"relative",
+            zIndex: theme.zIndex.drawer + 1,
+
+        },
+
         small_full_width: {
             [theme.breakpoints.down('sm')]: {
                 flexGrow:0, flexShrink:1, flexBasis:"100%",
@@ -128,6 +136,9 @@ function App()
                 <AppBar elevation={1} id="header" position="fixed" className={clsx(classes.app_bar, { [classes.app_bar_with_open_side_panel]: side_panel_open })}>
                     <Toolbar variant="dense" className={classes.toolbar}>
                         <Box className={`${classes.toolbar_section} ${classes.grow} ${classes.small_full_width}`}>
+                            {/* <Box className={`${classes.toolbar_item}`}>
+                                <FilterStatus />
+                            </Box> */}
                             <Box className={`${classes.toolbar_item}`}>
                                 <ViewOptions />
                             </Box>
@@ -185,7 +196,10 @@ function App()
                         </Box>
                     </Box>
                 </Drawer>
-                <HelpMenu />
+                <Box className={classes.help_popup}>
+                    <HelpMenu  />
+                </Box>
+
             </Box>
         </ThemeProvider>
     )

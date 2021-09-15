@@ -10,12 +10,9 @@ export function user_info_persist (state: RootState)
 {
     const to_persist = pick([
         "solid_oidc_provider",
-        // // Persisting user_name and default_solid_pod_URL smells like a hack.
-        // // Putting it in so that load_solid_data works on first load.
-        // // Alternative is to instantiate the store twice, once first for the
-        // // restore_session code and then for the app
-        // "user_name",
-        // "default_solid_pod_URL",
+        // Persisting user_name so that even when logged out, there will be a user name to use
+        // for `modified_by_username` required by https://github.com/centerofci/data-curator2/issues/150
+        "user_name",
 
         "custom_solid_pod_URLs",
         "chosen_custom_solid_pod_URL_index",

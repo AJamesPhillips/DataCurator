@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { Box, ButtonGroup, Button, Toolbar, makeStyles, Tooltip } from "@material-ui/core"
+import { Box, ButtonGroup, Button, Toolbar, makeStyles, Tooltip, Drawer, Collapse, IconButton } from "@material-ui/core"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
@@ -60,12 +60,42 @@ function _ContentControls (props: Props)
     })
     const useStyles = makeStyles(theme => ({
         toolbar: {
-            justifyContent:"space-between"
+            justifyContent:"space-between",
+        },
+        drawer_content: {
+            display:"flex", flexDirection:"row",
+            alignItems:"center", alignContent:"center",
+        },
+        warning_icon: {
+            color: theme.palette.warning.main
         },
     }))
     const classes = useStyles()
     return (
-        <Box p={2} mb={2} borderTop={1} borderColor="primary.main">
+        <Box p={2} mb={2} borderTop={1} borderColor="primary.main" position="relative">
+            <Collapse in={display_sliders}>
+                <Box className={classes.drawer_content}>
+                    <Button onClick={() => props.toggle_linked_datetime_sliders()}>
+                        {props.linked_datetime_sliders ? "Unlink" : "Link"}
+                    </Button>
+                    <Box flexGrow={1}>
+                        <TimeSlider
+                            events={created_events}
+                            get_handle_ms={state => state.routing.args.created_at_ms}
+                            change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
+                            data_set_name="content_controls_created_at_datetimes"
+                            title="Created at"
+                        />
+                        <TimeSlider
+                            events={sim_events}
+                            get_handle_ms={state => state.routing.args.sim_ms}
+                            change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
+                            data_set_name="content_controls_sim_datetimes"
+                            title="Simulation"
+                        />
+                    </Box>
+                </Box>
+            </Collapse>
             <Toolbar className={classes.toolbar} variant="dense">
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
@@ -73,6 +103,8 @@ function _ContentControls (props: Props)
                 <FilterStatus />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
+                        variant="contained"
+                        disableElevation
                         disabled={props.editing}
                         onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
                     >
@@ -112,30 +144,6 @@ function _ContentControls (props: Props)
                     </ButtonGroup>
                 </Box>
             </Toolbar>
-
-            {display_sliders && <Box
-                display="flex" flexDirection="row" alignItems="center" alignContent="center"
-            >
-                <Button onClick={() => props.toggle_linked_datetime_sliders()}>
-                    {props.linked_datetime_sliders ? "Unlink" : "Link"}
-                </Button>
-                <Box flexGrow={1}>
-                    <TimeSlider
-                        events={created_events}
-                        get_handle_ms={state => state.routing.args.created_at_ms}
-                        change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
-                        data_set_name="content_controls_created_at_datetimes"
-                        title="Created at"
-                    />
-                    <TimeSlider
-                        events={sim_events}
-                        get_handle_ms={state => state.routing.args.sim_ms}
-                        change_handle_ms={ms => props.change_display_at_sim_datetime({ ms })}
-                        data_set_name="content_controls_sim_datetimes"
-                        title="Simulation"
-                    />
-                </Box>
-            </Box>}
         </Box>
     )
 }

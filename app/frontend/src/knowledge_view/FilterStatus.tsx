@@ -53,11 +53,11 @@ function _FilterStatus (props: Props)
         <Tooltip placement="top" title="WARNING: No components are visible due to created_at filter!">
             <IconButton
                 className={classes.warning_button}
-                component="span"
-                disableRipple disableElevation
+                component="span" disableRipple disableElevation
                 size="small"
             >
                 <FilterIcon className={classes.warning_icon} />
+                {/* {how_many_components_are_visible} */}
             </IconButton>
         </Tooltip>
     )
