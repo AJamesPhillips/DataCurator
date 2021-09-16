@@ -6,6 +6,7 @@ import type { RootState } from "../../../State"
 import {
     get_wcomponents_from_state,
 } from "../../accessors"
+import { mark_as_modified } from "../../mark_as_modified"
 import { tidy_wcomponent } from "../tidy_wcomponent"
 import {
     ActionBulkEditWComponents,
@@ -39,7 +40,8 @@ function handle_bulk_edit_wcomponents (state: RootState, action: ActionBulkEditW
         const wcomponents_by_id = { ...state.specialised_objects.wcomponents_by_id }
         wcomponents.forEach(wcomponent => {
             const edited_wcomponent = { ...wcomponent, ...change }
-            const updated = tidy_wcomponent(edited_wcomponent)
+            const tidied = tidy_wcomponent(edited_wcomponent)
+            const updated = mark_as_modified(tidied, state)
 
             wcomponents_by_id[wcomponent.id] = updated
         })

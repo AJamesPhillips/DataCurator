@@ -11,6 +11,7 @@ import type { CreationContextState } from "../../../shared/creation_context/stat
 import { tidy_wcomponent } from "./tidy_wcomponent"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
+import { mark_as_deleted, mark_as_modified } from "../mark_as_modified"
 // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
 // import {
 //     update_wcomponent_ids_by_type_on_upserting_wcomponent,
@@ -24,7 +25,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
     if (is_upsert_wcomponent(action))
     {
-        const wcomponent = tidy_wcomponent(action.wcomponent)
+        const tidied = tidy_wcomponent(action.wcomponent)
+        const wcomponent = mark_as_modified(tidied, state)
         const wcomponent_id = wcomponent.id
 
         state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent_id, wcomponent)
@@ -43,15 +45,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
         if (existing)
         {
             wcomponents_by_id = { ...wcomponents_by_id }
-            delete wcomponents_by_id[wcomponent_id]
+            wcomponents_by_id[wcomponent_id] = mark_as_deleted(existing, state)
             state = update_substate(state, "specialised_objects", "wcomponents_by_id", wcomponents_by_id)
-
-            if (!state.specialised_objects.wcomponent_ids_deleted.has(wcomponent_id))
-            {
-                const wcomponent_ids_deleted = new Set(state.specialised_objects.wcomponent_ids_deleted)
-                wcomponent_ids_deleted.add(wcomponent_id)
-                state = update_substate(state, "specialised_objects", "wcomponent_ids_deleted", wcomponent_ids_deleted)
-            }
 
             // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
             // state = update_wcomponent_ids_by_type_on_deleting_wcomponent(state, existing)
