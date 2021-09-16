@@ -98,7 +98,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
 
     return <div>
-        {!knowledge_view_entry && knowledge_view_id && <div>
+        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
             Not present in this knowledge view
             {composed_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
@@ -127,7 +127,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {(editing && knowledge_view_id && knowledge_view_entry) && <div>
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <div>
             <ConfirmatoryDeleteButton
                 button_text="Remove from knowledge view"
                 tooltip_text={"Remove from current knowledge view (" + knowledge_view_title + ")"}
