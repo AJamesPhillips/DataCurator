@@ -20,8 +20,6 @@ import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWar
 import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 
-
-
 function App()
 {
     const classes = use_styles()
@@ -33,12 +31,9 @@ function App()
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
             <Box id="app" className={classes.root}>
-                <AppBar elevation={1} id="header" position="fixed" className={clsx(classes.app_bar, { [classes.app_bar_with_open_side_panel]: side_panel_open })}>
+                <AppBar elevation={1} id="header" position="fixed" className={classes.app_bar}>
                     <Toolbar variant="dense" className={classes.toolbar}>
                         <Box className={`${classes.toolbar_section} ${classes.grow} ${classes.small_full_width}`}>
-                            {/* <Box className={`${classes.toolbar_item}`}>
-                                <FilterStatus />
-                            </Box> */}
                             <Box className={`${classes.toolbar_item}`}>
                                 <ViewOptions />
                             </Box>
@@ -56,13 +51,13 @@ function App()
                             <Box className={`${classes.toolbar_item}`}>
                                 <IconButton
                                     aria-label="open side panel"
-                                    className={clsx(side_panel_open && classes.hide)}
                                     color="inherit"
                                     edge="end"
-                                    onClick={handle_open_side_panel}
+                                    onClick={(side_panel_open) ? handle_close_side_panel : handle_open_side_panel }
                                     size="small"
                                 >
-                                    <MenuIcon />
+                                    {(side_panel_open) &&  <CloseIcon />}
+                                    {(!side_panel_open) && <MenuIcon />}
                                 </IconButton>
                             </Box>
                         </Box>
@@ -80,7 +75,7 @@ function App()
                     variant="persistent"
                 >
                     <Box component="aside" className={classes.side_panel} id="side_panel">
-                        <AppBar elevation={1} position="sticky">
+                        {/* <AppBar elevation={1}  position="sticky">
                             <Toolbar variant="dense" className={classes.sidebar_toolbar}>
                                 <IconButton
                                     color="inherit"
@@ -91,7 +86,7 @@ function App()
                                     <CloseIcon />
                                 </IconButton>
                             </Toolbar>
-                        </AppBar>
+                        </AppBar> */}
                         <Box id="side_panel_content" className={classes.side_panel_content}>
                             <AppMenuItemsContainer />
                             <SidePanel />
@@ -130,12 +125,12 @@ const use_styles = makeStyles(theme => ({
     },
 
     app_bar_with_open_side_panel: {
-        width: `calc(100% - ${drawerWidth}px)`, maxWidth: `calc(100% - ${drawerWidth}px)`,
-        marginRight: drawerWidth,
-        transition: theme.transitions.create(["all"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
+        // width: `calc(100% - ${drawerWidth}px)`, maxWidth: `calc(100% - ${drawerWidth}px)`,
+        // marginRight: drawerWidth,
+        // transition: theme.transitions.create(["all"], {
+        //     easing: theme.transitions.easing.easeOut,
+        //     duration: theme.transitions.duration.enteringScreen,
+        // }),
     },
     content: {
         position: "relative", zIndex: 1,
@@ -160,12 +155,14 @@ const use_styles = makeStyles(theme => ({
     drawer: {
         width: drawerWidth,
         flexShrink: 0,
+
     },
 
     side_panel: {
         backgroundColor: theme.palette.background.paper,
         width: drawerWidth,
         position: "relative",
+        paddingTop:50,
     },
 
     side_panel_content: {
