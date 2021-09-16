@@ -1,7 +1,9 @@
 import { h } from "preact"
 import { useState } from "react"
-import clsx from 'clsx';
+import clsx from "clsx"
 import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
+import MenuIcon from "@material-ui/icons/Menu"
+import CloseIcon from "@material-ui/icons/Close"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -15,9 +17,11 @@ import { UserInfo } from "./sync/user_info/UserInfo"
 import { BackupInfo } from "./sync/sync_backup_info/BackupInfo"
 import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
 import { HelpMenu } from "./help_menu/HelpMenu"
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
-import { FilterStatus } from "./knowledge_view/FilterStatus";
+import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
+import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
+import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
+
+
 
 function App()
 {
@@ -121,13 +125,13 @@ function App()
         },
         grow: { flexGrow:1 },
         hide: { display: 'none' },
+        warning_icon: { color: theme.palette.warning.main }
       }));
 
     const classes = useStyles();
     const [side_panel_open, set_side_panel_open] = useState(true);
     const handle_open_side_panel = () => { set_side_panel_open(true); console.log("open"); }
     const handle_close_side_panel = () => { set_side_panel_open(false); console.log("closed"); }
-
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
@@ -146,7 +150,9 @@ function App()
                             </Box>
                         </Box>
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
-                            <Box className={`${classes.toolbar_item}`}><FilterStatus /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
