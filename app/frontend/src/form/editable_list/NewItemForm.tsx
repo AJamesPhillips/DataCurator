@@ -31,7 +31,7 @@ export function NewItemForm <T, Crud extends ListItemCRUDRequiredC<T>> (props: N
 
     return (
         <Box>
-            <Dialog  aria-labelledby="new_item_title" open={true} onClose={() => set_new_item(undefined)}>
+            <Dialog aria-labelledby="new_item_title" open={true} onClose={() => set_new_item(undefined)}>
                 <DialogTitle id="new_item_title">New {item_descriptor}</DialogTitle>
                 <DialogContent>
                     <EditableListEntry

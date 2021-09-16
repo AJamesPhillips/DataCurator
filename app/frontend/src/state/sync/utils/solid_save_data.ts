@@ -29,10 +29,8 @@ export async function save_solid_data (user_info: UserInfoState, data: Specialis
     const { solid_pod_URL, promised_error } = get_solid_pod_URL_or_error(user_info, "save")
     if (!solid_pod_URL) return Promise.reject(promised_error)
 
-    const wcomponent_ids_to_delete = Array.from(data.wcomponent_ids_to_delete || [])
-
     return save_knowledge_views(solid_pod_URL, data.knowledge_views)
-    .then(() => save_wcomponents(solid_pod_URL, data.wcomponents, wcomponent_ids_to_delete))
+    .then(() => save_wcomponents(solid_pod_URL, data.wcomponents))
 }
 
 
@@ -48,10 +46,10 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 
 
 
-async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[], wcomponent_ids_to_delete: string[])
+async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[])
 {
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
-    const result = await save_items(wcomponents_url, wcomponents, wcomponent_ids_to_delete, undefined) //, solid_dataset_cache.wcomponents_dataset)
+    const result = await save_items(wcomponents_url, wcomponents, [], undefined) //, solid_dataset_cache.wcomponents_dataset)
     solid_dataset_cache.wcomponents_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }

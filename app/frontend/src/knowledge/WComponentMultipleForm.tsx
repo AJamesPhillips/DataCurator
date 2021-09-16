@@ -134,8 +134,9 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {editing && <p>
-            Remove from current knowledge view
             <ConfirmatoryDeleteButton
+                button_text="Remove from knowledge view"
+                tooltip_text="Remove from current knowledge view"
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({ wcomponent_ids: Array.from(wcomponent_ids) })

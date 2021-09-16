@@ -125,7 +125,7 @@ function _WComponentCanvasConnection (props: Props)
     const {
         id, current_composed_knowledge_view, wcomponent,
         is_current_item, is_highlighted, is_selected,
-        validity_value,  connection_effect,
+        validity_value, connection_effect,
         shift_or_control_keys_are_down,
         change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props

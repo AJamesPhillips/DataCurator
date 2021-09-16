@@ -84,7 +84,6 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
-        storage_type_supports_delete: state.sync.storage_type !== "local_server",
     }
 }
 
@@ -163,7 +162,7 @@ function _WComponentForm (props: Props)
     }
 
 
-    return <Box  className={`editable-${wcomponent_id}`}>
+    return <Box className={`editable-${wcomponent_id}`}>
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
@@ -215,7 +214,7 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(editing || wcomponent.description) &&  <FormControl fullWidth={true} margin="normal">
+        {(editing || wcomponent.description) && <FormControl fullWidth={true} margin="normal">
             <EditableText
                 placeholder="Description..."
                 value={wcomponent.description}
@@ -280,7 +279,7 @@ function _WComponentForm (props: Props)
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
 
 
-        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) &&  <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl component="fieldset" fullWidth={true} margin="normal">
             <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
@@ -429,9 +428,8 @@ function _WComponentForm (props: Props)
 
         {editing && <div>
             <ConfirmatoryDeleteButton
-                disabled={!props.storage_type_supports_delete}
-                button_text={"Permanently delete" + (props.storage_type_supports_delete ? "" : " (currently unsupported for local server)")}
-                tooltip_text="Permanently remove from all knowledge views"
+                button_text="Delete"
+                tooltip_text="Remove from all knowledge views"
                 on_delete={() => props.delete_wcomponent({ wcomponent_id })}
             />
         </div>}

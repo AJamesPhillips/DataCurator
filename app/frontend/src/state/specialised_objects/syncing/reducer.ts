@@ -27,7 +27,6 @@ export const syncing_reducer = (state: RootState, action: AnyAction): RootState 
                 perceptions_by_id,
                 wcomponents_by_id,
                 knowledge_views_by_id,
-                wcomponent_ids_deleted: new Set(),
             }
         }
     }
@@ -41,7 +40,6 @@ export const syncing_reducer = (state: RootState, action: AnyAction): RootState 
                 perceptions_by_id: {},
                 wcomponents_by_id: {},
                 knowledge_views_by_id: {},
-                wcomponent_ids_deleted: new Set(),
             }
         }
     }

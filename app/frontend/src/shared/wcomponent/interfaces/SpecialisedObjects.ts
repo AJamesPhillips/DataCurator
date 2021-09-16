@@ -359,7 +359,6 @@ export interface SpecialisedObjectsFromToServer
     perceptions: Perception[]
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
-    wcomponent_ids_to_delete: Set<string>
 }
 
 // Used on the server
@@ -368,7 +367,6 @@ const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjec
     perceptions: true,
     wcomponents: true,
     knowledge_views: true,
-    wcomponent_ids_to_delete: true
 }
 // Used on the server
 export const specialised_objects_from_to_server_expected_keys: (SpecialisedObjectsFromToServerKeys)[] = Object.keys(_specialised_objects_from_to_server_expected_keys) as any

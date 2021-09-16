@@ -1,4 +1,4 @@
-import { FunctionalComponent, h  } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, makeStyles, Popover, TextField } from "@material-ui/core"
@@ -89,7 +89,7 @@ function _MaterialDateTime (props: Props)
                 disabled={not_editable}
                 fullWidth={(props.fullWidth || false)}
                 InputProps={{
-                    endAdornment: (!not_editable) &&  (
+                    endAdornment: (!not_editable) && (
                         <FileCopyIcon
                             className={classes.open_popover_icon}
                             onClick={handle_manual_date_click}

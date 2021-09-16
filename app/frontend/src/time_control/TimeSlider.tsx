@@ -80,7 +80,7 @@ function _TimeSlider (props: Props)
 
     return (
         <Box className="time_slider" my={2} px={5}>
-            <Box className="slider_container"  display="flex">
+            <Box className="slider_container" display="flex">
                 <ButtonGroup size="small">
                     <IconButton
                         onClick={move_to_event_datetime(-1)}

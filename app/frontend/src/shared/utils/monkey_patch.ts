@@ -2,7 +2,7 @@
 // https://stackoverflow.com/a/64522938/539490
 export{}
 declare global {
-    interface Array<T>  {
+    interface Array<T> {
         first (): T | undefined;
         last (): T | undefined;
         find_last (predicate: (t: T) => boolean): T | undefined;

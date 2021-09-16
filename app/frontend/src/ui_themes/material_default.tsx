@@ -1,5 +1,7 @@
-import type { ThemeOptions } from "@material-ui/core/styles";
-import { createMuiTheme }    from '@material-ui/core/styles'
+import { createMuiTheme, ThemeOptions } from "@material-ui/core/styles"
+
+
+
 const _default_theme_options: ThemeOptions = {
     breakpoints: {
         values: {
@@ -49,10 +51,12 @@ const _default_theme_options: ThemeOptions = {
             '"Segoe UI Symbol"',
         ].join(','),
     },
-};
+}
+
+
 
 export const DefaultTheme = createMuiTheme(_default_theme_options)
-export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } });
-export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } });
-export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } });
-export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } });
+export const WarningTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } })
+export const ErrorTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } })
+export const InfoTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } })
+export const SuccessTheme = createMuiTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } })

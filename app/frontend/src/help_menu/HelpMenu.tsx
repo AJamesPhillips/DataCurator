@@ -62,7 +62,7 @@ function _HelpMenu (props: Props)
                     onChange={handle_change("linking-tips")}
                 >
                     <AccordionSummary>
-                        <Typography  component="h2" variant="h6"> Tips on Linking: </Typography>
+                        <Typography component="h2" variant="h6"> Tips on Linking: </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box>
@@ -139,12 +139,12 @@ function KeyboardShortcutCommand (props: KeyboardShortcutProps)
                 return (
                     <Typography component="kbd" variant="body1">
                         {command}
-                        {(index < (props.keyboard_shortcut.length - 1)) &&  <Typography component="span"> + </Typography>}
+                        {(index < (props.keyboard_shortcut.length - 1)) && <Typography component="span"> + </Typography>}
                     </Typography>
                 )
             })}
         </Typography>
-        <Typography component="dd"  className={classes.command}> -&gt; {props.outcome} </Typography>
+        <Typography component="dd" className={classes.command}> -&gt; {props.outcome} </Typography>
     </Box>
 }
 

@@ -14,7 +14,7 @@ const map_state = (state: RootState) => ({
 })
 
 const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector>  & OwnProps
+type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ActiveCreationContextWarning (props: Props)
 {

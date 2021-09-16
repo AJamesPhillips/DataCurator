@@ -59,7 +59,7 @@ function _AppMenuItemsContainer (props: Props)
             <Button onClick={handleClick} aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
                 <Box component="span" width={1} display="flex" flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="start" alignContent="stretch">
                     <Box component="strong">{route_to_text(props.route)}</Box>
-                    <MenuIcon  />
+                    <MenuIcon />
                 </Box>
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>

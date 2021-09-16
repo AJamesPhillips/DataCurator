@@ -120,7 +120,7 @@ export function StorageOptionsForm (props: OwnProps)
         </div>}
 
 
-        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true}  disableElevation={true}>
+        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
             {show_single_confirm_button && <Button
                 value="Confirm"
                 disabled={!changed_storage_type}

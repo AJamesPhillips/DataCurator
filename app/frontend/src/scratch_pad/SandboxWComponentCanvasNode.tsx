@@ -121,7 +121,7 @@ export function SandboxWComponentCanvasNode ()
 
 
     store.dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({
-        specialised_objects: { perceptions: [], wcomponents, knowledge_views: [kv10], wcomponent_ids_to_delete: new Set() }
+        specialised_objects: { perceptions: [], wcomponents, knowledge_views: [kv10] }
     }))
 
 

@@ -80,7 +80,7 @@ function App()
                     variant="persistent"
                 >
                     <Box component="aside" className={classes.side_panel} id="side_panel">
-                        <AppBar elevation={1}  position="sticky">
+                        <AppBar elevation={1} position="sticky">
                             <Toolbar variant="dense" className={classes.sidebar_toolbar}>
                                 <IconButton
                                     color="inherit"
@@ -99,7 +99,7 @@ function App()
                     </Box>
                 </Drawer>
                 <Box className={classes.help_popup}>
-                    <HelpMenu  />
+                    <HelpMenu />
                 </Box>
 
             </Box>

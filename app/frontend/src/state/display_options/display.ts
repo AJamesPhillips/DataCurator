@@ -43,7 +43,7 @@ export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined
     const { left: x, top, zoom } = position
     const y = top !== undefined ? -1 * top : undefined
 
-    if (middle && x !== undefined && y  !== undefined && zoom !== undefined)
+    if (middle && x !== undefined && y !== undefined && zoom !== undefined)
     {
         const middle = calculate_xy_for_put_middle({ x, y, zoom })
         return { ...middle, zoom }

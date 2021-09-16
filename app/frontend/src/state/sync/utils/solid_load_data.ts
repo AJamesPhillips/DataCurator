@@ -35,7 +35,6 @@ export async function load_solid_data (state: RootState)
         knowledge_views: knowledge_views_response.items,
         wcomponents: wcomponents_response.items,
         perceptions: [],
-        wcomponent_ids_to_delete: new Set(),
     })
 }
 

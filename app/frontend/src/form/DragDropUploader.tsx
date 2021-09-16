@@ -111,6 +111,6 @@ const use_styles = makeStyles(theme => ({
         borderWidth: 2,
         display: "flex", flexDirection: "column",
         height: "100%",
-        justifyContent: "center",   alignItems: "stretch",
+        justifyContent: "center", alignItems: "stretch",
     }
 }))

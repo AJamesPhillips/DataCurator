@@ -23,7 +23,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ActiveCreatedAtFilterWarning (props: Props)
 {
-    const { current_composed_knowledge_view, wcomponents  } = props
+    const { current_composed_knowledge_view, wcomponents } = props
     if (!current_composed_knowledge_view) return null
 
     const wcomponents_on_kv = useMemo(() =>

@@ -24,13 +24,7 @@ const map_state = (state: RootState) =>
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
     const { created_at_ms, sim_ms } = state.routing.args
-    // const minute_time_resolution: TimeResolution = "minute"
-    // const default_time_resolution: TimeResolution = "day"
 
-    // let current_time_resolution: TimeResolution =  state.display_options.time_resolution
-    // if (current_time_resolution === minute_time_resolution) {
-    //     current_time_resolution = default_time_resolution
-    // }
 
     let wcomponent_nodes: WComponent[] = []
 
@@ -47,7 +41,6 @@ const map_state = (state: RootState) =>
         selected_wcomponent_ids_map,
         created_at_ms,
         sim_ms,
-        // time_resolution: default_time_resolution,
     }
 }
 
@@ -343,7 +336,7 @@ function _KnowledgeTimeView (props: Props)
     })
     let date_range = new DateRange(dates, props)
     let content = date_range.render(wcomponent_nodes)
-    return <MainArea main_content={(content) ? content :  <Box></Box>} />
+    return <MainArea main_content={(content) ? content : <Box />} />
 }
 
 export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>

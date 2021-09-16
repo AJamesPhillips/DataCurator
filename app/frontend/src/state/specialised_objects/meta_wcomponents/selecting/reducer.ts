@@ -114,7 +114,7 @@ function handle_set_selected_wcomponents (state: RootState, action: ActionSetSel
 export function update_derived_selected_wcomponent_ids (state: RootState)
 {
     const selected_wcomponent_ids_set = new Set(state.meta_wcomponents.selected_wcomponent_ids_list)
-    const map: { [id: string]: number}  = {}
+    const map: { [id: string]: number} = {}
     state.meta_wcomponents.selected_wcomponent_ids_list.forEach((id, index) => map[id] = index)
 
     const meta_wcomponents = {
