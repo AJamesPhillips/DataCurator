@@ -21,5 +21,9 @@ export const ERRORS = str_enum([
     "ALREADY_SIGNED_IN",
     "ALREADY_SIGNED_OUT",
     "EMAIL_OR_PASSWORD_NOT_RECOGNISED",
+
+    // Solid
+    "NOT_LOGGED_IN",
+    "NO_SOLID_WEB_ID",
 ])
 export type ERROR = keyof typeof ERRORS

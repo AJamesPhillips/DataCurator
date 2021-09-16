@@ -3,6 +3,7 @@ import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import type { UserInfoState } from "./state"
 import { ensure_chosen_index_is_valid } from "./utils"
+import { random_animal } from "../../utils/list_of_animals"
 
 
 
@@ -26,14 +27,15 @@ export function user_info_persist (state: RootState)
 export function user_info_starting_state (storage_location: string): UserInfoState
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
+    const user_name = ensure_user_name(obj.user_name)
 
     let state: UserInfoState = {
         solid_oidc_provider: "",
-        user_name: "",
         default_solid_pod_URL: "",
         custom_solid_pod_URLs: [],
         chosen_custom_solid_pod_URL_index: 0,
         ...obj,
+        user_name,
     }
 
     if (storage_location)
@@ -63,3 +65,8 @@ export function user_info_starting_state (storage_location: string): UserInfoSta
 
     return state
 }
+
+
+
+const get_anonymous_user_name = () => "Anonymous " + random_animal()
+export const ensure_user_name = (user_name: string = "") => (user_name).trim() || get_anonymous_user_name()

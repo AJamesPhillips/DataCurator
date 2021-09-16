@@ -59,7 +59,7 @@ async function main()
         wcomponent_ids_to_delete: new Set(),
     })
     const items = await load_solid_data(state)
-    console.log("got items", items)
+    console .log("got items", items)
 }
 
 

@@ -95,7 +95,6 @@ class _Link extends Component<Props, State>
         const partial_routing_args: Partial<RoutingStateArgs> = this.props.args || {}
 
         const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
-            console.log("on_pointer_down...", this.props.selected)
             if (this.props.selected) return // no-op
             this.setState({ clicked: true })
 

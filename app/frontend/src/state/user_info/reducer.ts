@@ -9,6 +9,7 @@ import {
     is_update_custom_solid_pod_URLs,
     is_update_chosen_custom_solid_pod_URL_index,
     is_ensure_solid_pod_URL_is_chosen,
+    is_update_users_name,
 } from "./actions"
 import { ensure_chosen_index_is_valid_using_root } from "./utils"
 
@@ -20,6 +21,13 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_update_solid_oidc_provider(action))
     {
         state = update_substate(state, "user_info", "solid_oidc_provider", action.solid_oidc_provider)
+    }
+
+
+    if (is_update_users_name(action))
+    {
+        const { user_name } = action
+        state = update_substate(state, "user_info", "user_name", user_name)
     }
 
 

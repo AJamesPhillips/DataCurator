@@ -39,16 +39,10 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     }
 
 
-    if (is_update_storage_type(action))
+    if (is_set_used_storage_type(action))
     {
-        state = update_substate(state, "sync", "storage_type", action.storage_type)
-        state = update_substate(state, "sync", "copy_from_storage_type", action.copy_from)
-    }
-
-
-    if (is_clear_storage_type_copy_from(action))
-    {
-        state = update_substate(state, "sync", "copy_from_storage_type", false)
+        if (action.storage_type !== "solid") throw new Error(`Unsupport storage_type: ${action.storage_type}`)
+        state = update_substate(state, "sync", "use_solid_storage", action.using)
     }
 
 
@@ -99,44 +93,29 @@ const is_set_next_sync_ms = (action: AnyAction): action is ActionSetNextSyncMs =
 
 
 
-interface UpdateStorageTypeArgs
+interface SetUsedStorageTypeArgs
 {
-    storage_type: StorageType
-    copy_from: StorageType | false
+    storage_type: "solid" // StorageType
+    using: boolean
 }
 
-interface ActionUpdateStorageType extends Action, UpdateStorageTypeArgs {}
+interface ActionSetUsedStorageType extends Action, SetUsedStorageTypeArgs {}
 
-const update_storage_type_type = "update_storage_type"
+const set_used_storage_type_type = "set_used_storage_type"
 
-export const update_storage_type = (args: UpdateStorageTypeArgs): ActionUpdateStorageType =>
+export const set_used_storage_type = (args: SetUsedStorageTypeArgs): ActionSetUsedStorageType =>
 {
-    return { type: update_storage_type_type, ...args }
+    return { type: set_used_storage_type_type, ...args }
 }
 
-const is_update_storage_type = (action: AnyAction): action is ActionUpdateStorageType => {
-    return action.type === update_storage_type_type
+const is_set_used_storage_type = (action: AnyAction): action is ActionSetUsedStorageType => {
+    return action.type === set_used_storage_type_type
 }
 
-
-
-interface ActionClearStorageTypeCopyFrom extends Action {}
-
-const clear_storage_type_copy_from_type = "clear_storage_type_copy_from"
-
-export const clear_storage_type_copy_from = (args: {}): ActionClearStorageTypeCopyFrom =>
-{
-    return { type: clear_storage_type_copy_from_type }
-}
-
-const is_clear_storage_type_copy_from = (action: AnyAction): action is ActionClearStorageTypeCopyFrom => {
-    return action.type === clear_storage_type_copy_from_type
-}
 
 
 export const sync_actions = {
     update_sync_status,
     set_next_sync_ms,
-    update_storage_type,
-    clear_storage_type_copy_from,
+    set_used_storage_type,
 }

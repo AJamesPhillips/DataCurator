@@ -9,11 +9,13 @@ import { ACTIONS } from "../../../state/actions"
 import type { RootState } from "../../../state/State"
 import { remove_index, replace_element } from "../../../utils/list"
 import { AutoFillOIDC } from "./AutoFillOIDC"
-import { get_solid_users_name_and_pod_URL } from "./get_solid_username"
 import { finish_login, start_login } from "./handle_login"
 import { PodProviderRow } from "./PodProviderRow"
 import { OIDC_provider_map } from "./urls"
 import { signout } from "../../../state/user_info/signout"
+import { EditableTextSingleLine } from "../../../form/editable_text/EditableTextSingleLine"
+import { set_using_solid } from "./set_using_solid"
+import { no_user_name } from "../constants"
 
 
 
@@ -25,8 +27,9 @@ interface OwnProps {
 const map_state = (state: RootState) =>
 {
     return {
-        solid_oidc_provider: state.user_info.solid_oidc_provider || OIDC_provider_map["inrupt.com"],
         user_name: state.user_info.user_name,
+        using_solid: state.sync.use_solid_storage,
+        solid_oidc_provider: state.user_info.solid_oidc_provider || OIDC_provider_map["inrupt.com"],
         default_solid_pod_URL: state.user_info.default_solid_pod_URL,
         custom_solid_pod_URLs: state.user_info.custom_solid_pod_URLs,
         chosen_custom_solid_pod_URL_index: state.user_info.chosen_custom_solid_pod_URL_index,
@@ -34,10 +37,9 @@ const map_state = (state: RootState) =>
 }
 
 const map_dispatch = {
+    update_users_name: ACTIONS.user_info.update_users_name,
     update_solid_oidc_provider: ACTIONS.user_info.update_solid_oidc_provider,
-    update_users_name_and_solid_pod_URL: ACTIONS.user_info.update_users_name_and_solid_pod_URL,
     update_custom_solid_pod_URLs: ACTIONS.user_info.update_custom_solid_pod_URLs,
-    update_chosen_custom_solid_pod_URL_index: ACTIONS.user_info.update_chosen_custom_solid_pod_URL_index,
 }
 
 
@@ -52,15 +54,21 @@ function _UserAccountInfoForm (props: Props)
     const [logged_in, _set_logged_in] = useState(solid_session.info.isLoggedIn)
     const set_logged_in = () => _set_logged_in(solid_session.info.isLoggedIn)
 
-    const started_logged_in = solid_session.info.isLoggedIn
-    finish_login()
-    .then(() =>
+    const { using_solid } = props
+
+    if (using_solid)
     {
-        set_logged_in()
-        // const changed_login_state = started_logged_in !== solid_session.info.isLoggedIn
-        // if (!changed_login_state) return // defensive against infinite loops
-        // get_solid_users_name_and_pod_URL().then(args => props.update_users_name_and_solid_pod_URL(args))
-    })
+        // const started_logged_in = solid_session.info.isLoggedIn
+        finish_login()
+        .then(() =>
+        {
+            set_logged_in()
+            // const changed_login_state = started_logged_in !== solid_session.info.isLoggedIn
+            // if (!changed_login_state) return // defensive against infinite loops
+            // get_solid_users_name_and_pod_URL().then(args => props.update_users_name_and_solid_pod_URL(args))
+        })
+        .catch(err => console.warn(`Failed to complete login in UserAccountInfoForm`, err))
+    }
 
 
     const log_inout_label = logged_in ? "Logout" : "Login"
@@ -68,6 +76,28 @@ function _UserAccountInfoForm (props: Props)
 
     return <div style={{ margin: 10 }}>
         <div className="section">
+            {using_solid ? "User name" : "Set user name:"}&nbsp; &nbsp;
+            <div style={{ width: 250, display: "inline-flex" }}>
+                <EditableTextSingleLine
+                    disabled={using_solid}
+                    placeholder="User name"
+                    value={props.user_name || (using_solid ? no_user_name : "")}
+                    always_allow_editing={true}
+                    select_all_on_focus={true}
+                    conditional_on_blur={user_name => props.update_users_name({ user_name })}
+                />
+            </div>
+
+            <Button onClick={() => set_using_solid(!using_solid)}>
+                {using_solid ? "Disable using" : "Or use"} Solid
+            </Button>
+        </div>
+
+
+        {/* {using_solid && <div className="section"> */}
+
+
+        {using_solid && <div className="section">
             Identity Provider (they allow you to prove who you are)&nbsp;
             <input
                 type="text"
@@ -118,9 +148,9 @@ function _UserAccountInfoForm (props: Props)
                 </button>
             </div>}
 
-        </div>
+        </div>}
 
-
+{/*
         <div className="section">
             Pod directory (where you want to get data from / save data to)
 
@@ -168,7 +198,7 @@ function _UserAccountInfoForm (props: Props)
 
             </tbody>
             </table>
-        </div>
+        </div> */}
 
 
         {logged_in && <div className="section" onClick={props.on_close}>
