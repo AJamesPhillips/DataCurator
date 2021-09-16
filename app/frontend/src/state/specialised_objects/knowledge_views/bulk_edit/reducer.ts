@@ -112,7 +112,7 @@ function handle_bulk_remove_from_knowledge_view (state: RootState, action: Actio
     {
         const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = { ...kv.wc_id_map }
 
-        wcomponent_ids.forEach(id => delete new_wc_id_map[id])
+        wcomponent_ids.forEach(id => new_wc_id_map[id] = { ...new_wc_id_map[id]!, deleted: true })
 
         const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
         state = handle_upsert_knowledge_view(state, new_kv)

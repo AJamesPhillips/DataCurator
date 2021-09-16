@@ -31,6 +31,8 @@ export interface KnowledgeViewWComponentEntry {
     // TODO remove left and top and abstract over the upside down browser coordinate system by using x and y
     left: number
     top: number
+
+    deleted?: true
 }
 
 

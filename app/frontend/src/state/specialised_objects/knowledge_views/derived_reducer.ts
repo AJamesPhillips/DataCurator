@@ -163,13 +163,20 @@ export function get_composed_wc_id_map (knowledge_view: KnowledgeView, knowledge
     foundation_knowledge_view_ids.forEach(id =>
     {
         const new_kv = knowledge_views_by_id[id]
+        if (!new_kv) return
 
-        if (new_kv) to_compose.push(new_kv.wc_id_map)
+        to_compose.push(new_kv.wc_id_map)
     })
 
-
     to_compose.push(knowledge_view.wc_id_map)
-    const composed_wc_id_map = Object.assign({}, ...to_compose) as KnowledgeViewWComponentIdEntryMap
+
+
+    const composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+    to_compose.forEach(map =>
+    {
+        Object.entries(map).forEach(([id, entry]) => !entry.deleted && (composed_wc_id_map[id] = entry))
+    })
+
 
     return composed_wc_id_map
 }

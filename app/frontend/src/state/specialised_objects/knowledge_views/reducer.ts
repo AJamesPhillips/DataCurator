@@ -91,9 +91,9 @@ function handle_delete_knowledge_view_entry (state: RootState, knowledge_view_id
         return state
     }
 
-    const wc_id_map = { ...knowledge_view.wc_id_map }
-    delete wc_id_map[wcomponent_id]
-    const new_knowledge_view = { ...knowledge_view, wc_id_map }
+    const new_wc_id_map = { ...knowledge_view.wc_id_map }
+    new_wc_id_map[wcomponent_id] = { ...new_wc_id_map[wcomponent_id]!, deleted: true }
+    const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)
 }
