@@ -22,11 +22,13 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
+
+
 function _HelpMenu (props: Props)
 {
     const [expanded, set_expanded] = useState<string | false>("kbd-shortcuts")
 
-    const handle_change = (panel: string) => (event:any, new_expanded: boolean) => {
+    const handle_change = (panel: string) => (event: any, new_expanded: boolean) => {
         set_expanded(new_expanded ? panel : false)
     }
     if (!props.show) return null
@@ -60,7 +62,7 @@ function _HelpMenu (props: Props)
                     onChange={handle_change("linking-tips")}
                 >
                     <AccordionSummary>
-                        <Typography  component="h2" variant="h6"> Tips on Linking:</Typography>
+                        <Typography  component="h2" variant="h6"> Tips on Linking: </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box>
@@ -75,7 +77,7 @@ function _HelpMenu (props: Props)
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6">General tips:</Typography>
+                        <Typography component="h2" variant="h6">General tips: </Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
@@ -91,7 +93,7 @@ function _HelpMenu (props: Props)
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6">Detailed tips:</Typography>
+                        <Typography component="h2" variant="h6">Detailed tips: </Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
@@ -127,19 +129,13 @@ interface KeyboardShortcutProps
 
 function KeyboardShortcutCommand (props: KeyboardShortcutProps)
 {
-    const useStyles = makeStyles(theme => ({
-        command: {
-            display:"inline"
-        },
-        outcome: {
-            display:"inline"
-        }
 
-      }))
-    const classes = useStyles()
+    const classes = use_styles()
+
+
     return <Box component="dl">
         <Typography component="dt" className={classes.command}>
-            {props.keyboard_shortcut.map((command, index:number) => {
+            {props.keyboard_shortcut.map((command, index) => {
                 return (
                     <Typography component="kbd" variant="body1">
                         {command}
@@ -154,6 +150,17 @@ function KeyboardShortcutCommand (props: KeyboardShortcutProps)
 
 
 
+const use_styles = makeStyles(theme => ({
+    command: {
+        display: "inline"
+    },
+    outcome: {
+        display: "inline"
+    }
+}))
+
+
+
 const tips_on_linking: (string | h.JSX.Element)[] = [
     `Type "@@" in any text field to access a menu to link to any other component.
     This will insert the id of that component, e.g. @@wc123.`
@@ -165,7 +172,7 @@ const tips_on_linking: (string | h.JSX.Element)[] = [
         Markdown is available so you can use things like <b>**some text**</b>
         to make it bold once it is rendered during presentation mode.
         Other Markdown syntax like "1. some text" will give you numbered lists.
-        See the full <a href="https://www.markdownguide.org/basic-syntax/">Markdown guide here</a>
+        See the full <a href="https: //www.markdownguide.org/basic-syntax/">Markdown guide here</a>
     </span>
     ,
     `Type "@@" in any text field to access a menu to link to any other component.  This will insert the id of that component, e.g. @@wc123.`
@@ -247,7 +254,7 @@ const detailed_tips: (string | h.JSX.Element)[] = [
             </li>
         </ol>
 
-        If the concept later needs to be analysed / comprehended / explored in greater detail it can be decomposed.  Either it could be change to a subtype of "other" with title "The medical response speed and effectiveness", with values of "fast and effective", "fast but ineffective", "slow but effective", "slow and ineffective".  Or replaced by two new seperate states, one for "Medical response speed" and one for "Medical response effectiveness".  In the latter case deleting the first node from the knowledge views would be best.  In the former case, <a href="https://github.com/centerofci/data-curator2/issues/36">versioning the whole component</a> would make this easier from a user's perspective.
+        If the concept later needs to be analysed / comprehended / explored in greater detail it can be decomposed.  Either it could be change to a subtype of "other" with title "The medical response speed and effectiveness", with values of "fast and effective", "fast but ineffective", "slow but effective", "slow and ineffective".  Or replaced by two new seperate states, one for "Medical response speed" and one for "Medical response effectiveness".  In the latter case deleting the first node from the knowledge views would be best.  In the former case, <a href="https: //github.com/centerofci/data-curator2/issues/36">versioning the whole component</a> would make this easier from a user's perspective.
     </div>
     ,
 ]

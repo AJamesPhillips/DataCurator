@@ -6,13 +6,15 @@ import type { RootState } from "../../state/State"
 import { TextField } from "@material-ui/core"
 import { Autocomplete } from "@material-ui/lab"
 
+
+
 export interface AutocompleteProps <E>
 {
     allow_editing_when_presenting?: boolean
-    disableClearable?:boolean
+    disableClearable?: boolean
     label?: string // TODO can remove this now that it always has a "-" in it?
-    selected_option?:any | undefined
-    onChange?: (e:PointerEvent, option:any) => void
+    selected_option?: any | undefined
+    onChange?: (e: PointerEvent, option: any) => void
     options: E[]
     // start_expanded?: boolean
 }
@@ -25,6 +27,8 @@ const map_state = (state: RootState) => ({
 
 const connector = connect(map_state)
 type Props <E> = ConnectedProps<typeof connector> & OwnProps<E>
+
+
 
 function _MaterialAutoComplete <E> (props: Props<E>)
 {
@@ -41,7 +45,7 @@ function _MaterialAutoComplete <E> (props: Props<E>)
             disablePortal={true}
             freeSolo={false}
             fullWidth={true}
-            getOptionLabel={(option:any) => { return option.title || option.id || "none" }}
+            getOptionLabel={(option: any) => { return option.title || option.id || "none" }}
             //includeInputInList={true}
             onChange={props.onChange || (() => null)}
             openOnFocus={true}
@@ -63,7 +67,7 @@ function _MaterialAutoComplete <E> (props: Props<E>)
 // <MaterialAutoComplete
 //     disableClearable={true}
 //     onChange={(e, v) => {
-//         const subview_id:string = v.id;
+//         const subview_id: string = v.id;
 //         if (subview_id) {
 //             props.change_route({ args: { subview_id }})
 //         }

@@ -1,17 +1,18 @@
-import { FunctionalComponent, h, render } from "preact"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+import { Box } from "@material-ui/core"
 
 import "./KnowledgeTimeView.scss"
-import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
-import { connect, ConnectedProps } from "react-redux"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms, get_sim_datetime_ms } from "../shared/utils_datetime/utils_datetime"
-import { Box } from "@material-ui/core"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
+
+
 
 const map_state = (state: RootState) =>
 {
@@ -19,17 +20,16 @@ const map_state = (state: RootState) =>
 
     const { current_composed_knowledge_view: current_composed_knowledge_view } = state.derived
 
-    if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
+    if (ready && !current_composed_knowledge_view) console .log("No current_composed_knowledge_view")
 
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
-    const cdate:Date = new Date(state.routing.args.created_at_ms)
-    const sdate:Date = new Date(state.routing.args.sim_ms)
-    const minute_time_resolution:TimeResolution = 'minute';
-    const default_time_resolution:TimeResolution = 'day';
+    const { created_at_ms, sim_ms } = state.routing.args
+    // const minute_time_resolution: TimeResolution = "minute"
+    // const default_time_resolution: TimeResolution = "day"
 
-    // let current_time_resolution:TimeResolution =  state.display_options.time_resolution;
+    // let current_time_resolution: TimeResolution =  state.display_options.time_resolution
     // if (current_time_resolution === minute_time_resolution) {
-    //     current_time_resolution = default_time_resolution;
+    //     current_time_resolution = default_time_resolution
     // }
 
     let wcomponent_nodes: WComponent[] = []
@@ -45,9 +45,9 @@ const map_state = (state: RootState) =>
         wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
-        cdate: cdate,
-        sdate: sdate,
-        time_resolution: default_time_resolution,
+        created_at_ms,
+        sim_ms,
+        // time_resolution: default_time_resolution,
     }
 }
 
@@ -55,7 +55,7 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
 
 class DateRange {
-    _ms(ms:number, convert:boolean=true):any {
+    _ms(ms: number, convert: boolean=true): any {
         const operator = (convert) ? "/" : "*"
         return {
             milliseconds: ms,
@@ -68,62 +68,62 @@ class DateRange {
             // get weeks() { return eval(`${this.days} ${operator} 7`) },
         }
     }
-    scale:string = "months"
+    scale = "months"
     single_time_units = this._ms(1, false)
-    scales:string[] = Object.keys(this.single_time_units)
-    get scale_index():number { return this.scales.indexOf(this.scale) }
+    scales = Object.keys(this.single_time_units)
+    get scale_index(): number { return this.scales.indexOf(this.scale) }
 
-    dates:Date[] = []
+    dates: Date[] = []
 
-    increment(date:Date, count:number = 1, scale:string = this.scale):Date {
-        let new_date = new Date(date.getTime())
-        let fn = this.get_date_prop_func_names(scale)
+    increment(date: Date, count: number = 1, scale: string = this.scale): Date {
+        const new_date = new Date(date.getTime())
+        const fn = this.get_date_prop_func_names(scale)
         Object(new_date)[fn.set](Object(new_date)[fn.get]() + count)
         return new_date
     }
 
-    get range_dates():Date[] {
-        const dates:Date[] = []
+    get range_dates(): Date[] {
+        const dates: Date[] = []
         const end_date = this.round_date(this.increment(this.end_date, 1), true, this.scale)
-        let current_date:Date = this.round_date(this.increment(this.start_date, -1), false, this.scale)
+        const current_date: Date = this.round_date(this.increment(this.start_date, -1), false, this.scale)
         dates.push(current_date)
         dates.push(end_date)
-        return dates;
+        return dates
     }
 
-    get start_date():Date {
-        const d:any = this.dates.slice(0)[0]
-        return (typeof d === typeof (new Date())) ? d : new Date()
+    get start_date(): Date {
+        const d = this.dates.first()
+        return ensure_date(d)
     }
-    get end_date():Date {
-        const d:any = this.dates.slice(-1)[0]
-        return (typeof d === typeof (new Date())) ? d : new Date()
-    }
-
-    get range_start_date():Date {
-        const d:any = this.range_dates.slice(0)[0]
-        return (typeof d === typeof (new Date())) ? d : new Date()
+    get end_date(): Date {
+        const d = this.dates.last()
+        return ensure_date(d)
     }
 
-    get range_end_date():Date {
-        const d:any = this.range_dates.slice(-1)[0]
-        return (typeof d === typeof (new Date())) ? d : new Date()
+    get range_start_date(): Date {
+        const d = this.range_dates.first()
+        return ensure_date(d)
     }
 
-    get_date_offset_percent(date:Date):number {
-        let percent:number = 0;
-        const date_ms:number = date.getTime()
-        const start_ms:number = this.range_start_date.getTime()
-        const end_ms:number = this.range_end_date.getTime()
+    get range_end_date(): Date {
+        const d = this.range_dates.last()
+        return ensure_date(d)
+    }
+
+    get_date_offset_percent(date: Date): number {
+        let percent: number = 0
+        const date_ms: number = date.getTime()
+        const start_ms: number = this.range_start_date.getTime()
+        const end_ms: number = this.range_end_date.getTime()
         percent = ((date_ms - start_ms) / (end_ms - start_ms)) * 100
         return percent
     }
 
-    get_date_prop_func_names(date_unit:string):Record<string, any> {
-        let getter, setter:string|null = null
-        const prop_name: string = date_unit.charAt(0).toUpperCase() + date_unit.slice(1)
-        const date:Date = new Date()
-        const default_getter_name:string = `get${prop_name}`
+    get_date_prop_func_names(date_unit: string): Record<string, any> {
+        let getter, setter: string|null = null
+        const prop_name = date_unit.charAt(0).toUpperCase() + date_unit.slice(1)
+        const date = new Date()
+        const default_getter_name = `get${prop_name}`
         switch(date_unit) {
             case "days":
                 getter = "getDate"
@@ -144,11 +144,11 @@ class DateRange {
         }
     }
 
-    round_date(date:Date, round_up:boolean = false, scale:string=this.scale):Date {
-        let rounded_date = new Date(date.getTime())
+    round_date(date: Date, round_up: boolean = false, scale: string=this.scale): Date {
+        const rounded_date = new Date(date.getTime())
         this.scales.forEach((scale, i) => {
             const date_prop_fns = this.get_date_prop_func_names(scale)
-            const adjusted_value = (scale === 'days') ? 1 : 0
+            const adjusted_value = (scale === "days") ? 1 : 0
             if (round_up) {
                 if (i === this.scale_index) {
                     Object(rounded_date)[date_prop_fns.set](Object(rounded_date)[date_prop_fns.get]() + 1)
@@ -169,24 +169,25 @@ class DateRange {
         return rounded_date
     }
 
-    cdate:Date = new Date()
-    sdate:Date = new Date()
-    time_resolution:TimeResolution = 'hour'
-    timeline_spacing:boolean = true
+    cdate: Date = new Date()
+    sdate: Date = new Date()
+    time_resolution: TimeResolution = "hour"
+    timeline_spacing: boolean = true
 
-    constructor(dates:Date[], props: Props) {
+    constructor(dates: Date[], props: Props) {
         if (dates.length === 0) return
-        this.time_resolution = props.time_resolution
+        this.time_resolution = "day"
         this.scale = this.time_resolution + "s"
-        this.cdate = props.cdate;
-        this.sdate = props.sdate;
-        this.dates = dates.sort((a:Date, b:Date) => a.getTime() - b.getTime())
+        this.cdate = new Date(props.created_at_ms)
+        this.sdate = new Date(props.sim_ms)
+        this.dates = dates.sort((a: Date, b: Date) => a.getTime() - b.getTime())
     }
-    render(wcomponent_nodes:any[]) {
+
+    render(wcomponent_nodes: any[]) {
 
         if (wcomponent_nodes.length === 0) return
-        let current_date = new Date(this.range_start_date.getTime())
-        let all_range_dates:Date[] = []
+        const current_date = new Date(this.range_start_date.getTime())
+        const all_range_dates: Date[] = []
         all_range_dates.push(new Date(current_date.getTime()))
         while (current_date.getTime() <= this.range_end_date.getTime()) {
             let fns = this.get_date_prop_func_names(this.scale)
@@ -194,19 +195,20 @@ class DateRange {
             Object(current_date)[fns.set](current_value + 1)
             all_range_dates.push(new Date(current_date.getTime()))
         }
-        let max_width:string = (this.timeline_spacing) ? `${100 + (all_range_dates.length * 1.42)}%` : "100%"
+        const max_width = (this.timeline_spacing) ? `${100 + (all_range_dates.length * 1.42)}%` : "100%"
+
         return(
             <Box
                 id="knowledge_time_view"
                 className={`time_view scroll_area_x ${this.scale} ${(this.timeline_spacing) ? "timeline_spacing" : "event_spacing" }`}
                 flexGrow={1} flexShrink={1}
                 position="relative"
-                onScroll={(e:Event) => {
-                    let scrolled_element:any = e.target
+                onScroll={(e: Event) => {
+                    let scrolled_element: any = e.target
                     let scrolled_offset = scrolled_element.scrollLeft
-                    let nodes:HTMLCollection = document.getElementsByClassName('wc')
+                    let nodes: HTMLCollection = document.getElementsByClassName("wc")
                     for (let i = 0; i < nodes.length; i++) {
-                        const node:any = nodes[i]
+                        const node: any = nodes[i]
                         if (node) {
                             node.style.marginLeft = `${scrolled_offset}px`
                         }
@@ -257,7 +259,7 @@ class DateRange {
                         <Box className="contents" mt={(this.timeline_spacing) ? 50 : 0}>
                         {wcomponent_nodes.map(wc => {
                             const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-                            // const wc_percent:number =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
+                            // const wc_percent =  (wc.created_at) ? this.get_date_offset_percent(wc.created_at) : 0
 
                             return (
                                 <Box
@@ -284,10 +286,10 @@ class DateRange {
                                         flexDirection="row" justifyContent="start"
                                     >
                                         {VAP_sets.map(VAP => {
-                                            const sim_datetime_ms = get_sim_datetime_ms(VAP);
+                                            const sim_datetime_ms = get_sim_datetime_ms(VAP)
                                             if (sim_datetime_ms) {
-                                                const sim_datetime:Date = new Date(sim_datetime_ms);
-                                                const vap_percent = this.get_date_offset_percent(sim_datetime);
+                                                const sim_datetime = new Date(sim_datetime_ms)
+                                                const vap_percent = this.get_date_offset_percent(sim_datetime)
                                                 return (
                                                     <Box className="vap"
                                                         flexGrow={0} flexShrink={1} flexBasis="auto"
@@ -304,7 +306,7 @@ class DateRange {
                                                     </Box>
                                                 )
                                             } else {
-                                                return;
+                                                return
                                             }
                                         })}
                                     </Box>
@@ -353,4 +355,11 @@ const get_svg_upper_children = ({ wcomponent_connections }: Props) =>
     // if (!wcomponent_connections) return no_svg_upper_children
 
     // return wcomponent_connections.map(({ id }) => <WComponentCanvasConnection key={id} id={id} />)
+}
+
+
+
+function ensure_date (date: Date | undefined): Date
+{
+    return (date instanceof Date) ? date : new Date()
 }

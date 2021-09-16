@@ -65,7 +65,10 @@ function _AppMenuItemsContainer (props: Props)
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
                 {routes.map(route => <AppMenuItem id={route} on_pointer_down={handleClose} />)}
 
-                <MaterialMenuItem onClick={() => set_show_all_routes(!show_all_routes)}  style="display:flex; justify-content:flex-start; padding:0.5em;">
+                <MaterialMenuItem
+                    onClick={() => set_show_all_routes(!show_all_routes)}
+                    style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
+                >
                     {show_all_routes ? "Hide" : "Show"} all options
                 </MaterialMenuItem>
             </Menu>

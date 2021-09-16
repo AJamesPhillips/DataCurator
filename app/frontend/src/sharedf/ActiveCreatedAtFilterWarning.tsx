@@ -36,11 +36,8 @@ function _ActiveCreatedAtFilterWarning (props: Props)
         wcomponents_on_kv.filter(kv => get_created_at_ms(kv) > props.created_at_ms).length
     , [wcomponents_on_kv, props.created_at_ms])
 
-    const useStyles = makeStyles(theme => ({
-        warning_button: { cursor:"help" },
-        warning_icon: { color: theme.palette.warning.main }
-    }))
-    const classes = useStyles()
+
+    const classes = use_styles()
 
 
     return (components_excluded_by_created_at_datetime_filter > 0) && (
@@ -58,3 +55,10 @@ function _ActiveCreatedAtFilterWarning (props: Props)
 }
 
 export const ActiveCreatedAtFilterWarning = connector(_ActiveCreatedAtFilterWarning) as FunctionalComponent<OwnProps>
+
+
+
+const use_styles = makeStyles(theme => ({
+    warning_button: { cursor: "help" },
+    warning_icon: { color: theme.palette.warning.main }
+}))

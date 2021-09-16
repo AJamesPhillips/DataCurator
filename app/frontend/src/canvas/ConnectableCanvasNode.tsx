@@ -73,7 +73,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     } = props
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
-    const classes = useStyles()
+    const classes = use_styles()
 
 
     return <CanvasNode
@@ -124,7 +124,7 @@ export function ConnectableCanvasNode (props: OwnProps)
 
 
 
-const useStyles = makeStyles(theme => ({
+const use_styles = makeStyles(theme => ({
     card: {
         borderColor: "black"
     },

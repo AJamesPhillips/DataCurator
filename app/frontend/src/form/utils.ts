@@ -2,17 +2,6 @@ import { test } from "../shared/utils/test"
 
 
 
-export function adjust_height (el: HTMLElement | null)
-{
-    setTimeout(() => {
-        if (!el) return
-        el.style.height = "auto"
-        el.style.height = el.scrollHeight + "px"
-    }, 0)
-}
-
-
-
 const regexp_list_line = /^[ \t]*(\*|\d+\.)/gm
 const regexp_text_line = /^[ \t]*[^\s]+/gm
 export function add_newlines_to_markdown (text: string): string

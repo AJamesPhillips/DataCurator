@@ -4,12 +4,13 @@ import type { ButtonProps } from "@material-ui/core/Button"
 import { Hidden } from "@material-ui/core"
 
 
+
 interface SpecificProps
 {
     value?: string,
 	is_hidden?: boolean
-    onPointerDown?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
-    onClick?: (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => void
+    onPointerDown?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
+    onClick?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
 }
 
 export function Button (props: ButtonProps & SpecificProps)
@@ -31,7 +32,7 @@ export function Button (props: ButtonProps & SpecificProps)
                 size={props.size || "small"}
                 startIcon={props.startIcon}
                 variant={props.variant || "contained"}
-                onPointerDown={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+                onPointerDown={(e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) =>
                 {
                     // Causes button focus and other elements to blur & their form onblur handlers to
                     // fire, triggering any ob_change handlers
@@ -43,7 +44,7 @@ export function Button (props: ButtonProps & SpecificProps)
                     // and the onClick here never gets to fire
                     props.onPointerDown && props.onPointerDown(e)
                 }}
-                onClick={(e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) =>
+                onClick={(e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) =>
                 {
                     // Causes button focus and other elements to blur & their form onblur handlers to
                     // fire, triggering any ob_change handlers

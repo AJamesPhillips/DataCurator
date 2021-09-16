@@ -220,12 +220,12 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             // type="text"
             placeholder={placeholder}
             value={temp_value_str || (editing_options ? "" : "-")}
-            onFocus={(e:any) => {
+            onFocus={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
                 setTimeout(() => set_editing_options(true), 0)
                 e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
             }}
-            onChange={(e:any) => handle_on_change(e.currentTarget.value)}
-            onKeyDown={(e:any) => handle_key_down(e, options_to_display)}
+            onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => handle_on_change(e.currentTarget.value)}
+            onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => handle_key_down(e, options_to_display)}
             onBlur={() => handle_on_blur()}
         />
 

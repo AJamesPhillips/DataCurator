@@ -76,7 +76,7 @@ function get_summary (item: StateValueString, crud: ListItemCRUD<StateValueStrin
         variant="outlined"
         value={item.value}
         // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
-        // conditional_on_change={(new_value:any) => {
+        // conditional_on_change={(new_value: any) => {
         //     const value = new_value && new_value.trim()
         //     crud.update_item({ ...item, value })
         // }}

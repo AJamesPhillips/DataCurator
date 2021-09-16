@@ -5,7 +5,6 @@ import {
     EditableTextCommon,
     EditableTextComponentArgs,
 } from "./editable_text_common"
-import { adjust_height } from "../utils"
 import { TextField } from "@material-ui/core"
 
 

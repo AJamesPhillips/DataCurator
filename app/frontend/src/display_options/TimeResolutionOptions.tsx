@@ -1,10 +1,13 @@
 import { Button, ButtonGroup } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+
 import { ACTIONS } from "../state/actions"
 import { time_resolution_types } from "../state/display_options/state"
 import type { RootState } from "../state/State"
-import { invertDisabledAppearance } from "../ui_themes/invert_disabled"
+import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
+
+
 
 interface OwnProps
 {
@@ -23,9 +26,11 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
+
+
 function _TimeResolutionOptions (props: Props)
 {
-    const classes = invertDisabledAppearance();
+    const classes = invert_disabled_appearance();
     return (!props.display_by_simulated_time) &&
         <ButtonGroup
             disableElevation
@@ -34,13 +39,10 @@ function _TimeResolutionOptions (props: Props)
         >
             {time_resolution_types.map(type => (
                 <Button
-                    value={type}
-                    onClick={(e:any) => {
-                        const time_resolution:any = e.currentTarget.value
-                        time_resolution && props.set_time_resolution({ time_resolution })
-                    }}
+                    value={type} // can remove this?
+                    onClick={() => props.set_time_resolution({ time_resolution: type })}
                     className={classes.inverse_disabled}
-                    disabled={(props.time_resolution == type) ? true : false }
+                    disabled={props.time_resolution === type}
                 >
                     {type}
                 </Button>)

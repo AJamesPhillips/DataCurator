@@ -10,6 +10,7 @@ import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 import { ACTIONS } from "../state/actions"
 
 
+
 interface OwnProps
 {
     id: ROUTE_TYPES
@@ -42,7 +43,7 @@ function _AppMenuItem (props: Props)
 {
     const title = get_title(props.id)
     return <MaterialMenuItem
-        style="display:flex; justify-content:flex-start; padding:0.5em;"
+        style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
         onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
         {
             e.stopImmediatePropagation()

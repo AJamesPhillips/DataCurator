@@ -25,113 +25,11 @@ import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 
 function App()
 {
-    const drawerWidth = 340;
-    const useStyles = makeStyles(theme => ({
-        root: {
-            width:"100%", height:"100%",
-            overflow: "hidden",
-            display: "flex",
-        },
-
-        app_bar: {
-            marginRight:0,
-            width:"100%", maxWidth:"100%", minWidth:0,
-            transition: theme.transitions.create(['all'], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-            zIndex: theme.zIndex.drawer + 1,
-        },
-
-        app_bar_with_open_side_panel: {
-            width: `calc(100% - ${drawerWidth}px)`, maxWidth:`calc(100% - ${drawerWidth}px)`,
-            marginRight: drawerWidth,
-            transition: theme.transitions.create(['all'], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-        content: {
-            position:"relative", zIndex: 1,
-            flexGrow:1,
-            flexShrink:1,
-            display:"flex", flexDirection:"column", flexWrap: "nowrap",
-            marginRight: -drawerWidth,
-            transition: theme.transitions.create(['margin'], {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-            }),
-        },
-
-        content_with_open_side_panel: {
-            marginRight: 0,
-            transition: theme.transitions.create(['margin'], {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-            }),
-        },
-
-        drawer: {
-            width: drawerWidth,
-            flexShrink: 0,
-        },
-
-        side_panel: {
-            backgroundColor:theme.palette.background.paper,
-            width: drawerWidth,
-            position:"relative",
-        },
-
-        side_panel_content: {
-            marginTop:10, padding:10,
-        },
-        sidebar_toolbar: {
-            flexGrow:1,
-            justifyContent:"flex-end"
-        },
-        toolbar: {
-            flexGrow: 1,
-            justifyContent:"space-between",
-            flexWrap:"wrap",
-            [theme.breakpoints.up('md')]: {
-                flexWrap:"nowrap"
-            }
-        },
-        toolbar_section: {
-            display:"inherit",
-            flexGrow:0,
-            flexShrink:1,
-            flexBasis:"auto",
-            marginRight:5,
-            "&:last-child": { marginRight:0 },
-            "&:empty": { display:"none" }
-        },
-        toolbar_item: {
-            marginRight:5,
-            "&:last-child": { marginRight:0 }
-        },
-
-        help_popup: {
-            position:"relative",
-            zIndex: theme.zIndex.drawer + 1,
-
-        },
-
-        small_full_width: {
-            [theme.breakpoints.down('sm')]: {
-                flexGrow:0, flexShrink:1, flexBasis:"100%",
-                margin: 0,
-            }
-        },
-        grow: { flexGrow:1 },
-        hide: { display: 'none' },
-        warning_icon: { color: theme.palette.warning.main }
-      }));
-
-    const classes = useStyles();
-    const [side_panel_open, set_side_panel_open] = useState(true);
+    const classes = use_styles()
+    const [side_panel_open, set_side_panel_open] = useState(true)
     const handle_open_side_panel = () => { set_side_panel_open(true); console.log("open"); }
     const handle_close_side_panel = () => { set_side_panel_open(false); console.log("closed"); }
+
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
@@ -210,3 +108,108 @@ function App()
 }
 
 export default App
+
+
+
+const drawerWidth = 340
+const use_styles = makeStyles(theme => ({
+    root: {
+        width: "100%", height: "100%",
+        overflow: "hidden",
+        display: "flex",
+    },
+
+    app_bar: {
+        marginRight: 0,
+        width: "100%", maxWidth: "100%", minWidth: 0,
+        transition: theme.transitions.create(["all"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+        zIndex: theme.zIndex.drawer + 1,
+    },
+
+    app_bar_with_open_side_panel: {
+        width: `calc(100% - ${drawerWidth}px)`, maxWidth: `calc(100% - ${drawerWidth}px)`,
+        marginRight: drawerWidth,
+        transition: theme.transitions.create(["all"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+    content: {
+        position: "relative", zIndex: 1,
+        flexGrow: 1,
+        flexShrink: 1,
+        display: "flex", flexDirection: "column", flexWrap: "nowrap",
+        marginRight: -drawerWidth,
+        transition: theme.transitions.create(["margin"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+
+    content_with_open_side_panel: {
+        marginRight: 0,
+        transition: theme.transitions.create(["margin"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    },
+
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0,
+    },
+
+    side_panel: {
+        backgroundColor: theme.palette.background.paper,
+        width: drawerWidth,
+        position: "relative",
+    },
+
+    side_panel_content: {
+        marginTop: 10, padding: 10,
+    },
+    sidebar_toolbar: {
+        flexGrow: 1,
+        justifyContent: "flex-end"
+    },
+    toolbar: {
+        flexGrow: 1,
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        [theme.breakpoints.up("md")]: {
+            flexWrap: "nowrap"
+        }
+    },
+    toolbar_section: {
+        display: "inherit",
+        flexGrow: 0,
+        flexShrink: 1,
+        flexBasis: "auto",
+        marginRight: 5,
+        "&:last-child": { marginRight: 0 },
+        "&:empty": { display: "none" }
+    },
+    toolbar_item: {
+        marginRight: 5,
+        "&:last-child": { marginRight: 0 }
+    },
+
+    help_popup: {
+        position: "relative",
+        zIndex: theme.zIndex.drawer + 1,
+
+    },
+
+    small_full_width: {
+        [theme.breakpoints.down("sm")]: {
+            flexGrow: 0, flexShrink: 1, flexBasis: "100%",
+            margin: 0,
+        }
+    },
+    grow: { flexGrow: 1 },
+    hide: { display: "none" },
+    warning_icon: { color: theme.palette.warning.main }
+}))

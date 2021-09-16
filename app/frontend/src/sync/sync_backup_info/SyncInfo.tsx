@@ -48,28 +48,7 @@ function _SyncInfo (props: Props)
     if (will_save_in_future) setTimeout(() => update_state({}), 500)
 
 
-    const useStyles = makeStyles(theme => ({
-        button: {
-            textTransform: "none",
-            "&:hover .show": { fontSize: 0 },
-            "&:focus .show": { fontSize: 0 },
-            "&:hover .hide": { fontSize: "initial" },
-            "&:focus .hide": { fontSize: "initial" }
-        },
-        animate: {
-            transitionProperty: "all",
-            transitionDuration: "0.23s"
-        },
-
-        initially_hidden: {
-            fontSize: 0,
-        },
-        initially_shown: {
-            fontSize: "initial",
-        }
-    }))
-
-    const classes = useStyles()
+    const classes = use_styles()
 
 
     if (!status) return null
@@ -117,3 +96,26 @@ function _SyncInfo (props: Props)
 }
 
 export const SyncInfo = connector(_SyncInfo) as FunctionalComponent<{}>
+
+
+
+const use_styles = makeStyles(theme => ({
+    button: {
+        textTransform: "none",
+        "&:hover .show": { fontSize: 0 },
+        "&:focus .show": { fontSize: 0 },
+        "&:hover .hide": { fontSize: "initial" },
+        "&:focus .hide": { fontSize: "initial" }
+    },
+    animate: {
+        transitionProperty: "all",
+        transitionDuration: "0.23s"
+    },
+
+    initially_hidden: {
+        fontSize: 0,
+    },
+    initially_shown: {
+        fontSize: "initial",
+    }
+}))

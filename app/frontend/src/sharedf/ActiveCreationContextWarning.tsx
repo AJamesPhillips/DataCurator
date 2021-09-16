@@ -19,11 +19,11 @@ type Props = ConnectedProps<typeof connector>  & OwnProps
 function _ActiveCreationContextWarning (props: Props)
 {
     const { creation_context, editing } = props
-    const useStyles = makeStyles(theme => ({
+    const use_styles = makeStyles(theme => ({
         warning_button: { cursor: "help" },
         warning_icon: { color: theme.palette.warning.main }
     }))
-    const classes = useStyles()
+    const classes = use_styles()
 
     return (creation_context.use_creation_context && editing) && (
         <Tooltip placement="top" title="WARNING: Creation Context is active, which can result in components being created with incorrect information!">

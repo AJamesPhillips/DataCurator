@@ -8,7 +8,7 @@ import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
-import { invertDisabledAppearance } from "../../ui_themes/invert_disabled"
+import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 
 
@@ -41,7 +41,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ContentControls (props: Props)
 {
-    const invert_classes = invertDisabledAppearance()
+    const invert_classes = invert_disabled_appearance()
     const { created_events, sim_events, move_to_component_id } = props
     const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
         const display_by_simulated_time = JSON.parse(e.currentTarget.value)
@@ -49,30 +49,8 @@ function _ContentControls (props: Props)
     }
 
     const display_sliders = props.editing || props.display_time_sliders
-    let are_any_component_dates_within_filter = false
-    let how_many_components_are_visible = 0
 
-    created_events.forEach(e => {
-
-        const component_created_date = e.datetime
-        if (props.created_at_ms >= component_created_date.getTime()) {
-            are_any_component_dates_within_filter = true
-            how_many_components_are_visible++
-        }
-    })
-    const useStyles = makeStyles(theme => ({
-        toolbar: {
-            justifyContent:"space-between",
-        },
-        drawer_content: {
-            display:"flex", flexDirection:"row",
-            alignItems:"center", alignContent:"center",
-        },
-        warning_icon: {
-            color: theme.palette.warning.main
-        },
-    }))
-    const classes = useStyles()
+    const classes = use_styles()
 
 
     return (
@@ -117,7 +95,7 @@ function _ContentControls (props: Props)
                 </Box>
 
                 <Box component="label">
-                    {/* <Box component="span" pr={1}>Time Resolution:</Box> */}
+                    {/* <Box component="span" pr={1}>Time Resolution: </Box> */}
                     <TimeResolutionOptions  />
                 </Box>
 
@@ -153,3 +131,18 @@ function _ContentControls (props: Props)
 }
 
 export const ContentControls = connector(_ContentControls) as FunctionalComponent<OwnProps>
+
+
+
+const use_styles = makeStyles(theme => ({
+    toolbar: {
+        justifyContent: "space-between",
+    },
+    drawer_content: {
+        display: "flex", flexDirection: "row",
+        alignItems: "center", alignContent: "center",
+    },
+    warning_icon: {
+        color: theme.palette.warning.main
+    },
+}))

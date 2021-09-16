@@ -1,11 +1,14 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { ACTIONS } from "../state/actions"
-import type { RootState } from "../state/State"
-import { ButtonGroup, IconButton } from "@material-ui/core";
+import { ButtonGroup, IconButton } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
-import { invertDisabledAppearance } from "../ui_themes/invert_disabled";
+
+import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
+
+
 
 const map_state = (state: RootState) =>
 {
@@ -21,9 +24,11 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
+
+
 function _ViewOptions (props: Props)
 {
-    const classes = invertDisabledAppearance();
+    const classes = invert_disabled_appearance();
     return (
         <ButtonGroup
             size="small"
