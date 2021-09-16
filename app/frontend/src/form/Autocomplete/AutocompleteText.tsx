@@ -346,7 +346,8 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
     }
 
 
-    let option_to_score = (option: InternalAutocompleteOption) => 0
+    let option_to_exact_score = (option: InternalAutocompleteOption) => 0
+    let option_to_fuzzy_score = (option: InternalAutocompleteOption) => 0
     let exact_results = 0
 
 
@@ -358,11 +359,11 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
         exact_results = results.length
         const id_num_to_score: { [id_num: number]: number } = {}
         results.forEach((id, index) => id_num_to_score[id] = 10000 - index)
-        option_to_score = o => id_num_to_score[o.id_num] || -10000
+        option_to_exact_score = o => id_num_to_score[o.id_num] || -10000
     }
 
 
-    if (exact_results === 0 && (search_type === "best" || search_type === "fuzzy"))
+    if (exact_results < 10 && (search_type === "best" || search_type === "fuzzy"))
     {
         search_type_used = "fuzzy"
 
@@ -377,7 +378,7 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
         const map_target_to_score: { [target: string]: number } = {}
         results.forEach(({ target, score }) => map_target_to_score[target] = score)
 
-        option_to_score = o =>
+        option_to_fuzzy_score = o =>
         {
             const score = map_target_to_score[o.limited_total_text]
             return score === undefined ? -10000 : score
@@ -387,8 +388,11 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
 
     const filterd_options = threshold_minimum_score === false
         ? options
-        : options.filter(o => option_to_score(o) > threshold_minimum_score)
-    const options_to_display: InternalAutocompleteOption[] = sort_list(filterd_options, option_to_score, "descending")
+        : options.filter(o => Math.max(option_to_exact_score(o), option_to_fuzzy_score(o)) > threshold_minimum_score)
+    const exact_options_to_display: InternalAutocompleteOption[] = sort_list(filterd_options, option_to_exact_score, "descending")
+    const fuzzy_options_to_display: InternalAutocompleteOption[] = sort_list(filterd_options, option_to_fuzzy_score, "descending")
+    const options_to_display = exact_options_to_display.concat(fuzzy_options_to_display)
+
 
     return { options: options_to_display, search_type_used }
 }
