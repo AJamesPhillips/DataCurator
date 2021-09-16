@@ -49,7 +49,7 @@ export function EditablePosition (props: OwnProps)
             value="&#8594;"
             onClick={() => update({ left: round_coordinate_small_step(left + grid_small_step) })}
         />
-        <br />
+        <br /><br />
         Move Top: <EditableNumber
             placeholder="Top"
             value={top}

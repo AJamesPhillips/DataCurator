@@ -22,6 +22,7 @@ export interface EditableTextCommonOwnProps
     force_focus?: boolean
     always_allow_editing?: boolean
     select_all_on_focus?: boolean
+    size?: "small"
 }
 
 

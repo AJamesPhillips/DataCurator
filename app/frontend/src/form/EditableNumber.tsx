@@ -90,6 +90,7 @@ function _EditableNumber (props: Props)
 
                 handle_blur({ value, default_value_when_invalid, on_blur: always_on_blur, allow_undefined })
             }}
+            size="small"
         />
     </div>
 }

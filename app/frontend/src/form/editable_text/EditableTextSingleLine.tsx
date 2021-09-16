@@ -23,6 +23,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                size={props.size}
                 inputRef={((el: HTMLInputElement) =>
                 {
                     if (!el) return
