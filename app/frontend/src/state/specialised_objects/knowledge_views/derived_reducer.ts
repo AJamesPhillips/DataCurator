@@ -119,6 +119,7 @@ function get_knowledge_view (state: RootState, id: string)
 function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
     const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id)
+    remove_deleted_wcomponents(composed_wc_id_map, state.specialised_objects.wcomponents_by_id)
     // Possible optimisation: store a set of wcomponent_ids and only run the following code when
     // this set changes... may save a bunch of views from updating (and also help them run faster)
     // as many just want to know what ids are present in the knowledge view not the positions of
@@ -179,6 +180,18 @@ export function get_composed_wc_id_map (knowledge_view: KnowledgeView, knowledge
 
 
     return composed_wc_id_map
+}
+
+
+
+function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, wcomponents_by_id: WComponentsById)
+{
+    Object.keys(composed_wc_id_map).forEach(id =>
+    {
+        const wcomponent = wcomponents_by_id[id]
+        if (!wcomponent) delete composed_wc_id_map[id]
+        else if (wcomponent.deleted_at) delete composed_wc_id_map[id]
+    })
 }
 
 

@@ -53,6 +53,7 @@ import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
+import { Button } from "../../sharedf/Button"
 
 
 
@@ -426,13 +427,21 @@ function _WComponentForm (props: Props)
         <br />
 
 
-        {editing && <div>
+        {editing && !wcomponent.deleted_at && <div>
             <ConfirmatoryDeleteButton
                 button_text="Delete"
                 tooltip_text="Remove from all knowledge views"
                 on_delete={() => props.delete_wcomponent({ wcomponent_id })}
             />
         </div>}
+
+        {editing && wcomponent.deleted_at && <div>
+            <Button
+                title="Undo delete"
+                onClick={() => props.upsert_wcomponent({ wcomponent: { ...wcomponent, deleted_at: undefined } })}
+            >Restore</Button>
+        </div>}
+
 
         <br />
     </Box>
