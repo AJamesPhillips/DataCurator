@@ -11,7 +11,7 @@ import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 
-export function get_contextless_new_wcomponent_object (partial_wcomponent: Partial<WComponent>)
+export function get_contextless_new_wcomponent_object (partial_wcomponent: Partial<WComponent> = {})
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
