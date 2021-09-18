@@ -33,8 +33,7 @@ function _SelectStorageType (props: Props)
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2 style={{ display: "inline" }}>Where would you like to store your data?</h2>
-            <span>&nbsp; (You can change this at any time)</span>
+            <h2 style={{ display: "inline" }}>Storage</h2>
         </div>}
         size="medium"
 
