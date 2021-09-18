@@ -39,7 +39,7 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 {
 
     const knowledge_views_url = get_knowledge_views_url(solid_pod_URL)
-    const result = await save_items(knowledge_views_url, knowledge_views, [], undefined) //solid_dataset_cache.knowledge_views_dataset)
+    const result = await save_items(knowledge_views_url, knowledge_views, []) //, solid_dataset_cache.knowledge_views_dataset)
     solid_dataset_cache.knowledge_views_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
@@ -49,33 +49,33 @@ async function save_knowledge_views (solid_pod_URL: string, knowledge_views: Kno
 async function save_wcomponents (solid_pod_URL: string, wcomponents: WComponent[])
 {
     const wcomponents_url = get_wcomponents_url(solid_pod_URL)
-    const result = await save_items(wcomponents_url, wcomponents, [], undefined) //, solid_dataset_cache.wcomponents_dataset)
+    const result = await save_items(wcomponents_url, wcomponents, []) //, solid_dataset_cache.wcomponents_dataset)
     solid_dataset_cache.wcomponents_dataset = result.items_dataset
     return result.error && Promise.reject(result.error)
 }
 
 
 
-async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[], item_ids_to_remove: string[], cached_items_dataset: SolidDataset | undefined)
+async function save_items <I extends Base & { title: string }> (items_URL: string, items: I[], item_ids_to_remove: string[]) //, cached_items_dataset: SolidDataset | undefined)
 {
     let items_dataset = createSolidDataset()
     let error: SyncError | undefined = undefined
 
-    if (cached_items_dataset)
+    // if (cached_items_dataset)
+    // {
+    //     items_dataset = cached_items_dataset
+    // }
+    // else
+    // {
+    try
     {
-        items_dataset = cached_items_dataset
+        items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
     }
-    else
+    catch (err)
     {
-        try
-        {
-            items_dataset = await getSolidDataset(items_URL, { fetch: solid_fetch })
-        }
-        catch (err)
-        {
-            if (!err || (err.statusCode !== 404)) console.error(`Error deleting "${items_URL}"`, err)
-        }
+        if (!err || (err.statusCode !== 404)) console.error(`Error deleting "${items_URL}"`, err)
     }
+    // }
 
 
     items.forEach(item =>
