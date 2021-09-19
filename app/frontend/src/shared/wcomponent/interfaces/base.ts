@@ -10,6 +10,7 @@ export interface Base
     label_ids?: string[]
     label_color?: Color
     summary_image?: string
+    base_id?: number
     modified_at?: Date
     modified_by_username?: string
     deleted_at?: Date

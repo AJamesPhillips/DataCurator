@@ -48,14 +48,6 @@ export function create_new_knowledge_view (args: CreateKnowledgeViewArgs)
 
 export function navigate_to_knowledge_view_or_kvwcomponent (kv_or_kvwc_id: string, store: Store<RootState>)
 {
-    let wc_id: string | undefined = undefined
-
-    if (is_wc_knowledge_view_id(kv_or_kvwc_id))
-    {
-        wc_id = kv_or_kvwc_id.replace("kv", "")
-    }
-
-
     store.dispatch(ACTIONS.routing.change_route({
         route: "wcomponents",
         // item_id: wc_id,
