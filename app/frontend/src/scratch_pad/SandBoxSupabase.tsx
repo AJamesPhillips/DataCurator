@@ -31,7 +31,11 @@ export function SandBoxSupabase ()
     const [user, set_user] = useState(supabase.auth.user())
     const [resetting_password, set_resetting_password] = useState(false)
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
+
     const [base, set_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
+
+    const [set_access_controls, set_set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
+
     const [knowledge_views, set_knowledge_views] = useState<KnowledgeView[] | undefined>(undefined)
     const knowledge_view = knowledge_views && knowledge_views[0]
 
@@ -125,15 +129,59 @@ export function SandBoxSupabase ()
                 Error: {postgrest_error.message || postgrest_error}
             </div>}
 
-            Bases: <br />
+            <h3>Bases</h3>
+            <br />
             {base && <div>
                 id: {base.id} &nbsp;
                 title: {base.title} &nbsp;
                 owned by: {base.owner_user_id === user.id ? "You" : "Someone else"}
             </div>}
 
+
             {base && <div>
+                <hr />
                 <br />
+                <h3>Base modification</h3>
+                <br />
+
+                <input type="button" onClick={() =>
+                    {
+                        const modified_base = { ...base, title: "Title changed" }
+                        modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    }} value="Modify base (change title)" />
+                <br />
+
+                <input type="button" onClick={() =>
+                    {
+                        const modified_base = { ...base, title: "Primary" }
+                        modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    }} value="Modify base (reset title)" />
+                <br />
+
+                <input type="button" onClick={() =>
+                    {
+                        const modified_base = { ...base, owner_user_id: "59a8ceba-a13b-4277-aa71-cd6f3a683172" }
+                        modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    }} value="Modify base (change owner to ajp@centerofci.org -- should FAIL if different user)" />
+                <br />
+            </div>}
+
+
+            {base && <div>
+                <hr />
+                <br />
+                <h3>Base sharing</h3>
+                <br />
+
+                {/* <input type="button" onClick={() => get_access_controls({ user, set_postgrest_error, set_access_controls })} value="Get access controls" /> */}
+                {/* <input type="button" onClick={() => create_knowledge_views({ user, base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" /> */}
+            </div>}
+
+
+            {base && <div>
+                <hr />
+                <br />
+                <h3>Knowledge Views</h3>
                 <br />
 
                 <input type="button" onClick={() => create_knowledge_views({ user, base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
@@ -160,6 +208,16 @@ export function SandBoxSupabase ()
             </div>}
 
 
+            {/* {base && <div>
+                <hr />
+                <br />
+                <br />
+
+                <input type="button" onClick={() => create_knowledge_views({ user, base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
+                <input type="button" onClick={() => get_knowledge_views({ user, set_postgrest_error, set_knowledge_views })} value="Get knowledge views" />
+            </div>} */}
+
+
             <div onClick={() => get_acl()}>Get ACL</div>
         </div>
     )
@@ -173,6 +231,7 @@ interface SupabaseKnowledgeBase
     inserted_at: Date
     updated_at: Date
     owner_user_id: string
+    public_read: boolean
     title: string
 }
 
@@ -219,6 +278,33 @@ async function get_or_create_base (args: GetOrCreateBaseArgs)
     const { base, error: postgrest_error } = await get_primary_base_optionally_create(args.user)
     args.set_postgrest_error(postgrest_error)
     args.set_base(base)
+}
+
+
+
+interface ModifyBaseArgs
+{
+    base: SupabaseKnowledgeBase
+    set_postgrest_error: (a: PostgrestError | null) => void
+    set_base: (a: SupabaseKnowledgeBase | undefined) => void
+}
+async function modify_base (args: ModifyBaseArgs)
+{
+    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(args.base).eq("id", args.base.id)
+    args.set_postgrest_error(res.error)
+    args.set_base(res.data ? res.data[0] : undefined)
+}
+
+
+
+type access_control_level = "editor" | "viewer"
+interface SupabaseAccessControl
+{
+    base_id: number
+    user_id: string
+    inserted_at: Date
+    updated_at: Date
+    access_level: access_control_level
 }
 
 
@@ -372,3 +458,5 @@ function get_acl ()
 {
 
 }
+
+

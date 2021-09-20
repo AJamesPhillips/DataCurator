@@ -17,19 +17,21 @@ CREATE TABLE IF NOT EXISTS bases (
   inserted_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
   owner_user_id uuid references auth.users NOT NULL,
+  public_read boolean DEFAULT false NOT NULL,
   title text DEFAULT '' NOT NULL
 );
 CREATE INDEX bases_owner_user_id_index ON bases ( owner_user_id );
 
 
 
-CREATE TYPE IF NOT EXISTS access_control_level AS ENUM ('editor', 'viewer');
+CREATE TYPE AccessControlLevel AS ENUM ('editor', 'viewer');
+-- DROP TYPE AccessControlLevel;
 CREATE TABLE IF NOT EXISTS access_control (
   base_id bigint NOT NULL,
   user_id uuid references auth.users NOT NULL,
   inserted_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
-  access_level text NOT NULL,
+  access_level AccessControlLevel NOT NULL,
   PRIMARY KEY(base_id, user_id),
   CONSTRAINT fk_access_control_base
     FOREIGN KEY(base_id)
