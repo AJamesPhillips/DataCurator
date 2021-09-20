@@ -8,7 +8,7 @@ Enable all actions for users based on their id and base_id
 
 DROP TABLE IF EXISTS knowledge_views;
 DROP TABLE IF EXISTS wcomponents;
-DROP TABLE IF EXISTS access_control;
+DROP TABLE IF EXISTS access_controls;
 DROP TABLE IF EXISTS bases;
 
 
@@ -26,14 +26,14 @@ CREATE INDEX bases_owner_user_id_index ON bases ( owner_user_id );
 
 CREATE TYPE AccessControlLevel AS ENUM ('editor', 'viewer');
 -- DROP TYPE AccessControlLevel;
-CREATE TABLE IF NOT EXISTS access_control (
+CREATE TABLE IF NOT EXISTS access_controls (
   base_id bigint NOT NULL,
   user_id uuid references auth.users NOT NULL,
   inserted_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
   access_level AccessControlLevel NOT NULL,
   PRIMARY KEY(base_id, user_id),
-  CONSTRAINT fk_access_control_base
+  CONSTRAINT fk_access_controls_base
     FOREIGN KEY(base_id)
 	  REFERENCES bases(id)
 );
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS wcomponents (
 
 
 alter table public.bases enable row level security;
-alter table public.access_control enable row level security;
+alter table public.access_controls enable row level security;
 alter table public.knowledge_views enable row level security;
 alter table public.wcomponents enable row level security;
 
