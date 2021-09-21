@@ -129,7 +129,10 @@ if (root)
     // }
     // else if (window.location.pathname === "/sandbox/supabase")
     // {
+    if (window.location.pathname === "/sandbox/supabase")
+    {
         render(<SandBoxSupabase />, root)
+    } else root.innerHTML = "on root page"
     // }
     // else if (window.location.pathname === "/sandbox")
     // {

@@ -14,6 +14,8 @@ import { get_new_knowledge_view_object } from "../knowledge_view/create_new_know
 import { get_contextless_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { sentence_case } from "../shared/utils/sentence_case"
+import { sort_list } from "../shared/utils/sort"
 
 
 
@@ -21,7 +23,7 @@ let is_supabase_recovery_email = document.location.hash.includes("type=recovery"
 
 const supabase_url = "https://sfkgqscbwofiphfxhnxg.supabase.co"
 const SUPABASE_ANONYMOUS_CLIENT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMjA2MTkwNSwiZXhwIjoxOTQ3NjM3OTA1fQ.or3FBQDa4CtAA8w7XQtYl_3NTmtFFYPWoafolOpPKgA"
-const supabase = createClient(supabase_url, SUPABASE_ANONYMOUS_CLIENT_KEY)
+const supabase = createClient(supabase_url, SUPABASE_ANONYMOUS_CLIENT_KEY, { autoRefreshToken: true })
 const supabase_auth_state_change: { subscribers: (() => void)[] } = { subscribers: [] }
 supabase.auth.onAuthStateChange(() =>
 {
@@ -30,36 +32,58 @@ supabase.auth.onAuthStateChange(() =>
 })
 
 
+;(window as any).supabase = supabase
+
+
 
 export function SandBoxSupabase ()
 {
     const [user, set_user] = useState(supabase.auth.user())
-    // We use user.email here for initial value as links from supabase for password reset and magic link sign
-    // sometimes seems to be processed before the useEffect supabase_auth_state_change subscriber can fire
-    const [email, set_email] = useState(user?.email || "")
+    const [email, set_email] = useState("")
     const [password, set_password] = useState("")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
 
     const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false)
     const [updating_password, set_updating_password] = useState(is_supabase_recovery_email)
+    const [username, set_username] = useState("")
+
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
+    const [current_base, set_current_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
+    const [bases, set_bases] = useState<SupabaseKnowledgeBaseWithAccess[] | undefined>(undefined)
 
-    const [base, set_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
+    const [p_users_by_id, set_p_users_by_id] = useState<PUsersById>({})
 
-    const [access_controls, set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
+    const [access_controls, _set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
+    const set_access_controls = (acs: SupabaseAccessControl[] | undefined) =>
+    {
+        _set_access_controls(acs && sort_list(acs, ac => ac.inserted_at.getTime(), "ascending"))
+    }
 
     const [knowledge_views, set_knowledge_views] = useState<KnowledgeView[] | undefined>(undefined)
     const knowledge_view = knowledge_views && knowledge_views[0]
 
 
     useEffect(() => {
-        const subscriber = () =>
+        const subscriber = async () =>
         {
             const new_user = supabase.auth.user()
             // console .log("sub called, ", user, " and now user is ", new_user)
             set_user(new_user)
             set_email(new_user?.email || email)
+
+            const { data, error } = await supabase.from<SupabasePUser>("users").select("*")
+            set_postgrest_error(error)
+            const map: PUsersById = {}
+            ;(data || []).forEach(pu => map[pu.id] = pu)
+            set_p_users_by_id(map)
+            set_username(map[new_user?.id || ""]?.name || "")
         }
+
+        // Always call subscriber once on start as it is not always called.
+        // Perhaps session restore, links from supabase for password reset and magic link sign, are dealth with
+        // synchronously or at least very quickly and before this view fires.
+        subscriber()
+
         supabase_auth_state_change.subscribers.push(subscriber)
 
         const unsubscribe = () =>
@@ -70,6 +94,7 @@ export function SandBoxSupabase ()
 
         return unsubscribe
     }, [])
+
 
 
     async function register ()
@@ -121,6 +146,15 @@ export function SandBoxSupabase ()
     }
 
 
+    async function update_username (username: string)
+    {
+        const id = user?.id || ""
+        const { data, error } = await supabase.from<SupabasePUser>("users").upsert({ id, name: username }).eq("id", id)
+
+        set_postgrest_error(error)
+        set_username((data && data[0]?.name) || "" )
+    }
+
 
     const user_1_id = "d9e6dde1-15e7-4bdf-a6ca-3cc769c131ee"
     const user_2_id = "e21a5c53-3cef-458c-bfaa-68e5d80c70f8"
@@ -130,7 +164,8 @@ export function SandBoxSupabase ()
     if (waiting_password_reset_email) return <div>
         <h3>Password reset</h3>
         <br/>
-        {supabase_session_error ? "Error : " + supabase_session_error : "Please check your email."}
+        {!supabase_session_error && "Please check your email"}
+        <DisplaySupabaseSessionError error={supabase_session_error} />
     </div>
 
 
@@ -139,8 +174,16 @@ export function SandBoxSupabase ()
 
         {updating_password ? "Reset password" : "Signin / Register"}<br/>
         <form>
-            <input type="email" placeholder="email" value={email} disabled={updating_password} onChange={e => set_email(e.currentTarget.value)}/><br/>
-            <input type="password" placeholder="password" value={password} onChange={e => set_password(e.currentTarget.value)}/><br/>
+            <input type="email" placeholder="email" value={email} disabled={updating_password}
+                onKeyUp={e => set_email(e.currentTarget.value)}
+                onChange={e => set_email(e.currentTarget.value)}
+                onBlur={e => set_email(e.currentTarget.value)}
+            /><br/>
+            <input type="password" placeholder="password" value={password}
+                onKeyUp={e => set_password(e.currentTarget.value)}
+                onChange={e => set_password(e.currentTarget.value)}
+                onBlur={e => set_password(e.currentTarget.value)}
+            /><br/>
         </form>
 
         {updating_password && <div>
@@ -154,9 +197,7 @@ export function SandBoxSupabase ()
             <input type="button" disabled={!email} onClick={forgot_password} value="Forgot password?" /><br/>
         </div>}
 
-        {supabase_session_error && <div>
-            Error: {supabase_session_error.message || supabase_session_error}
-        </div>}
+        <DisplaySupabaseSessionError error={supabase_session_error} />
     </div>
 
 
@@ -165,30 +206,53 @@ export function SandBoxSupabase ()
         Logged in with {user.email} {user.id}<br />
         <input type="button" onClick={log_out} value="Log out" /><br />
         <input type="button" onClick={() => set_updating_password(true)} value="Change password" /><br />
-        {supabase_session_error && <div>
-            Error: {supabase_session_error.message || supabase_session_error}
-        </div>}
+
+        Your user name:
+        <input type="text" placeholder="username" value={username}
+            onKeyUp={e => set_username(e.currentTarget.value)}
+            onChange={e => set_username(e.currentTarget.value)}
+            onBlur={e => set_username(e.currentTarget.value)}
+        /><br/>
+        <input type="button" onClick={() => update_username(username)} value="Change user name" /><br />
+
+        <DisplaySupabaseSessionError error={supabase_session_error} />
         <br />
         <br />
 
-        <input type="button" onClick={() => get_or_create_base({ user, set_postgrest_error, set_base })} value="Get base (optionally create)" />
+        <input type="button" onClick={() => get_or_create_a_writing_base({ user, set_postgrest_error, set_current_base })} value="Get a base (optionally create)" />
+        <input type="button" onClick={() => get_all_bases({ user, set_postgrest_error, set_bases })} value="Get all bases" />
 
         <br />
         <br />
-        {postgrest_error && <div>
-            Error: {postgrest_error.message || postgrest_error}
-        </div>}
+        <DisplaySupabasePostgrestError error={postgrest_error} />
 
         <h3>Bases</h3>
         <br />
-        {base && <div>
-            id: {base.id} &nbsp;
-            title: {base.title} &nbsp;
-            owned by: {base.owner_user_id === user.id ? "You" : "Someone else"}
+        {!bases && current_base && <div>
+            <b>Current base</b><br />
+            {current_base.public_read ? "Public" : "Private"} &nbsp;
+            title: {current_base.title} &nbsp;
+            owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: current_base.owner_user_id })}
+            id: {current_base.id} &nbsp;
+        </div>}
+        {bases && <div>
+            {bases.length} bases <br/>
+
+            {bases
+            .map(base => <div style={{ fontWeight: base.id === current_base?.id ? "bold" : undefined }}>
+                {base.id === current_base?.id ? "Current" : "Other"} &nbsp;
+                {base.public_read ? "Public" : "Private"} &nbsp;
+                title: {base.title} &nbsp;
+                owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
+                id: {base.id} &nbsp;
+                {base.owner_user_id !== user.id && <span>
+                    access: {base.access_level || "?"} &nbsp;
+                </span>}
+            </div>)}
         </div>}
 
 
-        {base && <div>
+        {current_base && <div>
             <hr />
             <br />
             <h3>Base modification</h3>
@@ -196,82 +260,64 @@ export function SandBoxSupabase ()
 
             <input type="button" onClick={() =>
                 {
-                    const modified_base = { ...base, title: "Title changed" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    const modified_base = { ...current_base, title: "Title changed" }
+                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
                 }} value="Modify base (change title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
-                    const modified_base = { ...base, title: "Primary" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    const modified_base = { ...current_base, title: "Current" }
+                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
                 }} value="Modify base (reset title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
-                    const modified_base = { ...base, owner_user_id: user_1_id }
-                    modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    const modified_base = { ...current_base, owner_user_id: user_1_id }
+                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
                 }} value="Modify base (change owner to user_1 -- should FAIL if different user)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
-                    const modified_base = { ...base, public_read: !base.public_read }
-                    modify_base({ base: modified_base, set_postgrest_error, set_base })
+                    const modified_base = { ...current_base, public_read: !current_base.public_read }
+                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
                 }} value="Modify base (toggle public read)" />
             <br />
         </div>}
 
 
-        {base && <div>
+        {current_base && <div>
             <hr />
             <br />
             <h3>Base sharing</h3>
             <br />
-            {base.public_read ? "Is PUBLIC" : "Is private (not public)"}
+            {current_base.public_read ? "Is PUBLIC" : "Is private (not public)"}
             <br />
             <br />
 
-            <input type="button" onClick={() => get_access_controls({ user, set_postgrest_error, set_access_controls })} value="Get access controls" />
+            <input type="button" onClick={() => get_access_controls({ set_postgrest_error, set_access_controls })} value="Open sharing options" /><br />
 
             {access_controls && <div>
                 {access_controls.length} access controls
+
                 {access_controls.map(ac => <div>
-                    user_id: {ac.user_id} level: {ac.access_level}
+                    <AccessControlEntry
+                        access_control={ac} base={current_base} p_users_by_id={p_users_by_id} user={user}
+                        set_postgrest_error={set_postgrest_error} set_access_controls={set_access_controls} />
                 </div>)}
             </div>}
-
-            <input type="button" onClick={() =>
-                {
-                    // update_access_control({ base, other_user_id: user_2_id, grant: "editor", set_postgrest_error, set_knowledge_views })
-                }}
-                value="Grant editor access to ajp+2" />
-            <br />
-
-            <input type="button" onClick={() =>
-                {
-                    // update_access_control({ base, other_user_id: user_2_id, grant: "viewer", set_postgrest_error, set_knowledge_views })
-                }}
-                value="Grant editor access to ajp+2" />
-            <br />
-
-            <input type="button" onClick={() =>
-                {
-                    // update_access_control({ base, other_user_id: user_2_id, grant: "none", set_postgrest_error, set_knowledge_views })
-                }}
-                value="Grant editor access to ajp+2" />
-            <br />
         </div>}
 
 
-        {base && <div>
+        {current_base && <div>
             <hr />
             <br />
             <h3>Knowledge Views</h3>
             <br />
 
-            <input type="button" onClick={() => create_knowledge_views({ user, base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
+            <input type="button" onClick={() => create_knowledge_views({ user, base: current_base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
             <input type="button" onClick={() => get_knowledge_views({ user, set_postgrest_error, set_knowledge_views })} value="Get knowledge views" />
         </div>}
 
@@ -304,8 +350,34 @@ export function SandBoxSupabase ()
             <input type="button" onClick={() => get_knowledge_views({ user, set_postgrest_error, set_knowledge_views })} value="Get knowledge views" />
         </div>} */}
 
+    </div>
+}
 
-        <div onClick={() => get_acl()}>Get ACL</div>
+
+
+function DisplaySupabaseSessionError (props: { error: Error | null })
+{
+    const { error } = props
+    if (error === null) return null
+
+
+    const already_registered = error?.message.includes("Thanks for registering") && (error as any)?.status === 400
+    if (already_registered) return <div>Please check your email</div>
+    // Perhaps need to handle `supabase_session_error?.message === 'JWT expired'` but hopefully `autoRefreshToken` will work
+
+
+    return <div>Error : {error.message || error}</div>
+}
+
+
+
+function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
+{
+    const { error } = props
+    if (error === null) return null
+
+    return <div>
+        Error: {error.message || error}
     </div>
 }
 
@@ -320,14 +392,23 @@ interface SupabaseKnowledgeBase
     public_read: boolean
     title: string
 }
+interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
+{
+    access_controls?: { access_level: ACCESS_CONTROL_LEVEL }[]
+}
+interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
+{
+    access_level?: ACCESS_CONTROL_LEVEL
+}
 
 
 
-async function get_primary_base (user: User)
+async function get_a_writing_base (user: User)
 {
     const { data: knowledge_bases, error } = await supabase
     .from<SupabaseKnowledgeBase>("bases")
     .select("*")
+    .eq("owner_user_id", user.id)
     .order("inserted_at", { ascending: true })
 
     const base = knowledge_bases && knowledge_bases[0] || undefined
@@ -337,9 +418,9 @@ async function get_primary_base (user: User)
 
 
 
-async function get_primary_base_optionally_create (user: User)
+async function get_a_writing_base_optionally_create (user: User)
 {
-    const first_get_result = await get_primary_base(user)
+    const first_get_result = await get_a_writing_base(user)
     if (first_get_result.error) return first_get_result
     if (first_get_result.base) return first_get_result
 
@@ -347,8 +428,9 @@ async function get_primary_base_optionally_create (user: User)
     const base = res.data && res.data[0] || undefined
     if (res.error) return { base, error: res.error }
 
-    // Do not return upserted entry as this might not be earlier one.  Refetch to get earliest primary Knowledge base
-    return await get_primary_base(user)
+    // Do not return upserted entry as (due to an incredibly unlikely race condition) this
+    // might not be the earliest one. Instead refetch to get earliest Knowledge base
+    return await get_a_writing_base(user)
 }
 
 
@@ -357,13 +439,40 @@ interface GetOrCreateBaseArgs
 {
     user: User
     set_postgrest_error: (error: PostgrestError | null) => void
-    set_base: (base: SupabaseKnowledgeBase | undefined) => void
+    set_current_base: (base: SupabaseKnowledgeBase | undefined) => void
 }
-async function get_or_create_base (args: GetOrCreateBaseArgs)
+async function get_or_create_a_writing_base (args: GetOrCreateBaseArgs)
 {
-    const { base, error: postgrest_error } = await get_primary_base_optionally_create(args.user)
+    const { base, error: postgrest_error } = await get_a_writing_base_optionally_create(args.user)
     args.set_postgrest_error(postgrest_error)
-    args.set_base(base)
+    args.set_current_base(base)
+}
+
+
+
+interface GetAllBasesArgs
+{
+    user: User
+    set_postgrest_error: (error: PostgrestError | null) => void
+    set_bases: (bases: SupabaseKnowledgeBaseWithAccess[] | undefined) => void
+}
+async function get_all_bases (args: GetAllBasesArgs)
+{
+    const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
+        .select("*, access_controls(access_level)")
+        .order("inserted_at", { ascending: true })
+
+    args.set_postgrest_error(res.error)
+
+    const data: SupabaseKnowledgeBaseWithAccess[] | null = res.data && res.data.map(r =>
+    {
+        const access_control = r.access_controls && r.access_controls[0]
+        const access_level = access_control && access_control.access_level
+        delete r.access_controls
+
+        return { ...r, access_level }
+    })
+    args.set_bases(data || undefined)
 }
 
 
@@ -372,41 +481,152 @@ interface ModifyBaseArgs
 {
     base: SupabaseKnowledgeBase
     set_postgrest_error: (a: PostgrestError | null) => void
-    set_base: (a: SupabaseKnowledgeBase | undefined) => void
+    set_current_base: (a: SupabaseKnowledgeBase | undefined) => void
 }
 async function modify_base (args: ModifyBaseArgs)
 {
     const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(args.base).eq("id", args.base.id)
     args.set_postgrest_error(res.error)
-    args.set_base(res.data ? res.data[0] : undefined)
+    args.set_current_base(res.data ? res.data[0] : undefined)
 }
 
 
 
-type access_control_level = "editor" | "viewer"
-interface SupabaseAccessControl
+// "Public" users
+interface SupabasePUser
+{
+    id: string
+    name: string
+}
+type PUsersById = { [id: string]: SupabasePUser }
+
+
+interface GetUserNameForDisplayArgs
+{
+    p_users_by_id: PUsersById
+    user: User
+    other_user_id: string
+}
+function get_user_name_for_display (args: GetUserNameForDisplayArgs)
+{
+    const { p_users_by_id, user, other_user_id } = args
+
+    let name = p_users_by_id[other_user_id]?.name || ""
+    if (!user) name = name || "Someone"
+    else name = user.id === other_user_id ? (name ? name + " (You)" : "You") : (name || "(Someone else)")
+
+    return <span title={other_user_id}>{name}</span>
+}
+
+
+
+type ACCESS_CONTROL_LEVEL = "editor" | "viewer" | "none"
+interface SupabaseAccessControlWrite
 {
     base_id: number
     user_id: string
+    access_level: ACCESS_CONTROL_LEVEL
+}
+interface SupabaseAccessControl extends SupabaseAccessControlWrite
+{
     inserted_at: Date
     updated_at: Date
-    access_level: access_control_level
 }
 
 
 
 interface GetAcessControlsArgs
 {
+    set_postgrest_error: (a: PostgrestError | null) => void
+    set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
+}
+async function get_access_controls (args: GetAcessControlsArgs)
+{
+    const { data, error } = await supabase.from<SupabaseAccessControl>("access_controls").select("*")
+    args.set_postgrest_error(error)
+    const parsed_data = data && data.map(ac => ({
+        ...ac,
+        inserted_at: new Date(ac.inserted_at),
+        updated_at: new Date(ac.updated_at),
+    })) || undefined
+    args.set_access_controls(parsed_data)
+}
+
+
+
+interface UpdateAcessControlArgs
+{
+    base: SupabaseKnowledgeBase
+    other_user_id: string
+    grant: ACCESS_CONTROL_LEVEL
+    set_postgrest_error: (a: PostgrestError | null) => void
+    set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
+}
+async function update_access_control (args: UpdateAcessControlArgs)
+{
+    const access_control: SupabaseAccessControlWrite = {
+        base_id: args.base.id,
+        user_id: args.other_user_id,
+        access_level: args.grant,
+    }
+    const res = await supabase.from<SupabaseAccessControl>("access_controls").upsert(access_control)
+
+
+    args.set_postgrest_error(res.error)
+    if (!res.error) await get_access_controls(args)
+}
+
+
+
+
+interface AccessControlEntryProps
+{
+    access_control: SupabaseAccessControl
+    base: SupabaseKnowledgeBaseWithAccess
+    p_users_by_id: PUsersById
     user: User
     set_postgrest_error: (a: PostgrestError | null) => void
     set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
 }
-async function get_access_controls(args: GetAcessControlsArgs)
+function AccessControlEntry (props: AccessControlEntryProps)
 {
-    const res = await supabase.from<SupabaseAccessControl>("access_controls").select("*")
-    args.set_postgrest_error(res.error)
-    args.set_access_controls(res.data || undefined)
+    const { access_control, base, p_users_by_id, user, set_postgrest_error, set_access_controls } = props
+    const { user_id: other_user_id, access_level: current_level } = access_control
+
+    const update = (grant: ACCESS_CONTROL_LEVEL) => update_access_control({
+        base, other_user_id, grant, set_postgrest_error, set_access_controls,
+    })
+
+    return <div>
+        user: {get_user_name_for_display({ p_users_by_id, user, other_user_id })} level: {current_level}
+
+        <SelectAccessLevel level="editor" current_level={current_level} on_click={update} />
+        <SelectAccessLevel level="viewer" current_level={current_level} on_click={update} />
+        <SelectAccessLevel level="none" current_level={current_level} on_click={update} />
+        <br />
+    </div>
 }
+
+
+interface SelectAccessLevelProps
+{
+    level: ACCESS_CONTROL_LEVEL
+    current_level: ACCESS_CONTROL_LEVEL
+    on_click: (level: ACCESS_CONTROL_LEVEL) => void
+}
+function SelectAccessLevel (props: SelectAccessLevelProps)
+{
+    const { level, current_level, on_click } = props
+
+    return <input
+        type="button"
+        onClick={() => on_click(level)}
+        value={sentence_case(level)}
+        disabled={level === current_level}
+    />
+}
+
+
 
 
 
@@ -552,10 +772,3 @@ const kv1 = get_new_knowledge_view_object({
     },
 })
 const knowledge_views: KnowledgeView[] = [kv1]
-
-
-
-function get_acl ()
-{
-
-}
