@@ -66,6 +66,11 @@ export function SandBoxSupabase ()
     {
         _set_access_controls(acs && sort_list(acs, ac => ac.inserted_at.getTime(), "ascending"))
     }
+    useEffect(() =>
+    {
+        if (current_base_id) get_access_controls({ base_id: current_base_id, set_postgrest_error, set_access_controls })
+        else set_access_controls(undefined)
+    }, [current_base_id])
 
     const [knowledge_views, set_knowledge_views] = useState<KnowledgeView[] | undefined>(undefined)
     const knowledge_view = knowledge_views && knowledge_views[0]
@@ -303,15 +308,17 @@ export function SandBoxSupabase ()
             <br />
             <br />
 
-            <input type="button" onClick={() => get_access_controls({ set_postgrest_error, set_access_controls })} value="Open sharing options" /><br />
+            <input type="button" onClick={() => get_access_controls({ base_id: current_base.id, set_postgrest_error, set_access_controls })} value="Refresh sharing info" /><br />
 
             {access_controls && <div>
                 {access_controls.length} access controls
 
                 {access_controls.map(ac => <div>
                     <AccessControlEntry
-                        access_control={ac} base={current_base} p_users_by_id={p_users_by_id} user={user}
-                        set_postgrest_error={set_postgrest_error} set_access_controls={set_access_controls} />
+                        access_control={ac}
+                        base_id={current_base.id} p_users_by_id={p_users_by_id} user={user}
+                        set_postgrest_error={set_postgrest_error}
+                        set_access_controls={set_access_controls} />
                 </div>)}
 
                 <br />
@@ -627,12 +634,13 @@ interface SupabaseAccessControl extends SupabaseAccessControlWrite
 
 interface GetAcessControlsArgs
 {
+    base_id: number
     set_postgrest_error: (a: PostgrestError | null) => void
     set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
 }
 async function get_access_controls (args: GetAcessControlsArgs)
 {
-    const { data, error } = await supabase.from<SupabaseAccessControl>("access_controls").select("*")
+    const { data, error } = await supabase.from<SupabaseAccessControl>("access_controls").select("*").eq("base_id", args.base_id)
     args.set_postgrest_error(error)
     const parsed_data = data && data.map(ac => ({
         ...ac,
@@ -646,7 +654,7 @@ async function get_access_controls (args: GetAcessControlsArgs)
 
 interface UpdateAcessControlArgs
 {
-    base: SupabaseKnowledgeBase
+    base_id: number
     other_user_id: string
     grant: ACCESS_CONTROL_LEVEL
     set_postgrest_error: (a: PostgrestError | null) => void
@@ -655,7 +663,7 @@ interface UpdateAcessControlArgs
 async function update_access_control (args: UpdateAcessControlArgs)
 {
     const access_control: SupabaseAccessControlWrite = {
-        base_id: args.base.id,
+        base_id: args.base_id,
         user_id: args.other_user_id,
         access_level: args.grant,
     }
@@ -672,7 +680,7 @@ async function update_access_control (args: UpdateAcessControlArgs)
 interface AccessControlEntryProps
 {
     access_control: SupabaseAccessControl
-    base: SupabaseKnowledgeBaseWithAccess
+    base_id: number
     p_users_by_id: PUsersById
     user: User
     set_postgrest_error: (a: PostgrestError | null) => void
@@ -680,11 +688,11 @@ interface AccessControlEntryProps
 }
 function AccessControlEntry (props: AccessControlEntryProps)
 {
-    const { access_control, base, p_users_by_id, user, set_postgrest_error, set_access_controls } = props
+    const { access_control, base_id, p_users_by_id, user, set_postgrest_error, set_access_controls } = props
     const { user_id: other_user_id, access_level: current_level } = access_control
 
     const update = (grant: ACCESS_CONTROL_LEVEL) => update_access_control({
-        base, other_user_id, grant, set_postgrest_error, set_access_controls,
+        base_id, other_user_id, grant, set_postgrest_error, set_access_controls,
     })
 
     return <div>
@@ -771,13 +779,13 @@ function AddAccessControlEntry (props: AddAccessControlEntryProps)
                 let custom_error: PostgrestError | null = error
                 if (data === 403) custom_error = { message: "Invalid base", details: "", hint: "", code: "403" }
                 else if (data === 404) custom_error = { message: "Invited user not found", details: "", hint: "", code: "404" }
-                // TODO return the status code as well as 409 is easier to work with and
-                // more meaningful than the code of "23505" which was given the last time I checked on 2021-09-22
+                // TODO Use error codes from postgrest: https://postgrest.org/en/v8.0/api.html#http-status-codes
+                // Instead of trying to include the result.status code
                 set_postgrest_error(custom_error)
 
                 if (!custom_error)
                 {
-                    await get_access_controls({ set_access_controls, set_postgrest_error })
+                    await get_access_controls({ base_id, set_access_controls, set_postgrest_error })
                     set_adding_status("added")
                     set_email_or_uid("") // reset form
                 }
