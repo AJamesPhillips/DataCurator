@@ -25,12 +25,22 @@ DECLARE
   usr_uid uuid;
 BEGIN
   SELECT $1 in (SELECT get_owned_base_ids_for_authorised_user()) into valid_base;
-  IF NOT valid_base THEN RETURN 403; END IF; -- TODO raise 403 instead of returning http status code of 200
+  IF NOT valid_base THEN
+    RAISE sqlstate 'PT403' using
+      message = 'Forbidden',
+      detail = 'Invalid base',
+      hint = 'You do not own this base';
+  END IF;
 
   select id INTO usr_uid from auth.users where auth.users.email = email_or_uid OR auth.users.id = uuid_or_null(email_or_uid) LIMIT 1;
-  IF usr_uid IS NULL THEN RETURN 404; END IF; -- TODO raise 404 instead of returning http status code of 200
+  IF usr_uid IS NULL THEN
+    RAISE sqlstate 'PT404' using
+      message = 'Not Found',
+      detail = 'Unknown user',
+      hint = 'Can not find user by tht email or id';
+  END IF;
 
-  -- INSERT correctly raises and results in 409 http status code if duplicate base and user id in access_controls
+  -- Will correctly result in 409 http status code if duplicate base and user id in access_controls
   INSERT INTO access_controls (base_id, user_id, access_level) VALUES (base_id, usr_uid, access_level);
 
   RETURN 200;
