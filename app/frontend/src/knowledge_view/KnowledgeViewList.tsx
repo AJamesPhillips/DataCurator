@@ -104,9 +104,9 @@ function factory_get_summary (current_view: ViewType)
 function get_knowledge_view_title (knowledge_view: KnowledgeView)
 {
     if (!knowledge_view.is_base) return knowledge_view.title
-    return knowledge_view.title !== "Base"
-        ? `Base (${knowledge_view.title})`
-        : "Base"
+    return knowledge_view.title !== "All"
+        ? `All (${knowledge_view.title})`
+        : "All"
 }
 
 

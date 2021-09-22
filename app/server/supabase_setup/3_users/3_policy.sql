@@ -11,3 +11,4 @@ CREATE policy "Users can update their own user entry" on public.users for update
 
 CREATE policy "Users can read user entries in owned bases" on public.users for select using ( users.id in (select get_owned_access_control_user_ids_for_authorised_user()) );
 CREATE policy "Users can read fellow user entries" on public.users for select using ( users.id in (select get_fellow_access_control_user_ids_for_authorised_user()) );
+CREATE policy "Users can read user entries of public bases" on public.users for select using ( users.id in (select owner_user_ids_of_public_bases()) );

@@ -71,6 +71,8 @@ export function SandBoxSupabase ()
             set_user(new_user)
             set_email(new_user?.email || email)
 
+            // Will need to do something smarter... we do not want to get all the users
+            // everytime someone loads the app!  :{}
             const { data, error } = await supabase.from<SupabasePUser>("users").select("*")
             set_postgrest_error(error)
             const map: PUsersById = {}
@@ -239,16 +241,24 @@ export function SandBoxSupabase ()
             {bases.length} bases <br/>
 
             {bases
-            .map(base => <div style={{ fontWeight: base.id === current_base?.id ? "bold" : undefined }}>
-                {base.id === current_base?.id ? "Current" : "Other"} &nbsp;
-                {base.public_read ? "Public" : "Private"} &nbsp;
-                title: {base.title} &nbsp;
-                owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
-                id: {base.id} &nbsp;
-                {base.owner_user_id !== user.id && <span>
-                    access: {base.access_level || "?"} &nbsp;
-                </span>}
-            </div>)}
+            .map(base =>
+            {
+                const { access_level } = base
+                const access_description = access_level === "editor" ? "Editor"
+                    : access_level === "viewer" ? "Viewer"
+                    : base.public_read ? "Viewer (public access)" : "?"
+
+                return <div style={{ fontWeight: base.id === current_base?.id ? "bold" : undefined }}>
+                    {base.id === current_base?.id ? "Current" : "Other"} &nbsp;
+                    {base.public_read ? "Public" : "Private"} &nbsp;
+                    title: {base.title} &nbsp;
+                    owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
+                    id: {base.id} &nbsp;
+                    {base.owner_user_id !== user.id && <span>
+                        access: {access_description} &nbsp;
+                    </span>}
+                </div>
+            })}
         </div>}
 
 
@@ -307,6 +317,10 @@ export function SandBoxSupabase ()
                         access_control={ac} base={current_base} p_users_by_id={p_users_by_id} user={user}
                         set_postgrest_error={set_postgrest_error} set_access_controls={set_access_controls} />
                 </div>)}
+
+                <br />
+                Id or email address of user's account:
+                <AddAccessControlEntry base_id={current_base.id} set_access_controls={set_access_controls} />
             </div>}
         </div>}
 
@@ -629,6 +643,79 @@ function SelectAccessLevel (props: SelectAccessLevelProps)
 
 
 
+interface AddAccessControlEntryProps
+{
+    base_id: number
+    set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
+}
+function AddAccessControlEntry (props: AddAccessControlEntryProps)
+{
+    const [email_or_uid, set_email_or_uid] = useState("")
+    const [access_level, set_access_level] = useState<ACCESS_CONTROL_LEVEL>("editor")
+    const [adding_status, set_adding_status] = useState<"initial" | "adding" | "added">("initial")
+    const adding = adding_status === "adding"
+    const added = adding_status === "added"
+    const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
+
+    const { base_id, set_access_controls } = props
+
+
+    return <div>
+        <input
+            type="text"
+            placeholder="User's ID or email"
+            value={email_or_uid}
+            disabled={adding}
+            onKeyUp={e => set_email_or_uid(e.currentTarget.value)}
+            onChange={e => set_email_or_uid(e.currentTarget.value)}
+            onBlur={e => set_email_or_uid(e.currentTarget.value)}
+        />
+        <br/>
+        <SelectAccessLevel level="editor" current_level={access_level} on_click={set_access_level} />
+        <SelectAccessLevel level="viewer" current_level={access_level} on_click={set_access_level} />
+        <SelectAccessLevel level="none" current_level={access_level} on_click={set_access_level} />
+
+        <br />
+        {adding && <span>Adding...</span>}
+        {added && <span>Added.</span>}
+        <DisplaySupabasePostgrestError error={postgrest_error} />
+        <br />
+
+        <input
+            type="button"
+            onClick={async () =>
+            {
+                set_adding_status("adding")
+
+                // TODO next
+                const result = await supabase.rpc("invite_user_to_base", { base_id, email_or_uid, access_level })
+                const { status, error } = result
+                const data: number = result.data as any
+
+                let custom_error: PostgrestError | null = error
+                if (data === 403) custom_error = { message: "Invalid base", details: "", hint: "", code: "403" }
+                else if (data === 404) custom_error = { message: "Invited user not found", details: "", hint: "", code: "404" }
+                // TODO return the status code as well as 409 is easier to work with and
+                // more meaningful than the code of "23505" which was given the last time I checked on 2021-09-22
+                set_postgrest_error(custom_error)
+
+                await get_access_controls({ set_access_controls, set_postgrest_error })
+
+                if (!custom_error)
+                {
+                    set_adding_status("added")
+                    set_email_or_uid("") // reset form
+                }
+            }}
+            value="Add user"
+            disabled={!email_or_uid}
+        />
+    </div>
+}
+
+
+
+
 
 interface SupabaseKnowledgeView
 {
@@ -638,9 +725,12 @@ interface SupabaseKnowledgeView
     title: string
     json: KnowledgeView
 }
-function kv_app_to_supabase (kv: KnowledgeView, base?: SupabaseKnowledgeBase): SupabaseKnowledgeView
+
+
+
+function kv_app_to_supabase (kv: KnowledgeView, base_id?: number): SupabaseKnowledgeView
 {
-    const base_id = kv.base_id || (base && base.id)
+    base_id = kv.base_id || base_id
 
     if (!base_id) throw new Error("Must provide base_id for kv_app_to_supabase")
 
@@ -679,8 +769,8 @@ interface CreateKnowledgeViewArgs
 async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 {
     const { data, error } = await supabase
-    .from<SupabaseKnowledgeView>("knowledge_views")
-    .insert(kv_app_to_supabase(kv1, args.base))
+        .from<SupabaseKnowledgeView>("knowledge_views")
+        .insert(kv_app_to_supabase(kv1, args.base.id))
 
     args.set_postgrest_error(error)
 

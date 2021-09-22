@@ -47,7 +47,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 placeholder="Title"
                 value={knowledge_view.title}
                 conditional_on_blur={new_title => {
-                    const default_title = knowledge_view.is_base ? "Base" : make_default_kv_title()
+                    const default_title = knowledge_view.is_base ? "All" : make_default_kv_title()
                     crud.update_item({ ...knowledge_view, title: new_title || default_title })
                 }}
             />

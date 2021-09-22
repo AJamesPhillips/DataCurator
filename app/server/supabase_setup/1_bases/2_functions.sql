@@ -15,14 +15,15 @@ $$;
 
 
 
-CREATE OR REPLACE FUNCTION get_bases_editable_or_viewable_for_authorised_user(allow_edit bool)
-returns setof bigint
+
+CREATE OR REPLACE FUNCTION owner_user_ids_of_public_bases()
+returns setof uuid
 stable
 language sql
 security definer
 SET search_path = public
 as $$
-  select base_id
-  from access_controls
-  where access_controls.user_id = auth.uid() AND ($1 AND access_controls.access_level = 'editor') OR access_controls.access_level = 'viewer';
+  select owner_user_id
+  from bases
+  where bases.public_read = true;
 $$;

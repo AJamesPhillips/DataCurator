@@ -24,15 +24,16 @@ DECLARE
   valid_base bool := false;
   usr_uid uuid;
 BEGIN
-  SELECT $1 in (SELECT get_owned_base_ids_for_user()) into valid_base;
-  IF NOT valid_base THEN RETURN 2; END IF;
+  SELECT $1 in (SELECT get_owned_base_ids_for_authorised_user()) into valid_base;
+  IF NOT valid_base THEN RETURN 403; END IF; -- TODO raise 403 instead of returning http status code of 200
 
   select id INTO usr_uid from auth.users where auth.users.email = email_or_uid OR auth.users.id = uuid_or_null(email_or_uid) LIMIT 1;
-  IF usr_uid IS NULL THEN RETURN 1; END IF;
+  IF usr_uid IS NULL THEN RETURN 404; END IF; -- TODO raise 404 instead of returning http status code of 200
 
+  -- INSERT correctly raises and results in 409 http status code if duplicate base and user id in access_controls
   INSERT INTO access_controls (base_id, user_id, access_level) VALUES (base_id, usr_uid, access_level);
 
-  RETURN 0;
+  RETURN 200;
 END;
 $$;
 
