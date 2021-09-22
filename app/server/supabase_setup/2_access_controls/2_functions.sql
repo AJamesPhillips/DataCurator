@@ -1,5 +1,5 @@
 
-CREATE OR REPLACE FUNCTION get_bases_editable_or_viewable_for_authorised_user(allow_edit bool)
+CREATE OR REPLACE FUNCTION get_bases_editable_or_viewable_for_authorised_user(allow_viewing bool)
 returns setof bigint
 stable
 language sql
@@ -8,7 +8,7 @@ SET search_path = public
 as $$
   select base_id
   from access_controls
-  where access_controls.user_id = auth.uid() AND ($1 AND access_controls.access_level = 'editor') OR access_controls.access_level = 'viewer';
+  where access_controls.user_id = auth.uid() AND (access_controls.access_level = 'editor' OR ($1 AND access_controls.access_level = 'viewer'));
 $$;
 
 
@@ -39,11 +39,13 @@ as $$
   select user_id
   from access_controls
   where user_id <> auth.uid()
-    AND access_level <> 'none'::AccessControlLevel -- fellow users are not exclude
-    AND access_controls.base_id in (
-      SELECT base_id
-      from access_controls
-      WHERE user_id = auth.uid()
-      AND access_level <> 'none'::AccessControlLevel -- authored user is not exclude
+  -- check fellow users are not exclude
+  AND access_controls.access_level <> 'none'::AccessControlLevel
+  AND access_controls.base_id in (
+    SELECT base_id
+    from access_controls
+    WHERE user_id = auth.uid()
+    -- check authorised user is not exclude
+    AND access_controls.access_level <> 'none'::AccessControlLevel
   );
 $$;

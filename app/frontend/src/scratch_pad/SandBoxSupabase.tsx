@@ -50,6 +50,13 @@ export function SandBoxSupabase ()
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
     const [bases, set_bases] = useState<SupabaseKnowledgeBaseWithAccess[] | undefined>(undefined)
     const [current_base_id, set_current_base_id] = useState<number | undefined>(undefined)
+    useEffect(() => {
+        if (!bases) return set_current_base_id(undefined)
+        if (!current_base_id || !bases.find(({ id }) => id === current_base_id))
+        {
+            return set_current_base_id(bases.filter(b => b.owner_user_id === user?.id)[0]?.id)
+        }
+    }, [bases])
     const current_base = bases?.find(({ id }) => id === current_base_id)
 
     const [p_users_by_id, set_p_users_by_id] = useState<PUsersById>({})
@@ -222,13 +229,6 @@ export function SandBoxSupabase ()
 
         <h3>Bases</h3>
         <br />
-        {!bases && current_base && <div>
-            <b>Current base</b><br />
-            {current_base.public_read ? "Public" : "Private"} &nbsp;
-            title: {current_base.title} &nbsp;
-            owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: current_base.owner_user_id })}
-            id: {current_base.id} &nbsp;
-        </div>}
         {bases && <div>
             {bases.length} bases <br/>
 
@@ -241,7 +241,11 @@ export function SandBoxSupabase ()
                     : base.public_read ? "Viewer (public access)" : "?"
 
                 return <div style={{ fontWeight: base.id === current_base?.id ? "bold" : undefined }}>
-                    {base.id === current_base?.id ? "Current" : "Other"} &nbsp;
+                    <input
+                        type="radio"
+                        checked={base.id === current_base?.id}
+                        onClick={() => set_current_base_id(base.id)}
+                    /> &nbsp;
                     {base.public_read ? "Public" : "Private"} &nbsp;
                     title: {base.title} &nbsp;
                     owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
@@ -383,7 +387,7 @@ function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
     if (error === null) return null
 
     return <div>
-        Error: {error.message || error}
+        Error: {error.message || `${error}` || "An error occured" }
     </div>
 }
 
@@ -446,13 +450,46 @@ interface SupabaseKnowledgeBase
     public_read: boolean
     title: string
 }
+interface JoinedAccessControlsPartial
+{
+    access_level: ACCESS_CONTROL_LEVEL
+}
 interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 {
-    access_controls?: { access_level: ACCESS_CONTROL_LEVEL }[]
+    access_controls?: JoinedAccessControlsPartial[]
 }
 interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 {
     access_level?: ACCESS_CONTROL_LEVEL
+}
+
+
+function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
+{
+    // Will drop other fields like:
+    // * `access_control` from `SupabaseKnowledgeBaseWithAccess`
+    // * `access_controls` from api call with `select` join
+    const santised_base: SupabaseKnowledgeBase = {
+        id: base.id,
+        inserted_at: base.inserted_at,
+        updated_at: base.updated_at,
+        owner_user_id: base.owner_user_id,
+        public_read: base.public_read,
+        title: base.title,
+    }
+    return santised_base
+}
+
+function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls?: JoinedAccessControlsPartial[]): SupabaseKnowledgeBaseWithAccess
+{
+    let { inserted_at, updated_at } = base
+    inserted_at = new Date(inserted_at)
+    updated_at = new Date(updated_at)
+
+    const access_control = access_controls && access_controls[0]
+    const access_level = access_control && access_control.access_level
+
+    return { ...santise_base(base), inserted_at, updated_at, access_level }
 }
 
 
@@ -519,11 +556,7 @@ async function get_all_bases (args: GetAllBasesArgs)
 
     const data: SupabaseKnowledgeBaseWithAccess[] | null = res.data && res.data.map(r =>
     {
-        const access_control = r.access_controls && r.access_controls[0]
-        const access_level = access_control && access_control.access_level
-        delete r.access_controls
-
-        return { ...r, access_level }
+        return base_supabase_to_app(r, r.access_controls)
     })
     args.set_bases(data || undefined)
 }
@@ -539,11 +572,12 @@ interface ModifyBaseArgs
 async function modify_base (args: ModifyBaseArgs)
 {
     const { base, set_postgrest_error, set_bases } = args
+    const santised_base = santise_base(base)
 
-    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(base).eq("id", base.id)
+    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(santised_base).eq("id", santised_base.id)
     set_postgrest_error(res.error)
 
-    await get_all_bases({ set_postgrest_error, set_bases })
+    if (!res.error) await get_all_bases({ set_postgrest_error, set_bases })
 }
 
 
@@ -741,10 +775,9 @@ function AddAccessControlEntry (props: AddAccessControlEntryProps)
                 // more meaningful than the code of "23505" which was given the last time I checked on 2021-09-22
                 set_postgrest_error(custom_error)
 
-                await get_access_controls({ set_access_controls, set_postgrest_error })
-
                 if (!custom_error)
                 {
+                    await get_access_controls({ set_access_controls, set_postgrest_error })
                     set_adding_status("added")
                     set_email_or_uid("") // reset form
                 }
