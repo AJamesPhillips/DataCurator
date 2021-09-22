@@ -43,9 +43,9 @@ export function SandBoxSupabase ()
     const [password, set_password] = useState("")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
 
+    const [waiting_user_registration_email, set_waiting_user_registration_email] = useState(false)
     const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false)
     const [updating_password, set_updating_password] = useState(is_supabase_recovery_email)
-    const [username, set_username] = useState("")
 
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
     const [current_base, set_current_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
@@ -78,7 +78,7 @@ export function SandBoxSupabase ()
             const map: PUsersById = {}
             ;(data || []).forEach(pu => map[pu.id] = pu)
             set_p_users_by_id(map)
-            set_username(map[new_user?.id || ""]?.name || "")
+            // set_username(map[new_user?.id || ""]?.name || "")
         }
 
         // Always call subscriber once on start as it is not always called.
@@ -104,7 +104,7 @@ export function SandBoxSupabase ()
         const { user: new_user, error } = await supabase.auth.signUp({ email, password })
 
         set_supabase_session_error(error)
-        set_user(new_user)
+        set_waiting_user_registration_email(true)
     }
 
 
@@ -147,15 +147,6 @@ export function SandBoxSupabase ()
         set_password("")
     }
 
-
-    async function update_username (username: string)
-    {
-        const id = user?.id || ""
-        const { data, error } = await supabase.from<SupabasePUser>("users").upsert({ id, name: username }).eq("id", id)
-
-        set_postgrest_error(error)
-        set_username((data && data[0]?.name) || "" )
-    }
 
 
     const user_1_id = "d9e6dde1-15e7-4bdf-a6ca-3cc769c131ee"
@@ -203,19 +194,19 @@ export function SandBoxSupabase ()
     </div>
 
 
+    if (waiting_user_registration_email) return <div>
+        <h3>Registered</h3>
+        <br/>
+        Please check your email
+    </div>
+
 
     return <div>
         Logged in with {user.email} {user.id}<br />
         <input type="button" onClick={log_out} value="Log out" /><br />
         <input type="button" onClick={() => set_updating_password(true)} value="Change password" /><br />
 
-        Your user name:
-        <input type="text" placeholder="username" value={username}
-            onKeyUp={e => set_username(e.currentTarget.value)}
-            onChange={e => set_username(e.currentTarget.value)}
-            onBlur={e => set_username(e.currentTarget.value)}
-        /><br/>
-        <input type="button" onClick={() => update_username(username)} value="Change user name" /><br />
+        <Username user={user} p_users_by_id={p_users_by_id} set_postgrest_error={set_postgrest_error} /><br />
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
         <br />
@@ -394,6 +385,54 @@ function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
         Error: {error.message || error}
     </div>
 }
+
+
+
+
+interface UsernameProps
+{
+    user: User
+    p_users_by_id: PUsersById
+    set_postgrest_error: (error: PostgrestError | null) => void
+}
+function Username (props: UsernameProps)
+{
+    const [username, set_username] = useState("")
+    const [is_saving, set_is_saving] = useState(false)
+
+    const { user, p_users_by_id, set_postgrest_error } = props
+
+    const name_in_db = p_users_by_id[user.id]?.name || ""
+    useEffect(() => { if (username !== name_in_db) set_username(name_in_db) }, [name_in_db])
+
+
+    async function update_username (name: string)
+    {
+        set_is_saving(true)
+        const { id } = user
+        const { data, error } = await supabase.from<SupabasePUser>("users").upsert({ id, name }).eq("id", id)
+
+        set_postgrest_error(error)
+        set_username((data && data[0]?.name) || "" )
+        set_is_saving(false)
+    }
+
+
+    return <div>
+        {is_saving ? "Saving" : "Your"} user name:
+        <input type="text" placeholder="username" value={username}
+            disabled={is_saving}
+            onKeyUp={e => set_username(e.currentTarget.value)}
+            onChange={e => set_username(e.currentTarget.value)}
+            onBlur={async e =>
+            {
+                set_username(e.currentTarget.value)
+                update_username(e.currentTarget.value)
+            }}
+        /><br/>
+    </div>
+}
+
 
 
 
