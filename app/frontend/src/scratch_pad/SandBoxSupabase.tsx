@@ -328,14 +328,27 @@ export function SandBoxSupabase ()
         </div>}
 
 
-        {current_base && <div>
+        {current_base_id !== undefined && <div>
             <hr />
             <br />
             <h3>Knowledge Views</h3>
             <br />
 
-            <input type="button" onClick={() => create_knowledge_views({ user, base: current_base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
-            <input type="button" onClick={() => get_knowledge_views({ user, set_postgrest_error, set_knowledge_views })} value="Get knowledge views" />
+            <input
+                type="button"
+                onClick={() => get_knowledge_views({ base_id: current_base_id, set_postgrest_error, set_knowledge_views })}
+                value={`Get knowledge views for base ${current_base_id}`}
+            />
+            <input
+                type="button"
+                onClick={() => get_knowledge_views({ base_id: undefined, set_postgrest_error, set_knowledge_views })}
+                value={`Get all knowledge views`}
+            />
+            <input
+                type="button"
+                onClick={() => create_knowledge_views({ base_id: current_base_id, set_postgrest_error, set_knowledge_views })}
+                value={`Create knowledge view in base ${current_base_id}`}
+            />
         </div>}
 
 
@@ -343,18 +356,24 @@ export function SandBoxSupabase ()
             {knowledge_views.length} knowledge views
 
             {knowledge_views.map(kv => <div>
-                id: {kv.id} &nbsp;
-                title: {kv.title} &nbsp;
-                description: {kv.description} &nbsp;
-                wc_id_map: {JSON.stringify(Object.keys(kv.wc_id_map || {}))} &nbsp;
-                json: {JSON.stringify(kv)} &nbsp;
+                <b>base_id</b>: {kv.base_id} &nbsp;
+                <b>id</b>: {kv.id} &nbsp;
+                <b>title</b>: {kv.title} &nbsp;
+                <b>description</b>: {kv.description} &nbsp;
+                <b>wc_id_map ids</b>: {JSON.stringify(Object.keys(kv.wc_id_map || {}))} &nbsp;
+                <b>json</b>: {JSON.stringify({ ...kv, base_id: undefined, id: undefined, title: undefined, description: undefined })} &nbsp;
+                <hr />
             </div>)}
         </div>}
 
 
         {knowledge_view && <div>
 
-            <input type="button" onClick={() => modify_knowledge_view({ user, knowledge_view, set_postgrest_error, set_knowledge_views })} value="Modify a knowledge view" />
+            <input
+                type="button"
+                onClick={() => modify_knowledge_view({ knowledge_view, set_postgrest_error, set_knowledge_views })}
+                value="Modify a knowledge view (set random title) then fetch all for all bases"
+            />
         </div>}
 
 
@@ -844,8 +863,7 @@ function kv_supabase_to_app (kv: SupabaseKnowledgeView): KnowledgeView
 
 interface CreateKnowledgeViewArgs
 {
-    user: User
-    base: SupabaseKnowledgeBase
+    base_id: number
     set_postgrest_error: (error: PostgrestError | null) => void
     set_knowledge_views: (kvs: KnowledgeView[]) => void
 }
@@ -853,7 +871,7 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 {
     const { data, error } = await supabase
         .from<SupabaseKnowledgeView>("knowledge_views")
-        .insert(kv_app_to_supabase(kv1, args.base.id))
+        .insert(kv_app_to_supabase(kv1, args.base_id))
 
     args.set_postgrest_error(error)
 
@@ -865,16 +883,20 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 
 interface GetKnowledgeViewsArgs
 {
-    user: User
+    base_id: number | undefined
     set_postgrest_error: (error: PostgrestError | null) => void
     set_knowledge_views: (kvs: KnowledgeView[]) => void
 }
 async function get_knowledge_views (args: GetKnowledgeViewsArgs)
 {
-    const { data, error } = await supabase
+    let query = supabase
     .from<SupabaseKnowledgeView>("knowledge_views")
     .select("*")
     .order("id", { ascending: true })
+
+    if (args.base_id) query = query.eq("base_id", args.base_id)
+
+    const { data, error } = await query
 
     args.set_postgrest_error(error)
 
@@ -886,7 +908,6 @@ async function get_knowledge_views (args: GetKnowledgeViewsArgs)
 
 interface ModifyKnowledgeViewArgs
 {
-    user: User
     knowledge_view: KnowledgeView
     set_postgrest_error: (error: PostgrestError | null) => void
     set_knowledge_views: (kvs: KnowledgeView[]) => void
@@ -896,13 +917,18 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     const modified_kv: KnowledgeView = { ...args.knowledge_view, title: "Some new title " + Math.random() }
     const db_kv = kv_app_to_supabase(modified_kv)
 
-    const { data, error } = await supabase
+    const result = await supabase
     .from<SupabaseKnowledgeView>("knowledge_views")
     .update(db_kv)
     .eq("id", db_kv.id)
 
+    let error: PostgrestError | null = result.error
+    if (result.status === 404) error = { message: "Not Found", details: "", hint: "", code: "404" }
+
     args.set_postgrest_error(error)
-    await get_knowledge_views(args)
+    if (error) return
+
+    await get_knowledge_views({ ...args, base_id: undefined })
 }
 
 
