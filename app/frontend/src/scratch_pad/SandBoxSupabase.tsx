@@ -48,8 +48,9 @@ export function SandBoxSupabase ()
     const [updating_password, set_updating_password] = useState(is_supabase_recovery_email)
 
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
-    const [current_base, set_current_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
     const [bases, set_bases] = useState<SupabaseKnowledgeBaseWithAccess[] | undefined>(undefined)
+    const [current_base_id, set_current_base_id] = useState<number | undefined>(undefined)
+    const current_base = bases?.find(({ id }) => id === current_base_id)
 
     const [p_users_by_id, set_p_users_by_id] = useState<PUsersById>({})
 
@@ -212,8 +213,8 @@ export function SandBoxSupabase ()
         <br />
         <br />
 
-        <input type="button" onClick={() => get_or_create_a_writing_base({ user, set_postgrest_error, set_current_base })} value="Get a base (optionally create)" />
-        <input type="button" onClick={() => get_all_bases({ user, set_postgrest_error, set_bases })} value="Get all bases" />
+        <input type="button" onClick={() => get_all_bases({ set_postgrest_error, set_bases })} value="Get all bases" />
+        <input type="button" onClick={() => get_or_create_a_writing_base({ user_id: user.id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
 
         <br />
         <br />
@@ -262,28 +263,28 @@ export function SandBoxSupabase ()
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, title: "Title changed" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
+                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (change title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
-                    const modified_base = { ...current_base, title: "Current" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
+                    const modified_base = { ...current_base, title: "Primary" }
+                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (reset title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, owner_user_id: user_1_id }
-                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
+                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (change owner to user_1 -- should FAIL if different user)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, public_read: !current_base.public_read }
-                    modify_base({ base: modified_base, set_postgrest_error, set_current_base })
+                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (toggle public read)" />
             <br />
         </div>}
@@ -456,12 +457,12 @@ interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 
 
 
-async function get_a_writing_base (user: User)
+async function get_a_writing_base (user_id: string)
 {
     const { data: knowledge_bases, error } = await supabase
     .from<SupabaseKnowledgeBase>("bases")
     .select("*")
-    .eq("owner_user_id", user.id)
+    .eq("owner_user_id", user_id)
     .order("inserted_at", { ascending: true })
 
     const base = knowledge_bases && knowledge_bases[0] || undefined
@@ -471,41 +472,40 @@ async function get_a_writing_base (user: User)
 
 
 
-async function get_a_writing_base_optionally_create (user: User)
+async function get_a_writing_base_optionally_create (user_id: string)
 {
-    const first_get_result = await get_a_writing_base(user)
+    const first_get_result = await get_a_writing_base(user_id)
     if (first_get_result.error) return first_get_result
     if (first_get_result.base) return first_get_result
 
-    const res = await supabase.from<SupabaseKnowledgeBase>("bases").insert({ owner_user_id: user.id, title: "Primary" })
+    const res = await supabase.from<SupabaseKnowledgeBase>("bases").insert({ owner_user_id: user_id, title: "Primary" })
     const base = res.data && res.data[0] || undefined
     if (res.error) return { base, error: res.error }
 
     // Do not return upserted entry as (due to an incredibly unlikely race condition) this
     // might not be the earliest one. Instead refetch to get earliest Knowledge base
-    return await get_a_writing_base(user)
+    return await get_a_writing_base(user_id)
 }
 
 
 
 interface GetOrCreateBaseArgs
 {
-    user: User
+    user_id: string
     set_postgrest_error: (error: PostgrestError | null) => void
-    set_current_base: (base: SupabaseKnowledgeBase | undefined) => void
+    set_current_base_id: (base_id: number | undefined) => void
 }
 async function get_or_create_a_writing_base (args: GetOrCreateBaseArgs)
 {
-    const { base, error: postgrest_error } = await get_a_writing_base_optionally_create(args.user)
+    const { base, error: postgrest_error } = await get_a_writing_base_optionally_create(args.user_id)
     args.set_postgrest_error(postgrest_error)
-    args.set_current_base(base)
+    args.set_current_base_id(base?.id)
 }
 
 
 
 interface GetAllBasesArgs
 {
-    user: User
     set_postgrest_error: (error: PostgrestError | null) => void
     set_bases: (bases: SupabaseKnowledgeBaseWithAccess[] | undefined) => void
 }
@@ -534,13 +534,16 @@ interface ModifyBaseArgs
 {
     base: SupabaseKnowledgeBase
     set_postgrest_error: (a: PostgrestError | null) => void
-    set_current_base: (a: SupabaseKnowledgeBase | undefined) => void
+    set_bases: (a: SupabaseKnowledgeBase[] | undefined) => void
 }
 async function modify_base (args: ModifyBaseArgs)
 {
-    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(args.base).eq("id", args.base.id)
-    args.set_postgrest_error(res.error)
-    args.set_current_base(res.data ? res.data[0] : undefined)
+    const { base, set_postgrest_error, set_bases } = args
+
+    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(base).eq("id", base.id)
+    set_postgrest_error(res.error)
+
+    await get_all_bases({ set_postgrest_error, set_bases })
 }
 
 
