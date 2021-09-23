@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core"
+import { Box, FormControl, FormLabel, Slider } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -96,7 +96,6 @@ function _WComponentKnowledgeViewForm (props: Props)
             knowledge_view_id,
         })
     }
-
     return <div>
         {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
             Not present in this knowledge view
@@ -109,6 +108,23 @@ function _WComponentKnowledgeViewForm (props: Props)
             />}
         </div>}
 
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+                <FormLabel component="legend">Size</FormLabel>
+                <Slider
+                    color="secondary"
+                    defaultValue={1}
+                    marks
+                    min={0.25} max={2}
+                    onChange={(e:Event, val:any) => {
+                        knowledge_view_entry.s = val;
+                        update(knowledge_view_id);
+                    }}
+                    step={0.25}
+                    value={knowledge_view_entry.s ? knowledge_view_entry.s : 1}
+                    valueLabelDisplay="on"
+                />
+            </FormControl>
+        }
 
         {composed_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
             <MoveToWComponentButton wcomponent_id={wcomponent.id} />
