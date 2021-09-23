@@ -2,7 +2,7 @@ import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box } from "@material-ui/core"
+import { Box, makeStyles } from "@material-ui/core"
 
 import "./WComponentCanvasNode.css"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
@@ -164,7 +164,8 @@ function _WComponentCanvasNode (props: Props)
     const update_position = (new_position: CanvasPoint) =>
     {
         const new_entry: KnowledgeViewWComponentEntry = {
-            ...kv_entry, ...new_position,
+            ...kv_entry,
+            ...new_position,
         }
         props.upsert_knowledge_view_entry({
             wcomponent_id: props.id,
@@ -192,6 +193,19 @@ function _WComponentCanvasNode (props: Props)
 
     const show_all_details = is_editing || is_current_item
 
+    const use_styles = makeStyles(theme => ({
+        sizer: {
+            transform: `scale(${kv_entry.s ? kv_entry.s : 1 })`,
+            // @NOTE: The transformOrigin defaults to center center (50% 50%), but this may not be
+            // best for determining position of connectors, values can be set
+            // with keywords left/right/center or top/center/bottom
+            // or percents, and the order is x-axis, y-axis
+
+            // transformOrigin: "center center"
+            // transformOrigin: "left top"
+        }
+    }))
+    const classes = use_styles()
     const extra_css_class = (
         ` wcomponent_canvas_node `
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
@@ -200,7 +214,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
-        + (show_all_details ? " compact_title " : "")
+        + (show_all_details ? " compact_title " : "") + classes.sizer
     )
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color(wcomponent)
@@ -219,6 +233,7 @@ function _WComponentCanvasNode (props: Props)
 
     const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
 
+    // <Box className={classes.sizer}>
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
         cover_image={wcomponent.summary_image}
