@@ -1,4 +1,23 @@
 
+
+
+-- If a user A is in the access_controls list of a base owned by user B, then return user B's id
+CREATE OR REPLACE FUNCTION get_owner_user_ids_for_authorised_user()
+returns setof uuid
+stable
+language sql
+security definer
+SET search_path = public
+as $$
+  select owner_user_id
+  from bases
+  left join access_controls
+  on bases.id = access_controls.base_id
+  where access_controls.user_id = auth.uid() and access_controls.access_level <> 'none'::AccessControlLevel;
+$$;
+
+
+
 CREATE OR REPLACE FUNCTION get_bases_editable_or_viewable_for_authorised_user(allow_viewing bool)
 returns setof bigint
 stable
