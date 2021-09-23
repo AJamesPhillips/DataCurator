@@ -37,7 +37,7 @@ BEGIN
     RAISE sqlstate 'PT404' using
       message = 'Not Found',
       detail = 'Unknown user',
-      hint = 'Can not find user by tht email or id';
+      hint = 'Can not find user by that email or id';
   END IF;
 
   -- Will correctly result in 409 http status code if duplicate base and user id in access_controls

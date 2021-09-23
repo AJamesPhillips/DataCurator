@@ -16,6 +16,7 @@ import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_vi
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { sentence_case } from "../shared/utils/sentence_case"
 import { sort_list } from "../shared/utils/sort"
+import { replace_element } from "../utils/list"
 
 
 
@@ -367,24 +368,16 @@ export function SandBoxSupabase ()
         </div>}
 
 
-        {knowledge_view && <div>
+        {knowledge_views && knowledge_view && <div>
 
             <input
                 type="button"
-                onClick={() => modify_knowledge_view({ knowledge_view, set_postgrest_error, set_knowledge_views })}
+                onClick={() => modify_knowledge_view({
+                    knowledge_view, current_knowledge_views: knowledge_views,
+                    set_postgrest_error, set_knowledge_views })}
                 value="Modify a knowledge view (set random title) then fetch all for all bases"
             />
         </div>}
-
-
-        {/* {base && <div>
-            <hr />
-            <br />
-            <br />
-
-            <input type="button" onClick={() => create_knowledge_views({ user, base, set_postgrest_error, set_knowledge_views })} value="Create knowledge view" />
-            <input type="button" onClick={() => get_knowledge_views({ user, set_postgrest_error, set_knowledge_views })} value="Get knowledge views" />
-        </div>} */}
 
     </div>
 }
@@ -412,8 +405,12 @@ function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
     const { error } = props
     if (error === null) return null
 
+    const message_value = error.message || error || "An error occured"
+    let message_string = `${message_value}`
+    if (message_string === "[object Object]") message_string = JSON.stringify(message_value)
+
     return <div>
-        Error: {error.message || `${error}` || "An error occured" }
+        Error: {message_string}
     </div>
 }
 
@@ -849,7 +846,8 @@ function kv_supabase_to_app (kv: SupabaseKnowledgeView): KnowledgeView
 {
     let { json, id, base_id, modified_at } = kv
     // Ensure all the fields that are edited in the db are set correctly in the json data.
-    // Do not update title.  This should only be edited by the client app
+    // Do not update title.  This should only be edited by the client app.  The canonical
+    // value is in the DB's json field not the title field.
     json = { ...json, id, base_id, modified_at }
 
     json.created_at = json.created_at && new Date(json.created_at)
@@ -869,9 +867,12 @@ interface CreateKnowledgeViewArgs
 }
 async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 {
+    const default_data = generate_default_data()
+    const a_knowledge_view = default_data.knowledge_views[0]!
+
     const { data, error } = await supabase
         .from<SupabaseKnowledgeView>("knowledge_views")
-        .insert(kv_app_to_supabase(kv1, args.base_id))
+        .insert(kv_app_to_supabase(a_knowledge_view, args.base_id))
 
     args.set_postgrest_error(error)
 
@@ -909,26 +910,38 @@ async function get_knowledge_views (args: GetKnowledgeViewsArgs)
 interface ModifyKnowledgeViewArgs
 {
     knowledge_view: KnowledgeView
+    current_knowledge_views: KnowledgeView[]
     set_postgrest_error: (error: PostgrestError | null) => void
     set_knowledge_views: (kvs: KnowledgeView[]) => void
 }
 async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
 {
-    const modified_kv: KnowledgeView = { ...args.knowledge_view, title: "Some new title " + Math.random() }
+    const { knowledge_view, current_knowledge_views, set_postgrest_error, set_knowledge_views } = args
+
+    const modified_kv: KnowledgeView = { ...knowledge_view, title: "Some new title " + Math.random() }
     const db_kv = kv_app_to_supabase(modified_kv)
 
     const result = await supabase
-    .from<SupabaseKnowledgeView>("knowledge_views")
-    .update(db_kv)
-    .eq("id", db_kv.id)
+    .rpc("update_knowledge_view", { kv: db_kv })
+
+    // const result = await supabase
+    // .from<SupabaseKnowledgeView>("knowledge_views")
+    // .update(db_kv)
+    // .eq("id", db_kv.id)
 
     let error: PostgrestError | null = result.error
     if (result.status === 404) error = { message: "Not Found", details: "", hint: "", code: "404" }
 
-    args.set_postgrest_error(error)
+    set_postgrest_error(error)
     if (error) return
 
-    await get_knowledge_views({ ...args, base_id: undefined })
+    const new_supabase_kv: SupabaseKnowledgeView = result.data as any
+    // type guard
+    if (!new_supabase_kv) return
+    const new_kv = kv_supabase_to_app(new_supabase_kv)
+
+    const updated_knowledge_views = replace_element(current_knowledge_views, new_kv, kv => kv.id === knowledge_view.id)
+    set_knowledge_views(updated_knowledge_views)
 }
 
 
@@ -960,14 +973,19 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
 
 
 
-const wc1 = get_contextless_new_wcomponent_object({ title: "wc1" })
-const wcomponents: WComponent[] = [wc1]
+function generate_default_data ()
+{
+    const wc1 = get_contextless_new_wcomponent_object({ title: "wc1" })
+    const wcomponents: WComponent[] = [wc1]
 
-const kv1 = get_new_knowledge_view_object({
-    id: uuid_v4(),
-    title: "kv1",
-    wc_id_map: {
-        [wc1.id]: { left: 0, top: 0 },
-    },
-})
-const knowledge_views: KnowledgeView[] = [kv1]
+    const kv1 = get_new_knowledge_view_object({
+        id: uuid_v4(),
+        title: "kv1",
+        wc_id_map: {
+            [wc1.id]: { left: 0, top: 0 },
+        },
+    })
+    const knowledge_views: KnowledgeView[] = [kv1]
+
+    return { knowledge_views, wcomponents }
+}
