@@ -44,7 +44,11 @@ function _ModalCore (props: Props)
     return <div
         id="modal_background"
         className={(props.size || "medium") + "_modal"}
-        onClick={e => on_close && on_close(e)}
+        onClick={e =>
+        {
+            e.stopImmediatePropagation()
+            on_close && on_close(e)
+        }}
     >
         <div id="modal_container" onClick={e => e.stopPropagation()}>
             <div id="modal_title">{props.title}</div>

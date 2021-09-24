@@ -18,9 +18,9 @@ export function user_info_subscribers (store: Store<RootState>)
     // We may satrt with a supabase user (from the synchronous restore from localstorage state)
     if (user && !users_by_id) get_users(store)
 
+    pub_sub.user.sub("stale_users_by_id", () => get_users(store))
 
     pub_sub.user.sub("changed_users_by_id", () => update_users_name(store))
-
 }
 
 
@@ -53,5 +53,8 @@ function update_users_name (store: Store<RootState>)
     let new_user_name: string | undefined = undefined
     if (user && users_by_id) new_user_name = users_by_id[user.id]?.name
 
-    store.dispatch(ACTIONS.user_info.update_users_name({ user_name: new_user_name || "" }))
+    if (user_name !== new_user_name)
+    {
+        store.dispatch(ACTIONS.user_info.update_users_name({ user_name: new_user_name }))
+    }
 }

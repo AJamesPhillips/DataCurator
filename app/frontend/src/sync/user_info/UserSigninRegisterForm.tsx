@@ -6,7 +6,7 @@ import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
-import { DisplaySupabaseSessionError } from "./DisplaySupabaseSessionError"
+import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 
 
 

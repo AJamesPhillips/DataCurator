@@ -32,7 +32,7 @@ export function user_info_starting_state (storage_location: number | undefined):
         users_by_id: undefined,
         bases: undefined,
         ...obj,
-        user_name: "",
+        user_name: undefined,
         chosen_base_id,
     }
 

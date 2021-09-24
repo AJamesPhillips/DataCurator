@@ -1,3 +1,4 @@
+import type { PostgrestError } from "@supabase/supabase-js"
 import { h } from "preact"
 
 
@@ -14,4 +15,20 @@ export function DisplaySupabaseSessionError (props: { error: Error | null })
 
 
     return <div>Error : {error.message || error}</div>
+}
+
+
+
+export function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
+{
+    const { error } = props
+    if (error === null) return null
+
+    const message_value = error.message || error || "An error occured"
+    let message_string = `${message_value}`
+    if (message_string === "[object Object]") message_string = JSON.stringify(message_value)
+
+    return <div>
+        Error: {message_string}
+    </div>
 }

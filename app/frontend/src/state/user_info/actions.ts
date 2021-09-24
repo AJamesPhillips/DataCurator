@@ -68,7 +68,7 @@ export const is_set_users = (action: AnyAction): action is ActionSetUsers => {
 
 interface UpdateUsersNameArgs
 {
-    user_name: string
+    user_name: string | undefined
 }
 
 interface ActionUpdateUsersName extends Action, UpdateUsersNameArgs {}

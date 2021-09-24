@@ -17,7 +17,7 @@ export function UserAccountInfo (props: OwnProps)
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2>Your profile</h2>
+            <h2>User Account</h2>
         </div>}
         size="medium"
 

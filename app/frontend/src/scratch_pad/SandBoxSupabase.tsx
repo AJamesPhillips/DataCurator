@@ -18,7 +18,7 @@ import { sentence_case } from "../shared/utils/sentence_case"
 import { sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
 import { get_supabase } from "../supabase/get_supabase"
-import { DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseSessionError"
+import { DisplaySupabasePostgrestError, DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseErrors"
 import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById } from "../supabase/interfaces"
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
 
@@ -400,20 +400,6 @@ export function SandBoxSupabase ()
 }
 
 
-
-function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
-{
-    const { error } = props
-    if (error === null) return null
-
-    const message_value = error.message || error || "An error occured"
-    let message_string = `${message_value}`
-    if (message_string === "[object Object]") message_string = JSON.stringify(message_value)
-
-    return <div>
-        Error: {message_string}
-    </div>
-}
 
 
 

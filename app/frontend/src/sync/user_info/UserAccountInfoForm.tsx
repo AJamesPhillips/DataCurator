@@ -6,7 +6,11 @@ import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
-import { DisplaySupabaseSessionError } from "./DisplaySupabaseSessionError"
+import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
+import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswordForm"
+import { useEffect } from "preact/hooks"
+import { selector_need_to_set_user_name } from "../../state/user_info/selector"
+import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
 
 
 
@@ -19,13 +23,14 @@ const map_state = (state: RootState) =>
 {
     return {
         user: state.user_info.user,
+        user_name: state.user_info.user_name,
+        need_to_set_user_name: selector_need_to_set_user_name(state),
         need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery,
     }
 }
 
 const map_dispatch = {
     set_user: ACTIONS.user_info.set_user,
-    set_need_to_handle_password_recovery: ACTIONS.user_info.set_need_to_handle_password_recovery,
 }
 
 
@@ -37,66 +42,57 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _UserAccountInfoForm (props: Props)
 {
-    const { user, need_to_handle_password_recovery, set_user, set_need_to_handle_password_recovery } = props
+    const { user, user_name, need_to_set_user_name, need_to_handle_password_recovery, set_user } = props
 
-    const [updating_password, set_updating_password] = useState(false)
-    const [password, set_password] = useState("")
+    const [form_state, set_form_state] = useState<"initial" | "updating_password" | "updating_username">("initial")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
 
-    if (!user) return null
-
-    const supabase = get_supabase()
-
-
-
-    async function update_password ()
+    useEffect(() =>
     {
-        // There should always be an email and password given on password update
-        const email = user?.email
-        const result = await supabase.auth.update({ email, password, /* data: {} */ })
+        if (need_to_set_user_name) set_form_state("updating_username")
+    }, [need_to_set_user_name, form_state])
 
-        set_supabase_session_error(result.error)
-        set_user({ user: result.user })
-        if (!result.error) set_need_to_handle_password_recovery(false)
-    }
+
+    if (!user) return null
 
 
     async function log_out ()
     {
+        const supabase = get_supabase()
+
         const { error } = await supabase.auth.signOut()
         set_supabase_session_error(error)
         set_user({ user: supabase.auth.user() })
-        set_password("")
     }
 
 
+    if (form_state === "updating_password" || need_to_handle_password_recovery)
+    {
+        return <UserAccountInfoChangePasswordForm on_close={() => set_form_state("initial")} />
+    }
 
-    if (updating_password) return <div className="section">
-        <input type="button" disabled={!(user?.email) || !password} onClick={update_password} value="Update password" /><br/>
-        {!need_to_handle_password_recovery && <input type="button" onClick={() => set_updating_password(false)} value="Cancel" />}<br />
-    </div>
+
+    if (form_state === "updating_username")
+    {
+        return <UserAccountInfoChangeUsernameForm on_close={() => set_form_state("initial")} />
+    }
 
 
     return <div>
         <div className="section">
             Logged in with {user.email} {user.id}<br />
             <input type="button" onClick={log_out} value="Log out" /><br />
-            <input type="button" onClick={() => set_updating_password(true)} value="Change password" /><br />
+            <input type="button" onClick={() => set_form_state("updating_password")} value="Change password" /><br />
         </div>
 
-
-        {updating_password && <div className="section">
-            <form>
-                <input type="password" placeholder="password" value={password}
-                    onKeyUp={e => set_password(e.currentTarget.value)}
-                    onChange={e => set_password(e.currentTarget.value)}
-                    onBlur={e => set_password(e.currentTarget.value)}
-                /><br/>
-            </form>
-
-            <input type="button" disabled={!(user?.email) || !password} onClick={update_password} value="Update password" /><br/>
-            {!need_to_handle_password_recovery && <input type="button" onClick={() => set_updating_password(false)} value="Cancel" />}<br />
-        </div>}
+        <div className="section">
+            User name {user_name ? `: ${user_name}` : ""} <br />
+            <input
+                type="button"
+                onClick={() => set_form_state("updating_username")}
+                value={`${need_to_set_user_name ? "Set" : "Change"} username`}
+            /><br />
+        </div>
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
     </div>
