@@ -75,7 +75,7 @@ export async function get_an_owned_base_optionally_create (user_id: string)
 
 
 
-export function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
+function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
 {
     // Will drop other fields like:
     // * `access_control` from `SupabaseKnowledgeBaseWithAccess`
@@ -103,4 +103,19 @@ function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls?: Jo
     const access_level = access_control && access_control.access_level
 
     return { ...santise_base(base), inserted_at, updated_at, access_level }
+}
+
+
+
+export async function modify_base (base: SupabaseKnowledgeBase)
+{
+    const santised_base = santise_base(base)
+
+    const supabase = get_supabase()
+    const res = await supabase
+        .from<SupabaseKnowledgeBase>("bases")
+        .update(santised_base)
+        .eq("id", santised_base.id)
+
+    return res
 }

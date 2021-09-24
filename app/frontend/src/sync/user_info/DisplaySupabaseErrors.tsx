@@ -19,10 +19,10 @@ export function DisplaySupabaseSessionError (props: { error: Error | null })
 
 
 
-export function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
+export function DisplaySupabasePostgrestError (props: { error?: PostgrestError | null })
 {
     const { error } = props
-    if (error === null) return null
+    if (!error) return null
 
     const message_value = error.message || error || "An error occured"
     let message_string = `${message_value}`

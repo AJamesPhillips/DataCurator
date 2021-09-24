@@ -18,10 +18,22 @@ import { sentence_case } from "../shared/utils/sentence_case"
 import { sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
 import { get_supabase } from "../supabase/get_supabase"
-import { DisplaySupabasePostgrestError, DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseErrors"
-import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById, SupabaseKnowledgeBase, SupabaseKnowledgeBaseWithAccess, JoinedAccessControlsPartial } from "../supabase/interfaces"
+import {
+    DisplaySupabasePostgrestError,
+    DisplaySupabaseSessionError,
+} from "../sync/user_info/DisplaySupabaseErrors"
+import type {
+    ACCESS_CONTROL_LEVEL,
+    SupabaseAccessControl,
+    DBSupabaseAccessControl,
+    SupabaseKnowledgeView,
+    SupabaseUser,
+    SupabaseUsersById,
+    SupabaseKnowledgeBase,
+    SupabaseKnowledgeBaseWithAccess,
+} from "../supabase/interfaces"
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
-import { get_all_bases, get_an_owned_base_optionally_create, santise_base } from "../supabase/bases"
+import { get_all_bases, get_an_owned_base_optionally_create, modify_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
 
 
@@ -278,28 +290,28 @@ export function SandBoxSupabase ()
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, title: "Title changed" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (change title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, title: "Primary" }
-                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (reset title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, owner_user_id: user_1_id }
-                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (change owner to user_1 -- should FAIL if different user)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, public_read: !current_base.public_read }
-                    modify_base({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
                 }} value="Modify base (toggle public read)" />
             <br />
         </div>}
@@ -485,12 +497,11 @@ interface ModifyBaseArgs
     set_postgrest_error: (a: PostgrestError | null) => void
     set_bases: (a: SupabaseKnowledgeBase[] | undefined) => void
 }
-async function modify_base (args: ModifyBaseArgs)
+async function modify_base_wrapper (args: ModifyBaseArgs)
 {
     const { base, set_postgrest_error, set_bases } = args
-    const santised_base = santise_base(base)
 
-    const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(santised_base).eq("id", santised_base.id)
+    const res = await modify_base(base)
     set_postgrest_error(res.error)
 
     if (!res.error) await get_all_bases2({ set_postgrest_error, set_bases })

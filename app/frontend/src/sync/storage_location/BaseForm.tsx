@@ -2,12 +2,13 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "../common.scss"
-import { StorageOption } from "./StorageOption"
 import type { RootState } from "../../state/State"
-import { ACTIONS } from "../../state/actions"
-import { sort_list } from "../../shared/utils/sort"
 import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
 import { useState } from "react"
+import { modify_base } from "../../supabase/bases"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
+import type { PostgrestError } from "@supabase/postgrest-js"
+import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
 
 
 
@@ -40,11 +41,12 @@ function _BaseForm (props: Props)
     const { base, on_save_or_exit, user } = props
 
     const [modified_base, set_modified_base] = useState(base)
+    const [error_modifying_base, set_error_modifying_base] = useState<PostgrestError | undefined>(undefined)
 
     if (!user) return "Please sign in"
 
 
-    const { id, access_level } = base
+    const { access_level } = base
 
     const is_owner = base.owner_user_id === user.id
     const owner_or_editor = access_level === "editor" || is_owner
@@ -53,44 +55,63 @@ function _BaseForm (props: Props)
         : base.public_read ? "Viewer (public access)" : "?"
 
     const have_pending_edits = JSON.stringify(base) !== JSON.stringify(modified_base)
+    const valid_edits = !!modified_base.title
+
+
+    function update_title (e: h.JSX.TargetedEvent<HTMLInputElement>)
+    {
+        const title = e.currentTarget.value.trim()
+        set_modified_base({ ...modified_base, title })
+    }
 
 
     return <div style={{ margin: 10 }}>
         {is_owner && <div>
             <h4>Edit base</h4>
 
-            <input
+            Title &nbsp; <input
                 type="text"
                 placeholder="title"
                 value={modified_base.title}
-                onBlur={e =>
-                {
-                    const new_title = e.currentTarget.value.trim()
-                    if (!new_title)
-                    {
-                        e.currentTarget.value = modified_base.title
-                        return
-                    }
-                    set_modified_base({ ...modified_base, title: new_title })
-                }}
+                onKeyDown={update_title}
+                onChange={update_title}
+                onBlur={update_title}
             />
             <br /><br />
 
-            Publish (make <b>public</b>)<br />
-            <input
-                type="checkbox"
-                checked={modified_base.public_read}
-                onChange={e =>
+            Visibility &nbsp; <input
+                type="button"
+                onClick={() =>
                 {
-                    set_modified_base({ ...modified_base, public_read: e.currentTarget.checked })
+                    set_modified_base({ ...modified_base, public_read: !modified_base.public_read })
                 }}
-            />{modified_base.public_read ? "(Public)" : "(Private)"}
+                value={modified_base.public_read ? "Make private" : "Publish (make public)"}
+            />
+            <br />
             <br />
 
-            {have_pending_edits && <div>
-                <input type="button" onClick={() => {}} value="Save changes" />
-                <input type="button" onClick={() => {}} value="Cancel" />
-            </div>}
+            <div>
+                <input
+                    type="button"
+                    disabled={!have_pending_edits || !valid_edits}
+                    onClick={async () =>
+                    {
+                        const res = await modify_base(modified_base)
+                        if (res.error) return set_error_modifying_base(res.error)
+
+                        set_error_modifying_base(undefined)
+                        pub_sub.user.pub("stale_bases", true)
+                    }}
+                    value="Save changes"
+                />
+                <input
+                    type="button"
+                    onClick={on_save_or_exit}
+                    value={have_pending_edits ? "Cancel" : "Back"}
+                />
+
+                <DisplaySupabasePostgrestError error={error_modifying_base} />
+            </div>
 
             <br />
             <hr />
@@ -100,6 +121,12 @@ function _BaseForm (props: Props)
 
         {/* <td>{get_user_name_for_display({ users_by_id, user, other_user_id: base.owner_user_id })}</td> */}
         {access_description}
+
+        <input
+            type="button"
+            onClick={on_save_or_exit}
+            value="Back"
+        />
     </div>
 }
 
