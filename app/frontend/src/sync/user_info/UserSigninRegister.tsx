@@ -5,7 +5,9 @@ import { UserSigninRegisterForm } from "./UserSigninRegisterForm"
 
 
 
-interface OwnProps {}
+interface OwnProps {
+    on_close?: () => void
+}
 
 
 export function UserSigninRegister (props: OwnProps)
@@ -17,7 +19,7 @@ export function UserSigninRegister (props: OwnProps)
         size="medium"
 
 
-        on_close={undefined} // not closeable until signed in
+        on_close={props.on_close} // not closeable until signed in
 
 
         child={<UserSigninRegisterForm />}

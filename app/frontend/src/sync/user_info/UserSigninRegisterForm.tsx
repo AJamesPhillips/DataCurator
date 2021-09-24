@@ -10,9 +10,7 @@ import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 
 
 
-interface OwnProps {
-    on_close?: () => void
-}
+interface OwnProps {}
 
 
 const map_state = (state: RootState) =>

@@ -41,6 +41,10 @@ export interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 
 
 
+export type SupabaseKnowledgeBaseWithAccessById = { [id: string]: SupabaseKnowledgeBaseWithAccess }
+
+
+
 // ++++++++++++++++ public.access_controls ++++++++++++++++
 
 export type ACCESS_CONTROL_LEVEL = "editor" | "viewer" | "none"

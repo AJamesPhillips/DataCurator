@@ -1,7 +1,5 @@
-import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
+import { h } from "preact"
 
-import type { RootState } from "../../state/State"
 import { Modal } from "../../modal/Modal"
 import { StorageOptionsForm } from "./StorageOptionsForm"
 
@@ -13,26 +11,13 @@ interface OwnProps
 }
 
 
-const map_state = (state: RootState) =>
-{
-    return {
-        chosen_base_id: state.user_info.chosen_base_id,
-        bases: state.user_info.bases,
-    }
-}
-
-const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
-
-
-
-function _SelectStorage (props: Props)
+export function SelectStorage (props: OwnProps)
 {
     const { on_close } = props
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2 style={{ display: "inline" }}>Select Knowledge Base</h2>
+            <h2 style={{ display: "inline" }}>Knowledge Bases</h2>
         </div>}
         size="medium"
 
@@ -43,12 +28,6 @@ function _SelectStorage (props: Props)
         })}
 
 
-        child={<StorageOptionsForm
-            chosen_base_id={props.chosen_base_id}
-            bases={props.bases}
-            on_close={on_close}
-        />}
+        child={<StorageOptionsForm on_close={on_close} />}
     />
 }
-
-export const SelectStorage = connector(_SelectStorage) as FunctionalComponent<OwnProps>

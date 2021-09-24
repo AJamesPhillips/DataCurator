@@ -1,6 +1,8 @@
 import { Button, Typography } from "@material-ui/core"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
+import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { FunctionalComponent, h } from "preact"
+import { useRef } from "preact/hooks"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -34,12 +36,16 @@ function _UserInfo (props: Props)
 {
     const { user, user_name, need_to_set_user_name } = props
     const [form_state, set_form_state] = useState<FormState>("hidden")
+    const previous_user = useRef<SupabaseAuthUser | null>(user)
     const user_name_or_none = user_name || no_user_name
 
 
     useEffect(() =>
     {
-        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : form_state)
+        const previous_signed_out = !previous_user.current && user
+        previous_user.current = user
+
+        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : (previous_signed_out ?"hidden" : form_state))
         set_form_state(new_form_state)
     }, [user, need_to_set_user_name])
 
@@ -61,7 +67,7 @@ function _UserInfo (props: Props)
                 {user ? user_name_or_none : "Sign in"}
             </Typography>
 
-            {form_state === "signin" && <UserSigninRegister />}
+            {form_state === "signin" && <UserSigninRegister on_close={(!user) ? undefined : () => set_form_state("hidden")} />}
             {form_state === "account_info" && <UserAccountInfo
                 on_close={need_to_set_user_name ? undefined : () => set_form_state("hidden")}
             />}

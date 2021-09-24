@@ -53,7 +53,7 @@ function _StorageInfo (props: Props)
             >
                 <span class="storage_name">{props.base_name || "Choose store"}</span>
             </Button>
-            {show_select_storage && <SelectStorage on_close={need_to_create_a_base ? undefined : () => set_show_select_storage(false)} />}
+            {show_select_storage && <SelectStorage on_close={() => set_show_select_storage(false)} />}
         </Typography>
     )
 }

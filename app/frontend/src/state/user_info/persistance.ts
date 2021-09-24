@@ -30,7 +30,7 @@ export function user_info_starting_state (storage_location: number | undefined):
         user: get_supabase().auth.user(),
         need_to_handle_password_recovery,
         users_by_id: undefined,
-        bases: undefined,
+        bases_by_id: undefined,
         ...obj,
         user_name: undefined,
         chosen_base_id,

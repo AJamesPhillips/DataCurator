@@ -4,17 +4,15 @@ import { connect, ConnectedProps } from "react-redux"
 import "../common.scss"
 import "./StorageOptionsForm.scss"
 import { StorageOption } from "./StorageOption"
-import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
 import { useState } from "preact/hooks"
+import { sort_list } from "../../shared/utils/sort"
 
 
 
 interface OwnProps
 {
-    chosen_base_id: number | undefined
-    bases: SupabaseKnowledgeBaseWithAccess[] | undefined
     on_close?: () => void
 }
 
@@ -24,7 +22,7 @@ const map_state = (state: RootState) =>
 {
     return {
         chosen_base_id: state.user_info.chosen_base_id,
-        bases: state.user_info.bases,
+        bases_by_id: state.user_info.bases_by_id,
     }
 }
 
@@ -40,11 +38,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _StorageOptionsForm (props: Props)
 {
-    const { on_close, chosen_base_id, bases, update_chosen_base_id } = props
+    const { on_close, chosen_base_id, bases_by_id, update_chosen_base_id } = props
 
     const [new_base_name, set_new_base_name] = useState("")
 
-    if (!bases) return "No bases fetched"
+    if (!bases_by_id) return "Fetching bases"
+    const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), "descending")
 
 
     function create_base ()
@@ -60,8 +59,7 @@ function _StorageOptionsForm (props: Props)
 
         {bases.map(base =>
             <StorageOption
-                name={base.title || "(No title)"}
-                description={<div />}
+                base={base}
                 selected={base.id === chosen_base_id}
                 on_click={() =>
                 {

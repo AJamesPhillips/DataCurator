@@ -13,7 +13,7 @@ export function sync_storage_location_subscriber (store: Store<RootState>)
     store.subscribe(() =>
     {
         const state = store.getState()
-        const { chosen_base_id: new_base_id } = starting_state.user_info
+        const { chosen_base_id: new_base_id } = state.user_info
         const { storage_location: new_routing_args_storage_location } = state.routing.args
 
 

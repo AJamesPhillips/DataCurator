@@ -15,7 +15,7 @@ export function user_info_subscribers (store: Store<RootState>)
 {
     const starting_state = store.getState()
 
-    const { user, users_by_id, bases } = starting_state.user_info
+    const { user, users_by_id, bases_by_id: bases } = starting_state.user_info
     // We may start with a supabase user (from the synchronous restore from localstorage state)
     if (user && !users_by_id) get_users(store)
     if (user && !bases) get_bases(store)
@@ -54,7 +54,7 @@ async function get_users (store: Store<RootState>)
 
 async function get_bases (store: Store<RootState>)
 {
-    const { user, bases: current_bases } = store.getState().user_info
+    const { user, bases_by_id: current_bases } = store.getState().user_info
 
     if (!user)
     {

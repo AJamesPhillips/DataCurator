@@ -2,14 +2,14 @@
 
 .storage_name
 {
-    width: 30px;
+    max-width: 60px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    transition: width 0.5s;
+    transition: max-width 0.5s;
 }
 
 .storage_name:hover
 {
-    width: initial;
+    max-width: initial;
 }

@@ -1,13 +1,13 @@
 import { h } from "preact"
 
 import "./StorageOption.scss"
+import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
 
 
 
 interface OwnProps
 {
-    name: string
-    description: h.JSX.Element
+    base: SupabaseKnowledgeBaseWithAccess
     selected: boolean
     on_click: () => void
 }
@@ -15,13 +15,14 @@ interface OwnProps
 
 export function StorageOption (props: OwnProps)
 {
-    const { selected } = props
+    const { base, selected } = props
 
     return <div
         className={"section storage_option " + (selected ? "selected" : "") }
         onClick={props.on_click}
     >
-        <h3>{props.name}</h3>
-        {props.description}
+        <h3>{base.title || "(No title)"}</h3>
+
+        id: {base.id}
     </div>
 }

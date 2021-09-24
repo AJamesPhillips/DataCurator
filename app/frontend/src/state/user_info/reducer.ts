@@ -1,5 +1,5 @@
 import type { AnyAction } from "redux"
-import type { SupabaseUsersById } from "../../supabase/interfaces"
+import type { SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../../supabase/interfaces"
 
 import { update_substate } from "../../utils/update_state"
 import { pub_sub } from "../pub_sub/pub_sub"
@@ -58,12 +58,20 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_update_bases(action))
     {
         const { bases } = action
-        state = update_substate(state, "user_info", "bases", bases)
+
+        let bases_by_id: SupabaseKnowledgeBaseWithAccessById | undefined = undefined
+        if (bases)
+        {
+            bases_by_id = {}
+            bases.forEach(b => bases_by_id![b.id] = b)
+        }
+
+        state = update_substate(state, "user_info", "bases_by_id", bases_by_id)
 
         const { chosen_base_id } = state.user_info
-        if (bases && !bases.find(({ id }) => id === chosen_base_id))
+        if (bases_by_id && (!chosen_base_id || !bases_by_id[chosen_base_id]))
         {
-            state = update_substate(state, "user_info", "chosen_base_id", bases[0]?.id)
+            state = update_substate(state, "user_info", "chosen_base_id", bases && bases[0]?.id)
         }
     }
 
