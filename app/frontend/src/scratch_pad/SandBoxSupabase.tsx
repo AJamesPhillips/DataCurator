@@ -21,7 +21,7 @@ import { get_supabase } from "../supabase/get_supabase"
 import { DisplaySupabasePostgrestError, DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseErrors"
 import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById, SupabaseKnowledgeBase, SupabaseKnowledgeBaseWithAccess, JoinedAccessControlsPartial } from "../supabase/interfaces"
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
-import { get_all_bases, santise_base } from "../supabase/bases"
+import { get_all_bases, get_an_owned_base_optionally_create, santise_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
 
 
@@ -232,7 +232,7 @@ export function SandBoxSupabase ()
         <br />
 
         <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases })} value="Get all bases" />
-        <input type="button" onClick={() => get_or_create_a_writing_base({ user_id: user.id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
+        <input type="button" onClick={() => get_or_create_an_owned_base({ user_id: user.id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
 
         <br />
         <br />
@@ -403,9 +403,6 @@ export function SandBoxSupabase ()
 
 
 
-
-
-
 interface UsernameProps
 {
     user: SupabaseAuthUser
@@ -452,51 +449,15 @@ function Username (props: UsernameProps)
 
 
 
-
-
-
-
-async function get_a_writing_base (user_id: string)
-{
-    const { data: knowledge_bases, error } = await supabase
-    .from<SupabaseKnowledgeBase>("bases")
-    .select("*")
-    .eq("owner_user_id", user_id)
-    .order("inserted_at", { ascending: true })
-
-    const base = knowledge_bases && knowledge_bases[0] || undefined
-
-    return { base, error }
-}
-
-
-
-async function get_a_writing_base_optionally_create (user_id: string)
-{
-    const first_get_result = await get_a_writing_base(user_id)
-    if (first_get_result.error) return first_get_result
-    if (first_get_result.base) return first_get_result
-
-    const res = await supabase.from<SupabaseKnowledgeBase>("bases").insert({ owner_user_id: user_id, title: "Primary" })
-    const base = res.data && res.data[0] || undefined
-    if (res.error) return { base, error: res.error }
-
-    // Do not return upserted entry as (due to an incredibly unlikely race condition) this
-    // might not be the earliest one. Instead refetch to get earliest Knowledge base
-    return await get_a_writing_base(user_id)
-}
-
-
-
 interface GetOrCreateBaseArgs
 {
     user_id: string
     set_postgrest_error: (error: PostgrestError | null) => void
     set_current_base_id: (base_id: number | undefined) => void
 }
-async function get_or_create_a_writing_base (args: GetOrCreateBaseArgs)
+async function get_or_create_an_owned_base (args: GetOrCreateBaseArgs)
 {
-    const { base, error: postgrest_error } = await get_a_writing_base_optionally_create(args.user_id)
+    const { base, error: postgrest_error } = await get_an_owned_base_optionally_create(args.user_id)
     args.set_postgrest_error(postgrest_error)
     args.set_current_base_id(base?.id)
 }

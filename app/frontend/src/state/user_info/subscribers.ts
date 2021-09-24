@@ -29,6 +29,7 @@ export function user_info_subscribers (store: Store<RootState>)
 
 
     pub_sub.user.sub("stale_users_by_id", () => get_users(store))
+    pub_sub.user.sub("stale_bases", () => get_bases(store))
 }
 
 

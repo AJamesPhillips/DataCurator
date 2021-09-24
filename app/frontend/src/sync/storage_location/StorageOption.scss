@@ -1,19 +1,47 @@
 
 
-.storage_option
+.base_option
 {
     cursor: pointer;
+
+    &:hover .edit_title
+    {
+        opacity: 0.1;
+    }
+
+    td {
+        min-width: 100px;
+        text-align: center;
+
+        &.narrow
+        {
+            min-width: 30px;
+        }
+
+        &.edit_title
+        {
+            transition: opacity .25s ease-in-out;
+            opacity: 0;
+            margin-left: 3px;
+            float: right;
+
+            &:hover
+            {
+                opacity: 1;
+            }
+        }
+    }
 }
 
 
-.storage_option.selected
+.base_option.selected
 {
     border: thin solid #290;
     background-color: #efd;
 }
 
 
-.storage_option:hover
+.base_option:hover
 {
     border: thin solid #2f0;
 }

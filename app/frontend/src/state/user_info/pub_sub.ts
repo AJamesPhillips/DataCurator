@@ -8,6 +8,7 @@ interface UserMsgMap
 {
     changed_user: SupabaseAuthUser | null
     stale_users_by_id: true
+    stale_bases: true
 }
 
 export const user_pub_sub = pub_sub_factory<UserMsgMap>()

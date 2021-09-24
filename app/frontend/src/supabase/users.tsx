@@ -17,7 +17,7 @@ export function get_user_name_for_display (args: GetUserNameForDisplayArgs)
 
     let name = users_by_id[other_user_id]?.name || ""
     if (!user) name = name || "Someone"
-    else name = user.id === other_user_id ? (name ? name + " (You)" : "You") : (name || "(Someone else)")
+    else name = user.id === other_user_id ? "me" : (name || "(someone else)")
 
     return <span title={other_user_id}>{name}</span>
 }

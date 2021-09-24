@@ -12,6 +12,7 @@ import type { SupabaseUser } from "../../supabase/interfaces"
 import type { PostgrestError } from "@supabase/postgrest-js"
 import { useEffect } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
+import type { AsyncState } from "../../utils/async_state"
 
 
 
@@ -35,8 +36,6 @@ const map_dispatch = {}
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
-
-type AsyncState = "initial" | "in_progress" | "success" | "error"
 
 
 function _UserAccountInfoChangeUsernameForm (props: Props)
