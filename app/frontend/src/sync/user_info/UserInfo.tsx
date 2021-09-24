@@ -39,9 +39,9 @@ function _UserInfo (props: Props)
 
     useEffect(() =>
     {
-        const new_form_state: FormState = !user ? "signin" : (user_name ? form_state : "account_info")
+        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : form_state)
         set_form_state(new_form_state)
-    }, [user, user_name])
+    }, [user, need_to_set_user_name])
 
 
     return (

@@ -13,6 +13,32 @@ export interface SupabaseUser
 }
 export type SupabaseUsersById = { [id: string]: SupabaseUser }
 
+// ++++++++++++++++ public.bases ++++++++++++++++
+
+
+
+export interface SupabaseKnowledgeBase
+{
+    id: number
+    inserted_at: Date
+    updated_at: Date
+    owner_user_id: string
+    public_read: boolean
+    title: string
+}
+export interface JoinedAccessControlsPartial
+{
+    access_level: ACCESS_CONTROL_LEVEL
+}
+export interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
+{
+    access_controls?: JoinedAccessControlsPartial[]
+}
+export interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
+{
+    access_level?: ACCESS_CONTROL_LEVEL
+}
+
 
 
 // ++++++++++++++++ public.access_controls ++++++++++++++++
@@ -28,32 +54,6 @@ export interface SupabaseAccessControl extends DBSupabaseAccessControl
 {
     inserted_at: Date
     updated_at: Date
-}
-
-
-
-// ++++++++++++++++ public.bases ++++++++++++++++
-
-export interface SupabaseKnowledgeBase
-{
-    id: number
-    inserted_at: Date
-    updated_at: Date
-    owner_user_id: string
-    public_read: boolean
-    title: string
-}
-interface JoinedAccessControlsPartial
-{
-    access_level: ACCESS_CONTROL_LEVEL
-}
-interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
-{
-    access_controls?: JoinedAccessControlsPartial[]
-}
-export interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
-{
-    access_level?: ACCESS_CONTROL_LEVEL
 }
 
 

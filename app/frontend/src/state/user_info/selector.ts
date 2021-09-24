@@ -8,6 +8,13 @@ export function selector_user_name (state: RootState)
 }
 
 
+export function selector_need_to_set_user_name (state: RootState)
+{
+    const { user, users_by_id, user_name } = state.user_info
+    return user && users_by_id && !user_name
+}
+
+
 export function selector_chosen_storage (state: RootState)
 {
     const { bases, chosen_base_id } = state.user_info
@@ -24,8 +31,8 @@ export function selector_storage_name (state: RootState)
 }
 
 
-export function selector_need_to_set_user_name (state: RootState)
+export function selector_need_to_create_a_base (state: RootState)
 {
-    const { user, users_by_id, user_name } = state.user_info
-    return user && users_by_id && !user_name
+    const { user, bases } = state.user_info
+    return user && bases && bases.length === 0
 }

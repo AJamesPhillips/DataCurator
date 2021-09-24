@@ -19,8 +19,9 @@ import { sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
 import { get_supabase } from "../supabase/get_supabase"
 import { DisplaySupabasePostgrestError, DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseErrors"
-import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById } from "../supabase/interfaces"
+import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById, SupabaseKnowledgeBase, SupabaseKnowledgeBaseWithAccess, JoinedAccessControlsPartial } from "../supabase/interfaces"
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
+import { get_all_bases, santise_base } from "../supabase/bases"
 
 
 
@@ -229,7 +230,7 @@ export function SandBoxSupabase ()
         <br />
         <br />
 
-        <input type="button" onClick={() => get_all_bases({ set_postgrest_error, set_bases })} value="Get all bases" />
+        <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases })} value="Get all bases" />
         <input type="button" onClick={() => get_or_create_a_writing_base({ user_id: user.id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
 
         <br />
@@ -451,56 +452,6 @@ function Username (props: UsernameProps)
 
 
 
-interface SupabaseKnowledgeBase
-{
-    id: number
-    inserted_at: Date
-    updated_at: Date
-    owner_user_id: string
-    public_read: boolean
-    title: string
-}
-interface JoinedAccessControlsPartial
-{
-    access_level: ACCESS_CONTROL_LEVEL
-}
-interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
-{
-    access_controls?: JoinedAccessControlsPartial[]
-}
-interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
-{
-    access_level?: ACCESS_CONTROL_LEVEL
-}
-
-
-function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
-{
-    // Will drop other fields like:
-    // * `access_control` from `SupabaseKnowledgeBaseWithAccess`
-    // * `access_controls` from api call with `select` join
-    const santised_base: SupabaseKnowledgeBase = {
-        id: base.id,
-        inserted_at: base.inserted_at,
-        updated_at: base.updated_at,
-        owner_user_id: base.owner_user_id,
-        public_read: base.public_read,
-        title: base.title,
-    }
-    return santised_base
-}
-
-function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls?: JoinedAccessControlsPartial[]): SupabaseKnowledgeBaseWithAccess
-{
-    let { inserted_at, updated_at } = base
-    inserted_at = new Date(inserted_at)
-    updated_at = new Date(updated_at)
-
-    const access_control = access_controls && access_controls[0]
-    const access_level = access_control && access_control.access_level
-
-    return { ...santise_base(base), inserted_at, updated_at, access_level }
-}
 
 
 
@@ -556,19 +507,12 @@ interface GetAllBasesArgs
     set_postgrest_error: (error: PostgrestError | null) => void
     set_bases: (bases: SupabaseKnowledgeBaseWithAccess[] | undefined) => void
 }
-async function get_all_bases (args: GetAllBasesArgs)
+async function get_all_bases2 (args: GetAllBasesArgs)
 {
-    const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
-        .select("*, access_controls(access_level)")
-        .order("inserted_at", { ascending: true })
+    const res = await get_all_bases()
 
     args.set_postgrest_error(res.error)
-
-    const data: SupabaseKnowledgeBaseWithAccess[] | null = res.data && res.data.map(r =>
-    {
-        return base_supabase_to_app(r, r.access_controls)
-    })
-    args.set_bases(data || undefined)
+    args.set_bases(res.data)
 }
 
 
@@ -587,7 +531,7 @@ async function modify_base (args: ModifyBaseArgs)
     const res = await supabase.from<SupabaseKnowledgeBase>("bases").update(santised_base).eq("id", santised_base.id)
     set_postgrest_error(res.error)
 
-    if (!res.error) await get_all_bases({ set_postgrest_error, set_bases })
+    if (!res.error) await get_all_bases2({ set_postgrest_error, set_bases })
 }
 
 

@@ -38,9 +38,7 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         }
 
         state = update_substate(state, "user_info", "users_by_id", map)
-        // New pattern, not sure this is a good idea yet but far simpler than making a
-        // host of subscribers which have to store state and that run on ever store change
-        pub_sub.user.pub("changed_users_by_id", map)
+        state = update_users_name(state)
     }
 
 
@@ -73,6 +71,23 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_update_chosen_base_id(action))
     {
         state = update_substate(state, "user_info", "chosen_base_id", action.base_id)
+    }
+
+    return state
+}
+
+
+
+function update_users_name (state: RootState)
+{
+    const { user, user_name: current_user_name, users_by_id } = state.user_info
+
+    let new_user_name: string | undefined = undefined
+    if (user && users_by_id) new_user_name = users_by_id[user.id]?.name
+
+    if (new_user_name !== current_user_name)
+    {
+        state = update_substate(state, "user_info", "user_name", new_user_name)
     }
 
     return state

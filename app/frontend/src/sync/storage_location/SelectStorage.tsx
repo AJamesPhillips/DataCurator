@@ -9,7 +9,7 @@ import { StorageOptionsForm } from "./StorageOptionsForm"
 
 interface OwnProps
 {
-    on_close: () => void
+    on_close?: () => void
 }
 
 
@@ -28,23 +28,25 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _SelectStorage (props: Props)
 {
+    const { on_close } = props
+
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2 style={{ display: "inline" }}>Base</h2>
+            <h2 style={{ display: "inline" }}>Select Knowledge Base</h2>
         </div>}
         size="medium"
 
-        on_close={e =>
+        on_close={on_close && (e =>
         {
             e?.stopImmediatePropagation()
-            props.on_close()
-        }}
+            on_close()
+        })}
 
 
         child={<StorageOptionsForm
             chosen_base_id={props.chosen_base_id}
             bases={props.bases}
-            on_close={props.on_close}
+            on_close={on_close}
         />}
     />
 }

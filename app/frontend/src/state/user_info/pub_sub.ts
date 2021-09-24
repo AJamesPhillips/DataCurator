@@ -7,7 +7,6 @@ import { pub_sub_factory } from "../pub_sub/pub_sub_factory"
 interface UserMsgMap
 {
     changed_user: SupabaseAuthUser | null
-    changed_users_by_id: SupabaseUsersById | undefined
     stale_users_by_id: true
 }
 
