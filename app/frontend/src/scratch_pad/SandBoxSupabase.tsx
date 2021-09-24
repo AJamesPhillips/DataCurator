@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
-import { createClient, PostgrestError, User } from "@supabase/supabase-js"
+import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4} from "uuid"
 
 
@@ -17,14 +17,17 @@ import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObje
 import { sentence_case } from "../shared/utils/sentence_case"
 import { sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
+import { get_supabase } from "../supabase/get_supabase"
+import { DisplaySupabaseSessionError } from "../sync/user_info/DisplaySupabaseSessionError"
+import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById } from "../supabase/interfaces"
+import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
 
 
 
 let is_supabase_recovery_email = document.location.hash.includes("type=recovery")
 
-const supabase_url = "https://sfkgqscbwofiphfxhnxg.supabase.co"
-const SUPABASE_ANONYMOUS_CLIENT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTYzMjA2MTkwNSwiZXhwIjoxOTQ3NjM3OTA1fQ.or3FBQDa4CtAA8w7XQtYl_3NTmtFFYPWoafolOpPKgA"
-const supabase = createClient(supabase_url, SUPABASE_ANONYMOUS_CLIENT_KEY, { autoRefreshToken: true })
+
+const supabase = get_supabase()
 const supabase_auth_state_change: { subscribers: (() => void)[] } = { subscribers: [] }
 supabase.auth.onAuthStateChange(() =>
 {
@@ -60,7 +63,7 @@ export function SandBoxSupabase ()
     }, [bases])
     const current_base = bases?.find(({ id }) => id === current_base_id)
 
-    const [p_users_by_id, set_p_users_by_id] = useState<PUsersById>({})
+    const [p_users_by_id, set_p_users_by_id] = useState<SupabaseUsersById>({})
 
     const [access_controls, _set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
     const set_access_controls = (acs: SupabaseAccessControl[] | undefined) =>
@@ -87,9 +90,9 @@ export function SandBoxSupabase ()
 
             // Will need to do something smarter... we do not want to get all the users
             // everytime someone loads the app!  :{}
-            const { data, error } = await supabase.from<SupabasePUser>("users").select("*")
+            const { data, error } = await supabase.from<SupabaseUser>("users").select("*")
             set_postgrest_error(error)
-            const map: PUsersById = {}
+            const map: SupabaseUsersById = {}
             ;(data || []).forEach(pu => map[pu.id] = pu)
             set_p_users_by_id(map)
             // set_username(map[new_user?.id || ""]?.name || "")
@@ -337,12 +340,26 @@ export function SandBoxSupabase ()
 
             <input
                 type="button"
-                onClick={() => get_knowledge_views({ base_id: current_base_id, set_postgrest_error, set_knowledge_views })}
+                onClick={async () =>
+                {
+                    const { error, items } = await get_knowledge_views({
+                        supabase, base_id: current_base_id
+                    })
+                    set_postgrest_error(error)
+                    set_knowledge_views(items)
+                }}
                 value={`Get knowledge views for base ${current_base_id}`}
             />
             <input
                 type="button"
-                onClick={() => get_knowledge_views({ base_id: undefined, set_postgrest_error, set_knowledge_views })}
+                onClick={async () =>
+                {
+                    const { error, items } = await get_knowledge_views({
+                        supabase, all_bases: true
+                    })
+                    set_postgrest_error(error)
+                    set_knowledge_views(items)
+                }}
                 value={`Get all knowledge views`}
             />
             <input
@@ -384,22 +401,6 @@ export function SandBoxSupabase ()
 
 
 
-function DisplaySupabaseSessionError (props: { error: Error | null })
-{
-    const { error } = props
-    if (error === null) return null
-
-
-    const already_registered = error?.message.includes("Thanks for registering") && (error as any)?.status === 400
-    if (already_registered) return <div>Please check your email</div>
-    // Perhaps need to handle `supabase_session_error?.message === 'JWT expired'` but hopefully `autoRefreshToken` will work
-
-
-    return <div>Error : {error.message || error}</div>
-}
-
-
-
 function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
 {
     const { error } = props
@@ -419,8 +420,8 @@ function DisplaySupabasePostgrestError (props: { error: PostgrestError | null })
 
 interface UsernameProps
 {
-    user: User
-    p_users_by_id: PUsersById
+    user: SupabaseAuthUser
+    p_users_by_id: SupabaseUsersById
     set_postgrest_error: (error: PostgrestError | null) => void
 }
 function Username (props: UsernameProps)
@@ -438,7 +439,7 @@ function Username (props: UsernameProps)
     {
         set_is_saving(true)
         const { id } = user
-        const { data, error } = await supabase.from<SupabasePUser>("users").upsert({ id, name }).eq("id", id)
+        const { data, error } = await supabase.from<SupabaseUser>("users").upsert({ id, name }).eq("id", id)
 
         set_postgrest_error(error)
         set_username((data && data[0]?.name) || "" )
@@ -605,19 +606,10 @@ async function modify_base (args: ModifyBaseArgs)
 
 
 
-// "Public" users
-interface SupabasePUser
-{
-    id: string
-    name: string
-}
-type PUsersById = { [id: string]: SupabasePUser }
-
-
 interface GetUserNameForDisplayArgs
 {
-    p_users_by_id: PUsersById
-    user: User
+    p_users_by_id: SupabaseUsersById
+    user: SupabaseAuthUser
     other_user_id: string
 }
 function get_user_name_for_display (args: GetUserNameForDisplayArgs)
@@ -631,20 +623,6 @@ function get_user_name_for_display (args: GetUserNameForDisplayArgs)
     return <span title={other_user_id}>{name}</span>
 }
 
-
-
-type ACCESS_CONTROL_LEVEL = "editor" | "viewer" | "none"
-interface SupabaseAccessControlWrite
-{
-    base_id: number
-    user_id: string
-    access_level: ACCESS_CONTROL_LEVEL
-}
-interface SupabaseAccessControl extends SupabaseAccessControlWrite
-{
-    inserted_at: Date
-    updated_at: Date
-}
 
 
 
@@ -678,7 +656,7 @@ interface UpdateAcessControlArgs
 }
 async function update_access_control (args: UpdateAcessControlArgs)
 {
-    const access_control: SupabaseAccessControlWrite = {
+    const access_control: DBSupabaseAccessControl = {
         base_id: args.base_id,
         user_id: args.other_user_id,
         access_level: args.grant,
@@ -697,8 +675,8 @@ interface AccessControlEntryProps
 {
     access_control: SupabaseAccessControl
     base_id: number
-    p_users_by_id: PUsersById
-    user: User
+    p_users_by_id: SupabaseUsersById
+    user: SupabaseAuthUser
     set_postgrest_error: (a: PostgrestError | null) => void
     set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
 }
@@ -814,51 +792,6 @@ function AddAccessControlEntry (props: AddAccessControlEntryProps)
 
 
 
-
-
-interface SupabaseKnowledgeView
-{
-    id: string
-    modified_at: Date
-    base_id: number
-    title: string
-    json: KnowledgeView
-}
-
-
-
-function kv_app_to_supabase (kv: KnowledgeView, base_id?: number): SupabaseKnowledgeView
-{
-    base_id = kv.base_id || base_id
-
-    if (!base_id) throw new Error("Must provide base_id for kv_app_to_supabase")
-
-    return {
-        id: kv.id,
-        modified_at: kv.modified_at!,
-        base_id,
-        title: kv.title,
-        json: kv,
-    }
-}
-
-function kv_supabase_to_app (kv: SupabaseKnowledgeView): KnowledgeView
-{
-    let { json, id, base_id, modified_at } = kv
-    // Ensure all the fields that are edited in the db are set correctly in the json data.
-    // Do not update title.  This should only be edited by the client app.  The canonical
-    // value is in the DB's json field not the title field.
-    json = { ...json, id, base_id, modified_at }
-
-    json.created_at = json.created_at && new Date(json.created_at)
-    json.custom_created_at = json.custom_created_at && new Date(json.custom_created_at)
-    json.deleted_at = json.deleted_at && new Date(json.deleted_at)
-
-    return json
-}
-
-
-
 interface CreateKnowledgeViewArgs
 {
     base_id: number
@@ -873,31 +806,6 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
     const { data, error } = await supabase
         .from<SupabaseKnowledgeView>("knowledge_views")
         .insert(kv_app_to_supabase(a_knowledge_view, args.base_id))
-
-    args.set_postgrest_error(error)
-
-    const knowledge_views: KnowledgeView[] = (data || []).map(kv_supabase_to_app)
-    args.set_knowledge_views(knowledge_views)
-}
-
-
-
-interface GetKnowledgeViewsArgs
-{
-    base_id: number | undefined
-    set_postgrest_error: (error: PostgrestError | null) => void
-    set_knowledge_views: (kvs: KnowledgeView[]) => void
-}
-async function get_knowledge_views (args: GetKnowledgeViewsArgs)
-{
-    let query = supabase
-    .from<SupabaseKnowledgeView>("knowledge_views")
-    .select("*")
-    .order("id", { ascending: true })
-
-    if (args.base_id) query = query.eq("base_id", args.base_id)
-
-    const { data, error } = await query
 
     args.set_postgrest_error(error)
 

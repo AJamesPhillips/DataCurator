@@ -1,24 +1,21 @@
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
 import { Button, Typography } from "@material-ui/core"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ERRORS } from "../../shared/errors"
 
 import type { RootState } from "../../state/State"
 import { no_user_name } from "./constants"
-import { finish_login } from "./solid/handle_login"
-import { UserAccountInfo } from "./solid/UserAccountInfo"
+import { UserAccountInfo } from "./UserAccountInfo"
+import { UserSigninRegister } from "./UserSigninRegister"
 
 
 
 const map_state = (state: RootState) =>
 {
     return {
-        storage_type: state.sync.storage_type,
+        user: state.user_info.user,
         user_name: state.user_info.user_name,
-        using_solid: state.sync.use_solid_storage,
     }
 }
 
@@ -28,31 +25,20 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
+type FormState = "signin" | "hidden" | "account_info"
+
 
 function _UserInfo (props: Props)
 {
-    const { storage_type, user_name, using_solid } = props
-    const [show_solid_signin_form, set_show_solid_signin_form] = useState(false)
+    const { user, user_name } = props
+    const [form_state, set_form_state] = useState<FormState>("hidden")
+    const user_name_or_none = user_name || no_user_name
 
 
-    const solid_session = getDefaultSession()
     useEffect(() =>
     {
-        if (storage_type !== "solid") return
-
-        finish_login()
-        .then(() => set_show_solid_signin_form(!solid_session.info.isLoggedIn))
-        .catch(err => console.error("UserInfo finish_login got error: ", err))
-    }, [storage_type])
-
-
-    const on_close = () =>
-    {
-        set_show_solid_signin_form(false)
-    }
-
-
-    const user_name_or_none = user_name || no_user_name
+        set_form_state(!user ? "signin" : "hidden")
+    }, [user])
 
 
     return (
@@ -61,19 +47,22 @@ function _UserInfo (props: Props)
             endIcon={<ExitToAppIcon />}
             fullWidth={true}
             disableElevation={true}
-            onClick={() => set_show_solid_signin_form(true)}
+            // disabled={form_state === "signin"} // do not mark as disabled as the modal will prevent user
+            // interaction anyway and if disabled is used then modal and buttons on it become disabled too.
+            onClick={() => set_form_state("account_info")}
             size="small"
             style={{textTransform: "none"}}
             variant="contained"
         >
             <Typography noWrap={true}>
-                {solid_session.info.isLoggedIn
+                {user
                     ? user_name_or_none
-                    : (using_solid ? "Sign in" + (user_name && ` as ${user_name}`) : user_name_or_none)
+                    : "Sign in" + (user_name && ` as ${user_name}`)
                 }
             </Typography>
 
-            {show_solid_signin_form && <UserAccountInfo on_close={on_close} />}
+            {form_state === "signin" && <UserSigninRegister />}
+            {form_state === "account_info" && <UserAccountInfo on_close={() => set_form_state("hidden")} />}
         </Button>
     )
 }

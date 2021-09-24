@@ -20,7 +20,6 @@ import { specialised_objects_reducer } from "./specialised_objects/reducer"
 import type { RootState } from "./State"
 import { statements_reducer } from "./statements"
 import { sync_reducer } from "./sync/actions_reducer"
-import { backup_reducer } from "./sync/backup/actions_reducer"
 import { user_activity_reducer } from "./user_activity/reducer"
 import { user_info_reducer } from "./user_info/reducer"
 
@@ -46,7 +45,6 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = filter_context_reducer(state, action)
     state = user_activity_reducer(state, action)
     state = user_info_reducer(state, action)
-    state = backup_reducer(state, action)
     state = search_reducer(state, action)
 
     state = { ...state, last_action: action }

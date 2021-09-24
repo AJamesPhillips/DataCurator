@@ -2,7 +2,7 @@ import type { Action, AnyAction } from "redux"
 
 import { update_state, update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
-import type { StorageType, SyncState, SYNC_STATUS } from "./state"
+import type { SyncState, SYNC_STATUS } from "./state"
 
 
 
@@ -36,13 +36,6 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     if (is_set_next_sync_ms(action))
     {
         state = update_substate(state, "sync", "next_save_ms", action.next_save_ms)
-    }
-
-
-    if (is_set_used_storage_type(action))
-    {
-        if (action.storage_type !== "solid") throw new Error(`Unsupport storage_type: ${action.storage_type}`)
-        state = update_substate(state, "sync", "use_solid_storage", action.using)
     }
 
 
@@ -93,29 +86,7 @@ const is_set_next_sync_ms = (action: AnyAction): action is ActionSetNextSyncMs =
 
 
 
-interface SetUsedStorageTypeArgs
-{
-    storage_type: "solid" // StorageType
-    using: boolean
-}
-
-interface ActionSetUsedStorageType extends Action, SetUsedStorageTypeArgs {}
-
-const set_used_storage_type_type = "set_used_storage_type"
-
-export const set_used_storage_type = (args: SetUsedStorageTypeArgs): ActionSetUsedStorageType =>
-{
-    return { type: set_used_storage_type_type, ...args }
-}
-
-const is_set_used_storage_type = (action: AnyAction): action is ActionSetUsedStorageType => {
-    return action.type === set_used_storage_type_type
-}
-
-
-
 export const sync_actions = {
     update_sync_status,
     set_next_sync_ms,
-    set_used_storage_type,
 }

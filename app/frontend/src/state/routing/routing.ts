@@ -46,7 +46,7 @@ export function routing_args_to_string (routing_args: RoutingStateArgs)
         // .reverse() // used so we can see x, y, zoom more easily
         // Put cdate and ctime at the end so they are easiest to manually remove from url
         .concat(["sdate", "stime", "cdate", "ctime"])
-        .map(key => `&${key}=${data[key]}`)
+        .map(key => `&${key}=${data[key] ?? ""}`)
         .join("")
 
     return routing_args_str
@@ -130,7 +130,7 @@ function update_args_with_value (args: RoutingStateArgs, key: RoutingStringArgKe
     }
     else if (routing_arg_is_a_number(key)) args[key] = parseInt(value)
     else if (key === "subview_id") args.subview_id = value
-    else if (key === "storage_location") args.storage_location = value
+    else if (key === "storage_location") args.storage_location = parse_int_or_undefined(value)
 }
 
 
@@ -139,6 +139,13 @@ const ROUTING_ARGS_WHICH_ARE_NUMBERS = new Set(["x", "y", "zoom"])
 function routing_arg_is_a_number (key: string): key is "x" | "y" | "zoom"
 {
     return ROUTING_ARGS_WHICH_ARE_NUMBERS.has(key)
+}
+
+
+function parse_int_or_undefined (val: string): number | undefined
+{
+    const int = parseInt(val)
+    return Number.isNaN(int) ? undefined : int
 }
 
 
@@ -160,7 +167,7 @@ function run_tests ()
             zoom: 100,
             x: 101,
             y: 158,
-            storage_location: "",
+            storage_location: undefined,
             created_at_datetime: new Date("2020-10-21T17:04:24.000Z"),
             created_at_ms: 1603299864000,
             sim_datetime: new Date("2021-04-26T09:23:13.000Z"),

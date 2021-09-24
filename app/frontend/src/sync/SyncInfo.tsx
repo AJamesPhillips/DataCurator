@@ -5,11 +5,11 @@ import { useState } from "preact/hooks"
 import SaveIcon from "@material-ui/icons/Save"
 import SyncProblemIcon from "@material-ui/icons/SyncProblem"
 
-import { sentence_case } from "../../shared/utils/sentence_case"
-import type { RootState } from "../../state/State"
-import { storage_dependent_save } from "../../state/sync/utils/save_state"
-import { ACTIONS } from "../../state/actions"
-import { get_store } from "../../state/store"
+import { sentence_case } from "../shared/utils/sentence_case"
+import type { RootState } from "../state/State"
+import { storage_dependent_save } from "../state/sync/utils/save_state"
+import { ACTIONS } from "../state/actions"
+import { get_store } from "../state/store"
 
 
 
@@ -63,8 +63,7 @@ function _SyncInfo (props: Props)
                 e.currentTarget.blur()
                 const store = get_store()
                 const state = store.getState()
-                const throttled_save_state = storage_dependent_save(store.dispatch, state)
-                await throttled_save_state.flush()
+                await storage_dependent_save(store.dispatch, state)
             }}
             startIcon={failed
                 ? <SyncProblemIcon color="error" />

@@ -1,0 +1,15 @@
+
+
+.storage_name
+{
+    width: 30px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: width 0.5s;
+}
+
+.storage_name:hover
+{
+    width: initial;
+}

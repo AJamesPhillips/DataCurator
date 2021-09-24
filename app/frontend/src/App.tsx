@@ -12,10 +12,9 @@ import { SidePanel } from "./side_panel/SidePanel"
 import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 import { DefaultTheme } from "./ui_themes/material_default"
 import { ViewOptions } from "./views/ViewOptions"
-import { StorageInfo } from "./sync/storage_type/StorageInfo"
+import { StorageInfo } from "./sync/storage_location/StorageInfo"
 import { UserInfo } from "./sync/user_info/UserInfo"
-import { BackupInfo } from "./sync/sync_backup_info/BackupInfo"
-import { SyncInfo } from "./sync/sync_backup_info/SyncInfo"
+import { SyncInfo } from "./sync/SyncInfo"
 import { HelpMenu } from "./help_menu/HelpMenu"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
 import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
@@ -51,7 +50,6 @@ function App()
                             <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
-                            <Box className={`${classes.toolbar_item}`}><BackupInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><UserInfo /></Box>
@@ -70,9 +68,11 @@ function App()
                         </Box>
                     </Toolbar>
                 </AppBar>
+
                 <Box id="app_content" component="main" className={clsx(classes.content, { [classes.content_with_open_side_panel]: side_panel_open, })}>
                     <MainAreaRouter />
                 </Box>
+
                 <Drawer
                     anchor="right"
                     className={classes.drawer}

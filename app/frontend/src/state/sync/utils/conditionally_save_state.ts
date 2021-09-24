@@ -40,7 +40,7 @@ export async function conditional_ctrl_s_save (load_state_from_storage: boolean,
     {
         allow_ctrl_s_to_flush_save = false
 
-        await storage_dependent_save(dispatch, state).flush()
+        await storage_dependent_save(dispatch, state)
         dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
     }
 

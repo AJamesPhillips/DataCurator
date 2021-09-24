@@ -1,66 +1,24 @@
-import { getDefaultSession } from "@inrupt/solid-client-authn-browser"
-import { setItem } from "localforage"
 import type { Dispatch } from "redux"
 
-import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { min_throttle } from "../../../utils/throttle"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
 import { get_specialised_state_to_save } from "./needs_save"
-import { save_solid_data } from "./solid_save_data"
+import { save_supabase_data } from "../supabase/supabase_save_data"
 
 
 
 export function storage_dependent_save (dispatch: Dispatch, state: RootState)
 {
-    const { storage_type } = state.sync
-
-    if (storage_type !== "solid")
-    {
-        // If not saving to solid then save immediately and do not throttle
-        throttled_save_state.throttled({ dispatch, state })
-        throttled_save_state.flush()
-    }
-    else
-    {
-        const solid_session = getDefaultSession()
-        if (!solid_session.info.isLoggedIn)
-        {
-            throttled_save_state.cancel()
-
-            const error_message = "Can not save.  Not logged in"
-            dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 }))
-
-            if (state.sync.next_save_ms !== undefined)
-            {
-                dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
-            }
-        }
-        else
-        {
-            const next_call_at_ms = throttled_save_state.throttled({ dispatch, state })
-            // Have to use conditional otherwise store.subscribe fires every time
-            // `set_next_sync_ms` is called even when `next_save_ms` does not change
-            if (state.sync.next_save_ms !== next_call_at_ms)
-            {
-                dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: next_call_at_ms }))
-            }
-        }
-
-    }
-
-
-    return throttled_save_state
+    // Save immediately and do not throttle
+    save_state({ dispatch, state })
 }
 
 
 
-const SAVE_THROTTLE_MS = 60000
-export const throttled_save_state = min_throttle(save_state, SAVE_THROTTLE_MS)
 export const last_attempted_state_to_save: { state: RootState | undefined } = { state: undefined }
 
 
@@ -108,7 +66,6 @@ interface AttemptSaveArgs
     dispatch: Dispatch
     max_attempts?: number
     attempt?: number
-    is_backup?: boolean
 }
 export function retryable_save (args: AttemptSaveArgs)
 {
@@ -118,56 +75,50 @@ export function retryable_save (args: AttemptSaveArgs)
         user_info,
         dispatch,
         max_attempts = MAX_ATTEMPTS,
-        is_backup,
     } = args
     let { attempt = 0 } = args
 
     attempt += 1
 
-    const is_backup_str = is_backup ? " (backup)" : ""
-    console .log(`retryable_save${is_backup_str} to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
+    console .log(`retryable_save to "${storage_type}" with data.knowledge_views: ${data.knowledge_views.length}, data.wcomponents: ${data.wcomponents.length}, attempt: ${attempt}`)
 
 
     let promise_save_data: Promise<any>
 
-    if (storage_type === "local_server")
-    {
-        // const state_to_save = get_state_to_save(state)
-        // const state_str = JSON.stringify(state_to_save)
+    // if (storage_type === "local_server")
+    // {
+    //     // const state_to_save = get_state_to_save(state)
+    //     // const state_str = JSON.stringify(state_to_save)
 
-        // fetch("http://localhost:4000/api/v1/state/", {
-        //     method: "post",
-        //     body: state_str,
-        // })
+    //     // fetch("http://localhost:4000/api/v1/state/", {
+    //     //     method: "post",
+    //     //     body: state_str,
+    //     // })
 
-        const specialised_state_str = JSON.stringify(data)
-        promise_save_data = fetch("http://localhost:4000/api/v1/specialised_state/", {
-            method: "post",
-            body: specialised_state_str,
-        })
-        .then((res) =>
-        {
-            if (res.ok) return ""
+    //     const specialised_state_str = JSON.stringify(data)
+    //     promise_save_data = fetch("http://localhost:4000/api/v1/specialised_state/", {
+    //         method: "post",
+    //         body: specialised_state_str,
+    //     })
+    //     .then((res) =>
+    //     {
+    //         if (res.ok) return ""
 
-            return res.text()
-            .then(text =>
-            {
-                const error: SyncError = { type: "general", message: text }
-                return Promise.reject(error)
-            })
-        })
-    }
-    else if (storage_type === "solid")
+    //         return res.text()
+    //         .then(text =>
+    //         {
+    //             const error: SyncError = { type: "general", message: text }
+    //             return Promise.reject(error)
+    //         })
+    //     })
+    // }
+    if (storage_type === "supabase")
     {
-        promise_save_data = save_solid_data(user_info, data)
-    }
-    else if (storage_type === "local_storage")
-    {
-        promise_save_data = setItem(LOCAL_STORAGE_STATE_KEY, data)
+        promise_save_data = save_supabase_data(user_info, data)
     }
     else
     {
-        console.error(`Returning from save_state${is_backup_str}.  storage_type "${storage_type}" unsupported.`)
+        console.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
         return Promise.reject()
     }
 
@@ -179,37 +130,29 @@ export function retryable_save (args: AttemptSaveArgs)
 
         if (attempt >= max_attempts)
         {
-            error_message = `Stopping after ${attempt} attempts at resaving${is_backup_str}: ${error_message}`
+            error_message = `Stopping after ${attempt} attempts at resaving: ${error_message}`
             console.error(error_message)
 
-            const action = is_backup
-                ? ACTIONS.backup.update_backup_status({ status: "FAILED" })
-                : ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
             dispatch(action)
 
             return Promise.reject()
         }
         else
         {
-            error_message = `Retrying${is_backup_str} attempt ${attempt}; ${error_message}`
+            error_message = `Retrying attempt ${attempt}; ${error_message}`
             console.error(error_message)
 
-            const action = is_backup
-                ? ACTIONS.backup.update_backup_status({ status: "FAILED" })
-                : ACTIONS.sync.update_sync_status({
-                    status: "FAILED",
-                    error_message,
-                    attempt,
-                })
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt })
             dispatch(action)
 
             return new Promise((resolve, reject) =>
             {
                 setTimeout(() =>
                 {
-                    console .log(`retrying save${is_backup_str} to ${storage_type}, attempt ${attempt}`)
+                    console .log(`retrying save to ${storage_type}, attempt ${attempt}`)
                     // const potentially_newer_state = get_store().getState().user_info
-                    retryable_save({ storage_type, data, user_info, dispatch, max_attempts, attempt, is_backup })
+                    retryable_save({ storage_type, data, user_info, dispatch, max_attempts, attempt })
                     .then(resolve).catch(reject)
                 }, 1000)
             })

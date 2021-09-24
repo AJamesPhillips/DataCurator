@@ -67,7 +67,7 @@ function run_tests ()
             zoom: 100,
             x: 0,
             y: 0,
-            storage_location: "",
+            storage_location: undefined,
         }
     }
 

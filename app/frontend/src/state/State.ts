@@ -10,7 +10,6 @@ import type { RoutingState } from "./routing/interfaces"
 import type { SearchState } from "./search/state"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
-import type { BackupState } from "./sync/backup/state"
 import type { SyncState } from "./sync/state"
 import type { UserActivityState } from "./user_activity/state"
 import type { UserInfoState } from "./user_info/state"
@@ -108,7 +107,6 @@ export interface RootStateCore
 }
 export interface RootState extends RootStateCore
 {
-    backup: BackupState
     controls: ControlsState
     creation_context: CreationContextState
     derived: DerivedState

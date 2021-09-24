@@ -1,17 +1,22 @@
-import { Box, Button, Typography } from "@material-ui/core"
+import { Button, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import PermDataSettingIcon from '@material-ui/icons/PermDataSetting'
 
+import "./StorageInfo.scss"
 import type { RootState } from "../../state/State"
-import { SelectStorageType } from "./SelectStorageType"
-import { get_storage_type_name } from "./get_storage_type_name"
-import PermDataSettingIcon from '@material-ui/icons/PermDataSetting';
+import { SelectStorage } from "./SelectStorage"
+import { selector_storage_name } from "../../state/user_info/selector"
+
+
 
 const map_state = (state: RootState) =>
 {
+    const base_name = selector_storage_name(state)
+
     return {
-        storage_type: state.sync.storage_type,
+        base_name,
     }
 }
 
@@ -19,10 +24,10 @@ const map_dispatch = {}
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
+
 function _StorageInfo (props: Props)
 {
-    const { storage_type } = props
-    const [show_select_storage, set_show_select_storage] = useState(storage_type === undefined)
+    const [show_select_storage, set_show_select_storage] = useState(false)
 
     return (
         <Typography component="span">
@@ -35,9 +40,9 @@ function _StorageInfo (props: Props)
                 style={{textTransform: 'none'}}
                 variant="contained"
             >
-                {get_storage_type_name(storage_type)}
+                <span class="storage_name">{props.base_name || "Choose store"}</span>
             </Button>
-            {show_select_storage && <SelectStorageType on_close={() => set_show_select_storage(false)} />}
+            {show_select_storage && <SelectStorage on_close={() => set_show_select_storage(false)} />}
         </Typography>
     )
 }

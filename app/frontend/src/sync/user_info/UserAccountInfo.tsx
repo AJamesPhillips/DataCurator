@@ -1,18 +1,19 @@
 import { h } from "preact"
 
-import { Modal } from "../../../modal/Modal"
+import { Modal } from "../../modal/Modal"
 import { UserAccountInfoForm } from "./UserAccountInfoForm"
 
 
 
 interface OwnProps
 {
-    on_close: () => void
+    on_close?: () => void
 }
 
 
 export function UserAccountInfo (props: OwnProps)
 {
+    const { on_close } = props
 
     return <Modal
         title={<div style={{ margin: 10 }}>
@@ -21,13 +22,13 @@ export function UserAccountInfo (props: OwnProps)
         size="medium"
 
 
-        on_close={e =>
+        on_close={!on_close ? undefined : e =>
         {
             e?.stopImmediatePropagation()
-            props.on_close()
+            on_close()
         }}
 
 
-        child={<UserAccountInfoForm on_close={props.on_close}/>}
+        child={<UserAccountInfoForm on_close={on_close}/>}
     />
 }

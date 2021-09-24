@@ -1,11 +1,15 @@
+import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
+
+import type { SupabaseKnowledgeBaseWithAccess, SupabaseUsersById } from "../../supabase/interfaces"
 
 
 
 export interface UserInfoState
 {
-    solid_oidc_provider: string
+    user: SupabaseAuthUser | null
+    need_to_handle_password_recovery: boolean
+    users_by_id: SupabaseUsersById | undefined
     user_name: string
-    default_solid_pod_URL: string
-    custom_solid_pod_URLs: string[]
-    chosen_custom_solid_pod_URL_index: number
+    chosen_base_id: number | undefined
+    bases: SupabaseKnowledgeBaseWithAccess[] | undefined
 }

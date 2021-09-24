@@ -1,13 +1,11 @@
 import type { Store } from "redux"
-import { getItem } from "localforage"
 
-import { LOCAL_STORAGE_STATE_KEY } from "../../../constants"
 import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
-import type { Statement, Pattern, ObjectWithCache, RootState } from "../../State"
+import type { RootState } from "../../State"
 import { error_to_string, SyncError } from "./errors"
-import { load_solid_data } from "./solid_load_data"
+import { supabase_load_data } from "../supabase/supabase_load_data"
 import type { StorageType } from "../state"
 import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
 
@@ -60,30 +58,26 @@ export function get_state_data (storage_type: StorageType, state: RootState)
 {
     let promise_data: Promise<SpecialisedObjectsFromToServer | null>
 
-    if (storage_type === "local_server")
-    {
-        promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
-        .then(resp =>
-        {
-            if (resp.ok) return resp.json()
+    // if (storage_type === "local_server")
+    // {
+    //     promise_data = fetch("http://localhost:4000/api/v1/specialised_state/", { method: "get" })
+    //     .then(resp =>
+    //     {
+    //         if (resp.ok) return resp.json()
 
-            return resp.text().then(text => Promise.reject(text))
-        })
-        .catch(err =>
-        {
-            if (err && err.message === "Failed to fetch") err = "local server not running or connection problem"
+    //         return resp.text().then(text => Promise.reject(text))
+    //     })
+    //     .catch(err =>
+    //     {
+    //         if (err && err.message === "Failed to fetch") err = "local server not running or connection problem"
 
-            const error: SyncError = { type: "general", message: "Error from server: " + err }
-            return Promise.reject(error)
-        })
-    }
-    else if (storage_type === "solid")
+    //         const error: SyncError = { type: "general", message: "Error from server: " + err }
+    //         return Promise.reject(error)
+    //     })
+    // }
+    if (storage_type === "supabase")
     {
-        promise_data = load_solid_data(state)
-    }
-    else if (storage_type === "local_storage")
-    {
-        promise_data = getItem<SpecialisedObjectsFromToServer>(LOCAL_STORAGE_STATE_KEY)
+        promise_data = supabase_load_data(state)
     }
     else
     {
@@ -92,11 +86,4 @@ export function get_state_data (storage_type: StorageType, state: RootState)
     }
 
     return promise_data.then(data => parse_specialised_objects_from_server_data(data))
-}
-
-
-
-function parse_datetimes<T extends { datetime_created: Date }> (items: T[]): T[]
-{
-    return items.map(i => ({ ...i, datetime_created: new Date(i.datetime_created) }))
 }

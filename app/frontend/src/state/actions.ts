@@ -13,14 +13,12 @@ import { search_actions } from "./search/actions_reducer"
 import { specialised_object_actions } from "./specialised_objects/actions"
 import { statement_actions } from "./statements"
 import { sync_actions } from "./sync/actions_reducer"
-import { backup_actions } from "./sync/backup/actions_reducer"
 import { user_activity_actions } from "./user_activity/actions"
 import { user_info_actions } from "./user_info/actions"
 
 
 
 export const ACTIONS = {
-    backup: backup_actions,
     controls: controls_actions,
     creation_context: creation_context_actions,
     filter_context: filter_context_actions,

@@ -12,10 +12,9 @@ import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/me
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
-import { periodically_backup_solid_data } from "./sync/backup/periodically_backup_solid_data"
-import { optionally_copy_then_load_data } from "./sync/utils/optionally_copy_then_load_data"
 import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/conditionally_save_state"
 import { conditionally_warn_unsaved_exit } from "./sync/utils/conditionally_warn_unsaved_exit"
+import { user_info_subscribers } from "./user_info/subscribers"
 
 
 
@@ -44,12 +43,6 @@ export function get_store (args: ConfigStoreArgs = {})
     }
     const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state)
     cached_store = store
-
-
-    if (load_state_from_storage)
-    {
-        optionally_copy_then_load_data(store)
-    }
 
 
     const save = () =>
@@ -81,11 +74,11 @@ export function get_store (args: ConfigStoreArgs = {})
 
     record_keyupdown_activity(store)
 
-    periodically_backup_solid_data(store)
-
     conditional_ctrl_f_search(store)
 
     routing_subscribers.sync_storage_location_subscriber(store)
+
+    user_info_subscribers(store)
 
     return store
 }

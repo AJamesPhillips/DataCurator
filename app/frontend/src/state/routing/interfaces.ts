@@ -59,7 +59,7 @@ export interface RoutingStateArgs
     zoom: number
     x: number
     y: number
-    storage_location: string
+    storage_location: number | undefined
 
     created_at_datetime: Date
     created_at_ms: number
