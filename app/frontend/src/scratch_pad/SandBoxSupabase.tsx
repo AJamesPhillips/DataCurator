@@ -22,6 +22,7 @@ import { DisplaySupabasePostgrestError, DisplaySupabaseSessionError } from "../s
 import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, DBSupabaseAccessControl, SupabaseKnowledgeView, SupabaseUser, SupabaseUsersById, SupabaseKnowledgeBase, SupabaseKnowledgeBaseWithAccess, JoinedAccessControlsPartial } from "../supabase/interfaces"
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
 import { get_all_bases, santise_base } from "../supabase/bases"
+import { get_user_name_for_display } from "../supabase/users"
 
 
 
@@ -258,7 +259,7 @@ export function SandBoxSupabase ()
                     /> &nbsp;
                     {base.public_read ? "Public" : "Private"} &nbsp;
                     title: {base.title} &nbsp;
-                    owned by: {get_user_name_for_display({ p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
+                    owned by: {get_user_name_for_display({ users_by_id: p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
                     id: {base.id} &nbsp;
                     {base.owner_user_id !== user.id && <span>
                         access: {access_description} &nbsp;
@@ -536,26 +537,6 @@ async function modify_base (args: ModifyBaseArgs)
 
 
 
-interface GetUserNameForDisplayArgs
-{
-    p_users_by_id: SupabaseUsersById
-    user: SupabaseAuthUser
-    other_user_id: string
-}
-function get_user_name_for_display (args: GetUserNameForDisplayArgs)
-{
-    const { p_users_by_id, user, other_user_id } = args
-
-    let name = p_users_by_id[other_user_id]?.name || ""
-    if (!user) name = name || "Someone"
-    else name = user.id === other_user_id ? (name ? name + " (You)" : "You") : (name || "(Someone else)")
-
-    return <span title={other_user_id}>{name}</span>
-}
-
-
-
-
 interface GetAcessControlsArgs
 {
     base_id: number
@@ -620,7 +601,7 @@ function AccessControlEntry (props: AccessControlEntryProps)
     })
 
     return <div>
-        user: {get_user_name_for_display({ p_users_by_id, user, other_user_id })} level: {current_level}
+        user: {get_user_name_for_display({ users_by_id: p_users_by_id, user, other_user_id })} level: {current_level}
 
         <SelectAccessLevel level="editor" current_level={current_level} on_click={update} />
         <SelectAccessLevel level="viewer" current_level={current_level} on_click={update} />

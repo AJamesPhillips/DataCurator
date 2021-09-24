@@ -21,6 +21,8 @@ interface OwnProps
 const map_state = (state: RootState) =>
 {
     return {
+        user: state.user_info.user,
+        users_by_id: state.user_info.users_by_id,
         chosen_base_id: state.user_info.chosen_base_id,
         bases_by_id: state.user_info.bases_by_id,
     }
@@ -38,11 +40,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _StorageOptionsForm (props: Props)
 {
-    const { on_close, chosen_base_id, bases_by_id, update_chosen_base_id } = props
+    const { on_close, user, users_by_id, chosen_base_id, bases_by_id, update_chosen_base_id } = props
 
     const [new_base_name, set_new_base_name] = useState("")
 
-    if (!bases_by_id) return "Fetching bases"
+    if (!user) return "Please sign in"
+    if (!users_by_id) return "Fetching users..."
+    if (!bases_by_id) return "Fetching bases..."
     const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), "descending")
 
 
@@ -59,6 +63,8 @@ function _StorageOptionsForm (props: Props)
 
         {bases.map(base =>
             <StorageOption
+                user={user}
+                users_by_id={users_by_id}
                 base={base}
                 selected={base.id === chosen_base_id}
                 on_click={() =>
