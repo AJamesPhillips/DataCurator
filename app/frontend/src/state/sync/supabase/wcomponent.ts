@@ -1,7 +1,8 @@
-import type { SupabaseClient, PostgrestError } from "@supabase/supabase-js"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { SupabaseWComponent } from "../../../supabase/interfaces"
+import { get_items } from "./get_items"
 
 
 
@@ -15,20 +16,13 @@ type GetWComponentsArgs =
     base_id?: undefined
     all_bases: true
 })
-export async function get_wcomponents (args: GetWComponentsArgs)
+export function get_wcomponents (args: GetWComponentsArgs)
 {
-    let query = args.supabase
-        .from<SupabaseWComponent>("wcomponents")
-        .select("*")
-        .order("id", { ascending: true })
-
-    if (args.base_id) query = query.eq("base_id", args.base_id)
-
-    const { data, error } = await query
-
-    const items: WComponent[] = (data || []).map(wcomponent_supabase_to_app)
-
-    return { error, items }
+    return get_items<SupabaseWComponent, WComponent>({
+        ...args,
+        table: "wcomponents",
+        converter: wcomponent_supabase_to_app,
+    })
 }
 
 

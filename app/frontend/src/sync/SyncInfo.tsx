@@ -52,7 +52,11 @@ function _SyncInfo (props: Props)
 
     const classes = use_styles()
 
-    const status_text = [specialised.status, bases.status].filter(is_defined).map(sentence_case).join(", ")
+    let status_text = sentence_case(specialised.status || "")
+    if (bases.status && bases.status !== "LOADED" && bases.status !== "SAVED")
+    {
+        status_text += ((bases.status !== specialised.status) && (", " + sentence_case(bases.status))) || ""
+    }
     if (!status_text) return null
 
 

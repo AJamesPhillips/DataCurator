@@ -8,6 +8,7 @@ interface UserMsgMap
     stale_users_by_id: true
     stale_bases: true
     changed_bases: true
+    changed_chosen_base_id: true
 }
 
 export const user_pub_sub = pub_sub_factory<UserMsgMap>()

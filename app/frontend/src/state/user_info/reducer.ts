@@ -1,5 +1,5 @@
 import type { AnyAction } from "redux"
-import type { SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../../supabase/interfaces"
+import type { SupabaseKnowledgeBaseWithAccess, SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../../supabase/interfaces"
 
 import { update_substate } from "../../utils/update_state"
 import { pub_sub } from "../pub_sub/pub_sub"
@@ -51,30 +51,29 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     {
         const { bases } = action
 
-        let bases_by_id: SupabaseKnowledgeBaseWithAccessById | undefined = undefined
-        if (bases)
-        {
-            bases_by_id = {}
-            bases.forEach(b => bases_by_id![b.id] = b)
-        }
-
+        const bases_by_id = build_bases_by_id_map(bases)
         state = update_substate(state, "user_info", "bases_by_id", bases_by_id)
 
-        const { chosen_base_id } = state.user_info
-        if (bases_by_id && (!chosen_base_id || !bases_by_id[chosen_base_id]))
-        {
-            state = update_substate(state, "user_info", "chosen_base_id", bases && bases[0]?.id)
-        }
+        const initial_chosen_base_id = state.user_info.chosen_base_id
+        state = ensure_valid_chosen_base_id(state, bases)
+        const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id
 
         // New pattern, not sure this is a good idea yet but is simpler than making subscribers
         // which store state, and that run on every store change to compare to current state
         pub_sub.user.pub("changed_bases", true)
+        if (changed_chosen_base_id) pub_sub.user.pub("changed_chosen_base_id", true)
     }
 
 
     if (is_update_chosen_base_id(action))
     {
+        const initial_chosen_base_id = state.user_info.chosen_base_id
         state = update_substate(state, "user_info", "chosen_base_id", action.base_id)
+        const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id
+
+        // New pattern, not sure this is a good idea yet but is simpler than making subscribers
+        // which store state, and that run on every store change to compare to current state
+        if (changed_chosen_base_id) pub_sub.user.pub("changed_chosen_base_id", true)
     }
 
     return state
@@ -99,6 +98,36 @@ function update_users_name (state: RootState)
     if (new_user_name !== state.user_info.user_name)
     {
         state = update_substate(state, "user_info", "user_name", new_user_name)
+    }
+
+    return state
+}
+
+
+
+function build_bases_by_id_map (bases: SupabaseKnowledgeBaseWithAccess[] | undefined)
+{
+    let bases_by_id: SupabaseKnowledgeBaseWithAccessById | undefined = undefined
+
+    if (bases)
+    {
+        bases_by_id = {}
+        bases.forEach(b => bases_by_id![b.id] = b)
+    }
+
+    return bases_by_id
+}
+
+
+
+function ensure_valid_chosen_base_id (state: RootState, bases: SupabaseKnowledgeBaseWithAccess[] | undefined)
+{
+    const { bases_by_id, chosen_base_id } = state.user_info
+
+    if (bases_by_id && (!chosen_base_id || !bases_by_id[chosen_base_id]))
+    {
+        const random_base_id: number | undefined = bases && bases[0]?.id
+        state = update_substate(state, "user_info", "chosen_base_id", random_base_id)
     }
 
     return state

@@ -13,12 +13,6 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     {
         const { status, error_message = "", attempt: retry_attempt } = action
 
-        // const saved = status === "SAVED"
-        // const loaded_successfully = status === "LOADED"
-        // const failed = status === "FAILED"
-        // const ready_for_reading = status !== undefined && status !== "LOADING"
-        // const ready_for_writing = saved || loaded_successfully || failed
-
         const sync_state_for_data_type: SyncStateForDataType =
         {
             ...state.sync[action.data_type],
@@ -28,6 +22,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
         }
 
         state = update_substate(state, "sync", action.data_type, sync_state_for_data_type)
+        state = update_ready_for_fields(state)
     }
 
 
@@ -89,4 +84,33 @@ const is_set_next_sync_ms = (action: AnyAction): action is ActionSetNextSyncMs =
 export const sync_actions = {
     update_sync_status,
     set_next_sync_ms,
+}
+
+
+
+function update_ready_for_fields (state: RootState): RootState
+{
+    const { bases, specialised_objects } = state.sync
+
+    // const bases_ready = get_ready_for_fields_for_data_type(bases)
+    const specialised_objects_ready = get_ready_for_fields_for_data_type(specialised_objects)
+    state = update_substate(state, "sync", "ready_for_reading", specialised_objects_ready.ready_for_reading)
+    state = update_substate(state, "sync", "ready_for_writing", specialised_objects_ready.ready_for_writing)
+
+    return state
+}
+
+
+function get_ready_for_fields_for_data_type (state: SyncStateForDataType)
+{
+    const { status } = state
+
+    const saved = status === "SAVED"
+    const loaded_successfully = status === "LOADED"
+    const failed = status === "FAILED"
+
+    const ready_for_reading = status !== undefined && status !== "LOADING"
+    const ready_for_writing = saved || loaded_successfully || failed
+
+    return { ready_for_reading, ready_for_writing }
 }

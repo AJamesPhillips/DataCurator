@@ -1,7 +1,8 @@
-import type { SupabaseClient, PostgrestError } from "@supabase/supabase-js"
+import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import type { SupabaseKnowledgeView } from "../../../supabase/interfaces"
+import { get_items } from "./get_items"
 
 
 
@@ -15,20 +16,13 @@ type GetKnowledgeViewsArgs =
     base_id?: undefined
     all_bases: true
 })
-export async function get_knowledge_views (args: GetKnowledgeViewsArgs)
+export function get_knowledge_views (args: GetKnowledgeViewsArgs)
 {
-    let query = args.supabase
-        .from<SupabaseKnowledgeView>("knowledge_views")
-        .select("*")
-        .order("id", { ascending: true })
-
-    if (args.base_id) query = query.eq("base_id", args.base_id)
-
-    const { data, error } = await query
-
-    const items: KnowledgeView[] = (data || []).map(kv_supabase_to_app)
-
-    return { error, items }
+    return get_items<SupabaseKnowledgeView, KnowledgeView>({
+        ...args,
+        table: "knowledge_views",
+        converter: kv_supabase_to_app,
+    })
 }
 
 

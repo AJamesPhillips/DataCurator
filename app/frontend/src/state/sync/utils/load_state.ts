@@ -16,6 +16,8 @@ export function load_state (store: Store<RootState>)
     let state = store.getState()
     const { dispatch } = store
 
+    store.dispatch(ACTIONS.specialised_object.clear_from_mem_all_specialised_objects())
+
 
     const { storage_type } = state.sync
     if (!storage_type)
@@ -25,18 +27,16 @@ export function load_state (store: Store<RootState>)
     }
 
 
-    // This patterns smells now that we have to duplicate these
-    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING", data_type: "specialised_objects" }))
-
-    const promise_data = get_state_data(storage_type, state)
-    if (!promise_data)
+    const { chosen_base_id } = state.user_info
+    if (chosen_base_id === undefined)
     {
-        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects" }))
         return
     }
 
 
-    promise_data
+    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING", data_type: "specialised_objects" }))
+
+    get_state_data(storage_type, chosen_base_id)
     .then(specialised_objects =>
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
@@ -55,9 +55,10 @@ export function load_state (store: Store<RootState>)
 
 
 
-export function get_state_data (storage_type: StorageType, state: RootState)
+export function get_state_data (storage_type: StorageType, chosen_base_id: number)
 {
     let promise_data: Promise<SpecialisedObjectsFromToServer | null>
+
 
     // if (storage_type === "local_server")
     // {
@@ -78,12 +79,14 @@ export function get_state_data (storage_type: StorageType, state: RootState)
     // }
     if (storage_type === "supabase")
     {
-        promise_data = supabase_load_data(state)
+        promise_data = supabase_load_data(chosen_base_id)
     }
     else
     {
-        console.error(`Returning from load_state.  storage_type "${storage_type}" unsupported.`)
-        return
+        const message = `storage_type "${storage_type}" unsupported`
+        console.error(`Returning from get_state_data. ` + message)
+        const error: SyncError = { type: "general", message }
+        return Promise.reject(error)
     }
 
     return promise_data.then(data => parse_specialised_objects_from_server_data(data))

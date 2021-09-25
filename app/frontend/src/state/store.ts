@@ -12,6 +12,7 @@ import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/me
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
+import { sync_subscribers } from "./sync/subscribers"
 import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/conditionally_save_state"
 import { conditionally_warn_unsaved_exit } from "./sync/utils/conditionally_warn_unsaved_exit"
 import { user_info_subscribers } from "./user_info/subscribers"
@@ -79,6 +80,8 @@ export function get_store (args: ConfigStoreArgs = {})
     routing_subscribers.sync_storage_location_subscriber(store)
 
     user_info_subscribers(store)
+
+    sync_subscribers(store)
 
     return store
 }
