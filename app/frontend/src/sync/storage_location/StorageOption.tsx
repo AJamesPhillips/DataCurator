@@ -43,7 +43,7 @@ export function StorageOption (props: OwnProps)
         </td>
         <td>{public_read && "(Public)"}</td>
 
-        <td>{get_user_name_for_display({ users_by_id, user, other_user_id: base.owner_user_id })}</td>
+        <td>{get_user_name_for_display({ users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id })}</td>
         <td>{access_description}</td>
 
         <td className="narrow" style={{ color: "grey", fontSize: 12 }}>{id}</td>

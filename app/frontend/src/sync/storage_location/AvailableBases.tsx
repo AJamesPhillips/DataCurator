@@ -1,11 +1,16 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
 import { StorageOption } from "./StorageOption"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
 import { sort_list } from "../../shared/utils/sort"
+import { refresh_bases_for_current_user } from "../../state/user_info/utils"
+import { SyncButton } from "../../sharedf/SyncButton"
+import { useState } from "react"
+import type { AsyncState } from "../../utils/async_state"
+import type { PostgrestError } from "@supabase/postgrest-js"
+import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
 
 
 
@@ -44,6 +49,11 @@ function _AvailableBases (props: Props)
         user, users_by_id, chosen_base_id, bases_by_id, update_chosen_base_id,
     } = props
 
+
+    const [async_state, set_async_state] = useState<AsyncState>("initial")
+    const [error, set_error] = useState<PostgrestError | undefined>(undefined)
+
+
     if (!user) return "Please sign in"
     if (!users_by_id) return "Fetching users..."
     if (!bases_by_id) return "Fetching bases..."
@@ -55,7 +65,22 @@ function _AvailableBases (props: Props)
 
 
     return <div style={{ margin: 10 }}>
+        <SyncButton
+            state={async_state}
+            title="Refresh sharing options"
+            on_click={async () =>
+            {
+                set_async_state("in_progress")
+                const res = await refresh_bases_for_current_user()
+                set_async_state(res.error ? "error" : "success")
+                set_error(res.error)
+            }}
+            style={{ float: "right" }}
+        />
+
         <h4>Select an existing base</h4>
+
+        <DisplaySupabasePostgrestError error={error} />
 
         <table>
         <thead>

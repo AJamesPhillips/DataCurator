@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
-import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
+import type { PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4} from "uuid"
 
 
@@ -35,6 +35,10 @@ import type {
 import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
 import { get_all_bases, get_an_owned_base_optionally_create, modify_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
+import { get_access_controls_for_base, update_access_control } from "../supabase/access_controls"
+import { AccessControlEntry } from "../access_controls/AccessControlEntry"
+import { SelectAccessLevel } from "../access_controls/SelectAccessLevel"
+import { AddAccessControlEntry } from "../access_controls/AddAccessControl"
 
 
 
@@ -77,7 +81,7 @@ export function SandBoxSupabase ()
     }, [bases])
     const current_base = bases?.find(({ id }) => id === current_base_id)
 
-    const [p_users_by_id, set_p_users_by_id] = useState<SupabaseUsersById>({})
+    const [users_by_id, set_users_by_id] = useState<SupabaseUsersById>({})
 
     const [access_controls, _set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
     const set_access_controls = (acs: SupabaseAccessControl[] | undefined) =>
@@ -94,6 +98,9 @@ export function SandBoxSupabase ()
     const knowledge_view = knowledge_views && knowledge_views[0]
 
 
+    const is_owner = !!user && (user.id === current_base?.owner_user_id)
+
+
     useEffect(() => {
         const subscriber = async () =>
         {
@@ -108,7 +115,7 @@ export function SandBoxSupabase ()
             set_postgrest_error(error)
             const map: SupabaseUsersById = {}
             ;(data || []).forEach(pu => map[pu.id] = pu)
-            set_p_users_by_id(map)
+            set_users_by_id(map)
             // set_username(map[new_user?.id || ""]?.name || "")
         }
 
@@ -237,7 +244,7 @@ export function SandBoxSupabase ()
         <input type="button" onClick={log_out} value="Log out" /><br />
         <input type="button" onClick={() => set_updating_password(true)} value="Change password" /><br />
 
-        <Username user={user} p_users_by_id={p_users_by_id} set_postgrest_error={set_postgrest_error} /><br />
+        <Username user={user} users_by_id={users_by_id} set_postgrest_error={set_postgrest_error} /><br />
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
         <br />
@@ -271,7 +278,7 @@ export function SandBoxSupabase ()
                     /> &nbsp;
                     {base.public_read ? "Public" : "Private"} &nbsp;
                     title: {base.title} &nbsp;
-                    owned by: {get_user_name_for_display({ users_by_id: p_users_by_id, user, other_user_id: base.owner_user_id })} &nbsp;
+                    owned by: {get_user_name_for_display({ users_by_id: users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id })} &nbsp;
                     id: {base.id} &nbsp;
                     {base.owner_user_id !== user.id && <span>
                         access: {access_description} &nbsp;
@@ -317,7 +324,7 @@ export function SandBoxSupabase ()
         </div>}
 
 
-        {current_base && <div>
+        {current_base && current_base_id && <div>
             <hr />
             <br />
             <h3>Base sharing</h3>
@@ -326,7 +333,7 @@ export function SandBoxSupabase ()
             <br />
             <br />
 
-            <input type="button" onClick={() => get_access_controls({ base_id: current_base.id, set_postgrest_error, set_access_controls })} value="Refresh sharing info" /><br />
+            <input type="button" onClick={() => get_access_controls({ base_id: current_base_id, set_postgrest_error, set_access_controls })} value="Refresh sharing info" /><br />
 
             {access_controls && <div>
                 {access_controls.length} access controls
@@ -334,14 +341,26 @@ export function SandBoxSupabase ()
                 {access_controls.map(ac => <div>
                     <AccessControlEntry
                         access_control={ac}
-                        base_id={current_base.id} p_users_by_id={p_users_by_id} user={user}
-                        set_postgrest_error={set_postgrest_error}
-                        set_access_controls={set_access_controls} />
+                        base_id={current_base_id} users_by_id={users_by_id} current_user_id={user?.id}
+                        is_owner={is_owner}
+                        on_update={res => on_update_access_control({ base_id: current_base_id, res, set_postgrest_error, set_access_controls })} />
                 </div>)}
 
                 <br />
                 Id or email address of user's account:
-                <AddAccessControlEntry base_id={current_base.id} set_access_controls={set_access_controls} />
+                <AddAccessControlEntry
+                    base_id={current_base_id}
+                    on_add_or_exit={stale_access_controls =>
+                    {
+                        if (!stale_access_controls) return
+
+                        get_access_controls({
+                            base_id: current_base_id,
+                            set_postgrest_error,
+                            set_access_controls,
+                        })
+                    }}
+                />
             </div>}
         </div>}
 
@@ -418,7 +437,7 @@ export function SandBoxSupabase ()
 interface UsernameProps
 {
     user: SupabaseAuthUser
-    p_users_by_id: SupabaseUsersById
+    users_by_id: SupabaseUsersById
     set_postgrest_error: (error: PostgrestError | null) => void
 }
 function Username (props: UsernameProps)
@@ -426,9 +445,9 @@ function Username (props: UsernameProps)
     const [username, set_username] = useState("")
     const [is_saving, set_is_saving] = useState(false)
 
-    const { user, p_users_by_id, set_postgrest_error } = props
+    const { user, users_by_id, set_postgrest_error } = props
 
-    const name_in_db = p_users_by_id[user.id]?.name || ""
+    const name_in_db = users_by_id[user.id]?.name || ""
     useEffect(() => { if (username !== name_in_db) set_username(name_in_db) }, [name_in_db])
 
 
@@ -517,14 +536,10 @@ interface GetAcessControlsArgs
 }
 async function get_access_controls (args: GetAcessControlsArgs)
 {
-    const { data, error } = await supabase.from<SupabaseAccessControl>("access_controls").select("*").eq("base_id", args.base_id)
-    args.set_postgrest_error(error)
-    const parsed_data = data && data.map(ac => ({
-        ...ac,
-        inserted_at: new Date(ac.inserted_at),
-        updated_at: new Date(ac.updated_at),
-    })) || undefined
-    args.set_access_controls(parsed_data)
+    const res = await get_access_controls_for_base(args.base_id)
+
+    args.set_postgrest_error(res.error)
+    args.set_access_controls(res.access_controls)
 }
 
 
@@ -532,145 +547,14 @@ async function get_access_controls (args: GetAcessControlsArgs)
 interface UpdateAcessControlArgs
 {
     base_id: number
-    other_user_id: string
-    grant: ACCESS_CONTROL_LEVEL
+    res: PostgrestResponse<SupabaseAccessControl>
     set_postgrest_error: (a: PostgrestError | null) => void
     set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
 }
-async function update_access_control (args: UpdateAcessControlArgs)
+async function on_update_access_control (args: UpdateAcessControlArgs)
 {
-    const access_control: DBSupabaseAccessControl = {
-        base_id: args.base_id,
-        user_id: args.other_user_id,
-        access_level: args.grant,
-    }
-    const res = await supabase.from<SupabaseAccessControl>("access_controls").upsert(access_control)
-
-
-    args.set_postgrest_error(res.error)
-    if (!res.error) await get_access_controls(args)
-}
-
-
-
-
-interface AccessControlEntryProps
-{
-    access_control: SupabaseAccessControl
-    base_id: number
-    p_users_by_id: SupabaseUsersById
-    user: SupabaseAuthUser
-    set_postgrest_error: (a: PostgrestError | null) => void
-    set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
-}
-function AccessControlEntry (props: AccessControlEntryProps)
-{
-    const { access_control, base_id, p_users_by_id, user, set_postgrest_error, set_access_controls } = props
-    const { user_id: other_user_id, access_level: current_level } = access_control
-
-    const update = (grant: ACCESS_CONTROL_LEVEL) => update_access_control({
-        base_id, other_user_id, grant, set_postgrest_error, set_access_controls,
-    })
-
-    return <div>
-        user: {get_user_name_for_display({ users_by_id: p_users_by_id, user, other_user_id })} level: {current_level}
-
-        <SelectAccessLevel level="editor" current_level={current_level} on_click={update} />
-        <SelectAccessLevel level="viewer" current_level={current_level} on_click={update} />
-        <SelectAccessLevel level="none" current_level={current_level} on_click={update} />
-        <br />
-    </div>
-}
-
-
-interface SelectAccessLevelProps
-{
-    level: ACCESS_CONTROL_LEVEL
-    current_level: ACCESS_CONTROL_LEVEL
-    on_click: (level: ACCESS_CONTROL_LEVEL) => void
-}
-function SelectAccessLevel (props: SelectAccessLevelProps)
-{
-    const { level, current_level, on_click } = props
-
-    return <input
-        type="button"
-        onClick={() => on_click(level)}
-        value={sentence_case(level)}
-        disabled={level === current_level}
-    />
-}
-
-
-
-
-interface AddAccessControlEntryProps
-{
-    base_id: number
-    set_access_controls: (a: SupabaseAccessControl[] | undefined) => void
-}
-function AddAccessControlEntry (props: AddAccessControlEntryProps)
-{
-    const [email_or_uid, set_email_or_uid] = useState("")
-    const [access_level, set_access_level] = useState<ACCESS_CONTROL_LEVEL>("editor")
-    const [adding_status, set_adding_status] = useState<"initial" | "adding" | "added">("initial")
-    const adding = adding_status === "adding"
-    const added = adding_status === "added"
-    const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
-
-    const { base_id, set_access_controls } = props
-
-
-    return <div>
-        <input
-            type="text"
-            placeholder="User's ID or email"
-            value={email_or_uid}
-            disabled={adding}
-            onKeyUp={e => set_email_or_uid(e.currentTarget.value)}
-            onChange={e => set_email_or_uid(e.currentTarget.value)}
-            onBlur={e => set_email_or_uid(e.currentTarget.value)}
-        />
-        <br/>
-        <SelectAccessLevel level="editor" current_level={access_level} on_click={set_access_level} />
-        <SelectAccessLevel level="viewer" current_level={access_level} on_click={set_access_level} />
-        <SelectAccessLevel level="none" current_level={access_level} on_click={set_access_level} />
-
-        <br />
-        {adding && <span>Adding...</span>}
-        {added && <span>Added.</span>}
-        <DisplaySupabasePostgrestError error={postgrest_error} />
-        <br />
-
-        <input
-            type="button"
-            onClick={async () =>
-            {
-                set_adding_status("adding")
-
-                // TODO next
-                const result = await supabase.rpc("invite_user_to_base", { base_id, email_or_uid, access_level })
-                const { status, error } = result
-                const data: number = result.data as any
-
-                let custom_error: PostgrestError | null = error
-                if (data === 403) custom_error = { message: "Invalid base", details: "", hint: "", code: "403" }
-                else if (data === 404) custom_error = { message: "Invited user not found", details: "", hint: "", code: "404" }
-                // TODO Use error codes from postgrest: https://postgrest.org/en/v8.0/api.html#http-status-codes
-                // Instead of trying to include the result.status code
-                set_postgrest_error(custom_error)
-
-                if (!custom_error)
-                {
-                    await get_access_controls({ base_id, set_access_controls, set_postgrest_error })
-                    set_adding_status("added")
-                    set_email_or_uid("") // reset form
-                }
-            }}
-            value="Add user"
-            disabled={!email_or_uid}
-        />
-    </div>
+    args.set_postgrest_error(args.res.error)
+    if (!args.res.error) await get_access_controls(args)
 }
 
 

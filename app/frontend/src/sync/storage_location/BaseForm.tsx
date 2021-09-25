@@ -5,7 +5,7 @@ import "../common.scss"
 import type { RootState } from "../../state/State"
 import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
 import { BaseFormEditFields } from "./BaseFormEditFields"
-import { BaseFormEditSharing } from "./BaseFormEditSharing"
+import { BaseFormEditSharing } from "../../access_controls/BaseFormEditSharing"
 
 
 

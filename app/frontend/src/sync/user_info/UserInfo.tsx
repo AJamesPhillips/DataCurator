@@ -50,7 +50,7 @@ function _UserInfo (props: Props)
     }, [user, need_to_set_user_name])
 
 
-    return (
+    return (<div>
         <Button
             color="primary"
             endIcon={<ExitToAppIcon />}
@@ -66,13 +66,15 @@ function _UserInfo (props: Props)
             <Typography noWrap={true}>
                 {user ? user_name_or_none : "Sign in"}
             </Typography>
-
-            {form_state === "signin" && <UserSigninRegister on_close={(!user) ? undefined : () => set_form_state("hidden")} />}
-            {form_state === "account_info" && <UserAccountInfo
-                on_close={need_to_set_user_name ? undefined : () => set_form_state("hidden")}
-            />}
         </Button>
-    )
+
+        {form_state === "signin" && <UserSigninRegister
+            on_close={(!user) ? undefined : () => set_form_state("hidden")} />}
+
+        {form_state === "account_info" && <UserAccountInfo
+            on_close={need_to_set_user_name ? undefined : () => set_form_state("hidden")}
+        />}
+    </div>)
 }
 
 export const UserInfo = connector(_UserInfo) as FunctionalComponent<{}>

@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useState } from "react"
+import { useState } from "preact/hooks"
 import { Accordion, AccordionDetails, AccordionSummary, Box, makeStyles, Typography } from "@material-ui/core"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 

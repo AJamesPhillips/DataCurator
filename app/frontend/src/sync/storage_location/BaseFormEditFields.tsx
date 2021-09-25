@@ -1,12 +1,12 @@
 import { h } from "preact"
+import { useState } from "preact/hooks"
 import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
+import type { PostgrestError } from "@supabase/postgrest-js"
 
 import "../common.scss"
 import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
-import { useState } from "react"
 import { modify_base } from "../../supabase/bases"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
-import type { PostgrestError } from "@supabase/postgrest-js"
 import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
 
 
@@ -68,7 +68,7 @@ export function BaseFormEditFields (props: OwnProps)
         <br />
 
         <div>
-            <input
+            {have_pending_edits && valid_edits && <input
                 type="button"
                 disabled={!have_pending_edits || !valid_edits}
                 onClick={async () =>
@@ -80,12 +80,14 @@ export function BaseFormEditFields (props: OwnProps)
                     pub_sub.user.pub("stale_bases", true)
                 }}
                 value="Save changes"
-            />
+            />} &nbsp;
+
             <input
                 type="button"
                 onClick={on_save_or_exit}
                 value={have_pending_edits ? "Cancel" : "Back"}
             />
+            <br />
 
             <DisplaySupabasePostgrestError error={error_modifying_base} />
         </div>

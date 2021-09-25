@@ -16,7 +16,7 @@ export function UserAccountInfo (props: OwnProps)
     const { on_close } = props
 
     return <Modal
-        title={<div style={{ margin: 10 }}>
+        title={<div style={{ margin: 10, textAlign: "center" }}>
             <h2>User Account</h2>
         </div>}
         size="medium"
@@ -29,6 +29,8 @@ export function UserAccountInfo (props: OwnProps)
         }}
 
 
-        child={<UserAccountInfoForm on_close={on_close}/>}
+        child={<div style={{ textAlign: "center" }}>
+            <UserAccountInfoForm on_close={on_close}/>
+        </div>}
     />
 }

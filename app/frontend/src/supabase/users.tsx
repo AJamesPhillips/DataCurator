@@ -1,5 +1,4 @@
 import { h } from "preact"
-import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 
 import type { SupabaseUsersById } from "./interfaces"
 
@@ -8,16 +7,16 @@ import type { SupabaseUsersById } from "./interfaces"
 interface GetUserNameForDisplayArgs
 {
     users_by_id: SupabaseUsersById
-    user: SupabaseAuthUser
+    current_user_id: string | undefined
     other_user_id: string
 }
 export function get_user_name_for_display (args: GetUserNameForDisplayArgs)
 {
-    const { users_by_id, user, other_user_id } = args
+    const { users_by_id, current_user_id, other_user_id } = args
 
     let name = users_by_id[other_user_id]?.name || ""
-    if (!user) name = name || "Someone"
-    else name = user.id === other_user_id ? "me" : (name || "(someone else)")
+    if (!current_user_id) name = name || "Someone"
+    else name = current_user_id === other_user_id ? "me" : (name || "(someone else)")
 
     return <span title={other_user_id}>{name}</span>
 }

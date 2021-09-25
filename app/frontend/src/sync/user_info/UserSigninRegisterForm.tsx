@@ -73,11 +73,13 @@ function _UserSigninRegisterForm (props: Props)
 
     if (form_state === "initial") return <div className="section">
         <form>
+            <br/><br/>
             <input type="email" placeholder="email" value={email}
                 onKeyUp={e => set_email(e.currentTarget.value)}
                 onChange={e => set_email(e.currentTarget.value)}
                 onBlur={e => set_email(e.currentTarget.value)}
             /><br/>
+            <br/>
             <input type="password" placeholder="password" value={password}
                 onKeyUp={e => set_password(e.currentTarget.value)}
                 onChange={e => set_password(e.currentTarget.value)}
@@ -86,12 +88,16 @@ function _UserSigninRegisterForm (props: Props)
         </form>
 
         <div>
-            <input type="button" disabled={!email || !password} onClick={sign_in} value="Signin" />
+            <br/>
+            <input type="button" disabled={!email || !password} onClick={sign_in} value="Signin" /> &nbsp;
             <input type="button" disabled={!email || !password} onClick={register} value="Register" /><br/>
+            <br/>
             <input type="button" disabled={!email} onClick={forgot_password} value="Forgot password?" /><br/>
+            <br/>
         </div>
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
+        <br/>
     </div>
 
 

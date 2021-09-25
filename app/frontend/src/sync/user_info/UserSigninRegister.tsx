@@ -13,7 +13,7 @@ interface OwnProps {
 export function UserSigninRegister (props: OwnProps)
 {
     return <Modal
-        title={<div style={{ margin: 10 }}>
+        title={<div style={{ margin: 10, textAlign: "center" }}>
             <h2>Signin / Register</h2>
         </div>}
         size="medium"
@@ -22,6 +22,8 @@ export function UserSigninRegister (props: OwnProps)
         on_close={props.on_close} // not closeable until signed in
 
 
-        child={<UserSigninRegisterForm />}
+        child={<div style={{ textAlign: "center" }}>
+            <UserSigninRegisterForm />
+        </div>}
     />
 }

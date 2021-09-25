@@ -80,8 +80,11 @@ function _UserAccountInfoForm (props: Props)
 
     return <div>
         <div className="section">
-            Logged in with {user.email} {user.id}<br />
+            Logged in with {user.email}<br />
+            user id: &nbsp; {user.id}<br />
+            <br />
             <input type="button" onClick={log_out} value="Log out" /><br />
+            <br />
             <input type="button" onClick={() => set_form_state("updating_password")} value="Change password" /><br />
         </div>
 
