@@ -25,12 +25,13 @@ export function load_state (store: Store<RootState>)
     }
 
 
-    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING" }))
+    // This patterns smells now that we have to duplicate these
+    dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING", data_type: "specialised_objects" }))
 
     const promise_data = get_state_data(storage_type, state)
     if (!promise_data)
     {
-        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED" }))
+        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects" }))
         return
     }
 
@@ -42,13 +43,13 @@ export function load_state (store: Store<RootState>)
 
         ensure_any_knowledge_view_displayed(store)
 
-        dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED" }))
+        dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED", data_type: "specialised_objects" }))
     })
     .catch((error: SyncError | Error) =>
     {
         const error_message = error_to_string(error)
         console.error(error)
-        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", error_message }))
+        dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects", error_message }))
     })
 }
 

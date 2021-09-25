@@ -1,7 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
-import type { SyncState } from "./state"
+import type { SyncState, SyncStateForDataType } from "./state"
 
 
 
@@ -19,15 +19,21 @@ export function sync_starting_state (): SyncState
 {
     const obj = get_persisted_state_object<SyncState>("sync")
 
-    const state: SyncState = {
-        storage_type: "supabase",
+    const default_sync_state_for_one_data_type: SyncStateForDataType = {
         status: undefined,
-        ready_for_reading: false,
-        ready_for_writing: false,
-        saving: false,
         error_message: "",
         retry_attempt: undefined,
         next_save_ms: undefined,
+    }
+
+    const state: SyncState = {
+        storage_type: "supabase",
+        ready_for_reading: false,
+        ready_for_writing: false,
+
+        bases: { ...default_sync_state_for_one_data_type },
+        specialised_objects: { ...default_sync_state_for_one_data_type },
+
         ...obj,
     }
 

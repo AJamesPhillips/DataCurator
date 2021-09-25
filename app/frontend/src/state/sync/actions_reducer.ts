@@ -1,8 +1,8 @@
 import type { Action, AnyAction } from "redux"
 
-import { update_state, update_substate } from "../../utils/update_state"
+import { update_substate, update_subsubstate } from "../../utils/update_state"
 import type { RootState } from "../State"
-import type { SyncState, SYNC_STATUS } from "./state"
+import type { SyncDataType, SyncStateForDataType, SYNC_STATUS } from "./state"
 
 
 
@@ -12,30 +12,28 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     if (is_update_sync_status(action))
     {
         const { status, error_message = "", attempt: retry_attempt } = action
-        const saving = status === "SAVING"
-        const saved = status === "SAVED"
-        const loaded_successfully = status === "LOADED"
-        const failed = status === "FAILED"
-        const ready_for_reading = status !== undefined && status !== "LOADING"
-        const ready_for_writing = saved || loaded_successfully || failed
 
-        const sync: SyncState = {
-            ...state.sync,
+        // const saved = status === "SAVED"
+        // const loaded_successfully = status === "LOADED"
+        // const failed = status === "FAILED"
+        // const ready_for_reading = status !== undefined && status !== "LOADING"
+        // const ready_for_writing = saved || loaded_successfully || failed
+
+        const sync_state_for_data_type: SyncStateForDataType =
+        {
+            ...state.sync[action.data_type],
             status,
-            ready_for_reading,
-            ready_for_writing,
-            saving,
             error_message,
             retry_attempt,
         }
 
-        state = update_state(state, "sync", sync)
+        state = update_substate(state, "sync", action.data_type, sync_state_for_data_type)
     }
 
 
     if (is_set_next_sync_ms(action))
     {
-        state = update_substate(state, "sync", "next_save_ms", action.next_save_ms)
+        state = update_subsubstate(state, "sync", action.data_type, "next_save_ms", action.next_save_ms)
     }
 
 
@@ -47,6 +45,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 interface UpdateSyncStatusArgs
 {
     status: SYNC_STATUS
+    data_type: SyncDataType
     error_message?: string
     attempt?: number
 }
@@ -69,6 +68,7 @@ const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncSta
 interface SetNextSyncMsArgs
 {
     next_save_ms: number | undefined
+    data_type: SyncDataType
 }
 
 interface ActionSetNextSyncMs extends Action, SetNextSyncMsArgs {}

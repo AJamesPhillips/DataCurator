@@ -8,7 +8,7 @@ export async function signout ()
 {
     const store = get_store()
 
-    store.dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
+    store.dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined, data_type: "specialised_objects" }))
     await storage_dependent_save(store.dispatch, store.getState())
 
 }

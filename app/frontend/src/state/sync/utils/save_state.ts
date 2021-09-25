@@ -34,12 +34,12 @@ function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | un
 
     if (!state.sync.ready_for_writing)
     {
-        console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
+        console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
         return Promise.reject()
     }
 
-    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING" }))
-    dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined }))
+    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
+    dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined, data_type: "specialised_objects" }))
 
     const storage_type = state.sync.storage_type!
     const data = get_specialised_state_to_save(state)
@@ -49,7 +49,7 @@ function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | un
     {
         // Move this here so that retryable_save can be used by swap_storage and not trigger front end
         // code to prematurely think that application is ready
-        dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED" }))
+        dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
         return state
     })
     .catch(() => last_attempted_state_to_save.state = undefined)
@@ -133,7 +133,7 @@ export function retryable_save (args: AttemptSaveArgs)
             error_message = `Stopping after ${attempt} attempts at resaving: ${error_message}`
             console.error(error_message)
 
-            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt: 0 })
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects", error_message, attempt: 0 })
             dispatch(action)
 
             return Promise.reject()
@@ -143,7 +143,7 @@ export function retryable_save (args: AttemptSaveArgs)
             error_message = `Retrying attempt ${attempt}; ${error_message}`
             console.error(error_message)
 
-            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", error_message, attempt })
+            const action = ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects", error_message, attempt })
             dispatch(action)
 
             return new Promise((resolve, reject) =>

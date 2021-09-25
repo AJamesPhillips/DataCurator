@@ -7,16 +7,26 @@ export type StorageType = "supabase" //| "local_server" | "solid" | "hard_copy_e
     // TODO: remove "local_storage" as option
     //| "local_storage"
 
-export interface SyncState
+export type SyncDataType = "bases" | "specialised_objects"
+
+export interface SyncState extends SyncStateByType
 {
-    status: SYNC_STATUS | undefined
     ready_for_reading: boolean
     ready_for_writing: boolean
-    saving: boolean
-    error_message: string
 
+    // Only one type at the moment
     storage_type: StorageType
+}
+
+
+export interface SyncStateForDataType
+{
+    status: SYNC_STATUS | undefined
+    error_message: string
 
     retry_attempt: number | undefined
     next_save_ms: number | undefined
 }
+
+
+type SyncStateByType = { [data_type in SyncDataType]: SyncStateForDataType }
