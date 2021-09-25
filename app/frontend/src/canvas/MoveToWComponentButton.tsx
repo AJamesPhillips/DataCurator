@@ -1,5 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
+import { Box, IconButton } from "@material-ui/core"
 
 import {
     get_current_composed_knowledge_view_from_state,
@@ -7,9 +9,7 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
-import FilterCenterFocusIcon from '@material-ui/icons/FilterCenterFocus'
 import { lefttop_to_xy } from "../state/display_options/display"
-import { Box, IconButton } from "@material-ui/core"
 import type { PositionAndZoom } from "./interfaces"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 

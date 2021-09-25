@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { IconButton, makeStyles,Tooltip } from "@material-ui/core"
 import { connect, ConnectedProps } from "react-redux"
-import FilterNoneIcon from '@material-ui/icons/FilterNone'
+import FilterNoneIcon from "@material-ui/icons/FilterNone"
 
 import type { RootState } from "../state/State"
 

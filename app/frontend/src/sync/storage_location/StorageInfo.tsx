@@ -1,14 +1,13 @@
 import { Button, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import PermDataSettingIcon from '@material-ui/icons/PermDataSetting'
+import PermDataSettingIcon from "@material-ui/icons/PermDataSetting"
 
 import "./StorageInfo.scss"
 import type { RootState } from "../../state/State"
 import { SelectStorage } from "./SelectStorage"
 import { selector_need_to_create_a_base, selector_storage_name } from "../../state/user_info/selector"
-import { useEffect } from "preact/hooks"
 
 
 

@@ -1,5 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, ButtonGroup, IconButton, Slider } from "@material-ui/core"
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
+import NavigateNextIcon from "@material-ui/icons/NavigateNext"
 
 import "./time_slider.scss"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
@@ -8,9 +11,6 @@ import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
 import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
-import { Box, ButtonGroup, IconButton, Slider } from "@material-ui/core"
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
 import { date2str_auto } from "../shared/utils/date_helpers"
 
 

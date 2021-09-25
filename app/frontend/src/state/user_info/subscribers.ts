@@ -1,9 +1,7 @@
 import type { Store } from "redux"
 
 import { get_supabase } from "../../supabase/get_supabase"
-import type {
-    SupabaseUser,
-} from "../../supabase/interfaces"
+import type { SupabaseUser } from "../../supabase/interfaces"
 import { ACTIONS } from "../actions"
 import { pub_sub } from "../pub_sub/pub_sub"
 import type { RootState } from "../State"

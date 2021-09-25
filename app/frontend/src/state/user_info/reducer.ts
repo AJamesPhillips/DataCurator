@@ -6,7 +6,6 @@ import { pub_sub } from "../pub_sub/pub_sub"
 import type { RootState } from "../State"
 import {
     is_set_user,
-    is_update_users_name,
     is_set_need_to_handle_password_recovery,
     is_update_bases,
     is_update_chosen_base_id,
@@ -21,9 +20,9 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_set_user(action))
     {
         state = update_substate(state, "user_info", "user", action.user)
-        // New pattern, not sure this is a good idea yet but far simpler than making a
-        // host of subscribers which have to store state and that run on ever store change
-        pub_sub.user.pub("changed_user", action.user)
+        // New pattern, not sure this is a good idea yet but is simpler than making subscribers
+        // which store state, and that run on every store change to compare to current state
+        pub_sub.user.pub("changed_user", true)
     }
 
 
@@ -48,13 +47,6 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
-    if (is_update_users_name(action))
-    {
-        const { user_name } = action
-        state = update_substate(state, "user_info", "user_name", user_name)
-    }
-
-
     if (is_update_bases(action))
     {
         const { bases } = action
@@ -73,6 +65,10 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         {
             state = update_substate(state, "user_info", "chosen_base_id", bases && bases[0]?.id)
         }
+
+        // New pattern, not sure this is a good idea yet but is simpler than making subscribers
+        // which store state, and that run on every store change to compare to current state
+        pub_sub.user.pub("changed_bases", true)
     }
 
 
@@ -86,14 +82,21 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
 
 
 
+// Probably should be a public selector but perhaps we want to have the name to be easy to
+// persist and restore into the state on page reload
+function selector_users_name (state: RootState)
+{
+    const { user, users_by_id } = state.user_info
+
+    return (user && users_by_id) ? users_by_id[user.id]?.name : undefined
+}
+
+
 function update_users_name (state: RootState)
 {
-    const { user, user_name: current_user_name, users_by_id } = state.user_info
+    const new_user_name = selector_users_name(state)
 
-    let new_user_name: string | undefined = undefined
-    if (user && users_by_id) new_user_name = users_by_id[user.id]?.name
-
-    if (new_user_name !== current_user_name)
+    if (new_user_name !== state.user_info.user_name)
     {
         state = update_substate(state, "user_info", "user_name", new_user_name)
     }

@@ -66,27 +66,6 @@ export const is_set_users = (action: AnyAction): action is ActionSetUsers => {
 
 
 
-interface UpdateUsersNameArgs
-{
-    user_name: string | undefined
-}
-
-interface ActionUpdateUsersName extends Action, UpdateUsersNameArgs {}
-
-const update_users_name_type = "update_users_name"
-
-const update_users_name = (args: UpdateUsersNameArgs): ActionUpdateUsersName =>
-{
-    // const user_name = ensure_user_name(args.user_name)
-    return { type: update_users_name_type, ...args }
-}
-
-export const is_update_users_name = (action: AnyAction): action is ActionUpdateUsersName => {
-    return action.type === update_users_name_type
-}
-
-
-
 interface UpdateChosenBaseIdArgs
 {
     base_id: number | undefined
@@ -131,7 +110,6 @@ export const user_info_actions = {
     set_user,
     set_need_to_handle_password_recovery,
     set_users,
-    update_users_name,
     update_chosen_base_id,
     update_bases,
 }

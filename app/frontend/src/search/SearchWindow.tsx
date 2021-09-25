@@ -1,18 +1,18 @@
 import Accordion from "@material-ui/core/Accordion"
-import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionDetails from "@material-ui/core/AccordionDetails"
 import AccordionSummary from "@material-ui/core/AccordionSummary"
 import Box from "@material-ui/core/Box"
-import Button from "@material-ui/core/Button";
-import yellow from "@material-ui/core/colors/yellow";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Typography from "@material-ui/core/Typography";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import WarningIcon from '@material-ui/icons/Warning';
+import Button from "@material-ui/core/Button"
+import yellow from "@material-ui/core/colors/yellow"
+import FormControl from "@material-ui/core/FormControl"
+import FormControlLabel from "@material-ui/core/FormControlLabel"
+import FormLabel from "@material-ui/core/FormLabel"
+import Radio from "@material-ui/core/Radio"
+import RadioGroup from "@material-ui/core/RadioGroup"
+import Typography from "@material-ui/core/Typography"
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
+import RefreshIcon from "@material-ui/icons/Refresh"
+import WarningIcon from "@material-ui/icons/Warning"
 
 import { h } from "preact"
 import { useState } from "preact/hooks"
