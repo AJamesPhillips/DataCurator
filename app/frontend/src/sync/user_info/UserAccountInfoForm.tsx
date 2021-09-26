@@ -11,6 +11,7 @@ import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswo
 import { useEffect } from "preact/hooks"
 import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
+import { signout } from "../../state/user_info/signout"
 
 
 
@@ -60,6 +61,14 @@ function _UserAccountInfoForm (props: Props)
     {
         const supabase = get_supabase()
 
+        try
+        {
+            signout()
+        }
+        catch (err)
+        {
+            // todo handle failure
+        }
         const { error } = await supabase.auth.signOut()
         set_supabase_session_error(error)
         set_user({ user: supabase.auth.user() })

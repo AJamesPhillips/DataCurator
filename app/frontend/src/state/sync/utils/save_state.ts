@@ -14,7 +14,7 @@ import { save_supabase_data } from "../supabase/supabase_save_data"
 export function storage_dependent_save (dispatch: Dispatch, state: RootState)
 {
     // Save immediately and do not throttle
-    save_state({ dispatch, state })
+    return save_state({ dispatch, state })
 }
 
 
@@ -29,15 +29,15 @@ function save_state ({ dispatch, state }: SaveStateArgs)
     if (!state.sync.ready_for_writing)
     {
         console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
-        return
+        return Promise.reject()
     }
 
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
-    dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined, data_type: "specialised_objects" }))
 
     const storage_type = state.sync.storage_type!
     const ids = get_next_specialised_state_id_to_save(state)
 
+    return Promise.resolve()
     // retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
     // .then(() =>
     // {

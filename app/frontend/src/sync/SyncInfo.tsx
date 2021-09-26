@@ -23,7 +23,6 @@ const map_state = (state: RootState) =>
 }
 
 const map_dispatch = {
-    set_next_sync_ms: ACTIONS.sync.set_next_sync_ms,
     update_sync_status: ACTIONS.sync.update_sync_status,
 }
 
@@ -41,14 +40,6 @@ function _SyncInfo (props: Props)
     const error_message = [specialised.error_message, bases.error_message].filter(is_defined).join(", ")
     // const overwriting = status === "OVERWRITING"
     const sending_or_recieving = loading || saving //|| overwriting
-
-    const next_save_ms = Math.min(...[specialised.next_save_ms, bases.next_save_ms].filter(is_defined))
-    const next_save = Number.isFinite(next_save_ms) && next_save_ms - performance.now()
-    const will_save_in_future = next_save && next_save >= 0
-    const save_in_seconds = next_save && next_save >= 0 && Math.round(next_save / 1000)
-
-    if (will_save_in_future) setTimeout(() => update_state({}), 500)
-
 
     const classes = use_styles()
 
@@ -81,11 +72,11 @@ function _SyncInfo (props: Props)
         >
             <Typography
                 className={`${classes.animate} ${classes.initially_shown} show`}
-                color={(failed) ? "error" : "initial" }
+                color={failed ? "error" : "initial" }
                 component="span"
                 noWrap={true}
             >
-                {failed ? "Failed!" : (will_save_in_future ? `Save in ${save_in_seconds}s` : status_text)}
+                {failed ? "Failed!" : status_text}
             </Typography>
             <Typography
                 className={`${classes.animate} ${classes.initially_hidden} hide`}

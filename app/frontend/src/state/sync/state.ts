@@ -37,7 +37,6 @@ export interface SyncStateForDataType
     error_message: string
 
     retry_attempt: number | undefined
-    next_save_ms: number | undefined
 }
 
 
