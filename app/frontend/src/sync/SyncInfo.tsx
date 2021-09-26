@@ -38,8 +38,7 @@ function _SyncInfo (props: Props)
     const loading = specialised.status === "LOADING" || bases.status === "LOADING"
     const saving = specialised.status === "SAVING" || bases.status === "SAVING"
     const error_message = [specialised.error_message, bases.error_message].filter(is_defined).join(", ")
-    // const overwriting = status === "OVERWRITING"
-    const sending_or_recieving = loading || saving //|| overwriting
+    const sending_or_recieving = loading || saving
 
     const classes = use_styles()
 
