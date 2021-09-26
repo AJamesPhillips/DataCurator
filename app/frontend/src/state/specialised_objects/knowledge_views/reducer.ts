@@ -78,7 +78,7 @@ function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_vie
 {
     const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry)
 
-    return handle_upsert_knowledge_view(state, new_knowledge_view, true)
+    return handle_upsert_knowledge_view(state, new_knowledge_view)
 }
 
 function handle_delete_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string): RootState
@@ -95,7 +95,7 @@ function handle_delete_knowledge_view_entry (state: RootState, knowledge_view_id
     new_wc_id_map[wcomponent_id] = { ...new_wc_id_map[wcomponent_id]!, deleted: true }
     const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
-    return handle_upsert_knowledge_view(state, new_knowledge_view, true)
+    return handle_upsert_knowledge_view(state, new_knowledge_view)
 }
 
 

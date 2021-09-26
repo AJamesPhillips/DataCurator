@@ -1,7 +1,6 @@
 import { Button, makeStyles, Typography } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useState } from "preact/hooks"
 import SaveIcon from "@material-ui/icons/Save"
 import SyncProblemIcon from "@material-ui/icons/SyncProblem"
 
@@ -31,8 +30,6 @@ type Props = ConnectedProps<typeof connector>
 
 function _SyncInfo (props: Props)
 {
-    const [, update_state] = useState({})
-
     const { sync_state_specialised_objects: specialised, sync_state_bases: bases } = props
     const failed = specialised.status === "FAILED" || bases.status === "FAILED"
     const loading = specialised.status === "LOADING" || bases.status === "LOADING"

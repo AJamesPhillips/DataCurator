@@ -1,6 +1,5 @@
 import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { SpecialisedObjectsState } from "../specialised_objects/State"
 
 
 
