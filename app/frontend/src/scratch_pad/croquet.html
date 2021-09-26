@@ -1,0 +1,117 @@
+<html>
+<body>
+    <script src="https://unpkg.com/@croquet/croquet@1.0"></script>
+    <script>
+        // https://croquet-dev.slack.com/archives/CKMR86T45/p1632610153047200
+        Croquet.app.root = false;
+    </script>
+    <div id="countDisplay"></div>
+    <div id="userList"></div>
+
+<script>
+
+class MyModel extends Croquet.Model {
+
+    init() {
+        this.count = 0;
+        this.subscribe("counter", "reset", this.resetCounter);
+
+        // +users
+        this.userData = {};
+        this.subscribe(this.sessionId, "view-join", this.addUser);
+        this.subscribe(this.sessionId, "view-exit", this.deleteUser);
+        // -users
+
+        this.subscribe("pointer", "position", this.handlePointerPosition);
+
+        this.future(1000).tick();
+    }
+
+    // +users
+    addUser(viewId) {
+        this.userData[viewId] = this.userData[viewId] || { viewId, order: Object.keys(this.userData).length };
+        this.userData[viewId].start = this.now()
+        this.publish(this.sessionId, "user-added");
+    }
+    deleteUser(viewId) {
+        this.userData[viewId].end = this.now();
+        this.publish(this.sessionId, "user-deleted");
+    }
+    // -users
+
+
+    handlePointerPosition (args)
+    {
+        const user = this.userData[args.viewId] || { viewId: args.viewId, order: -1 }
+        user.x = args.x
+        user.y = args.y
+        this.publish(this.sessionId, "user-moved");
+    }
+
+
+    resetCounter() {
+        this.count = 0;
+        this.publish("counter", "update", this.count);
+    }
+
+    tick() {
+        this.count++;
+        this.publish("counter", "update", this.count);
+        this.future(1000).tick();
+    }
+
+}
+
+MyModel.register("MyModel");
+
+class MyView extends Croquet.View {
+
+    constructor(model) {
+        super(model);
+        this.model = model;
+        countDisplay.onclick = event => this.onclick(event);
+        document.body.onpointermove = e => this.onmove(e.clientX, e.clientY)
+
+        this.subscribe("counter", "update", this.handleUpdate);
+
+        // +users
+        this.subscribe(this.sessionId, "user-added", this.updateUsersList);
+        this.subscribe(this.sessionId, "user-deleted", this.updateUsersList);
+        this.subscribe(this.sessionId, "user-moved", this.updateUsersList);
+        this.updateUsersList()
+        // -users
+    }
+
+    updateUsersList() {
+        const users = Object.values(this.model.userData).sort((a, b) => a.order < b.order ? -1 : 1)
+        userList.innerHTML = users.map(u => `${u.viewId} x: ${u.x} y: ${u.y} ${u.order} ${u.start} ${u.end}`).join("<br />")
+    }
+
+
+    onclick() {
+        this.publish("counter", "reset");
+    }
+
+    onmove(x, y)
+    {
+        this.publish("pointer", "position", { x, y, viewId: this.viewId });
+    }
+
+    handleUpdate(data) {
+        countDisplay.textContent = data;
+    }
+
+}
+
+Croquet.Session.join({
+    appId: "io.codepen.croquet.hello",
+    apiKey: "1_9oolgb5b5wc5kju39lx8brrrhm82log9xvdn34uq",
+    name: "unnamed",
+    password: "secret",
+    model: MyModel,
+    view: MyView
+})
+
+</script>
+</body>
+</html>
