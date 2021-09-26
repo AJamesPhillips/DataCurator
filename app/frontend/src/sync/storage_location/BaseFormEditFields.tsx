@@ -33,9 +33,10 @@ export function BaseFormEditFields (props: OwnProps)
     const valid_edits = !!modified_base.title
 
 
-    function update_title (e: h.JSX.TargetedEvent<HTMLInputElement>)
+    function update_title (e: h.JSX.TargetedEvent<HTMLInputElement>, trim_title: boolean)
     {
-        const title = e.currentTarget.value.trim()
+        let title = e.currentTarget.value
+        if (trim_title) title = title.trim()
         set_modified_base({ ...modified_base, title })
     }
 
@@ -50,9 +51,8 @@ export function BaseFormEditFields (props: OwnProps)
             type="text"
             placeholder="title"
             value={modified_base.title}
-            onKeyDown={update_title}
-            onChange={update_title}
-            onBlur={update_title}
+            onChange={e => update_title(e, false)}
+            onBlur={e => update_title(e, true)}
         />
         <br /><br />
 
