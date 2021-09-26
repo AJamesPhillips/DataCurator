@@ -1,4 +1,4 @@
-import type { Color } from "../shared/interfaces"
+import type { Color } from "../shared/interfaces/color"
 
 
 

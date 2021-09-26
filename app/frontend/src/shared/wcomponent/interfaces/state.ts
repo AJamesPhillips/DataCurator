@@ -1,4 +1,4 @@
-import type { Base } from "./base"
+import type { Base } from "../../interfaces/base"
 import type { TemporalUncertainty, PredictionBase } from "../../uncertainty/uncertainty"
 import type { WComponentNodeBase } from "./wcomponent_base"
 

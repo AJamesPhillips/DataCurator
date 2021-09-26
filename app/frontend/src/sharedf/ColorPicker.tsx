@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 
 import "./ColorPicker.css"
 import { EditableNumber } from "../form/EditableNumber"
-import type { Color } from "../shared/interfaces"
+import type { Color } from "../shared/interfaces/color"
 import { bounded } from "../shared/utils/bounded"
 import { color_to_string } from "./color"
 

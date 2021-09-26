@@ -8,7 +8,7 @@ import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
-import type { Color } from "../shared/interfaces"
+import type { Color } from "../shared/interfaces/color"
 
 
 

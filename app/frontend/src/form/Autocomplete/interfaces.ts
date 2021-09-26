@@ -1,6 +1,6 @@
 import type { h } from "preact"
 
-import type { Color } from "../../shared/interfaces"
+import type { Color } from "../../shared/interfaces/color"
 
 
 

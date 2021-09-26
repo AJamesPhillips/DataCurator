@@ -1,4 +1,4 @@
-import type { Base } from "./base"
+import type { Base } from "../../interfaces/base"
 import type { Project } from "./project"
 
 

@@ -1,5 +1,5 @@
 import type { StartedStoppedAt, WComponentNodeAction } from "./action"
-import type { Base } from "./base"
+import type { Base } from "../../interfaces/base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"

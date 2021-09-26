@@ -1,6 +1,6 @@
 import type { HasUncertainDatetime } from "../../uncertainty/uncertainty"
 import { sort_list } from "../../utils/sort"
-import type { Base } from "../interfaces/base"
+import type { Base } from "../../interfaces/base"
 import { VAPsType } from "../interfaces/generic_value"
 import { WComponent, wcomponent_is_action, wcomponent_is_statev2 } from "../interfaces/SpecialisedObjects"
 import type {

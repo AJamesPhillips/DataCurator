@@ -1,5 +1,4 @@
-import type { Base } from "../../../shared/wcomponent/interfaces/base"
-
+import type { Base } from "../../../shared/interfaces/base"
 import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
 import type {
     SpecialisedObjectsFromToServer,
