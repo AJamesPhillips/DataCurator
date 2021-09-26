@@ -1,3 +1,6 @@
+import type { KnowledgeView } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsState } from "../specialised_objects/State"
 
 
 
@@ -11,6 +14,15 @@ export type SyncDataType = "bases" | "specialised_objects"
 
 export interface SyncState extends SyncStateByType
 {
+    specialised_objects_pending_save: {
+        wcomponent_ids: Set<string>
+        knowledge_view_ids: Set<string>
+    },
+    specialised_objects_save_conflicts: {
+        wcomponent_conflicts_by_id: {[id: string]: WComponent[]}
+        knowledge_view_conflicts_by_id: {[id: string]: KnowledgeView[]}
+    },
+
     ready_for_reading: boolean
     ready_for_writing: boolean
 

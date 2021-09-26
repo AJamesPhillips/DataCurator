@@ -14,6 +14,8 @@ export interface Base
     modified_at?: Date
     modified_by_username?: string
     deleted_at?: Date
+
+    needs_save?: boolean
 }
 
 

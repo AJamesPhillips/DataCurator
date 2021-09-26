@@ -106,11 +106,11 @@ function get_ready_for_fields_for_data_type (state: SyncStateForDataType)
     const { status } = state
 
     const saved = status === "SAVED"
-    const loaded_successfully = status === "LOADED"
+    const loaded = status === "LOADED"
     const failed = status === "FAILED"
 
     const ready_for_reading = status !== undefined && status !== "LOADING"
-    const ready_for_writing = saved || loaded_successfully || failed
+    const ready_for_writing = saved || loaded || failed
 
     return { ready_for_reading, ready_for_writing }
 }

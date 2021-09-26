@@ -12,6 +12,7 @@ import { tidy_wcomponent } from "./tidy_wcomponent"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
 import { mark_as_deleted, update_modified_by } from "../update_modified_by"
+import { ensure_item_in_set } from "../../../utils/set"
 
 
 
@@ -21,10 +22,16 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
     if (is_upsert_wcomponent(action))
     {
         const tidied = tidy_wcomponent(action.wcomponent)
-        const wcomponent = update_modified_by(tidied, state)
-        const wcomponent_id = wcomponent.id
+        const wcomponent = action.source_of_truth ? tidied : update_modified_by(tidied, state)
 
-        state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent_id, wcomponent)
+        state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent.id, wcomponent)
+
+        if (!action.source_of_truth)
+        {
+            let { wcomponent_ids } = state.sync.specialised_objects_pending_save
+            wcomponent_ids = ensure_item_in_set(wcomponent_ids, wcomponent.id)
+            state = update_subsubstate(state, "sync", "specialised_objects_pending_save", "wcomponent_ids", wcomponent_ids)
+        }
     }
 
 

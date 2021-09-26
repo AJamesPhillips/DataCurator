@@ -22,6 +22,7 @@ function _update_modified_by <I extends Base> (item: I, state: RootState, deleti
 {
     item = {
         ...item,
+        needs_save: true,
         // modified_at: new Date(), // this is done by the server.  We have to send the same modified_at
         // for the server to accept an `UPDATE` command.
         modified_by_username: selector_user_name(state),

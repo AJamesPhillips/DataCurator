@@ -15,6 +15,7 @@ export interface AddToKnowledgeViewArgs
 interface UpsertWComponentArgs
 {
     wcomponent: WComponent
+    source_of_truth?: boolean
     add_to_knowledge_view?: AddToKnowledgeViewArgs
 }
 interface ActionUpsertWComponent extends Action, UpsertWComponentArgs {}

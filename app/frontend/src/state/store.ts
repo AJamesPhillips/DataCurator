@@ -2,7 +2,7 @@ import { createStore, Action, Store } from "redux"
 
 import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
-import { persist_all_state } from "./persistence/persistence"
+import { persist_relevant_state } from "./persistence/persistence"
 import { root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
@@ -14,7 +14,7 @@ import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
 import { sync_subscribers } from "./sync/subscribers"
 import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/conditionally_save_state"
-import { conditionally_warn_unsaved_exit } from "./sync/utils/conditionally_warn_unsaved_exit"
+import { setup_warning_of_unsaved_data_beforeunload } from "./unsaved_warning_onbeforeunload"
 import { user_info_subscribers } from "./user_info/subscribers"
 
 
@@ -49,19 +49,15 @@ export function get_store (args: ConfigStoreArgs = {})
     const save = () =>
     {
         const state = store.getState()
-        persist_all_state(state)
+        persist_relevant_state(state)
         ;(window as any).debug_state = state
 
         conditionally_save_state(load_state_from_storage, store.dispatch, state)
         conditional_ctrl_s_save(load_state_from_storage, store.dispatch, state)
     }
     store.subscribe(save)
-    window.onbeforeunload = () =>
-    {
-        const state = store.getState()
-        return conditionally_warn_unsaved_exit(load_state_from_storage, state)
-    }
 
+    setup_warning_of_unsaved_data_beforeunload(load_state_from_storage, store)
 
     store.subscribe(factory_location_hash(store))
 

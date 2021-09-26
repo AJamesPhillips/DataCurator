@@ -9,7 +9,7 @@ import { user_info_persist } from "../user_info/persistance"
 
 
 
-export function persist_all_state (state: RootState)
+export function persist_relevant_state (state: RootState)
 {
     creation_context_persist(state)
     controls_persist(state)

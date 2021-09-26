@@ -1,27 +1,42 @@
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../State"
 
 
 
-export function needs_save (state: RootState, last_attempted_state_to_save: RootState | undefined)
+export function needs_save (state: RootState)
 {
-    return (!last_attempted_state_to_save
-        || last_attempted_state_to_save.specialised_objects !== state.specialised_objects
-        // state.statements !== last_saved.statements ||
-        // state.patterns !== last_saved.patterns ||
-        // state.objects !== last_saved.objects ||
-    )
+    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_objects_pending_save
+
+    return (wcomponent_ids.size + knowledge_view_ids.size) > 0
 }
 
 
 
-export function get_specialised_state_to_save (state: RootState)
+interface GetNextSpecialisedStateIdToSaveReturn
 {
-    const specialised_state: SpecialisedObjectsFromToServer = {
-        perceptions: state.derived.perceptions,
-        wcomponents: state.derived.wcomponents,
-        knowledge_views: state.derived.knowledge_views,
+    knowledge_view_id?: string
+    wcomponent_id?: string
+}
+export function get_next_specialised_state_id_to_save (state: RootState): GetNextSpecialisedStateIdToSaveReturn
+{
+    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_objects_pending_save
+
+    const knowledge_view_ids_iterator = knowledge_view_ids.values()
+    const knowledge_view_id = knowledge_view_ids_iterator.next()
+    if (!knowledge_view_id.done)
+    {
+        const id = knowledge_view_id.value
+        return { knowledge_view_id: id }
     }
 
-    return specialised_state
+
+    const wcomponent_ids_iterator = wcomponent_ids.values()
+    const wcomponent_id = wcomponent_ids_iterator.next()
+    if (!wcomponent_id.done)
+    {
+        const id = wcomponent_id.value
+        return { wcomponent_id: id }
+    }
+
+
+    return {}
 }

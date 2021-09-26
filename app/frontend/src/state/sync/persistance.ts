@@ -28,6 +28,14 @@ export function sync_starting_state (): SyncState
 
     const state: SyncState = {
         storage_type: "supabase",
+        specialised_objects_pending_save: {
+            wcomponent_ids: new Set(),
+            knowledge_view_ids: new Set(),
+        },
+        specialised_objects_save_conflicts: {
+            wcomponent_conflicts_by_id: {},
+            knowledge_view_conflicts_by_id: {},
+        },
         ready_for_reading: false,
         ready_for_writing: false,
 

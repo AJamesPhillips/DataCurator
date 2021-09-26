@@ -6,7 +6,7 @@ import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
 import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
-import { get_specialised_state_to_save } from "./needs_save"
+import { get_next_specialised_state_id_to_save } from "./needs_save"
 import { save_supabase_data } from "../supabase/supabase_save_data"
 
 
@@ -19,40 +19,33 @@ export function storage_dependent_save (dispatch: Dispatch, state: RootState)
 
 
 
-export const last_attempted_state_to_save: { state: RootState | undefined } = { state: undefined }
-
-
-
 interface SaveStateArgs
 {
     dispatch: Dispatch
     state: RootState
 }
-function save_state ({ dispatch, state }: SaveStateArgs): Promise<RootState | undefined>
+function save_state ({ dispatch, state }: SaveStateArgs)
 {
-    last_attempted_state_to_save.state = state
-
     if (!state.sync.ready_for_writing)
     {
         console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
-        return Promise.reject()
+        return
     }
 
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
     dispatch(ACTIONS.sync.set_next_sync_ms({ next_save_ms: undefined, data_type: "specialised_objects" }))
 
     const storage_type = state.sync.storage_type!
-    const data = get_specialised_state_to_save(state)
+    const ids = get_next_specialised_state_id_to_save(state)
 
-    return retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
-    .then(() =>
-    {
-        // Move this here so that retryable_save can be used by swap_storage and not trigger front end
-        // code to prematurely think that application is ready
-        dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
-        return state
-    })
-    .catch(() => last_attempted_state_to_save.state = undefined)
+    // retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
+    // .then(() =>
+    // {
+    //     // Move this here so that retryable_save can be used by swap_storage and not trigger front end
+    //     // code to prematurely think that application is ready
+    //     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
+    //     return state
+    // })
 }
 
 
