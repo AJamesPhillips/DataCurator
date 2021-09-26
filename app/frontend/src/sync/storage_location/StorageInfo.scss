@@ -1,15 +1,18 @@
-
+#storage_info_button
+{
+    min-width: 30px;
+}
 
 .storage_name
 {
-    max-width: 60px;
+    max-width: 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     transition: max-width 0.5s;
 }
 
-.storage_name:hover
+#storage_info_button:hover .storage_name
 {
-    max-width: initial;
+    max-width: 200px;
 }

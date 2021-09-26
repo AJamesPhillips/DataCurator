@@ -42,6 +42,7 @@ function _StorageInfo (props: Props)
     return (
         <Typography component="span">
             <Button
+                id="storage_info_button"
                 color="primary"
                 disableElevation={true}
                 onClick={() => set_show_select_storage(true)}
