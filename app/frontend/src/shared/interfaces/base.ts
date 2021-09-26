@@ -16,6 +16,7 @@ export interface Base
     deleted_at?: Date
 
     needs_save?: boolean
+    saving?: boolean
 }
 
 
