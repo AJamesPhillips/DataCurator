@@ -1,4 +1,4 @@
-import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import { ensure_item_in_set } from "../../../utils/set"
 import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"

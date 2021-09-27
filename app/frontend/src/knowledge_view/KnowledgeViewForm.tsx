@@ -2,7 +2,7 @@ import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
 
-import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../state/actions"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"

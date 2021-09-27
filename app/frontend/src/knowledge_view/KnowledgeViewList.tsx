@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
-import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { Link } from "../sharedf/Link"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import { optional_view_type } from "../views/optional_view_type"

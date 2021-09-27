@@ -3,7 +3,7 @@ import type { Base } from "../../interfaces/base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"
-import type { KnowledgeView } from "./knowledge_view"
+import type { KnowledgeView } from "../../interfaces/knowledge_view"
 import type {
     HasVAPSets,
     StateValueAndPredictionsSet,

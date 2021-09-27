@@ -7,14 +7,16 @@ export interface Base
     id: string
     created_at: Date
     custom_created_at?: Date
-    label_ids?: string[]
-    label_color?: Color
-    summary_image?: string
     base_id?: number
     modified_at?: Date
     modified_by_username?: string
     deleted_at?: Date
 
+    label_ids?: string[]
+    label_color?: Color
+    summary_image?: string
+
+    // meta sync fields
     needs_save?: boolean
     saving?: boolean
 }

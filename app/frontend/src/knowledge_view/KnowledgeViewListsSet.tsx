@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { KnowledgeViewList } from "./KnowledgeViewList"
 import type { KnowledgeViewListCoreProps } from "./interfaces"
 import { useMemo } from "preact/hooks"

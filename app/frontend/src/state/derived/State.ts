@@ -3,7 +3,7 @@ import type {
     KnowledgeView,
     KnowledgeViewSortType,
     KnowledgeViewWComponentIdEntryMap,
-} from "../../shared/wcomponent/interfaces/knowledge_view"
+} from "../../shared/interfaces/knowledge_view"
 import type {
     Perception,
     WComponent,

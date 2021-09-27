@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
-import type { KnowledgeView } from "../../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import type { SupabaseKnowledgeView } from "../../../supabase/interfaces"
 import { get_items } from "./get_items"
 

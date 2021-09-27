@@ -22,7 +22,7 @@ import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
-} from "../../../shared/wcomponent/interfaces/knowledge_view"
+} from "../../../shared/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 import { is_knowledge_view_id } from "../../../shared/utils/ids"
 import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"

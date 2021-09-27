@@ -6,7 +6,7 @@ import SyncProblemIcon from "@material-ui/icons/SyncProblem"
 
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { RootState } from "../state/State"
-import { storage_dependent_save } from "../state/sync/utils/save_state"
+import { save_state } from "../state/sync/utils/save_state"
 import { ACTIONS } from "../state/actions"
 import { get_store } from "../state/store"
 import { is_defined } from "../shared/utils/is_defined"

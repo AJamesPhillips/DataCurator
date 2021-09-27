@@ -7,7 +7,7 @@ import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgem
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
-} from "../shared/wcomponent/interfaces/knowledge_view"
+} from "../shared/interfaces/knowledge_view"
 import {
     WComponent,
     wcomponent_is_plain_connection,

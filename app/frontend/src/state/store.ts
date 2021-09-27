@@ -8,7 +8,9 @@ import { periodically_change_display_at_created_datetime } from "./routing/datet
 import { factory_location_hash } from "./routing/factory_location_hash"
 import routing_subscribers from "./routing/subscribers"
 import { conditional_ctrl_f_search } from "./search/conditional_ctrl_f_search"
-import { meta_wcomponents_selecting_subscribers } from "./specialised_objects/meta_wcomponents/selecting/subscribers"
+import {
+    meta_wcomponents_selecting_subscribers,
+} from "./specialised_objects/meta_wcomponents/selecting/subscribers"
 import { specialised_objects_subscribers } from "./specialised_objects/subscribers/subscribers"
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"

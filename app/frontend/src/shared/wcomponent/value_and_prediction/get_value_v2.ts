@@ -1,7 +1,7 @@
 import { wcomponent_has_knowledge_view } from "../../../state/specialised_objects/accessors"
 import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
 import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry, TargetVAPIdCounterfactualMap, WComponentCounterfactualV2 } from "../interfaces/counterfactual"
-import type { KnowledgeViewsById } from "../interfaces/knowledge_view"
+import type { KnowledgeViewsById } from "../../interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { partition_and_prune_items_by_datetimes_and_versions } from "./utils"
 

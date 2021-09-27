@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"

@@ -4,7 +4,7 @@ import { round_canvas_point } from "../../../../canvas/position_utils"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
-} from "../../../../shared/wcomponent/interfaces/knowledge_view"
+} from "../../../../shared/interfaces/knowledge_view"
 import type { RootState } from "../../../State"
 import {
     get_current_knowledge_view_from_state,

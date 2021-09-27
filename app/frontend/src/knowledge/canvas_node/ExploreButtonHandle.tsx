@@ -12,7 +12,7 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
     KnowledgeViewWComponentEntry,
-} from "../../shared/wcomponent/interfaces/knowledge_view"
+} from "../../shared/interfaces/knowledge_view"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"

@@ -2,7 +2,7 @@ import type {
     Perception,
     WComponentsById,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeViewsById } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 
 
 

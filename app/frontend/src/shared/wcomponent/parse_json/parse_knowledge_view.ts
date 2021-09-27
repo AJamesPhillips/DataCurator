@@ -1,4 +1,4 @@
-import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../interfaces/knowledge_view"
 
 
 

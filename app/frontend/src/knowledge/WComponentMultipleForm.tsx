@@ -13,7 +13,7 @@ import {
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { is_defined } from "../shared/utils/is_defined"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
-import type { KnowledgeViewWComponentIdEntryMap } from "../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
 
 
 

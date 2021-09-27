@@ -7,7 +7,7 @@ import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewSortType,
-} from "../../shared/wcomponent/interfaces/knowledge_view"
+} from "../../shared/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"

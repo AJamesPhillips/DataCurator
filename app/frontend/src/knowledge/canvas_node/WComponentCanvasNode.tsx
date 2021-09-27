@@ -21,7 +21,7 @@ import {
     wcomponent_is_statev2,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeViewWComponentEntry } from "../../shared/wcomponent/interfaces/knowledge_view"
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state, is_on_current_knowledge_view } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"

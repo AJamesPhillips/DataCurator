@@ -1,4 +1,4 @@
-import type { KnowledgeView } from "../interfaces/knowledge_view"
+import type { KnowledgeView } from "../../interfaces/knowledge_view"
 import type { SpecialisedObjectsFromToServer, Perception, WComponent } from "../interfaces/SpecialisedObjects"
 import { parse_dates } from "./parse_dates"
 import { parse_knowledge_view } from "./parse_knowledge_view"
