@@ -1,22 +1,16 @@
 import { test } from "../../../shared/utils/test"
 import { get_contextless_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { MergeDataCoreArgs, MergeDataReturn, merge_data } from "./merge_data"
+import { MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
 
 
 
 export function merge_wcomponent (args: MergeDataCoreArgs<WComponent>): MergeDataReturn<WComponent>
 {
 
-    return merge_data({ ...args, get_field_value, get_custom_field_merger })
+    return merge_base_object({ ...args, get_custom_field_merger })
 }
 
-
-
-function get_field_value (field: keyof WComponent, wcomponent: WComponent)
-{
-    return wcomponent[field]
-}
 
 
 function get_custom_field_merger (field: keyof WComponent)
@@ -29,7 +23,7 @@ function get_custom_field_merger (field: keyof WComponent)
 function run_tests()
 {
     const dt1 = new Date("2021-01-01")
-    // either the modified_at values match (between attempted_update_value and the DB's initial value)
+    // Either the modified_at values match (between attempted_update_value and the DB's initial value)
     // and will result in an update, a new modified_at and a 200 response code.
     // OR they will not match, the current DB value will be returned with a 409 response code.
     const latest_modified_at = new Date("2021-02-02")
@@ -295,4 +289,4 @@ function run_tests()
 
 
 
-run_tests()
+// run_tests()

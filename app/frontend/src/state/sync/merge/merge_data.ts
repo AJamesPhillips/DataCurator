@@ -16,8 +16,7 @@ export interface MergeDataCoreArgs<U>
 
 interface MergeDataArgs<U> extends MergeDataCoreArgs<U>
 {
-    get_field_value: <T extends keyof U>(field: T, item: U) => any
-    get_custom_field_merger: <T extends keyof U>(field: T) => (undefined | ((args: MergeDataCoreArgs<U>) => { needs_save: boolean, unresolvable_conflict: boolean, value: U[T] }))
+    get_custom_field_merger: <T extends keyof U>(field: T) => (undefined | ((args: MergeDataCoreArgs<U>) => FieldMergerReturn<U, T>))
 }
 
 export interface MergeDataReturn<U>
@@ -27,13 +26,12 @@ export interface MergeDataReturn<U>
     unresolvable_conflicted_fields: (keyof U)[]
 }
 
-export function merge_data <U extends Base> (args: MergeDataArgs<U>): MergeDataReturn<U>
+export function merge_base_object <U extends Base> (args: MergeDataArgs<U>): MergeDataReturn<U>
 {
     const {
         last_source_of_truth,
         current_value,
         source_of_truth,
-        get_field_value,
         get_custom_field_merger,
     } = args
 
@@ -46,7 +44,7 @@ export function merge_data <U extends Base> (args: MergeDataArgs<U>): MergeDataR
     const fields = get_fields(current_value, last_source_of_truth, source_of_truth)
     fields.forEach(field =>
     {
-        const field_merger = get_custom_field_merger(field) || get_default_field_merger(field)
+        const field_merger = get_custom_field_merger(field) || get_default_base_object_field_merger(field)
         const merge = field_merger(args)
         needs_save = needs_save || merge.needs_save
         if (merge.unresolvable_conflict) unresolvable_conflicted_fields.push(field)
@@ -75,7 +73,14 @@ function get_fields <U> (...items: U[]): (keyof U)[]
 
 
 
-function get_default_field_merger <U extends Base, T extends keyof U> (field: T)
+export interface FieldMergerReturn <U, T extends keyof U>
+{
+    needs_save: boolean
+    unresolvable_conflict: boolean
+    value: U[T]
+}
+
+function get_default_base_object_field_merger <U extends Base, T extends keyof U> (field: T)
 {
     const always_current_value_fields: Set<keyof U> = new Set([
         "needs_save",
@@ -89,7 +94,7 @@ function get_default_field_merger <U extends Base, T extends keyof U> (field: T)
     ])
 
 
-    function default_field_merger (args: MergeDataCoreArgs<U>): { needs_save: boolean, unresolvable_conflict: boolean, value: U[T] }
+    function default_field_merger (args: MergeDataCoreArgs<U>): FieldMergerReturn<U, T>
     {
         const source_of_truth = args.source_of_truth[field]
         const current_value = args.current_value[field]
@@ -110,24 +115,49 @@ function get_default_field_merger <U extends Base, T extends keyof U> (field: T)
             return { needs_save, unresolvable_conflict, value: source_of_truth }
         }
 
+        return get_default_field_merger<U, T>(field)(args)
+    }
 
+
+    return default_field_merger
+}
+
+
+
+export function get_default_field_merger <U extends object, T extends keyof U> (field: T)
+{
+    function are_equal (a: U[T], b: U[T])
+    {
+        return JSON.stringify(a) === JSON.stringify(b)
+    }
+
+
+    function default_field_merger (args: MergeDataCoreArgs<U>): FieldMergerReturn<U, T>
+    {
+        const source_of_truth = args.source_of_truth[field]
+        const current_value = args.current_value[field]
         const last_source_of_truth = args.last_source_of_truth[field]
 
 
+        let needs_save = false
+        let unresolvable_conflict = false
         let value: U[T]
 
-        if (args.update_successful || source_of_truth === last_source_of_truth)
+        if (args.update_successful || are_equal(source_of_truth, last_source_of_truth))
         {
             value = current_value
-            needs_save = current_value !== source_of_truth
+            needs_save = !are_equal(current_value, source_of_truth)
         }
         else
         {
             value = source_of_truth
-            if (current_value !== last_source_of_truth)
+            if (!are_equal(current_value, last_source_of_truth))
             {
-                console.log("unresolvable_conflict with field: ", field, "last_source_of_truth", last_source_of_truth, "source_of_truth", source_of_truth, "current_value", current_value)
-                unresolvable_conflict = true
+                unresolvable_conflict = !are_equal(current_value, source_of_truth)
+                if (unresolvable_conflict)
+                {
+                    console .log("unresolvable_conflict with field: ", field, "last_source_of_truth", last_source_of_truth, "source_of_truth", source_of_truth, "current_value", current_value)
+                }
             }
         }
 
