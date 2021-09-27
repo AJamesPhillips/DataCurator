@@ -12,5 +12,5 @@ export async function signout ()
     //  2. cancel any loading.
     // At the moment this will not run if state.sync.reading_for_writing is not true
 
-    await conditionally_save_state(load_state_from_storage, store.dispatch, store.getState())
+    await conditionally_save_state(load_state_from_storage, store)
 }

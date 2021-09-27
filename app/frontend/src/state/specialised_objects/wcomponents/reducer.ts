@@ -1,22 +1,20 @@
 import type { AnyAction } from "redux"
 
-import { prepare_new_VAP, prepare_new_VAP_set } from "../../../knowledge/multiple_values/utils"
-import { get_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"
-import type { StateValueAndPrediction, WComponentNodeStateV2 } from "../../../shared/wcomponent/interfaces/state"
-import { test } from "../../../shared/utils/test"
-import { update_substate, update_subsubstate } from "../../../utils/update_state"
-import type { RootState } from "../../State"
-import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
+import { prepare_new_VAP_set, prepare_new_VAP } from "../../../knowledge/multiple_values/utils"
 import type { CreationContextState } from "../../../shared/creation_context/state"
-import { tidy_wcomponent } from "./tidy_wcomponent"
-import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
+import { test } from "../../../shared/utils/test"
+import { get_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
-import { mark_as_deleted, update_modified_by } from "../update_modified_by"
-import {
-    is_update_specialised_object_sync_info,
-    update_specialised_object_ids_pending_save,
-} from "../../sync/actions_reducer"
+import type { WComponentNodeStateV2, StateValueAndPrediction } from "../../../shared/wcomponent/interfaces/state"
+import { update_subsubstate, update_substate } from "../../../utils/update_state"
+import type { RootState } from "../../State"
+import { is_update_specialised_object_sync_info } from "../../sync/actions"
+import { update_specialised_object_ids_pending_save } from "../../sync/utils"
 import { get_wcomponent_from_state } from "../accessors"
+import { update_modified_by, mark_as_deleted } from "../update_modified_by"
+import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
+import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
+import { tidy_wcomponent } from "./tidy_wcomponent"
 
 
 
@@ -30,7 +28,7 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
         state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent.id, wcomponent)
 
-        if (!action.source_of_truth)
+        if (wcomponent.needs_save)
         {
             state = update_specialised_object_ids_pending_save(state, "wcomponent", wcomponent.id, true)
         }

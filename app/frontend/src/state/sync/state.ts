@@ -1,5 +1,5 @@
-import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { KnowledgeView, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
+import type { WComponent, WComponentsById } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -13,20 +13,36 @@ export type SyncDataType = "bases" | "specialised_objects"
 
 export interface SyncState extends SyncStateByType
 {
-    specialised_object_ids_pending_save: {
-        wcomponent_ids: Set<string>
-        knowledge_view_ids: Set<string>
-    },
-    specialised_objects_save_conflicts: {
-        wcomponent_conflicts_by_id: {[id: string]: WComponent[]}
-        knowledge_view_conflicts_by_id: {[id: string]: KnowledgeView[]}
-    },
+    last_source_of_truth_specialised_objects_by_id: LastSourceOfTruthSpecialisedObjectsById
+    specialised_object_ids_pending_save: SpecialisedObjectIdsPendingSave
+    specialised_objects_save_conflicts: SpecialisedObjectsSaveConflicts
 
     ready_for_reading: boolean
     ready_for_writing: boolean
 
     // Only one type at the moment
     storage_type: StorageType
+}
+
+
+export interface LastSourceOfTruthSpecialisedObjectsById
+{
+    wcomponents: WComponentsById
+    knowledge_views: KnowledgeViewsById
+}
+
+
+export interface SpecialisedObjectIdsPendingSave
+{
+    wcomponent_ids: Set<string>
+    knowledge_view_ids: Set<string>
+}
+
+
+export interface SpecialisedObjectsSaveConflicts
+{
+    wcomponent_conflicts_by_id: {[id: string]: WComponent[]}
+    knowledge_view_conflicts_by_id: {[id: string]: KnowledgeView[]}
 }
 
 

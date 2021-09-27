@@ -1,6 +1,6 @@
 import type { Dispatch } from "redux"
 
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer, WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import type { UserInfoState } from "../../user_info/state"
@@ -9,14 +9,23 @@ import { error_to_string, SyncError } from "./errors"
 import { get_next_specialised_state_id_to_save } from "./needs_save"
 import { save_supabase_data } from "../supabase/supabase_save_data"
 import { get_wcomponent_from_state } from "../../specialised_objects/accessors"
+import { get_supabase } from "../../../supabase/get_supabase"
+import { supabase_upsert_wcomponent } from "../supabase/wcomponent"
+import type { PostgrestError } from "@supabase/supabase-js"
+import type { SupabaseWComponent } from "../../../supabase/interfaces"
+import { merge_wcomponent } from "../merge/merge_wcomponents"
+import type { StoreType } from "../../store"
+import { get_last_source_of_truth_wcomponent_from_state } from "../selector"
 
 
 
-export function save_state (dispatch: Dispatch, state: RootState)
+export async function save_state (store: StoreType)
 {
+    const state = store.getState()
+
     if (!state.sync.ready_for_writing)
     {
-        console.error(`State machine violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
+        console.error(`Inconsistent state violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
         return Promise.reject()
     }
 
@@ -28,20 +37,35 @@ export function save_state (dispatch: Dispatch, state: RootState)
         const wc_ids = JSON.stringify(Array.from(wcomponent_ids))
         const kv_ids = JSON.stringify(Array.from(knowledge_view_ids))
 
-        console.error(`State machine violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
+        console.error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
         return Promise.reject()
     }
 
-    dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
+    store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
+
+    let promise_response
 
     if (next_id_to_save.object_type === "wcomponent")
     {
-        return save_wcomponent(next_id_to_save.id, dispatch, state)
+        promise_response = save_wcomponent(next_id_to_save.id, store)
     }
     else
     {
-        return save_knowledge_view(next_id_to_save.id)
+        promise_response = save_knowledge_view(next_id_to_save.id)
     }
+
+    try
+    {
+        await promise_response
+    }
+    catch (err)
+    {
+        console.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err}`)
+        store.dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects" }))
+        return Promise.reject()
+    }
+
+    return Promise.resolve()
 
     // return retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
     // .then(() =>
@@ -56,19 +80,71 @@ export function save_state (dispatch: Dispatch, state: RootState)
 
 
 
-function save_wcomponent (id: string, dispatch: Dispatch, state: RootState)
+async function save_wcomponent (id: string, store: StoreType)
 {
-    const kv = get_wcomponent_from_state(state, id)
-    if (!kv)
+    const wcomponent = get_wcomponent_from_state(store.getState(), id)
+    if (!wcomponent)
     {
-        console.error(`save_wcomponent but no wcomponent for id: "${id}"`)
-        dispatch(ACTIONS.sync.mark_specialised_object_id_as_saved({ id, object_type: "wcomponent" }))
-        return
+        store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save())
+        return Promise.reject(`Inconsistent state violation.  save_wcomponent but no wcomponent for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
     }
-    // work in progress
 
-    // dispatch(ACTIONS.sync.)
+    store.dispatch(ACTIONS.sync.update_specialised_object_sync_info({
+        id: wcomponent.id, object_type: "wcomponent", saving: true,
+    }))
+
+    const supabase = get_supabase()
+    const res = await supabase_upsert_wcomponent({ supabase, wcomponent })
+    if (res.status !== 200 && res.status !== 409)
+    {
+        return Promise.reject(`save_wcomponent got ${res.status} error: ${res.error}`)
+    }
+
+    let latest_source_of_truth = res.item
+    if (!latest_source_of_truth)
+    {
+        return Promise.reject(`Inconsistent state violation.  save_wcomponent got ${res.status} but no latest_source_of_truth item.  Error: ${res.error}.`)
+    }
+    store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent: latest_source_of_truth, source_of_truth: true }))
+
+
+    const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id)
+    if (!last_source_of_truth)
+    {
+        if (wcomponent.modified_at)
+        {
+            return Promise.reject(`Inconsistent state violation.  save_wcomponent found no last_source_of_truth wcomponent for id: "${id}" but wcomponent had a modified_at already set`)
+        }
+    }
+    else
+    {
+        const current_value = get_wcomponent_from_state(store.getState(), id)
+        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_wcomponent found wcomponent last_source_of_truth but no current_value for id ${id}.`)
+
+        const merge = merge_wcomponent({
+            last_source_of_truth,
+            current_value,
+            source_of_truth: latest_source_of_truth,
+            update_successful: res.status === 200,
+        })
+
+        if (merge.needs_save)
+        {
+            store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
+                wcomponent: merge.value, source_of_truth: false
+            }))
+        }
+
+        if (merge.unresolvable_conflicted_fields)
+        {
+            // TODO add unresolvable conflict
+        }
+    }
+
+    return Promise.resolve()
 }
+
+
 
 function save_knowledge_view (id: string)
 {

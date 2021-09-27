@@ -32,7 +32,7 @@ import type {
     SupabaseKnowledgeBase,
     SupabaseKnowledgeBaseWithAccess,
 } from "../supabase/interfaces"
-import { get_knowledge_views, kv_app_to_supabase, kv_supabase_to_app } from "../state/sync/supabase/knowledge_view"
+import { supabase_get_knowledge_views, knowledge_view_app_to_supabase, knowledge_view_supabase_to_app } from "../state/sync/supabase/knowledge_view"
 import { get_all_bases, get_an_owned_base_optionally_create, modify_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
 import { get_access_controls_for_base, update_access_control } from "../supabase/access_controls"
@@ -375,7 +375,7 @@ export function SandBoxSupabase ()
                 type="button"
                 onClick={async () =>
                 {
-                    const { error, items } = await get_knowledge_views({
+                    const { error, items } = await supabase_get_knowledge_views({
                         supabase, base_id: current_base_id
                     })
                     set_postgrest_error(error || null) // change this to undefined at some point
@@ -387,7 +387,7 @@ export function SandBoxSupabase ()
                 type="button"
                 onClick={async () =>
                 {
-                    const { error, items } = await get_knowledge_views({
+                    const { error, items } = await supabase_get_knowledge_views({
                         supabase, all_bases: true
                     })
                     set_postgrest_error(error || null) // change this to undefined at some point
@@ -572,11 +572,11 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 
     const { data, error } = await supabase
         .from<SupabaseKnowledgeView>("knowledge_views")
-        .insert(kv_app_to_supabase(a_knowledge_view, args.base_id))
+        .insert(knowledge_view_app_to_supabase(a_knowledge_view, args.base_id))
 
     args.set_postgrest_error(error)
 
-    const knowledge_views: KnowledgeView[] = (data || []).map(kv_supabase_to_app)
+    const knowledge_views: KnowledgeView[] = (data || []).map(knowledge_view_supabase_to_app)
     args.set_knowledge_views(knowledge_views)
 }
 
@@ -594,10 +594,10 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     const { knowledge_view, current_knowledge_views, set_postgrest_error, set_knowledge_views } = args
 
     const modified_kv: KnowledgeView = { ...knowledge_view, title: "Some new title " + Math.random() }
-    const db_kv = kv_app_to_supabase(modified_kv)
+    const db_kv = knowledge_view_app_to_supabase(modified_kv)
 
     const result = await supabase
-    .rpc("update_knowledge_view", { kv: db_kv })
+    .rpc("update_knowledge_view", { item: db_kv })
 
     // const result = await supabase
     // .from<SupabaseKnowledgeView>("knowledge_views")
@@ -613,7 +613,7 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     const new_supabase_kv: SupabaseKnowledgeView = result.data as any
     // type guard
     if (!new_supabase_kv) return
-    const new_kv = kv_supabase_to_app(new_supabase_kv)
+    const new_kv = knowledge_view_supabase_to_app(new_supabase_kv)
 
     const updated_knowledge_views = replace_element(current_knowledge_views, new_kv, kv => kv.id === knowledge_view.id)
     set_knowledge_views(updated_knowledge_views)

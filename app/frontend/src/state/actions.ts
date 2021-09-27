@@ -12,7 +12,7 @@ import { display_at_sim_datetime_actions } from "./routing/datetime/display_at_s
 import { search_actions } from "./search/actions_reducer"
 import { specialised_object_actions } from "./specialised_objects/actions"
 import { statement_actions } from "./statements"
-import { sync_actions } from "./sync/actions_reducer"
+import { sync_actions } from "./sync/actions"
 import { user_activity_actions } from "./user_activity/actions"
 import { user_info_actions } from "./user_info/actions"
 

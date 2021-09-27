@@ -21,7 +21,7 @@ import { user_info_subscribers } from "./user_info/subscribers"
 
 
 
-type StoreType = Store<RootState, Action<any>> & { load_state_from_storage: boolean }
+export type StoreType = Store<RootState, Action<any>> & { load_state_from_storage: boolean }
 let cached_store: StoreType
 
 interface ConfigStoreArgs
@@ -56,8 +56,8 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
         persist_relevant_state(state)
         ;(window as any).debug_state = state
 
-        conditionally_save_state(load_state_from_storage, store.dispatch, state)
-        conditional_ctrl_s_save(load_state_from_storage, store.dispatch, state)
+        conditionally_save_state(load_state_from_storage, store)
+        conditional_ctrl_s_save(load_state_from_storage, store)
     }
     store.subscribe(save)
 

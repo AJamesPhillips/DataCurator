@@ -3,7 +3,7 @@ import type { AnyAction } from "redux"
 import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { update_substate, update_subsubstate, update_subsubsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
-import { is_update_specialised_object_sync_info } from "../../sync/actions_reducer"
+import { is_update_specialised_object_sync_info } from "../../sync/actions"
 import {get_knowledge_view_from_state } from "../accessors"
 import { is_upsert_wcomponent } from "../wcomponents/actions"
 import {

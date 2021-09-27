@@ -33,6 +33,18 @@ export function ensure_item_in_set <E> (set: Set<E>, item: E): Set<E>
 
 
 
+export function ensure_item_not_in_set <E> (set: Set<E>, item: E): Set<E>
+{
+    if (!set.has(item)) return set
+
+    set = new Set(set)
+    set.delete(item)
+
+    return set
+}
+
+
+
 export function set_union <E> (set1: Set<E>, set2: Set<E>)
 {
     return new Set([

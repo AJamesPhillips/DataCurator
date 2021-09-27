@@ -7,7 +7,6 @@ import { MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_d
 
 export function merge_wcomponent (args: MergeDataCoreArgs<WComponent>): MergeDataReturn<WComponent>
 {
-
     return merge_base_object({ ...args, get_custom_field_merger })
 }
 

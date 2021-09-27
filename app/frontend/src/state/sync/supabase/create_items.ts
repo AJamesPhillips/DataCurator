@@ -15,6 +15,7 @@ interface CreateItemReturn<U>
 {
     error: PostgrestError | undefined
     item: U | undefined
+    status: number
 }
 export async function supabase_create_item <S extends { id: string }, U extends Base> (args: CreateItemArgs<S, U>): Promise<CreateItemReturn<U>>
 {
@@ -28,5 +29,5 @@ export async function supabase_create_item <S extends { id: string }, U extends 
     const items: U[] = (result.data || []).map(args.converter_supabase_to_app)
     const item = items[0]
 
-    return { item, error: result.error || undefined }
+    return { status: result.status, item, error: result.error || undefined }
 }

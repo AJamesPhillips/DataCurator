@@ -19,7 +19,7 @@ import { derived_meta_wcomponents_state_reducer } from "./specialised_objects/me
 import { specialised_objects_reducer } from "./specialised_objects/reducer"
 import type { RootState } from "./State"
 import { statements_reducer } from "./statements"
-import { sync_reducer } from "./sync/actions_reducer"
+import { sync_reducer } from "./sync/reducer"
 import { user_activity_reducer } from "./user_activity/reducer"
 import { user_info_reducer } from "./user_info/reducer"
 

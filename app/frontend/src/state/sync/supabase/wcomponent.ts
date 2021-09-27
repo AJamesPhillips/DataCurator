@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { SupabaseWComponent } from "../../../supabase/interfaces"
+import { clean_base_object_of_sync_meta_fields } from "./clean_base_object_for_supabase"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
 
@@ -31,12 +32,19 @@ export function supabase_get_wcomponents (args: GetWComponentsArgs)
 
 
 
-interface SupabaseCreateWcomponentArgs
+interface SupabaseUpsertWcomponentArgs
 {
     supabase: SupabaseClient
     wcomponent: WComponent
 }
-export async function supabase_create_wcomponent (args: SupabaseCreateWcomponentArgs)
+export async function supabase_upsert_wcomponent (args: SupabaseUpsertWcomponentArgs)
+{
+    return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args)
+}
+
+
+
+async function supabase_create_wcomponent (args: SupabaseUpsertWcomponentArgs)
 {
     return supabase_create_item({
         supabase: args.supabase,
@@ -49,20 +57,40 @@ export async function supabase_create_wcomponent (args: SupabaseCreateWcomponent
 
 
 
+async function supabase_update_wcomponent (args: SupabaseUpsertWcomponentArgs)
+{
+    const item = wcomponent_app_to_supabase(args.wcomponent)
+
+    const result = await args.supabase.rpc("update_wcomponent", { item })
+
+    // TODO parse 409 response and set as result.data
+
+    const new_supabase_item: SupabaseWComponent = result.data as any
+    const new_item = wcomponent_supabase_to_app(new_supabase_item)
+
+    return { status: result.status, error: result.error || undefined, item: new_item }
+}
+
+
+
 export function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWComponent
 {
     base_id = item.base_id || base_id
 
     if (!base_id) throw new Error("Must provide base_id for wcomponent_app_to_supabase")
 
+    const json = clean_base_object_of_sync_meta_fields(item)
+
     return {
         id: item.id,
         modified_at: item.modified_at!,
         base_id,
         title: item.title,
-        json: item,
+        json,
     }
 }
+
+
 
 export function wcomponent_supabase_to_app (kv: SupabaseWComponent): WComponent
 {
@@ -71,9 +99,11 @@ export function wcomponent_supabase_to_app (kv: SupabaseWComponent): WComponent
     // Do not update title.  This should only be edited by the client app.  The canonical
     // value is in the DB's json field not the title field.
     json = { ...json, id, base_id, modified_at }
+    json = clean_base_object_of_sync_meta_fields(json)
 
     json.created_at = json.created_at && new Date(json.created_at)
     json.custom_created_at = json.custom_created_at && new Date(json.custom_created_at)
+    json.modified_at = json.modified_at && new Date(json.modified_at)
     json.deleted_at = json.deleted_at && new Date(json.deleted_at)
 
     return json
