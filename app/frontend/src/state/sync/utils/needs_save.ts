@@ -1,4 +1,5 @@
 import type { RootState } from "../../State"
+import type { SPECIALISED_OBJECT_TYPE } from "../actions"
 
 
 
@@ -11,7 +12,7 @@ export function needs_save (state: RootState)
 
 
 
-type GetNextSpecialisedStateIdToSaveReturn = undefined | { id: string; object_type: "knowledge_view" | "wcomponent" }
+type GetNextSpecialisedStateIdToSaveReturn = undefined | { id: string; object_type: SPECIALISED_OBJECT_TYPE }
 export function get_next_specialised_state_id_to_save (state: RootState): GetNextSpecialisedStateIdToSaveReturn
 {
     const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save

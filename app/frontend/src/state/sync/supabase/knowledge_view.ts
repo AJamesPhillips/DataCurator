@@ -32,12 +32,24 @@ export function supabase_get_knowledge_views (args: SupabaseGetKnowledgeViewsArg
 
 
 
+interface SupabaseUpsertKnowledgeViewArgs
+{
+    supabase: SupabaseClient
+    knowledge_view: KnowledgeView
+}
+export async function supabase_upsert_knowledge_view (args: SupabaseUpsertKnowledgeViewArgs)
+{
+    return args.knowledge_view.modified_at ? supabase_update_knowledge_view(args) : supabase_create_knowledge_view(args)
+}
+
+
+
 interface SupabaseCreateWcomponentArgs
 {
     supabase: SupabaseClient
     knowledge_view: KnowledgeView
 }
-export async function supabase_create_knowledge_view (args: SupabaseCreateWcomponentArgs)
+async function supabase_create_knowledge_view (args: SupabaseCreateWcomponentArgs)
 {
     return supabase_create_item({
         supabase: args.supabase,
@@ -55,7 +67,7 @@ interface SupabaseCreateWcomponentArgs
     supabase: SupabaseClient
     knowledge_view: KnowledgeView
 }
-export async function supabase_update_knowledge_view (args: SupabaseCreateWcomponentArgs)
+async function supabase_update_knowledge_view (args: SupabaseCreateWcomponentArgs)
 {
     const item = knowledge_view_app_to_supabase(args.knowledge_view)
 
@@ -94,7 +106,7 @@ export function knowledge_view_supabase_to_app (kv: SupabaseKnowledgeView): Know
     // Do not update title.  This should only be edited by the client app.  The canonical
     // value is in the DB's json field not the title field.
     json = { ...json, id, base_id, modified_at }
-    json = clean_base_object_of_sync_meta_fields(json)
+    json = clean_base_object_of_sync_meta_fields(json) // defensive
 
     json.created_at = json.created_at && new Date(json.created_at)
     json.custom_created_at = json.custom_created_at && new Date(json.custom_created_at)

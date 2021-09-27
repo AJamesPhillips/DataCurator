@@ -32,19 +32,19 @@ export function supabase_get_wcomponents (args: GetWComponentsArgs)
 
 
 
-interface SupabaseUpsertWcomponentArgs
+interface SupabaseUpsertWComponentArgs
 {
     supabase: SupabaseClient
     wcomponent: WComponent
 }
-export async function supabase_upsert_wcomponent (args: SupabaseUpsertWcomponentArgs)
+export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponentArgs)
 {
     return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args)
 }
 
 
 
-async function supabase_create_wcomponent (args: SupabaseUpsertWcomponentArgs)
+async function supabase_create_wcomponent (args: SupabaseUpsertWComponentArgs)
 {
     return supabase_create_item({
         supabase: args.supabase,
@@ -57,7 +57,7 @@ async function supabase_create_wcomponent (args: SupabaseUpsertWcomponentArgs)
 
 
 
-async function supabase_update_wcomponent (args: SupabaseUpsertWcomponentArgs)
+async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs)
 {
     const item = wcomponent_app_to_supabase(args.wcomponent)
 
@@ -99,7 +99,7 @@ export function wcomponent_supabase_to_app (kv: SupabaseWComponent): WComponent
     // Do not update title.  This should only be edited by the client app.  The canonical
     // value is in the DB's json field not the title field.
     json = { ...json, id, base_id, modified_at }
-    json = clean_base_object_of_sync_meta_fields(json)
+    json = clean_base_object_of_sync_meta_fields(json) // defensive
 
     json.created_at = json.created_at && new Date(json.created_at)
     json.custom_created_at = json.custom_created_at && new Date(json.custom_created_at)
