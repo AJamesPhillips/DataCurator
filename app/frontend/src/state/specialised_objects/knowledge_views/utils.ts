@@ -1,7 +1,7 @@
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
-import { ensure_item_in_set } from "../../../utils/set"
-import { update_substate, update_subsubstate } from "../../../utils/update_state"
+import { update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
+import { update_specialised_object_ids_pending_save } from "../../sync/actions_reducer"
 import { update_modified_by } from "../update_modified_by"
 
 
@@ -15,9 +15,7 @@ export function handle_upsert_knowledge_view (state: RootState, knowledge_view: 
 
     if (!source_of_truth)
     {
-        let { knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
-        knowledge_view_ids = ensure_item_in_set(knowledge_view_ids, knowledge_view.id)
-        state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", "knowledge_view_ids", knowledge_view_ids)
+        state = update_specialised_object_ids_pending_save(state, "knowledge_view", knowledge_view.id, true)
     }
 
     return state

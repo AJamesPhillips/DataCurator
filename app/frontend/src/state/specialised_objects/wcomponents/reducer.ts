@@ -12,7 +12,11 @@ import { tidy_wcomponent } from "./tidy_wcomponent"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
 import { mark_as_deleted, update_modified_by } from "../update_modified_by"
-import { ensure_item_in_set } from "../../../utils/set"
+import {
+    is_update_specialised_object_sync_info,
+    update_specialised_object_ids_pending_save,
+} from "../../sync/actions_reducer"
+import { get_wcomponent_from_state } from "../accessors"
 
 
 
@@ -28,9 +32,7 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
         if (!action.source_of_truth)
         {
-            let { wcomponent_ids } = state.sync.specialised_object_ids_pending_save
-            wcomponent_ids = ensure_item_in_set(wcomponent_ids, wcomponent.id)
-            state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", "wcomponent_ids", wcomponent_ids)
+            state = update_specialised_object_ids_pending_save(state, "wcomponent", wcomponent.id, true)
         }
     }
 
@@ -49,6 +51,22 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
             state = update_substate(state, "specialised_objects", "wcomponents_by_id", wcomponents_by_id)
         }
     }
+
+
+    if (is_update_specialised_object_sync_info(action) && action.object_type === "wcomponent")
+    {
+        let wc = get_wcomponent_from_state(state, action.id)
+        if (wc)
+        {
+            wc = { ...wc, saving: action.saving }
+            state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", action.id, wc)
+        }
+        else
+        {
+            console.error(`Could not find wcomponent by id: "${action.id}" whilst handling is_update_specialised_object_sync_info`)
+        }
+    }
+
 
     state = bulk_editing_wcomponents_reducer(state, action)
 

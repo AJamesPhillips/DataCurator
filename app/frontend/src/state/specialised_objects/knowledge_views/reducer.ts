@@ -1,8 +1,9 @@
 import type { AnyAction } from "redux"
 
 import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
-import { update_substate } from "../../../utils/update_state"
+import { update_substate, update_subsubstate, update_subsubsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
+import { is_update_specialised_object_sync_info } from "../../sync/actions_reducer"
 import {get_knowledge_view_from_state } from "../accessors"
 import { is_upsert_wcomponent } from "../wcomponents/actions"
 import {
@@ -47,6 +48,22 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
     if (is_delete_knowledge_view_entry(action))
     {
         state = handle_delete_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id)
+    }
+
+
+
+    if (is_update_specialised_object_sync_info(action) && action.object_type === "knowledge_view")
+    {
+        let kv = get_knowledge_view_from_state(state, action.id)
+        if (kv)
+        {
+            kv = { ...kv, saving: action.saving }
+            state = update_subsubstate(state, "specialised_objects", "knowledge_views_by_id", action.id, kv)
+        }
+        else
+        {
+            console.error(`Could not find knowledge_view by id: "${action.id}" whilst handling is_update_specialised_object_sync_info`)
+        }
     }
 
 

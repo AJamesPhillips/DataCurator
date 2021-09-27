@@ -1,6 +1,7 @@
 import type { Action, AnyAction } from "redux"
+import { ensure_item_in_set, ensure_item_not_in_set } from "../../utils/set"
 
-import { update_substate } from "../../utils/update_state"
+import { update_substate, update_subsubstate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import type { SyncDataType, SyncStateForDataType, SYNC_STATUS } from "./state"
 
@@ -25,6 +26,33 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
         state = update_ready_for_fields(state)
     }
 
+
+    if (is_update_specialised_object_sync_info(action))
+    {
+        const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
+        const wcomponents = action.object_type === "wcomponent"
+        let ids = wcomponents ? wcomponent_ids : knowledge_view_ids
+
+        ids = ensure_item_not_in_set(ids, action.id)
+        const key = wcomponents ? "wcomponent_ids" : "knowledge_view_ids"
+        state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", key, ids)
+    }
+
+
+    return state
+}
+
+
+
+export function update_specialised_object_ids_pending_save (state: RootState, object_type: SPECIALISED_OBJECT_TYPE, id: string, pending_save: boolean)
+{
+    let { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
+    const wcomponents = object_type === "wcomponent"
+    let ids = wcomponents ? wcomponent_ids : knowledge_view_ids
+
+    ids = pending_save ? ensure_item_in_set(ids, id) : ensure_item_not_in_set(ids, id)
+    const key = wcomponents ? "wcomponent_ids" : "knowledge_view_ids"
+    state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", key, ids)
 
     return state
 }
@@ -54,30 +82,34 @@ const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncSta
 
 
 
-interface MarkSpecialisedObjecIdAsSavedArgs
+type SPECIALISED_OBJECT_TYPE = "knowledge_view" | "wcomponent"
+interface UpdateSpecialisedObjectSyncInfoArgs
 {
     id: string
-    object_type: "knowledge_view" | "wcomponent"
+    object_type: SPECIALISED_OBJECT_TYPE
+    // needs_save: boolean -- Updated to false/true through upsert_wcomponent or upsert_knowledge_view
+    //                        and setting `source_of_truth` to true/false
+    saving: boolean
 }
 
-interface ActionMarkSpecialisedObjecIdAsSaved extends Action, MarkSpecialisedObjecIdAsSavedArgs {}
+interface ActionUpdateSpecialisedObjectSyncInfo extends Action, UpdateSpecialisedObjectSyncInfoArgs {}
 
-const mark_specialised_object_id_as_saved_type = "mark_specialised_object_id_as_saved"
+const update_specialised_object_sync_info_type = "update_specialised_object_sync_info"
 
-export const mark_specialised_object_id_as_saved = (args: MarkSpecialisedObjecIdAsSavedArgs): ActionMarkSpecialisedObjecIdAsSaved =>
+export const update_specialised_object_sync_info = (args: UpdateSpecialisedObjectSyncInfoArgs): ActionUpdateSpecialisedObjectSyncInfo =>
 {
-    return { type: mark_specialised_object_id_as_saved_type, ...args }
+    return { type: update_specialised_object_sync_info_type, ...args }
 }
 
-const is_mark_specialised_object_id_as_saved = (action: AnyAction): action is ActionMarkSpecialisedObjecIdAsSaved => {
-    return action.type === mark_specialised_object_id_as_saved_type
+export const is_update_specialised_object_sync_info = (action: AnyAction): action is ActionUpdateSpecialisedObjectSyncInfo => {
+    return action.type === update_specialised_object_sync_info_type
 }
 
 
 
 export const sync_actions = {
     update_sync_status,
-    mark_specialised_object_id_as_saved,
+    update_specialised_object_sync_info,
 }
 
 
