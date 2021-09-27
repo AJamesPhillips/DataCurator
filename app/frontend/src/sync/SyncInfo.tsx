@@ -56,7 +56,7 @@ function _SyncInfo (props: Props)
                 e.currentTarget.blur()
                 const store = get_store()
                 const state = store.getState()
-                await storage_dependent_save(store.dispatch, state)
+                await save_state(store.dispatch, state)
             }}
             startIcon={failed
                 ? <SyncProblemIcon color="error" />

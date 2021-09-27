@@ -11,11 +11,7 @@ export function needs_save (state: RootState)
 
 
 
-interface GetNextSpecialisedStateIdToSaveReturn
-{
-    knowledge_view_id?: string
-    wcomponent_id?: string
-}
+type GetNextSpecialisedStateIdToSaveReturn = undefined | { id: string; object_type: "knowledge_view" | "wcomponent" }
 export function get_next_specialised_state_id_to_save (state: RootState): GetNextSpecialisedStateIdToSaveReturn
 {
     const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
@@ -25,7 +21,7 @@ export function get_next_specialised_state_id_to_save (state: RootState): GetNex
     if (!knowledge_view_id.done)
     {
         const id = knowledge_view_id.value
-        return { knowledge_view_id: id }
+        return { id, object_type: "knowledge_view" }
     }
 
 
@@ -34,9 +30,9 @@ export function get_next_specialised_state_id_to_save (state: RootState): GetNex
     if (!wcomponent_id.done)
     {
         const id = wcomponent_id.value
-        return { wcomponent_id: id }
+        return { id, object_type: "wcomponent" }
     }
 
 
-    return {}
+    return undefined
 }

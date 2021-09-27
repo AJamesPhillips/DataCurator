@@ -54,8 +54,30 @@ const is_update_sync_status = (action: AnyAction): action is ActionUpdateSyncSta
 
 
 
+interface MarkSpecialisedObjecIdAsSavedArgs
+{
+    id: string
+    object_type: "knowledge_view" | "wcomponent"
+}
+
+interface ActionMarkSpecialisedObjecIdAsSaved extends Action, MarkSpecialisedObjecIdAsSavedArgs {}
+
+const mark_specialised_object_id_as_saved_type = "mark_specialised_object_id_as_saved"
+
+export const mark_specialised_object_id_as_saved = (args: MarkSpecialisedObjecIdAsSavedArgs): ActionMarkSpecialisedObjecIdAsSaved =>
+{
+    return { type: mark_specialised_object_id_as_saved_type, ...args }
+}
+
+const is_mark_specialised_object_id_as_saved = (action: AnyAction): action is ActionMarkSpecialisedObjecIdAsSaved => {
+    return action.type === mark_specialised_object_id_as_saved_type
+}
+
+
+
 export const sync_actions = {
     update_sync_status,
+    mark_specialised_object_id_as_saved,
 }
 
 

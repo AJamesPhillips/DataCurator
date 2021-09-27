@@ -3,16 +3,16 @@ import type { Dispatch } from "redux"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import { needs_save } from "./needs_save"
-import { storage_dependent_save } from "./save_state"
+import { save_state } from "./save_state"
 
 
 
 export function conditionally_save_state (load_state_from_storage: boolean, dispatch: Dispatch, state: RootState)
 {
     const should_save = calc_should_save(load_state_from_storage, dispatch, state, true)
-    if (!should_save) return
+    if (!should_save) return Promise.resolve()
 
-    storage_dependent_save(dispatch, state)
+    return save_state(dispatch, state)
 }
 
 
@@ -28,7 +28,7 @@ export async function conditional_ctrl_s_save (load_state_from_storage: boolean,
     {
         allow_ctrl_s_to_flush_save = false
 
-        await storage_dependent_save(dispatch, state)
+        await save_state(dispatch, state)
     }
 
     // Only reset it to true once `is_ctrl_s_flush_save` is no longer true

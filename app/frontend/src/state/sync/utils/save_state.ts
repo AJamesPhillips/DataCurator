@@ -8,23 +8,11 @@ import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
 import { get_next_specialised_state_id_to_save } from "./needs_save"
 import { save_supabase_data } from "../supabase/supabase_save_data"
+import { get_wcomponent_from_state } from "../../specialised_objects/accessors"
 
 
 
-export function storage_dependent_save (dispatch: Dispatch, state: RootState)
-{
-    // Save immediately and do not throttle
-    return save_state({ dispatch, state })
-}
-
-
-
-interface SaveStateArgs
-{
-    dispatch: Dispatch
-    state: RootState
-}
-function save_state ({ dispatch, state }: SaveStateArgs)
+export function save_state (dispatch: Dispatch, state: RootState)
 {
     if (!state.sync.ready_for_writing)
     {
@@ -32,13 +20,30 @@ function save_state ({ dispatch, state }: SaveStateArgs)
         return Promise.reject()
     }
 
+
+    const next_id_to_save = get_next_specialised_state_id_to_save(state)
+    if (!next_id_to_save)
+    {
+        const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
+        const wc_ids = JSON.stringify(Array.from(wcomponent_ids))
+        const kv_ids = JSON.stringify(Array.from(knowledge_view_ids))
+
+        console.error(`State machine violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
+        return Promise.reject()
+    }
+
     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
 
-    const storage_type = state.sync.storage_type!
-    const ids = get_next_specialised_state_id_to_save(state)
+    if (next_id_to_save.object_type === "wcomponent")
+    {
+        return save_wcomponent(next_id_to_save.id, dispatch, state)
+    }
+    else
+    {
+        return save_knowledge_view(next_id_to_save.id)
+    }
 
-    return Promise.resolve()
-    // retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
+    // return retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
     // .then(() =>
     // {
     //     // Move this here so that retryable_save can be used by swap_storage and not trigger front end
@@ -50,6 +55,28 @@ function save_state ({ dispatch, state }: SaveStateArgs)
 
 
 
+
+function save_wcomponent (id: string, dispatch: Dispatch, state: RootState)
+{
+    const kv = get_wcomponent_from_state(state, id)
+    if (!kv)
+    {
+        console.error(`save_wcomponent but no wcomponent for id: "${id}"`)
+        dispatch(ACTIONS.sync.mark_specialised_object_id_as_saved({ id, object_type: "wcomponent" }))
+        return
+    }
+    // work in progress
+
+    // dispatch(ACTIONS.sync.)
+}
+
+function save_knowledge_view (id: string)
+{
+
+}
+
+
+/*
 const MAX_ATTEMPTS = 5
 interface AttemptSaveArgs
 {
@@ -152,3 +179,4 @@ export function retryable_save (args: AttemptSaveArgs)
         }
     })
 }
+*/
