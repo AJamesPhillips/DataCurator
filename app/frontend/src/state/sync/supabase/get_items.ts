@@ -21,7 +21,7 @@ interface GetItemsReturn<U>
     error: PostgrestError | undefined
     items: U[]
 }
-export async function get_items <S extends { id: string, base_id: number }, U> (args: GetItemsArgs<S, U>): Promise<GetItemsReturn<U>>
+export async function supabase_get_items <S extends { id: string, base_id: number }, U> (args: GetItemsArgs<S, U>): Promise<GetItemsReturn<U>>
 {
     const offset = args.offset || 0
 
@@ -39,7 +39,7 @@ export async function get_items <S extends { id: string, base_id: number }, U> (
 
     if (!error && items.length === SUPABASE_MAX_ROWS)
     {
-        const res2 = await get_items({ ...args, offset: offset + SUPABASE_MAX_ROWS })
+        const res2 = await supabase_get_items({ ...args, offset: offset + SUPABASE_MAX_ROWS })
         if (!res2.error) items = items.concat(res2.items)
         else error = res2.error
     }

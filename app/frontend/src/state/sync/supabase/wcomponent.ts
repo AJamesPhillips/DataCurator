@@ -2,8 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { SupabaseWComponent } from "../../../supabase/interfaces"
-import { get_items } from "./get_items"
+import { supabase_create_item } from "./create_items"
+import { supabase_get_items } from "./get_items"
 
+
+
+const TABLE_NAME = "wcomponents"
 
 
 type GetWComponentsArgs =
@@ -16,12 +20,30 @@ type GetWComponentsArgs =
     base_id?: undefined
     all_bases: true
 })
-export function get_wcomponents (args: GetWComponentsArgs)
+export function supabase_get_wcomponents (args: GetWComponentsArgs)
 {
-    return get_items<SupabaseWComponent, WComponent>({
+    return supabase_get_items<SupabaseWComponent, WComponent>({
         ...args,
-        table: "wcomponents",
+        table: TABLE_NAME,
         converter: wcomponent_supabase_to_app,
+    })
+}
+
+
+
+interface SupabaseCreateWcomponentArgs
+{
+    supabase: SupabaseClient
+    wcomponent: WComponent
+}
+export async function supabase_create_wcomponent (args: SupabaseCreateWcomponentArgs)
+{
+    return supabase_create_item({
+        supabase: args.supabase,
+        table: TABLE_NAME,
+        item: args.wcomponent,
+        converter_app_to_supabase: wcomponent_app_to_supabase,
+        converter_supabase_to_app: wcomponent_supabase_to_app,
     })
 }
 

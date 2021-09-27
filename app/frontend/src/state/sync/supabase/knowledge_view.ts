@@ -2,11 +2,15 @@ import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import type { SupabaseKnowledgeView } from "../../../supabase/interfaces"
-import { get_items } from "./get_items"
+import { supabase_create_item } from "./create_items"
+import { supabase_get_items } from "./get_items"
 
 
 
-type GetKnowledgeViewsArgs =
+const TABLE_NAME = "knowledge_views"
+
+
+type SupabaseGetKnowledgeViewsArgs =
 {
     supabase: SupabaseClient
 } & ({
@@ -16,12 +20,30 @@ type GetKnowledgeViewsArgs =
     base_id?: undefined
     all_bases: true
 })
-export function get_knowledge_views (args: GetKnowledgeViewsArgs)
+export function supabase_get_knowledge_views (args: SupabaseGetKnowledgeViewsArgs)
 {
-    return get_items<SupabaseKnowledgeView, KnowledgeView>({
+    return supabase_get_items<SupabaseKnowledgeView, KnowledgeView>({
         ...args,
-        table: "knowledge_views",
+        table: TABLE_NAME,
         converter: kv_supabase_to_app,
+    })
+}
+
+
+
+interface SupabaseCreateWcomponentArgs
+{
+    supabase: SupabaseClient
+    knowledge_view: KnowledgeView
+}
+export async function supabase_create_knowledge_view (args: SupabaseCreateWcomponentArgs)
+{
+    return supabase_create_item({
+        supabase: args.supabase,
+        table: TABLE_NAME,
+        item: args.knowledge_view,
+        converter_app_to_supabase: kv_app_to_supabase,
+        converter_supabase_to_app: kv_supabase_to_app,
     })
 }
 
@@ -41,6 +63,8 @@ export function kv_app_to_supabase (item: KnowledgeView, base_id?: number): Supa
         json: item,
     }
 }
+
+
 
 export function kv_supabase_to_app (kv: SupabaseKnowledgeView): KnowledgeView
 {
