@@ -21,7 +21,8 @@ import { user_info_subscribers } from "./user_info/subscribers"
 
 
 
-let cached_store: Store<RootState, Action<any>>
+type StoreType = Store<RootState, Action<any>> & { load_state_from_storage: boolean }
+let cached_store: StoreType
 
 interface ConfigStoreArgs
 {
@@ -29,7 +30,7 @@ interface ConfigStoreArgs
     override_preloaded_state?: Partial<RootState> | undefined
     load_state_from_storage?: boolean
 }
-export function get_store (args: ConfigStoreArgs = {})
+export function get_store (args: ConfigStoreArgs = {}): StoreType
 {
     const {
         use_cache = true,
@@ -44,8 +45,9 @@ export function get_store (args: ConfigStoreArgs = {})
         ...get_starting_state(),
         ...override_preloaded_state,
     }
-    const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state)
-    cached_store = store
+    const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state) as any as StoreType
+    store.load_state_from_storage = load_state_from_storage
+    cached_store = store as any
 
 
     const save = () =>
