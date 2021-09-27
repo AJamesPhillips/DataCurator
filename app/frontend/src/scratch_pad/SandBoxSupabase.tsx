@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import type { PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
-import { v4 as uuid_v4} from "uuid"
+import { v4 as uuid_v4 } from "uuid"
 
 
 // import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"

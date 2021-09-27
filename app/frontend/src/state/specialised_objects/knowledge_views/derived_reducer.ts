@@ -24,7 +24,7 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
-import { is_knowledge_view_id } from "../../../shared/utils/ids"
+import { is_uuid_v4 } from "../../../shared/utils/ids"
 import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
 import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { is_defined } from "../../../shared/utils/is_defined"
@@ -44,9 +44,9 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
 
     let initial_kv_id = initial_state.routing.args.subview_id
-    initial_kv_id = is_knowledge_view_id(initial_kv_id) ? initial_kv_id : ""
+    initial_kv_id = is_uuid_v4(initial_kv_id) ? initial_kv_id : ""
     let current_kv_id = state.routing.args.subview_id
-    current_kv_id = is_knowledge_view_id(current_kv_id) ? current_kv_id : ""
+    current_kv_id = is_uuid_v4(current_kv_id) ? current_kv_id : ""
     const kv_object_id_changed = initial_kv_id !== current_kv_id
     if (kv_object_id_changed)
     {

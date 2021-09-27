@@ -175,7 +175,7 @@ async function save_knowledge_view (id: string, store: StoreType)
 
     const supabase = get_supabase()
     const res = await supabase_upsert_knowledge_view({ supabase, knowledge_view })
-    if (res.status !== 200 && res.status !== 409)
+    if (res.status !== 201 && res.status !== 200 && res.status !== 409)
     {
         return Promise.reject(`save_knowledge_view got "${res.status}" error: "${res.error}"`)
     }
@@ -209,7 +209,7 @@ async function save_knowledge_view (id: string, store: StoreType)
             last_source_of_truth,
             current_value,
             source_of_truth: latest_source_of_truth,
-            update_successful: res.status === 200,
+            update_successful: res.status === 200, // we should never get a 201 if we have a last_source_of_truth
         })
 
         if (merge.needs_save)

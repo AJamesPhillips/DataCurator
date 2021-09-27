@@ -35,7 +35,7 @@ export interface ExploreButtonHandleOwnProps
 const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
 {
     const wcomponent = get_wcomponent_from_state(state, own_props.wcomponent_id)
-    const kvwc_id = wcomponent_id_to_wcomponent_kv_id(own_props.wcomponent_id)
+    const kvwc_id = own_props.wcomponent_id
 
     return {
         wcomponent,

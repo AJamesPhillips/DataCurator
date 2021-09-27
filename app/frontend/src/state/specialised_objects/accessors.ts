@@ -201,6 +201,5 @@ function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: Nest
 
 export function wcomponent_has_knowledge_view (wcomponent_id: string, knowledge_views_by_id: KnowledgeViewsById)
 {
-    const kvwc_id = wcomponent_id_to_wcomponent_kv_id(wcomponent_id)
-    return !!knowledge_views_by_id[kvwc_id]
+    return !!knowledge_views_by_id[wcomponent_id]
 }
