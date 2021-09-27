@@ -4,7 +4,7 @@ import type { RootState } from "../../State"
 
 export function needs_save (state: RootState)
 {
-    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_objects_pending_save
+    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
 
     return (wcomponent_ids.size + knowledge_view_ids.size) > 0
 }
@@ -18,7 +18,7 @@ interface GetNextSpecialisedStateIdToSaveReturn
 }
 export function get_next_specialised_state_id_to_save (state: RootState): GetNextSpecialisedStateIdToSaveReturn
 {
-    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_objects_pending_save
+    const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
 
     const knowledge_view_ids_iterator = knowledge_view_ids.values()
     const knowledge_view_id = knowledge_view_ids_iterator.next()

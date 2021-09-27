@@ -13,7 +13,7 @@ export type SyncDataType = "bases" | "specialised_objects"
 
 export interface SyncState extends SyncStateByType
 {
-    specialised_objects_pending_save: {
+    specialised_object_ids_pending_save: {
         wcomponent_ids: Set<string>
         knowledge_view_ids: Set<string>
     },

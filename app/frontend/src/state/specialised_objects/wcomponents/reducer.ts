@@ -28,9 +28,9 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
         if (!action.source_of_truth)
         {
-            let { wcomponent_ids } = state.sync.specialised_objects_pending_save
+            let { wcomponent_ids } = state.sync.specialised_object_ids_pending_save
             wcomponent_ids = ensure_item_in_set(wcomponent_ids, wcomponent.id)
-            state = update_subsubstate(state, "sync", "specialised_objects_pending_save", "wcomponent_ids", wcomponent_ids)
+            state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", "wcomponent_ids", wcomponent_ids)
         }
     }
 

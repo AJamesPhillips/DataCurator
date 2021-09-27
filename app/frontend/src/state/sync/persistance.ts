@@ -27,7 +27,7 @@ export function sync_starting_state (): SyncState
 
     const state: SyncState = {
         storage_type: "supabase",
-        specialised_objects_pending_save: {
+        specialised_object_ids_pending_save: {
             wcomponent_ids: new Set(),
             knowledge_view_ids: new Set(),
         },

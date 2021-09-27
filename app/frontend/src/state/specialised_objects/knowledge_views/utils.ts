@@ -15,9 +15,9 @@ export function handle_upsert_knowledge_view (state: RootState, knowledge_view: 
 
     if (!source_of_truth)
     {
-        let { knowledge_view_ids } = state.sync.specialised_objects_pending_save
+        let { knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
         knowledge_view_ids = ensure_item_in_set(knowledge_view_ids, knowledge_view.id)
-        state = update_subsubstate(state, "sync", "specialised_objects_pending_save", "knowledge_view_ids", knowledge_view_ids)
+        state = update_subsubstate(state, "sync", "specialised_object_ids_pending_save", "knowledge_view_ids", knowledge_view_ids)
     }
 
     return state
