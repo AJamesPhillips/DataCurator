@@ -4,10 +4,12 @@ import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import { get_items_by_id } from "../../shared/utils/get_items"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { update_substate } from "../../utils/update_state"
+import { is_upsert_knowledge_view } from "../specialised_objects/knowledge_views/actions"
 import {
     is_clear_from_mem_all_specialised_objects,
     is_replace_all_specialised_objects,
 } from "../specialised_objects/syncing/actions"
+import { is_upsert_wcomponent } from "../specialised_objects/wcomponents/actions"
 import type { RootState } from "../State"
 import { is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save } from "./actions"
 import type {
@@ -15,6 +17,7 @@ import type {
     SpecialisedObjectIdsPendingSave,
     SyncStateForDataType,
 } from "./state"
+import { update_knowledge_view_last_source_of_truth, update_wcomponent_last_source_of_truth } from "./utils"
 
 
 
@@ -69,6 +72,17 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
         state = update_substate(state, "sync", "last_source_of_truth_specialised_objects_by_id", last)
     }
 
+
+    if (is_upsert_wcomponent(action) && action.source_of_truth)
+    {
+        state = update_wcomponent_last_source_of_truth(state, action.wcomponent)
+    }
+
+
+    if (is_upsert_knowledge_view(action) && action.source_of_truth)
+    {
+        state = update_knowledge_view_last_source_of_truth(state, action.knowledge_view)
+    }
 
     return state
 }

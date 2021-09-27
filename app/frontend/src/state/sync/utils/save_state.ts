@@ -8,14 +8,16 @@ import type { StorageType } from "../state"
 import { error_to_string, SyncError } from "./errors"
 import { get_next_specialised_state_id_to_save } from "./needs_save"
 import { save_supabase_data } from "../supabase/supabase_save_data"
-import { get_wcomponent_from_state } from "../../specialised_objects/accessors"
+import { get_knowledge_view_from_state, get_wcomponent_from_state } from "../../specialised_objects/accessors"
 import { get_supabase } from "../../../supabase/get_supabase"
 import { supabase_upsert_wcomponent } from "../supabase/wcomponent"
 import type { PostgrestError } from "@supabase/supabase-js"
 import type { SupabaseWComponent } from "../../../supabase/interfaces"
 import { merge_wcomponent } from "../merge/merge_wcomponents"
 import type { StoreType } from "../../store"
-import { get_last_source_of_truth_wcomponent_from_state } from "../selector"
+import { get_last_source_of_truth_knowledge_view_from_state, get_last_source_of_truth_wcomponent_from_state } from "../selector"
+import { supabase_upsert_knowledge_view } from "../supabase/knowledge_view"
+import { merge_knowledge_view } from "../merge/merge_knowledge_views"
 
 
 
@@ -45,23 +47,27 @@ export async function save_state (store: StoreType)
 
     let promise_response
 
-    if (next_id_to_save.object_type === "wcomponent")
+    if (next_id_to_save.object_type === "knowledge_view")
     {
-        promise_response = save_wcomponent(next_id_to_save.id, store)
+        promise_response = save_knowledge_view(next_id_to_save.id, store)
     }
     else
     {
-        promise_response = save_knowledge_view(next_id_to_save.id)
+        promise_response = save_wcomponent(next_id_to_save.id, store)
     }
 
     try
     {
         await promise_response
+        store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
     }
     catch (err)
     {
         console.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err}`)
-        store.dispatch(ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects" }))
+        store.dispatch(ACTIONS.sync.update_sync_status({
+            status: "FAILED", data_type: "specialised_objects", error_message: `${err}`,
+        }))
+
         return Promise.reject()
     }
 
@@ -97,18 +103,22 @@ async function save_wcomponent (id: string, store: StoreType)
     const res = await supabase_upsert_wcomponent({ supabase, wcomponent })
     if (res.status !== 200 && res.status !== 409)
     {
-        return Promise.reject(`save_wcomponent got ${res.status} error: ${res.error}`)
+        return Promise.reject(`save_wcomponent got "${res.status}" error: "${res.error}"`)
     }
 
     let latest_source_of_truth = res.item
     if (!latest_source_of_truth)
     {
-        return Promise.reject(`Inconsistent state violation.  save_wcomponent got ${res.status} but no latest_source_of_truth item.  Error: ${res.error}.`)
+        return Promise.reject(`Inconsistent state violation.  save_wcomponent got "${res.status}" but no latest_source_of_truth item.  Error: "${res.error}".`)
     }
-    store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent: latest_source_of_truth, source_of_truth: true }))
 
 
     const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id)
+    store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
+        wcomponent: latest_source_of_truth, source_of_truth: true,
+    }))
+
+
     if (!last_source_of_truth)
     {
         if (wcomponent.modified_at)
@@ -119,7 +129,7 @@ async function save_wcomponent (id: string, store: StoreType)
     else
     {
         const current_value = get_wcomponent_from_state(store.getState(), id)
-        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_wcomponent found wcomponent last_source_of_truth but no current_value for id ${id}.`)
+        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_wcomponent found wcomponent last_source_of_truth but no current_value for id "${id}".`)
 
         const merge = merge_wcomponent({
             last_source_of_truth,
@@ -131,7 +141,11 @@ async function save_wcomponent (id: string, store: StoreType)
         if (merge.needs_save)
         {
             store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
-                wcomponent: merge.value, source_of_truth: false
+                wcomponent: {
+                    ...merge.value,
+                    // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
+                },
+                source_of_truth: false,
             }))
         }
 
@@ -146,9 +160,76 @@ async function save_wcomponent (id: string, store: StoreType)
 
 
 
-function save_knowledge_view (id: string)
+async function save_knowledge_view (id: string, store: StoreType)
 {
+    const knowledge_view = get_knowledge_view_from_state(store.getState(), id)
+    if (!knowledge_view)
+    {
+        store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save())
+        return Promise.reject(`Inconsistent state violation.  save_knowledge_view but no knowledge_view for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
+    }
 
+    store.dispatch(ACTIONS.sync.update_specialised_object_sync_info({
+        id: knowledge_view.id, object_type: "knowledge_view", saving: true,
+    }))
+
+    const supabase = get_supabase()
+    const res = await supabase_upsert_knowledge_view({ supabase, knowledge_view })
+    if (res.status !== 200 && res.status !== 409)
+    {
+        return Promise.reject(`save_knowledge_view got "${res.status}" error: "${res.error}"`)
+    }
+
+    let latest_source_of_truth = res.item
+    if (!latest_source_of_truth)
+    {
+        return Promise.reject(`Inconsistent state violation.  save_knowledge_view got "${res.status}" but no latest_source_of_truth item.  Error: "${res.error}".`)
+    }
+
+
+    const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id)
+    store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+        knowledge_view: latest_source_of_truth, source_of_truth: true,
+    }))
+
+
+    if (!last_source_of_truth)
+    {
+        if (knowledge_view.modified_at)
+        {
+            return Promise.reject(`Inconsistent state violation.  save_knowledge_view found no last_source_of_truth knowledge_view for id: "${id}" but knowledge_view had a modified_at already set`)
+        }
+    }
+    else
+    {
+        const current_value = get_knowledge_view_from_state(store.getState(), id)
+        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_knowledge_view found knowledge_view last_source_of_truth but no current_value for id "${id}".`)
+
+        const merge = merge_knowledge_view({
+            last_source_of_truth,
+            current_value,
+            source_of_truth: latest_source_of_truth,
+            update_successful: res.status === 200,
+        })
+
+        if (merge.needs_save)
+        {
+            store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+                knowledge_view: {
+                    ...merge.value,
+                    // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
+                },
+                source_of_truth: false,
+            }))
+        }
+
+        if (merge.unresolvable_conflicted_fields)
+        {
+            // TODO add unresolvable conflict
+        }
+    }
+
+    return Promise.resolve()
 }
 
 

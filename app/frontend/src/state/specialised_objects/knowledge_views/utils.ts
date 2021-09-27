@@ -13,10 +13,8 @@ export function handle_upsert_knowledge_view (state: RootState, knowledge_view: 
 
     state = update_substate(state, "specialised_objects", "knowledge_views_by_id", map)
 
-    if (knowledge_view.needs_save)
-    {
-        state = update_specialised_object_ids_pending_save(state, "knowledge_view", knowledge_view.id, true)
-    }
+    // Set derived data
+    state = update_specialised_object_ids_pending_save(state, "knowledge_view", knowledge_view.id, !!knowledge_view.needs_save)
 
     return state
 }

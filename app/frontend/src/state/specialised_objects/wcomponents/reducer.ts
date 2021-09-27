@@ -28,10 +28,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
         state = update_subsubstate(state, "specialised_objects", "wcomponents_by_id", wcomponent.id, wcomponent)
 
-        if (wcomponent.needs_save)
-        {
-            state = update_specialised_object_ids_pending_save(state, "wcomponent", wcomponent.id, true)
-        }
+        // Set derived data
+        state = update_specialised_object_ids_pending_save(state, "wcomponent", wcomponent.id, !!wcomponent.needs_save)
     }
 
 

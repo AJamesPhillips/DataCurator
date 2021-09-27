@@ -5,7 +5,7 @@ import { get_new_knowledge_view_object } from "../../../knowledge_view/create_ne
 
 
 
-export function merge_knowledge_views (args: MergeDataCoreArgs<KnowledgeView>): MergeDataReturn<KnowledgeView>
+export function merge_knowledge_view (args: MergeDataCoreArgs<KnowledgeView>): MergeDataReturn<KnowledgeView>
 {
 
     return merge_base_object({ ...args, get_custom_field_merger })
@@ -115,7 +115,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
@@ -139,7 +139,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 2: e(3) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
@@ -163,7 +163,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 2: e(3) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1), 2: e(5) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
@@ -187,7 +187,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
@@ -211,7 +211,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
@@ -237,7 +237,7 @@ function run_tests()
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3), 1: e(10) } }
         const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
-        const merge = merge_knowledge_views({
+        const merge = merge_knowledge_view({
             last_source_of_truth,
             current_value,
             source_of_truth,
