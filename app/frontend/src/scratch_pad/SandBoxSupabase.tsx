@@ -567,7 +567,7 @@ interface CreateKnowledgeViewArgs
 }
 async function create_knowledge_views (args: CreateKnowledgeViewArgs)
 {
-    const default_data = generate_default_data()
+    const default_data = generate_default_data(args.base_id)
     const a_knowledge_view = default_data.knowledge_views[0]!
 
     const { data, error } = await supabase
@@ -648,13 +648,14 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
 
 
 
-function generate_default_data ()
+function generate_default_data (base_id: number)
 {
-    const wc1 = get_contextless_new_wcomponent_object({ title: "wc1" })
+    const wc1 = get_contextless_new_wcomponent_object({ base_id, title: "wc1" })
     const wcomponents: WComponent[] = [wc1]
 
     const kv1 = get_new_knowledge_view_object({
         id: uuid_v4(),
+        base_id,
         title: "kv1",
         wc_id_map: {
             [wc1.id]: { left: 0, top: 0 },

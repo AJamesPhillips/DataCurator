@@ -1,10 +1,12 @@
 import type { Store } from "redux"
 
 import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
+import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentConnectionType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
+import { selector_chosen_base_id } from "../../user_info/selector"
 import { is_pointerup_on_connection_terminal } from "../meta_wcomponents/selecting/actions"
 
 
@@ -27,6 +29,9 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         if (!state.last_action) return
 
         if (!is_pointerup_on_connection_terminal(state.last_action)) return
+
+        const base_id = selector_chosen_base_id(state)
+        if (base_id === undefined) return
 
         const { terminal_type: start_terminal_type, wcomponent_id: start_wcomponent_id } = last_pointer_down_connection_terminal
         const { terminal_type: end_terminal_type, wcomponent_id: end_wcomponent_id } = state.last_action
@@ -58,7 +63,7 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         const either_meta = start_type === "meta" || end_type === "meta"
         const connection_type: WComponentConnectionType = either_meta ? "relation_link" : "causal_link"
 
-        const wcomponent: Partial<WComponent> = { type: connection_type, from_id, to_id, from_type, to_type }
+        const wcomponent: Partial<WComponent> & HasBaseId = { base_id, type: connection_type, from_id, to_id, from_type, to_type }
         create_wcomponent({ wcomponent, creation_context: state.creation_context })
     }
 }

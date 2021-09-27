@@ -21,6 +21,7 @@ const wc10: WComponentNodeState = {
     type: "state",
     id: "wc10",
     created_at,
+    base_id: -1,
     title: "wc10 title",
     description: "wc10 description",
 }
@@ -30,7 +31,7 @@ const creation_context: CreationContextState = { use_creation_context: true, cre
 } }
 
 
-const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
+const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], -1, creation_context)
 VAP_set1.entries[0]!.value = "thing"
 VAP_set1.entries[0]!.probability = 0.6
 VAP_set1.shared_entry_values = { conviction: 0.4 }
@@ -39,6 +40,7 @@ const wc11: WComponentNodeStateV2 = {
     subtype: "boolean",
     id: "wc11",
     created_at,
+    base_id: -1,
     title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
     description: "wc11 description",
     boolean_false_str: "this is false",
@@ -52,6 +54,7 @@ const wc12_judgement: WComponentJudgement = {
     type: "judgement",
     id: "wc12",
     created_at,
+    base_id: -1,
     title: "wc12 title",
     description: "wc12 description",
     judgement_target_wcomponent_id: wc11.id,
@@ -65,12 +68,13 @@ const wc13_judgement: WComponentJudgement = {
 }
 
 
-const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, [], creation_context)
+const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, [], -1, creation_context)
 VAP_set2.entries[0]!.probability = 0
 const wc14: WComponentNodeStateV2 = {
     ...wc11,
     id: "wc14",
     created_at,
+    base_id: -1,
     title: "wc14 title ${value}",
     description: "wc14 description",
     values_and_prediction_sets: [
@@ -90,6 +94,7 @@ const kv10: KnowledgeView = {
         [wc14.id]: { left: 700, top: 100 },
     },
     created_at,
+    base_id: -1,
     goal_ids: [],
     sort_type: "normal",
 }

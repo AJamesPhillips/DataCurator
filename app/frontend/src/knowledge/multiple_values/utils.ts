@@ -37,7 +37,7 @@ export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_
 
 
 
-export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets: VAPSet[], creation_context: CreationContextState): VAPSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
 {
     const dates = get_new_created_ats(creation_context)
     // const now = new Date(get_created_at_ms(dates))
@@ -48,6 +48,7 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets
     const new_VAP_set = {
         id: get_new_value_and_prediction_set_id(),
         ...dates,
+        base_id,
         datetime: {}, // min: now },
         entries: entries_with_probabilities,
     }

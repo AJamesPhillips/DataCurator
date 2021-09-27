@@ -5,6 +5,7 @@ import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
 import type { CanvasPointerEvent } from "../../canvas/pub_sub"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"
+import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_current_knowledge_view_from_state } from "../accessors"
 import type { AddToKnowledgeViewArgs } from "../wcomponents/actions"
 
@@ -24,6 +25,14 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
         }
 
 
+        const base_id = selector_chosen_base_id(state)
+        if (base_id === undefined)
+        {
+            console.error("No base_id despite canvas double_tap")
+            return // should never happen
+        }
+
+
         if (state.display_options.consumption_formatting) return
 
 
@@ -32,7 +41,7 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
 
 
         create_wcomponent({
-            wcomponent: { type: "statev2" },
+            wcomponent: { base_id, type: "statev2" },
             creation_context: state.creation_context,
             add_to_knowledge_view,
             store,

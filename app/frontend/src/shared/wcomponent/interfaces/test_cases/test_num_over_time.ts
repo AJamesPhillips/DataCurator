@@ -27,6 +27,7 @@ const default_VAP: StateValueAndPrediction = {
 const political_pressure_on_state_dph: WComponentNodeStateV2 = {
     id: "a",
     created_at: april20th,
+    base_id: -1,
     type: "statev2",
     subtype: "boolean",
     title: "Political pressure ${value}",
@@ -37,6 +38,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april20th,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: feb12th,
@@ -55,6 +57,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april21st,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: feb12th,
@@ -76,6 +79,7 @@ const political_pressure_on_state_dph: WComponentNodeStateV2 = {
 const state_dph_mis_reporting: WComponentNodeStateV2 = {
     id: "a",
     created_at: april20th,
+    base_id: -1,
     type: "statev2",
     subtype: "boolean",
     title: "State DPH ${value} fradulently increase test count",
@@ -86,6 +90,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april20th,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: feb12th,
@@ -104,6 +109,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april28th,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: feb12th,
@@ -128,6 +134,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
 // const political_pressure_resulting_in_made_up_state_dph_mis_reporting: WComponentConnection = {
 //     id: "",
 //     created_at:
+//     base_id: -1,
 //     type: "causal_link",
 //
 // }
@@ -137,6 +144,7 @@ const state_dph_mis_reporting: WComponentNodeStateV2 = {
 const number_of_tests: WComponentNodeState = {
     id: "123",
     created_at: march1st,
+    base_id: -1,
     type: "state",
     title: "Number of tests in region _a_",
     description: "",
@@ -144,6 +152,7 @@ const number_of_tests: WComponentNodeState = {
         {
             id: "",
             created_at: march1st,
+            base_id: -1,
             start_datetime: march1st,
             description: "As reported by news outlet ABC here: http://...",
             value: "10",
@@ -151,6 +160,7 @@ const number_of_tests: WComponentNodeState = {
         {
             id: "",
             created_at: april1st,
+            base_id: -1,
             // this will overwrite the other contrasting value for this time point.
             start_datetime: march1st,
             description: "Official figure from http://...",
@@ -159,6 +169,7 @@ const number_of_tests: WComponentNodeState = {
         {
             id: "",
             created_at: april1st,
+            base_id: -1,
             start_datetime: april1st,
             description: "Official figure from http://...",
             value: "50",
@@ -186,6 +197,7 @@ const number_of_tests: WComponentNodeState = {
 const number_of_testsv2: WComponentNodeStateV2 = {
     id: "123",
     created_at: march1st,
+    base_id: -1,
     type: "statev2",
     subtype: "number",
     title: "Number of tests in region _a_",
@@ -194,6 +206,7 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: march1st,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: march1st,
@@ -215,6 +228,7 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april1st,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: march1st,
@@ -242,6 +256,7 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         {
             id: "2",
             created_at: april1st,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: april1st,
@@ -261,6 +276,7 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: april20th,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: march1st,
@@ -295,6 +311,7 @@ const number_of_testsv2: WComponentNodeStateV2 = {
         {
             id: "2",
             created_at: april20th,
+            base_id: -1,
             datetime: {
                 // future: false,
                 value: april1st,

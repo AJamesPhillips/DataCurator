@@ -122,6 +122,7 @@ function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
         const vap_set: StateValueAndPredictionsSet = {
             id: e.id.replace("pr", "vps"),
             created_at: e.created_at,
+            base_id: e.base_id,
             custom_created_at: e.custom_created_at,
             datetime: e.datetime || {},
             entries: [

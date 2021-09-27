@@ -6,7 +6,6 @@ import {
     EditableListEntryItemProps,
     EditableListEntry,
     ListItemCRUDRequiredCUD,
-    ListItemCRUDRequiredC,
     ListItemCRUDRequiredCU,
 } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
@@ -19,7 +18,6 @@ import type { VAP_set_id_counterfactual_map } from "../../shared/uncertainty/unc
 import { Tense } from "../../shared/wcomponent/interfaces/datetime"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
-import { get_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { replace_element, remove_from_list_by_predicate } from "../../utils/list"
 import {
     get_summary_for_single_VAP_set,
@@ -48,6 +46,7 @@ interface OwnProps
     future_items: VAPSet[]
     previous_versions_by_id: {[id: string]: VAPSet[]}
 
+    base_id: number
     creation_context: CreationContextState
     editing: boolean
 }
@@ -146,7 +145,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
-                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, all_VAP_sets, props.creation_context)
+                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, all_VAP_sets, props.base_id, props.creation_context)
                     set_new_item(new_VAP_set)
                 }}
             />}

@@ -97,8 +97,8 @@ function test_partition_items_by_created_at_datetime ()
     const date3 = new Date("2021-04-01 00:03")
     const date3_ms = date3.getTime()
 
-    const c1: Simple = { id: "1", created_at: date1 }
-    const c2: Simple = { id: "2", created_at: date2 }
+    const c1: Simple = { base_id: -1, id: "1", created_at: date1 }
+    const c2: Simple = { base_id: -1, id: "2", created_at: date2 }
 
     items = []
     result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date3_ms })

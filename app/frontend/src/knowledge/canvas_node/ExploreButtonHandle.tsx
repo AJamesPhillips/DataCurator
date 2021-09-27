@@ -19,6 +19,7 @@ import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
+import type { HasBaseId } from "../../shared/interfaces/base"
 
 
 
@@ -135,8 +136,9 @@ function prepare_wcomponent_knowledge_view(props: Props, store: Store<RootState>
     const current_kv_id = current_kv && current_kv.id
 
 
-    const partial_knowledge_view_wcomponent: Partial<KnowledgeView> = {
+    const partial_knowledge_view_wcomponent: Partial<KnowledgeView> & HasBaseId = {
         id: props.kvwc_id,
+        base_id: props.wcomponent.base_id,
         wc_id_map,
         title,
         sort_type: current_kv_id ? "normal" : "hidden",

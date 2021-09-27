@@ -36,3 +36,9 @@ export function selector_need_to_create_a_base (state: RootState)
     const { user, bases_by_id } = state.user_info
     return user && bases_by_id && Object.keys(bases_by_id).length === 0
 }
+
+
+export function selector_chosen_base_id (state: RootState)
+{
+    return state.user_info.chosen_base_id
+}

@@ -1,16 +1,18 @@
 import type { Store } from "redux"
 
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
-import { get_new_knowledge_view_id, is_wc_knowledge_view_id } from "../shared/utils/ids"
+import { get_new_knowledge_view_id } from "../shared/utils/ids"
 import { get_new_created_ats } from "../shared/utils/datetime"
 import type { CreationContextState } from "../shared/creation_context/state"
 import { get_store } from "../state/store"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
+import { selector_chosen_base_id } from "../state/user_info/selector"
+import type { HasBaseId } from "../shared/interfaces/base"
 
 
 
-export function get_new_knowledge_view_object (args: Partial<KnowledgeView> = {}, creation_context?: CreationContextState)
+export function get_new_knowledge_view_object (args: Partial<KnowledgeView> & HasBaseId, creation_context?: CreationContextState)
 {
     const knowledge_view: KnowledgeView = {
         id: get_new_knowledge_view_id(),
@@ -38,8 +40,10 @@ interface CreateKnowledgeViewArgs
 export function create_new_knowledge_view (args: CreateKnowledgeViewArgs)
 {
     const store = args.store || get_store()
+    const base_id = selector_chosen_base_id(store.getState())!
 
-    const knowledge_view = get_new_knowledge_view_object(args.knowledge_view, args.creation_context)
+    const partial_knowledge_view = { ...args.knowledge_view, base_id }
+    const knowledge_view = get_new_knowledge_view_object(partial_knowledge_view, args.creation_context)
 
     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
 }

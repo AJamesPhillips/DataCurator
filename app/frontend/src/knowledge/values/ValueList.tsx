@@ -16,6 +16,7 @@ import { get_new_created_ats } from "../../shared/utils/datetime"
 
 
 interface OwnProps {
+    base_id: number
     values: StateValueString[]
     // update_values: (values: StateValueString[]) => void
     // creation_context: CreationContextState
@@ -43,7 +44,7 @@ export function ValueList (props: OwnProps)
         item_descriptor="Value"
         get_id={get_id}
         item_props={item_props}
-        prepare_new_item={prepare_new_item}
+        prepare_new_item={() => prepare_new_item(props.base_id)}
         disable_collapsed={true}
     />
 }
@@ -54,13 +55,14 @@ const get_created_at = (item: StateValueString) => item.created_at
 const get_custom_created_at = (item: StateValueString) => item.custom_created_at
 
 
-const prepare_new_item = (): StateValueString =>
+const prepare_new_item = (base_id: number): StateValueString =>
 {
     const created_ats = get_new_created_ats()
 
     return {
         id: get_new_value_id(),
         ...created_ats,
+        base_id,
         value: "",
         start_datetime: created_ats.custom_created_at || created_ats.created_at,
         description: "",

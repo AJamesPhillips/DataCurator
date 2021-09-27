@@ -4,7 +4,12 @@ import { useMemo, useState } from "preact/hooks"
 import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
-import type { EditableListEntryItemProps, ListItemCRUD, ListItemCRUDRequiredC, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
+import type {
+    EditableListEntryItemProps,
+    ListItemCRUD,
+    ListItemCRUDRequiredC,
+    ListItemCRUDRequiredU,
+} from "../../form/editable_list/EditableListEntry"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
@@ -16,6 +21,7 @@ import { floor_datetime_to_resolution, get_new_created_ats } from "../../shared/
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
 import { remove_from_list_by_predicate, replace_element } from "../../utils/list"
+import { selector_chosen_base_id } from "../../state/user_info/selector"
 
 
 
@@ -31,6 +37,7 @@ const map_state = (state: RootState) => ({
     sim_ms: state.routing.args.sim_ms,
     creation_context: state.creation_context,
     editing: !state.display_options.consumption_formatting,
+    base_id: selector_chosen_base_id(state),
 })
 
 const connector = connect(map_state)
@@ -40,7 +47,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _PredictionList (props: Props)
 {
     const [new_item, set_new_item] = useState<Prediction | undefined>(undefined)
-    const { item_descriptor, predictions, update_predictions, created_at_ms, sim_ms, editing } = props
+    const { item_descriptor, predictions, update_predictions, created_at_ms, sim_ms, editing, base_id = -1 } = props
 
     const new_item_props = useMemo<EditableListEntryItemProps<Prediction, ListItemCRUDRequiredC<Prediction>>>(() => ({
         get_created_at,
@@ -107,7 +114,7 @@ function _PredictionList (props: Props)
             on_click_header={undefined}
             other_content={() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(props.creation_context))}
+                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id, props.creation_context))}
             />}
         />
 
@@ -188,7 +195,7 @@ function factory_get_details (editing: boolean)
 }
 
 
-function prepare_new_item (creation_context: CreationContextState): Prediction
+function prepare_new_item (base_id: number, creation_context: CreationContextState): Prediction
 {
     const created_ats = get_new_created_ats(creation_context)
     const custom_now = floor_datetime_to_resolution(created_ats.custom_created_at || created_ats.created_at, "day")
@@ -196,6 +203,7 @@ function prepare_new_item (creation_context: CreationContextState): Prediction
     return {
         id: get_new_prediction_id(),
         ...created_ats,
+        base_id,
         datetime: { min: custom_now },
         explanation: "",
         probability: 1,

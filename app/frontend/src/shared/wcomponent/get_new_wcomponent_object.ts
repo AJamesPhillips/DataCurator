@@ -1,4 +1,5 @@
 import type { CreationContextState } from "../creation_context/state"
+import type { HasBaseId } from "../interfaces/base"
 import { get_new_created_ats } from "../utils/datetime"
 import { date2str_auto } from "../utils/date_helpers"
 import { get_new_wcomponent_id } from "../utils/ids"
@@ -11,11 +12,12 @@ import type { WComponentBase } from "./interfaces/wcomponent_base"
 
 
 
-export function get_contextless_new_wcomponent_object (partial_wcomponent: Partial<WComponent> = {})
+export function get_contextless_new_wcomponent_object (partial_wcomponent: Partial<WComponent> & HasBaseId)
 {
     const base: WComponentBase = {
         id: get_new_wcomponent_id(),
         created_at: new Date(),
+        base_id: partial_wcomponent.base_id,
         title: "",
         description: "",
         type: "process",
@@ -113,7 +115,7 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
 
 
 
-export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent>, creation_context: CreationContextState)
+export function get_new_wcomponent_object (partial_wcomponent: Partial<WComponent> & HasBaseId, creation_context: CreationContextState)
 {
     let wcomponent: WComponent = {
         ...get_contextless_new_wcomponent_object(partial_wcomponent),

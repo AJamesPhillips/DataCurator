@@ -19,12 +19,13 @@ import {
 import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
+import type { HasBaseId } from "../shared/interfaces/base"
 
 
 
 interface CreateWComponentArgs
 {
-    wcomponent: Partial<WComponent>
+    wcomponent: Partial<WComponent> & HasBaseId
     creation_context: CreationContextState
     add_to_knowledge_view?: AddToKnowledgeViewArgs
     must_add_to_knowledge_view?: boolean

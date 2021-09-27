@@ -54,6 +54,7 @@ import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../../sharedf/Button"
+import { selector_chosen_base_id } from "../../state/user_info/selector"
 
 
 
@@ -77,6 +78,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 
     return {
         ready: state.sync.ready_for_reading,
+        base_id: selector_chosen_base_id(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_id_counterfactuals_map,
         from_wcomponent,
@@ -124,7 +126,9 @@ function _WComponentForm (props: Props)
     }, [props.wcomponent.type])
 
 
-    if (!props.ready) return <div>Loading...</div>
+    const { ready, base_id } = props
+    if (!ready) return <div>Loading...</div>
+    if (base_id === undefined) return <div>Choose a base first.</div>
 
 
     const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent,
@@ -193,7 +197,7 @@ function _WComponentForm (props: Props)
                     if (!type) return
 
                     // This ensures it will always have the fields it is expected to have
-                    const vanilla = get_contextless_new_wcomponent_object({ type }) as WComponent
+                    const vanilla = get_contextless_new_wcomponent_object({ base_id, type }) as WComponent
                     const new_wcomponent = { ...vanilla, ...wcomponent }
                     new_wcomponent.type = type
                     upsert_wcomponent(new_wcomponent)
@@ -356,6 +360,7 @@ function _WComponentForm (props: Props)
         {wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && <div>
             <p>
                 <ValueList
+                    base_id={base_id}
                     values={wcomponent.values || []}
                     // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
                     // update_values={new_values => upsert_wcomponent({ values: new_values }) }

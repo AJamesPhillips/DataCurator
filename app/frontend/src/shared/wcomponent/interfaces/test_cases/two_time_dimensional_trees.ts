@@ -13,6 +13,7 @@ const day5 = new Date("2021-04-25")
 const two_time_dimensional_trees: WComponentNodeStateV2 = {
     id: "node1_id",
     created_at: day1,
+    base_id: -1,
     type: "statev2",
     subtype: "other",
     title: "",
@@ -23,6 +24,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id1",
             created_at: day1,
+            base_id: -1,
             datetime: { value: day1 },
             entries: [{
                 id: "",
@@ -36,6 +38,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id2",
             created_at: day1,
+            base_id: -1,
             datetime: { value: day2 },
             entries: [{
                 id: "",
@@ -52,6 +55,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id1",
             created_at: day2,
+            base_id: -1,
             datetime: { value: day1 },
             entries: [{
                 id: "",
@@ -65,6 +69,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id2",
             created_at: day2,
+            base_id: -1,
             datetime: { value: day2 },
             entries: [{
                 id: "",
@@ -81,6 +86,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id3",
             created_at: day3,
+            base_id: -1,
             datetime: { value: day4 },
             entries: [{
                 id: "",
@@ -103,6 +109,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id4",
             created_at: day3,
+            base_id: -1,
             datetime: { value: day4 },
             entries: [{
                 id: "",
@@ -125,6 +132,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id5",
             created_at: day3,
+            base_id: -1,
             datetime: { value: day5 },
             entries: [{
                 id: "",
@@ -141,6 +149,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id3",
             created_at: day4,
+            base_id: -1,
             datetime: { value: day4 },
             entries: [{
                 id: "",
@@ -163,6 +172,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id4",
             created_at: day4,
+            base_id: -1,
             datetime: { value: day4 },
             entries: [{
                 id: "",
@@ -185,6 +195,7 @@ const two_time_dimensional_trees: WComponentNodeStateV2 = {
         {
             id: "VAP_set_id5",
             created_at: day4,
+            base_id: -1,
             datetime: { value: day5 },
             entries: [{
                 id: "",

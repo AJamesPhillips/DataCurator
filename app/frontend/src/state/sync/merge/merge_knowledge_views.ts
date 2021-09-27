@@ -109,7 +109,7 @@ function run_tests()
     function test_should_handle_adding_entry_on_client ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: {}, modified_at: dt1,
+            wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
@@ -133,7 +133,7 @@ function run_tests()
     function test_should_handle_adding_entries_on_client_and_remote ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: {}, modified_at: dt1,
+            wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
@@ -157,7 +157,7 @@ function run_tests()
     function test_should_handle_nonconflicting_changing_different_entries_on_client_and_remote ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: { 0: e(1), 2: e(3) }, modified_at: dt1,
+            wc_id_map: { 0: e(1), 2: e(3) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 2: e(3) }, needs_save: true, saving: true }
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 2: e(3) } }
@@ -181,7 +181,7 @@ function run_tests()
     function test_should_handle_conflict_changing_same_entries_on_client_and_remote ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: { 0: e(1) }, modified_at: dt1,
+            wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3) }, needs_save: true, saving: true }
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4) } }
@@ -205,7 +205,7 @@ function run_tests()
     function test_should_handle_resolveable_conflict_changing_same_entries_on_client_and_remote ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: { 0: e(1) }, modified_at: dt1,
+            wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, needs_save: true, saving: true }
         const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3) } }
@@ -229,7 +229,7 @@ function run_tests()
     function test_should_handle_non_and_conflict_changes_and_second_client_change ()
     {
         const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
-            wc_id_map: { 0: e(1) }, modified_at: dt1,
+            wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         // The user changes the position a second time
         const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 1: e(10) }, needs_save: true, saving: true }

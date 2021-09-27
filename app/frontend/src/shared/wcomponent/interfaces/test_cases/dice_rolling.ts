@@ -13,6 +13,7 @@ const default_VAP: StateValueAndPrediction = {
 const possible_d3_dice_rolling: WComponentNodeStateV2 = {
     id: "",
     created_at: d0,
+    base_id: -1,
     type: "statev2",
     subtype: "other",
     title: "Possible value of D3 roll: ${value}", // should render ${value} as "1 or 2 or 3" as all equally probable
@@ -21,6 +22,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: d0,
+            base_id: -1,
             datetime: {}, // note it does not need a sim datetime value, just marked as future
             // though actually we do not even need to set this value?  What does it add?  This data of relative
             // probabilities is equally applicable before we know the outcome of a future _or past_ event.
@@ -38,6 +40,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2 = {
         {
             id: "2",
             created_at: d1,
+            base_id: -1,
             datetime: {},
             entries: [
                 { ...default_VAP, relative_probability: 1 }, // fix error
@@ -54,6 +57,7 @@ const possible_d3_dice_rolling: WComponentNodeStateV2 = {
 const Person_A_rolled_a_2_on_a_d3_dice: WComponentNodeEvent = {
     id: "890",
     created_at: d1,
+    base_id: -1,
     type: "event",
     title: "Person A rolled a 2 on a d3 dice",
     description: "",
@@ -62,6 +66,7 @@ const Person_A_rolled_a_2_on_a_d3_dice: WComponentNodeEvent = {
 const specific_dice_roll: WComponentNodeStateV2 = {
     id: "",
     created_at: d0,
+    base_id: -1,
     type: "statev2",
     subtype: "other",
     title: "Possible value of D3 roll: ${value}", // should render ${value} as "1 or 2 or 3" as all equally probable
@@ -70,6 +75,7 @@ const specific_dice_roll: WComponentNodeStateV2 = {
         {
             id: "1",
             created_at: d0,
+            base_id: -1,
             datetime: {
                 // future: true, // this future === true can be computed from the fact min > now
                 min: d0,
@@ -93,6 +99,7 @@ const specific_dice_roll: WComponentNodeStateV2 = {
         {
             id: "2",
             created_at: d1,
+            base_id: -1,
             datetime: { value: d1 },
             shared_entry_values: {
                 explanation: `@@${Person_A_rolled_a_2_on_a_d3_dice.id}`,
