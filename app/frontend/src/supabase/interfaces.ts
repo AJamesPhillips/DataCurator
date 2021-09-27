@@ -56,8 +56,8 @@ export interface DBSupabaseAccessControl
 }
 export interface SupabaseAccessControl extends DBSupabaseAccessControl
 {
-    inserted_at: Date
-    updated_at: Date
+    inserted_at: string
+    updated_at: string
 }
 
 
@@ -67,7 +67,7 @@ export interface SupabaseAccessControl extends DBSupabaseAccessControl
 interface SupabaseItem<I>
 {
     id: string
-    modified_at: Date
+    modified_at: string
     base_id: number
     title: string
     json: I

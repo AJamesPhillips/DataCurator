@@ -1,5 +1,3 @@
-import type { Dispatch, Store } from "redux"
-
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
 import type { StoreType } from "../../store"
@@ -8,12 +6,12 @@ import { save_state } from "./save_state"
 
 
 
-export function conditionally_save_state (load_state_from_storage: boolean, store: StoreType)
+export async function conditionally_save_state (load_state_from_storage: boolean, store: StoreType)
 {
     const should_save = calc_should_save(load_state_from_storage, store, true)
     if (!should_save) return Promise.resolve()
 
-    return save_state(store)
+    await save_state(store)
 }
 
 

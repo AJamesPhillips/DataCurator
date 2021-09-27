@@ -1,4 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js"
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import type { SupabaseKnowledgeView } from "../../../supabase/interfaces"
@@ -72,10 +72,24 @@ async function supabase_update_knowledge_view (args: SupabaseCreateWcomponentArg
     const item = knowledge_view_app_to_supabase(args.knowledge_view)
 
     const result = await args.supabase.rpc("update_knowledge_view", { item })
-    const new_supabase_item: SupabaseKnowledgeView = result.data as any
-    const new_item = knowledge_view_supabase_to_app(new_supabase_item)
 
-    return { status: result.status, error: result.error || undefined, item: new_item }
+
+    let new_item: KnowledgeView | undefined = undefined
+    let error: PostgrestError | undefined | unknown = result.error || undefined
+    try
+    {
+        let new_supabase_item: SupabaseKnowledgeView = result.data as any
+        if (result.status === 409) new_supabase_item = JSON.parse(result.error!.details)
+        new_item = knowledge_view_supabase_to_app(new_supabase_item)
+    }
+    catch (err)
+    {
+        console.error("Exception whilst handling rpc update_knowledge_view response", err)
+        error = err
+    }
+
+
+    return { status: result.status, error, item: new_item }
 }
 
 
@@ -90,7 +104,7 @@ export function knowledge_view_app_to_supabase (item: KnowledgeView, base_id?: n
 
     return {
         id: item.id,
-        modified_at: item.modified_at!,
+        modified_at: item.modified_at ? item.modified_at.toISOString() : "",
         base_id,
         title: item.title,
         json,
@@ -105,7 +119,7 @@ export function knowledge_view_supabase_to_app (kv: SupabaseKnowledgeView): Know
     // Ensure all the fields that are edited in the db are set correctly in the json data.
     // Do not update title.  This should only be edited by the client app.  The canonical
     // value is in the DB's json field not the title field.
-    json = { ...json, id, base_id, modified_at }
+    json = { ...json, id, base_id, modified_at: new Date(modified_at) }
     json = clean_base_object_of_sync_meta_fields(json) // defensive
 
     json.created_at = json.created_at && new Date(json.created_at)
