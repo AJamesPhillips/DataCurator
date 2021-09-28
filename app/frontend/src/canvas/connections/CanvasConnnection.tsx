@@ -1,17 +1,17 @@
 import { h } from "preact"
+import { useState } from "preact/hooks"
 
 import "./CanvasConnnection.css"
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { CanvasPoint } from "../interfaces"
-import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"
+import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
-import { useState } from "preact/hooks"
 
 
 
 interface OwnProps {
-    from_node_position: CanvasPoint | undefined
-    to_node_position: CanvasPoint | undefined
+    from_node_position: KnowledgeViewWComponentEntry | undefined
+    to_node_position: KnowledgeViewWComponentEntry | undefined
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
     hidden?: boolean
