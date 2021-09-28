@@ -1,4 +1,5 @@
 import type { WComponent, WComponentsById } from "../interfaces/SpecialisedObjects"
+import { old_ids_and_functions_regex, uuids_and_functions_regex } from "./id_regexs"
 import { format_wcomponent_url, format_wcomponent_link } from "./templates"
 
 
@@ -46,7 +47,12 @@ export function replace_function_ids_in_text (text: string, wcomponents_by_id: W
 
 function get_functional_ids_from_text (text: string): { id: string, funktion: string }[]
 {
-    return [...text.matchAll(/.*?(@@\w*\d+)\.([\w]+)/g)].map(entry => ({ id: entry[1]!.slice(2), funktion: entry[2]! }))
+    const matches = [
+        ...text.matchAll(uuids_and_functions_regex),
+        ...text.matchAll(old_ids_and_functions_regex),
+    ]
+
+    return matches.map(entry => ({ id: entry[1]!.slice(2), funktion: entry[2]! }))
 }
 
 

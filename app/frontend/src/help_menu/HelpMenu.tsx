@@ -163,10 +163,10 @@ const use_styles = makeStyles(theme => ({
 
 const tips_on_linking: (string | h.JSX.Element)[] = [
     `Type "@@" in any text field to access a menu to link to any other component.
-    This will insert the id of that component, e.g. @@wc123.`
+    This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab or @@wc123 (short ids).`
     ,
     `Follow "@@some-id" with .url, .title and .description to get the attributes
-    of that component e.g. "@@wc123.title"`
+    of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title"`
     ,
     <span>
         Markdown is available so you can use things like <b>**some text**</b>
