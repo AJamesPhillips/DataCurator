@@ -1,5 +1,6 @@
-import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
+import type { SupabaseClient } from "@supabase/supabase-js"
 import type { Base } from "../../../shared/interfaces/base"
+import type { UpsertItemReturn } from "./interface"
 
 
 
@@ -11,13 +12,7 @@ type CreateItemArgs<SWrite, SRead, U> =
     converter_supabase_to_app: (item: SRead) => U
     converter_app_to_supabase: (item: U) => SWrite
 }
-interface CreateItemReturn<U>
-{
-    error: PostgrestError | undefined
-    item: U | undefined
-    status: number
-}
-export async function supabase_create_item <SWrite extends { id: string }, SRead extends SWrite, U extends Base> (args: CreateItemArgs<SWrite, SRead, U>): Promise<CreateItemReturn<U>>
+export async function supabase_create_item <SWrite extends { id: string }, SRead extends SWrite, U extends Base> (args: CreateItemArgs<SWrite, SRead, U>): Promise<UpsertItemReturn<U>>
 {
     const item_to_insert = args.converter_app_to_supabase(args.item)
 

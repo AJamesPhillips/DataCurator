@@ -12,6 +12,11 @@ import {
 } from "../selector"
 import { supabase_upsert_knowledge_view } from "../supabase/knowledge_view"
 import { merge_knowledge_view } from "../merge/merge_knowledge_views"
+import type { SPECIALISED_OBJECT_TYPE } from "../actions"
+import type { Base } from "../../../shared/interfaces/base"
+import type { UpsertItemReturn } from "../supabase/interface"
+import type { MergeDataCoreArgs } from "../merge/merge_data"
+import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 
 
 
@@ -44,7 +49,7 @@ export async function save_state (store: StoreType)
 
     if (next_id_to_save.object_type === "knowledge_view")
     {
-        promise_response = save_knowledge_view(next_id_to_save.id, store)
+        promise_response = save_knowledge_view(next_id_to_save.id, store, "knowledge_view")
     }
     else
     {
@@ -82,6 +87,66 @@ export async function save_state (store: StoreType)
     return Promise.resolve()
 }
 
+
+
+async function save_knowledge_view (id: string, store: StoreType, object_type: SPECIALISED_OBJECT_TYPE)
+{
+    const maybe_initial_item = get_knowledge_view_from_state(store.getState(), id)
+
+    const pre_upsert_check_result = pre_upsert_check(id, store, object_type, maybe_initial_item)
+    if (pre_upsert_check_result.error) return pre_upsert_check_result.error
+    const initial_item = pre_upsert_check_result.initial_item
+
+
+    const supabase = get_supabase()
+    const response = await supabase_upsert_knowledge_view({ supabase, knowledge_view: initial_item })
+
+    const post_upsert_check_result = post_upsert_check(id, store, object_type, response)
+    if (post_upsert_check_result.error) return post_upsert_check_result.error
+    const { create_successful, update_successful, latest_source_of_truth } = post_upsert_check_result
+
+
+    const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id)
+    const current_value = get_knowledge_view_from_state(store.getState(), id)
+    store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+        knowledge_view: latest_source_of_truth, source_of_truth: true,
+    }))
+
+
+    const check_merge_args_result = check_merge_args({
+        object_type,
+        initial_item,
+        last_source_of_truth,
+        current_value,
+    })
+    if (check_merge_args_result.error) return check_merge_args_result.error
+    if (check_merge_args_result.merge_args)
+    {
+        const merge = merge_knowledge_view({
+            ...check_merge_args_result.merge_args,
+            source_of_truth: latest_source_of_truth,
+            update_successful,
+        })
+
+        if (merge.needs_save)
+        {
+            store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
+                knowledge_view: {
+                    ...merge.value,
+                    // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
+                },
+                source_of_truth: false,
+            }))
+        }
+
+        if (merge.unresolvable_conflicted_fields.length)
+        {
+            // TODO add unresolvable conflict
+        }
+    }
+
+    return Promise.resolve(create_successful || update_successful)
+}
 
 
 
@@ -159,87 +224,96 @@ async function save_wcomponent (id: string, store: StoreType)
 
 
 
-async function save_knowledge_view (id: string, store: StoreType)
+function pre_upsert_check <U extends Base> (id: string, store: StoreType, object_type: SPECIALISED_OBJECT_TYPE, initial_item: U | undefined)
 {
-    const knowledge_view = get_knowledge_view_from_state(store.getState(), id)
-    if (!knowledge_view)
+    if (!initial_item)
     {
         store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save())
-        return Promise.reject(`Inconsistent state violation.  save_knowledge_view but no knowledge_view for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
+        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" but no item for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
+        return { error, initial_item: undefined }
     }
 
     store.dispatch(ACTIONS.sync.update_specialised_object_sync_info({
-        id: knowledge_view.id, object_type: "knowledge_view", saving: true,
+        id: initial_item.id, object_type, saving: true,
     }))
 
+    return { error: undefined, initial_item }
+}
 
-    const supabase = get_supabase()
-    const res = await supabase_upsert_knowledge_view({ supabase, knowledge_view })
 
 
-    const create_successful = res.status === 201
-    const update_successful = res.status === 200
-    if (!create_successful && !update_successful && res.status !== 409)
+function post_upsert_check <U extends Base> (id: string, store: StoreType, object_type: SPECIALISED_OBJECT_TYPE, response: UpsertItemReturn<U>)
+{
+    const create_successful = response.status === 201
+    const update_successful = response.status === 200
+    if (!create_successful && !update_successful && response.status !== 409)
     {
-        return Promise.reject(`save_knowledge_view got "${res.status}" error: "${res.error}"`)
+        const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${response.error}"`)
+
+        return { error, create_successful, update_successful, latest_source_of_truth: undefined }
     }
 
-    let latest_source_of_truth = res.item
+
+    const latest_source_of_truth = response.item
     if (!latest_source_of_truth)
     {
-        return Promise.reject(`Inconsistent state violation.  save_knowledge_view got "${res.status}" but no latest_source_of_truth item.  Error: "${res.error}".`)
+        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth item.  Error: "${response.error}".`)
+
+        return { error, create_successful, update_successful, latest_source_of_truth }
     }
 
+    return { error: undefined, create_successful, update_successful, latest_source_of_truth }
+}
 
-    const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id)
-    const current_value = get_knowledge_view_from_state(store.getState(), id)
-    store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
-        knowledge_view: latest_source_of_truth, source_of_truth: true,
-    }))
 
+
+interface CheckMergeArgsArgs<U>
+{
+    object_type: SPECIALISED_OBJECT_TYPE
+    initial_item: U
+    last_source_of_truth: U | undefined
+    current_value: U | undefined
+}
+
+interface CheckMergeArgsReturn <U>
+{
+    error: Promise<string> | undefined
+    merge_args: undefined | {
+        last_source_of_truth: U
+        current_value: U
+    }
+}
+function check_merge_args <U extends Base> (args: CheckMergeArgsArgs<U>): CheckMergeArgsReturn<U>
+{
+    const { object_type, initial_item, last_source_of_truth, current_value } = args
 
     if (!last_source_of_truth)
     {
-        if (knowledge_view.modified_at)
+        if (initial_item.modified_at)
         {
-            return Promise.reject(`Inconsistent state violation.  save_knowledge_view found no last_source_of_truth knowledge_view for id: "${id}" but knowledge_view had a modified_at already set`)
+            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`)
+            return { error, merge_args: undefined }
         }
         else
         {
-            // knowledge_view has been created.  status code should be 201
+            // "${object_type}" has been created.  status code should be 201
         }
     }
     else
     {
-        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_knowledge_view found knowledge_view last_source_of_truth but no current_value for id "${id}".`)
-
-        const merge = merge_knowledge_view({
-            last_source_of_truth,
-            current_value,
-            source_of_truth: latest_source_of_truth,
-            update_successful,
-        })
-
-        if (merge.needs_save)
+        if (!current_value)
         {
-            store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
-                knowledge_view: {
-                    ...merge.value,
-                    // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
-                },
-                source_of_truth: false,
-            }))
+            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth but no current_value for id "${initial_item.id}".`)
+            return { error, merge_args: undefined }
         }
 
-        if (merge.unresolvable_conflicted_fields.length)
-        {
-            // TODO add unresolvable conflict
-        }
+        return { error: undefined, merge_args: { last_source_of_truth, current_value } }
     }
 
-    // return (create_successful || update_successful) ? Promise.resolve() : Promise.reject("Conflicting edits")
-    return Promise.resolve(create_successful || update_successful)
+    return { error: undefined, merge_args: undefined }
 }
+
+
 
 
 /*

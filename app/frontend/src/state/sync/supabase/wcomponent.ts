@@ -2,9 +2,9 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
-import { clean_base_object_of_sync_meta_fields } from "./clean_base_object_for_supabase"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
+import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 
 
@@ -38,7 +38,7 @@ interface SupabaseUpsertWComponentArgs
     supabase: SupabaseClient
     wcomponent: WComponent
 }
-export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponentArgs)
+export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponentArgs): Promise<UpsertItemReturn<WComponent>>
 {
     return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args)
 }
