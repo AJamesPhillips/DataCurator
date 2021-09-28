@@ -56,15 +56,24 @@ export interface DBSupabaseAccessControl
 }
 export interface SupabaseAccessControl extends DBSupabaseAccessControl
 {
-    inserted_at: string
-    updated_at: string
+    inserted_at: Date
+    updated_at: Date
 }
 
 
 
 // ++++++++++++++++ public.knowledge_views and public.wcomponents ++++++++++++++++
 
-interface SupabaseItem<I>
+export interface SupabaseWriteItem<I>
+{
+    id: string
+    modified_at?: string
+    base_id: number
+    title: string
+    json: I
+}
+
+export interface SupabaseReadItem<I> extends SupabaseWriteItem<I>
 {
     id: string
     modified_at: string
@@ -74,6 +83,8 @@ interface SupabaseItem<I>
 }
 
 
-export interface SupabaseKnowledgeView extends SupabaseItem<KnowledgeView> {}
+export interface SupabaseWriteKnowledgeView extends SupabaseWriteItem<KnowledgeView> {}
+export interface SupabaseReadKnowledgeView extends SupabaseReadItem<KnowledgeView> {}
 
-export interface SupabaseWComponent extends SupabaseItem<WComponent> {}
+export interface SupabaseWriteWComponent extends SupabaseWriteItem<WComponent> {}
+export interface SupabaseReadWComponent extends SupabaseReadItem<WComponent> {}

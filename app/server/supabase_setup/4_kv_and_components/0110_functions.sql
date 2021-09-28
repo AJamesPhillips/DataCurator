@@ -26,7 +26,7 @@ BEGIN
 
   UPDATE knowledge_views
   SET
-    modified_at = timezone('utc'::text, now()),
+    modified_at = now()::timestamp(3),
     -- base_id = item.base_id,
     title = item.title,
     json = item.json
@@ -88,7 +88,7 @@ BEGIN
 
   UPDATE wcomponents
   SET
-    modified_at = timezone('utc'::text, now()),
+    modified_at = now()::timestamp(3),
     -- base_id = item.base_id,
     title = item.title,
     json = item.json

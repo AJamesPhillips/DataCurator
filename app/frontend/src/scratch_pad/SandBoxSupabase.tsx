@@ -26,7 +26,7 @@ import type {
     ACCESS_CONTROL_LEVEL,
     SupabaseAccessControl,
     DBSupabaseAccessControl,
-    SupabaseKnowledgeView,
+    SupabaseReadKnowledgeView,
     SupabaseUser,
     SupabaseUsersById,
     SupabaseKnowledgeBase,
@@ -571,7 +571,7 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
     const a_knowledge_view = default_data.knowledge_views[0]!
 
     const { data, error } = await supabase
-        .from<SupabaseKnowledgeView>("knowledge_views")
+        .from<SupabaseReadKnowledgeView>("knowledge_views")
         .insert(knowledge_view_app_to_supabase(a_knowledge_view, args.base_id))
 
     args.set_postgrest_error(error)
@@ -610,7 +610,7 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     set_postgrest_error(error)
     if (error) return
 
-    const new_supabase_kv: SupabaseKnowledgeView = result.data as any
+    const new_supabase_kv: SupabaseReadKnowledgeView = result.data as any
     // type guard
     if (!new_supabase_kv) return
     const new_kv = knowledge_view_supabase_to_app(new_supabase_kv)

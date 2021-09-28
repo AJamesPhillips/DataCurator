@@ -15,6 +15,7 @@ import { merge_knowledge_view } from "../merge/merge_knowledge_views"
 
 
 
+let global_attempts = 0
 export async function save_state (store: StoreType)
 {
     const state = store.getState()
@@ -51,32 +52,34 @@ export async function save_state (store: StoreType)
     }
 
 
-    let success = true
     try
     {
-        await promise_response
-        store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
+        global_attempts += 1
+        const successfully_finished_upsert = await promise_response
+
+        if (successfully_finished_upsert) global_attempts = 0 // reset
+
+        if (global_attempts < 10)
+        {
+            store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
+        }
+        else
+        {
+            // This will protect against a code error resulting in an infinite cycle of 409
+            store.dispatch(ACTIONS.sync.update_sync_status({
+                status: "FAILED", data_type: "specialised_objects", error_message: `Try manually saving or refresh the page.  Failing that contact the team.`, attempt: global_attempts,
+            }))
+        }
     }
     catch (err)
     {
         console.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err}`)
         store.dispatch(ACTIONS.sync.update_sync_status({
-            status: "FAILED", data_type: "specialised_objects", error_message: `${err}`,
+            status: "FAILED", data_type: "specialised_objects", error_message: `${err}`, attempt: global_attempts,
         }))
-
-        success = false
     }
 
-    return Promise.resolve(success)
-
-    // return retryable_save({ storage_type, data, user_info: state.user_info, dispatch })
-    // .then(() =>
-    // {
-    //     // Move this here so that retryable_save can be used by swap_storage and not trigger front end
-    //     // code to prematurely think that application is ready
-    //     dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
-    //     return state
-    // })
+    return Promise.resolve()
 }
 
 
@@ -169,6 +172,7 @@ async function save_knowledge_view (id: string, store: StoreType)
         id: knowledge_view.id, object_type: "knowledge_view", saving: true,
     }))
 
+
     const supabase = get_supabase()
     const res = await supabase_upsert_knowledge_view({ supabase, knowledge_view })
 
@@ -233,7 +237,8 @@ async function save_knowledge_view (id: string, store: StoreType)
         }
     }
 
-    return (create_successful || update_successful) ? Promise.resolve() : Promise.reject("Conflicting edits")
+    // return (create_successful || update_successful) ? Promise.resolve() : Promise.reject("Conflicting edits")
+    return Promise.resolve(create_successful || update_successful)
 }
 
 
