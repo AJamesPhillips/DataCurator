@@ -1,8 +1,8 @@
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
+import { bounded } from "../../shared/utils/bounded"
 import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_angle } from "../../utils/angles"
-import { bounded } from "../../shared/utils/bounded"
 import { get_magnitude } from "../../utils/vector"
-import type { CanvasPoint } from "../interfaces"
 import { get_angle_from_start_connector, get_angle_from_end_connector } from "./angles"
 import { get_connection_point } from "./terminal"
 import { to_vec } from "./utils"
@@ -11,8 +11,8 @@ import { to_vec } from "./utils"
 
 interface DeriveCoordsArgs
 {
-    from_node_position: CanvasPoint
-    to_node_position: CanvasPoint
+    from_node_position: KnowledgeViewWComponentEntry
+    to_node_position: KnowledgeViewWComponentEntry
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
 }

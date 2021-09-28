@@ -202,7 +202,7 @@ function _WComponentCanvasNode (props: Props)
             // or percents, and the order is x-axis, y-axis
 
             // transformOrigin: "center center"
-            // transformOrigin: "left top"
+            transformOrigin: "left top",
         }
     }))
     const classes = use_styles()
@@ -233,7 +233,7 @@ function _WComponentCanvasNode (props: Props)
 
     const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
 
-    // <Box className={classes.sizer}>
+
     return <ConnectableCanvasNode
         position={on_graph ? kv_entry : undefined}
         cover_image={wcomponent.summary_image}
