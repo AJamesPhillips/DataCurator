@@ -23,7 +23,7 @@ export function find_index_in_sorted_list <I> (sorted_list: I[], get_key: (item:
             end = middle - 1
         }
     }
-	// key wasn't found
+    // key wasn't found
     return -1
 }
 
