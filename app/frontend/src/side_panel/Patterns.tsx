@@ -31,18 +31,18 @@ function _Patterns (props: Props)
         </div>
     }
 
-	return (
-		<Box>
-			<Typography component="h2" gutterBottom>
-				Add patterns
-			</Typography>
-			<NewPatternForm />
-			<Typography component="h3" my={3}>
-				Patterns: {props.pattern_count}
-			</Typography>
-			<PatternsList />
-		</Box>
-	)
+    return (
+        <Box>
+            <Typography component="h2" gutterBottom>
+                Add patterns
+            </Typography>
+            <NewPatternForm />
+            <Typography component="h3" my={3}>
+                Patterns: {props.pattern_count}
+            </Typography>
+            <PatternsList />
+        </Box>
+    )
 }
 
 export const Patterns = connector(_Patterns) as FunctionComponent<OwnProps>

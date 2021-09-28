@@ -297,13 +297,13 @@ function _WComponentCanvasNode (props: Props)
                 const top_fudge = -8 * (scale / 2)
                 const left_fudge = 6 / (scale / 2)
                 // maybe explore using e.currentTarget.offsetLeft?
-				const top = kv_entry.top + (e.offsetY) + top_fudge
-				const left = kv_entry.left + (e.offsetX) + left_fudge
-				// console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
-				// console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
-				update_position(round_canvas_point({
+                const top = kv_entry.top + (e.offsetY) + top_fudge
+                const left = kv_entry.left + (e.offsetX) + left_fudge
+                // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
+                // console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
+                update_position(round_canvas_point({
                     top: top,
-					left: left,
+                    left: left,
                 }))
             }
         }}

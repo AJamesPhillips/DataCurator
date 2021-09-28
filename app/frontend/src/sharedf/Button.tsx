@@ -8,7 +8,7 @@ import { Hidden } from "@material-ui/core"
 interface SpecificProps
 {
     value?: string,
-	is_hidden?: boolean
+    is_hidden?: boolean
     onPointerDown?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
     onClick?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
 }

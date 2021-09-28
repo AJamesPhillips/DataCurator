@@ -52,7 +52,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
                     </Typography>
                 </Tooltip>
             </Button>
-            {editing &&	<IconButton onClick={() => on_remove_option(option.id)}>
+            {editing && <IconButton onClick={() => on_remove_option(option.id)}>
                 <ClearIcon />
             </IconButton>}
         </ButtonGroup>

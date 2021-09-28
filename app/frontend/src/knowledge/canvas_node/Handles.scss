@@ -7,7 +7,8 @@ $handle_width:1em;
     position: absolute;
     top: 0; right: auto; bottom: auto; left: -24px;
     font-size: $handle_width;
-	// background:rgba(255, 255, 255, 0.7)
+    width: 25px; // I do not understand how this works but it makes it slightly wider
+    // background:rgba(255, 255, 255, 0.7)
 }
 
 
@@ -17,7 +18,6 @@ $handle_width:1em;
     min-width: $handle_width * 1.5;
     border-radius: 3px;
     transition: background-color 0.2s, color 0.2s;
-    text-align: center;
     cursor: pointer;
 }
 .node_handle:hover
@@ -25,11 +25,11 @@ $handle_width:1em;
     color: rgba(0,0,0,1);
 }
 
+
 .node_handle.movement
 {
-    left: $handle_width * 0.5;
+    cursor: move;
 }
-
 
 .node_handle.explore
 {
