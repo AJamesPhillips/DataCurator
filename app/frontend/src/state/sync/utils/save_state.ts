@@ -49,7 +49,7 @@ export async function save_state (store: StoreType)
 
     if (next_id_to_save.object_type === "knowledge_view")
     {
-        promise_response = save_knowledge_view(next_id_to_save.id, store, "knowledge_view")
+        promise_response = save_knowledge_view(next_id_to_save.id, store)
     }
     else
     {
@@ -89,8 +89,9 @@ export async function save_state (store: StoreType)
 
 
 
-async function save_knowledge_view (id: string, store: StoreType, object_type: SPECIALISED_OBJECT_TYPE)
+async function save_knowledge_view (id: string, store: StoreType)
 {
+    const object_type: SPECIALISED_OBJECT_TYPE = "knowledge_view"
     const maybe_initial_item = get_knowledge_view_from_state(store.getState(), id)
 
     const pre_upsert_check_result = pre_upsert_check(id, store, object_type, maybe_initial_item)
@@ -152,54 +153,42 @@ async function save_knowledge_view (id: string, store: StoreType, object_type: S
 
 async function save_wcomponent (id: string, store: StoreType)
 {
-    const wcomponent = get_wcomponent_from_state(store.getState(), id)
-    if (!wcomponent)
-    {
-        store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save())
-        return Promise.reject(`Inconsistent state violation.  save_wcomponent but no wcomponent for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
-    }
+    const object_type: SPECIALISED_OBJECT_TYPE = "wcomponent"
+    const maybe_initial_item = get_wcomponent_from_state(store.getState(), id)
 
-    store.dispatch(ACTIONS.sync.update_specialised_object_sync_info({
-        id: wcomponent.id, object_type: "wcomponent", saving: true,
-    }))
+    const pre_upsert_check_result = pre_upsert_check(id, store, object_type, maybe_initial_item)
+    if (pre_upsert_check_result.error) return pre_upsert_check_result.error
+    const initial_item = pre_upsert_check_result.initial_item
+
 
     const supabase = get_supabase()
-    const res = await supabase_upsert_wcomponent({ supabase, wcomponent })
-    if (res.status !== 200 && res.status !== 409)
-    {
-        return Promise.reject(`save_wcomponent got "${res.status}" error: "${res.error}"`)
-    }
+    const response = await supabase_upsert_wcomponent({ supabase, wcomponent: initial_item })
 
-    let latest_source_of_truth = res.item
-    if (!latest_source_of_truth)
-    {
-        return Promise.reject(`Inconsistent state violation.  save_wcomponent got "${res.status}" but no latest_source_of_truth item.  Error: "${res.error}".`)
-    }
+    const post_upsert_check_result = post_upsert_check(id, store, object_type, response)
+    if (post_upsert_check_result.error) return post_upsert_check_result.error
+    const { create_successful, update_successful, latest_source_of_truth } = post_upsert_check_result
 
 
     const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id)
+    const current_value = get_wcomponent_from_state(store.getState(), id)
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
         wcomponent: latest_source_of_truth, source_of_truth: true,
     }))
 
 
-    if (!last_source_of_truth)
+    const check_merge_args_result = check_merge_args({
+        object_type,
+        initial_item,
+        last_source_of_truth,
+        current_value,
+    })
+    if (check_merge_args_result.error) return check_merge_args_result.error
+    if (check_merge_args_result.merge_args)
     {
-        if (wcomponent.modified_at)
-        {
-            return Promise.reject(`Inconsistent state violation.  save_wcomponent found no last_source_of_truth wcomponent for id: "${id}" but wcomponent had a modified_at already set`)
-        }
-    }
-    else
-    {
-        const current_value = get_wcomponent_from_state(store.getState(), id)
-        if (!current_value) return Promise.reject(`Inconsistent state violation.  save_wcomponent found wcomponent last_source_of_truth but no current_value for id "${id}".`)
-
         const merge = merge_wcomponent({
-            last_source_of_truth,
-            current_value,
+            ...check_merge_args_result.merge_args,
             source_of_truth: latest_source_of_truth,
-            update_successful: res.status === 200,
+            update_successful,
         })
 
         if (merge.needs_save)
@@ -213,13 +202,13 @@ async function save_wcomponent (id: string, store: StoreType)
             }))
         }
 
-        if (merge.unresolvable_conflicted_fields)
+        if (merge.unresolvable_conflicted_fields.length)
         {
             // TODO add unresolvable conflict
         }
     }
 
-    return Promise.resolve()
+    return Promise.resolve(create_successful || update_successful)
 }
 
 
