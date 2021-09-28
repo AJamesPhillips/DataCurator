@@ -1,6 +1,15 @@
 
 # Data curator
 
+A collaborative real time planning application for complex projects.  Integrates a subset of features from:
+
+* whiteboard applications like Miro
+* micro note taking and knowledge graphs like Obsidian
+* Gantt chart like Microsoft project
+
+The data is store in a Supabase account we operate.  In furture we would like to allow you to host your own data in [Solid pods](https://solidproject.org/about) or something equivalent.
+
+
 ## Setup (on Mac)
 
     $ git clone git@github.com:centerofci/data-curator2.git
@@ -17,7 +26,7 @@
 
 ## Running the app
 
-### Start the backend server
+### ~~Start the backend server~~
 
     cd app/server
     npm start
@@ -30,7 +39,9 @@
 Then visit [http://localhost:8080/app#wcomponents/&view=knowledge](http://localhost:8080/app#wcomponents/&view=knowledge)
 
 
-## Optional: Output data to Obsidian / Markdown
+## Disabled ~~Optional: Output data to Obsidian / Markdown~~
+
+This does not work at the moment because the support for the local server has been removed in favour of collaborative "source of truth" central DB.
 
 <b style="background-color: pink; color: black;">This is write only.  If you edit these files outside DataCurator the changes will be overwritten and lost.</b>  (for now)
 
