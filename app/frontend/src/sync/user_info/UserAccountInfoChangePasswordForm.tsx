@@ -7,7 +7,8 @@ import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
-
+import { Box, Button, FormControl, FormGroup, IconButton, Input, InputAdornment, makeStyles, TextField } from "@material-ui/core"
+import SaveIcon from '@material-ui/icons/Save';
 
 
 interface OwnProps {
@@ -61,37 +62,69 @@ function _UserAccountInfoChangePasswordForm (props: Props)
             on_close()
         }
     }
+    const classes = use_styles();
+    return <FormGroup className="section">
+        {need_to_handle_password_recovery && <p>Please set a new password.</p>}
 
-    return <div className="section">
-        {need_to_handle_password_recovery && <div>Please set a new passowrd</div>}
+        <Box className={classes.root}>
+            <FormControl>
+                <TextField
+                    inputProps={{
+                        type: "password",
+                    }}
+                    onBlur={(e:any) => set_password(e.currentTarget.value)}
+                    onChange={(e:any) => set_password(e.currentTarget.value)}
+                    onKeyUp={(e:any) => set_password(e.currentTarget.value)}
+                    label="password"
+                    size="small"
+                    value={password}
+                    variant="outlined"
+                />
+            </FormControl>
 
-        <form>
-            <input type="password" placeholder="password" value={password}
-                onKeyUp={e => set_password(e.currentTarget.value)}
-                onChange={e => set_password(e.currentTarget.value)}
-                onBlur={e => set_password(e.currentTarget.value)}
-            /><br/>
-        </form>
+            <Box className={classes.update_button_container}>
+                <Button
+                    className={classes.update_button}
+                    disabled={!(user?.email) || !password}
+                    onClick={update_password}
+                    variant="contained"
+                >
+                    Update password
+                </Button>
+            </Box>
 
-        <input
-            type="button"
-            disabled={!(user?.email) || !password}
-            onClick={update_password}
-            value="Update password"
-        /><br/>
-
-        {!need_to_handle_password_recovery && <input
-            type="button"
-            onClick={() =>
-            {
-                on_close()
-                set_supabase_session_error(null)
-            }}
-            value="Cancel"
-        />}<br />
+            <Box>
+            {!need_to_handle_password_recovery && <Button
+                variant="contained"
+                onClick={() =>
+                {
+                    on_close()
+                    set_supabase_session_error(null)
+                }}>
+                    Cancel
+                </Button>
+            }
+            </Box>
+        </Box>
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
-    </div>
+    </FormGroup>
 }
+
+const use_styles = makeStyles(theme => ({
+    root: {
+        display:"flex",
+        justifyContent: "flex-start", alignContent: "center",
+    },
+    update_button_container: {
+        flexGrow: 1,
+        textAlign: "left",
+        marginLeft: 15,
+    },
+    update_button: {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius:0,
+    },
+}))
 
 export const UserAccountInfoChangePasswordForm = connector(_UserAccountInfoChangePasswordForm) as FunctionalComponent<OwnProps>
