@@ -13,6 +13,7 @@ import type { PostgrestError } from "@supabase/postgrest-js"
 import { useEffect } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { AsyncState } from "../../utils/async_state"
+import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
 
 
 
@@ -72,39 +73,82 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
         set_save_state(error ? "error" : "success")
     }
 
+    const classes = use_styles();
 
-    return <div className="section">
-        <form>
-            <input type="text" placeholder="Username" value={username} disabled={is_saving}
-                onKeyUp={e => set_username(e.currentTarget.value)}
-                onChange={e => set_username(e.currentTarget.value)}
-                onBlur={async e => set_username(e.currentTarget.value)}
-            /><br/>
-        </form>
+    return <FormGroup className="section">
+        <Box className={classes.root}>
 
-        <input
-            type="button"
-            disabled={!username || is_saving}
-            onClick={update_username}
-            value={`${need_to_set_user_name ? "Set" : "Change"} username`}
-        /><br/>
+            <FormControl>
+                <TextField
+                    disabled={is_saving}
+                    onBlur={async (e:any) => set_username(e.currentTarget.value)}
+                    onChange={(e:any) => set_username(e.currentTarget.value)}
+                    onKeyUp={(e:any) => set_username(e.currentTarget.value)}
+                    placeholder="Username"
+                    size="small"
+                    value={username}
+                    variant="outlined"
+                />
+            </FormControl>
+            {/* <form>
+                <input type="text" placeholder="Username" value={username} disabled={is_saving}
+                    onKeyUp={e => set_username(e.currentTarget.value)}
+                    onChange={e => set_username(e.currentTarget.value)}
+                    onBlur={async e => set_username(e.currentTarget.value)}
+                /><br/>
+            </form> */}
 
+
+            <Box className={classes.update_button_container}>
+                <Button
+                    className={classes.update_button}
+                    disabled={!username || is_saving}
+                    onClick={update_username}
+                    variant="contained"
+
+                >
+                    {need_to_set_user_name ? "Set" : "Change"} username
+                </Button>
+            </Box>
+
+            <Box>
+                {!need_to_set_user_name && <Button
+                    variant="contained"
+                    onClick={() =>
+                    {
+                        on_close()
+                        set_postgrest_error(null)
+                    }}
+                >
+                    Close
+                </Button>}
+            </Box>
+        </Box>
         {is_saving && "Saving..."}
         {save_state === "success" && "Saved."}
-        <br />
-
-        {!need_to_set_user_name && <input
-            type="button"
-            onClick={() =>
-            {
-                on_close()
-                set_postgrest_error(null)
-            }}
-            value="Close"
-        />}<br />
 
         <DisplaySupabasePostgrestError error={postgrest_error} />
-    </div>
+    </FormGroup>
 }
+
+const use_styles = makeStyles(theme => ({
+    root: {
+        display:"flex",
+        justifyContent: "flex-start", alignContent: "center",
+    },
+    username_input: {
+        borderTopRightRadius:0,
+        borderBottomRightRadius:0,
+    },
+    update_button_container: {
+        flexGrow: 1,
+        textAlign: "left",
+        marginLeft: 15,
+    },
+    update_button: {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius:0,
+    },
+}))
 
 export const UserAccountInfoChangeUsernameForm = connector(_UserAccountInfoChangeUsernameForm) as FunctionalComponent<OwnProps>

@@ -12,7 +12,8 @@ import { useEffect } from "preact/hooks"
 import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
 import { signout } from "../../state/user_info/signout"
-
+import { Box, Button, makeStyles, Typography } from "@material-ui/core"
+import LogoutIcon from '@material-ui/icons/ExitToApp'
 
 
 interface OwnProps {
@@ -38,6 +39,25 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
+const use_styles = makeStyles(theme => ({
+    root: {
+        margin: 5,
+    },
+    section: {
+        display:"flex",
+        justifyContent:"space-between",
+        alignItems:"center",
+    },
+    logout_section: {
+        flexBasis:"100%",
+    },
+    button: {
+        marginBottom: 5,
+    },
+    label: {
+        marginBottom:10,
+    }
+}))
 
 
 
@@ -86,28 +106,41 @@ function _UserAccountInfoForm (props: Props)
         return <UserAccountInfoChangeUsernameForm on_close={() => set_form_state("initial")} />
     }
 
+    const classes = use_styles();
+    return <Box className={classes.root}>
+        <Box className={`${classes.section} ${classes.logout_section} section`}>
+                <p>
+                    Logged in with
+                    <strong> {user.email} </strong>
+                </p>
+                <Box>
+                    <Button
+                        onClick={log_out}
+                        variant="contained"
+                        endIcon={<LogoutIcon />}
+                    >
+                        Log out
+                    </Button>
+                </Box>
+        </Box>
 
-    return <div>
-        <div className="section">
-            Logged in with {user.email}<br />
-            user id: &nbsp; {user.id}<br />
-            <br />
-            <input type="button" onClick={log_out} value="Log out" /><br />
-            <br />
-            <input type="button" onClick={() => set_form_state("updating_password")} value="Change password" /><br />
-        </div>
-
-        <div className="section">
-            User name {user_name ? `: ${user_name}` : ""} <br />
-            <input
-                type="button"
-                onClick={() => set_form_state("updating_username")}
-                value={`${need_to_set_user_name ? "Set" : "Change"} username`}
-            /><br />
-        </div>
-
+        <Box className={`${classes.section} section`} display="flex" justifyContent="space-between">
+            <Typography component="p">
+                User name <strong>{user_name ? `: ${user_name}` : ""}</strong><br />
+                <small>user id: &nbsp; {user.id}</small>
+            </Typography>
+            <Box>
+                <Button className={classes.button} variant="contained" onClick={() => set_form_state("updating_username")}>
+                    {`${need_to_set_user_name ? "Set" : "Change"} username`}
+                </Button>
+                <br />
+                <Button variant="contained" onClick={() => set_form_state("updating_password")}>
+                     Change password
+                </Button>
+            </Box>
+        </Box>
         <DisplaySupabaseSessionError error={supabase_session_error} />
-    </div>
+    </Box>
 }
 
 export const UserAccountInfoForm = connector(_UserAccountInfoForm) as FunctionalComponent<OwnProps>
