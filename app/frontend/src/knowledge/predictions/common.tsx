@@ -40,13 +40,19 @@ function _SummaryForPrediction (props: Props)
                 value={undefined}
             />
         </div>}
-        <div className="summary_container" style={{ display: "inline-flex", width: "100%" }}>
-            <div className="datetimes">
-                {uncertain_date_to_string(datetime, time_resolution)}
+        <div className="summary_container" style={{ flexDirection: "column", width: "100%" }}>
+            <div style={{ display: "inline-flex", flexDirection: "row" }}>
+                <div className="datetimes">
+                    {uncertain_date_to_string(datetime, time_resolution)}
+                </div>
+                {value && <div>&nbsp; &nbsp; &nbsp; {value}</div>}
             </div>
-            {value && <div>Value:&nbsp;{value}</div>}
-            <div>Prob:&nbsp;{probability}</div>
-            <div>Cn:&nbsp;{conviction}</div>
+
+            <div style={{ display: "inline-flex", flexDirection: "row" }}>
+                <div>Prob&nbsp;{probability}</div>
+                <div>Cn&nbsp;{conviction}</div>
+            </div>
+
         </div>
     </div>
 }
