@@ -182,10 +182,15 @@ function _WComponentForm (props: Props)
 
 
         {UI_value && (editing || UI_value.is_defined) &&
-        <div style={{ cursor: "not-allowed" }}>
+        <a // Temporarily provide link to open issue
+            style={{ color: "#bbb", textDecoration: "none" }}
+            title="This is broken for counterfactuals at the moment.  See issue 81"
+            href="https://github.com/centerofci/data-curator2/issues/81"
+            target="_blank"
+        >
             <span className="description_label">Value</span>
             <DisplayValue UI_value={UI_value} />
-        </div>}
+        </a>}
 
         <FormControl component="fieldset" fullWidth={true} margin="normal">
             <AutocompleteText
