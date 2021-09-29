@@ -21,6 +21,11 @@ $max_vap_height:$max_vap_fontsize * 1.75;
         @include vap_transition();
         max-height:$max_vap_height;
 
+        &.prob-0
+        {
+            padding: 0;
+        }
+
         &:before {
             content:"";
             position:absolute;
@@ -30,7 +35,7 @@ $max_vap_height:$max_vap_fontsize * 1.75;
 
     @for $i from 2 through $max_elements {
         &.visible-#{$i} {
-            min-height:$max_vap_height * ($i * 0.90);
+            min-height:$max_vap_height * $i;
         }
     }
 

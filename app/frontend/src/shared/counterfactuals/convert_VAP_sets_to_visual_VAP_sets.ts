@@ -33,7 +33,8 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     const expanded_VAP_set = expand_booleans(cleaned_VAP_set, args.VAPs_represent)
 
     const maybe_confidence = expanded_VAP_set.shared_entry_values?.conviction
-    const confidence = maybe_confidence === undefined ? 1 : maybe_confidence
+    const use_common_confidence = maybe_confidence !== undefined
+    const common_confidence = use_common_confidence ? maybe_confidence : 1
     let total_certainties = 0
 
 
@@ -45,7 +46,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
             value = index === 0
         }
         const value_text = VAP_value_to_string(value, boolean_representation)
-        const certainty = VAP.probability * VAP.conviction * confidence
+        const certainty = VAP.probability * (use_common_confidence ? common_confidence : VAP.conviction)
         total_certainties += certainty
 
         return {
