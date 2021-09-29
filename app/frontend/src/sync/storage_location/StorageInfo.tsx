@@ -47,13 +47,15 @@ function _StorageInfo (props: Props)
                 disableElevation={true}
                 onClick={() => set_show_select_storage(true)}
                 size="small"
-                endIcon={<PermDataSettingIcon titleAccess="Set Data Storage Location" />}
+                endIcon={<PermDataSettingIcon titleAccess="Create and Select Knowledge Bases" />}
                 style={{textTransform: 'none'}}
                 variant="contained"
             >
                 <span class="storage_name">{props.base_name || "Choose store"}</span>
             </Button>
-            {show_select_storage && <SelectStorage on_close={() => set_show_select_storage(false)} />}
+            {show_select_storage && <SelectStorage
+                on_close={need_to_create_a_base ? undefined : () => set_show_select_storage(false)}
+            />}
         </Typography>
     )
 }
