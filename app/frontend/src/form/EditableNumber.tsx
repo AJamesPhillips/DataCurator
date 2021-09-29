@@ -71,6 +71,7 @@ function _EditableNumber (props: Props)
             placeholder={props.placeholder}
             size={props.size || "small"}
             value={value}
+            select_all_on_focus={true}
             conditional_on_change={new_value =>
             {
                 if (!conditional_on_change) return
