@@ -1,13 +1,15 @@
-import type { TemporalUncertainty } from "../../uncertainty/uncertainty"
+import type { Base } from "../../interfaces/base"
+import type { HasUncertainDatetime, TemporalUncertainty } from "../../uncertainty/uncertainty"
 
 
 
-export function parse_dates <T extends { created_at: Date, custom_created_at?: Date, datetime?: TemporalUncertainty }> (o: T): T
+export function parse_dates <T extends Base & Partial<HasUncertainDatetime>> (o: T): T
 {
     return {
         ...o,
         created_at: new Date(o.created_at),
         custom_created_at: optional_date(o.custom_created_at),
+        modified_at: optional_date(o.modified_at),
         datetime: optional_datetime_temporal_uncertainty(o.datetime || {})
     }
 }
