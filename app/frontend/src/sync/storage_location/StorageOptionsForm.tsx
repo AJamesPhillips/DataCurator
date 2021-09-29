@@ -101,7 +101,11 @@ function _StorageOptionsForm (props: Props)
 
         {newly_created_base && <input
             type="button"
-            onClick={() => update_chosen_base_id({ base_id: newly_created_base.id })}
+            onClick={() =>
+            {
+                update_chosen_base_id({ base_id: newly_created_base.id })
+                on_close && on_close()
+            }}
             value="Select new base"
         />}
     </div>
