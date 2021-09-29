@@ -1,0 +1,12 @@
+@keyframes bounce_pointer {
+    $start_padding:2em;
+    0% {
+        margin-right:$start_padding,
+    }
+    50% {
+        margin-right:0,
+    }
+    100% {
+        margin-right:$start_padding,
+    }
+}

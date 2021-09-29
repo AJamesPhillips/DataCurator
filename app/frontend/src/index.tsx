@@ -1,6 +1,6 @@
+import "./shared/utils/monkey_patch"
 import "./index.scss"
 import App from "./App"
-import "./shared/utils/monkey_patch"
 
 import { h, render } from "preact"
 import "preact/devtools"
@@ -19,7 +19,8 @@ import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanv
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { SandBoxSupabase } from "./scratch_pad/SandBoxSupabase"
 import { setup_window_on_focus_listener } from "./utils/window_on_focus_listener"
-
+import { LandingPage } from "./home/LandingPage"
+import { DevLandingPage } from "./home/DevLandingPage"
 
 
 const root = document.getElementById("root")
@@ -29,52 +30,13 @@ const title = document.getElementsByTagName("title")[0]
 if (root)
 {
     const in_production = window.location.hostname === "datacurator.org"
-
     if (window.location.pathname === "" || window.location.pathname === "/")
     {
-        let content = `
-        <style>
-            .alpha {
-                color: #A00;
-                vertical-align: super;
-                font-size: small;
-            }
-        </style>
-
-        <h1>DataCurator <span class="alpha">Alpha</span></h1>
-
-        <div>
-            <h4>Welcome</h4>
-        </div>
-
-        <div>
-            To get started go to <a href="/app/">/app</a> to create your first knowledge component.
-        </div>
-
-        <!--div>
-            For more info see <a href="https://github.com/CenterOfCI/datacurator2">the repository on GitHub</a> containing the code.
-        </div-->
-
-        <br>
-        `
-
-        if (!in_production)
-        {
-            content = `<ul>
-            <li><a href="/app/">app</a></li>
-            <li><a href="/project_dashboard">Project dashboard</a></li>
-            <li><a href="/prob_graph">Probability graph</a></li>
-            <li><a href="/prob_badge">Probability badge</a></li>
-            <li><a href="/statement_probability">Statement probability</a></li>
-            <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
-            <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
-            <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
-            <li><a href="/sandbox/supabase">Sandbox - Supabase</a></li>
-            <li><a href="/sandbox">Sandbox</a></li>
-            </ul>`
+        if (in_production) {
+            render(<LandingPage />, root)
+        } else {
+            render(<DevLandingPage />, root)
         }
-
-        root.innerHTML = content
     }
     else if (window.location.pathname === "/project_dashboard")
     {
