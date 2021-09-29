@@ -165,6 +165,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditableNumber
                     disabled={disabled_rel_prob}
                     placeholder="Relative probability"
+                    size="medium"
                     value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
                     conditional_on_blur={relative_probability =>

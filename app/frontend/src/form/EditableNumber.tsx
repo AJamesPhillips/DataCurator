@@ -12,23 +12,23 @@ type OwnProps =
 {
     disabled?: boolean
     placeholder: string
-    value: number
     default_value_when_invalid?: number
+    size?: "small" | "medium"
+} & (
+{
+    value: number
     allow_undefined: false
     conditional_on_change?: (new_value: number) => void
     conditional_on_blur?: (value: number) => void
     always_on_blur?: (value: number) => void
 } |
 {
-    disabled?: boolean
-    placeholder: string
     value: number | undefined
-    default_value_when_invalid?: number
     allow_undefined: true
     conditional_on_change?: (new_value: number | undefined) => void
     conditional_on_blur?: (value: number | undefined) => void
     always_on_blur?: (value: number | undefined) => void
-}
+})
 
 
 
@@ -69,6 +69,7 @@ function _EditableNumber (props: Props)
     return <div className={class_name}>
         <EditableTextSingleLine
             placeholder={props.placeholder}
+            size={props.size || "small"}
             value={value}
             conditional_on_change={new_value =>
             {
@@ -90,7 +91,6 @@ function _EditableNumber (props: Props)
 
                 handle_blur({ value, default_value_when_invalid, on_blur: always_on_blur, allow_undefined })
             }}
-            size="small"
         />
     </div>
 }
