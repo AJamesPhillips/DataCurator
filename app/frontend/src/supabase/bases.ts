@@ -26,22 +26,6 @@ export async function get_all_bases ()
 
 
 
-async function get_an_owned_base (user_id: string)
-{
-    const supabase = get_supabase()
-    const { data: knowledge_bases, error } = await supabase
-        .from<SupabaseKnowledgeBase>("bases")
-        .select("*")
-        .eq("owner_user_id", user_id)
-        .order("inserted_at", { ascending: true })
-
-    const base = knowledge_bases && knowledge_bases[0] || undefined
-
-    return { base, error }
-}
-
-
-
 export async function create_a_base (args: { owner_user_id: string, title?: string })
 {
     const { owner_user_id, title = "Primary" } = args
@@ -54,23 +38,6 @@ export async function create_a_base (args: { owner_user_id: string, title?: stri
     const base = res.data && res.data[0] || undefined
 
     return { base, error: res.error }
-}
-
-
-
-export async function get_an_owned_base_optionally_create (user_id: string)
-{
-    const first_get_result = await get_an_owned_base(user_id)
-    if (first_get_result.error) return first_get_result
-    if (first_get_result.base) return first_get_result
-
-    const res = await create_a_base({ owner_user_id: user_id })
-
-    if (res.error) return res
-
-    // Do not return upserted entry as (due to an incredibly unlikely race condition) this
-    // might not be the earliest one. Instead refetch to get earliest Knowledge base
-    return await get_an_owned_base(user_id)
 }
 
 

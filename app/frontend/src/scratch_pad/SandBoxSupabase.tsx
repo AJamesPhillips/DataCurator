@@ -33,7 +33,7 @@ import type {
     SupabaseKnowledgeBaseWithAccess,
 } from "../supabase/interfaces"
 import { supabase_get_knowledge_views, knowledge_view_app_to_supabase, knowledge_view_supabase_to_app } from "../state/sync/supabase/knowledge_view"
-import { get_all_bases, get_an_owned_base_optionally_create, modify_base } from "../supabase/bases"
+import { create_a_base, get_all_bases, modify_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
 import { get_access_controls_for_base, update_access_control } from "../supabase/access_controls"
 import { AccessControlEntry } from "../access_controls/AccessControlEntry"
@@ -491,6 +491,39 @@ async function get_or_create_an_owned_base (args: GetOrCreateBaseArgs)
     const { base, error: postgrest_error } = await get_an_owned_base_optionally_create(args.user_id)
     args.set_postgrest_error(postgrest_error)
     args.set_current_base_id(base?.id)
+}
+
+
+
+async function get_an_owned_base_optionally_create (user_id: string)
+{
+    const first_get_result = await get_an_owned_base(user_id)
+    if (first_get_result.error) return first_get_result
+    if (first_get_result.base) return first_get_result
+
+    const res = await create_a_base({ owner_user_id: user_id })
+
+    if (res.error) return res
+
+    // Do not return upserted entry as (due to an incredibly unlikely race condition) this
+    // might not be the earliest one. Instead refetch to get earliest Knowledge base
+    return await get_an_owned_base(user_id)
+}
+
+
+
+async function get_an_owned_base (user_id: string)
+{
+    const supabase = get_supabase()
+    const { data: knowledge_bases, error } = await supabase
+        .from<SupabaseKnowledgeBase>("bases")
+        .select("*")
+        .eq("owner_user_id", user_id)
+        .order("inserted_at", { ascending: true })
+
+    const base = knowledge_bases && knowledge_bases[0] || undefined
+
+    return { base, error }
 }
 
 
