@@ -157,7 +157,7 @@ function SimplifiedDatetimeForm (props: SimplifiedDatetimeFormProps)
 
         {is_eternal && <Button
             value="Set to 'From today'"
-            onClick={() => on_change({ ...VAP_set, datetime: { min: get_today_date() } })}
+            onClick={() => on_change({ ...VAP_set, datetime: { value: get_today_date() } })}
         />}
 
         {!is_eternal && <Button
