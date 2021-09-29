@@ -1,8 +1,11 @@
+import {
+    clean_base_object_of_sync_meta_fields,
+} from "../../../state/sync/supabase/clean_base_object_for_supabase"
+import type { Prediction } from "../../uncertainty/uncertainty"
 import { get_new_VAP_id } from "../../utils/ids"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
-    wcomponent_has_existence_predictions,
     wcomponent_has_statev1_values,
     wcomponent_has_VAP_sets,
     wcomponent_has_event_at,
@@ -10,17 +13,18 @@ import {
     wcomponent_has_started_stopped_at,
     ConnectionTerminalAttributeType,
     wcomponent_is_process,
+    wcomponent_has_existence_predictions,
     wcomponent_is_action,
     wcomponent_is_goal,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../interfaces/state"
-import type { Prediction } from "../../uncertainty/uncertainty"
 import { parse_base_dates, optional_date } from "./parse_dates"
 
 
 
 export function parse_wcomponent (wcomponent: WComponent): WComponent
 {
+    wcomponent = clean_base_object_of_sync_meta_fields(wcomponent) // defensive
 
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
     wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent)

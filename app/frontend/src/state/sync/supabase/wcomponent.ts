@@ -1,6 +1,7 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { parse_wcomponent } from "../../../shared/wcomponent/parse_json/parse_wcomponent"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
@@ -94,5 +95,7 @@ export function wcomponent_app_to_supabase (item: WComponent, base_id?: number):
 
 export function wcomponent_supabase_to_app (item: SupabaseReadWComponent): WComponent
 {
-    return supabase_item_to_app(item)
+    let wc = supabase_item_to_app(item)
+    wc = parse_wcomponent(wc)
+    return wc
 }

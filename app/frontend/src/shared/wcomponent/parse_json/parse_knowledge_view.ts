@@ -1,3 +1,6 @@
+import {
+    clean_base_object_of_sync_meta_fields,
+} from "../../../state/sync/supabase/clean_base_object_for_supabase"
 import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../interfaces/knowledge_view"
 import { parse_base_dates } from "./parse_dates"
 
@@ -5,6 +8,8 @@ import { parse_base_dates } from "./parse_dates"
 
 export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_ids?: Set<string>): KnowledgeView
 {
+    knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view) // defensive
+
     knowledge_view = {
         ...knowledge_view,
         ...parse_base_dates(knowledge_view),
