@@ -62,9 +62,7 @@ export function PredictionBadge (props: Props)
     const border_width = 3
     const counterfactual_active__class = `counterfactual_${counterfactual_active ? "" : "in"}active`
     const class_name = `prediction_badge ${counterfactual_active__class}`
-    const title = props.disabled
-        ? "Disabled: counterfactuals have probably not yet been allowed on this knowledge view"
-        : "Click to toggle prediction counterfactuals"
+    const title = "Visual display of probability and confidence"
 
     return <div style={{ cursor: props.disabled ? "not-allowed" : "pointer" }} title={title}>
         <svg
