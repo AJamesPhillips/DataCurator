@@ -20,6 +20,7 @@ $max_vap_height:$max_vap_fontsize * 1.75;
     .value_and_prediction {
         @include vap_transition();
         max-height:$max_vap_height;
+        overflow: hidden;
 
         &.prob-0
         {
