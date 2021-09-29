@@ -2,12 +2,12 @@ import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../int
 
 
 
-export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_ids: Set<string>): KnowledgeView
+export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_ids?: Set<string>): KnowledgeView
 {
     knowledge_view = {
         ...knowledge_view,
         created_at: new Date(knowledge_view.created_at),
-        wc_id_map: remove_invalid_wc_ids(knowledge_view, wcomponent_ids),
+        wc_id_map: optionally_remove_invalid_wc_ids(knowledge_view, wcomponent_ids),
         sort_type: knowledge_view.sort_type || "normal",
     }
 
@@ -16,8 +16,10 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
 
 
 
-function remove_invalid_wc_ids (kv: KnowledgeView, wcomponent_ids: Set<string>): KnowledgeViewWComponentIdEntryMap
+function optionally_remove_invalid_wc_ids (kv: KnowledgeView, wcomponent_ids?: Set<string>): KnowledgeViewWComponentIdEntryMap
 {
+    if (!wcomponent_ids) return kv.wc_id_map
+
     const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     const dropped_ids: string[] = []
 
