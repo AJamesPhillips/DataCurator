@@ -167,7 +167,11 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     placeholder="Relative probability"
                     value={is_boolean ? undefined : VAP.relative_probability}
                     allow_undefined={true}
-                    conditional_on_blur={relative_probability => crud.update_item({ ...VAP, relative_probability })}
+                    conditional_on_blur={relative_probability =>
+                    {
+                        relative_probability = is_boolean ? undefined : (relative_probability || 0)
+                        crud.update_item({ ...VAP, relative_probability })
+                    }}
                 />
                 <br />
             </div>}
