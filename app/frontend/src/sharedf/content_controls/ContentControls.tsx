@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse } from "@material-ui/core"
 
+import "./ContentControls.scss"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
@@ -39,6 +40,9 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
+
+let displayed_pulse_circle_on_move_to_components = false
+
 function _ContentControls (props: Props)
 {
     const invert_classes = invert_disabled_appearance()
@@ -51,6 +55,7 @@ function _ContentControls (props: Props)
     const display_sliders = props.editing || props.display_time_sliders
 
     const classes = use_styles()
+    displayed_pulse_circle_on_move_to_components = true
 
 
     return (
@@ -81,6 +86,10 @@ function _ContentControls (props: Props)
             <Toolbar className={classes.toolbar} variant="dense">
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
+                    <div
+                        className={displayed_pulse_circle_on_move_to_components ? "" : "pulsating_circle"}
+                        ref={e => setTimeout(() => e?.classList.remove("pulsating_circle"), 6000)}
+                    />
                 </Box>
                 <ActiveCreatedAtFilterWarning />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
