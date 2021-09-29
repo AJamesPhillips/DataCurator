@@ -9,4 +9,5 @@ export function percentage_to_string (value: number | undefined): string
     const percent = bounded(value, 0, 1) * 100
 
     return (percent).toPrecision(percent < 98 ? 2 : 3)
+        .replace(/\.0$/, "") // hide trailing .0 of 99.0
 }

@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./common.css"
+import "./PredictionSummary.css"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../shared/uncertainty/uncertainty"
@@ -29,7 +29,7 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-function _SummaryForPrediction (props: Props)
+function _PredictionSummary (props: Props)
 {
     const { value, created_at, datetime, probability, conviction, time_resolution } = props
 
@@ -40,21 +40,21 @@ function _SummaryForPrediction (props: Props)
                 value={undefined}
             />
         </div>}
-        <div className="summary_container" style={{ flexDirection: "column", width: "100%" }}>
-            <div style={{ display: "inline-flex", flexDirection: "row" }}>
+        <div className="summary_container">
+            <div className="summary_row">
                 <div className="datetimes">
                     {uncertain_date_to_string(datetime, time_resolution)}
                 </div>
                 {value && <div>&nbsp; &nbsp; &nbsp; {value}</div>}
             </div>
 
-            <div style={{ display: "inline-flex", flexDirection: "row" }}>
-                <div>Prob&nbsp;{probability}</div>
-                <div>Cn&nbsp;{conviction}</div>
+            <div className="summary_row">
+                <div><span className="description_label">Confidence</span>&nbsp;{conviction}</div>
+                <div>&nbsp; <span className="description_label">Prob</span>&nbsp;{probability}</div>
             </div>
 
         </div>
     </div>
 }
 
-export const SummaryForPrediction = connector(_SummaryForPrediction) as FunctionalComponent<OwnProps>
+export const PredictionSummary = connector(_PredictionSummary) as FunctionalComponent<OwnProps>

@@ -1,5 +1,6 @@
 import { h, FunctionalComponent } from "preact"
 import { useMemo, useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
 import type { Prediction } from "../../shared/uncertainty/uncertainty"
 import { get_new_prediction_id } from "../../shared/utils/ids"
@@ -10,7 +11,6 @@ import type {
     ListItemCRUDRequiredC,
     ListItemCRUDRequiredU,
 } from "../../form/editable_list/EditableListEntry"
-import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"

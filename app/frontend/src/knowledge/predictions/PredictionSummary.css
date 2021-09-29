@@ -1,0 +1,21 @@
+
+.summary_container
+{
+    flex-direction: column;
+    width: 100%;
+}
+
+.summary_row
+{
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.summary_row > div {
+    /* flex: 2; */
+    margin: 3px;
+}
+
+.summary_container .datetimes {
+    flex: 3;
+}

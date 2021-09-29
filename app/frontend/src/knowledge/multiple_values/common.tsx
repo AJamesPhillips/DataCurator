@@ -9,7 +9,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/state"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
 import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge"
-import { SummaryForPrediction } from "../predictions/common"
+import { PredictionSummary } from "../predictions/PredictionSummary"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
@@ -27,10 +27,10 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
     VAP_set = { ...VAP_set, entries: VAPs }
 
     const values = get_probable_VAP_set_values(VAP_set, VAPs_represent)
-    const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + " %"
-    const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + " %"
+    const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + "%"
+    const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + "%"
 
-    return <SummaryForPrediction
+    return <PredictionSummary
         created_at={show_created_at ? (VAP_set.custom_created_at || VAP_set.created_at) : undefined}
         value={values}
         datetime={VAP_set.datetime}
