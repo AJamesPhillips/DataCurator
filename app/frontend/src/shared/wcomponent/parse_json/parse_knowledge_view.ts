@@ -1,4 +1,5 @@
 import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../interfaces/knowledge_view"
+import { parse_dates } from "./parse_dates"
 
 
 
@@ -6,7 +7,7 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
 {
     knowledge_view = {
         ...knowledge_view,
-        created_at: new Date(knowledge_view.created_at),
+        ...parse_dates(knowledge_view),
         wc_id_map: optionally_remove_invalid_wc_ids(knowledge_view, wcomponent_ids),
         sort_type: knowledge_view.sort_type || "normal",
     }
