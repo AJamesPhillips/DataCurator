@@ -114,10 +114,10 @@ const keyboard_shortcuts: KeyboardShortcutProps[] = [
     { keyboard_shortcut: ["?"], outcome: "Opens this help menu" },
     { keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
     { keyboard_shortcut: ["Ctrl", "d"], outcome: `Toggle "focused" mode on and off` },
-    { keyboard_shortcut: ["Shift"], outcome: "shows all nodes" },
-    { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "select multiple nodes" },
-    { keyboard_shortcut: ["Ctrl", "click", "drag"], outcome: "deselect multiple nodes" },
-    { keyboard_shortcut: ["Ctrl", "a"], outcome: "select all nodes on knowledge view" },
+    { keyboard_shortcut: ["Shift"], outcome: "Shows all hidden nodes (hidden due to filters or being invalid)" },
+    { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes" },
+    { keyboard_shortcut: ["Ctrl", "click", "drag"], outcome: "Deselect multiple nodes" },
+    { keyboard_shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view" },
     { keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
 ]
 
