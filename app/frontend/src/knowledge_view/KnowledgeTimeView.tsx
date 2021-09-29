@@ -8,7 +8,7 @@ import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasN
 import { MainArea } from "../layout/MainArea"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms, get_sim_datetime_ms } from "../shared/utils_datetime/utils_datetime"
+import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
 import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
 
@@ -176,9 +176,10 @@ class DateRange {
         this.dates = dates.sort((a: Date, b: Date) => a.getTime() - b.getTime())
     }
 
-    render(wcomponent_nodes: any[]) {
+    render (wcomponent_nodes: WComponent[]) {
 
-        if (wcomponent_nodes.length === 0) return
+        if (wcomponent_nodes.length === 0) return null
+
         const current_date = new Date(this.range_start_date.getTime())
         const all_range_dates: Date[] = []
         all_range_dates.push(new Date(current_date.getTime()))
@@ -190,7 +191,7 @@ class DateRange {
         }
         const max_width = (this.timeline_spacing) ? `${100 + (all_range_dates.length * 1.42)}%` : "100%"
 
-        return(
+        return (
             <Box
                 id="knowledge_time_view"
                 className={`time_view scroll_area_x ${this.scale} ${(this.timeline_spacing) ? "timeline_spacing" : "event_spacing" }`}
@@ -278,29 +279,26 @@ class DateRange {
                                         display={`${(this.timeline_spacing) ? "block" : "flex" }`}
                                         flexDirection="row" justifyContent="start"
                                     >
-                                        {VAP_sets.map(VAP => {
-                                            const sim_datetime_ms = get_sim_datetime_ms(VAP)
-                                            if (sim_datetime_ms) {
-                                                const sim_datetime = new Date(sim_datetime_ms)
-                                                const vap_percent = this.get_date_offset_percent(sim_datetime)
-                                                return (
-                                                    <Box className="vap"
-                                                        flexGrow={0} flexShrink={1} flexBasis="auto"
-                                                        display="inline-block"
-                                                        border={1}
-                                                        minHeight="100%" height="100%" maxHeight="100%"
-                                                        position={`${(this.timeline_spacing) ? "absolute" : "static" }`}
-                                                        zIndex={1}
-                                                        left={`${vap_percent}%`}
-                                                    >
-                                                        {/* <Box component="small">{sim_datetime.toLocaleString()}</Box><br /> */}
-                                                        {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
-                                                        <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP} />
-                                                    </Box>
-                                                )
-                                            } else {
-                                                return
-                                            }
+                                        {VAP_sets.map(VAP_set => {
+                                            const sim_datetime = get_sim_datetime(VAP_set)
+                                            if (!sim_datetime) return null
+
+                                            const vap_percent = this.get_date_offset_percent(sim_datetime)
+                                            return (
+                                                <Box className="vap"
+                                                    flexGrow={0} flexShrink={1} flexBasis="auto"
+                                                    display="inline-block"
+                                                    border={1}
+                                                    minHeight="100%" height="100%" maxHeight="100%"
+                                                    position={`${(this.timeline_spacing) ? "absolute" : "static" }`}
+                                                    zIndex={1}
+                                                    left={`${vap_percent}%`}
+                                                >
+                                                    {/* <Box component="small">{sim_datetime.toLocaleString()}</Box><br /> */}
+                                                    {/* <Box component="small">{vap_percent.toFixed(2)}%</Box><br /> */}
+                                                    <ConnectedValueAndPredictionSetSummary wcomponent={wc} VAP_set={VAP_set} />
+                                                </Box>
+                                            )
                                         })}
                                     </Box>
                                 </Box>
@@ -329,13 +327,14 @@ function _KnowledgeTimeView (props: Props)
     wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending")
     wcomponent_nodes.forEach(wc => {
         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
-        dates.push(wc.created_at)
-        VAP_sets.forEach(VAP => {
-            dates.push(VAP.created_at)
+        VAP_sets.forEach(VAP_set =>
+        {
+            const dt = get_sim_datetime(VAP_set)
+            dt && dates.push(dt)
         })
     })
-    let date_range = new DateRange(dates, props)
-    let content = date_range.render(wcomponent_nodes)
+    const date_range = new DateRange(dates, props)
+    const content = date_range.render(wcomponent_nodes)
     return <MainArea main_content={(content) ? content : <Box />} />
 }
 
