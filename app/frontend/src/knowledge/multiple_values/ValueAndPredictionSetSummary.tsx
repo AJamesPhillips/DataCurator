@@ -35,7 +35,8 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             position="relative"
             flexDirection="column" justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
             className={`value_and_prediction_set_summary items-${data.length} visible-${data_with_non_zero_certainty.length}`}
-s
+            onPointerOver={() => set_show_all_judgements(true)}
+            onPointerLeave={() => set_show_all_judgements(false)}
         >
             {data.map((vap_visual, index) =>
             {
@@ -79,6 +80,12 @@ s
                                 target_VAPs_represent={VAPs_represent}
                                 value={vap_visual.value}
                             />}
+
+                            {cf_entries.map(entry => <CounterfactualLink
+                                any_active={VAP_set.is_counterfactual}
+                                counterfactual={entry}
+                                active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
+                            />)}
 
                         </Box>
                     </Box>
