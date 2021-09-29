@@ -62,7 +62,7 @@ function _HelpMenu (props: Props)
                     onChange={handle_change("linking-tips")}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6"> Tips on Linking: </Typography>
+                        <Typography component="h2" variant="h6"> Tips on Linking</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Box>
@@ -77,7 +77,7 @@ function _HelpMenu (props: Props)
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6">General tips: </Typography>
+                        <Typography component="h2" variant="h6">General tips</Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
@@ -93,7 +93,7 @@ function _HelpMenu (props: Props)
                     expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
-                        <Typography component="h2" variant="h6">Detailed tips: </Typography>
+                        <Typography component="h2" variant="h6">Detailed tips</Typography>
                     </AccordionSummary>
 
                     <AccordionDetails>
@@ -257,4 +257,28 @@ const detailed_tips: (string | h.JSX.Element)[] = [
         If the concept later needs to be analysed / comprehended / explored in greater detail it can be decomposed.  Either it could be change to a subtype of "other" with title "The medical response speed and effectiveness", with values of "fast and effective", "fast but ineffective", "slow but effective", "slow and ineffective".  Or replaced by two new seperate states, one for "Medical response speed" and one for "Medical response effectiveness".  In the latter case deleting the first node from the knowledge views would be best.  In the former case, <a href="https: //github.com/centerofci/data-curator2/issues/36">versioning the whole component</a> would make this easier from a user's perspective.
     </div>
     ,
+    <div>
+        <Typography component="h3" variant="h6">Temporal uncertainty</Typography>
+
+        <p>
+            Part of making predictions is knowing when some event may occur.  For this we have a very simple "Temporal Uncertainty" form that has three fields: Min, Expected and Max datetime.
+        </p>
+
+        <p>
+            It's important to note that this represents a single event and not a distribution of similar events.  It is also not directly the uncertain temporal range a state might exist over.  i.e. the min is the earliest when the event can occur.  This is easier to understand if you talk about the max value.  The max is the latest the event can occur.  This means the state (associate with state transition events) will occur from the max of an event marking its existence but might occur earlier: up to an including the min datetime of the event.
+        </p>
+
+        <p>
+            A concrete example: you will switch on the light in 1 minute (min), likely in 5 minutes (expected) or at most in 10 minutes (max).  But this does not mean the room will be lit from 1 minutes time to 10 minutes time.
+        </p>
+
+        <p>
+            The current form is also woefully simplistic for a lot of the uncertain temporal distributions you have inside your head, use almost all the time, use seamlessly, unconsciously, and yet are vital to coordinated effective collaboration, for (complex) interventions.
+        </p>
+
+        <p>
+            For example: when are you going to get funding for project X, when will have a hire for position Y, when will your change job, when will you next go shopping (if it's not raining AND someone else not gone yet AND time after 7 am AND time less 10 am then ...).
+        </p>
+
+    </div>
 ]
