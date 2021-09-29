@@ -46,6 +46,8 @@ export function uncertain_date_to_string (datetime: TemporalUncertainty, time_re
         const value = date_to_string({ date: datetime.value, time_resolution })
         const max = date_to_string({ date: datetime.max, time_resolution })
 
+        if (value && !min && !max) return value
+
         const strs: string[] = [
             min,
             min ? " " : "",
