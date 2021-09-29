@@ -11,6 +11,7 @@ import {
     is_update_chosen_base_id,
     is_set_users,
 } from "./actions"
+import { selector_editable_bases } from "./selector"
 
 
 
@@ -55,7 +56,7 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         state = update_substate(state, "user_info", "bases_by_id", bases_by_id)
 
         const initial_chosen_base_id = state.user_info.chosen_base_id
-        state = ensure_valid_chosen_base_id(state, bases)
+        state = ensure_valid_chosen_base_id(state)
         const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id
 
         // New pattern, not sure this is a good idea yet but is simpler than making subscribers
@@ -120,13 +121,15 @@ function build_bases_by_id_map (bases: SupabaseKnowledgeBaseWithAccess[] | undef
 
 
 
-function ensure_valid_chosen_base_id (state: RootState, bases: SupabaseKnowledgeBaseWithAccess[] | undefined)
+function ensure_valid_chosen_base_id (state: RootState)
 {
     const { bases_by_id, chosen_base_id } = state.user_info
 
-    if (bases_by_id && (!chosen_base_id || !bases_by_id[chosen_base_id]))
+    if (bases_by_id && (chosen_base_id === undefined || !bases_by_id[chosen_base_id]))
     {
-        const random_base_id: number | undefined = bases && bases[0]?.id
+        const editable_bases = selector_editable_bases(state)
+
+        const random_base_id: number | undefined = editable_bases && editable_bases[0]?.id
         state = update_substate(state, "user_info", "chosen_base_id", random_base_id)
     }
 
