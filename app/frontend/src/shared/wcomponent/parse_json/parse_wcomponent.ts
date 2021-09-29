@@ -15,7 +15,7 @@ import {
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, StateValueString } from "../interfaces/state"
 import type { Prediction } from "../../uncertainty/uncertainty"
-import { parse_dates, optional_date } from "./parse_dates"
+import { parse_base_dates, optional_date } from "./parse_dates"
 
 
 
@@ -28,7 +28,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
     wcomponent = upgrade_2021_06_12_goal(wcomponent)
 
     wcomponent = {
-        ...parse_dates(wcomponent),
+        ...parse_base_dates(wcomponent),
     }
 
     if (wcomponent_has_validity_predictions(wcomponent))
@@ -49,7 +49,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
     if (wcomponent_has_event_at(wcomponent))
     {
-        wcomponent.event_at = wcomponent.event_at.map(parse_dates)
+        wcomponent.event_at = wcomponent.event_at.map(parse_base_dates)
     }
 
     if (wcomponent_is_plain_connection(wcomponent))
@@ -177,6 +177,6 @@ function upgrade_2021_06_12_goal (wcomponent: WComponent): WComponent
 
 
 
-const parse_prediction = (prediction: Prediction) => parse_dates(prediction)
-const parse_values = (value: StateValueString) => parse_dates(value)
-const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) => parse_dates(VAP_set)
+const parse_prediction = (prediction: Prediction) => parse_base_dates(prediction)
+const parse_values = (value: StateValueString) => parse_base_dates(value)
+const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) => parse_base_dates(VAP_set)

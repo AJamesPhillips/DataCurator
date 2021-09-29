@@ -3,7 +3,7 @@ import type { HasUncertainDatetime, TemporalUncertainty } from "../../uncertaint
 
 
 
-export function parse_dates <T extends Base & Partial<HasUncertainDatetime>> (o: T): T
+export function parse_base_dates <T extends Base & Partial<HasUncertainDatetime>> (o: T): T
 {
     return {
         ...o,
