@@ -87,7 +87,7 @@ function _ContentControls (props: Props)
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                     <div
-                        className={displayed_pulse_circle_on_move_to_components ? "" : "pulsating_circle"}
+                        className={(!move_to_component_id || displayed_pulse_circle_on_move_to_components) ? "" : "pulsating_circle"}
                         ref={e => setTimeout(() => e?.classList.remove("pulsating_circle"), 6000)}
                     />
                 </Box>
