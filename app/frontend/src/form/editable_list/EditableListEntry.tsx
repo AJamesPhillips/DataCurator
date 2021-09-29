@@ -157,6 +157,7 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
                 <div>
                     {on_delete && <ConfirmatoryDeleteButton on_delete={on_delete} button_text={delete_button_text} />}
 
+                    <br />
                     {(get_created_at || get_custom_created_at) && <FormControl>
                         <EditableCustomDateTime
                             title="Created at"
