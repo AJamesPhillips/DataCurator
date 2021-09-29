@@ -4,7 +4,8 @@
 CREATE TABLE IF NOT EXISTS knowledge_views (
   id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   short_id bigserial,
-  modified_at timestamp without time zone DEFAULT now()::timestamp(3) NOT NULL,
+  -- limit timestamp to 3 decimal places to accommodate javascript Date object that lacks microseconds
+  modified_at timestamp(3) without time zone DEFAULT now() NOT NULL,
   base_id bigint NOT NULL,
   title text NOT NULL,
   json json NOT NULL,
@@ -21,7 +22,8 @@ CREATE TABLE IF NOT EXISTS knowledge_views (
 CREATE TABLE IF NOT EXISTS wcomponents (
   id uuid NOT NULL DEFAULT uuid_generate_v4() PRIMARY KEY,
   short_id bigserial,
-  modified_at timestamp without time zone DEFAULT now()::timestamp(3) NOT NULL,
+  -- limit timestamp to 3 decimal places to accommodate javascript Date object that lacks microseconds
+  modified_at timestamp(3) without time zone DEFAULT now() NOT NULL,
   base_id bigint NOT NULL,
   title text NOT NULL,
   json json NOT NULL,
