@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
 
 import "../common.scss"
-import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabasePostgrestError } from "./DisplaySupabaseErrors"
@@ -13,7 +13,6 @@ import type { PostgrestError } from "@supabase/postgrest-js"
 import { useEffect } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { AsyncState } from "../../utils/async_state"
-import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
 
 
 
@@ -81,23 +80,15 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
             <FormControl>
                 <TextField
                     disabled={is_saving}
-                    onBlur={async (e:any) => set_username(e.currentTarget.value)}
-                    onChange={(e:any) => set_username(e.currentTarget.value)}
-                    onKeyUp={(e:any) => set_username(e.currentTarget.value)}
+                    onKeyUp={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
+                    onChange={(e: h.JSX.TargetedEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
+                    onBlur={async (e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
                     placeholder="Username"
                     size="small"
                     value={username}
                     variant="outlined"
                 />
             </FormControl>
-            {/* <form>
-                <input type="text" placeholder="Username" value={username} disabled={is_saving}
-                    onKeyUp={e => set_username(e.currentTarget.value)}
-                    onChange={e => set_username(e.currentTarget.value)}
-                    onBlur={async e => set_username(e.currentTarget.value)}
-                /><br/>
-            </form> */}
-
 
             <Box className={classes.update_button_container}>
                 <Button

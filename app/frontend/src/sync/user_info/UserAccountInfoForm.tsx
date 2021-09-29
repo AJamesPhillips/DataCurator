@@ -1,19 +1,19 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, Button, makeStyles, Typography } from "@material-ui/core"
+import LogoutIcon from "@material-ui/icons/ExitToApp"
 
 import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
+import { selector_need_to_set_user_name } from "../../state/user_info/selector"
+import { signout } from "../../state/user_info/signout"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswordForm"
-import { useEffect } from "preact/hooks"
-import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
-import { signout } from "../../state/user_info/signout"
-import { Box, Button, makeStyles, Typography } from "@material-ui/core"
-import LogoutIcon from '@material-ui/icons/ExitToApp'
+
 
 
 interface OwnProps {
