@@ -8,6 +8,7 @@ import { AutocompleteText } from "./AutocompleteText"
 import type { AutocompleteOption } from "./interfaces"
 import { SelectedOption } from "./SelectedOption"
 import { Box } from "@material-ui/core"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -46,10 +47,15 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
     const { editable, options, selected_option_ids } = props
 
-    const filtered_options = options.filter(({ id }) => !selected_option_ids.includes(id))
+    const filtered_options = useMemo(() => options.filter(({ id }) => !selected_option_ids.includes(id))
+    , [options, selected_option_ids])
 
-    const option_by_id: { [id: string]: E } = {}
-    options.forEach(option => option_by_id[option.id] = option)
+    const option_by_id = useMemo(() =>
+    {
+        const inner_option_by_id: { [id: string]: E } = {}
+        options.forEach(option => inner_option_by_id[option.id] = option)
+        return inner_option_by_id
+    }, [options])
 
 
     return (
