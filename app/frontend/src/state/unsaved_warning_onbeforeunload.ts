@@ -21,6 +21,8 @@ export function setup_warning_of_unsaved_data_beforeunload (load_state_from_stor
             warn = outside_threshold
         }
 
+        if (warn) last_unload_warning = performance.now()
+
         return warn
     }
 }
