@@ -1,14 +1,13 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
 
 import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
-import { Box, Button, FormControl, FormGroup, IconButton, Input, InputAdornment, makeStyles, TextField } from "@material-ui/core"
-import SaveIcon from '@material-ui/icons/Save';
 
 
 interface OwnProps {
