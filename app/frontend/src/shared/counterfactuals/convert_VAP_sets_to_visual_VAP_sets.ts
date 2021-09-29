@@ -7,7 +7,7 @@ import { clean_VAP_set_entries, parse_VAP_value } from "../wcomponent/value_and_
 
 
 
-export const VAP_visual_id__undefined = "id__undefined__"
+export const VAP_visual_uncertainty_id = "uncertainty_id__undefined__"
 
 
 
@@ -63,7 +63,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     // Always put uncertain value last
     const uncertainty = 1 - total_certainties
     sorted_data.push({
-        id: VAP_visual_id__undefined,
+        id: VAP_visual_uncertainty_id,
         value_text: "?",
         certainty: uncertainty,
         value: null, // should result in `undefined` as a judgemnet

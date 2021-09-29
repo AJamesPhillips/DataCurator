@@ -6,7 +6,10 @@ import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
-import { get_VAP_visuals_data, VAP_visual_id__undefined } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+import {
+    get_VAP_visuals_data,
+    VAP_visual_uncertainty_id,
+} from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
     CoreCounterfactualStateValueAndPredictionSetV2,
@@ -197,7 +200,7 @@ function _WComponentCounterfactualForm (props: Props)
 
                             const shared_entry_values = {
                                 ...counterfactual_VAP_set.shared_entry_values,
-                                conviction: id === VAP_visual_id__undefined ? 0 : 1,
+                                conviction: id === VAP_visual_uncertainty_id ? 0 : 1,
                             }
 
                             const new_counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 = {
