@@ -99,7 +99,7 @@ function run_tests ()
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
-    test(tidied.values_and_prediction_sets!.map(({ id }) => id), ["vps1", "vps2"], sort_list)
+    test(tidied.values_and_prediction_sets!.map(({ id }) => id), ["vps1", "vps2"], "", sort_list)
 
 
 
@@ -113,7 +113,7 @@ function run_tests ()
     ]
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
 
-    test(tidied.values_and_prediction_sets![0]!.entries.map(({ probability }) => probability), [1, 0], sort_list)
+    test(tidied.values_and_prediction_sets![0]!.entries.map(({ probability }) => probability), [1, 0], "", sort_list)
 
 
 
@@ -122,8 +122,8 @@ function run_tests ()
     wcomponent = { ...wcomponent, subtype: "boolean" }
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
     tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
-    test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], sort_list)
-    test(tidied_VAPs.map(({ probability }) => probability), [1, 0], sort_list)
+    test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], "", sort_list)
+    test(tidied_VAPs.map(({ probability }) => probability), [1, 0], "", sort_list)
 
 
     VAPs = [
@@ -138,8 +138,8 @@ function run_tests ()
     tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
     tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
 
-    test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], sort_list)
-    test(tidied_VAPs.map(({ probability }) => probability), [0, 1], sort_list)
+    test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], "", sort_list)
+    test(tidied_VAPs.map(({ probability }) => probability), [0, 1], "", sort_list)
 }
 
 // run_tests()

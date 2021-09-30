@@ -208,9 +208,9 @@ function test_sort_by_uncertain_event_datetimes ()
         const result2 = ids_sort_by_uncertain_event_datetimes(items_reverse)
 
         // Should get same result from items forwards or backwards
-        test(result, result2, false)
+        test(result, result2, "", false)
         console.log(items.map(({ id }) => id).join(", "))
-        test(result, expected_ids, false)
+        test(result, expected_ids, "", false)
     }
 
 
@@ -239,7 +239,7 @@ function test_sort_by_uncertain_event_datetimes ()
 
     items = []
     result = ids_sort_by_uncertain_event_datetimes(items)
-    test(result, [], false)
+    test(result, [], "", false)
 
 
     items = [s_eternal, s1, s2]

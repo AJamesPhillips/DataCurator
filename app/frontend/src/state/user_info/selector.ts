@@ -17,7 +17,7 @@ export function selector_need_to_set_user_name (state: RootState)
 
 export function selector_chosen_base (state: RootState)
 {
-    const { bases_by_id: bases_by_id, chosen_base_id } = state.user_info
+    const { bases_by_id, chosen_base_id } = state.user_info
     const base = bases_by_id && bases_by_id[chosen_base_id || ""]
     return base
 }
@@ -35,9 +35,10 @@ export function selector_chosen_base_name (state: RootState)
 export function selector_editable_bases (state: RootState)
 {
     const { user, bases_by_id } = state.user_info
-    if (!user || !bases_by_id) return undefined
+    if (!user) return undefined // if no user then no editing so by definition no editable base
+    if (!bases_by_id) return undefined
 
-    return Object.values(bases_by_id).filter(b => b.access_level === "editor")
+    return Object.values(bases_by_id).filter(b => b.access_level === "editor" || b.owner_user_id === user.id)
 }
 
 
@@ -57,5 +58,9 @@ export function selector_chosen_base_id (state: RootState)
 
 export function selector_needs_to_create_a_base (state: RootState)
 {
-    return selector_have_an_editable_base(state) === false && selector_chosen_base(state) === undefined
+    const { bases_by_id } = state.user_info
+    if (bases_by_id === undefined) return false
+
+    return selector_have_an_editable_base(state) === false
+        && selector_chosen_base(state) === undefined
 }
