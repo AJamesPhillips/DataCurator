@@ -24,6 +24,7 @@ import { Modal } from "./modal/Modal"
 import { get_store } from "./state/store"
 import { check_and_handle_connection_and_session } from "./sync/user_info/window_focus_session_check"
 import { date_to_string } from "./form/datetime_utils"
+import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 
 
 
@@ -81,6 +82,7 @@ function App(props: Props)
                             <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}><ActiveUserWidget /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><UserInfo /></Box>
