@@ -46,7 +46,7 @@ function _DisplayOptionsSidePanel (props: Props)
             <br />
 
             <div style={{ display: "inline-flex" }}>
-                Show: <AutocompleteText
+                Show: &nbsp; <AutocompleteText
                     placeholder=""
                     options={validity_filter_display_options}
                     selected_option_id={props.validity_filter}
@@ -56,6 +56,7 @@ function _DisplayOptionsSidePanel (props: Props)
                         if (!validity_filter) return
                         props.set_validity_filter({ validity_filter })
                     }}
+                    allow_editing_when_presenting={true}
                 />
             </div>
 
@@ -75,7 +76,7 @@ function _DisplayOptionsSidePanel (props: Props)
             <br />
 
             <div style={{ display: "inline-flex" }}>
-                Opacity: <AutocompleteText
+                Opacity: &nbsp; <AutocompleteText
                     placeholder=""
                     options={certainty_formatting_display_options}
                     selected_option_id={props.certainty_formatting}
@@ -86,6 +87,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
                         props.set_certainty_formatting({ certainty_formatting })
                     }}
+                    allow_editing_when_presenting={true}
                 />
             </div>
 
