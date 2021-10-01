@@ -174,6 +174,7 @@ function _WComponentForm (props: Props)
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={focus_title}
+                hide_label={true}
             />
         </FormControl>
 
@@ -229,6 +230,7 @@ function _WComponentForm (props: Props)
                 placeholder="Description..."
                 value={wcomponent.description}
                 conditional_on_blur={description => upsert_wcomponent({ description })}
+                hide_label={true}
             />
         </FormControl>}
 

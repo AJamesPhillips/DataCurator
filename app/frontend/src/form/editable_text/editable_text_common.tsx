@@ -23,6 +23,7 @@ export interface EditableTextCommonOwnProps
     always_allow_editing?: boolean
     select_all_on_focus?: boolean
     size?: "small" | "medium"
+    hide_label?: boolean
 }
 
 
@@ -84,7 +85,10 @@ function _EditableTextCommon (props: Props)
     if ((!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || (presenting && !always_allow_editing))
     {
         const class_name = (disabled ? "disabled" : "")
+        const have_value = props.value !== undefined
+
         return <div className={class_name}>
+            {have_value && !props.hide_label && <span className="description_label">{props.placeholder}&nbsp;</span>}
             <RichMarkDown text={value || placeholder} />
         </div>
     }

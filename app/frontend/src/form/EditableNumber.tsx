@@ -62,7 +62,12 @@ function _EditableNumber (props: Props)
     if (!editing || (!conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled)
     {
         class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "")
-        return <div className={class_name}>{props.value === undefined ? props.placeholder : props.value}</div>
+        const have_value = props.value !== undefined
+
+        return <div className={class_name}>
+            {have_value && <span className="description_label">{props.placeholder}</span>}
+            {have_value ? props.value : props.placeholder}
+        </div>
     }
 
 

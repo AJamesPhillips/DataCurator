@@ -25,7 +25,12 @@ export function EditablePercentage (props: OwnProps)
     if ((!conditional_on_change && !conditional_on_blur) || disabled)
     {
         const class_name = "editable_percentage" + (disabled ? "disabled" : "")
-        return <div className={class_name}>{value || props.placeholder}&nbsp;%</div>
+        const have_value = props.value !== undefined
+
+        return <div className={class_name}>
+            {have_value && <span className="description_label">{props.placeholder}</span>}
+            {value || props.placeholder}&nbsp;%
+        </div>
     }
 
 
