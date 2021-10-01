@@ -7,18 +7,19 @@ import { StatementsList } from "../statements/StatementsList"
 import { NewStatementForm } from "../statements/NewStatementForm"
 
 
+
 interface OwnProps {}
 
 
-const map_state = (state: RootState) => ({
+const map_state = (state: RootState) =>
+({
     statement: state.statements.find(({ id }) => id === state.routing.item_id),
     statement_count: state.statements.length,
 })
 
 const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & OwnProps
 
-type Props = PropsFromRedux & OwnProps
 
 
 function _Statements (props: Props)
@@ -39,6 +40,5 @@ function _Statements (props: Props)
         <StatementsList />
     </div>
 }
-
 
 export const Statements = connector(_Statements) as FunctionComponent<OwnProps>

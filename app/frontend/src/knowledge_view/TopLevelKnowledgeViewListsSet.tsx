@@ -29,9 +29,8 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & OwnProps
 
-type Props = PropsFromRedux & OwnProps
 
 
 function _TopLevelKnowledgeViewListsSet (props: Props)

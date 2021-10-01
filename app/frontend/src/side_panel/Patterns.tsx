@@ -17,9 +17,8 @@ const map_state = (state: RootState) => ({
 })
 
 const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & OwnProps
 
-type Props = PropsFromRedux & OwnProps
 
 
 function _Patterns (props: Props)

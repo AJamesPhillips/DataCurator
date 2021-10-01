@@ -1,11 +1,9 @@
-import type { FunctionalComponent } from "preact"
-import { h } from "preact"
+import { h, FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { EditableText } from "../form/editable_text/EditableText"
-
-import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { RootState } from "../state/State"
 import "./SandBox.css"
 
@@ -19,9 +17,8 @@ const map_state = (state: RootState) =>
 
 
 const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector>
 
-type Props = PropsFromRedux
 
 
 function _SandBoxConnected (props: Props)

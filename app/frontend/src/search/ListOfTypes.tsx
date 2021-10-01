@@ -166,9 +166,8 @@ function map_state (state: RootState, own_props: OwnProps)
 
 
 const connector = connect(map_state)
-type PropsFromRedux = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & OwnProps
 
-type Props = PropsFromRedux & OwnProps
 
 
 interface State

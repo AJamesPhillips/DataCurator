@@ -16,7 +16,7 @@ import { PatternAttributeListEntry, PatternAttributeListHeader } from "./Pattern
 
 
 // const connector = connect(map_state, map_dispatch)
-// type PropsFromRedux = ConnectedProps<typeof connector>
+// type Props = ConnectedProps<typeof connector> & OwnProps
 
 type Props = /*PropsFromRedux &*/ {
     attributes: PatternAttribute[]
