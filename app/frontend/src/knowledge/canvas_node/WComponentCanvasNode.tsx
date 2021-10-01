@@ -131,6 +131,7 @@ function _WComponentCanvasNode (props: Props)
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
+    if (kv_entry.deleted) return null
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters

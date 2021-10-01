@@ -175,7 +175,7 @@ export function get_composed_wc_id_map (knowledge_view: KnowledgeView, knowledge
     const composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     to_compose.forEach(map =>
     {
-        Object.entries(map).forEach(([id, entry]) => !entry.deleted && (composed_wc_id_map[id] = entry))
+        Object.entries(map).forEach(([id, entry]) => composed_wc_id_map[id] = entry)
     })
 
 

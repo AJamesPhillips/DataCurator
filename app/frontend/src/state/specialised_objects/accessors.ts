@@ -81,6 +81,7 @@ export function get_base_knowledge_view (knowledge_views: KnowledgeView[])
     let base_knowledge_view: KnowledgeView | undefined
     base_knowledge_view = base_knowledge_views[0]
 
+    // (Partially) handles any bugs resulting in multiple `is_base` knowledge views being created
     if (base_knowledge_views.length > 1)
     {
         base_knowledge_views.forEach(kv =>

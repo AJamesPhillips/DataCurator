@@ -41,6 +41,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
+
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
             <EditableTextSingleLine
@@ -52,6 +53,9 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 }}
             />
         </p>
+
+
+        {/* <p>{knowledge_view.is_base ? "All container" : "Normal"}</p> */}
 
 
         {(editing || knowledge_view.description) && <p>

@@ -98,11 +98,11 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
     return <div>
         {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
-            Not present in this knowledge view
+            {(knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view"}
             {composed_knowledge_view_entry && " but is present in a foundational knowledge view"}
             <br />
             {editing && <Button
-                value="Add to current knowledge view"
+                value={(knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view"}
                 extra_class_names="left"
                 onClick={() => update(knowledge_view_id)}
             />}
