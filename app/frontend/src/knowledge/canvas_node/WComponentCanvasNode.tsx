@@ -239,6 +239,8 @@ function _WComponentCanvasNode (props: Props)
         position={on_graph ? kv_entry : undefined}
         cover_image={wcomponent.summary_image}
         node_main_content={<div>
+            <img className="background_image" />
+
             <div className="node_title">
                 {kv_entry_maybe === undefined && <span>
                     <WarningTriangle message="Missing from this knowledge view" />

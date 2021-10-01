@@ -69,3 +69,23 @@
 {
     border-color: lightblue;
 }
+
+
+.wcomponent_canvas_node .node_title, .wcomponent_canvas_node .node_main_content
+{
+    position: relative;
+}
+.wcomponent_canvas_node img.background_image
+{
+    /* background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png); */
+    /* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Wroclaw_Most_Mlynski_w_porannej_mgle_przed_switem.jpg/1280px-Wroclaw_Most_Mlynski_w_porannej_mgle_przed_switem.jpg); */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    opacity: 0.1;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
