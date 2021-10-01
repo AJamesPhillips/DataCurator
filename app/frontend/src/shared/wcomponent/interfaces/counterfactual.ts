@@ -32,7 +32,7 @@ export interface TargetVAPIdCounterfactualMap
 // This is composed / denormalised form suitable for UI
 export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
 {
-    is_counterfactual: boolean
+    has_counterfactual_applied: boolean
     target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap
     active_counterfactual_v2_id: string | undefined
 }
@@ -51,5 +51,6 @@ export interface WComponentCounterfactualV2 extends WComponentNodeBase
     target_wcomponent_id?: string
     // subtype: "existence" | "validity"
     target_VAP_set_id?: string
-    counterfactual_VAP_set?: CoreCounterfactualStateValueAndPredictionSetV2
+    target_VAP_id?: string
+    // counterfactual_VAP_set?: CoreCounterfactualStateValueAndPredictionSetV2
 }

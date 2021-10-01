@@ -1,3 +1,4 @@
+import Warning from "@material-ui/icons/Warning"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -8,7 +9,6 @@ import { get_wcomponent_search_options } from "../../search/get_wcomponent_searc
 import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import {
     get_VAP_visuals_data,
-    VAP_visual_uncertainty_id,
 } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
@@ -108,8 +108,13 @@ function _WComponentCounterfactualForm (props: Props)
     }
 
 
-    const counterfactual_VAP_set = wcomponent.counterfactual_VAP_set
     const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    const { target_VAP_set_id, target_VAP_id } = wcomponent
+    const target_VAP_set = target_VAP_sets.find(({ id }) => id === target_VAP_set_id)
+
+    const counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
+        ? clean_VAP_set_for_counterfactual(target_VAP_set, target_VAP_id)
+        : undefined
 
 
     let counterfactual_active_for_current_knowledge_view = false
@@ -139,7 +144,7 @@ function _WComponentCounterfactualForm (props: Props)
                     on_change={target_wcomponent_id => upsert_wcomponent({
                         target_wcomponent_id,
                         target_VAP_set_id: undefined,
-                        counterfactual_VAP_set: undefined,
+                        target_VAP_id: undefined,
                     })}
                     on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
                     on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
@@ -153,19 +158,13 @@ function _WComponentCounterfactualForm (props: Props)
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
                     allow_none={true}
-                    selected_option_id={wcomponent.target_VAP_set_id}
+                    selected_option_id={target_VAP_set_id}
                     options={VAP_set_id_options}
                     on_change={new_target_VAP_set_id =>
                     {
-                        const target_VAP_set = target_VAP_sets.find(({ id }) => id === new_target_VAP_set_id)
-
-                        const VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
-                            ? clean_VAP_set_for_counterfactual(target_VAP_set)
-                            : undefined
-
                         upsert_wcomponent({
                             target_VAP_set_id: new_target_VAP_set_id,
-                            counterfactual_VAP_set: VAP_set,
+                            target_VAP_id: undefined,
                         })
                     }}
                 />
@@ -173,7 +172,7 @@ function _WComponentCounterfactualForm (props: Props)
         </p>}
 
 
-        {counterfactual_VAP_set && target_wcomponent && <p>
+        {target_wcomponent && counterfactual_VAP_set && <p>
             <span className="description_label">Counterfactual value</span> &nbsp;
             {get_VAP_visuals_data({
                 VAP_set: counterfactual_VAP_set,
@@ -195,22 +194,7 @@ function _WComponentCounterfactualForm (props: Props)
                         checked={checked}
                         onChange={() =>
                         {
-                            const new_entries = counterfactual_VAP_set.entries
-                                .map(entry => ({ ...entry, probability: entry.id === id ? 1 : 0 }))
-
-                            const shared_entry_values = {
-                                ...counterfactual_VAP_set.shared_entry_values,
-                                conviction: id === VAP_visual_uncertainty_id ? 0 : 1,
-                            }
-
-                            const new_counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 = {
-                                ...counterfactual_VAP_set,
-                                entries: new_entries,
-                                shared_entry_values,
-                                target_VAP_id: id,
-                            }
-
-                            upsert_wcomponent({ counterfactual_VAP_set: new_counterfactual_VAP_set })
+                            upsert_wcomponent({ target_VAP_id: id })
                         }}
                     />
                     <label for={id}>{value_text}</label>
@@ -219,7 +203,7 @@ function _WComponentCounterfactualForm (props: Props)
         </p>}
 
 
-        {counterfactual_VAP_set && knowledge_view && <p>
+        {knowledge_view && <p>
             <span className="description_label">Apply counterfactual in this knowledge view</span> &nbsp;
             <EditableCheckbox
                 // disabled={!props.editing}
@@ -235,6 +219,7 @@ function _WComponentCounterfactualForm (props: Props)
                     props.upsert_knowledge_view({ knowledge_view: kv })
                 }}
             />
+            {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>}
         </p>}
     </div>
 }

@@ -154,13 +154,14 @@ export type WcIdCounterfactualsMap = {
 
 
 
+export type WcIdCounterfactualsV2Map = {
+    [target_wcomponent_id: string]: WcCounterfactualsByAttribute
+}
+interface WcCounterfactualsByAttribute {
+    VAP_sets: VAP_set_id_counterfactual_mapV2
+    // validity_VAP_set: VAP_set_id_counterfactual_map
+}
 export interface VAP_set_id_counterfactual_mapV2
 {
     [target_VAP_set_id: string]: WComponentCounterfactualV2[]
-}
-export type WcIdCounterfactualsV2Map = {
-    [target_wcomponent_id: string]: {
-        VAP_set: VAP_set_id_counterfactual_mapV2
-        // validity_VAP_set: VAP_set_id_counterfactual_map
-    }
 }

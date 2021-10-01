@@ -7,7 +7,7 @@ import type { RootState } from "../../state/State"
 import { ValueAndPredictionSetSummary } from "./ValueAndPredictionSetSummary"
 import { get_counterfactual_v2_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
 import {
-    get_props_for_get_counterfactual_v2_VAP_set,
+    get_partial_args_for_get_counterfactual_v2_VAP_set,
 } from "../../state/specialised_objects/counterfactuals/get_props_for_state_v2"
 
 
@@ -23,7 +23,7 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    return get_props_for_get_counterfactual_v2_VAP_set(own_props.wcomponent, state)
+    return get_partial_args_for_get_counterfactual_v2_VAP_set(own_props.wcomponent.id, state)
 }
 
 

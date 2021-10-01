@@ -28,7 +28,7 @@ import {
 } from "./calc_display_parameters"
 import { factory_on_pointer_down } from "./canvas_common"
 import {
-    get_props_for_get_counterfactual_v2_VAP_set,
+    get_partial_args_for_get_counterfactual_v2_VAP_set,
 } from "../state/specialised_objects/counterfactuals/get_props_for_state_v2"
 import {
     get_counterfactual_v2_VAP_set,
@@ -262,7 +262,7 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
 
             if (VAP_set)
             {
-                const value_args = get_props_for_get_counterfactual_v2_VAP_set(from_wc, state)
+                const value_args = get_partial_args_for_get_counterfactual_v2_VAP_set(from_wc.id, state)
                 const counterfactual_VAP_set = get_counterfactual_v2_VAP_set({ ...value_args, VAP_set })
                 const VAPs_represent = wcomponent_VAPs_represent(from_wc)
                 const raw_data = get_VAP_visuals_data({

@@ -14,7 +14,6 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import type { CreationContextState } from "../../shared/creation_context/state"
-import type { VAP_set_id_counterfactual_map } from "../../shared/uncertainty/uncertainty"
 import { Tense } from "../../shared/wcomponent/interfaces/datetime"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
@@ -33,7 +32,6 @@ import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlder
 interface OwnProps
 {
     wcomponent_id: string
-    VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
 
     item_descriptor: string
     VAPs_represent: VAPsType
@@ -57,7 +55,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const [new_item, set_new_item] = useState<VAPSet | undefined>(undefined)
 
     const {
-        wcomponent_id, VAP_set_counterfactuals_map,
+        wcomponent_id,
         item_descriptor, VAPs_represent, update_items,
         values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
         creation_context, editing
@@ -70,7 +68,6 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets,
         update_items,
         wcomponent_id,
-        VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.future,
         creation_context,
@@ -83,7 +80,6 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets,
         update_items,
         wcomponent_id,
-        VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.present,
         creation_context,
@@ -96,7 +92,6 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         all_VAP_sets,
         update_items,
         wcomponent_id,
-        VAP_set_counterfactuals_map,
         VAPs_represent,
         tense: Tense.past,
         creation_context,
@@ -235,7 +230,6 @@ interface FactoryRenderListContentArgs <U>
     previous_versions_by_id: {[id: string]: U[]},
     update_items: (items: U[]) => void
     wcomponent_id: string
-    VAP_set_counterfactuals_map?: VAP_set_id_counterfactual_map
     VAPs_represent: VAPsType
     tense: Tense
     creation_context: CreationContextState

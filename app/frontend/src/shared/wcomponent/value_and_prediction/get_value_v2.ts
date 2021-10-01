@@ -1,9 +1,15 @@
 import { wcomponent_has_knowledge_view } from "../../../state/specialised_objects/accessors"
 import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
-import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry, TargetVAPIdCounterfactualMap, WComponentCounterfactualV2 } from "../interfaces/counterfactual"
+import type {
+    ComposedCounterfactualStateValueAndPredictionSetV2,
+    TargetVAPIdCounterfactualEntry,
+    TargetVAPIdCounterfactualMap,
+    WComponentCounterfactualV2,
+} from "../interfaces/counterfactual"
 import type { KnowledgeViewsById } from "../../interfaces/knowledge_view"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { partition_and_prune_items_by_datetimes_and_versions } from "./utils"
+import { clean_VAP_set_for_counterfactual } from "../../counterfactuals/clean_VAP_set"
 
 
 
@@ -35,48 +41,39 @@ export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs):
 interface GetCounterfactualV2VAPSetArgs
 {
     VAP_set: StateValueAndPredictionsSet
-    VAP_set_counterfactuals_map: VAP_set_id_counterfactual_mapV2 | undefined
+    VAP_set_ids_to_counterfactuals_map: VAP_set_id_counterfactual_mapV2 | undefined
     active_counterfactual_v2_ids: string[] | undefined
     knowledge_views_by_id: KnowledgeViewsById
 }
 export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetArgs)
 {
     const {
-        VAP_set,
-        VAP_set_counterfactuals_map: cf_map,
+        VAP_set_ids_to_counterfactuals_map,
         active_counterfactual_v2_ids = [],
+        knowledge_views_by_id,
     } = args
+    let { VAP_set } = args
 
-    const counterfactual_v2 = cf_map && cf_map[VAP_set.id]
+
+    const counterfactuals_v2 = VAP_set_ids_to_counterfactuals_map?.[VAP_set.id] || []
     const active_cf_ids = new Set(active_counterfactual_v2_ids)
 
-    return merge_counterfactuals_v2_into_composed_VAP_set(VAP_set, counterfactual_v2, active_cf_ids, args.knowledge_views_by_id)
-}
 
-
-
-function merge_counterfactuals_v2_into_composed_VAP_set (
-    VAP_set: StateValueAndPredictionsSet,
-    counterfactuals_v2: WComponentCounterfactualV2[] = [],
-    active_cf_ids: Set<string>,
-    knowledge_views_by_id: KnowledgeViewsById,
-): ComposedCounterfactualStateValueAndPredictionSetV2
-{
-    let is_counterfactual = false
+    let has_counterfactual_applied = false
     const target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap = {}
     let active_counterfactual_v2_id: string | undefined = undefined
 
     counterfactuals_v2.forEach(cf =>
     {
-        if (active_cf_ids.has(cf.id))
+        const { target_VAP_id } = cf
+        if (!target_VAP_id) return
+
+        if (active_cf_ids.has(cf.id) && !has_counterfactual_applied)
         {
-            VAP_set = { ...VAP_set, ...cf.counterfactual_VAP_set }
-            is_counterfactual = true
+            VAP_set = clean_VAP_set_for_counterfactual(VAP_set, target_VAP_id)
+            has_counterfactual_applied = true
             active_counterfactual_v2_id = cf.id
         }
-
-        const target_VAP_id = cf.counterfactual_VAP_set && cf.counterfactual_VAP_set.target_VAP_id
-        if (!target_VAP_id) return
 
         const counterfactual_has_knowledge_view = wcomponent_has_knowledge_view(cf.id, knowledge_views_by_id)
         const entry: TargetVAPIdCounterfactualEntry = {
@@ -91,7 +88,7 @@ function merge_counterfactuals_v2_into_composed_VAP_set (
 
     return {
         ...VAP_set,
-        is_counterfactual,
+        has_counterfactual_applied,
         target_VAP_id_counterfactual_map,
         active_counterfactual_v2_id
     }

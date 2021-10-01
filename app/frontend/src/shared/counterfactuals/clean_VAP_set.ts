@@ -3,7 +3,7 @@ import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state
 
 
 
-export function clean_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet): CoreCounterfactualStateValueAndPredictionSetV2
+export function clean_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
 {
     const shared_entry_values = {
         ...VAP_set.shared_entry_values,
@@ -11,19 +11,17 @@ export function clean_VAP_set_for_counterfactual (VAP_set: StateValueAndPredicti
     }
 
 
+    if (target_VAP_id === undefined)
+    {
+        target_VAP_id = VAP_set.entries[0]?.id
+    }
+
+
     const entries = VAP_set.entries.map(entry =>
     {
-        return { ...entry, probability: 0, relative_probability: 0, conviction: 1 }
+        const probability = entry.id === target_VAP_id ? 1 : 0
+        return { ...entry, probability, relative_probability: 0, conviction: 1 }
     })
-
-
-    const first_entry = entries[0]
-    let target_VAP_id: string | undefined = undefined
-    if (first_entry)
-    {
-        first_entry.probability = 1
-        target_VAP_id = first_entry.id
-    }
 
 
     return { ...VAP_set, shared_entry_values, entries, target_VAP_id }

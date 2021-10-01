@@ -7,7 +7,10 @@ import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedO
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
-import type { ComposedCounterfactualStateValueAndPredictionSetV2, TargetVAPIdCounterfactualEntry } from "../../shared/wcomponent/interfaces/counterfactual"
+import type {
+    ComposedCounterfactualStateValueAndPredictionSetV2,
+    TargetVAPIdCounterfactualEntry,
+} from "../../shared/wcomponent/interfaces/counterfactual"
 import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
 
@@ -56,7 +59,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                         className={`value_and_prediction prob-${rounded_certainty_percent}`}
                         p={2} boxSizing="border-box"
                         position="relative"
-                        bgcolor={VAP_set.is_counterfactual ? "warning.main" : "primary.main"}
+                        bgcolor={VAP_set.has_counterfactual_applied ? "warning.main" : "primary.main"}
                         flexGrow={1} flexShrink={1} flexBasis="auto"
                         display="flex" flexDirection="row" justifyContent="center" alignItems="center"
                         fontSize={`${font_size}%`}
@@ -82,7 +85,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             />}
 
                             {cf_entries.map(entry => <CounterfactualLink
-                                any_active={VAP_set.is_counterfactual}
+                                any_active={VAP_set.has_counterfactual_applied}
                                 counterfactual={entry}
                                 active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
                             />)}

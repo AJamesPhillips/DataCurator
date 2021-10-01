@@ -6,7 +6,6 @@ import type {
 import type { RootState } from "../../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
-import { get_wcomponent_VAP_set_counterfactuals } from "../../state/derived/accessor"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
@@ -22,14 +21,11 @@ interface OwnProps
 }
 
 
-const map_state = (state: RootState, own_props: OwnProps) =>
+const map_state = (state: RootState) =>
 {
-    const VAP_set_counterfactuals_map = get_wcomponent_VAP_set_counterfactuals(state, own_props.wcomponent_id)
-
     return {
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
-        VAP_set_counterfactuals_map,
         creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
         base_id: selector_chosen_base_id(state),
@@ -45,7 +41,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ValueAndPredictionSets (props: Props)
 {
     const {
-        wcomponent_id, VAP_set_counterfactuals_map, values_and_prediction_sets, VAPs_represent, base_id = -1,
+        wcomponent_id, values_and_prediction_sets, VAPs_represent, base_id = -1,
     } = props
 
     const { invalid_future_items, past_items, present_items, future_items, previous_versions_by_id } = partition_and_prune_items_by_datetimes_and_versions({
@@ -56,7 +52,6 @@ function _ValueAndPredictionSets (props: Props)
 
     return <ValueAndPredictionSetsComponent
         wcomponent_id={wcomponent_id}
-        VAP_set_counterfactuals_map={VAP_set_counterfactuals_map}
 
         item_descriptor="Value"
         VAPs_represent={VAPs_represent}

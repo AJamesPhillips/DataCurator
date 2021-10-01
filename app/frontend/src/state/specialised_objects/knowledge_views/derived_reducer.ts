@@ -255,12 +255,12 @@ function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs
         const { target_wcomponent_id, target_VAP_set_id } = counterfactual_v2
         if (!target_wcomponent_id || !target_VAP_set_id) return
 
-        const level_VAP_set_ids = map[target_wcomponent_id] || { VAP_set: {} }
+        const level_VAP_set_ids = map[target_wcomponent_id] || { VAP_sets: {} }
         map[target_wcomponent_id] = level_VAP_set_ids
 
-        const counterfactual_v2s = level_VAP_set_ids.VAP_set[target_VAP_set_id] || []
+        const counterfactual_v2s = level_VAP_set_ids.VAP_sets[target_VAP_set_id] || []
         counterfactual_v2s.push(counterfactual_v2)
-        level_VAP_set_ids.VAP_set[target_VAP_set_id] = counterfactual_v2s
+        level_VAP_set_ids.VAP_sets[target_VAP_set_id] = counterfactual_v2s
     })
 
     return map
