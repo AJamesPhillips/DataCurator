@@ -51,7 +51,7 @@ function _HelpMenu (props: Props)
 
                     <AccordionDetails>
                         <Box>
-                            These shortcuts only work when you are not editing text.  Some may only work when you are on the Map (Knowledge) canvas view.
+                            These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.
                             {keyboard_shortcuts.map(args => <KeyboardShortcutCommand {...args} />)}
                         </Box>
                     </AccordionDetails>
@@ -202,6 +202,11 @@ const general_tips: (string | h.JSX.Element)[] = [
         </ol>
     </div>
     ,
+    <div>
+        <Typography component="h3" variant="h6">"Action" node type versus "State"</Typography>
+
+        The action and state node types are very similar.  The former can be used to draw attention to the areas were you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.
+    </div>
 ]
 
 
