@@ -37,6 +37,8 @@ export async function save_state (store: StoreType, is_manual_save = false)
         const wc_ids = JSON.stringify(Array.from(wcomponent_ids))
         const kv_ids = JSON.stringify(Array.from(knowledge_view_ids))
 
+        store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVED", data_type: "specialised_objects" }))
+
         if (is_manual_save)
         {
             console .log(`No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
