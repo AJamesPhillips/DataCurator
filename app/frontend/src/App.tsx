@@ -113,7 +113,7 @@ export default connector(App) as FunctionalComponent<{}>
 
 
 
-const drawerWidth = 340
+const drawerWidth = 440
 const use_styles = makeStyles(theme => ({
     root: {
         width: "100%", height: "100%",
