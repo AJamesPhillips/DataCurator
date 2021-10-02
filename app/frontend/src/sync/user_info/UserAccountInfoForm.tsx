@@ -89,9 +89,6 @@ function _UserAccountInfoForm (props: Props)
         {
             // todo handle failure
         }
-        const { error } = await supabase.auth.signOut()
-        set_supabase_session_error(error)
-        set_user({ user: supabase.auth.user() })
     }
 
 

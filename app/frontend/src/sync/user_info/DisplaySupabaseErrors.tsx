@@ -3,6 +3,7 @@ import { h } from "preact"
 
 
 
+// TODO merge with error_to_string
 export function DisplaySupabaseSessionError (props: { error: Error | null })
 {
     const { error } = props
@@ -19,6 +20,7 @@ export function DisplaySupabaseSessionError (props: { error: Error | null })
 
 
 
+// TODO merge with error_to_string
 export function DisplaySupabasePostgrestError (props: { error?: PostgrestError | null })
 {
     const { error } = props

@@ -1,6 +1,10 @@
 import type { AnyAction } from "redux"
-import type { SupabaseKnowledgeBaseWithAccess, SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../../supabase/interfaces"
 
+import type {
+    SupabaseKnowledgeBaseWithAccess,
+    SupabaseKnowledgeBaseWithAccessById,
+    SupabaseUsersById,
+} from "../../supabase/interfaces"
 import { update_substate } from "../../utils/update_state"
 import { pub_sub } from "../pub_sub/pub_sub"
 import type { RootState } from "../State"
@@ -90,6 +94,7 @@ function selector_users_name (state: RootState)
 
     return (user && users_by_id) ? users_by_id[user.id]?.name : undefined
 }
+
 
 
 function update_users_name (state: RootState)

@@ -1,8 +1,7 @@
 import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 import type { Action, AnyAction } from "redux"
-import type { SupabaseKnowledgeBaseWithAccess, SupabaseUser } from "../../supabase/interfaces"
 
-import { ensure_user_name } from "./persistance"
+import type { SupabaseKnowledgeBaseWithAccess, SupabaseUser } from "../../supabase/interfaces"
 
 
 

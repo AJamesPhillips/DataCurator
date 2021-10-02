@@ -10,6 +10,7 @@ export interface SyncError
 
 
 
+// TODO merge with DisplaySupabaseSessionError and DisplaySupabasePostgrestError
 export function error_to_string (error: Partial<PostgrestError> | SyncError | Error | undefined)
 {
     if (error && ("type" in error) && typeof error.type === "string")

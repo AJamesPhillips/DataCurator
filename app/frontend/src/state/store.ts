@@ -1,4 +1,5 @@
 import { createStore, Action, Store } from "redux"
+import { register_window_focus_session_check } from "../sync/user_info/window_focus_session_check"
 
 import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
@@ -76,6 +77,8 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     user_info_subscribers(store)
 
     sync_subscribers(store)
+
+    register_window_focus_session_check(store)
 
     return store
 }

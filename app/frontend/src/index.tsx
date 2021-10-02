@@ -18,6 +18,7 @@ import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
 import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanvasNode"
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { SandBoxSupabase } from "./scratch_pad/SandBoxSupabase"
+import { setup_window_on_focus_listener } from "./utils/window_on_focus_listener"
 
 
 
@@ -27,7 +28,7 @@ const title = document.getElementsByTagName("title")[0]
 
 if (root)
 {
-    const in_production = window.location.hostname.endsWith("datacurator.org")
+    const in_production = window.location.hostname === "datacurator.org"
 
     if (window.location.pathname === "" || window.location.pathname === "/")
     {
@@ -131,3 +132,6 @@ if (title)
 {
     title.innerHTML = APP_DETAILS.NAME
 }
+
+
+setup_window_on_focus_listener()
