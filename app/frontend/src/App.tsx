@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import clsx from "clsx"
-import { AppBar, Box, CssBaseline, Drawer, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
+import { AppBar, Box, CssBaseline, Drawer, makeStyles, ThemeProvider, Toolbar, Typography } from "@material-ui/core"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -19,12 +19,15 @@ import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWar
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
 import type { RootState } from "./state/State"
+import { Modal } from "./modal/Modal"
+import { useEffect, useState } from "preact/hooks"
 
 
 
 const map_state = (state: RootState) =>
 ({
     display_side_panel: state.controls.display_side_panel,
+    network_functional: state.sync.network_functional,
 })
 
 
@@ -36,10 +39,27 @@ type Props = ConnectedProps<typeof connector>
 function App(props: Props)
 {
     const classes = use_styles()
+    const [show_network_warning, set_show_network_warning] = useState(false)
+    useEffect(() => set_show_network_warning(!props.network_functional), [props.network_functional])
 
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
+
+            {show_network_warning && <Modal
+                title=""
+                size="small"
+                child={<Box>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Seems to be offline
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Please check your connection
+                    </Typography>
+                </Box>}
+                on_close={() => set_show_network_warning(false)}
+            />}
+
             <Box id="app" className={classes.root}>
                 <AppBar elevation={1} id="header" position="fixed" className={classes.app_bar}>
                     <Toolbar variant="dense" className={classes.toolbar}>
