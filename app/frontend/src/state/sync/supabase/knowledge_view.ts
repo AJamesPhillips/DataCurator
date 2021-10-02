@@ -39,19 +39,15 @@ interface SupabaseUpsertKnowledgeViewArgs
     supabase: SupabaseClient
     knowledge_view: KnowledgeView
 }
-export async function supabase_upsert_knowledge_view (args: SupabaseUpsertKnowledgeViewArgs): Promise<UpsertItemReturn<KnowledgeView>>
+type SupabaseUpsertKnowledgeViewReturn = Promise<UpsertItemReturn<KnowledgeView>>
+export async function supabase_upsert_knowledge_view (args: SupabaseUpsertKnowledgeViewArgs): SupabaseUpsertKnowledgeViewReturn
 {
     return args.knowledge_view.modified_at ? supabase_update_knowledge_view(args) : supabase_create_knowledge_view(args)
 }
 
 
 
-interface SupabaseCreateWcomponentArgs
-{
-    supabase: SupabaseClient
-    knowledge_view: KnowledgeView
-}
-async function supabase_create_knowledge_view (args: SupabaseCreateWcomponentArgs)
+async function supabase_create_knowledge_view (args: SupabaseUpsertKnowledgeViewArgs): SupabaseUpsertKnowledgeViewReturn
 {
     return supabase_create_item({
         supabase: args.supabase,
@@ -64,20 +60,19 @@ async function supabase_create_knowledge_view (args: SupabaseCreateWcomponentArg
 
 
 
-interface SupabaseCreateWcomponentArgs
-{
-    supabase: SupabaseClient
-    knowledge_view: KnowledgeView
-}
-async function supabase_update_knowledge_view (args: SupabaseCreateWcomponentArgs)
+async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeViewArgs): SupabaseUpsertKnowledgeViewReturn
 {
     const item = knowledge_view_app_to_supabase(args.knowledge_view)
 
     const result = await args.supabase.rpc("update_knowledge_view", { item })
+    if (result.status === 401)
+    {
+        return { status: result.status, error: { message: "JWT expired" }, item: undefined }
+    }
 
 
     let new_item: KnowledgeView | undefined = undefined
-    let error: PostgrestError | undefined | unknown = result.error || undefined
+    let error: PostgrestError | Error | undefined = result.error || undefined
     try
     {
         let new_supabase_item: SupabaseReadKnowledgeView = result.data as any
@@ -87,7 +82,7 @@ async function supabase_update_knowledge_view (args: SupabaseCreateWcomponentArg
     catch (err)
     {
         console.error("Exception whilst handling rpc update_knowledge_view response", err)
-        error = err
+        error = err as Error
     }
 
 

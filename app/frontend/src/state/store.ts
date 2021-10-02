@@ -53,10 +53,7 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     {
         const state = store.getState()
         persist_relevant_state(state)
-        ;(window as any).debug_state = state
-
-        conditionally_save_state(load_state_from_storage, store)
-        conditional_ctrl_s_save(load_state_from_storage, store)
+        conditionally_save_state(store)
     }
     store.subscribe(save)
 

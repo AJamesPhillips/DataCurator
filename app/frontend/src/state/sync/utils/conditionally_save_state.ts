@@ -6,9 +6,9 @@ import { save_state } from "./save_state"
 
 
 
-export async function conditionally_save_state (load_state_from_storage: boolean, store: StoreType)
+export async function conditionally_save_state (store: StoreType)
 {
-    const should_save = calc_should_save(load_state_from_storage, store, true)
+    const should_save = calc_should_save(store, true)
     if (!should_save) return Promise.resolve()
 
     await save_state(store)
@@ -17,9 +17,9 @@ export async function conditionally_save_state (load_state_from_storage: boolean
 
 
 let allow_ctrl_s_to_flush_save = true
-export async function conditional_ctrl_s_save (load_state_from_storage: boolean, store: StoreType)
+export async function conditional_ctrl_s_save (store: StoreType)
 {
-    const should_save = calc_should_save(load_state_from_storage, store, false)
+    const should_save = calc_should_save(store, false)
     if (!should_save) return
 
     const ctrl_s_flush_save = is_ctrl_s_flush_save(store.getState())
@@ -27,7 +27,7 @@ export async function conditional_ctrl_s_save (load_state_from_storage: boolean,
     {
         allow_ctrl_s_to_flush_save = false
 
-        await save_state(store)
+        await save_state(store, true)
     }
 
     // Only reset it to true once `is_ctrl_s_flush_save` is no longer true
@@ -44,9 +44,9 @@ function is_ctrl_s_flush_save (state: RootState)
 
 
 
-function calc_should_save (load_state_from_storage: boolean, store: StoreType, cautious_save: boolean): boolean
+function calc_should_save (store: StoreType, cautious_save: boolean): boolean
 {
-    if (!load_state_from_storage) return false
+    if (!store.load_state_from_storage) return false
 
     const state = store.getState()
     const { ready_for_writing, storage_type, specialised_objects } = state.sync

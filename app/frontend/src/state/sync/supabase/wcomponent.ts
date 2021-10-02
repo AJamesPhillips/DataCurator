@@ -39,14 +39,15 @@ interface SupabaseUpsertWComponentArgs
     supabase: SupabaseClient
     wcomponent: WComponent
 }
-export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponentArgs): Promise<UpsertItemReturn<WComponent>>
+type SupabaseUpsertWComponentReturn = Promise<UpsertItemReturn<WComponent>>
+export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponentArgs): SupabaseUpsertWComponentReturn
 {
     return args.wcomponent.modified_at ? supabase_update_wcomponent(args) : supabase_create_wcomponent(args)
 }
 
 
 
-async function supabase_create_wcomponent (args: SupabaseUpsertWComponentArgs)
+async function supabase_create_wcomponent (args: SupabaseUpsertWComponentArgs): SupabaseUpsertWComponentReturn
 {
     return supabase_create_item({
         supabase: args.supabase,
@@ -59,15 +60,19 @@ async function supabase_create_wcomponent (args: SupabaseUpsertWComponentArgs)
 
 
 
-async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs)
+async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): SupabaseUpsertWComponentReturn
 {
     const item = wcomponent_app_to_supabase(args.wcomponent)
 
     const result = await args.supabase.rpc("update_wcomponent", { item })
+    if (result.status === 401)
+    {
+        return { status: result.status, error: { message: "JWT expired" }, item: undefined }
+    }
 
 
     let new_item: WComponent | undefined = undefined
-    let error: PostgrestError | undefined | unknown = result.error || undefined
+    let error: PostgrestError | Error | undefined = result.error || undefined
     try
     {
         let new_supabase_item: SupabaseReadWComponent = result.data as any
@@ -77,7 +82,7 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs)
     catch (err)
     {
         console.error("Exception whilst handling rpc update_wcomponent response", err)
-        error = err
+        error = err as Error
     }
 
 

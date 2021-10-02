@@ -1,3 +1,5 @@
+import type { PostgrestError } from "@supabase/supabase-js"
+
 
 
 export interface SyncError
@@ -8,7 +10,7 @@ export interface SyncError
 
 
 
-export function error_to_string (error: SyncError | Error)
+export function error_to_string (error: Partial<PostgrestError> | SyncError | Error | undefined)
 {
     if (error && ("type" in error) && typeof error.type === "string")
     {

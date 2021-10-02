@@ -3,6 +3,7 @@ import type { ActionKeyEventArgs } from "../global_keys/actions"
 import { pub_sub } from "../pub_sub/pub_sub"
 import { conditional_ctrl_f_search } from "../search/conditional_ctrl_f_search"
 import type { StoreType } from "../store"
+import { conditional_ctrl_s_save } from "../sync/utils/conditionally_save_state"
 
 
 
@@ -44,6 +45,7 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         else
         {
             conditional_ctrl_f_search(store, e)
+            conditional_ctrl_s_save(store)
         }
     })
 

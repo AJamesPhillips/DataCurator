@@ -55,5 +55,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
 
     // console. log (action.type, action)
 
+    ;(window as any).debug_state = state
+
     return state
 })

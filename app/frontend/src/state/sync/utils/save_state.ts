@@ -13,6 +13,7 @@ import {
 import type { UpsertItemReturn } from "../supabase/interface"
 import { supabase_upsert_knowledge_view } from "../supabase/knowledge_view"
 import { supabase_upsert_wcomponent } from "../supabase/wcomponent"
+import { error_to_string } from "./errors"
 import { get_next_specialised_state_id_to_save } from "./needs_save"
 
 
@@ -239,7 +240,8 @@ function post_upsert_check <U extends Base> (id: string, store: StoreType, objec
     const update_successful = response.status === 200
     if (!create_successful && !update_successful && response.status !== 409)
     {
-        const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${response.error}"`)
+        const error_string = error_to_string(response.error)
+        const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${error_string}"`)
 
         return { error, create_successful, update_successful, latest_source_of_truth: undefined }
     }
