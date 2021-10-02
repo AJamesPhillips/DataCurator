@@ -1,6 +1,6 @@
 import { h } from "preact"
-import Sync from "@material-ui/icons/Sync"
-import SyncProblem from "@material-ui/icons/SyncProblem"
+import SyncIcon from "@material-ui/icons/Sync"
+import SyncProblemIcon from "@material-ui/icons/SyncProblem"
 
 import type { AsyncState } from "../utils/async_state"
 
@@ -22,7 +22,7 @@ export function SyncButton (props: Props)
 
     return <span title={title} onClick={on_click} style={style}>
         {text}
-        {!error && <Sync className={state === "in_progress" ? "animate spinning" : ""} />}
-        {error && <SyncProblem />}
+        {!error && <SyncIcon className={state === "in_progress" ? "animate spinning" : ""} />}
+        {error && <SyncProblemIcon />}
     </span>
 }

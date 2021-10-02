@@ -2,6 +2,7 @@ import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import type { PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4 } from "uuid"
+import SyncIcon from "@material-ui/icons/Sync"
 
 
 // import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"
@@ -14,7 +15,6 @@ import { get_new_knowledge_view_object } from "../knowledge_view/create_new_know
 import { get_contextless_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { sentence_case } from "../shared/utils/sentence_case"
 import { sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
 import { get_supabase } from "../supabase/get_supabase"
@@ -23,21 +23,22 @@ import {
     DisplaySupabaseSessionError,
 } from "../sync/user_info/DisplaySupabaseErrors"
 import type {
-    ACCESS_CONTROL_LEVEL,
     SupabaseAccessControl,
-    DBSupabaseAccessControl,
     SupabaseReadKnowledgeView,
     SupabaseUser,
     SupabaseUsersById,
     SupabaseKnowledgeBase,
     SupabaseKnowledgeBaseWithAccess,
 } from "../supabase/interfaces"
-import { supabase_get_knowledge_views, knowledge_view_app_to_supabase, knowledge_view_supabase_to_app } from "../state/sync/supabase/knowledge_view"
+import {
+    supabase_get_knowledge_views,
+    knowledge_view_app_to_supabase,
+    knowledge_view_supabase_to_app,
+} from "../state/sync/supabase/knowledge_view"
 import { create_a_base, get_all_bases, modify_base } from "../supabase/bases"
 import { get_user_name_for_display } from "../supabase/users"
-import { get_access_controls_for_base, update_access_control } from "../supabase/access_controls"
+import { get_access_controls_for_base } from "../supabase/access_controls"
 import { AccessControlEntry } from "../access_controls/AccessControlEntry"
-import { SelectAccessLevel } from "../access_controls/SelectAccessLevel"
 import { AddAccessControlEntry } from "../access_controls/AddAccessControl"
 
 
@@ -68,6 +69,7 @@ export function SandBoxSupabase ()
     const [waiting_user_registration_email, set_waiting_user_registration_email] = useState(false)
     const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false)
     const [updating_password, set_updating_password] = useState(is_supabase_recovery_email)
+    const [async_request_in_progress, set_async_request_in_progress] = useState(false)
 
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
     const [bases, set_bases] = useState<SupabaseKnowledgeBaseWithAccess[] | undefined>(undefined)
@@ -139,7 +141,9 @@ export function SandBoxSupabase ()
 
     async function register ()
     {
+        set_async_request_in_progress(true)
         const { user: new_user, error } = await supabase.auth.signUp({ email, password })
+        set_async_request_in_progress(false)
 
         set_supabase_session_error(error)
         set_waiting_user_registration_email(true)
@@ -148,7 +152,9 @@ export function SandBoxSupabase ()
 
     async function sign_in ()
     {
+        set_async_request_in_progress(true)
         const { user, error } = await supabase.auth.signIn({ email, password })
+        set_async_request_in_progress(false)
 
         set_supabase_session_error(error)
         set_user(user)
@@ -157,7 +163,9 @@ export function SandBoxSupabase ()
 
     async function forgot_password ()
     {
+        set_async_request_in_progress(true)
         const { data, error } = await supabase.auth.api.resetPasswordForEmail(email)
+        set_async_request_in_progress(false)
 
         set_supabase_session_error(error)
         set_waiting_password_reset_email(!error)
@@ -168,7 +176,9 @@ export function SandBoxSupabase ()
     {
         // There should always be an email and password given on password update
         const email = user?.email
+        set_async_request_in_progress(true)
         const result = await supabase.auth.update({ email, password, /* data: {} */ })
+        set_async_request_in_progress(false)
 
         set_supabase_session_error(result.error)
         set_user(result.user)
@@ -179,7 +189,10 @@ export function SandBoxSupabase ()
 
     async function log_out ()
     {
+        set_async_request_in_progress(true)
         const { error } = await supabase.auth.signOut()
+        set_async_request_in_progress(false)
+
         set_supabase_session_error(error)
         set_user(supabase.auth.user())
         set_password("")
@@ -218,14 +231,40 @@ export function SandBoxSupabase ()
         </form>
 
         {updating_password && <div>
-            <input type="button" disabled={!(user?.email) || !password} onClick={update_password} value="Update password" /><br/>
-            {!is_supabase_recovery_email && <input type="button" onClick={() => set_updating_password(false)} value="Cancel" />}<br />
+            {async_request_in_progress && <SyncIcon className="animate spinning" />}
+            <input
+                type="button"
+                value="Update password"
+                disabled={async_request_in_progress || !(user?.email) || !password}
+                onClick={update_password}
+            /><br/>
+            {!is_supabase_recovery_email && <input
+                type="button"
+                onClick={() => set_updating_password(false)}
+                value="Cancel"
+            />}<br />
         </div>}
 
         {!updating_password && <div>
-            <input type="button" disabled={!email || !password} onClick={sign_in} value="Signin" />
-            <input type="button" disabled={!email || !password} onClick={register} value="Register" /><br/>
-            <input type="button" disabled={!email} onClick={forgot_password} value="Forgot password?" /><br/>
+            {async_request_in_progress && <SyncIcon className="animate spinning" />}
+            <input
+                type="button"
+                value="Signin"
+                disabled={async_request_in_progress || !email || !password}
+                onClick={sign_in}
+            />
+            <input
+                type="button"
+                value="Register"
+                disabled={async_request_in_progress || !email || !password}
+                onClick={register}
+            /><br/>
+            <input
+                type="button"
+                value="Forgot password?"
+                disabled={async_request_in_progress || !email}
+                onClick={forgot_password}
+            /><br/>
         </div>}
 
         <DisplaySupabaseSessionError error={supabase_session_error} />
@@ -241,7 +280,13 @@ export function SandBoxSupabase ()
 
     return <div>
         Logged in with {user.email} {user.id}<br />
-        <input type="button" onClick={log_out} value="Log out" /><br />
+        {async_request_in_progress && <SyncIcon className="animate spinning" />}
+        <input
+            type="button"
+            value="Log out"
+            disabled={async_request_in_progress}
+            onClick={log_out}
+        /><br />
         <input type="button" onClick={() => set_updating_password(true)} value="Change password" /><br />
 
         <Username user={user} users_by_id={users_by_id} set_postgrest_error={set_postgrest_error} /><br />
