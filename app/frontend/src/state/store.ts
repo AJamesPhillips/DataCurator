@@ -7,7 +7,6 @@ import { root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
 import routing_subscribers from "./routing/subscribers"
-import { conditional_ctrl_f_search } from "./search/conditional_ctrl_f_search"
 import {
     meta_wcomponents_selecting_subscribers,
 } from "./specialised_objects/meta_wcomponents/selecting/subscribers"
@@ -74,8 +73,6 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     periodically_change_display_at_created_datetime(store)
 
     record_keyupdown_activity(store)
-
-    conditional_ctrl_f_search(store)
 
     routing_subscribers.sync_storage_location_subscriber(store)
 

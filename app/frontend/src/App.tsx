@@ -1,9 +1,7 @@
-import { h } from "preact"
-import { useState } from "preact/hooks"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 import clsx from "clsx"
-import { AppBar, Box, CssBaseline, Drawer, IconButton, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
-import MenuIcon from "@material-ui/icons/Menu"
-import CloseIcon from "@material-ui/icons/Close"
+import { AppBar, Box, CssBaseline, Drawer, makeStyles, ThemeProvider, Toolbar } from "@material-ui/core"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -19,13 +17,25 @@ import { HelpMenu } from "./help_menu/HelpMenu"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
 import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
+import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
+import type { RootState } from "./state/State"
 
-function App()
+
+
+const map_state = (state: RootState) =>
+({
+    display_side_panel: state.controls.display_side_panel,
+})
+
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector>
+
+
+
+function App(props: Props)
 {
     const classes = use_styles()
-    const [side_panel_open, set_side_panel_open] = useState(true)
-    const handle_open_side_panel = () => { set_side_panel_open(true); console.log("open"); }
-    const handle_close_side_panel = () => { set_side_panel_open(false); console.log("closed"); }
 
     return (
         <ThemeProvider theme={DefaultTheme}>
@@ -48,45 +58,22 @@ function App()
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><UserInfo /></Box>
-                            <Box className={`${classes.toolbar_item}`}>
-                                <IconButton
-                                    aria-label="open side panel"
-                                    color="inherit"
-                                    edge="end"
-                                    onClick={(side_panel_open) ? handle_close_side_panel : handle_open_side_panel }
-                                    size="small"
-                                >
-                                    {(side_panel_open) &&  <CloseIcon />}
-                                    {(!side_panel_open) && <MenuIcon />}
-                                </IconButton>
-                            </Box>
+                            <Box className={`${classes.toolbar_item}`}><SidePanelOrMenuButton /></Box>
                         </Box>
                     </Toolbar>
                 </AppBar>
 
-                <Box id="app_content" component="main" className={clsx(classes.content, { [classes.content_with_open_side_panel]: side_panel_open, })}>
+                <Box id="app_content" component="main" className={clsx(classes.content, { [classes.content_with_open_side_panel]: props.display_side_panel })}>
                     <MainAreaRouter />
                 </Box>
 
                 <Drawer
                     anchor="right"
                     className={classes.drawer}
-                    open={side_panel_open}
+                    open={props.display_side_panel}
                     variant="persistent"
                 >
                     <Box component="aside" className={classes.side_panel} id="side_panel">
-                        {/* <AppBar elevation={1}  position="sticky">
-                            <Toolbar variant="dense" className={classes.sidebar_toolbar}>
-                                <IconButton
-                                    color="inherit"
-                                    aria-label="Close side panel"
-                                    edge="end"
-                                    onClick={handle_close_side_panel}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                            </Toolbar>
-                        </AppBar> */}
                         <Box id="side_panel_content" className={classes.side_panel_content}>
                             <AppMenuItemsContainer />
                             <SidePanel />
@@ -102,7 +89,7 @@ function App()
     )
 }
 
-export default App
+export default connector(App) as FunctionalComponent<{}>
 
 
 
