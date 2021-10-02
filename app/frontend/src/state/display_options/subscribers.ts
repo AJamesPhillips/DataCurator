@@ -51,7 +51,7 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
     pub_sub.global_keys.sub("key_up", e =>
     {
         if (e.key === "Control") key_combination = ""
-        console.log("key up, key_combination now = ", key_combination)
+        // console .log("key up, key_combination now = ", key_combination)
     })
 
 

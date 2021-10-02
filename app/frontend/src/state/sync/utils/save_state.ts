@@ -1,27 +1,24 @@
-
-import { ACTIONS } from "../../actions"
-import { get_next_specialised_state_id_to_save } from "./needs_save"
-import { get_knowledge_view_from_state, get_wcomponent_from_state } from "../../specialised_objects/accessors"
+import type { Base } from "../../../shared/interfaces/base"
 import { get_supabase } from "../../../supabase/get_supabase"
-import { supabase_upsert_wcomponent } from "../supabase/wcomponent"
-import { merge_wcomponent } from "../merge/merge_wcomponents"
+import { ACTIONS } from "../../actions"
+import { get_knowledge_view_from_state, get_wcomponent_from_state } from "../../specialised_objects/accessors"
 import type { StoreType } from "../../store"
+import type { SPECIALISED_OBJECT_TYPE } from "../actions"
+import { merge_knowledge_view } from "../merge/merge_knowledge_views"
+import { merge_wcomponent } from "../merge/merge_wcomponents"
 import {
     get_last_source_of_truth_knowledge_view_from_state,
     get_last_source_of_truth_wcomponent_from_state,
 } from "../selector"
-import { supabase_upsert_knowledge_view } from "../supabase/knowledge_view"
-import { merge_knowledge_view } from "../merge/merge_knowledge_views"
-import type { SPECIALISED_OBJECT_TYPE } from "../actions"
-import type { Base } from "../../../shared/interfaces/base"
 import type { UpsertItemReturn } from "../supabase/interface"
-import type { MergeDataCoreArgs } from "../merge/merge_data"
-import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
+import { supabase_upsert_knowledge_view } from "../supabase/knowledge_view"
+import { supabase_upsert_wcomponent } from "../supabase/wcomponent"
+import { get_next_specialised_state_id_to_save } from "./needs_save"
 
 
 
 let global_attempts = 0
-export async function save_state (store: StoreType)
+export async function save_state (store: StoreType, is_manual_save = false)
 {
     const state = store.getState()
 
@@ -39,6 +36,11 @@ export async function save_state (store: StoreType)
         const wc_ids = JSON.stringify(Array.from(wcomponent_ids))
         const kv_ids = JSON.stringify(Array.from(knowledge_view_ids))
 
+        if (is_manual_save)
+        {
+            console .log(`No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
+            return Promise.resolve()
+        }
         console.error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
         return Promise.reject()
     }
