@@ -53,7 +53,7 @@ function _ValueAndPredictionSets (props: Props)
     return <ValueAndPredictionSetsComponent
         wcomponent_id={wcomponent_id}
 
-        item_descriptor="Value"
+        item_descriptor="Value Prediction"
         VAPs_represent={VAPs_represent}
         update_items={props.update_values_and_predictions}
 

@@ -55,6 +55,7 @@ import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../../sharedf/Button"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
+import { ValuesEditor } from "../multiple_values/ValuesEditor"
 
 
 
@@ -361,6 +362,19 @@ function _WComponentForm (props: Props)
 
             <hr />
             <br />
+            {/* {VAPs_represent !== VAPsType.undefined && <div>
+                <ValuesEditor
+                    wcomponent_id={wcomponent.id}
+                    VAPs_represent={VAPs_represent}
+                    values_and_prediction_sets={orig_values_and_prediction_sets}
+                    update_values_and_predictions={values_and_prediction_sets =>
+                    {
+                        upsert_wcomponent({ values_and_prediction_sets })
+                    }}
+                />
+                <hr />
+                <br />
+            </div>} */}
         </div>}
 
 
