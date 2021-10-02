@@ -67,8 +67,29 @@ export const is_update_specialised_object_sync_info = (action: AnyAction): actio
 
 
 
+interface UpdateNetworkStatusArgs
+{
+    network_functional: boolean
+}
+
+interface ActionUpdateNetworkStatus extends Action, UpdateNetworkStatusArgs {}
+
+const update_network_status_type = "update_network_status"
+
+const update_network_status = (args: UpdateNetworkStatusArgs): ActionUpdateNetworkStatus =>
+{
+    return { type: update_network_status_type, ...args }
+}
+
+export const is_update_network_status = (action: AnyAction): action is ActionUpdateNetworkStatus => {
+    return action.type === update_network_status_type
+}
+
+
+
 export const sync_actions = {
     update_sync_status,
     debug_refresh_all_specialised_object_ids_pending_save,
     update_specialised_object_sync_info,
+    update_network_status,
 }

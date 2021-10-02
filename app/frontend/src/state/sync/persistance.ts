@@ -42,6 +42,8 @@ export function sync_starting_state (): SyncState
         ready_for_reading: false,
         ready_for_writing: false,
 
+        network_functional: true,
+
         bases: { ...default_sync_state_for_one_data_type },
         specialised_objects: { ...default_sync_state_for_one_data_type },
 

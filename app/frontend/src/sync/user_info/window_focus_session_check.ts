@@ -31,10 +31,17 @@ export function register_window_focus_session_check (store: StoreType)
         supabase.auth.update({})
         .then(response =>
         {
+            let network_functional = true
+
             if (response.error?.message === "Not logged in.")
             {
                 console.log("User not logged in.  Reloading page.")
                 signout()
+            }
+            else if (response.error?.message === "Network request failed")
+            {
+                console.log("Network error")
+                network_functional = false
             }
             else if (response.error)
             {
@@ -42,7 +49,11 @@ export function register_window_focus_session_check (store: StoreType)
                 console.log("Some error whilst doing no-op update to user info.", response.error)
                 signout()
             }
-            else console.log("On window focus event, successfully accessed user info.")
+            else
+            {
+                console.log("On window focus event, successfully accessed user info.")
+            }
+            store.dispatch(ACTIONS.sync.update_network_status({ network_functional }))
         })
         .catch(err =>
         {

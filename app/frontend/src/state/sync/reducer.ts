@@ -11,7 +11,7 @@ import {
 } from "../specialised_objects/syncing/actions"
 import { is_upsert_wcomponent } from "../specialised_objects/wcomponents/actions"
 import type { RootState } from "../State"
-import { is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save } from "./actions"
+import { is_update_sync_status, is_debug_refresh_all_specialised_object_ids_pending_save, is_update_network_status } from "./actions"
 import type {
     LastSourceOfTruthSpecialisedObjectsById,
     SpecialisedObjectIdsPendingSave,
@@ -83,6 +83,13 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     {
         state = update_knowledge_view_last_source_of_truth(state, action.knowledge_view)
     }
+
+
+    if (is_update_network_status(action))
+    {
+        state = update_substate(state, "sync", "network_functional", action.network_functional)
+    }
+
 
     return state
 }

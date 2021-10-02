@@ -20,6 +20,8 @@ export interface SyncState extends SyncStateByType
     ready_for_reading: boolean
     ready_for_writing: boolean
 
+    network_functional: boolean
+
     // Only one type at the moment
     storage_type: StorageType
 }
