@@ -5,7 +5,7 @@
 
 .editable_percentage
 {
-    width: 70px; /* Width 70 needed to cope with "100" */
+    width: 120px; /* Width 70 needed to cope with "100", Width 120px needed to make it not overlap with neighbour */
     display: inline-flex;
 }
 .editable_percentage .editable_field input[type="text"]

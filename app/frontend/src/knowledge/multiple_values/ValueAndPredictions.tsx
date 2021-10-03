@@ -89,7 +89,7 @@ function _ValueAndPredictions (props: Props)
             get_id,
             item_props,
             debug_item_descriptor: item_descriptor,
-        })({ expanded_item_rows: true, expanded_items: true, disable_partial_collapsed: false })}
+        })({ expanded_item_rows: false, expanded_items: true, disable_partial_collapsed: false })}
     </div>
 }
 
@@ -150,7 +150,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
             </div>}
         </div>
 
-        <div className="probabilities">
+        <div className="probabilities" style={{ display: "inline-flex" }}>
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
                 <EditablePercentage
                     disabled={disabled_prob}
@@ -174,7 +174,6 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                         crud.update_item({ ...VAP, relative_probability })
                     }}
                 />
-                <br />
             </div>}
 
             {is_boolean && <div>
@@ -183,11 +182,9 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     value={conviction}
                     conditional_on_blur={conviction => crud.update_item({ ...VAP, conviction })}
                 />
-                <br />
             </div>}
 
-            <br />
-            <PredictionBadge
+            &nbsp; <PredictionBadge
                 disabled={true}
                 size={20}
                 probability={VAP.probability}
@@ -201,12 +198,15 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
 const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>): h.JSX.Element =>
 {
-    if (VAPs_represent === VAPsType.boolean) return <div></div>
+    if (VAPs_represent === VAPsType.boolean) return <div>
+        <div className="description_label">Description</div>
+        Boolean value of this state, i.e. either true (100%), false (0%) or somewhere in between.
+    </div>
 
     if (!editing && !item.description) return <div></div>
 
     return <div>
-        <div className="description_label">Description:</div>
+        <div className="description_label">Description</div>
         <EditableText
             placeholder="..."
             value={item.description}
