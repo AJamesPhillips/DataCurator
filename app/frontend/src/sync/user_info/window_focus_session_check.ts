@@ -35,6 +35,7 @@ export function register_window_focus_session_check (store: StoreType)
 
             if (response.error?.message === "Not logged in.")
             {
+                // TODO research how to attempt to refresh the session and iff that fails, only then call signout
                 console.log("User not logged in.  Reloading page.")
                 signout()
             }
@@ -45,7 +46,7 @@ export function register_window_focus_session_check (store: StoreType)
             }
             else if (response.error)
             {
-                debugger
+                debugger // temporary addition whilst we develop this in parallel with other work, will remove later
                 console.log("Some error whilst doing no-op update to user info.", response.error)
                 signout()
             }
