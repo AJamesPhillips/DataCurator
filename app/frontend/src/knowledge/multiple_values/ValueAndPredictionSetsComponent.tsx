@@ -16,7 +16,11 @@ import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { Tense } from "../../shared/wcomponent/interfaces/datetime"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import type {
+    HasValuePossibilitiesAndVAPSets,
+    StateValueAndPredictionsSet as VAPSet,
+} from "../../shared/wcomponent/interfaces/state"
 import { replace_element, remove_from_list_by_predicate } from "../../utils/list"
 import {
     get_summary_for_single_VAP_set,
@@ -35,7 +39,9 @@ interface OwnProps
 
     item_descriptor: string
     VAPs_represent: VAPsType
-    update_items: (items: VAPSet[]) => void
+    update_values_and_predictions: (updated_VAP_sets: VAPSet[]) => void
+
+    value_possibilities: ValuePossibilitiesById | undefined
 
     values_and_prediction_sets: VAPSet[]
     invalid_future_items: VAPSet[]
@@ -56,7 +62,8 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
     const {
         wcomponent_id,
-        item_descriptor, VAPs_represent, update_items,
+        item_descriptor, VAPs_represent, update_values_and_predictions,
+        value_possibilities,
         values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
         creation_context, editing
     } = props
@@ -66,7 +73,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         subset_VAP_sets: future_items,
         previous_versions_by_id,
         all_VAP_sets,
-        update_items,
+        update_values_and_predictions,
         wcomponent_id,
         VAPs_represent,
         tense: Tense.future,
@@ -78,7 +85,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         subset_VAP_sets: present_items,
         previous_versions_by_id,
         all_VAP_sets,
-        update_items,
+        update_values_and_predictions,
         wcomponent_id,
         VAPs_represent,
         tense: Tense.present,
@@ -90,7 +97,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         subset_VAP_sets: past_items,
         previous_versions_by_id,
         all_VAP_sets,
-        update_items,
+        update_values_and_predictions,
         wcomponent_id,
         VAPs_represent,
         tense: Tense.past,
@@ -102,22 +109,18 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const new_VAP_set_form_item_props: EditableListEntryItemProps<VAPSet, ListItemCRUDRequiredCU<VAPSet>> = {
         get_created_at: get_actual_created_at_datetime,
         get_custom_created_at: get_actual_custom_created_at_datetime,
-        get_summary: new_value_and_prediction_set(VAPs_represent),
+        get_summary: new_value_and_prediction_set(VAPs_represent, value_possibilities),
         get_details: () => <div />, // get_details_for_single_VAP_set(VAPs_represent),
         get_details2: () => <div />, // get_details2_for_single_VAP_set(VAPs_represent, editing),
         extra_class_names: `value_and_prediction_set new`,
         crud: {
             create_item: new_VAP_set =>
             {
-                update_items([...all_VAP_sets, new_VAP_set])
+                const updated_VAP_sets = [...all_VAP_sets, new_VAP_set]
+                update_values_and_predictions(updated_VAP_sets)
                 set_new_item(undefined)
             },
-            update_item: modified_VAP_set =>
-            {
-                const predicate = predicate_by_id_and_created_at(modified_VAP_set)
-                const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate)
-                update_items(updated_VAP_sets)
-            },
+            update_item: set_new_item,
         },
     }
 
@@ -140,7 +143,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
-                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, all_VAP_sets, props.base_id, props.creation_context)
+                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, value_possibilities, all_VAP_sets, props.base_id, props.creation_context)
                     set_new_item(new_VAP_set)
                 }}
             />}
@@ -228,7 +231,7 @@ interface FactoryRenderListContentArgs <U>
     subset_VAP_sets: U[]
     all_VAP_sets: U[]
     previous_versions_by_id: {[id: string]: U[]},
-    update_items: (items: U[]) => void
+    update_values_and_predictions: (updated_VAP_sets: U[]) => void
     wcomponent_id: string
     VAPs_represent: VAPsType
     tense: Tense
@@ -237,7 +240,7 @@ interface FactoryRenderListContentArgs <U>
 }
 function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs<VAPSet>)
 {
-    const { subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_items, VAPs_represent, tense, editing } = args
+    const { subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_values_and_predictions, VAPs_represent, tense, editing } = args
 
     const render_VAP_set_list_content = (list_content_props: ExpandableListContentProps) =>
     {
@@ -249,18 +252,23 @@ function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs
 
 
         const crud: ListItemCRUDRequiredCUD<VAPSet> = {
-            create_item: item => update_items([...all_VAP_sets, item]),
+            // create_item used for creating new versions
+            create_item: item =>
+            {
+                const updated_VAP_sets = [...all_VAP_sets, item]
+                update_values_and_predictions(updated_VAP_sets)
+            },
             update_item: modified_VAP_set =>
             {
                 const predicate = predicate_by_id_and_created_at(modified_VAP_set)
                 const updated_VAP_sets = replace_element(all_VAP_sets, modified_VAP_set, predicate)
-                update_items(updated_VAP_sets)
+                update_values_and_predictions(updated_VAP_sets)
             },
             delete_item: item =>
             {
                 const predicate = predicate_by_id_and_created_at(item)
                 const updated_VAP_sets = remove_from_list_by_predicate(all_VAP_sets, predicate)
-                update_items(updated_VAP_sets)
+                update_values_and_predictions(updated_VAP_sets)
             },
         }
 

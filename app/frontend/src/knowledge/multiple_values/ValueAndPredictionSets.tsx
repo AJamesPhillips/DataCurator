@@ -1,14 +1,18 @@
 import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
+import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type {
+    HasValuePossibilitiesAndVAPSets,
+    HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
 } from "../../shared/wcomponent/interfaces/state"
-import type { RootState } from "../../state/State"
-import { connect, ConnectedProps } from "react-redux"
-import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
-import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
+import type { RootState } from "../../state/State"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
+import { get_max_value_possibilities_order } from "./utils"
+import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
 
 
 
@@ -16,8 +20,9 @@ interface OwnProps
 {
     wcomponent_id: string
     VAPs_represent: VAPsType
+    value_possibilities: ValuePossibilitiesById | undefined
     values_and_prediction_sets: StateValueAndPredictionsSet[]
-    update_values_and_predictions: (values_and_predictions: StateValueAndPredictionsSet[]) => void
+    update_values_and_predictions: (args: HasVAPSetsAndMaybeValuePossibilities) => void
 }
 
 
@@ -55,7 +60,13 @@ function _ValueAndPredictionSets (props: Props)
 
         item_descriptor="Value Prediction"
         VAPs_represent={VAPs_represent}
-        update_items={props.update_values_and_predictions}
+        update_values_and_predictions={values_and_prediction_sets =>
+        {
+            const value_possibilities = update_value_possibilities(props.value_possibilities, values_and_prediction_sets)
+            props.update_values_and_predictions({ value_possibilities, values_and_prediction_sets })
+        }}
+
+        value_possibilities={props.value_possibilities}
 
         values_and_prediction_sets={values_and_prediction_sets}
         invalid_future_items={invalid_future_items}
@@ -71,3 +82,30 @@ function _ValueAndPredictionSets (props: Props)
 }
 
 export const ValueAndPredictionSets = connector(_ValueAndPredictionSets) as FunctionalComponent<OwnProps>
+
+
+
+function update_value_possibilities (value_possibilities: ValuePossibilitiesById | undefined, values_and_prediction_sets: StateValueAndPredictionsSet[])
+{
+    let max_order = get_max_value_possibilities_order(value_possibilities)
+    if (value_possibilities) value_possibilities = { ...value_possibilities }
+
+
+    values_and_prediction_sets.forEach(VAP_set => {
+        VAP_set.entries.forEach(VAP => {
+            if (!VAP.value_id) return
+            value_possibilities = value_possibilities || {}
+
+            const order = value_possibilities[VAP.value_id]?.order ?? ++max_order
+
+            value_possibilities[VAP.value_id] = {
+                id: VAP.value_id,
+                value: VAP.value,
+                description: VAP.description,
+                order,
+            }
+        })
+    })
+
+    return value_possibilities
+}

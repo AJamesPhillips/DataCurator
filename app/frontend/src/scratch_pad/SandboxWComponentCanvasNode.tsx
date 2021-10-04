@@ -31,7 +31,7 @@ const creation_context: CreationContextState = { use_creation_context: true, cre
 } }
 
 
-const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, [], -1, creation_context)
+const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
 VAP_set1.entries[0]!.value = "thing"
 VAP_set1.entries[0]!.probability = 0.6
 VAP_set1.shared_entry_values = { conviction: 0.4 }
@@ -68,7 +68,7 @@ const wc13_judgement: WComponentJudgement = {
 }
 
 
-const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, [], -1, creation_context)
+const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
 VAP_set2.entries[0]!.probability = 0
 const wc14: WComponentNodeStateV2 = {
     ...wc11,

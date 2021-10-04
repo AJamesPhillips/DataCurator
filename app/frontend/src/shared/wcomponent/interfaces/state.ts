@@ -1,18 +1,27 @@
 import type { Base } from "../../interfaces/base"
 import type { TemporalUncertainty, PredictionBase } from "../../uncertainty/uncertainty"
+import type { ValuePossibilitiesById } from "./possibility"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
 
+// DEPRECATED
 export interface WComponentNodeState extends WComponentNodeBase
 {
     // TODO remove once MVP reached (remove the conditionals)
     values?: StateValueString[]
 }
 
-export interface HasVAPSets
+
+
+export interface HasVAPSetsAndMaybeValuePossibilities
 {
+    value_possibilities?: ValuePossibilitiesById // optional as there will be older data that lacks this field
     values_and_prediction_sets: StateValueAndPredictionsSet[]
+}
+export interface HasValuePossibilitiesAndVAPSets extends HasVAPSetsAndMaybeValuePossibilities
+{
+    value_possibilities: ValuePossibilitiesById
 }
 
 export interface WComponentNodeStateV2 extends WComponentNodeBase
@@ -86,7 +95,9 @@ export interface StateValueAndPredictionsSet extends Base
 export interface StateValueAndPrediction extends PredictionBase
 {
     id: string
+    value_id?: string // if present, will attempt to set `value` and `description` from ValuePossibilitiesById
     value: string
+    description: string
     // The min and max refer to original author's assessment.  If we are recording a value reported by
     // author ABC then if ABC does not enter +/- values for a given probability then leave these values
     // blank.  If we disagree with, and or want to add our own +/- values then this should be a second
@@ -94,7 +105,6 @@ export interface StateValueAndPrediction extends PredictionBase
     min?: string
     max?: string
     author_id?: string
-    description: string
     // This is not out of 100, it is the portion of the total probability that this
     // value has
     // Added this cause if you have 3 options of 0.3, 0.6 and 0.1 relative probability, and then

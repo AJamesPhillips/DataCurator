@@ -55,7 +55,8 @@ import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../../sharedf/Button"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
-import { ValuesEditor } from "../multiple_values/ValuesEditor"
+import { PossibleValues } from "../multiple_values/PossibleValues"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
 
@@ -161,10 +162,12 @@ function _WComponentForm (props: Props)
     const VAPs_represent = wcomponent_VAPs_represent(wcomponent)
     let UI_value: UIValue | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
+    let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
+        orig_value_possibilities = wcomponent.value_possibilities
     }
 
 
@@ -352,29 +355,30 @@ function _WComponentForm (props: Props)
                 {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
                     VAPs_represent={VAPs_represent}
+                    value_possibilities={orig_value_possibilities}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_values_and_predictions={values_and_prediction_sets =>
+                    update_values_and_predictions={({ value_possibilities, values_and_prediction_sets }) =>
                     {
-                        upsert_wcomponent({ values_and_prediction_sets })
+                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
                 />}
             </p>
 
             <hr />
             <br />
-            {/* {VAPs_represent !== VAPsType.undefined && <div>
-                <ValuesEditor
-                    wcomponent_id={wcomponent.id}
+            {VAPs_represent !== VAPsType.undefined && VAPs_represent !== VAPsType.boolean && <div>
+                <PossibleValues
+                    editing={editing}
                     VAPs_represent={VAPs_represent}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_values_and_predictions={values_and_prediction_sets =>
+                    value_possibilities={orig_value_possibilities}
+                    update_value_possibilities={value_possibilities =>
                     {
-                        upsert_wcomponent({ values_and_prediction_sets })
+                        upsert_wcomponent({ value_possibilities })
                     }}
                 />
                 <hr />
                 <br />
-            </div>} */}
+            </div>}
         </div>}
 
 

@@ -5,7 +5,7 @@ import type { WComponentNodeGoal } from "./goal"
 import type { WComponentJudgement } from "./judgement"
 import type { KnowledgeView } from "../../interfaces/knowledge_view"
 import type {
-    HasVAPSets,
+    HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
     StateValueString,
     WComponentNodeState,
@@ -16,6 +16,7 @@ import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
 import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "./counterfactual"
+import type { ValuePossibilitiesById } from "./possibility"
 
 
 
@@ -71,7 +72,7 @@ export interface ConnectionTerminalType
 
 
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
-export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSets>
+export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
 {
     type: WComponentConnectionType
     from_id: string
@@ -254,6 +255,10 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }
+// export function wcomponent_has_value_possibilities (wcomponent: WComponent): wcomponent is (WComponent & { value_possibilities: ValuePossibilitiesById })
+// {
+//     return (wcomponent as WComponentNodeStateV2).value_possibilities !== undefined
+// }
 
 
 export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
@@ -268,20 +273,20 @@ export function wcomponent_should_have_state (wcomponent: WComponent)
 }
 
 
-export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)
 }
 
 
 
-export function wcomponent_has_legitimate_non_empty_statev1 (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_has_legitimate_non_empty_statev1 (wcomponent: WComponent): wcomponent is (WComponent & { values: StateValueString[] })
 {
     return wcomponent_has_statev1_values(wcomponent) && wcomponent.values.length > 0 && wcomponent_is_statev1(wcomponent)
 }
 
 
-export function wcomponent_has_legitimate_non_empty_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
+export function wcomponent_has_legitimate_non_empty_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_should_have_state_VAP_sets(wcomponent)
 }

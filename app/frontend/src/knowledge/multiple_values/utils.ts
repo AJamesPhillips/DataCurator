@@ -1,3 +1,5 @@
+import { v4 as uuid_v4 } from "uuid"
+
 import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet as VAPSet,
@@ -7,6 +9,38 @@ import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { action_statuses } from "../../shared/wcomponent/interfaces/action"
+import type {
+    SimpleValuePossibility,
+    ValuePossibilitiesById,
+    ValuePossibility,
+} from "../../shared/wcomponent/interfaces/possibility"
+
+
+
+export function prepare_new_value_possibility (existing_value_possibilities: ValuePossibilitiesById | undefined): ValuePossibility
+{
+    const max_order = get_max_value_possibilities_order(existing_value_possibilities)
+
+    return {
+        id: uuid_v4(),
+        value: "",
+        description: "",
+        order: max_order + 1,
+    }
+}
+
+
+
+export function get_max_value_possibilities_order (value_possibilities: ValuePossibilitiesById | undefined)
+{
+    let max_order = -1
+    if (value_possibilities)
+    {
+        value_possibilities = { ...value_possibilities }
+        Object.values(value_possibilities).forEach(({ order }) => max_order = Math.max(max_order, order))
+    }
+    return max_order
+}
 
 
 
@@ -24,12 +58,18 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 
 
-export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_VAP_sets: VAPSet[])
+export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[])
 {
-    const options = VAPs_represent === VAPsType.other ? all_options_in_VAP_set(VAPs_represent, existing_VAP_sets)
-        : (VAPs_represent === VAPsType.action ? action_statuses
-        : [""])
-    const vanilla_entries = options.map(value => ({ ...prepare_new_VAP(), value }))
+    const possibilities = all_options_in_VAP_set(VAPs_represent, value_possibilities, existing_VAP_sets)
+
+    const vanilla_entries: StateValueAndPrediction[] = possibilities.map(possibility =>
+        ({
+            ...prepare_new_VAP(),
+            value: possibility.value,
+            value_id: possibility.id,
+            description: possibility.description || "",
+        })
+    )
     const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
 
     return entries_with_probabilities
@@ -37,12 +77,12 @@ export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_
 
 
 
-export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
 {
     const dates = get_new_created_ats(creation_context)
     // const now = new Date(get_created_at_ms(dates))
 
-    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_VAP_sets)
+    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets)
 
 
     const new_VAP_set = {
@@ -58,26 +98,61 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_VAP_sets
 
 
 
-function all_options_in_VAP_set (VAPs_represent: VAPsType, VAP_sets: VAPSet[])
+function all_options_in_VAP_set (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
 {
-    if (VAPs_represent !== VAPsType.other) return [""]
+    let possibilities: SimpleValuePossibility[] = []
+    const possible_value_strings: Set<string> = new Set()
 
-    const options: string[] = []
-    const options_set: Set<string> = new Set()
 
-    // Go in reverse order as assuming options increase over time and latest (newest) VAP_sets
-    // will be added at end of list
-    for (let i = (VAP_sets.length - 1); i >= 0; --i) {
-        const VAP_set = VAP_sets[i]!
-        VAP_set.entries.forEach(({ value }) =>
+    VAP_sets.forEach(VAP_set =>
+    {
+        VAP_set.entries.forEach(({ value, value_id }) =>
         {
-            if (options_set.has(value)) return
-            options.push(value)
-            options_set.add(value)
+            const value_possibility = value_possibilities && value_possibilities[value_id || ""]
+            if (value_possibility)
+            {
+                possibilities.push(value_possibility)
+                possible_value_strings.add(value_possibility.value)
+            }
+            else
+            {
+                if (possible_value_strings.has(value)) return
+                possibilities.push({ value })
+                possible_value_strings.add(value)
+            }
         })
+    })
+    // Go in reverse order as assuming options increase over time and latest (newest) VAP_sets
+    // will be added at end of VAP_sets list, so we can bring them to the beginning of the possibilities list
+    possibilities.reverse()
+
+
+    if (VAPs_represent === VAPsType.boolean)
+    {
+        if (possibilities.length !== 2 || !possible_value_strings.has("True") || !possible_value_strings.has("False"))
+        {
+            possibilities = [{ value: "True" }, { value: "False" }]
+        }
+    }
+    else if (possibilities.length === 0)
+    {
+        (VAPs_represent === VAPsType.action ? action_statuses : [""])
+            .forEach(value =>
+            {
+                possibilities.push({ value })
+            })
     }
 
-    return options
+
+    // Ensure all possibilities have an id
+    possibilities = possibilities.map(possibility =>
+    {
+        const id = possibility.id || uuid_v4()
+        return { ...possibility, id }
+    })
+
+
+    return possibilities
 }
 
 

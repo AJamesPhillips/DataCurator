@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./MultiAutocompleteText.css"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { AutocompleteText } from "./AutocompleteText"

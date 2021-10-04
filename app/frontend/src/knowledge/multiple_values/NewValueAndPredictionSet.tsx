@@ -6,47 +6,48 @@ import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableLis
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { ACTION_OPTIONS, get_action_status_of_VAP_set } from "../../shared/wcomponent/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
 import { get_details2_for_single_VAP_set, get_details_for_single_VAP_set, get_summary_for_single_VAP_set } from "./common"
-import { prepare_new_VAP_set_entries } from "./utils"
 
 
 
-export const new_value_and_prediction_set = (VAPs_represent: VAPsType) =>
+export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined) =>
 {
+    const boolean_or_action = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action
     // I do not understand why this works as it occurs after a conditional in NewItemForm
-    const [show_advanced, set_show_advanced] = useState(false)
+    const [show_advanced, set_show_advanced] = useState(!boolean_or_action)
     // useEffect(() => {}, [VAPs_represent])
 
     return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUDRequiredU<StateValueAndPredictionsSet>) =>
-{
-    const { update_item } = crud
+    {
+        const { update_item } = crud
 
-    return <div>
-        {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={update_item} />}
-        {VAPs_represent === VAPsType.action && <SimplifiedActionForm VAP_set={VAP_set} on_change={update_item} />}
+        return <div>
+            {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={update_item} />}
+            {VAPs_represent === VAPsType.action && <SimplifiedActionForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
 
-        <SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />
+            <SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />
 
-        <Button
-            value={(show_advanced ? "Hide" : "Show") + " advanced options"}
-            onClick={() => set_show_advanced(!show_advanced)}
-        />
+            <Button
+                value={(show_advanced ? "Hide" : "Show") + " advanced options"}
+                onClick={() => set_show_advanced(!show_advanced)}
+            />
 
-        {show_advanced && <div>
-            <br />
-            <br />
-            <hr />
+            {show_advanced && <div>
+                <br />
+                <br />
+                <hr />
 
-            {get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud)}
-            {get_details_for_single_VAP_set(VAPs_represent)(VAP_set, crud)}
-            {get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)}
-        </div>}
+                {get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud)}
+                {get_details_for_single_VAP_set(VAPs_represent)(VAP_set, crud)}
+                {get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)}
+            </div>}
 
-    </div>
-}
+        </div>
+    }
 }
 
 
@@ -95,6 +96,7 @@ function SimplifiedBooleanForm (props: SimplifiedBooleanFormProps)
 
 interface SimplifiedActionFormProps
 {
+    value_possibilities: ValuePossibilitiesById | undefined
     VAP_set: StateValueAndPredictionsSet
     on_change: (VAP_set: StateValueAndPredictionsSet) => void
 }
@@ -114,13 +116,15 @@ function SimplifiedActionForm (props: SimplifiedActionFormProps)
             {
                 if (!new_status) return
 
-                const entries = prepare_new_VAP_set_entries(VAPsType.action, [])
-                entries.forEach(VAP =>
+                const entries = VAP_set.entries.map(VAP =>
                 {
                     const probability = VAP.value === new_status ? 1 : 0
-                    VAP.relative_probability = probability
-                    VAP.probability = probability
-                    VAP.conviction = 1
+                    return {
+                        ...VAP,
+                        relative_probability: probability,
+                        probability: probability,
+                        conviction: 1,
+                    }
                 })
 
                 on_change({ ...VAP_set, entries })
