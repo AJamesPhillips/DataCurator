@@ -31,14 +31,19 @@ export function prepare_new_value_possibility (existing_value_possibilities: Val
 
 
 
-export function get_max_value_possibilities_order (value_possibilities: ValuePossibilitiesById | undefined)
+export function get_max_value_possibilities_order (value_possibilities: SimpleValuePossibility[] | ValuePossibilitiesById | undefined): number
 {
     let max_order = -1
+
     if (value_possibilities)
     {
-        value_possibilities = { ...value_possibilities }
-        Object.values(value_possibilities).forEach(({ order }) => max_order = Math.max(max_order, order))
+        let values_array: SimpleValuePossibility[]
+        if (Array.isArray(value_possibilities)) values_array = value_possibilities
+        else values_array = Object.values(value_possibilities)
+
+        values_array.forEach(({ order = -1 }) => max_order = Math.max(max_order, order))
     }
+
     return max_order
 }
 
@@ -122,35 +127,39 @@ function all_options_in_VAP_set (VAPs_represent: VAPsType, value_possibilities: 
             }
         })
     })
-    // Go in reverse order as assuming options increase over time and latest (newest) VAP_sets
-    // will be added at end of VAP_sets list, so we can bring them to the beginning of the possibilities list
-    possibilities.reverse()
+
+    possibilities = default_possible_values(VAPs_represent, possibilities)
+
+    return possibilities
+}
 
 
+
+export function default_possible_values (VAPs_represent: VAPsType, simple_possibilities: SimpleValuePossibility[]): ValuePossibility[]
+{
     if (VAPs_represent === VAPsType.boolean)
     {
-        if (possibilities.length !== 2 || !possible_value_strings.has("True") || !possible_value_strings.has("False"))
-        {
-            possibilities = [{ value: "True" }, { value: "False" }]
-        }
+        simple_possibilities = []
     }
-    else if (possibilities.length === 0)
+    else if (simple_possibilities.length === 0)
     {
         (VAPs_represent === VAPsType.action ? action_statuses : [""])
-            .forEach(value =>
+            .forEach((value, index) =>
             {
-                possibilities.push({ value })
+                simple_possibilities.push({ value, order: index })
             })
     }
 
 
-    // Ensure all possibilities have an id
-    possibilities = possibilities.map(possibility =>
+    let max_order = get_max_value_possibilities_order(simple_possibilities)
+
+    // Ensure all possibilities have an id, order and description
+    const possibilities: ValuePossibility[] = simple_possibilities.map(possibility =>
     {
         const id = possibility.id || uuid_v4()
-        return { ...possibility, id }
+        const order = possibility.order ?? ++max_order
+        return { description: "", ...possibility, id, order }
     })
-
 
     return possibilities
 }

@@ -1,13 +1,14 @@
 import { h } from "preact"
-import { useState } from "react"
+import { useState } from "preact/hooks"
 import { Box } from "@material-ui/core"
 
 import "../../form/editable_list/EditableListEntry.css"
 import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
 import { Button } from "../../sharedf/Button"
-import { prepare_new_value_possibility } from "./utils"
+import { default_possible_values, prepare_new_value_possibility } from "./utils"
 import { PossibleValue } from "./PossibleValue"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { get_items_by_id } from "../../shared/utils/get_items"
 
 
 
@@ -84,6 +85,17 @@ export function PossibleValues (props: OwnProps)
                     props.update_value_possibilities(modified_value_possibilities)
                 }}
             />
+
+            {props.value_possibilities === undefined && <Button
+                value="Use defaults"
+                fullWidth={true}
+                onClick={() =>
+                {
+                    const possible_values = default_possible_values(props.VAPs_represent, [])
+                    const value_possibilities = get_items_by_id(possible_values, "default_possible_values")
+                    props.update_value_possibilities(value_possibilities)
+                }}
+            />}
         </div>}
     </div>
 }
