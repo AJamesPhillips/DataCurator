@@ -11,7 +11,7 @@ import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { ExternalLinkIcon } from "../sharedf/ExternalLinkIcon"
+import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 
 
