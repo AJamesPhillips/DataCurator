@@ -42,11 +42,11 @@
     vertical-align: super;
     height: 17px;
 }
-.editable_list_entry .expansion_button:before
+.editable_list_entry > * > .expansion_button:before
 {
     content: '\2304';
 }
-.editable_list_entry.expanded .expansion_button:before
+.editable_list_entry.expanded > * > .expansion_button:before
 {
     font-size: 18px;
     line-height: initial;
