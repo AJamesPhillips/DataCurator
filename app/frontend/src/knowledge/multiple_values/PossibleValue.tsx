@@ -1,6 +1,6 @@
 import { h } from "preact"
-import { useState } from "react"
-import { Box, ButtonGroup, IconButton, Tooltip, Typography } from "@material-ui/core"
+import { useEffect, useState } from "preact/hooks"
+import { Box, ButtonGroup, IconButton, Typography } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
 import WarningIcon from "@material-ui/icons/Warning"
 
@@ -25,11 +25,12 @@ export function PossibleValue (props: OwnProps)
     const other_values = new Set(existing_values)
     other_values.delete(value_possibility.value)
 
-    const [current_value, set_current_value] = useState(value_possibility.value)
+    const [current_value, set_current_value] = useState("")
+    useEffect(() => set_current_value(value_possibility.value), [value_possibility.value])
     const warning = other_values.has(current_value) ? `Current value "${current_value}" is already present in other possible values.` : ""
 
 
-    return <Box p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px">
+    return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px">
         <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
             <Box style={{ width: "100%" }}>
                 <Typography noWrap variant="caption" title={warning} aria-label={warning} style={{ display: warning ? "inline" : "none" }}>
