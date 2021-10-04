@@ -15,6 +15,7 @@ import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { set_VAP_probabilities } from "./utils"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
 
@@ -41,7 +42,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
 
 
-export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP_set: VAPSet, crud: ListItemCRUDRequiredU<VAPSet>): h.JSX.Element =>
+export const get_details_for_single_VAP_set = (value_possibilities: ValuePossibilitiesById | undefined, VAPs_represent: VAPsType) => (VAP_set: VAPSet, crud: ListItemCRUDRequiredU<VAPSet>): h.JSX.Element =>
 {
     const VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
 
@@ -57,6 +58,7 @@ export const get_details_for_single_VAP_set = (VAPs_represent: VAPsType) => (VAP
         <div>
             <br />
             <ValueAndPredictions
+                value_possibilities={value_possibilities}
                 VAPs_represent={VAPs_represent}
                 values_and_predictions={VAPs}
                 update_values_and_predictions={VAPs =>

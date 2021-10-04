@@ -1,0 +1,23 @@
+
+
+.possible_value_link.clickable
+{
+    cursor: pointer;
+}
+
+.possible_value_link.disabled
+{
+    cursor: not-allowed;
+    color: grey;
+    opacity: 0.8;
+}
+
+.possible_value_link .show_on_hover, .possible_value_link:hover .hide_on_hover
+{
+    display: none;
+}
+
+.possible_value_link:hover .show_on_hover
+{
+    display: initial;
+}

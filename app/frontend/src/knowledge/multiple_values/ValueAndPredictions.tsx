@@ -21,11 +21,14 @@ import type { RootState } from "../../state/State"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { replace_element } from "../../utils/list"
+import { PossibleValueLink } from "./PossibleValueLink"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
 
 interface OwnProps
 {
+    value_possibilities: ValuePossibilitiesById | undefined
     VAPs_represent: VAPsType
     values_and_predictions: StateValueAndPrediction[]
     update_values_and_predictions: (values_and_predictions: StateValueAndPrediction[]) => void
@@ -46,7 +49,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictions (props: Props)
 {
-    const { editing, VAPs_represent } = props
+    const { editing, value_possibilities, VAPs_represent } = props
 
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (VAPs_represent === VAPsType.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
@@ -54,7 +57,7 @@ function _ValueAndPredictions (props: Props)
     const item_props: EditableListEntryItemProps<StateValueAndPrediction, ListItemCRUDRequiredU<StateValueAndPrediction>> = {
         // Do not show created_at of VAPs when in VAP set
         // get_created_at: () => props.created_at,
-        get_summary: get_summary({ VAPs_represent, editing }),
+        get_summary: get_summary({ value_possibilities, VAPs_represent, editing }),
         get_details: get_details(VAPs_represent, editing),
         extra_class_names: "value_and_prediction",
         crud: {
@@ -103,12 +106,13 @@ const get_id = (item: StateValueAndPrediction) => item.id
 
 interface GetSummaryArgs
 {
+    value_possibilities: ValuePossibilitiesById | undefined
     VAPs_represent: VAPsType
     editing: boolean
 }
 const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>): h.JSX.Element =>
 {
-    const { VAPs_represent, editing } = args
+    const { value_possibilities, VAPs_represent, editing } = args
 
     const { probability, conviction } = merge_counterfactual_into_VAP(VAP)
 
@@ -189,6 +193,12 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 size={20}
                 probability={VAP.probability}
                 conviction={VAP.conviction}
+            />
+
+            <PossibleValueLink
+                editing={editing}
+                VAP={VAP}
+                value_possibilities={value_possibilities}
             />
         </div>
     </div>

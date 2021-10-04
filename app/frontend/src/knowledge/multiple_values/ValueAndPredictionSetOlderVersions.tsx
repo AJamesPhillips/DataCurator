@@ -14,11 +14,13 @@ import { ExpandableListWithAddButton } from "../../form/editable_list/Expandable
 import { create_new_VAP_set_version } from "./utils"
 import type { RootState } from "../../state/State"
 import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
+import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
 
 interface OwnProps extends ListItemCRUDRequiredU<VAPSet>
 {
+    value_possibilities: ValuePossibilitiesById | undefined
     VAPs_represent: VAPsType
     current_VAP_set: VAPSet
     older_VAP_sets: VAPSet[]
@@ -44,7 +46,11 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ValueAndPredictionSetOlderVersions (props: Props)
 {
-    const { VAPs_represent, older_VAP_sets, create_item, update_item, delete_item, editing } = props
+    const {
+        editing,
+        value_possibilities, VAPs_represent, older_VAP_sets,
+        create_item, update_item, delete_item,
+    } = props
     const item_descriptor = "Older version"
 
     const make_new_version = useMemo(() => () =>
@@ -64,7 +70,7 @@ function _ValueAndPredictionSetOlderVersions (props: Props)
             get_created_at,
             get_custom_created_at,
             get_summary: get_summary_for_single_VAP_set(VAPs_represent, true),
-            get_details: get_details_for_single_VAP_set(VAPs_represent),
+            get_details: get_details_for_single_VAP_set(value_possibilities, VAPs_represent),
             get_details2: get_details2_for_single_VAP_set(VAPs_represent, editing),
             extra_class_names: "value_and_prediction_set",
             crud: {

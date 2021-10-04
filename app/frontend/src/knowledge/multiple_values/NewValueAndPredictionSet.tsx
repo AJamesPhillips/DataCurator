@@ -42,7 +42,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_pos
                 <hr />
 
                 {get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud)}
-                {get_details_for_single_VAP_set(VAPs_represent)(VAP_set, crud)}
+                {get_details_for_single_VAP_set(value_possibilities, VAPs_represent)(VAP_set, crud)}
                 {get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)}
             </div>}
 

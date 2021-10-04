@@ -23,11 +23,11 @@ export function PossibleValue (props: OwnProps)
 {
     const { editing, value_possibility, existing_values, update_value_possibility } = props
     const other_values = new Set(existing_values)
-    other_values.delete(value_possibility.value)
+    other_values.delete(value_possibility.value.toLowerCase())
 
     const [current_value, set_current_value] = useState("")
     useEffect(() => set_current_value(value_possibility.value), [value_possibility.value])
-    const warning = other_values.has(current_value) ? `Current value "${current_value}" is already present in other possible values.` : ""
+    const warning = other_values.has(current_value.toLowerCase()) ? `Current value "${current_value}" is already present in other possible values.` : ""
 
 
     return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px">

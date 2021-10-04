@@ -104,7 +104,7 @@ export function PossibleValues (props: OwnProps)
 
 function all_possible_values (value_possibilities: ValuePossibility[]): Set<string>
 {
-    const all_values = new Set(value_possibilities.map(({ value }) => value))
+    const all_values = new Set(value_possibilities.map(({ value }) => value.toLowerCase()))
 
     return all_values
 }

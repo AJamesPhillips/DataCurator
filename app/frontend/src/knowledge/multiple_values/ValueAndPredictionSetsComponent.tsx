@@ -18,7 +18,6 @@ import { Tense } from "../../shared/wcomponent/interfaces/datetime"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type {
-    HasValuePossibilitiesAndVAPSets,
     StateValueAndPredictionsSet as VAPSet,
 } from "../../shared/wcomponent/interfaces/state"
 import { replace_element, remove_from_list_by_predicate } from "../../utils/list"
@@ -65,11 +64,12 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         item_descriptor, VAPs_represent, update_values_and_predictions,
         value_possibilities,
         values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
-        creation_context, editing
+        editing
     } = props
 
 
     const render_future_list_content = factory_render_VAP_set_list_content({
+        value_possibilities,
         subset_VAP_sets: future_items,
         previous_versions_by_id,
         all_VAP_sets,
@@ -77,11 +77,11 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         wcomponent_id,
         VAPs_represent,
         tense: Tense.future,
-        creation_context,
         editing,
     })
 
     const render_present_list_content = factory_render_VAP_set_list_content({
+        value_possibilities,
         subset_VAP_sets: present_items,
         previous_versions_by_id,
         all_VAP_sets,
@@ -89,11 +89,11 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         wcomponent_id,
         VAPs_represent,
         tense: Tense.present,
-        creation_context,
         editing,
     })
 
     const render_past_list_content = factory_render_VAP_set_list_content({
+        value_possibilities,
         subset_VAP_sets: past_items,
         previous_versions_by_id,
         all_VAP_sets,
@@ -101,7 +101,6 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         wcomponent_id,
         VAPs_represent,
         tense: Tense.past,
-        creation_context,
         editing,
     })
 
@@ -228,6 +227,7 @@ function count_and_versions (title: string, all_latest: {id: string}[], previous
 
 interface FactoryRenderListContentArgs <U>
 {
+    value_possibilities: ValuePossibilitiesById | undefined
     subset_VAP_sets: U[]
     all_VAP_sets: U[]
     previous_versions_by_id: {[id: string]: U[]},
@@ -235,12 +235,12 @@ interface FactoryRenderListContentArgs <U>
     wcomponent_id: string
     VAPs_represent: VAPsType
     tense: Tense
-    creation_context: CreationContextState
     editing: boolean
 }
 function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs<VAPSet>)
 {
-    const { subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_values_and_predictions, VAPs_represent, tense, editing } = args
+    const {
+        value_possibilities, subset_VAP_sets, all_VAP_sets, previous_versions_by_id, update_values_and_predictions, VAPs_represent, tense, editing } = args
 
     const render_VAP_set_list_content = (list_content_props: ExpandableListContentProps) =>
     {
@@ -285,9 +285,9 @@ function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs
                     get_custom_created_at={get_actual_custom_created_at_datetime}
 
                     get_summary={get_summary_for_single_VAP_set(VAPs_represent, false)}
-                    get_details={get_details_for_single_VAP_set(VAPs_represent)}
+                    get_details={get_details_for_single_VAP_set(value_possibilities, VAPs_represent)}
                     get_details2={get_details2_for_single_VAP_set(VAPs_represent, editing)}
-                    get_details3={get_details3(VAPs_represent, previous_versions_by_id)}
+                    get_details3={get_details3(value_possibilities, VAPs_represent, previous_versions_by_id)}
 
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
@@ -316,12 +316,13 @@ const predicate_by_id_and_created_at = (i1: VAPSet) => (i2: VAPSet) => {
 
 
 
-const get_details3 = (VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}) => (latest_VAP_set: VAPSet, crud: ListItemCRUDRequiredCUD<VAPSet>): h.JSX.Element =>
+const get_details3 = (value_possibilities: ValuePossibilitiesById | undefined, VAPs_represent: VAPsType, previous_versions_by_id: {[id: string]: VAPSet[]}) => (latest_VAP_set: VAPSet, crud: ListItemCRUDRequiredCUD<VAPSet>): h.JSX.Element =>
 {
     return <Box className="VAP_set_details">
         <br />
 
         <ValueAndPredictionSetOlderVersions
+            value_possibilities={value_possibilities}
             VAPs_represent={VAPs_represent}
             current_VAP_set={latest_VAP_set}
             older_VAP_sets={previous_versions_by_id[latest_VAP_set.id] || []}
