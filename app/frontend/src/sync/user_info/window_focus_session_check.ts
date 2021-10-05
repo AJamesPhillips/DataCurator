@@ -1,6 +1,6 @@
 import { ACTIONS } from "../../state/actions"
 import type { StoreType } from "../../state/store"
-import { signout } from "../../state/user_info/signout"
+import { save_and_signout } from "../../state/user_info/signout"
 import { get_supabase } from "../../supabase/get_supabase"
 import { register_window_on_focus_listener } from "../../utils/window_on_focus_listener"
 
@@ -33,11 +33,15 @@ export function register_window_focus_session_check (store: StoreType)
         {
             let network_functional = true
 
-            if (response.error?.message === "Not logged in.")
+            if (response.error?.message === "Not logged in." || (response.error as any)?.status === 401)
             {
+                // Can get response:
+                //   * { error: {message: 'Not logged in.', other fields ...?}, other fields ...?}
+                //   * { error: {message: 'Invalid token: token is expired by 27m3s', status: 401}, other fields ...?}
+
                 // TODO research how to attempt to refresh the session and iff that fails, only then call signout
                 console.log("User not logged in.  Reloading page.")
-                signout()
+                window.location.reload()
             }
             else if (response.error?.message === "Network request failed")
             {
@@ -48,7 +52,7 @@ export function register_window_focus_session_check (store: StoreType)
             {
                 debugger // temporary addition whilst we develop this in parallel with other work, will remove later
                 console.log("Some error whilst doing no-op update to user info.", response.error)
-                signout()
+                save_and_signout()
             }
             else
             {
@@ -61,7 +65,7 @@ export function register_window_focus_session_check (store: StoreType)
             debugger // temporary addition whilst we develop this in parallel with other work, will remove later
             if (err?.status === 401)
             {
-                signout()
+                save_and_signout()
             }
         })
     })

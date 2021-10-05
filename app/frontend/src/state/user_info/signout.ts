@@ -4,7 +4,7 @@ import { conditionally_save_state } from "../sync/utils/conditionally_save_state
 
 
 
-export async function signout ()
+export async function save_and_signout ()
 {
     const store = get_store()
     const supabase = get_supabase()
