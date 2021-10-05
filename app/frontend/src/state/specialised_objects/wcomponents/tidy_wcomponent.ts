@@ -1,4 +1,4 @@
-import { set_VAP_probabilities } from "../../../knowledge/multiple_values/utils"
+import { set_VAP_probabilities } from "../../../knowledge/multiple_values/value_and_prediction/utils"
 import { sort_list } from "../../../shared/utils/sort"
 import { get_wcomponent_VAPsType } from "../../../shared/wcomponent/get_wcomponent_state_value"
 import {

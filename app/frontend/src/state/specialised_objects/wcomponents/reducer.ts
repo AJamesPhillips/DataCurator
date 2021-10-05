@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import { prepare_new_VAP_set, prepare_new_VAP } from "../../../knowledge/multiple_values/utils"
+import { prepare_new_VAP_set, prepare_new_VAP } from "../../../knowledge/multiple_values/value_and_prediction/utils"
 import type { CreationContextState } from "../../../shared/creation_context/state"
 import { test } from "../../../shared/utils/test"
 import { get_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"

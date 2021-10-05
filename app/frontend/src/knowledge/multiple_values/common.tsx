@@ -13,7 +13,7 @@ import { PredictionSummary } from "../predictions/PredictionSummary"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import { set_VAP_probabilities } from "./utils"
+import { set_VAP_probabilities } from "./value_and_prediction/utils"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 

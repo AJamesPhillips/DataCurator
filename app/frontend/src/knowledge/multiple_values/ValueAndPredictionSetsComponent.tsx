@@ -27,7 +27,7 @@ import {
     get_details2_for_single_VAP_set,
 } from "./common"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
-import { prepare_new_VAP_set } from "./utils"
+import { prepare_new_VAP_set } from "./value_and_prediction/utils"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 
 

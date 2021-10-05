@@ -8,9 +8,16 @@ import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { ACTION_OPTIONS, get_action_status_of_VAP_set } from "../../shared/wcomponent/value_and_prediction/actions_value"
+import {
+    ACTION_OPTIONS,
+    get_action_status_of_VAP_set,
+} from "../../shared/wcomponent/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
-import { get_details2_for_single_VAP_set, get_details_for_single_VAP_set, get_summary_for_single_VAP_set } from "./common"
+import {
+    get_details2_for_single_VAP_set,
+    get_details_for_single_VAP_set,
+    get_summary_for_single_VAP_set,
+} from "./common"
 
 
 
