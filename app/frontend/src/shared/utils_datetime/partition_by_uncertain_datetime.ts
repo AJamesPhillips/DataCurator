@@ -28,6 +28,27 @@ export function partition_and_sort_by_uncertain_event_datetimes <U extends HasUn
 
 
 
+function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
+{
+
+
+    const sorted_items = sort_list(items, ({ datetime }) =>
+    {
+        if (uncertain_datetime_is_eternal(datetime)) return Number.NEGATIVE_INFINITY
+        const { max, value, min } = datetime
+
+        if (min) return min.getTime() * 10 + 2
+        if (value) return value.getTime() * 10 + 1
+        if (max) return max.getTime() * 10
+
+        return 1
+    }, "descending")
+
+    return sorted_items
+}
+
+
+
 interface PartitionSortedItemsByDatetimeArgs<U>
 {
     sorted_items: U[]
@@ -81,7 +102,7 @@ function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (a
         if (present_items.length !== 1)
         {
             present_items = eternal_items.slice(0, 1)
-            eternal_items = eternal_items.slice(1, 0)
+            eternal_items = eternal_items.slice(1)
         }
 
         past_items = past_items.concat(eternal_items)
@@ -89,25 +110,6 @@ function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (a
 
 
     return { past_items, present_items, future_items }
-}
-
-
-
-function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
-{
-    const sorted_items = sort_list(items, ({ datetime }) =>
-    {
-        if (uncertain_datetime_is_eternal(datetime)) return Number.NEGATIVE_INFINITY
-        const { max, value, min } = datetime
-
-        if (min) return min.getTime() * 10 + 2
-        if (value) return value.getTime() * 10 + 1
-        if (max) return max.getTime() * 10
-
-        return 1
-    }, "descending")
-
-    return sorted_items
 }
 
 
@@ -141,9 +143,10 @@ function test_partition_sorted_items_by_datetimes ()
     const date3 = new Date("2021-04-01 00:03")
     const date3_ms = date3.getTime()
 
-    const s_eternal = { id: "0", created_at: date2, datetime: {} }
-    const s1 = { id: "1", created_at: date1, datetime: { value: date1 } }
-    const s2 = { id: "2", created_at: date1, datetime: { value: date2 } }
+    const s_eternal1 = { id: "10", created_at: date1, datetime: {} }
+    const s_eternal2 = { id: "11", created_at: date2, datetime: {} }
+    const s1 = { id: "20", created_at: date1, datetime: { value: date1 } }
+    const s2 = { id: "30", created_at: date1, datetime: { value: date2 } }
 
     sorted_items = []
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
@@ -154,31 +157,40 @@ function test_partition_sorted_items_by_datetimes ()
     })
 
 
-    sorted_items = [s2, s1, s_eternal]
+    sorted_items = [s_eternal1, s_eternal2]
+    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
+    test(result, {
+        past_items: [s_eternal2.id],
+        present_items: [s_eternal1.id],
+        future_items: [],
+    }, "Can handle multiple eternal elements")
+
+
+    sorted_items = [s2, s1, s_eternal2]
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [],
-        present_items: [s_eternal.id],
+        present_items: [s_eternal2.id],
         future_items: [s2.id, s1.id],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
     test(result, {
-        past_items: [s_eternal.id],
+        past_items: [s_eternal2.id],
         present_items: [s1.id],
         future_items: [s2.id],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
     test(result, {
-        past_items: [s1.id, s_eternal.id],
+        past_items: [s1.id, s_eternal2.id],
         present_items: [s2.id],
         future_items: [],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
-        past_items: [s1.id, s_eternal.id],
+        past_items: [s1.id, s_eternal2.id],
         present_items: [s2.id],
         future_items: [],
     })
@@ -226,6 +238,7 @@ function test_sort_by_uncertain_event_datetimes ()
     let id = 0
     const next_id = () => `${id++}`
     const s_eternal = { id: next_id(), datetime: {} }
+    const s_eternal2 = { id: next_id(), datetime: {} }
     const s1 = { id: next_id(), datetime: { value: date1 } }
     const s2 = { id: next_id(), datetime: { value: date2 } }
     const s_max1 = { id: next_id(), datetime: { max: date1 } }
@@ -240,6 +253,14 @@ function test_sort_by_uncertain_event_datetimes ()
     items = []
     result = ids_sort_by_uncertain_event_datetimes(items)
     test(result, [], "", false)
+
+
+    // Not sure how to deal with multiple eternal entries so testing that sort is indeterminant for now
+    items = [s_eternal, s_eternal2]
+    const items_reverse = [...items].reverse()
+    result = ids_sort_by_uncertain_event_datetimes(items)
+    const result2 = ids_sort_by_uncertain_event_datetimes(items_reverse)
+    test(JSON.stringify(result) !== JSON.stringify(result2), true, "Should be different (indeterminant sort)")
 
 
     items = [s_eternal, s1, s2]
