@@ -57,6 +57,7 @@ import { Button } from "../../sharedf/Button"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ValuePossibilitiesComponent } from "../multiple_values/ValuePossibilitiesComponent"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import { update_VAPs_with_possibilities } from "../multiple_values/value_possibilities/update_VAPs_with_possibilities"
 
 
 
@@ -373,7 +374,8 @@ function _WComponentForm (props: Props)
                     value_possibilities={orig_value_possibilities}
                     update_value_possibilities={value_possibilities =>
                     {
-                        upsert_wcomponent({ value_possibilities })
+                        const values_and_prediction_sets = update_VAPs_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
+                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
                 />
                 <hr />
