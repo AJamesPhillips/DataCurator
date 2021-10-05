@@ -2,11 +2,11 @@ import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { Box, ButtonGroup, IconButton, Typography } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
-import WarningIcon from "@material-ui/icons/Warning"
 
 import "../../form/editable_list/EditableListEntry.css"
 import type { ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
+import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
 
 
 
@@ -14,28 +14,25 @@ interface OwnProps
 {
     editing: boolean
     value_possibility: ValuePossibility
-    existing_values: Set<string>
+    count_of_value_possibilities: {[value: string]: number}
     update_value_possibility: (value_possibility: ValuePossibility | undefined) => void
 }
 
 
 export function ValuePossibilityComponent (props: OwnProps)
 {
-    const { editing, value_possibility, existing_values, update_value_possibility } = props
-    const other_values = new Set(existing_values)
-    other_values.delete(value_possibility.value.toLowerCase())
-
-    const [current_value, set_current_value] = useState("")
+    const { editing, value_possibility, count_of_value_possibilities, update_value_possibility } = props
+    const [current_value, set_current_value] = useState(value_possibility.value)
     useEffect(() => set_current_value(value_possibility.value), [value_possibility.value])
-    const warning = other_values.has(current_value.toLowerCase()) ? `Current value "${current_value}" is already present in other possible values.` : ""
+
+    const count = count_of_value_possibilities[current_value.toLowerCase()] || 0
+    const warning = count > 1 ? `Current value "${current_value}" is already present in other possible values.` : ""
 
 
     return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px">
         <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
             <Box style={{ width: "100%" }}>
-                <Typography noWrap variant="caption" title={warning} aria-label={warning} style={{ display: warning ? "inline" : "none" }}>
-                    <WarningIcon />
-                </Typography>
+                <ValuePossibilityDuplicate warning={warning} />
                 <Typography noWrap textOverflow="ellipsis" variant="caption">
                     <EditableTextSingleLine
                         placeholder="Possible value"

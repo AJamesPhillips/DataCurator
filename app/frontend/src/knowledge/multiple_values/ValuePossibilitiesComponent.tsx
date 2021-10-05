@@ -10,6 +10,7 @@ import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcom
 import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
 import { default_possible_values } from "./value_possibilities/default_possible_values"
 import { prepare_new_value_possibility } from "./value_possibilities/prepare_new_value_possibility"
+import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
 
 
 
@@ -26,11 +27,11 @@ export function ValuePossibilitiesComponent (props: OwnProps)
 {
     const [show_value_possibilities, set_show_value_possibilities] = useState(false)
 
-    const value_possibilities_list = value_possibilities_as_list(props.value_possibilities)
-    const all_values = all_possible_values(value_possibilities_list)
-
-
     if (props.VAPs_represent === VAPsType.boolean) return null
+
+    const value_possibilities_list = value_possibilities_as_list(props.value_possibilities)
+    const { count_of_value_possibilities, max_count } = get_count_of_value_possibilities(value_possibilities_list)
+    const warning = max_count > 1 ? "Duplicate value possibilities present" : ""
 
 
     // Note: `editable_list_entry` makes no semantic sense here, only using to get the
@@ -40,7 +41,12 @@ export function ValuePossibilitiesComponent (props: OwnProps)
     return <div className={class_name}>
         <div className="summary_header">
             <div className="summary">
-                <h4>Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}</h4>
+                <h4 style={{ display: "inline-block" }}>
+                    Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}
+                </h4>
+                <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
+                    <ValuePossibilityDuplicate warning={warning} label="" />
+                </div>
             </div>
 
             <div
@@ -54,7 +60,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                 {value_possibilities_list.map(value_possibility => <ValuePossibilityComponent
                     editing={props.editing}
                     value_possibility={value_possibility}
-                    existing_values={all_values}
+                    count_of_value_possibilities={count_of_value_possibilities}
                     update_value_possibility={new_value_possibility => {
                         const modified_value_possibilities = { ...props.value_possibilities }
 
@@ -103,11 +109,20 @@ export function ValuePossibilitiesComponent (props: OwnProps)
 
 
 
-function all_possible_values (value_possibilities: ValuePossibility[]): Set<string>
+function get_count_of_value_possibilities (value_possibilities: ValuePossibility[])
 {
-    const all_values = new Set(value_possibilities.map(({ value }) => value.toLowerCase()))
+    const count_of_value_possibilities: {[value: string]: number} = {}
+    let max_count = 0
 
-    return all_values
+    value_possibilities.forEach(({ value }) =>
+    {
+        value = value.toLowerCase()
+        const count = (count_of_value_possibilities[value] || 0) + 1
+        count_of_value_possibilities[value] = count
+        max_count = Math.max(max_count, count)
+    })
+
+    return { count_of_value_possibilities, max_count }
 }
 
 
