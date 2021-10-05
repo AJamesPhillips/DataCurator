@@ -40,7 +40,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
     return <div className={class_name}>
         <div className="summary_header">
             <div className="summary">
-                <h4>Possible Values</h4>
+                <h4>Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}</h4>
             </div>
 
             <div
