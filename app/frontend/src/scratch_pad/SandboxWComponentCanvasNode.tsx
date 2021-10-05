@@ -12,97 +12,105 @@ import { ACTIONS } from "../state/actions"
 import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
+import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 
 
 
-const created_at = new Date("2021-01-01")
+function sandbox_code ()
+{
+    const created_at = new Date("2021-01-01")
 
-const wc10: WComponentNodeState = {
-    type: "state",
-    id: "wc10",
-    created_at,
-    base_id: -1,
-    title: "wc10 title",
-    description: "wc10 description",
-}
+    const wc10: WComponentNodeState = {
+        type: "state",
+        id: "wc10",
+        created_at,
+        base_id: -1,
+        title: "wc10 title",
+        description: "wc10 description",
+    }
 
-const creation_context: CreationContextState = { use_creation_context: true, creation_context: {
-    custom_created_at: created_at, label_ids: [],
-} }
-
-
-const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
-VAP_set1.entries[0]!.value = "thing"
-VAP_set1.entries[0]!.probability = 0.6
-VAP_set1.shared_entry_values = { conviction: 0.4 }
-const wc11: WComponentNodeStateV2 = {
-    type: "statev2",
-    subtype: "boolean",
-    id: "wc11",
-    created_at,
-    base_id: -1,
-    title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
-    description: "wc11 description",
-    boolean_false_str: "this is false",
-    boolean_true_str: "this is true",
-    values_and_prediction_sets: [
-        VAP_set1,
-    ]
-}
-
-const wc12_judgement: WComponentJudgement = {
-    type: "judgement",
-    id: "wc12",
-    created_at,
-    base_id: -1,
-    title: "wc12 title",
-    description: "wc12 description",
-    judgement_target_wcomponent_id: wc11.id,
-    judgement_operator: "==",
-    judgement_comparator_value: "True",
-}
-const wc13_judgement: WComponentJudgement = {
-    ...wc12_judgement,
-    id: "wc13",
-    judgement_operator: "!=",
-}
+    const creation_context: CreationContextState = { use_creation_context: true, creation_context: {
+        custom_created_at: created_at, label_ids: [],
+    } }
 
 
-const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
-VAP_set2.entries[0]!.probability = 0
-const wc14: WComponentNodeStateV2 = {
-    ...wc11,
-    id: "wc14",
-    created_at,
-    base_id: -1,
-    title: "wc14 title ${value}",
-    description: "wc14 description",
-    values_and_prediction_sets: [
-        VAP_set2,
-    ]
-}
+    const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
+    VAP_set1.entries[0]!.value = "thing"
+    VAP_set1.entries[0]!.probability = 0.6
+    VAP_set1.shared_entry_values = { conviction: 0.4 }
+    const wc11: WComponentNodeStateV2 = {
+        type: "statev2",
+        subtype: "boolean",
+        id: "wc11",
+        created_at,
+        base_id: -1,
+        title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
+        description: "wc11 description",
+        boolean_false_str: "this is false",
+        boolean_true_str: "this is true",
+        values_and_prediction_sets: [
+            VAP_set1,
+        ]
+    }
 
-const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement, wc14]
+    const wc12_judgement: WComponentJudgement = {
+        type: "judgement",
+        id: "wc12",
+        created_at,
+        base_id: -1,
+        title: "wc12 title",
+        description: "wc12 description",
+        judgement_target_wcomponent_id: wc11.id,
+        judgement_operator: "==",
+        judgement_comparator_value: "True",
+    }
+    const wc13_judgement: WComponentJudgement = {
+        ...wc12_judgement,
+        id: "wc13",
+        judgement_operator: "!=",
+    }
 
-const kv10: KnowledgeView = {
-    id: "kv10",
-    title: "kv10 title",
-    description: "kv10 description",
-    wc_id_map: {
-        [wc10.id]: { left: 100, top: 100 },
-        [wc11.id]: { left: 400, top: 100 },
-        [wc14.id]: { left: 700, top: 100 },
-    },
-    created_at,
-    base_id: -1,
-    goal_ids: [],
-    sort_type: "normal",
+
+    const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
+    VAP_set2.entries[0]!.probability = 0
+    const wc14: WComponentNodeStateV2 = {
+        ...wc11,
+        id: "wc14",
+        created_at,
+        base_id: -1,
+        title: "wc14 title ${value}",
+        description: "wc14 description",
+        values_and_prediction_sets: [
+            VAP_set2,
+        ]
+    }
+
+    const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement, wc14]
+
+    const kv10: KnowledgeView = {
+        id: "kv10",
+        title: "kv10 title",
+        description: "kv10 description",
+        wc_id_map: {
+            [wc10.id]: { left: 100, top: 100 },
+            [wc11.id]: { left: 400, top: 100 },
+            [wc14.id]: { left: 700, top: 100 },
+        },
+        created_at,
+        base_id: -1,
+        goal_ids: [],
+        sort_type: "normal",
+    }
+
+
+    return { wcomponents, wc10, kv10 }
 }
 
 
 
 export function SandboxWComponentCanvasNode ()
 {
+    const { wcomponents, wc10, kv10 } = sandbox_code()
 
     let override_preloaded_state: RootState = get_starting_state()
 
@@ -131,25 +139,30 @@ export function SandboxWComponentCanvasNode ()
 
 
     return <Provider store={store}>
-        <WComponentCanvasNodes />
+        <WComponentCanvasNodes wcomponents={wcomponents} />
     </Provider>
 }
 
 
 
+interface WComponentCanvasNodesOwnProps
+{
+    wcomponents: WComponent[]
+}
+
 const map_state = (state: RootState) => ({
     rich_text_formatting: state.display_options.consumption_formatting,
 })
 const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & WComponentCanvasNodesOwnProps
 
 function _WComponentCanvasNodes (props: Props)
 {
     return <div>
         WComponentCanvasNodes {"" + props.rich_text_formatting}
 
-        {wcomponents.map(({ id }) => <WComponentCanvasNode id={id} />)}
+        {props.wcomponents.map(({ id }) => <WComponentCanvasNode id={id} />)}
     </div>
 }
 
-const WComponentCanvasNodes = connector(_WComponentCanvasNodes) as FunctionalComponent<{}>
+const WComponentCanvasNodes = connector(_WComponentCanvasNodes) as FunctionalComponent<WComponentCanvasNodesOwnProps>

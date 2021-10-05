@@ -16,13 +16,13 @@ interface OwnProps
     VAP: VAP
     value_possibilities: ValuePossibilitiesById | undefined
 
-    // update_value_possibility: (value_possibility: ValuePossibility | undefined) => void
+    update_VAP: (VAP: VAP) => void
 }
 
 
 export function PossibleValueLink (props: OwnProps)
 {
-    const { editing, VAP, value_possibilities } = props
+    const { editing, VAP, value_possibilities, update_VAP } = props
 
     const value_possibility_ids_by_value = useMemo(() =>
     {
@@ -45,10 +45,12 @@ export function PossibleValueLink (props: OwnProps)
     const value_possibility_linked = !!(value_possibilities[VAP.value_id || ""])
     if (value_possibility_linked) return <span
         title="Linked to possible value.  Click to unlink."
-        className={"possible_value_link " + editing ? "clickable" : "disabled"}
+        className={"possible_value_link " + (editing ? "clickable" : "disabled")}
         onClick={() =>
         {
-            console.log("linked -> unlinked")
+            const modified_VAP = {...VAP}
+            delete modified_VAP.value_id
+            update_VAP(modified_VAP)
         }}
     >
         <LinkIcon className="hide_on_hover" />
@@ -56,13 +58,20 @@ export function PossibleValueLink (props: OwnProps)
     </span>
 
 
-    const linkable_value_possibility = value_possibility_ids_by_value[VAP.value.toLowerCase()]
-    if (linkable_value_possibility) return <span
+    const linkable_value_possibility_id = value_possibility_ids_by_value[VAP.value.toLowerCase()]
+    if (linkable_value_possibility_id) return <span
         title="Linkable to value possibility.  Click to link."
-        className={"possible_value_link " + editing ? "clickable" : "disabled"}
+        className={"possible_value_link " + (editing ? "clickable" : "disabled")}
         onClick={() =>
         {
-            console.log("unlinked -> linked")
+            const value_possibility = value_possibilities[linkable_value_possibility_id]!
+            const description = value_possibility.description || VAP.description
+            const modified_VAP: VAP = {
+                ...VAP,
+                value_id: linkable_value_possibility_id,
+                description,
+            }
+            update_VAP(modified_VAP)
         }}
     >
         <AddLinkIcon />

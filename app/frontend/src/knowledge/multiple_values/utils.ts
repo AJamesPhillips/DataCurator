@@ -8,12 +8,13 @@ import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../share
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import type { CreationContextState } from "../../shared/creation_context/state"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import { action_statuses } from "../../shared/wcomponent/interfaces/action"
 import type {
     SimpleValuePossibility,
     ValuePossibilitiesById,
     ValuePossibility,
 } from "../../shared/wcomponent/interfaces/possibility"
+import { default_possible_values } from "./value_possibilities/default_possible_values"
+import { get_max_value_possibilities_order } from "./value_possibilities/get_max_value_possibilities_order"
 
 
 
@@ -27,24 +28,6 @@ export function prepare_new_value_possibility (existing_value_possibilities: Val
         description: "",
         order: max_order + 1,
     }
-}
-
-
-
-export function get_max_value_possibilities_order (value_possibilities: SimpleValuePossibility[] | ValuePossibilitiesById | undefined): number
-{
-    let max_order = -1
-
-    if (value_possibilities)
-    {
-        let values_array: SimpleValuePossibility[]
-        if (Array.isArray(value_possibilities)) values_array = value_possibilities
-        else values_array = Object.values(value_possibilities)
-
-        values_array.forEach(({ order = -1 }) => max_order = Math.max(max_order, order))
-    }
-
-    return max_order
 }
 
 
@@ -129,37 +112,6 @@ function all_options_in_VAP_set (VAPs_represent: VAPsType, value_possibilities: 
     })
 
     possibilities = default_possible_values(VAPs_represent, possibilities)
-
-    return possibilities
-}
-
-
-
-export function default_possible_values (VAPs_represent: VAPsType, simple_possibilities: SimpleValuePossibility[]): ValuePossibility[]
-{
-    if (VAPs_represent === VAPsType.boolean)
-    {
-        simple_possibilities = []
-    }
-    else if (simple_possibilities.length === 0)
-    {
-        (VAPs_represent === VAPsType.action ? action_statuses : [""])
-            .forEach((value, index) =>
-            {
-                simple_possibilities.push({ value, order: index })
-            })
-    }
-
-
-    let max_order = get_max_value_possibilities_order(simple_possibilities)
-
-    // Ensure all possibilities have an id, order and description
-    const possibilities: ValuePossibility[] = simple_possibilities.map(possibility =>
-    {
-        const id = possibility.id || uuid_v4()
-        const order = possibility.order ?? ++max_order
-        return { description: "", ...possibility, id, order }
-    })
 
     return possibilities
 }

@@ -4,15 +4,14 @@ import { connect, ConnectedProps } from "react-redux"
 import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type {
-    HasValuePossibilitiesAndVAPSets,
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
 } from "../../shared/wcomponent/interfaces/state"
 import { partition_and_prune_items_by_datetimes_and_versions } from "../../shared/wcomponent/value_and_prediction/utils"
 import type { RootState } from "../../state/State"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
-import { get_max_value_possibilities_order } from "./utils"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
+import { get_max_value_possibilities_order } from "./value_possibilities/get_max_value_possibilities_order"
 
 
 

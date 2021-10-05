@@ -135,13 +135,27 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 />
                 <br />
             </div>}
-            {(editing || VAP.value) && <div>
+            {(editing || VAP.value) && <div
+                style={{ position: "relative" /* Used to position PossibleValueLink*/ }}
+            >
                 <EditableTextSingleLine
                     disabled={is_boolean}
                     placeholder="Value"
                     value={is_boolean ? (VAP.probability > 0.5 ? "True" : "False") : VAP.value}
                     conditional_on_blur={value => crud.update_item({ ...VAP, value })}
                 />
+
+                {!is_number && !is_boolean && <div
+                    style={{ position: "absolute", right: "-25px", top: "15px" }}
+                >
+                    <PossibleValueLink
+                        editing={editing}
+                        VAP={VAP}
+                        value_possibilities={value_possibilities}
+                        update_VAP={modified_VAP => crud.update_item(modified_VAP)}
+                    />
+                </div>}
+
                 <br />
             </div>}
             {is_number && (editing || VAP.max) && <div>
@@ -193,12 +207,6 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 size={20}
                 probability={VAP.probability}
                 conviction={VAP.conviction}
-            />
-
-            <PossibleValueLink
-                editing={editing}
-                VAP={VAP}
-                value_possibilities={value_possibilities}
             />
         </div>
     </div>

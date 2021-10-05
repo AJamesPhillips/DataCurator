@@ -3,12 +3,13 @@ import { useState } from "preact/hooks"
 import { Box } from "@material-ui/core"
 
 import "../../form/editable_list/EditableListEntry.css"
-import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
 import { Button } from "../../sharedf/Button"
-import { default_possible_values, prepare_new_value_possibility } from "./utils"
-import { PossibleValue } from "./PossibleValue"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { get_items_by_id } from "../../shared/utils/get_items"
+import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
+import { PossibleValue } from "./PossibleValue"
+import { prepare_new_value_possibility } from "./utils"
+import { default_possible_values } from "./value_possibilities/default_possible_values"
 
 
 
