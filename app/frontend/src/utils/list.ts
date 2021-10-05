@@ -61,7 +61,7 @@ export function remove_index <I> (list: I[], index: number): I[]
 
 
 
-export function remove_from_list_by_predicate <I> (list: I[], predicate: (i: I) => boolean): I[]
+export function remove_element <I> (list: I[], predicate: (i: I) => boolean): I[]
 {
     const filtered = list.filter(i => !predicate(i))
 

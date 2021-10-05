@@ -7,6 +7,7 @@ import type { StateValueAndPrediction as VAP } from "../../shared/wcomponent/int
 import { AddLinkIcon } from "../../sharedf/icons/AddLink"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import { useMemo } from "preact/hooks"
+import { LinkWorkingIcon } from "../../sharedf/icons/LinkWorking"
 
 
 
@@ -53,7 +54,7 @@ export function PossibleValueLink (props: OwnProps)
             update_VAP(modified_VAP)
         }}
     >
-        <LinkIcon className="hide_on_hover" />
+        <LinkWorkingIcon className="hide_on_hover" />
         <LinkOffIcon className="show_on_hover" />
     </span>
 

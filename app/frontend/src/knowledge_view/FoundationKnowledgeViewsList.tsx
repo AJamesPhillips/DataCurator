@@ -5,7 +5,7 @@ import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { remove_from_list_by_predicate } from "../utils/list"
+import { remove_element } from "../utils/list"
 import { SelectKnowledgeView } from "./SelectKnowledgeView"
 
 
@@ -81,7 +81,7 @@ function _FoundationKnowledgeViewsList (props: Props)
                         value="remove"
                         onClick={() =>
                         {
-                            on_change(remove_from_list_by_predicate(foundation_knowledge_view_ids, id => id === foundation_knowledge_view.id))
+                            on_change(remove_element(foundation_knowledge_view_ids, id => id === foundation_knowledge_view.id))
                         }}
                     />}
                 </div>

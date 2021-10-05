@@ -20,7 +20,7 @@ import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import { replace_element } from "../../utils/list"
+import { remove_element, replace_element } from "../../utils/list"
 import { PossibleValueLink } from "./PossibleValueLink"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
@@ -67,6 +67,12 @@ function _ValueAndPredictions (props: Props)
                 const updated_VAPs = replace_element(VAPs, modified_VAP, item => get_id(item) === id)
                 props.update_values_and_predictions(updated_VAPs)
             },
+            delete_item: VAP_to_delete =>
+            {
+                const id = get_id(VAP_to_delete)
+                const updated_VAPs = remove_element(VAPs, item => get_id(item) === id)
+                props.update_values_and_predictions(updated_VAPs)
+            }
         },
         delete_button_text: "Delete Value & Prediction",
     }

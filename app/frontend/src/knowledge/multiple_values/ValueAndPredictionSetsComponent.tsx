@@ -20,7 +20,7 @@ import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/
 import type {
     StateValueAndPredictionsSet as VAPSet,
 } from "../../shared/wcomponent/interfaces/state"
-import { replace_element, remove_from_list_by_predicate } from "../../utils/list"
+import { replace_element, remove_element } from "../../utils/list"
 import {
     get_summary_for_single_VAP_set,
     get_details_for_single_VAP_set,
@@ -267,7 +267,7 @@ function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs
             delete_item: item =>
             {
                 const predicate = predicate_by_id_and_created_at(item)
-                const updated_VAP_sets = remove_from_list_by_predicate(all_VAP_sets, predicate)
+                const updated_VAP_sets = remove_element(all_VAP_sets, predicate)
                 update_values_and_predictions(updated_VAP_sets)
             },
         }
