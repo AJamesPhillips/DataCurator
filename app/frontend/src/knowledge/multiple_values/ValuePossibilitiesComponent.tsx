@@ -7,7 +7,7 @@ import { Button } from "../../sharedf/Button"
 import { get_items_by_id } from "../../shared/utils/get_items"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
-import { PossibleValue } from "./PossibleValue"
+import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
 import { default_possible_values } from "./value_possibilities/default_possible_values"
 import { prepare_new_value_possibility } from "./value_possibilities/prepare_new_value_possibility"
 
@@ -22,7 +22,7 @@ interface OwnProps
 }
 
 
-export function PossibleValues (props: OwnProps)
+export function ValuePossibilitiesComponent (props: OwnProps)
 {
     const [show_value_possibilities, set_show_value_possibilities] = useState(false)
 
@@ -51,7 +51,7 @@ export function PossibleValues (props: OwnProps)
 
         {show_value_possibilities && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
-                {value_possibilities_list.map(value_possibility => <PossibleValue
+                {value_possibilities_list.map(value_possibility => <ValuePossibilityComponent
                     editing={props.editing}
                     value_possibility={value_possibility}
                     existing_values={all_values}

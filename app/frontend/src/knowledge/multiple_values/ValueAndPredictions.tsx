@@ -21,7 +21,7 @@ import type { RootState } from "../../state/State"
 import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { remove_element, replace_element } from "../../utils/list"
-import { PossibleValueLink } from "./PossibleValueLink"
+import { ValuePossibilityLink } from "./ValuePossibilityLink"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
@@ -154,7 +154,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 {!is_number && !is_boolean && <div
                     style={{ position: "absolute", right: "-25px", top: "15px" }}
                 >
-                    <PossibleValueLink
+                    <ValuePossibilityLink
                         editing={editing}
                         VAP={VAP}
                         value_possibilities={value_possibilities}

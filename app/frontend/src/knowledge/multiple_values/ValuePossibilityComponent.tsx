@@ -19,7 +19,7 @@ interface OwnProps
 }
 
 
-export function PossibleValue (props: OwnProps)
+export function ValuePossibilityComponent (props: OwnProps)
 {
     const { editing, value_possibility, existing_values, update_value_possibility } = props
     const other_values = new Set(existing_values)

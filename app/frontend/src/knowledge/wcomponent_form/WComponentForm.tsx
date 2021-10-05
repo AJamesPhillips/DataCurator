@@ -55,7 +55,7 @@ import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../../sharedf/Button"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
-import { PossibleValues } from "../multiple_values/PossibleValues"
+import { ValuePossibilitiesComponent } from "../multiple_values/ValuePossibilitiesComponent"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 
 
@@ -367,7 +367,7 @@ function _WComponentForm (props: Props)
             <hr />
             <br />
             {VAPs_represent !== VAPsType.undefined && VAPs_represent !== VAPsType.boolean && <div>
-                <PossibleValues
+                <ValuePossibilitiesComponent
                     editing={editing}
                     VAPs_represent={VAPs_represent}
                     value_possibilities={orig_value_possibilities}

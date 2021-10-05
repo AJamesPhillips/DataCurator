@@ -1,8 +1,7 @@
 import { h } from "preact"
-import LinkIcon from "@material-ui/icons/Link"
 import LinkOffIcon from "@material-ui/icons/LinkOff"
 
-import "./PossibleValueLink.css"
+import "./ValuePossibilityLink.css"
 import type { StateValueAndPrediction as VAP } from "../../shared/wcomponent/interfaces/state"
 import { AddLinkIcon } from "../../sharedf/icons/AddLink"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
@@ -21,7 +20,7 @@ interface OwnProps
 }
 
 
-export function PossibleValueLink (props: OwnProps)
+export function ValuePossibilityLink (props: OwnProps)
 {
     const { editing, VAP, value_possibilities, update_VAP } = props
 
