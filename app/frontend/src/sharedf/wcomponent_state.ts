@@ -1,4 +1,4 @@
-import { percentage_to_string } from "../shared/UI/percentages"
+import { percentage_to_string } from "./percentages"
 import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
 import type { StateValueAndPredictionsSet } from "../shared/wcomponent/interfaces/state"
 import { get_VAPs_ordered_by_prob } from "../shared/wcomponent/value_and_prediction/utils"

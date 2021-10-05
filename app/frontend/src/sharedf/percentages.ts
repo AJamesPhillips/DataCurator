@@ -1,4 +1,4 @@
-import { bounded } from "../utils/bounded"
+import { bounded } from "../shared/utils/bounded"
 
 
 

@@ -1,4 +1,4 @@
-import { percentage_to_string } from "../UI/percentages"
+import { percentage_to_string } from "../../sharedf/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValueAndProbabilities, ParsedValue, UIValue } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
