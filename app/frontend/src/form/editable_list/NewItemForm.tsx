@@ -38,7 +38,6 @@ export function NewItemForm <T, Crud extends ListItemCRUDRequiredC<T>> (props: N
                         item={new_item}
                         {...item_props}
                         expanded={true}
-                        disable_collapsable={true}
                         crud={modified_crud}
                     />
                 </DialogContent>

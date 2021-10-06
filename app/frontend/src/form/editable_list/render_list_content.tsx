@@ -30,7 +30,6 @@ export function factory_render_list_content <U, Crud extends ListItemCRUDRequire
     const render_list_content = (list_content_props: ExpandableListContentProps) =>
     {
         const {
-            disable_partial_collapsed,
             expanded_items,
             expanded_item_rows,
         } = list_content_props
@@ -48,7 +47,6 @@ export function factory_render_list_content <U, Crud extends ListItemCRUDRequire
                     {...item_props}
 
                     expanded={expanded_item_rows}
-                    disable_collapsable={disable_partial_collapsed}
                 />
             </div>)}
         </div>

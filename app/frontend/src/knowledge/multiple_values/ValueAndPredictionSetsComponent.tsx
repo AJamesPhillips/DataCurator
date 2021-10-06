@@ -293,7 +293,6 @@ function factory_render_VAP_set_list_content (args: FactoryRenderListContentArgs
                     extra_class_names={`value_and_prediction_set ${tense === Tense.future ? "future" : (tense === Tense.present ? "present" : "past")}`}
 
                     expanded={expanded_item_rows}
-                    disable_collapsable={disable_partial_collapsed}
                     crud={crud}
                     delete_button_text="Delete Set of Value &amp; Predictions"
                 />

@@ -64,7 +64,6 @@ interface OwnProps<U, Crud extends ListItemCRUDRequiredU<U>> extends EditableLis
 {
     item: U
     expanded?: boolean
-    disable_collapsable?: boolean
     crud: Crud
 }
 
@@ -108,7 +107,6 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
             get_details,
             get_details2,
             get_details3,
-            disable_collapsable,
             crud,
             delete_button_text,
         } = this.props
@@ -120,10 +118,9 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
         const { internal__expanded } = this.state
 
 
-        const class_name__not_collapsable = disable_collapsable ? "not_collapsable" : ""
         const class_name__expanded = internal__expanded ? "expanded" : ""
         const extra_class_names = this.props.extra_class_names || ""
-        const class_name = `editable_list_entry ${class_name__not_collapsable} ${class_name__expanded} ${extra_class_names}`
+        const class_name = `editable_list_entry ${class_name__expanded} ${extra_class_names}`
 
 
         const on_delete = useMemo(() => delete_item && (() => delete_item(item)), [delete_item, item])
