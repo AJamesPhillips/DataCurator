@@ -12,6 +12,14 @@ export interface WComponentNodeState extends WComponentNodeBase
     values?: StateValueString[]
 }
 
+// DEPRECATED
+export interface StateValueString extends Base
+{
+    start_datetime: Date
+    description: string
+    value: string
+}
+
 
 
 export interface HasVAPSetsAndMaybeValuePossibilities
@@ -43,20 +51,6 @@ const _wcomponent_statev2_subtypes: {[P in WComponentStateV2SubType]: true} = {
     other: true,
 }
 export const wcomponent_statev2_subtypes: WComponentStateV2SubType[] = Object.keys(_wcomponent_statev2_subtypes) as any
-
-
-
-interface StateValueBase extends Base
-{
-    start_datetime: Date
-    description: string
-}
-
-
-export interface StateValueString extends StateValueBase
-{
-    value: string
-}
 
 
 

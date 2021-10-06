@@ -36,6 +36,7 @@ export interface DisplayOptionsState
 
 
 const _time_resolution_types: {[P in TimeResolution]: true} = {
+    second: true,
     minute: true,
     hour: true,
     day: true,
