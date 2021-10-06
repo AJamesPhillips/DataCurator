@@ -41,7 +41,11 @@ export function ValuePossibilitiesComponent (props: OwnProps)
     const class_name = `editable_list_entry ${show_value_possibilities ? "expanded" : ""}`
 
     return <div className={class_name}>
-        <div className="summary_header">
+        <div
+            className="summary_header"
+            style={{ cursor: "pointer" }}
+            onClick={() => set_show_value_possibilities(!show_value_possibilities)}
+        >
             <div className="summary">
                 <h4 style={{ display: "inline-block" }}>
                     Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}
@@ -51,10 +55,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                 </div>
             </div>
 
-            <div
-                className="expansion_button"
-                onClick={() => set_show_value_possibilities(!show_value_possibilities)}
-            />
+            <div className="expansion_button"/>
         </div>
 
         {show_value_possibilities && <div>
