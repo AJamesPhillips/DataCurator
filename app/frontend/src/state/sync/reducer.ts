@@ -56,6 +56,8 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
         const last: LastSourceOfTruthSpecialisedObjectsById = { wcomponents: {}, knowledge_views: {} }
         state = update_substate(state, "sync", "last_source_of_truth_specialised_objects_by_id", last)
+        state = update_substate(state, "sync", "specialised_objects", { status: undefined, error_message: "", retry_attempt: 0 })
+        state = update_ready_for_fields(state)
     }
 
 
