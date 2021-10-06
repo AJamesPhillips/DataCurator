@@ -2,15 +2,12 @@ import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet as VAPSet,
 } from "../../../shared/wcomponent/interfaces/state"
-import { get_new_value_and_prediction_set_id, get_new_VAP_id } from "../../../shared/utils/ids"
+import { get_new_VAP_id } from "../../../shared/utils/ids"
 import { get_new_created_ats } from "../../../shared/utils/datetime"
 import type { CreationContextState } from "../../../shared/creation_context/state"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
-import type {
-    SimpleValuePossibility,
-    ValuePossibilitiesById,
-} from "../../../shared/wcomponent/interfaces/possibility"
-import { default_possible_values } from "../value_possibilities/default_possible_values"
+import type { ValuePossibilitiesById } from "../../../shared/wcomponent/interfaces/possibility"
+import { get_possibilities_from_VAP_sets } from "../value_possibilities/get_possibilities_from_VAP_sets"
 
 
 
@@ -30,7 +27,7 @@ export function prepare_new_VAP (): StateValueAndPrediction
 
 export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[])
 {
-    const possibilities = all_options_in_VAP_set(VAPs_represent, value_possibilities, existing_VAP_sets)
+    const possibilities = get_possibilities_from_VAP_sets(VAPs_represent, value_possibilities, existing_VAP_sets)
 
     const vanilla_entries: StateValueAndPrediction[] = possibilities.map(possibility =>
         ({
@@ -43,59 +40,6 @@ export function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, value_pos
     const entries_with_probabilities = set_VAP_probabilities(vanilla_entries, VAPs_represent)
 
     return entries_with_probabilities
-}
-
-
-
-export function prepare_new_VAP_set (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
-{
-    const dates = get_new_created_ats(creation_context)
-    // const now = new Date(get_created_at_ms(dates))
-
-    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets)
-
-
-    const new_VAP_set = {
-        id: get_new_value_and_prediction_set_id(),
-        ...dates,
-        base_id,
-        datetime: {}, // min: now },
-        entries: entries_with_probabilities,
-    }
-
-    return new_VAP_set
-}
-
-
-
-function all_options_in_VAP_set (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
-{
-    let possibilities: SimpleValuePossibility[] = []
-    const possible_value_strings: Set<string> = new Set()
-
-
-    VAP_sets.forEach(VAP_set =>
-    {
-        VAP_set.entries.forEach(({ value, value_id }) =>
-        {
-            const value_possibility = value_possibilities && value_possibilities[value_id || ""]
-            if (value_possibility)
-            {
-                possibilities.push(value_possibility)
-                possible_value_strings.add(value_possibility.value)
-            }
-            else
-            {
-                if (possible_value_strings.has(value)) return
-                possibilities.push({ value })
-                possible_value_strings.add(value)
-            }
-        })
-    })
-
-    possibilities = default_possible_values(VAPs_represent, possibilities)
-
-    return possibilities
 }
 
 

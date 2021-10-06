@@ -19,7 +19,7 @@ function get_custom_field_merger (field: keyof WComponent)
 
 
 
-function run_tests()
+function run_tests ()
 {
     const dt1 = new Date("2021-01-01")
     // Either the modified_at values match (between attempted_update_value and the DB's initial value)

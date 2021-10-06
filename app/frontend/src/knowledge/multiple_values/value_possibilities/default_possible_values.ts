@@ -17,7 +17,7 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
     }
     else if (simple_possibilities.length === 0)
     {
-        (VAPs_represent === VAPsType.action ? action_statuses : [])
+        (VAPs_represent === VAPsType.action ? action_statuses : [""])
             .forEach((value, index) =>
             {
                 simple_possibilities.push({ value, order: index })
@@ -43,18 +43,18 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
 function run_tests ()
 {
     const simple_possibilities: SimpleValuePossibility[] = [
-      {
-        id: "730a7cb4-7523-45f7-bfde-a00d0acb9f65",
-        value: "",
-        description: "",
-        order: 0
-      },
-      {
-        id: "724c4da6-f4ee-4680-a493-556ee241f29d",
-        value: "",
-        description: "",
-        order: 1
-      }
+        {
+            id: "730a7cb4-7523-45f7-bfde-a00d0acb9f65",
+            value: "",
+            description: "",
+            order: 0
+        },
+        {
+            id: "724c4da6-f4ee-4680-a493-556ee241f29d",
+            value: "",
+            description: "",
+            order: 1
+        }
     ]
 
     let result = default_possible_values(VAPsType.boolean, simple_possibilities)

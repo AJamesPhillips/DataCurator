@@ -372,6 +372,7 @@ function _WComponentForm (props: Props)
                     editing={editing}
                     VAPs_represent={VAPs_represent}
                     value_possibilities={orig_value_possibilities}
+                    values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_value_possibilities={value_possibilities =>
                     {
                         const values_and_prediction_sets = update_VAPs_with_possibilities(orig_values_and_prediction_sets, value_possibilities)

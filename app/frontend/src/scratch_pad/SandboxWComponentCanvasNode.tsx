@@ -2,7 +2,6 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps, Provider } from "react-redux"
 
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
-import { prepare_new_VAP_set } from "../knowledge/multiple_values/value_and_prediction/utils"
 import type { CreationContextState } from "../shared/creation_context/state"
 import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
@@ -13,6 +12,7 @@ import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
 import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import { prepare_new_VAP_set } from "../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set"
 
 
 

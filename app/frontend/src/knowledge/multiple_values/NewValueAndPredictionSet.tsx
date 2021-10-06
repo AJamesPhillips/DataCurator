@@ -2,30 +2,33 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import {
-    ACTION_OPTIONS,
-    get_action_status_of_VAP_set,
-} from "../../shared/wcomponent/value_and_prediction/actions_value"
+import { ACTION_OPTIONS } from "../../shared/wcomponent/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
 import {
     get_details2_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_summary_for_single_VAP_set,
 } from "./common"
+import { get_current_value_of_VAP_set } from "./value_and_prediction/get_current_value"
+import { value_possibility_options } from "./value_possibilities/value_possibility_options"
 
 
 
 export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined) =>
 {
-    const boolean_or_action = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action
+    const any_value_possibilities = Object.keys(value_possibilities || {}).length > 0
+    const hide_advanced_for_type_other = VAPs_represent === VAPsType.other && any_value_possibilities
+    const initial_hide_advanced = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action || hide_advanced_for_type_other
+
     // I do not understand why this works as it occurs after a conditional in NewItemForm
-    const [show_advanced, set_show_advanced] = useState(!boolean_or_action)
+    const [show_advanced, set_show_advanced] = useState(!initial_hide_advanced)
     // useEffect(() => {}, [VAPs_represent])
 
     return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUDRequiredU<StateValueAndPredictionsSet>) =>
@@ -35,6 +38,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_pos
         return <div>
             {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={update_item} />}
             {VAPs_represent === VAPsType.action && <SimplifiedActionForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
+            {hide_advanced_for_type_other && <SimplifiedOtherForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
 
             <SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />
 
@@ -109,15 +113,52 @@ interface SimplifiedActionFormProps
 }
 function SimplifiedActionForm (props: SimplifiedActionFormProps)
 {
-    const { VAP_set, on_change } = props
+    return <SimplifiedFormHeader
+        {...props}
+        title="Set action status to:"
+        default_options={ACTION_OPTIONS}
+    />
+}
 
-    const selected_option_id = get_action_status_of_VAP_set(VAP_set)
+
+
+interface SimplifiedOtherFormProps
+{
+    value_possibilities: ValuePossibilitiesById | undefined
+    VAP_set: StateValueAndPredictionsSet
+    on_change: (VAP_set: StateValueAndPredictionsSet) => void
+}
+function SimplifiedOtherForm (props: SimplifiedOtherFormProps)
+{
+    return <SimplifiedFormHeader
+        {...props}
+        title="Set value to:"
+        default_options={[]}
+    />
+}
+
+
+
+interface SimplifiedFormHeaderProps
+{
+    title: string
+    value_possibilities: ValuePossibilitiesById | undefined
+    VAP_set: StateValueAndPredictionsSet
+    default_options: AutocompleteOption[]
+    on_change: (VAP_set: StateValueAndPredictionsSet) => void
+}
+function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
+{
+    const { title, value_possibilities, VAP_set, default_options, on_change } = props
+
+    const selected_option_id = get_current_value_of_VAP_set(VAP_set)
+    const options = value_possibility_options(value_possibilities, default_options)
 
     return <div>
-        Set action status to:
+        {title}
         <AutocompleteText
             selected_option_id={selected_option_id}
-            options={ACTION_OPTIONS}
+            options={options}
             allow_none={true}
             on_change={new_status =>
             {

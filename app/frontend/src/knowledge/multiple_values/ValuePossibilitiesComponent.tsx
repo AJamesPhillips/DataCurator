@@ -8,9 +8,10 @@ import { get_items_by_id } from "../../shared/utils/get_items"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import type { ValuePossibilitiesById, ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
 import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
-import { default_possible_values } from "./value_possibilities/default_possible_values"
 import { prepare_new_value_possibility } from "./value_possibilities/prepare_new_value_possibility"
 import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
+import type { StateValueAndPredictionsSet as VAPSet } from "../../shared/wcomponent/interfaces/state"
+import { get_possibilities_from_VAP_sets } from "./value_possibilities/get_possibilities_from_VAP_sets"
 
 
 
@@ -19,6 +20,7 @@ interface OwnProps
     editing: boolean
     VAPs_represent: VAPsType
     value_possibilities: ValuePossibilitiesById | undefined
+    values_and_prediction_sets: VAPSet[]
     update_value_possibilities: (value_possibilities: ValuePossibilitiesById | undefined) => void
 }
 
@@ -98,7 +100,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                 fullWidth={true}
                 onClick={() =>
                 {
-                    const possible_values = default_possible_values(props.VAPs_represent, [])
+                    const possible_values = get_possibilities_from_VAP_sets(props.VAPs_represent, undefined, props.values_and_prediction_sets)
                     const value_possibilities = get_items_by_id(possible_values, "default_possible_values")
                     props.update_value_possibilities(value_possibilities)
                 }}
