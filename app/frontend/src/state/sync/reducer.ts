@@ -88,6 +88,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     if (is_update_network_status(action))
     {
         state = update_substate(state, "sync", "network_functional", action.network_functional)
+        state = update_substate(state, "sync", "network_function_last_checked", action.last_checked)
     }
 
 

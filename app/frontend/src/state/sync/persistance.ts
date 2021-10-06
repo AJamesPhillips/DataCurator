@@ -43,6 +43,7 @@ export function sync_starting_state (): SyncState
         ready_for_writing: false,
 
         network_functional: true,
+        network_function_last_checked: undefined,
 
         bases: { ...default_sync_state_for_one_data_type },
         specialised_objects: { ...default_sync_state_for_one_data_type },

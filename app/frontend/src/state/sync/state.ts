@@ -21,6 +21,7 @@ export interface SyncState extends SyncStateByType
     ready_for_writing: boolean
 
     network_functional: boolean
+    network_function_last_checked: Date | undefined
 
     // Only one type at the moment
     storage_type: StorageType

@@ -70,6 +70,7 @@ export const is_update_specialised_object_sync_info = (action: AnyAction): actio
 interface UpdateNetworkStatusArgs
 {
     network_functional: boolean
+    last_checked: Date
 }
 
 interface ActionUpdateNetworkStatus extends Action, UpdateNetworkStatusArgs {}

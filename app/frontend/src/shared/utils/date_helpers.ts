@@ -257,9 +257,10 @@ export function date2str_auto (args: Date2strAutoArgs)
 {
     const { date, time_resolution = "minute", trim_midnight = true } = args
 
-    const format = time_resolution === "day" ? "yyyy-MM-dd" : (
-        time_resolution === "hour" ? "yyyy-MM-dd hh:00" : "yyyy-MM-dd hh:mm"
-    )
+    const format = time_resolution === "day" ? "yyyy-MM-dd" :
+        time_resolution === "hour" ? "yyyy-MM-dd hh:00" :
+        time_resolution === "minute" ? "yyyy-MM-dd hh:mm" : "yyyy-MM-dd hh:mm:ss"
+
 
     const datetime_string = date2str(date, format)
     return trim_midnight ? datetime_string.replace(" 00:00", "") : datetime_string

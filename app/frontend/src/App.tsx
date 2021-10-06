@@ -20,7 +20,11 @@ import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
 import type { RootState } from "./state/State"
 import { Modal } from "./modal/Modal"
-import { useEffect, useState } from "preact/hooks"
+import { Button } from "./sharedf/Button"
+import { useEffect } from "react"
+import { get_store } from "./state/store"
+import { check_and_handle_connection_and_session } from "./sync/user_info/window_focus_session_check"
+import { date_to_string } from "./form/datetime_utils"
 
 
 
@@ -28,6 +32,7 @@ const map_state = (state: RootState) =>
 ({
     display_side_panel: state.controls.display_side_panel,
     network_functional: state.sync.network_functional,
+    network_function_last_checked: state.sync.network_function_last_checked,
 })
 
 
@@ -39,25 +44,27 @@ type Props = ConnectedProps<typeof connector>
 function App(props: Props)
 {
     const classes = use_styles()
-    const [show_network_warning, set_show_network_warning] = useState(false)
-    useEffect(() => set_show_network_warning(!props.network_functional), [props.network_functional])
+    useEffect(() =>
+    {
+        if (props.network_functional) return
+        setTimeout(() => check_and_handle_connection_and_session(get_store()), 1000)
+    }, [props.network_functional, props.network_function_last_checked])
 
     return (
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
 
-            {show_network_warning && <Modal
+            {!props.network_functional && <Modal
                 title=""
                 size="small"
                 child={<Box>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Seems to be offline
+                        Reconnecting...
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Please check your connection
+                        Last attempt: {date_to_string({ date: props.network_function_last_checked, time_resolution: "second" })}
                     </Typography>
                 </Box>}
-                on_close={() => set_show_network_warning(false)}
             />}
 
             <Box id="app" className={classes.root}>

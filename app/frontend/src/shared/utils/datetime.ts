@@ -3,7 +3,7 @@ import { date2str_auto } from "./date_helpers"
 
 
 
-export type TimeResolution = "minute" | "hour" | "day"
+export type TimeResolution = "second" | "minute" | "hour" | "day"
 
 
 
