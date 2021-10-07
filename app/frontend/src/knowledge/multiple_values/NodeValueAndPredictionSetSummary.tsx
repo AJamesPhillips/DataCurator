@@ -1,5 +1,4 @@
 import { h } from "preact"
-import { Box } from "@material-ui/core"
 
 import { WComponent, wcomponent_has_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_current_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"

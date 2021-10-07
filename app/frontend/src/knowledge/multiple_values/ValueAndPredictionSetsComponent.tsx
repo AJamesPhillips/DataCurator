@@ -142,7 +142,6 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() =>
                 {
-                    debugger
                     const new_VAP_set = prepare_new_VAP_set(VAPs_represent, value_possibilities, all_VAP_sets, props.base_id, props.creation_context)
                     set_new_item(new_VAP_set)
                 }}

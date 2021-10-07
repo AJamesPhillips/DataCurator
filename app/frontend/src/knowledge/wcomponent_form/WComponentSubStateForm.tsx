@@ -12,11 +12,11 @@ import {
 } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
-    CoreCounterfactualStateValueAndPredictionSetV2,
-    WComponentCounterfactualV2,
-} from "../../shared/wcomponent/interfaces/counterfactual"
+    StateValueAndPredictionsSet as VAPSet,
+} from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
+import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../../shared/wcomponent/interfaces/substate"
 import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
@@ -32,23 +32,29 @@ import { toggle_item_in_list } from "../../utils/list"
 
 interface OwnProps
 {
-    wcomponent: WComponentCounterfactualV2
-    upsert_wcomponent: (partial_wcomponent: Partial<WComponentCounterfactualV2>) => void
+    wcomponent: WComponentSubState
+    upsert_wcomponent: (partial_wcomponent: Partial<WComponentSubState>) => void
 }
 
 
-const map_state = (state: RootState) =>
+const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const knowledge_view = get_current_knowledge_view_from_state(state)
-    const composed_kv = get_current_composed_knowledge_view_from_state(state)
+    const { target_wcomponent_id } = own_props.wcomponent
+    const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""]
+    const target_wcomponent = wcomponent_is_statev2(maybe_target_wcomponent) && maybe_target_wcomponent
+    // const knowledge_view = get_current_knowledge_view_from_state(state)
+    // const composed_kv = get_current_composed_knowledge_view_from_state(state)
+
 
     return {
-        knowledge_view,
-        editing: !state.display_options.consumption_formatting,
-        composed_wc_id_map: composed_kv && composed_kv.composed_wc_id_map,
+        // knowledge_view,
+        // composed_wc_id_map: composed_kv && composed_kv.composed_wc_id_map,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        statev2_wcomponent_ids: state.derived.wcomponent_ids_by_type.statev2,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
+        editing: !state.display_options.consumption_formatting,
+        target_wcomponent,
     }
 }
 
@@ -63,28 +69,22 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-function _WComponentCounterfactualForm (props: Props)
+function _WComponentSubStateForm (props: Props)
 {
     const {
+        wcomponents_by_id,
         wcomponent,
         upsert_wcomponent,
-        wcomponents_by_id,
-        composed_wc_id_map,
-        knowledge_view,
+        target_wcomponent,
     } = props
 
-    if (!composed_wc_id_map) return <div>
-        Counterfactual form can not render: No current knowledge view
-    </div>
-
-
-    const wcomponent_statev2s_in_current_kv = Object.keys(composed_wc_id_map)
+    const wcomponent_statev2s = Array.from(props.statev2_wcomponent_ids)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
         .filter(wcomponent_is_statev2)
 
     const wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: wcomponent_statev2s_in_current_kv,
+        wcomponents: wcomponent_statev2s,
         wcomponents_by_id,
         wc_id_counterfactuals_map: {},
         created_at_ms: props.created_at_ms,
@@ -92,10 +92,10 @@ function _WComponentCounterfactualForm (props: Props)
     })
 
 
-    const target_wcomponent = wcomponents_by_id[wcomponent.target_wcomponent_id || ""]
+    // Copied from WComponentCounterfactualForm
     let target_VAP_sets: StateValueAndPredictionsSet[] = []
     let VAP_set_id_options: { id: string, title: string }[] = []
-    if (wcomponent_is_statev2(target_wcomponent))
+    if (target_wcomponent)
     {
         target_VAP_sets = target_wcomponent.values_and_prediction_sets || []
 
@@ -108,21 +108,20 @@ function _WComponentCounterfactualForm (props: Props)
     }
 
 
-    const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-    const { target_VAP_set_id, target_VAP_id } = wcomponent
-    const target_VAP_set = target_VAP_sets.find(({ id }) => id === target_VAP_set_id)
+    const selector: Partial<WComponentSubStateSelector> = wcomponent.selector || {}
+    // const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
 
-    const counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
-        ? clean_VAP_set_for_counterfactual(target_VAP_set, target_VAP_id)
-        : undefined
+    const target_VAP_set = target_VAP_sets.find(({ id }) => id === selector.target_VAP_set_id)
 
 
-    let counterfactual_active_for_current_knowledge_view = false
-    if (knowledge_view)
-    {
-        const ids = (knowledge_view.active_counterfactual_v2_ids || [])
-        counterfactual_active_for_current_knowledge_view = ids.includes(wcomponent.id)
-    }
+
+    // let counterfactual_active_for_current_knowledge_view = false
+    // if (knowledge_view)
+    // {
+    //     const ids = (knowledge_view.active_counterfactual_v2_ids || [])
+    //     counterfactual_active_for_current_knowledge_view = ids.includes(wcomponent.id)
+    // }
+
 
 
     return <div>
@@ -143,8 +142,7 @@ function _WComponentCounterfactualForm (props: Props)
                     options={wcomponent_id_options}
                     on_change={target_wcomponent_id => upsert_wcomponent({
                         target_wcomponent_id,
-                        target_VAP_set_id: undefined,
-                        target_VAP_id: undefined,
+                        selector: undefined,
                     })}
                     on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
                     on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
@@ -153,29 +151,31 @@ function _WComponentCounterfactualForm (props: Props)
         </p>
 
 
-        {wcomponent.target_wcomponent_id && <p>
-            <span className="description_label">Target value and prediction set to override</span> &nbsp;
+        {target_wcomponent && <p>
+            <span className="description_label">Select value and prediction set timepoint of interest to display</span> &nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
                     allow_none={true}
-                    selected_option_id={target_VAP_set_id}
+                    selected_option_id={selector.target_VAP_set_id}
                     options={VAP_set_id_options}
                     on_change={new_target_VAP_set_id =>
                     {
-                        upsert_wcomponent({
+                        const new_selector = make_valid_selector({
+                            ...selector,
                             target_VAP_set_id: new_target_VAP_set_id,
-                            target_VAP_id: undefined,
                         })
+
+                        upsert_wcomponent({ selector: new_selector })
                     }}
                 />
             </div>
         </p>}
 
 
-        {target_wcomponent && counterfactual_VAP_set && <p>
-            <span className="description_label">Counterfactual value</span> &nbsp;
+        {/* {target_wcomponent && <p>
+            <span className="description_label">Select value possibility of interest to limit display by</span> &nbsp;
             {get_VAP_visuals_data({
-                VAP_set: counterfactual_VAP_set,
+                VAP_set: target_VAP_set,
                 VAPs_represent,
                 wcomponent: target_wcomponent,
                 sort: false,
@@ -200,10 +200,10 @@ function _WComponentCounterfactualForm (props: Props)
                     <label for={id}>{value_text}</label>
                 </div>
             })}
-        </p>}
+        </p>} */}
 
 
-        {knowledge_view && <p>
+        {/* {knowledge_view && <p>
             <span className="description_label">Apply counterfactual in this knowledge view</span> &nbsp;
             <EditableCheckbox
                 // disabled={!props.editing}
@@ -220,8 +220,8 @@ function _WComponentCounterfactualForm (props: Props)
                 }}
             />
             {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>}
-        </p>}
+        </p>} */}
     </div>
 }
 
-export const WComponentCounterfactualForm = connector(_WComponentCounterfactualForm) as FunctionalComponent<OwnProps>
+export const WComponentSubStateForm = connector(_WComponentSubStateForm) as FunctionalComponent<OwnProps>

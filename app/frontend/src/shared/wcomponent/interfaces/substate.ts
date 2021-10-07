@@ -11,7 +11,7 @@ type StrictUnion<T> = StrictUnionHelper<T, T>
 
 interface TemporalSelector
 {
-    target_vap_set_id: string
+    target_VAP_set_id: string
 }
 interface ValueSelector
 {
@@ -19,14 +19,43 @@ interface ValueSelector
     target_value: string
 }
 
-type WComponentNodeSubStateSelector = (ValueSelector & TemporalSelector) | StrictUnion<ValueSelector | TemporalSelector>
+export type WComponentSubStateSelector = (ValueSelector & TemporalSelector) | StrictUnion<ValueSelector | TemporalSelector>
 
 
 
 // Other potential names: WComponentNodeStateSlice, WComponentNodeStateFocus, WComponentNodeStatePoint
-export interface WComponentNodeSubState extends WComponentNodeBase
+export interface WComponentSubState extends WComponentNodeBase
 {
     type: "sub_state"
-    target_wcomponent_id: string
-    selector: WComponentNodeSubStateSelector
+    target_wcomponent_id: string | undefined
+    selector: WComponentSubStateSelector | undefined
+}
+
+
+
+export function make_valid_selector (selector: Partial<WComponentSubStateSelector> | undefined)
+{
+    let new_selector: WComponentSubStateSelector | undefined
+    if (!selector) return undefined
+
+    const { target_VAP_set_id, target_value, target_value_id_type } = selector
+
+    if (!target_VAP_set_id)
+    {
+        if (target_value && target_value_id_type)
+        {
+            new_selector = { target_value, target_value_id_type }
+        }
+        else new_selector = undefined
+    }
+    else
+    {
+        if (target_value && target_value_id_type)
+        {
+            new_selector = { target_VAP_set_id, target_value, target_value_id_type }
+        }
+        else new_selector = { target_VAP_set_id }
+    }
+
+    return new_selector
 }

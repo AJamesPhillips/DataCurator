@@ -17,6 +17,7 @@ import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WCom
 import type { WComponentPrioritisation } from "./priorities"
 import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "./counterfactual"
 import type { ValuePossibilitiesById } from "./possibility"
+import type { WComponentSubState } from "./substate"
 
 
 
@@ -201,6 +202,14 @@ export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is 
 }
 
 
+
+export function wcomponent_is_sub_state (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentSubState
+{
+    return wcomponent_is_a("sub_state", wcomponent, log_error_id)
+}
+
+
+
 export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactual
 {
     return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
@@ -234,6 +243,7 @@ export function wcomponent_has_validity_predictions (wcomponent: WComponent): wc
 const types_without_validity: Set<WComponentType> = new Set([
     "prioritisation",
     "counterfactual",
+    "sub_state",
 ])
 export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & Partial<ValidityPredictions>)
 {

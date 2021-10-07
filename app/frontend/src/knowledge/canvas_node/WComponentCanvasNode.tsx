@@ -5,8 +5,6 @@ import { connect, ConnectedProps } from "react-redux"
 import { Box, makeStyles } from "@material-ui/core"
 
 import "./WComponentCanvasNode.css"
-import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
-import type { CanvasPoint } from "../../canvas/interfaces"
 import {
     connection_terminal_attributes,
     connection_terminal_directions,
@@ -19,29 +17,32 @@ import {
     wcomponent_is_judgement_or_objective,
     wcomponent_is_statev1,
     wcomponent_is_statev2,
+    wcomponent_is_sub_state,
     wcomponent_should_have_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import { ACTIONS } from "../../state/actions"
-import { get_wcomponent_from_state, is_on_current_knowledge_view } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
-import { calc_display_opacity, calc_wcomponent_should_display } from "../calc_display_parameters"
-import { WComponentStatefulValue } from "../WComponentStatefulValue"
-import { WComponentJudgements } from "../judgements/WComponentJudgements"
-import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
+import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
+import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
+import type { CanvasPoint } from "../../canvas/interfaces"
 import { round_canvas_point } from "../../canvas/position_utils"
-import { Handles } from "./Handles"
-import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
-import { WComponentValidityValue } from "../WComponentValidityValue"
-import { get_top_left_for_terminal_type, Terminal } from "../../canvas/connections/terminal"
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
-import { LabelsListV2 } from "../../labels/LabelsListV2"
-import { factory_on_pointer_down } from "../canvas_common"
 import { SCALE_BY } from "../../canvas/zoom_utils"
-import { get_store } from "../../state/store"
-import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
-import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
+import { LabelsListV2 } from "../../labels/LabelsListV2"
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
+import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import { ACTIONS } from "../../state/actions"
+import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
+import { is_on_current_knowledge_view, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { get_store } from "../../state/store"
+import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_display_parameters"
+import { factory_on_pointer_down } from "../canvas_common"
+import { WComponentJudgements } from "../judgements/WComponentJudgements"
+import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
+import { WComponentValidityValue } from "../WComponentValidityValue"
+import { Handles } from "./Handles"
+import { NodeSubStateSummary } from "../multiple_values/NodeSubStateSummary"
 
 
 
@@ -229,6 +230,7 @@ function _WComponentCanvasNode (props: Props)
         // || is_highlighted
         // || is_current_item
         || props.have_judgements
+    const sub_state_wcomponent = wcomponent_is_sub_state(wcomponent) && wcomponent
 
     const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
 
@@ -261,6 +263,17 @@ function _WComponentCanvasNode (props: Props)
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeValueAndPredictionSetSummary
                         wcomponent={wcomponent}
+                        created_at_ms={created_at_ms}
+                        sim_ms={sim_ms}
+                    />
+                </Box>
+            </Box>}
+
+            {sub_state_wcomponent && <Box display="flex" maxWidth="100%" overflow="hidden">
+                {/* {is_editing && <Box pr={2}>sub state</Box>} */}
+                <Box flexGrow={1} flexShrink={1} overflow="hidden">
+                    <NodeSubStateSummary
+                        wcomponent={sub_state_wcomponent}
                         created_at_ms={created_at_ms}
                         sim_ms={sim_ms}
                     />

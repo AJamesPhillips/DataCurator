@@ -1,0 +1,57 @@
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
+
+import { WComponent, wcomponent_has_VAP_sets, wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentSubState } from "../../shared/wcomponent/interfaces/substate"
+import { get_current_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
+import type { RootState } from "../../state/State"
+import { ConnectedValueAndPredictionSetSummary } from "./ConnectedValueAndPredictionSetSummary"
+
+
+
+interface OwnProps
+{
+    wcomponent: WComponentSubState
+    created_at_ms: number
+    sim_ms: number
+}
+
+
+const map_state = (state: RootState, own_props: OwnProps) =>
+{
+    const { target_wcomponent_id, selector } = own_props.wcomponent
+    const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""]
+    const target_wcomponent = wcomponent_is_statev2(maybe_target_wcomponent) && maybe_target_wcomponent
+
+    return {
+        target_wcomponent,
+    }
+}
+
+const connector = connect(map_state)
+type Props = ConnectedProps<typeof connector> & OwnProps
+
+
+function _NodeSubStateSummary (props: Props)
+{
+    const { target_wcomponent } = props
+    const { selector } = props.wcomponent
+    if (!target_wcomponent) return null
+    if (!selector) return null
+
+    const { target_VAP_set_id, target_value_id_type, target_value } = selector
+    if (!target_VAP_set_id && (!target_value_id_type || !target_value)) return null
+
+
+    // const VAP_set = get_current_VAP_set({
+    //     ...props,
+    //     values_and_prediction_sets: props.wcomponent.values_and_prediction_sets,
+    // })
+
+
+    // if (!VAP_set) return null
+
+    return <div>Target: {target_wcomponent.title}</div>
+}
+
+export const NodeSubStateSummary = connector(_NodeSubStateSummary) as FunctionalComponent<OwnProps>

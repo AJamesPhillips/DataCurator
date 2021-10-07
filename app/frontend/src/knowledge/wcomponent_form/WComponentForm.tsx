@@ -28,6 +28,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_statev1,
     wcomponent_is_goal,
+    wcomponent_is_sub_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
@@ -58,6 +59,7 @@ import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ValuePossibilitiesComponent } from "../multiple_values/ValuePossibilitiesComponent"
 import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
 import { update_VAPs_with_possibilities } from "../multiple_values/value_possibilities/update_VAPs_with_possibilities"
+import { WComponentSubStateForm } from "./WComponentSubStateForm"
 
 
 
@@ -257,6 +259,11 @@ function _WComponentForm (props: Props)
                 conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
             />
         </FormControl>}
+
+        {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
 
         {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
             wcomponent={wcomponent}
