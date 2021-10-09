@@ -9,7 +9,7 @@ import type { RootState } from "../../state/State"
 import { Options } from "./Options"
 import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
 import { throttle } from "../../utils/throttle"
-import { useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 import type { SearchFields, SearchType } from "../../state/search/state"
 import { TextField } from "@material-ui/core"
 
@@ -117,6 +117,25 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const [highlighted_option_index, set_highlighted_option_index] = useState(0)
 
+    const moused_over_options = useRef(new Set<string>())
+    const on_mouse_over_option = useMemo(() =>
+    {
+        return (id: string | undefined) =>
+        {
+            id && moused_over_options.current.add(id)
+            props.on_mouse_over_option && props.on_mouse_over_option(id)
+        }
+    }, [props.on_mouse_over_option])
+
+    const on_mouse_leave_option = useMemo(() =>
+    {
+        return (id: string | undefined) =>
+        {
+            id && moused_over_options.current.delete(id)
+            props.on_mouse_leave_option && props.on_mouse_leave_option(id)
+        }
+    }, [props.on_mouse_leave_option])
+
 
     function get_selected_option_title_str (): string
     {
@@ -176,6 +195,14 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         set_to_not_editing()
 
+        const { on_mouse_leave_option } = props
+        if (on_mouse_leave_option)
+        {
+            // Ensure on_mouse_leave_option is called for any ids remaining
+            moused_over_options.current.forEach(id => on_mouse_leave_option(id))
+            moused_over_options.current = new Set()
+        }
+
         const { actively_chosen, id } = actively_selected_option.current
         if (!actively_chosen) return
         actively_selected_option.current = { actively_chosen: false, id: undefined }
@@ -195,12 +222,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const final_value = get_valid_value(options_to_display, temp_value_str)
     const valid = !final_value || temp_value_str.toLowerCase() === final_value.title.toLowerCase()
 
-    const {
-        placeholder,
-        on_mouse_over_option = () => {},
-        on_mouse_leave_option = () => {},
-    } = props
-
 
     return <div
         class={"editable_field autocomplete " + (valid ? "" : "invalid ")}
@@ -218,7 +239,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                 else setTimeout(() => input_el.focus(), 0)
             }) as any}
             // type="text"
-            placeholder={placeholder}
+            placeholder={props.placeholder}
             value={temp_value_str || (editing_options ? "" : "-")}
             onFocus={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
                 setTimeout(() => set_editing_options(true), 0)
