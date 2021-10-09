@@ -16,15 +16,15 @@ export interface WComponentCounterfactual extends WComponentNodeBase
 
 
 
-export interface TargetVAPIdCounterfactualEntry
+export interface TargetVAPIdCounterfactualInfoEntry
 {
     counterfactual_v2_id: string | undefined
     counterfactual_has_knowledge_view: boolean | undefined
 }
 
-export interface TargetVAPIdCounterfactualMap
+export interface TargetVAPIdCounterfactualInfoMap
 {
-    [target_VAP_id: string]: TargetVAPIdCounterfactualEntry[]
+    [target_VAP_id: string]: TargetVAPIdCounterfactualInfoEntry[]
 }
 
 
@@ -33,7 +33,6 @@ export interface TargetVAPIdCounterfactualMap
 export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
 {
     has_counterfactual_applied: boolean
-    target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap
     active_counterfactual_v2_id: string | undefined
 }
 

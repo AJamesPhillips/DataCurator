@@ -1,7 +1,4 @@
-import { wcomponent_has_knowledge_view } from "../../../state/specialised_objects/accessors"
-import type { KnowledgeViewsById } from "../../interfaces/knowledge_view"
 import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
-import type { TargetVAPIdCounterfactualMap, TargetVAPIdCounterfactualEntry } from "../interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 
 
@@ -11,14 +8,12 @@ interface GetCounterfactualV2VAPSetArgs
     VAP_set: StateValueAndPredictionsSet
     VAP_set_ids_to_counterfactuals_map: VAP_set_id_counterfactual_mapV2 | undefined
     active_counterfactual_v2_ids: string[] | undefined
-    knowledge_views_by_id: KnowledgeViewsById
 }
 export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetArgs)
 {
     const {
         VAP_set_ids_to_counterfactuals_map,
         active_counterfactual_v2_ids = [],
-        knowledge_views_by_id,
     } = args
     let { VAP_set } = args
 
@@ -28,7 +23,6 @@ export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetAr
 
 
     let has_counterfactual_applied = false
-    const target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualMap = {}
     let active_counterfactual_v2_id: string | undefined = undefined
 
     counterfactuals_v2.forEach(cf =>
@@ -42,22 +36,11 @@ export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetAr
             has_counterfactual_applied = true
             active_counterfactual_v2_id = cf.id
         }
-
-        const counterfactual_has_knowledge_view = wcomponent_has_knowledge_view(cf.id, knowledge_views_by_id)
-        const entry: TargetVAPIdCounterfactualEntry = {
-            counterfactual_v2_id: cf.id,
-            counterfactual_has_knowledge_view,
-        }
-
-        const cf_data = target_VAP_id_counterfactual_map[target_VAP_id] || []
-        cf_data.push(entry)
-        target_VAP_id_counterfactual_map[target_VAP_id] = cf_data
     })
 
     return {
         ...VAP_set,
         has_counterfactual_applied,
-        target_VAP_id_counterfactual_map,
         active_counterfactual_v2_id
     }
 }

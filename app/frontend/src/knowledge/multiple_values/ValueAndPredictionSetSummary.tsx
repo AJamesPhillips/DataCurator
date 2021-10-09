@@ -9,7 +9,8 @@ import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     ComposedCounterfactualStateValueAndPredictionSetV2,
-    TargetVAPIdCounterfactualEntry,
+    TargetVAPIdCounterfactualInfoEntry,
+    TargetVAPIdCounterfactualInfoMap,
 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
@@ -19,17 +20,16 @@ interface OwnProps
 {
     wcomponent: WComponent
     counterfactual_VAP_set: ComposedCounterfactualStateValueAndPredictionSetV2
+    VAP_id_to_counterfactuals_info_map: TargetVAPIdCounterfactualInfoMap
 }
 
 export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
-    const { counterfactual_VAP_set } = props
+    const { counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
     const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent)
-    const raw_data = get_VAP_visuals_data({ ...props, VAP_set: counterfactual_VAP_set, VAPs_represent })
-    const put_most_probable_last = false
-    const data = put_most_probable_last ? raw_data.reverse() : raw_data
-    const data_with_non_zero_certainty = data.filter(d => d.certainty > 0)
+    const VAP_visuals_data = get_VAP_visuals_data({ ...props, VAP_set: counterfactual_VAP_set, VAPs_represent })
+    const data_with_non_zero_certainty = VAP_visuals_data.filter(d => d.certainty > 0)
 
     return (
         <Box
@@ -37,11 +37,11 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             overflow="hidden"
             position="relative"
             flexDirection="column" justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
-            className={`value_and_prediction_set_summary items-${data.length} visible-${data_with_non_zero_certainty.length}`}
+            className={`value_and_prediction_set_summary items-${VAP_visuals_data.length} visible-${data_with_non_zero_certainty.length}`}
             onPointerOver={() => set_show_all_judgements(true)}
             onPointerLeave={() => set_show_all_judgements(false)}
         >
-            {data.map((vap_visual, index) =>
+            {VAP_visuals_data.map((vap_visual, index) =>
             {
                 const certainty_percent_num = vap_visual.certainty * 100
                 const certainty_percent_str = `${certainty_percent_num}%`
@@ -52,8 +52,8 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                 if (rounded_certainty_percent < 100) {
                     font_size = rounded_certainty_percent * 1.25
                 }
-                const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
-                const cf_entries = counterfactual_VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
+                const show_judgements = show_all_judgements || index === 0
+                const cf_entries = VAP_id_to_counterfactuals_info_map[vap_visual.id] || []
                 return (
                     <Box
                         className={`value_and_prediction prob-${rounded_certainty_percent}`}
@@ -103,7 +103,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 interface CounterfactualLinkProps
 {
     any_active: boolean
-    counterfactual: TargetVAPIdCounterfactualEntry
+    counterfactual: TargetVAPIdCounterfactualInfoEntry
     active_counterfactual_v2_id: string | undefined
 }
 function CounterfactualLink (props: CounterfactualLinkProps)

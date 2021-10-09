@@ -21,6 +21,5 @@ export function get_partial_args_for_get_counterfactual_v2_VAP_set (wcomponent_i
     return {
         active_counterfactual_v2_ids,
         VAP_set_ids_to_counterfactuals_map,
-        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     }
 }
