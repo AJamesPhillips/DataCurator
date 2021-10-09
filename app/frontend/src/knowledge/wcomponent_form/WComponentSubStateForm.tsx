@@ -27,6 +27,12 @@ import {
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { toggle_item_in_list } from "../../utils/list"
+import { get_simple_possibilities_from_VAP_sets } from "../multiple_values/value_possibilities/get_possibilities_from_VAP_sets"
+import type { SimpleValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
+import {
+    get_sub_state_value_possibilities,
+    SimpleValuePossibilityWithSelected,
+} from "../multiple_values/sub_state/get_sub_state_value_possibilities"
 
 
 
@@ -95,6 +101,7 @@ function _WComponentSubStateForm (props: Props)
     // Copied from WComponentCounterfactualForm
     let target_VAP_sets: StateValueAndPredictionsSet[] = []
     let VAP_set_id_options: { id: string, title: string }[] = []
+    let simple_possibilities: SimpleValuePossibilityWithSelected[] = []
     if (target_wcomponent)
     {
         target_VAP_sets = target_wcomponent.values_and_prediction_sets || []
@@ -105,6 +112,8 @@ function _WComponentSubStateForm (props: Props)
                 const title = uncertain_date_to_string(datetime, "minute")
                 return { id, title }
             })
+
+        simple_possibilities = get_sub_state_value_possibilities(wcomponent, target_wcomponent)
     }
 
 
@@ -172,17 +181,11 @@ function _WComponentSubStateForm (props: Props)
         </p>}
 
 
-        {/* {target_wcomponent && <p>
+        {target_wcomponent && <p>
             <span className="description_label">Select value possibility of interest to limit display by</span> &nbsp;
-            {get_VAP_visuals_data({
-                VAP_set: target_VAP_set,
-                VAPs_represent,
-                wcomponent: target_wcomponent,
-                sort: false,
-            }).map(visual_VAP =>
+            {simple_possibilities.map(value_possibility =>
             {
-                const { id, value_text, certainty } = visual_VAP
-                const checked = certainty === 1
+                const { value, id, selected } = value_possibility
 
                 return <div>
                     <input
@@ -190,17 +193,24 @@ function _WComponentSubStateForm (props: Props)
                         disabled={!props.editing}
                         id={id}
                         name="counterfactual_vap"
-                        value={value_text}
-                        checked={checked}
+                        value={value}
+                        checked={selected}
+                        ref={el => el && (el.indeterminate = selected === undefined)}
                         onChange={() =>
                         {
-                            upsert_wcomponent({ target_VAP_id: id })
+                            const new_selector = make_valid_selector({
+                                ...selector,
+                                target_value: id || value,
+                                target_value_id_type: id ? "id" : "value_string",
+                            })
+
+                            upsert_wcomponent({ selector: new_selector })
                         }}
                     />
-                    <label for={id}>{value_text}</label>
+                    <label for={id}>{value}</label>
                 </div>
             })}
-        </p>} */}
+        </p>}
 
 
         {/* {knowledge_view && <p>

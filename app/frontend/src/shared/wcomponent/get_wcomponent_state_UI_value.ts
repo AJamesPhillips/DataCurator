@@ -77,8 +77,7 @@ export function get_boolean_representation (args: { wcomponent: WComponent | und
     let boolean_false_str = ""
 
 
-    if (!wcomponent) ""
-    else if (wcomponent_is_statev2(wcomponent))
+    if (wcomponent_is_statev2(wcomponent))
     {
         boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
         boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
