@@ -7,6 +7,7 @@ import {
     WComponent,
     wcomponent_is_plain_connection,
     wcomponent_is_counterfactual_v2,
+    wcomponent_is_sub_state,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
 import type { WcIdCounterfactualsMap } from "../../uncertainty/uncertainty"
@@ -63,6 +64,13 @@ export function get_title (args: GetFieldTextArgs): string
 
             const target_wc_id = wcomponent.target_wcomponent_id
             if (target_wc_id) title = `Counterfactual of: @@${target_wc_id} <auto generated>`
+        }
+        else if (wcomponent_is_sub_state(wcomponent))
+        {
+            title = `Sub state (no target set) <auto generated>`
+
+            const target_wc_id = wcomponent.target_wcomponent_id
+            if (target_wc_id) title = `Sub state of: @@${target_wc_id} <auto generated>`
         }
     }
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
