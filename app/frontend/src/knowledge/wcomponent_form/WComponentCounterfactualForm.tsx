@@ -17,7 +17,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"
@@ -108,7 +108,7 @@ function _WComponentCounterfactualForm (props: Props)
     }
 
 
-    const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
     const { target_VAP_set_id, target_VAP_id } = wcomponent
     const target_VAP_set = target_VAP_sets.find(({ id }) => id === target_VAP_set_id)
 
@@ -189,13 +189,9 @@ function _WComponentCounterfactualForm (props: Props)
                         type="radio"
                         disabled={!props.editing}
                         id={id}
-                        name="counterfactual_vap"
                         value={value_text}
                         checked={checked}
-                        onChange={() =>
-                        {
-                            upsert_wcomponent({ target_VAP_id: id })
-                        }}
+                        onChange={() => upsert_wcomponent({ target_VAP_id: id })}
                     />
                     <label for={id}>{value_text}</label>
                 </div>

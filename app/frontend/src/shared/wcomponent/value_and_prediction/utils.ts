@@ -93,7 +93,7 @@ export function subtype_to_VAPsType (subtype: WComponentStateV2SubType): VAPsTyp
 
 
 
-export function wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
+export function get_wcomponent_VAPs_represent (wcomponent: WComponent | undefined)
 {
     let VAPs_represent = VAPsType.undefined
 

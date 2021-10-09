@@ -17,7 +17,7 @@ import type {
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
 import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../../shared/wcomponent/interfaces/substate"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"

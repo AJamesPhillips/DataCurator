@@ -11,12 +11,13 @@ import type {
 import { default_possible_values } from "./default_possible_values"
 import { prepare_new_VAP } from "../value_and_prediction/utils"
 import { test } from "../../../shared/utils/test"
+import { ensure_possible_values_have_ids } from "./ensure_possible_values_have_ids"
 
 
 
-export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): ValuePossibility[]
+export function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
 {
-    const simple_possibilities: SimpleValuePossibility[] = []
+    let simple_possibilities: SimpleValuePossibility[] = []
     const possible_value_strings: Set<string> = new Set()
 
 
@@ -45,7 +46,17 @@ export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value
     })
 
 
-    const possibilities: ValuePossibility[] = default_possible_values(VAPs_represent, simple_possibilities)
+    simple_possibilities = default_possible_values(VAPs_represent, simple_possibilities)
+
+    return simple_possibilities
+}
+
+
+
+export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): ValuePossibility[]
+{
+    const simple_possibilities = get_simple_possibilities_from_VAP_sets(VAPs_represent, value_possibilities, VAP_sets)
+    const possibilities: ValuePossibility[] = ensure_possible_values_have_ids(simple_possibilities)
 
     return possibilities
 }
@@ -72,10 +83,11 @@ function run_tests ()
 
 
     let result = get_possibilities_from_VAP_sets(VAPs_represent, undefined, VAP_sets)
-    test(result.length, 2, "Should get possibilities for all unique values")
+    test(result.length, 2, "Should get possibilities for all unique values and remove duplicates")
     test(result[0]?.value, "abc")
     test(result[0]?.id !== val_prob_id_123, true, "Should set a new ID")
     test(result[1]?.value, "duplicated")
+    test(result[1]?.id !== undefined, true, "Should set a new ID if original is undefined")
 
     let value_possibilities: ValuePossibilitiesById = {
         [val_prob_id_123]: {id: val_prob_id_123, value: "new abc", description: "", order: 1}

@@ -33,7 +33,7 @@ import {
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../shared/wcomponent/interfaces/state"
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { DEPRECATED_WCOMPONENT_TYPES, wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
@@ -162,7 +162,7 @@ function _WComponentForm (props: Props)
     const orig_validity_predictions = wcomponent_can_have_validity_predictions(wcomponent) ? (wcomponent.validity || []) : undefined
 
 
-    const VAPs_represent = wcomponent_VAPs_represent(wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
     let UI_value: UIValue | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined

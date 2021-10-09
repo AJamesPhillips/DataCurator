@@ -3,7 +3,7 @@ import { h } from "preact"
 import { EditableNumber } from "../../form/EditableNumber"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { WComponent, WComponentCausalConnection, wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -28,7 +28,7 @@ export function WComponentCausalLinkForm (props: OwnProps)
 
 
     const from_statev2 = wcomponent_is_statev2(from_wcomponent)
-    const VAPs_represent_number = wcomponent_VAPs_represent(from_wcomponent) === VAPsType.number
+    const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent) === VAPsType.number
 
 
     const show_primary_effect = editing || wcomponent.effect_when_true !== undefined

@@ -4,7 +4,7 @@ import { Box } from "@material-ui/core"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import type {
@@ -25,7 +25,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
     const { counterfactual_VAP_set: VAP_set } = props
-    const VAPs_represent = wcomponent_VAPs_represent(props.wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent)
     const raw_data = get_VAP_visuals_data({ ...props, VAP_set, VAPs_represent })
     const put_most_probable_last = false
     const data = put_most_probable_last ? raw_data.reverse() : raw_data

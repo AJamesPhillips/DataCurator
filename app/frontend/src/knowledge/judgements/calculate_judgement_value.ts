@@ -2,7 +2,7 @@ import { get_wcomponent_state_value } from "../../shared/wcomponent/get_wcompone
 import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 
 
@@ -47,7 +47,7 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     const value = current_value!.value
 
 
-    const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
 
     return core_calculate_judgement_value({ judgement_wcomponent, target_VAPs_represent, value })
 }

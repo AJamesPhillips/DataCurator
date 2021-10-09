@@ -1,14 +1,11 @@
-import { v4 as uuid_v4 } from "uuid"
-
 import { test } from "../../../shared/utils/test"
 import { action_statuses } from "../../../shared/wcomponent/interfaces/action"
 import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
-import type { SimpleValuePossibility, ValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
-import { get_max_value_possibilities_order } from "./get_max_value_possibilities_order"
+import type { SimpleValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
 
 
 
-export function default_possible_values (VAPs_represent: VAPsType, simple_possibilities: SimpleValuePossibility[]): ValuePossibility[]
+export function default_possible_values (VAPs_represent: VAPsType, simple_possibilities: SimpleValuePossibility[]): SimpleValuePossibility[]
 {
     if (VAPs_represent === VAPsType.boolean)
     {
@@ -24,18 +21,7 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
             })
     }
 
-
-    let max_order = get_max_value_possibilities_order(simple_possibilities)
-
-    // Ensure all possibilities have an id, order and description
-    const possibilities: ValuePossibility[] = simple_possibilities.map(possibility =>
-    {
-        const id = possibility.id || uuid_v4()
-        const order = possibility.order ?? ++max_order
-        return { description: "", ...possibility, id, order }
-    })
-
-    return possibilities
+    return simple_possibilities
 }
 
 

@@ -12,7 +12,7 @@ import {
     WComponentJudgement,
 } from "../../shared/wcomponent/interfaces/judgement"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -60,7 +60,7 @@ function _JudgementFormFields (props: Props)
     const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
 
 
-    const target_VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
+    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
     let boolean_options: AutocompleteOption[] = []
     if (target_VAPs_represent === VAPsType.boolean)
     {
