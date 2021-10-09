@@ -5,7 +5,6 @@ import type { WComponentType } from "./interfaces/wcomponent_base"
 export const DEPRECATED_WCOMPONENT_TYPES: Set<WComponentType> = new Set([
     "counterfactual",
     "state",
-    "sub_state", // not deprecated but an easy way to hide this component type for production
 ])
 
 
