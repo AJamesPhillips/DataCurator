@@ -1,40 +1,8 @@
 import { wcomponent_has_knowledge_view } from "../../../state/specialised_objects/accessors"
-import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
-import type {
-    ComposedCounterfactualStateValueAndPredictionSetV2,
-    TargetVAPIdCounterfactualEntry,
-    TargetVAPIdCounterfactualMap,
-    WComponentCounterfactualV2,
-} from "../interfaces/counterfactual"
 import type { KnowledgeViewsById } from "../../interfaces/knowledge_view"
+import type { VAP_set_id_counterfactual_mapV2 } from "../../uncertainty/uncertainty"
+import type { TargetVAPIdCounterfactualMap, TargetVAPIdCounterfactualEntry } from "../interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
-import { partition_and_prune_items_by_datetimes_and_versions } from "./utils"
-import { clean_VAP_set_for_counterfactual } from "../../counterfactuals/clean_VAP_set"
-
-
-
-interface GetCurrentCounterfactualVAPSetsArgs
-{
-    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    created_at_ms: number
-    sim_ms: number
-}
-export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs): StateValueAndPredictionsSet | undefined
-{
-    const {
-        values_and_prediction_sets,
-        created_at_ms, sim_ms,
-    } = args
-
-    const { present_items } = partition_and_prune_items_by_datetimes_and_versions({
-        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
-    })
-
-    const VAP_set = present_items[0]
-    if (!VAP_set) return undefined
-
-    return VAP_set
-}
 
 
 
@@ -92,4 +60,35 @@ export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetAr
         target_VAP_id_counterfactual_map,
         active_counterfactual_v2_id
     }
+}
+
+
+
+interface CoreCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
+{
+    target_VAP_id: string | undefined
+}
+
+function clean_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
+{
+    const shared_entry_values = {
+        ...VAP_set.shared_entry_values,
+        conviction: 1,
+    }
+
+
+    if (target_VAP_id === undefined)
+    {
+        target_VAP_id = VAP_set.entries[0]?.id
+    }
+
+
+    const entries = VAP_set.entries.map(entry =>
+    {
+        const probability = entry.id === target_VAP_id ? 1 : 0
+        return { ...entry, probability, relative_probability: 0, conviction: 1 }
+    })
+
+
+    return { ...VAP_set, shared_entry_values, entries, target_VAP_id }
 }

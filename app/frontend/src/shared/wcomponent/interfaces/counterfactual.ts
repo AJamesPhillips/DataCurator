@@ -38,12 +38,6 @@ export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends Stat
 }
 
 
-export interface CoreCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
-{
-    target_VAP_id: string | undefined
-}
-
-
 
 export interface WComponentCounterfactualV2 extends WComponentNodeBase
 {

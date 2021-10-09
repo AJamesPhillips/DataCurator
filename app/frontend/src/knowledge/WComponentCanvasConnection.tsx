@@ -3,42 +3,42 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentCanvasConnection.scss"
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
-import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
+import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
+import { get_VAP_visuals_data } from "../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
 } from "../shared/interfaces/knowledge_view"
+import { bounded } from "../shared/utils/bounded"
+import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
+import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import {
     WComponent,
     wcomponent_is_plain_connection,
-    wcomponent_can_render_connection,
-    ConnectionTerminalType,
     wcomponent_is_judgement_or_objective,
+    wcomponent_can_render_connection,
+    WComponentConnection,
+    ConnectionTerminalType,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
-    WComponentConnection,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import {
+    get_counterfactual_v2_VAP_set,
+} from "../shared/wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_current_VAP_set } from "../shared/wcomponent/value_and_prediction/get_current_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../shared/wcomponent/value_and_prediction/utils"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import {
-    calc_connection_wcomponent_should_display,
-    calc_display_opacity,
-    calc_judgement_connection_wcomponent_should_display,
-} from "./calc_display_parameters"
-import { factory_on_pointer_down } from "./canvas_common"
 import {
     get_partial_args_for_get_counterfactual_v2_VAP_set,
 } from "../state/specialised_objects/counterfactuals/get_props_for_state_v2"
+import type { RootState } from "../state/State"
 import {
-    get_counterfactual_v2_VAP_set,
-    get_current_VAP_set,
-} from "../shared/wcomponent/value_and_prediction/get_value_v2"
-import { get_VAP_visuals_data } from "../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
-import { get_wcomponent_VAPs_represent } from "../shared/wcomponent/value_and_prediction/utils"
-import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
-import { bounded } from "../shared/utils/bounded"
-import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
+    calc_connection_wcomponent_should_display,
+    calc_judgement_connection_wcomponent_should_display,
+    calc_display_opacity,
+} from "./calc_display_parameters"
+import { factory_on_pointer_down } from "./canvas_common"
 
 
 

@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { WComponent, wcomponent_has_VAP_sets } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_current_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
+import { get_current_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_current_v2_VAP_set"
 import { ConnectedValueAndPredictionSetSummary } from "./ConnectedValueAndPredictionSetSummary"
 
 

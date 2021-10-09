@@ -6,13 +6,11 @@ import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
-import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import {
     get_VAP_visuals_data,
 } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
-    CoreCounterfactualStateValueAndPredictionSetV2,
     WComponentCounterfactualV2,
 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -112,9 +110,9 @@ function _WComponentCounterfactualForm (props: Props)
     const { target_VAP_set_id, target_VAP_id } = wcomponent
     const target_VAP_set = target_VAP_sets.find(({ id }) => id === target_VAP_set_id)
 
-    const counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
-        ? clean_VAP_set_for_counterfactual(target_VAP_set, target_VAP_id)
-        : undefined
+    // const counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
+    //     ? clean_VAP_set_for_counterfactual(target_VAP_set, target_VAP_id)
+    //     : undefined
 
 
     let counterfactual_active_for_current_knowledge_view = false
@@ -172,7 +170,7 @@ function _WComponentCounterfactualForm (props: Props)
         </p>}
 
 
-        {target_wcomponent && counterfactual_VAP_set && <p>
+        {/* {target_wcomponent && counterfactual_VAP_set && <p>
             <span className="description_label">Counterfactual value</span> &nbsp;
             {get_VAP_visuals_data({
                 VAP_set: counterfactual_VAP_set,
@@ -196,7 +194,7 @@ function _WComponentCounterfactualForm (props: Props)
                     <label for={id}>{value_text}</label>
                 </div>
             })}
-        </p>}
+        </p>} */}
 
 
         {knowledge_view && <p>
@@ -215,7 +213,7 @@ function _WComponentCounterfactualForm (props: Props)
                     props.upsert_knowledge_view({ knowledge_view: kv })
                 }}
             />
-            {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>}
+            {/* {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>} */}
         </p>}
     </div>
 }

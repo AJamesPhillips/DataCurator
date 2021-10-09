@@ -24,9 +24,9 @@ interface OwnProps
 export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
-    const { counterfactual_VAP_set: VAP_set } = props
+    const { counterfactual_VAP_set } = props
     const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent)
-    const raw_data = get_VAP_visuals_data({ ...props, VAP_set, VAPs_represent })
+    const raw_data = get_VAP_visuals_data({ ...props, VAP_set: counterfactual_VAP_set, VAPs_represent })
     const put_most_probable_last = false
     const data = put_most_probable_last ? raw_data.reverse() : raw_data
     const data_with_non_zero_certainty = data.filter(d => d.certainty > 0)
@@ -53,13 +53,13 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     font_size = rounded_certainty_percent * 1.25
                 }
                 const show_judgements = show_all_judgements || index === (put_most_probable_last ? data.length - 1 : 0)
-                const cf_entries = VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
+                const cf_entries = counterfactual_VAP_set.target_VAP_id_counterfactual_map[vap_visual.id] || []
                 return (
                     <Box
                         className={`value_and_prediction prob-${rounded_certainty_percent}`}
                         p={2} boxSizing="border-box"
                         position="relative"
-                        bgcolor={VAP_set.has_counterfactual_applied ? "warning.main" : "primary.main"}
+                        bgcolor={counterfactual_VAP_set.has_counterfactual_applied ? "warning.main" : "primary.main"}
                         flexGrow={1} flexShrink={1} flexBasis="auto"
                         display="flex" flexDirection="row" justifyContent="center" alignItems="center"
                         fontSize={`${font_size}%`}
@@ -85,9 +85,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             />}
 
                             {cf_entries.map(entry => <CounterfactualLink
-                                any_active={VAP_set.has_counterfactual_applied}
+                                any_active={counterfactual_VAP_set.has_counterfactual_applied}
                                 counterfactual={entry}
-                                active_counterfactual_v2_id={VAP_set.active_counterfactual_v2_id}
+                                active_counterfactual_v2_id={counterfactual_VAP_set.active_counterfactual_v2_id}
                             />)}
 
                         </Box>

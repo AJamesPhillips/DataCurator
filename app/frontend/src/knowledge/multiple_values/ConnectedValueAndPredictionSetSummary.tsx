@@ -1,14 +1,16 @@
 import { FunctionalComponent, h } from "preact"
-
-import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { connect, ConnectedProps } from "react-redux"
-import type { RootState } from "../../state/State"
-import { ValueAndPredictionSetSummary } from "./ValueAndPredictionSetSummary"
-import { get_counterfactual_v2_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
+
+import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
+import {
+    get_counterfactual_v2_VAP_set,
+} from "../../shared/wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
 import {
     get_partial_args_for_get_counterfactual_v2_VAP_set,
 } from "../../state/specialised_objects/counterfactuals/get_props_for_state_v2"
+import type { RootState } from "../../state/State"
+import { ValueAndPredictionSetSummary } from "./ValueAndPredictionSetSummary"
 
 
 

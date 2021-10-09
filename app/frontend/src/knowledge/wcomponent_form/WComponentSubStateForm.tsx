@@ -6,7 +6,6 @@ import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
-import { clean_VAP_set_for_counterfactual } from "../../shared/counterfactuals/clean_VAP_set"
 import {
     get_VAP_visuals_data,
 } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
