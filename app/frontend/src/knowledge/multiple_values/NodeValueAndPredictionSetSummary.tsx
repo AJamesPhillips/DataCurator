@@ -29,6 +29,5 @@ export function NodeValueAndPredictionSetSummary (props: OwnProps)
     return <ConnectedValueAndPredictionSetSummary
         wcomponent={props.wcomponent}
         VAP_set={VAP_set}
-        flexBasis={100}
     />
 }

@@ -6,6 +6,7 @@ import type { WComponentSubState } from "../../shared/wcomponent/interfaces/subs
 import { get_current_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_value_v2"
 import type { RootState } from "../../state/State"
 import { ConnectedValueAndPredictionSetSummary } from "./ConnectedValueAndPredictionSetSummary"
+import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
 
 
 
@@ -37,16 +38,26 @@ function _NodeSubStateSummary (props: Props)
     const { target_wcomponent } = props
     const { selector } = props.wcomponent
     if (!target_wcomponent) return null
-    if (!selector) return null
 
-    const { target_VAP_set_id, target_value_id_type, target_value } = selector
-    if (!target_VAP_set_id && (!target_value_id_type || !target_value)) return null
+    const { target_VAP_set_id, target_value_id_type, target_value } = selector || {}
 
+    if (!target_VAP_set_id && (!target_value_id_type || !target_value))
+    {
+        return <NodeValueAndPredictionSetSummary
+            wcomponent={target_wcomponent}
+            created_at_ms={props.created_at_ms}
+            sim_ms={props.sim_ms}
+        />
+    }
 
-    // const VAP_set = get_current_VAP_set({
-    //     ...props,
-    //     values_and_prediction_sets: props.wcomponent.values_and_prediction_sets,
-    // })
+    const VAP_sets = target_wcomponent.values_and_prediction_sets || []
+    const target_VAP_set = VAP_sets.find(({ id }) => id === target_VAP_set_id)
+    // if (target_VAP_set_id && !target_VAP_set) return ""
+
+    if (target_VAP_set) return <ConnectedValueAndPredictionSetSummary
+        wcomponent={target_wcomponent}
+        VAP_set={target_VAP_set}
+    />
 
 
     // if (!VAP_set) return null

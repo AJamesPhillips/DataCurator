@@ -16,7 +16,6 @@ interface OwnProps
 {
     wcomponent: WComponent
     VAP_set: StateValueAndPredictionsSet
-    flexBasis?: number
 }
 
 
