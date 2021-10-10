@@ -2,17 +2,18 @@ import { percentage_to_string } from "../../sharedf/percentages"
 import { get_wcomponent_state_value } from "./get_wcomponent_state_value"
 import type { CurrentValueAndProbabilities, ParsedValue, UIValue } from "./interfaces/generic_value"
 import { WComponent, wcomponent_is_statev2 } from "./interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
+import type { VAP_set_id_counterfactual_mapV2 } from "../uncertainty/uncertainty"
 
 
 
 interface GetWcomponentStateUIValueArgs
 {
     wcomponent: WComponent
-    wc_counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     created_at_ms: number
     sim_ms: number
 }
+// CARNAGE
 export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): UIValue
 {
     const possibilities = get_wcomponent_state_value(args)

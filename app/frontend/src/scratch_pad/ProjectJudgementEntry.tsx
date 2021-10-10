@@ -9,7 +9,7 @@ import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
 import { format_wcomponent_url } from "../shared/wcomponent/rich_text/templates"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
-import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
+import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
 import { lefttop_to_xy } from "../state/display_options/display"
 import type { RootState } from "../state/State"
 
@@ -32,7 +32,7 @@ const map_state = (state: RootState, { judgement }: OwnProps) =>
     return {
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         target_wcomponent,
-        wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
+        wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
     }
 }
 
@@ -46,7 +46,7 @@ const _ProjectJudgementEntry = (props: Props) =>
 
 
     const { knowledge_view, judgement, target_wcomponent, wc_id_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms } = props
-    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[target_wcomponent.id]
+    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[target_wcomponent.id]?.VAP_sets
 
     return <div style={{ display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa" }}>
         <div

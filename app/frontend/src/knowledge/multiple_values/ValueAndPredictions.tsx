@@ -18,7 +18,6 @@ import { prepare_new_VAP } from "./value_and_prediction/utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-import { merge_counterfactual_into_VAP } from "../../shared/counterfactuals/merge_v1"
 import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
 import { remove_element, replace_element } from "../../utils/list"
 import { ValuePossibilityLink } from "./ValuePossibilityLink"
@@ -120,12 +119,19 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 {
     const { value_possibilities, VAPs_represent, editing } = args
 
-    const { probability, conviction } = merge_counterfactual_into_VAP(VAP)
+    const {
+        probability: orig_probability,
+        relative_probability: orig_relative_probability,
+        conviction: orig_conviction,
+        min: orig_min,
+        value: orig_value,
+        max: orig_max,
+    } = VAP
 
     const is_boolean = VAPs_represent === VAPsType.boolean
     const is_number = VAPs_represent === VAPsType.number
 
-    const has_rel_prob = VAP.relative_probability !== undefined
+    const has_rel_prob = orig_relative_probability !== undefined
     const disabled_prob = has_rel_prob && !is_boolean
     const disabled_rel_prob = !has_rel_prob || is_boolean
 
@@ -133,21 +139,21 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
     return <div className="value_and_prediction_summary">
         <br />
         <div className="temporal_uncertainty">
-            {is_number && (editing || VAP.min) && <div>
+            {is_number && (editing || orig_min) && <div>
                 <EditableTextSingleLine
                     placeholder="Min"
-                    value={VAP.min || ""}
-                    conditional_on_blur={min => crud.update_item({ ...VAP, min })}
+                    value={orig_min || ""}
+                    conditional_on_blur={new_min => crud.update_item({ ...VAP, min: new_min })}
                 />
                 <br />
             </div>}
-            {(editing || VAP.value) && <div
+            {(editing || orig_value) && <div
                 style={{ position: "relative" /* Used to position PossibleValueLink*/ }}
             >
                 <EditableTextSingleLine
                     disabled={is_boolean}
                     placeholder="Value"
-                    value={is_boolean ? (VAP.probability > 0.5 ? "True" : "False") : VAP.value}
+                    value={is_boolean ? (orig_probability > 0.5 ? "True" : "False") : orig_value}
                     conditional_on_blur={value => crud.update_item({ ...VAP, value })}
                 />
 
@@ -164,10 +170,10 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
                 <br />
             </div>}
-            {is_number && (editing || VAP.max) && <div>
+            {is_number && (editing || orig_max) && <div>
                 <EditableTextSingleLine
                     placeholder="Max"
-                    value={VAP.max || ""}
+                    value={orig_max || ""}
                     conditional_on_blur={max => crud.update_item({ ...VAP, max })}
                 />
                 <br />
@@ -179,23 +185,26 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditablePercentage
                     disabled={disabled_prob}
                     placeholder="probability"
-                    value={probability}
-                    conditional_on_blur={probability => crud.update_item({ ...VAP, probability })}
+                    value={orig_probability}
+                    conditional_on_blur={new_probability =>
+                    {
+                        crud.update_item({ ...VAP, probability: new_probability })
+                    }}
                 />
                 <br />
             </div>}
 
-            {!is_boolean && VAP.relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
+            {!is_boolean && orig_relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
                 <EditableNumber
                     disabled={disabled_rel_prob}
                     placeholder="Relative probability"
                     size="medium"
-                    value={is_boolean ? undefined : VAP.relative_probability}
+                    value={is_boolean ? undefined : orig_relative_probability}
                     allow_undefined={true}
-                    conditional_on_blur={relative_probability =>
+                    conditional_on_blur={new_relative_probability =>
                     {
-                        relative_probability = is_boolean ? undefined : (relative_probability || 0)
-                        crud.update_item({ ...VAP, relative_probability })
+                        new_relative_probability = is_boolean ? undefined : (new_relative_probability || 0)
+                        crud.update_item({ ...VAP, relative_probability: new_relative_probability })
                     }}
                 />
             </div>}
@@ -203,16 +212,16 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
             {is_boolean && <div>
                 <EditablePercentage
                     placeholder="Confidence"
-                    value={conviction}
-                    conditional_on_blur={conviction => crud.update_item({ ...VAP, conviction })}
+                    value={orig_conviction}
+                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
                 />
             </div>}
 
             &nbsp; <PredictionBadge
                 disabled={true}
                 size={20}
-                probability={VAP.probability}
-                conviction={VAP.conviction}
+                probability={orig_probability}
+                conviction={orig_conviction}
             />
         </div>
     </div>

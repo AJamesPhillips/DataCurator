@@ -10,6 +10,7 @@ interface GetCounterfactualV2VAPSetArgs
     VAP_set_ids_to_counterfactuals_v2_map: VAP_set_id_counterfactual_mapV2 | undefined
     active_counterfactual_v2_ids: string[] | undefined
 }
+// CARNAGE
 export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualStateValueAndPredictionSetV2
 {
     const {

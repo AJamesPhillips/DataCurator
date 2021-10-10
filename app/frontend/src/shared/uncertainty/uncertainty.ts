@@ -1,5 +1,5 @@
 import type { Base } from "../interfaces/base"
-import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "../wcomponent/interfaces/counterfactual"
+import type { WComponentCounterfactualV2 } from "../wcomponent/interfaces/counterfactual"
 
 
 
@@ -131,26 +131,6 @@ export interface Prediction extends Base, PredictionBase, HasUncertainDatetime {
 // probability of the item in question.
 // Or as we have chosen so far to do, keep these two concepts seperate from each other
 // --- 2021-04-10
-
-
-
-export interface VAP_id_counterfactual_map
-{
-    [target_VAP_id: string]: WComponentCounterfactual
-}
-export interface VAP_set_id_counterfactual_map
-{
-    [target_VAP_set_id: string]: VAP_id_counterfactual_map
-}
-export interface WComponentCounterfactuals
-{
-    // validity_VAP_set: VAP_set_id_counterfactual_map
-    // TODO rename to state_VAP_set
-    VAP_set: VAP_set_id_counterfactual_map
-}
-export type WcIdCounterfactualsMap = {
-    [target_wcomponent_id: string]: WComponentCounterfactuals
-}
 
 
 

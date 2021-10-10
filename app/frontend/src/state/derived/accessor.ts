@@ -2,21 +2,16 @@ import type { RootState } from "../State"
 
 
 
-export function get_wc_id_counterfactuals_map (state: RootState)
+export function get_wc_id_counterfactuals_v2_map (state: RootState)
 {
-    return state.derived.current_composed_knowledge_view && state.derived.current_composed_knowledge_view.wc_id_counterfactuals_map
+    return state.derived.current_composed_knowledge_view && state.derived.current_composed_knowledge_view.wc_id_counterfactuals_v2_map
 }
 
 
-export function get_wcomponent_counterfactuals (state: RootState, wcomponent_id: string)
+export function get_wcomponent_counterfactuals_v2 (state: RootState, wcomponent_id?: string)
 {
-    const map = get_wc_id_counterfactuals_map(state)
-    return map && map[wcomponent_id]
-}
+    if (!wcomponent_id) return undefined
 
-
-export function get_wcomponent_VAP_set_counterfactuals (state: RootState, wcomponent_id: string)
-{
-    const counterfactuals = get_wcomponent_counterfactuals(state, wcomponent_id)
-    return counterfactuals && counterfactuals.VAP_set
+    const map = get_wc_id_counterfactuals_v2_map(state)
+    return map && map[wcomponent_id]?.VAP_sets
 }

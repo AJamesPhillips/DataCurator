@@ -40,7 +40,6 @@ function _KnowledgeContentControls (props: Props)
     const wcomponents_on_kv = useMemo(() =>
         wcomponents
         .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
-        .filter(wc => wc.type !== "counterfactual")
     , [wcomponents, current_composed_knowledge_view])
 
     const move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id

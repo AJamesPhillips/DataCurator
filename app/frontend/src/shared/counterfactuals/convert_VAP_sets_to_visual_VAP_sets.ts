@@ -26,6 +26,7 @@ interface VAPVisual
     certainty: number
     value: ParsedValue
 }
+// CARNAGE
 export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 {
     const cleaned_VAP_set = clean_VAP_set_entries(args.VAP_set, args.VAPs_represent)

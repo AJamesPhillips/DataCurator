@@ -1,16 +1,19 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WComponent, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "../../shared/uncertainty/uncertainty"
-import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
-import type { RootState } from "../../state/State"
-import { calculate_judgement_value } from "./calculate_judgement_value"
-import { JudgementBadge } from "./JudgementBadge"
+import type { VAP_set_id_counterfactual_mapV2 } from "../../shared/uncertainty/uncertainty"
+import {
+    WComponent,
+    wcomponent_is_judgement_or_objective,
+} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_counterfactuals_v2 } from "../../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { calculate_judgement_value } from "./calculate_judgement_value"
+import { JudgementBadge } from "./JudgementBadge"
 
 
 
@@ -27,12 +30,12 @@ const map_state = (state: RootState, own_props: OwnProps) => {
 
 
     let target_wcomponent: WComponent | undefined = undefined
-    let target_counterfactuals: WComponentCounterfactuals | undefined = undefined
+    let target_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined = undefined
     if (judgement_wcomponent)
     {
         const target_id = judgement_wcomponent.judgement_target_wcomponent_id
         target_wcomponent = get_wcomponent_from_state(state, target_id)
-        target_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
+        target_counterfactuals = get_wcomponent_counterfactuals_v2(state, target_id)
     }
 
     const kv = get_current_composed_knowledge_view_from_state(state)

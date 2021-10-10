@@ -7,8 +7,11 @@ import type {
     StateValueAndPredictionsSet as VAPSet,
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
-import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
-import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge_v1"
+import {
+    get_probable_VAP_set_values,
+    get_VAP_set_prob,
+    get_VAP_set_conviction,
+} from "../../sharedf/wcomponent_state"
 import { PredictionSummary } from "../predictions/PredictionSummary"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
@@ -23,7 +26,7 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 {
     let VAPs = get_VAPs_from_set(VAP_set, VAPs_represent)
     // leaving this for now in case we want to merge in and render v2 counterfactuals
-    VAPs = merge_counterfactuals_into_VAPs(VAPs)
+    // VAPs = merge_counterfactuals_into_VAPs(VAPs)
 
     VAP_set = { ...VAP_set, entries: VAPs }
 

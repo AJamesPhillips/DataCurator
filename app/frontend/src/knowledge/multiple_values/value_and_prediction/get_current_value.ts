@@ -2,6 +2,7 @@ import type { StateValueAndPredictionsSet } from "../../../shared/wcomponent/int
 
 
 
+// CARNAGE
 export function get_current_value_of_VAP_set (VAP_set: StateValueAndPredictionsSet): string | undefined
 {
     let status: string | undefined = undefined

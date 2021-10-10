@@ -8,7 +8,7 @@ import type {
     Perception,
     WComponent,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap, WcIdCounterfactualsV2Map } from "../../shared/uncertainty/uncertainty"
+import type { WcIdCounterfactualsV2Map } from "../../shared/uncertainty/uncertainty"
 import type { WComponentType } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import type { WComponentPrioritisation } from "../../shared/wcomponent/interfaces/priorities"
 
@@ -40,7 +40,6 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
-    wc_id_counterfactuals_map: WcIdCounterfactualsMap
     wc_id_counterfactuals_v2_map: WcIdCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]

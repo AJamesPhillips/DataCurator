@@ -1,11 +1,11 @@
-import { Component, FunctionalComponent, h, ComponentChildren } from "preact"
+import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 
-import type { RootState } from "../state/State"
 import { add_newlines_to_markdown } from "../form/utils"
 import { replace_ids_in_text } from "../shared/wcomponent/rich_text/get_rich_text"
-import { get_wc_id_counterfactuals_map } from "../state/derived/accessor"
+import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
+import type { RootState } from "../state/State"
 import { AnchorTag } from "./AnchorTag"
 
 
@@ -19,7 +19,7 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     rich_text: state.display_options.consumption_formatting,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
+    wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
 })

@@ -32,17 +32,17 @@ import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
-import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
 import { is_on_current_knowledge_view, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
-import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_display_parameters"
+import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
 import { factory_on_pointer_down } from "../canvas_common"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
 import { NodeValueAndPredictionSetSummary } from "../multiple_values/NodeValueAndPredictionSetSummary"
 import { WComponentValidityValue } from "../WComponentValidityValue"
 import { Handles } from "./Handles"
 import { NodeSubStateSummary } from "../multiple_values/NodeSubStateSummary"
+import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
 
 
 
@@ -75,7 +75,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         on_current_knowledge_view,
         current_composed_knowledge_view,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
-        wc_id_counterfactuals_map: get_wc_id_counterfactuals_map(state),
+        wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
         is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),

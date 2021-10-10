@@ -8,13 +8,13 @@ import {
     wcomponent_is_judgement_or_objective,
     wcomponent_should_have_state,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentCounterfactuals } from "../shared/uncertainty/uncertainty"
-import { get_wcomponent_counterfactuals } from "../state/derived/accessor"
+import { get_wcomponent_counterfactuals_v2 } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
 import { DisplayValue } from "./multiple_values/DisplayValue"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import type { VAP_set_id_counterfactual_mapV2 } from "../shared/uncertainty/uncertainty"
 
 
 
@@ -29,17 +29,17 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { created_at_ms, sim_ms } = state.routing.args
     const { wcomponent } = own_props
 
-    let wc_counterfactuals: WComponentCounterfactuals | undefined
+    let wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     let target_wcomponent: WComponent | undefined = undefined
     if (wcomponent_is_judgement_or_objective(wcomponent))
     {
         const target_id = wcomponent.judgement_target_wcomponent_id
         target_wcomponent = get_wcomponent_from_state(state, target_id)
-        wc_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
+        wc_counterfactuals = get_wcomponent_counterfactuals_v2(state, target_id)
     }
     else
     {
-        wc_counterfactuals = get_wcomponent_counterfactuals(state, wcomponent.id)
+        wc_counterfactuals = get_wcomponent_counterfactuals_v2(state, wcomponent.id)
     }
 
 

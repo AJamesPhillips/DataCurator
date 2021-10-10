@@ -13,7 +13,7 @@ import {
 } from "../../shared/wcomponent/interfaces/judgement"
 import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
-import { get_wcomponent_counterfactuals } from "../../state/derived/accessor"
+import { get_wcomponent_counterfactuals_v2 } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "../judgements/calculate_judgement_value"
@@ -33,7 +33,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 {
     const target_id = wcomponent.judgement_target_wcomponent_id
     const target_wcomponent = get_wcomponent_from_state(state, target_id)
-    const target_counterfactuals = get_wcomponent_counterfactuals(state, target_id)
+    const target_counterfactuals = get_wcomponent_counterfactuals_v2(state, target_id)
 
     return {
         target_wcomponent,

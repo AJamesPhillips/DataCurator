@@ -41,7 +41,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     }
 
 
-    const wc_id_counterfactuals_map = get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map
+    const wc_id_counterfactuals_map = get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_v2_map
 
 
     return {

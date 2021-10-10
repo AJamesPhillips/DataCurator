@@ -37,7 +37,7 @@ import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and
 import { DEPRECATED_WCOMPONENT_TYPES, wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
-import { get_wc_id_counterfactuals_map } from "../../state/derived/accessor"
+import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { DisplayValue } from "../multiple_values/DisplayValue"
@@ -78,7 +78,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     }
 
 
-    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state)
+    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_v2_map(state)
 
 
     return {
@@ -138,7 +138,7 @@ function _WComponentForm (props: Props)
 
     const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent,
         editing, created_at_ms, sim_ms, creation_context } = props
-    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]
+    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]?.VAP_sets
 
 
     if (previous_id !== wcomponent_id && previous_id !== undefined)

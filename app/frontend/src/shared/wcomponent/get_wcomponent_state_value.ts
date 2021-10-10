@@ -1,4 +1,5 @@
-import type { WComponentCounterfactuals } from "../uncertainty/uncertainty"
+import type { VAP_set_id_counterfactual_mapV2 } from "../uncertainty/uncertainty"
+import { get_created_at_ms } from "../utils_datetime/utils_datetime"
 import { CurrentValueAndProbabilities, VAPsType } from "./interfaces/generic_value"
 import {
     WComponent,
@@ -8,7 +9,6 @@ import {
     wcomponent_should_have_state_VAP_sets,
 } from "./interfaces/SpecialisedObjects"
 import type { WComponentNodeState } from "./interfaces/state"
-import { get_created_at_ms } from "../utils_datetime/utils_datetime"
 import { get_current_values_and_probabilities } from "./value_and_prediction/get_value"
 import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
@@ -27,10 +27,11 @@ export function get_wcomponent_VAPsType (wcomponent: WComponent)
 interface GetWcomponentStateValueArgs
 {
     wcomponent: WComponent
-    wc_counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     created_at_ms: number
     sim_ms: number
 }
+// CARNAGE
 export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): CurrentValueAndProbabilities[]
 {
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args

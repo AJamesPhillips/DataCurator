@@ -37,7 +37,7 @@ import {
     calc_connection_wcomponent_should_display,
     calc_judgement_connection_wcomponent_should_display,
     calc_display_opacity,
-} from "./calc_display_parameters"
+} from "./calc_should_display"
 import { factory_on_pointer_down } from "./canvas_common"
 
 

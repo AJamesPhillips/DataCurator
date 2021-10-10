@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { JudgementBadgeConnected } from "../knowledge/judgements/JudgementBadgeConnected"
-import type { WcIdCounterfactualsMap } from "../shared/uncertainty/uncertainty"
+import type { WcIdCounterfactualsV2Map } from "../shared/uncertainty/uncertainty"
 import {
     WComponent,
     WComponentsById,
@@ -17,7 +17,7 @@ interface GetWcomponentSearchOptionsArgs
 {
     wcomponents?: WComponent[]
     wcomponents_by_id: WComponentsById
-    wc_id_counterfactuals_map: WcIdCounterfactualsMap | undefined
+    wc_id_counterfactuals_map: WcIdCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
     include_deleted?: boolean

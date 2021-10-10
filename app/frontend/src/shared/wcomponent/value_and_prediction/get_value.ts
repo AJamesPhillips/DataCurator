@@ -1,20 +1,17 @@
-import {
-    ComposedCounterfactualStateValueAndPredictionV1,
-    merge_all_counterfactuals_into_all_VAPs,
-} from "../../counterfactuals/merge_v1"
 import { CurrentValue, CurrentValueAndProbabilities, VAPsType } from "../interfaces/generic_value"
 import type {
     StateValueAndPredictionsSet,
     StateValueAndPrediction,
 } from "../interfaces/state"
 import type {
-    WComponentCounterfactuals,
+    VAP_set_id_counterfactual_mapV2,
 } from "../../uncertainty/uncertainty"
 import { calc_is_uncertain } from "../uncertainty_utils"
 import { get_VAPs_ordered_by_prob, partition_and_prune_items_by_datetimes_and_versions } from "./utils"
+import type { ComposedCounterfactualStateValueAndPredictionV1 } from "../../counterfactuals/merge_v1"
 
 
-
+// CARNAGE
 export function get_current_value (probabilities: CurrentValueAndProbabilities[]): CurrentValue
 {
     let value: CurrentValue = {
@@ -42,10 +39,11 @@ interface GetCurrentValueAndProbabilitiesArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
     VAPs_represent: VAPsType
-    wc_counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     created_at_ms: number
     sim_ms: number
 }
+// CARNAGE
 export function get_current_values_and_probabilities (args: GetCurrentValueAndProbabilitiesArgs): CurrentValueAndProbabilities[]
 {
     const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args)
@@ -58,7 +56,7 @@ interface GetCurrentCounterfactualVAPSetsArgs
 {
     values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
     VAPs_represent: VAPsType
-    wc_counterfactuals: WComponentCounterfactuals | undefined
+    wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     created_at_ms: number
     sim_ms: number
 }
@@ -72,8 +70,9 @@ function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPS
     })
 
     const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
-    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals && wc_counterfactuals.VAP_set || {})
-    return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
+    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals || {})
+    // return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
+    return all_present_VAPs.map(VAP => ({ ...VAP, is_counterfactual: false }))
 }
 
 
@@ -192,7 +191,7 @@ function run_tests ()
             })
         }
 
-        const counterfactuals: WComponentCounterfactuals = { VAP_set: counterfactuals_VAP_set_map }
+        const counterfactuals: VAP_set_id_counterfactual_mapV2 = { VAP_set: counterfactuals_VAP_set_map }
         return counterfactuals
     }
 

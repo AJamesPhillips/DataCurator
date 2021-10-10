@@ -1,4 +1,5 @@
 import type { CreationContextState } from "../../creation_context/state"
+import type { WcIdCounterfactualsV2Map } from "../../uncertainty/uncertainty"
 import { test } from "../../utils/test"
 import { get_new_wcomponent_object } from "../get_new_wcomponent_object"
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
@@ -10,7 +11,6 @@ import {
     wcomponent_is_sub_state,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../interfaces/state"
-import type { WcIdCounterfactualsMap } from "../../uncertainty/uncertainty"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -24,7 +24,7 @@ interface ReplaceIdsArgs
     rich_text: boolean
     render_links?: boolean
     wcomponents_by_id: WComponentsById
-    wc_id_counterfactuals_map: WcIdCounterfactualsMap | undefined
+    wc_id_counterfactuals_map: WcIdCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
     depth_limit?: number
@@ -91,7 +91,7 @@ interface ReplaceValueInTextArgs
 {
     text: string
     wcomponent: WComponent
-    wc_id_counterfactuals_map: WcIdCounterfactualsMap | undefined
+    wc_id_counterfactuals_map: WcIdCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
 }
@@ -101,7 +101,7 @@ function replace_value_in_text (args: ReplaceValueInTextArgs)
 
     if (!text.includes("${value}")) return text
 
-    const wc_counterfactuals = wc_id_counterfactuals_map[wcomponent.id]
+    const wc_counterfactuals = wc_id_counterfactuals_map[wcomponent.id]?.VAP_sets
 
     const value = get_wcomponent_state_UI_value({
         wcomponent,
@@ -140,7 +140,7 @@ export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
 
 
 
-function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_counterfactuals_map: WcIdCounterfactualsMap | undefined, created_at_ms: number, sim_ms: number)
+function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_counterfactuals_map: WcIdCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
 {
     // TODO: document why we do not render links at top level i.e. when current_depth === 0 ?
     render_links = render_links === false ? false : current_depth === 0
@@ -312,7 +312,7 @@ function test_rendering_title ()
         id: string
         rich_text: boolean
         render_links?: boolean
-        wc_id_counterfactuals_map?: WcIdCounterfactualsMap
+        wc_id_counterfactuals_map?: WcIdCounterfactualsV2Map
     }
     function get_title_for_id (args: GetTitleForIdArgs)
     {
@@ -353,24 +353,22 @@ function test_rendering_title ()
     test(result, "ggg [fff eee True ddd @@333](#wcomponents/666&view=knowledge)")
 
 
-    const wc_id_counterfactuals_map: WcIdCounterfactualsMap = {
+    const wc_id_counterfactuals_map: WcIdCounterfactualsV2Map = {
         [wcomponent3.id]: {
-            VAP_set: {
-                "vps333": {
-                    "VAP333": {
+            VAP_sets: {
+                "vps333": [
+                    {
                         id: "wc999000",
+                        type: "counterfactualv2",
                         created_at: dt,
                         base_id: -1,
                         title: "",
                         description: "",
-                        type: "counterfactual",
                         target_wcomponent_id: wcomponent3.id,
                         target_VAP_set_id: "vps333",
                         target_VAP_id: "VAP333",
-                        probability: 0,
-                        conviction: 1,
                     }
-                }
+                ]
             }
         }
     }
@@ -391,4 +389,4 @@ function run_tests ()
     test_rendering_title()
 }
 
-// run_tests()
+run_tests()

@@ -15,8 +15,7 @@ import type { ExistencePredictions } from "../../uncertainty/existence"
 import type { ValidityPredictions } from "../../uncertainty/validity"
 import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
-import type { WComponentCounterfactual, WComponentCounterfactualV2 } from "./counterfactual"
-import type { ValuePossibilitiesById } from "./possibility"
+import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { WComponentSubState } from "./substate"
 
 
@@ -56,7 +55,6 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentNodeStateV2
     | WComponentNodeProcess
     | WComponentNodeAction
-    | WComponentCounterfactual
     | WComponentNodeGoal
 
 
@@ -210,13 +208,6 @@ export function wcomponent_is_sub_state (wcomponent: WComponent | undefined, log
 
 
 
-export function wcomponent_is_counterfactual (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactual
-{
-    return wcomponent_is_a("counterfactual", wcomponent, log_error_id)
-}
-
-
-
 export function wcomponent_is_counterfactual_v2 (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactualV2
 {
     return wcomponent_is_a("counterfactualv2", wcomponent, log_error_id)
@@ -242,7 +233,7 @@ export function wcomponent_has_validity_predictions (wcomponent: WComponent): wc
 }
 const types_without_validity: Set<WComponentType> = new Set([
     "prioritisation",
-    "counterfactual",
+    "counterfactualv2",
     "sub_state",
 ])
 export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & Partial<ValidityPredictions>)

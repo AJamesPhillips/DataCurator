@@ -18,7 +18,7 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_map,
+    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_v2_map,
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
 })

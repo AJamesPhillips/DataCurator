@@ -47,7 +47,7 @@ function _CreateNewWComponent (props: Props)
     </div>
 
 
-    const exclude: Set<WComponentType> = new Set(["counterfactual", "state"])
+    const exclude: Set<WComponentType> = new Set(["state"])
 
     const types = wcomponent_types.filter(t => !exclude.has(t))
 

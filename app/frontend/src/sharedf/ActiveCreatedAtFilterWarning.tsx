@@ -29,7 +29,6 @@ function _ActiveCreatedAtFilterWarning (props: Props)
     const wcomponents_on_kv = useMemo(() =>
         wcomponents
         .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
-        .filter(wc => wc.type !== "counterfactual")
     , [wcomponents, current_composed_knowledge_view])
 
     const components_excluded_by_created_at_datetime_filter = useMemo(() =>

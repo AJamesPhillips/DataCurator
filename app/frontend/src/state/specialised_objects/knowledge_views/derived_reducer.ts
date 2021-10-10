@@ -2,11 +2,10 @@ import {
     WComponent,
     WComponentsById,
     wcomponent_can_render_connection,
-    wcomponent_is_counterfactual,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_prioritisation,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsMap, WcIdCounterfactualsV2Map } from "../../../shared/uncertainty/uncertainty"
+import type { WcIdCounterfactualsV2Map } from "../../../shared/uncertainty/uncertainty"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
 import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
@@ -15,7 +14,6 @@ import {
     get_base_knowledge_view,
     get_nested_knowledge_view_ids,
     get_wcomponents_from_state,
-    get_wcomponent_from_state,
     sort_nested_knowledge_map_ids_by_priority_then_title,
 } from "../accessors"
 import type {
@@ -129,7 +127,6 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
-    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_map(state, current_kv)
     const wc_id_counterfactuals_v2_map = get_wc_id_counterfactuals_v2_map({
         wc_ids_by_type,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
@@ -141,7 +138,6 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         composed_wc_id_map,
         wcomponent_nodes,
         wcomponent_connections,
-        wc_id_counterfactuals_map,
         wc_id_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
@@ -199,42 +195,11 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
 const invalid_node_types = new Set<WComponentType>([
     "causal_link",
     "relation_link",
-    "counterfactual",
-    "prioritisation",
+    // "prioritisation",
     // "judgement",
     // "objective",
 ])
 const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(wcomponent.type)
-
-
-
-function get_wc_id_counterfactuals_map (state: RootState, knowledge_view: KnowledgeView): WcIdCounterfactualsMap
-{
-    const map: WcIdCounterfactualsMap = {}
-
-    Object.keys(knowledge_view.wc_id_map).forEach(wcomponent_id =>
-    {
-        const counterfactual = get_wcomponent_from_state(state, wcomponent_id)
-        if (!wcomponent_is_counterfactual(counterfactual)) return
-
-        const { target_wcomponent_id, target_VAP_set_id, target_VAP_id } = counterfactual
-
-        const level_VAP_set_ids = map[target_wcomponent_id] || { VAP_set: {} }
-        map[target_wcomponent_id] = level_VAP_set_ids
-
-        const level_VAP_ids = level_VAP_set_ids.VAP_set[target_VAP_set_id] || {}
-        level_VAP_set_ids.VAP_set[target_VAP_set_id] = level_VAP_ids
-
-        if (level_VAP_ids[target_VAP_id])
-        {
-            console.error(`Multiple counterfactuals for wcomponent: "${target_wcomponent_id}" VAP_set_id: "${target_VAP_set_id}" VAP_id: "${target_VAP_id}".  Already have counterfactual wcomponent by id: "${level_VAP_ids[target_VAP_id]!.id}", will not overwrite with: "${counterfactual.id}"`)
-            return
-        }
-        level_VAP_ids[target_VAP_id] = counterfactual
-    })
-
-    return map
-}
 
 
 

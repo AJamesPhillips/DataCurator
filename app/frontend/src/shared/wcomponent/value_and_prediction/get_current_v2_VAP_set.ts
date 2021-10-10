@@ -9,6 +9,7 @@ interface GetCurrentCounterfactualVAPSetsArgs
     created_at_ms: number
     sim_ms: number
 }
+// CARNAGE
 export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs): StateValueAndPredictionsSet | undefined
 {
     const {
