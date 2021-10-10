@@ -81,10 +81,10 @@ function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPS
     const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
         created_at_ms, sim_ms } = args
 
-    const { present_items } = partition_and_prune_items_by_datetimes_and_versions({
+    const { present_item } = partition_and_prune_items_by_datetimes_and_versions({
         items: values_and_prediction_sets || [], created_at_ms, sim_ms,
     })
-
+    const present_items = present_item ? [present_item] : []
     const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
     const VAP_counterfactuals_maps = Object.values(wc_counterfactuals || {})
     // return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)

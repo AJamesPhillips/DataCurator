@@ -1,7 +1,9 @@
 import { WComponent, wcomponent_has_validity_predictions } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { CurrentValidityValueAndProbabilities } from "../wcomponent/interfaces/value_probabilities_etc"
 import { calc_prediction_is_uncertain } from "./calc_prediction_is_uncertain"
-import { partition_and_prune_items_by_datetimes_and_versions } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import {
+    partition_and_prune_items_by_datetimes_and_versions,
+} from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
 
 
@@ -40,7 +42,7 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
     // })
 
     // .values are sorted created_at ascending
-    const active_validity = partition_and_prune_items_by_datetimes_and_versions({ items: wcomponent.validity, created_at_ms, sim_ms }).present_items.last()
+    const active_validity = partition_and_prune_items_by_datetimes_and_versions({ items: wcomponent.validity, created_at_ms, sim_ms }).present_item
 
     if (!active_validity) return default_value()
 

@@ -1,11 +1,10 @@
 import type { HasUncertainDatetime } from "../../shared/uncertainty/interfaces"
 import { sort_list } from "../../shared/utils/sort"
 import type { Base } from "../../shared/interfaces/base"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import type {
-    StateValueAndPrediction,
-} from "../../wcomponent/interfaces/state"
-import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
+import {
+    get_created_at_ms,
+    partition_items_by_created_at_datetime,
+} from "../../shared/utils_datetime/utils_datetime"
 import {
     partition_and_sort_by_uncertain_event_datetimes,
 } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
@@ -22,7 +21,7 @@ interface PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 {
     invalid_future_items: U[]
     past_items: U[]
-    present_items: U[]
+    present_item: U | undefined
     future_items: U[]
     previous_versions_by_id: {[id: string]: U[]}
 }

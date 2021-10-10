@@ -58,7 +58,7 @@ function _ValueAndPredictionSets (props: Props)
         current_created_at_ms, change_route,
     } = props
 
-    const { invalid_future_items, past_items, present_items, future_items, previous_versions_by_id } = partition_and_prune_items_by_datetimes_and_versions({
+    const { invalid_future_items, past_items, present_item, future_items, previous_versions_by_id } = partition_and_prune_items_by_datetimes_and_versions({
         items: orig_values_and_prediction_sets,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
@@ -89,7 +89,7 @@ function _ValueAndPredictionSets (props: Props)
         values_and_prediction_sets={orig_values_and_prediction_sets}
         invalid_future_items={invalid_future_items}
         past_items={past_items}
-        present_items={present_items}
+        present_item={present_item}
         future_items={future_items}
         previous_versions_by_id={previous_versions_by_id}
 

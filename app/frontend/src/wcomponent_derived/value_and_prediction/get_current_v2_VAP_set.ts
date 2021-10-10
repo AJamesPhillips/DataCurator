@@ -1,5 +1,7 @@
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { partition_and_prune_items_by_datetimes_and_versions } from "./partition_and_prune_items_by_datetimes_and_versions"
+import {
+    partition_and_prune_items_by_datetimes_and_versions,
+} from "./partition_and_prune_items_by_datetimes_and_versions"
 
 
 
@@ -17,12 +19,9 @@ export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs):
         created_at_ms, sim_ms,
     } = args
 
-    const { present_items } = partition_and_prune_items_by_datetimes_and_versions({
+    const { present_item } = partition_and_prune_items_by_datetimes_and_versions({
         items: values_and_prediction_sets || [], created_at_ms, sim_ms,
     })
 
-    const VAP_set = present_items[0]
-    if (!VAP_set) return undefined
-
-    return VAP_set
+    return present_item
 }

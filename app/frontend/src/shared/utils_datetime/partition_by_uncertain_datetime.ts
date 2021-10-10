@@ -57,7 +57,7 @@ interface PartitionSortedItemsByDatetimeArgs<U>
 interface PartitionItemsByDatetimeReturn<U>
 {
     past_items: U[]
-    present_items: U[]
+    present_item: U | undefined
     future_items: U[]
 }
 function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (args: PartitionSortedItemsByDatetimeArgs<U>): PartitionItemsByDatetimeReturn<U>
@@ -109,7 +109,9 @@ function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (a
     }
 
 
-    return { past_items, present_items, future_items }
+    const present_item = present_items[0]
+
+    return { past_items, present_item, future_items }
 }
 
 
@@ -125,7 +127,7 @@ function test_partition_sorted_items_by_datetimes ()
         const result = partition_sorted_items_by_datetimes(args)
         return {
             past_items: result.past_items.map(({ id }) => id),
-            present_items: result.present_items.map(({ id }) => id),
+            present_item: result.present_item?.id,
             future_items: result.future_items.map(({ id }) => id),
         }
     }
@@ -152,7 +154,7 @@ function test_partition_sorted_items_by_datetimes ()
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
         past_items: [],
-        present_items: [],
+        present_item: undefined,
         future_items: [],
     })
 
@@ -161,7 +163,7 @@ function test_partition_sorted_items_by_datetimes ()
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [s_eternal2.id],
-        present_items: [s_eternal1.id],
+        present_item: s_eternal1.id,
         future_items: [],
     }, "Can handle multiple eternal elements")
 
@@ -170,28 +172,28 @@ function test_partition_sorted_items_by_datetimes ()
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [],
-        present_items: [s_eternal2.id],
+        present_item: s_eternal2.id,
         future_items: [s2.id, s1.id],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
     test(result, {
         past_items: [s_eternal2.id],
-        present_items: [s1.id],
+        present_item: s1.id,
         future_items: [s2.id],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
     test(result, {
         past_items: [s1.id, s_eternal2.id],
-        present_items: [s2.id],
+        present_item: s2.id,
         future_items: [],
     })
 
     result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
         past_items: [s1.id, s_eternal2.id],
-        present_items: [s2.id],
+        present_item: s2.id,
         future_items: [],
     })
 }

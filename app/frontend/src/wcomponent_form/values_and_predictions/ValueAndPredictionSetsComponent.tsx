@@ -45,7 +45,7 @@ interface OwnProps
     values_and_prediction_sets: VAPSet[]
     invalid_future_items: VAPSet[]
     past_items: VAPSet[]
-    present_items: VAPSet[]
+    present_item: VAPSet | undefined
     future_items: VAPSet[]
     previous_versions_by_id: {[id: string]: VAPSet[]}
 
@@ -63,9 +63,10 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         wcomponent_id,
         item_descriptor, VAPs_represent, update_values_and_predictions,
         value_possibilities,
-        values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_items, past_items, previous_versions_by_id,
+        values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_item, past_items, previous_versions_by_id,
         editing
     } = props
+    const present_items = present_item ? [present_item] : []
 
 
     const render_future_list_content = factory_render_VAP_set_list_content({

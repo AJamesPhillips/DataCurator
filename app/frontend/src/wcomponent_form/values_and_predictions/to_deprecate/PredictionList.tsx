@@ -89,9 +89,9 @@ function _PredictionList (props: Props)
 
 
     const {
-        invalid_future_items, future_items, present_items, past_items,
+        invalid_future_items, future_items, present_item, past_items,
     } = partition_and_prune_items_by_datetimes_and_versions({ items: predictions, created_at_ms, sim_ms })
-
+    const present_items = present_item ? [present_item] : []
 
     const render_future_list_content = factory_render_list_content({ items: future_items, get_id, item_props })
     const render_present_list_content = factory_render_list_content({ items: present_items, get_id, item_props })
