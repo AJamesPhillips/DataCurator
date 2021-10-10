@@ -5,7 +5,6 @@ import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
-    wcomponent_is_statev1,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 
@@ -17,13 +16,6 @@ export function tidy_wcomponent (wcomponent: WComponent): WComponent
     {
         const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, "ascending")
         wcomponent.validity = sorted_predictions
-    }
-
-
-    if (wcomponent_is_statev1(wcomponent))
-    {
-        const sorted_values = sort_list(wcomponent.values || [], get_created_at_ms, "ascending")
-        wcomponent.values = sorted_values
     }
 
 

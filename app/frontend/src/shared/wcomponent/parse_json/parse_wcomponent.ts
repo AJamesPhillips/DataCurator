@@ -6,7 +6,6 @@ import { get_new_VAP_id } from "../../utils/ids"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
-    wcomponent_has_statev1_values,
     wcomponent_has_VAP_sets,
     wcomponent_has_event_at,
     wcomponent_is_plain_connection,
@@ -17,7 +16,7 @@ import {
     wcomponent_is_action,
     wcomponent_is_goal,
 } from "../interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet, StateValueString } from "../interfaces/state"
+import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { parse_base_dates, optional_date } from "./parse_dates"
 
 
@@ -40,11 +39,6 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.validity = wcomponent.validity.map(parse_prediction)
     }
 
-    if (wcomponent_has_statev1_values(wcomponent))
-    {
-        wcomponent.values = wcomponent.values && wcomponent.values.map(parse_values)
-    }
-
     if (wcomponent_has_VAP_sets(wcomponent))
     {
         const VAP_sets = wcomponent.values_and_prediction_sets
@@ -65,6 +59,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
         wcomponent.to_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.to_type)
     }
 
+    // TODO refactor this to use the action's VAPs?
     if (wcomponent_has_started_stopped_at(wcomponent))
     {
         wcomponent.started_at = optional_date(wcomponent.started_at)
@@ -182,5 +177,4 @@ function upgrade_2021_06_12_goal (wcomponent: WComponent): WComponent
 
 
 const parse_prediction = (prediction: Prediction) => parse_base_dates(prediction)
-const parse_values = (value: StateValueString) => parse_base_dates(value)
 const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) => parse_base_dates(VAP_set)

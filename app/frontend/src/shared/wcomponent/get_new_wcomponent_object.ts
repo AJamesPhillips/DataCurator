@@ -3,6 +3,7 @@ import type { HasBaseId } from "../interfaces/base"
 import { get_new_created_ats } from "../utils/datetime"
 import { date2str_auto } from "../utils/date_helpers"
 import { get_new_wcomponent_id } from "../utils/ids"
+import type { WComponentNodeAction } from "./interfaces/action"
 import type { WComponentNodeGoal } from "./interfaces/goal"
 import type { WComponentJudgement } from "./interfaces/judgement"
 import type { WComponentPrioritisation } from "./interfaces/priorities"
@@ -47,6 +48,7 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
             link = {
                 effect_when_true: 1,
                 effect_when_false: -1,
+                values_and_prediction_sets: [],
                 ...link,
             }
         }
@@ -98,6 +100,18 @@ export function get_contextless_new_wcomponent_object (partial_wcomponent: Parti
             type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = goal
+    }
+    else if (partial_wcomponent.type === "action")
+    {
+        const action: WComponentNodeAction = {
+            values_and_prediction_sets: [],
+            reason_for_status: "",
+            depends_on_action_ids: [],
+            ...base,
+            ...partial_wcomponent,
+            type: partial_wcomponent.type, // only added to remove type warning
+        }
+        wcomponent = action
     }
     else
     {

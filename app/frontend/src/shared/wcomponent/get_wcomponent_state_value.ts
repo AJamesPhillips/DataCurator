@@ -1,14 +1,11 @@
 import type { VAP_set_id_counterfactual_mapV2 } from "../uncertainty/uncertainty"
-import { get_created_at_ms } from "../utils_datetime/utils_datetime"
 import { CurrentValueAndProbabilities, VAPsType } from "./interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_action,
-    wcomponent_is_statev1,
     wcomponent_is_statev2,
     wcomponent_should_have_state_VAP_sets,
 } from "./interfaces/SpecialisedObjects"
-import type { WComponentNodeState } from "./interfaces/state"
 import { get_current_values_and_probabilities } from "./value_and_prediction/get_value"
 import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
@@ -16,9 +13,16 @@ import { subtype_to_VAPsType } from "./value_and_prediction/utils"
 
 export function get_wcomponent_VAPsType (wcomponent: WComponent)
 {
-    const VAPs_represent = wcomponent_is_statev2(wcomponent) ? subtype_to_VAPsType(wcomponent.subtype)
-        : (wcomponent_is_action(wcomponent) ? VAPsType.action
-        : VAPsType.other)
+    if (wcomponent_should_have_state_VAP_sets(wcomponent)) return VAPsType.undefined
+
+    let VAPs_represent = VAPsType.other
+
+    if (wcomponent_is_statev2(wcomponent)) VAPs_represent = subtype_to_VAPsType(wcomponent.subtype)
+    else if (wcomponent_is_action(wcomponent)) VAPs_represent = VAPsType.action
+    else
+    {
+        console.error(`Unimplmented "get_wcomponent_VAPsType" for wcomponent id: "${wcomponent.id}" type: "${wcomponent.type}"`)
+    }
 
     return VAPs_represent
 }
@@ -31,13 +35,12 @@ interface GetWcomponentStateValueArgs
     created_at_ms: number
     sim_ms: number
 }
-// CARNAGE
 export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): CurrentValueAndProbabilities[]
 {
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
 
-    if (wcomponent_is_statev1(wcomponent)) return get_wcomponent_statev1_value(wcomponent, created_at_ms, sim_ms)
-    else if (wcomponent_should_have_state_VAP_sets(wcomponent))
+
+    if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
 
@@ -50,27 +53,4 @@ export function get_wcomponent_state_value (args: GetWcomponentStateValueArgs): 
         })
     }
     else return []
-}
-
-
-
-function get_wcomponent_statev1_value (wcomponent: WComponentNodeState, created_at_ms: number, sim_ms: number): CurrentValueAndProbabilities[]
-{
-    if (!wcomponent.values) return [] // TODO remove once MVP reached
-
-    // .values are sorted created_at ascending
-    const state_value_entry = wcomponent.values.filter(v => get_created_at_ms(v) <= created_at_ms).last()
-
-    if (!state_value_entry) return []
-
-    const possibility: CurrentValueAndProbabilities = {
-        value: state_value_entry.value,
-        probability: 1,
-        conviction: 1,
-        certainty: 1,
-        uncertain: false,
-        assumed: false,
-    }
-
-    return [possibility]
 }

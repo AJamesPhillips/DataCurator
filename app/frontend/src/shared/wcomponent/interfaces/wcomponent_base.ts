@@ -5,12 +5,11 @@ import type { ValidityPredictions } from "../../uncertainty/validity"
 
 
 
-export type WComponentNodeType = "event" | "state" | "statev2" | "sub_state" | "process" | "action" | "actor" | "counterfactualv2" | "goal"
+export type WComponentNodeType = "event" | "statev2" | "sub_state" | "process" | "action" | "actor" | "counterfactualv2" | "goal"
 export type WComponentConnectionType = "causal_link" | "relation_link"
 export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective" | "prioritisation"
 const _wcomponent_types: {[P in WComponentType]: true} = {
     event: true,
-    state: true,
     statev2: true,
     sub_state: true,
     process: true,

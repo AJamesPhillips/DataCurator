@@ -1,20 +1,20 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { VAP_set_id_counterfactual_mapV2 } from "../shared/uncertainty/uncertainty"
 import { get_wcomponent_state_UI_value } from "../shared/wcomponent/get_wcomponent_state_UI_value"
 import type { UIValue } from "../shared/wcomponent/interfaces/generic_value"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
-    wcomponent_should_have_state,
+    wcomponent_should_have_state_VAP_sets,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_counterfactuals_v2 } from "../state/derived/accessor"
+import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "./judgements/calculate_judgement_value"
 import { JudgementBadge } from "./judgements/JudgementBadge"
 import { DisplayValue } from "./multiple_values/DisplayValue"
-import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
-import type { VAP_set_id_counterfactual_mapV2 } from "../shared/uncertainty/uncertainty"
 
 
 
@@ -82,7 +82,7 @@ function process_props (props: Props)
     const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms, target_wcomponent } = props
 
 
-    if (wcomponent_should_have_state(wcomponent))
+    if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
         ui_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
     }

@@ -47,16 +47,12 @@ function _CreateNewWComponent (props: Props)
     </div>
 
 
-    const exclude: Set<WComponentType> = new Set(["state"])
-
-    const types = wcomponent_types.filter(t => !exclude.has(t))
-
     return <div class="create_new_wcomponent">
         <h3>
             Create new component
         </h3>
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
-            {types.map(type => <Button onClick={() => create_wcomponent_type(base_id, type, creation_context)}>
+            {wcomponent_types.map(type => <Button onClick={() => create_wcomponent_type(base_id, type, creation_context)}>
                 {wcomponent_type_to_text(type)}
             </Button>)}
         </ButtonGroup>

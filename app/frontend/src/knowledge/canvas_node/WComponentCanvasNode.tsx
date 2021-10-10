@@ -10,15 +10,14 @@ import {
     connection_terminal_directions,
     WComponent,
     wcomponent_can_have_validity_predictions,
-    wcomponent_has_legitimate_non_empty_state,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_statev1,
     wcomponent_is_statev2,
     wcomponent_is_sub_state,
-    wcomponent_should_have_state,
+    wcomponent_should_have_state_VAP_sets,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
@@ -223,8 +222,8 @@ function _WComponentCanvasNode (props: Props)
 
 
     const show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
-    const show_state_value = (is_editing && wcomponent_should_have_state(wcomponent))
-        || wcomponent_has_legitimate_non_empty_state(wcomponent)
+    const show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(wcomponent))
+        || wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
         || wcomponent_is_judgement_or_objective(wcomponent)
         || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
         // || is_highlighted
@@ -234,7 +233,7 @@ function _WComponentCanvasNode (props: Props)
 
     const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
 
-    const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0)) || wcomponent_is_statev1(wcomponent)
+    const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
 
 
     return <ConnectableCanvasNode

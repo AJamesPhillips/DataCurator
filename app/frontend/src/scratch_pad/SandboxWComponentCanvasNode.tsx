@@ -6,7 +6,7 @@ import type { CreationContextState } from "../shared/creation_context/state"
 import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
 import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
-import type { WComponentNodeState, WComponentNodeStateV2 } from "../shared/wcomponent/interfaces/state"
+import type { WComponentNodeStateV2 } from "../shared/wcomponent/interfaces/state"
 import { ACTIONS } from "../state/actions"
 import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
@@ -19,15 +19,6 @@ import { prepare_new_VAP_set } from "../knowledge/multiple_values/value_and_pred
 function sandbox_code ()
 {
     const created_at = new Date("2021-01-01")
-
-    const wc10: WComponentNodeState = {
-        type: "state",
-        id: "wc10",
-        created_at,
-        base_id: -1,
-        title: "wc10 title",
-        description: "wc10 description",
-    }
 
     const creation_context: CreationContextState = { use_creation_context: true, creation_context: {
         custom_created_at: created_at, label_ids: [],
@@ -85,14 +76,13 @@ function sandbox_code ()
         ]
     }
 
-    const wcomponents = [wc10, wc11, wc12_judgement, wc13_judgement, wc14]
+    const wcomponents = [wc11, wc12_judgement, wc13_judgement, wc14]
 
     const kv10: KnowledgeView = {
         id: "kv10",
         title: "kv10 title",
         description: "kv10 description",
         wc_id_map: {
-            [wc10.id]: { left: 100, top: 100 },
             [wc11.id]: { left: 400, top: 100 },
             [wc14.id]: { left: 700, top: 100 },
         },
@@ -103,14 +93,14 @@ function sandbox_code ()
     }
 
 
-    return { wcomponents, wc10, kv10 }
+    return { wcomponents, wc11, kv10 }
 }
 
 
 
 export function SandboxWComponentCanvasNode ()
 {
-    const { wcomponents, wc10, kv10 } = sandbox_code()
+    const { wcomponents, wc11, kv10 } = sandbox_code()
 
     let override_preloaded_state: RootState = get_starting_state()
 
@@ -119,7 +109,7 @@ export function SandboxWComponentCanvasNode ()
         routing: {
             route: "wcomponents",
             sub_route: null,
-            item_id: wc10.id,
+            item_id: wc11.id,
             args: {
                 ...override_preloaded_state.routing.args,
                 view: "knowledge",

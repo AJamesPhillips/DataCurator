@@ -6,8 +6,8 @@ import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcompone
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_state,
     wcomponent_is_statev2,
+    wcomponent_should_have_state_VAP_sets,
 } from "../shared/wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { ACTIONS } from "../state/actions"
@@ -82,7 +82,7 @@ function set_judgement_or_objective_target (wcomponent: WComponent, state: RootS
         if (selected_wcomponents.length === 1)
         {
             const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponents[0]!)
-            if (wcomponent_is_state(selected_wcomponent))
+            if (selected_wcomponent && wcomponent_should_have_state_VAP_sets(selected_wcomponent))
             {
                 wcomponent = {
                     ...wcomponent,

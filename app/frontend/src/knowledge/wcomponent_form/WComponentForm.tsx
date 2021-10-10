@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useMemo, useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
@@ -26,7 +26,6 @@ import {
     wcomponent_is_event,
     wcomponent_is_prioritisation,
     wcomponent_has_existence_predictions,
-    wcomponent_is_statev1,
     wcomponent_is_goal,
     wcomponent_is_sub_state,
 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
@@ -34,7 +33,7 @@ import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../../
 import { wcomponent_types } from "../../shared/wcomponent/interfaces/wcomponent_base"
 import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
 import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
-import { DEPRECATED_WCOMPONENT_TYPES, wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
@@ -43,7 +42,6 @@ import type { RootState } from "../../state/State"
 import { DisplayValue } from "../multiple_values/DisplayValue"
 import { ValueAndPredictionSets } from "../multiple_values/ValueAndPredictionSets"
 import { PredictionList } from "../predictions/PredictionList"
-import { ValueList } from "../values/ValueList"
 import { WComponentFromTo } from "../WComponentFromTo"
 import { WComponentLatestPrediction } from "../WComponentLatestPrediction"
 import { GoalFormFields } from "./GoalFormFields"
@@ -120,17 +118,6 @@ function _WComponentForm (props: Props)
     }, [wcomponent_id])
 
 
-    const filtered_wcomponent_type_options = useMemo(() =>
-    {
-        return wcomponent_type_options.filter(option =>
-        {
-            const not_deprecated = !DEPRECATED_WCOMPONENT_TYPES.has(option.id)
-            const current_type = option.id === props.wcomponent.type
-            return not_deprecated || current_type
-        })
-    }, [props.wcomponent.type])
-
-
     const { ready, base_id } = props
     if (!ready) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>
@@ -204,7 +191,7 @@ function _WComponentForm (props: Props)
             <AutocompleteText
                 placeholder="Type: "
                 selected_option_id={wcomponent.type}
-                options={filtered_wcomponent_type_options}
+                options={wcomponent_type_options}
                 on_change={type =>
                 {
                     if (!type) return
@@ -391,21 +378,6 @@ function _WComponentForm (props: Props)
             </div>}
         </div>}
 
-
-        {wcomponent_is_statev1(wcomponent) && (editing || (wcomponent.values || []).length > 0) && <div>
-            <p>
-                <ValueList
-                    base_id={base_id}
-                    values={wcomponent.values || []}
-                    // Disalllow editing for now as we're deprecating StateV1 and its values anyway #101
-                    // update_values={new_values => upsert_wcomponent({ values: new_values }) }
-                    // creation_context={creation_context}
-                />
-            </p>
-
-            <hr />
-            <br />
-        </div>}
 
 
         {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }

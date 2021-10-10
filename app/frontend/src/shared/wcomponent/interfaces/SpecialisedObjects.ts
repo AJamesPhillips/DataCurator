@@ -7,8 +7,6 @@ import type { KnowledgeView } from "../../interfaces/knowledge_view"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
-    StateValueString,
-    WComponentNodeState,
     WComponentNodeStateV2,
 } from "./state"
 import type { ExistencePredictions } from "../../uncertainty/existence"
@@ -51,7 +49,6 @@ interface WComponentNodeProcessBase
 
 
 export type WComponentNode = WComponentNodeEvent
-    | WComponentNodeState
     | WComponentNodeStateV2
     | WComponentNodeProcess
     | WComponentNodeAction
@@ -92,15 +89,7 @@ export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WCom
     return wcomponent.type === "event"
 }
 
-export function wcomponent_is_state (wcomponent: WComponent | undefined): wcomponent is WComponentNodeState | WComponentNodeStateV2
-{
-    if (!wcomponent) return false
-    return wcomponent.type === "state" || wcomponent.type === "statev2"
-}
-export function wcomponent_is_statev1 (wcomponent: WComponent): wcomponent is WComponentNodeState
-{
-    return wcomponent.type === "state"
-}
+
 export function wcomponent_is_statev2 (wcomponent: WComponent | undefined): wcomponent is WComponentNodeStateV2
 {
     if (!wcomponent) return false
@@ -247,10 +236,6 @@ export function wcomponent_has_existence_predictions (wcomponent: WComponent): w
     return (wcomponent as ExistencePredictions).existence !== undefined
 }
 
-export function wcomponent_has_statev1_values (wcomponent: WComponent): wcomponent is (WComponent & { values: StateValueString[] })
-{
-    return (wcomponent as WComponentNodeState).values !== undefined
-}
 
 export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & { values_and_prediction_sets: StateValueAndPredictionsSet[] })
 {
@@ -262,16 +247,12 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 // }
 
 
+// TODO refactor this to use the action's VAPs?
 export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
 {
     return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
 }
 
-
-export function wcomponent_should_have_state (wcomponent: WComponent)
-{
-    return wcomponent_is_state(wcomponent) || wcomponent_should_have_state_VAP_sets(wcomponent)
-}
 
 
 export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
@@ -281,21 +262,11 @@ export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): 
 
 
 
-export function wcomponent_has_legitimate_non_empty_statev1 (wcomponent: WComponent): wcomponent is (WComponent & { values: StateValueString[] })
-{
-    return wcomponent_has_statev1_values(wcomponent) && wcomponent.values.length > 0 && wcomponent_is_statev1(wcomponent)
-}
-
-
-export function wcomponent_has_legitimate_non_empty_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
+export function wcomponent_has_legitimate_non_empty_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_should_have_state_VAP_sets(wcomponent)
 }
 
-export function wcomponent_has_legitimate_non_empty_state (wcomponent: WComponent)
-{
-    return wcomponent_has_legitimate_non_empty_VAP_sets(wcomponent)
-}
 
 // export interface JudgementView
 // {

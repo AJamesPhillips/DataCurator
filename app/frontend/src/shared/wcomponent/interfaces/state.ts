@@ -5,23 +5,6 @@ import type { WComponentNodeBase } from "./wcomponent_base"
 
 
 
-// DEPRECATED
-export interface WComponentNodeState extends WComponentNodeBase
-{
-    // TODO remove once MVP reached (remove the conditionals)
-    values?: StateValueString[]
-}
-
-// DEPRECATED
-export interface StateValueString extends Base
-{
-    start_datetime: Date
-    description: string
-    value: string
-}
-
-
-
 export interface HasVAPSetsAndMaybeValuePossibilities
 {
     value_possibilities?: ValuePossibilitiesById // optional as there will be older data that lacks this field
