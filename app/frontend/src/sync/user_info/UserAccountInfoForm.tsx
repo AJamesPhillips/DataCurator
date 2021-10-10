@@ -8,7 +8,7 @@ import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { selector_need_to_set_user_name } from "../../state/user_info/selector"
-import { save_and_signout } from "../../state/user_info/signout"
+import { save_and_optionally_signout } from "../../state/user_info/signout"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswordForm"
@@ -83,7 +83,7 @@ function _UserAccountInfoForm (props: Props)
 
         try
         {
-            save_and_signout()
+            save_and_optionally_signout()
         }
         catch (err)
         {

@@ -4,7 +4,7 @@ import { conditionally_save_state } from "../sync/utils/conditionally_save_state
 
 
 
-export async function save_and_signout ()
+export async function save_and_optionally_signout (signout = true)
 {
     const store = get_store()
     const supabase = get_supabase()
@@ -24,7 +24,10 @@ export async function save_and_signout ()
 
     try
     {
-        const { error } = await supabase.auth.signOut()
+        if (signout)
+        {
+            const { error } = await supabase.auth.signOut()
+        }
     }
     catch (err)
     {

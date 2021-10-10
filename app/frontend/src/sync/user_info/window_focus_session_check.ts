@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 import { ACTIONS } from "../../state/actions"
 import type { StoreType } from "../../state/store"
-import { save_and_signout } from "../../state/user_info/signout"
+import { save_and_optionally_signout } from "../../state/user_info/signout"
 import { get_supabase } from "../../supabase/get_supabase"
 import { register_window_on_focus_listener } from "../../utils/window_on_focus_listener"
 
@@ -101,7 +101,7 @@ function handle_connection_and_session_check_result (result: CheckConnectionAndS
     }
     else if (result === CheckConnectionAndSessionResult.unexpected_error)
     {
-        save_and_signout()
+        save_and_optionally_signout(false)
         return
     }
 
