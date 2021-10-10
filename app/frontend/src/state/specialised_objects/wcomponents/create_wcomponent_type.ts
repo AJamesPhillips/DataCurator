@@ -2,7 +2,7 @@ import type { Store } from "redux"
 
 import { round_canvas_point } from "../../../canvas/position_utils"
 import type { CreationContextState } from "../../creation_context/state"
-import { get_new_wcomponent_object } from "../../../wcomponent/get_new_wcomponent_object"
+import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
@@ -37,7 +37,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     const store = args.store || get_store()
     const state = store.getState()
 
-    let wcomponent = get_new_wcomponent_object(args.wcomponent, args.creation_context)
+    let wcomponent = prepare_new_wcomponent_object(args.wcomponent, args.creation_context)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
 
 

@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { WComponent, wcomponent_has_VAP_sets, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentSubState } from "../../wcomponent/interfaces/substate"
-import { get_current_VAP_set } from "../../wcomponent/value_and_prediction/get_current_v2_VAP_set"
+import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
 import type { RootState } from "../../state/State"
 import { ConnectedValueAndPredictionSetSummary } from "./ConnectedValueAndPredictionSetSummary"
 import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"

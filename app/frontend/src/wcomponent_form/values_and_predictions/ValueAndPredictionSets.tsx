@@ -10,12 +10,12 @@ import type {
 } from "../../wcomponent/interfaces/state"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
-} from "../../wcomponent/value_and_prediction/utils"
+} from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
-import { update_value_possibilities } from "../../knowledge/multiple_values/value_possibilities/update_possibilities_with_VAPs"
+import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
 
 
 
@@ -71,7 +71,7 @@ function _ValueAndPredictionSets (props: Props)
         VAPs_represent={VAPs_represent}
         update_values_and_predictions={new_values_and_prediction_sets =>
         {
-            const value_possibilities = update_value_possibilities(props.value_possibilities, new_values_and_prediction_sets)
+            const value_possibilities = update_value_possibilities_with_VAPSets(props.value_possibilities, new_values_and_prediction_sets)
             props.update_values_and_predictions({
                 value_possibilities, values_and_prediction_sets: new_values_and_prediction_sets
             })

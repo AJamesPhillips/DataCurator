@@ -14,14 +14,14 @@ import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
-import { prepare_new_VAP } from "../../knowledge/multiple_values/value_and_prediction/utils"
+import { prepare_new_VAP } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import { PredictionBadge } from "../../sharedf/prediction_badge/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { remove_element, replace_element } from "../../utils/list"
-import { ValuePossibilityLink } from "../../knowledge/multiple_values/ValuePossibilityLink"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import { ValuePossibilityLink } from "../value_possibilities/ValuePossibilityLink"
 
 
 

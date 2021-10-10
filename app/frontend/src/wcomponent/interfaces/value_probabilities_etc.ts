@@ -44,15 +44,3 @@ export interface CurrentValidityValueAndProbabilities extends CurrentValueAndPro
 {
     value: boolean
 }
-
-
-
-export interface UIValue
-{
-    is_defined: boolean
-    values_string: string
-    probabilities_string: string
-    convictions_string: string
-    assumed?: boolean
-    uncertain?: boolean
-}

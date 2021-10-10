@@ -11,7 +11,7 @@ import {
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
-import { create_new_VAP_set_version } from "../../knowledge/multiple_values/value_and_prediction/utils"
+import { create_new_VAP_set_version } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import type { RootState } from "../../state/State"
 import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"

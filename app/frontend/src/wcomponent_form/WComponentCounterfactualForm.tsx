@@ -8,15 +8,15 @@ import { EditableCheckbox } from "../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import {
     get_VAP_visuals_data,
-} from "../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+} from "../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../shared/utils/is_defined"
 import type {
     WComponentCounterfactualV2,
 } from "../wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_counterfactual_v2_VAP_set } from "../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_prediction/utils"
+import { get_counterfactual_v2_VAP_set } from "../wcomponent_derived/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"

@@ -19,7 +19,7 @@ import { NewItemForm } from "../../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../../shared/utils/datetime"
 import type { CreationContextState } from "../../../state/creation_context/state"
-import { partition_and_prune_items_by_datetimes_and_versions } from "../../../wcomponent/value_and_prediction/utils"
+import { partition_and_prune_items_by_datetimes_and_versions } from "../../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 import { remove_element, replace_element } from "../../../utils/list"
 import { selector_chosen_base_id } from "../../../state/user_info/selector"
 

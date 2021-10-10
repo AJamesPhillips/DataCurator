@@ -1,4 +1,4 @@
-import { set_VAP_probabilities } from "../../../knowledge/multiple_values/value_and_prediction/utils"
+import { set_VAP_probabilities } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import { sort_list } from "../../../shared/utils/sort"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import {
@@ -6,7 +6,7 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../../wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../../wcomponent/get_wcomponent_VAPs_represent"
 
 
 

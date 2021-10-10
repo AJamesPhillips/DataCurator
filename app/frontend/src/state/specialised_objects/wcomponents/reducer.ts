@@ -1,10 +1,10 @@
 import type { AnyAction } from "redux"
-import { prepare_new_VAP_set } from "../../../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set"
+import { prepare_new_VAP_set } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 
-import { prepare_new_VAP } from "../../../knowledge/multiple_values/value_and_prediction/utils"
+import { prepare_new_VAP } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import type { CreationContextState } from "../../creation_context/state"
 import { test } from "../../../shared/utils/test"
-import { get_new_wcomponent_object } from "../../../wcomponent/get_new_wcomponent_object"
+import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
 import type { WComponentNodeStateV2, StateValueAndPrediction } from "../../../wcomponent/interfaces/state"
 import { update_subsubstate, update_substate } from "../../../utils/update_state"
@@ -93,7 +93,7 @@ function run_tests ()
     const base_id = -1
 
     // Should sort VAP sets by ascending created_at
-    wcomponent = get_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
+    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
@@ -104,7 +104,7 @@ function run_tests ()
 
 
 
-    wcomponent = get_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
+    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     VAPs = [
         { ...prepare_new_VAP(), id: "VAP1", relative_probability: 5 },
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },

@@ -4,9 +4,9 @@ import { Box } from "@material-ui/core"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import { WComponentJudgements } from "./WComponentJudgements"
-import { get_VAP_visuals_data } from "../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+import { get_VAP_visuals_data } from "../../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     ComposedCounterfactualStateValueAndPredictionSetV2,
     TargetVAPIdCounterfactualInfoEntry,

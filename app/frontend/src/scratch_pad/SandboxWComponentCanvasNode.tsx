@@ -12,7 +12,7 @@ import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { prepare_new_VAP_set } from "../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set"
+import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 
 
 

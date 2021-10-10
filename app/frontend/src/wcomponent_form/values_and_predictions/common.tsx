@@ -11,12 +11,12 @@ import {
     get_probable_VAP_set_values,
     get_VAP_set_prob,
     get_VAP_set_conviction,
-} from "../../wcomponent/value_and_prediction/get_UI_value_of_VAP_set_attributes"
+} from "../../wcomponent_derived/value_and_prediction/get_UI_value_of_VAP_set_attributes"
 import { PredictionSummary } from "./to_deprecate/PredictionSummary"
 import { UncertainDateTimeForm } from "../uncertain_datetime/UncertainDateTimeForm"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import { set_VAP_probabilities } from "../../knowledge/multiple_values/value_and_prediction/utils"
+import { set_VAP_probabilities } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 

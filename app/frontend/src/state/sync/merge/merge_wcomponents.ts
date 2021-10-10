@@ -1,5 +1,5 @@
 import { test } from "../../../shared/utils/test"
-import { get_contextless_new_wcomponent_object } from "../../../wcomponent/get_new_wcomponent_object"
+import { prepare_new_contextless_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
 
@@ -56,7 +56,7 @@ function run_tests ()
 
     function test_should_handle_update_on_client ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
         })
         const current_value: WComponent = { ...last_source_of_truth, title: "TB", needs_save: true, saving: true }
@@ -80,7 +80,7 @@ function run_tests ()
 
     function test_should_handle_nonconflicting_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
         })
         const current_value: WComponent = { ...last_source_of_truth, title: "TB", needs_save: true, saving: true }
@@ -105,7 +105,7 @@ function run_tests ()
 
     function test_should_handle_conflicting_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
         })
         const current_value: WComponent = { ...last_source_of_truth, title: "TB", needs_save: true, saving: true }
@@ -130,7 +130,7 @@ function run_tests ()
 
     function test_should_handle_multiple_updates_on_client ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
         })
         // Client makes second change from TB to TC
@@ -155,7 +155,7 @@ function run_tests ()
 
     function test_should_handle_nonconflicting_updates_with_multiple_client_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
         })
         // Client makes second change from TB to TC
@@ -182,7 +182,7 @@ function run_tests ()
 
     function test_should_handle_conflicting_updates_with_multiple_client_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
         })
         // Client makes second change from TB to TC
@@ -209,7 +209,7 @@ function run_tests ()
 
     function test_should_handle_non_and_conflicting_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
         })
         const current_value: WComponent = { ...last_source_of_truth, title: "TB", description: "DB", needs_save: true, saving: true }
@@ -235,7 +235,7 @@ function run_tests ()
 
     function test_should_handle_non_and_conflicting_updates_with_multiple_client_updates ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
         })
         // Client makes second change from TB to TC and DB to DC
@@ -263,7 +263,7 @@ function run_tests ()
 
     function test_should_handle_different_custom_created_at ()
     {
-        const last_source_of_truth: WComponent = get_contextless_new_wcomponent_object({
+        const last_source_of_truth: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, custom_created_at: new Date("2021"), modified_at: dt1,
         })
         const current_value: WComponent = { ...last_source_of_truth, custom_created_at: new Date("2015"), needs_save: true, saving: true }

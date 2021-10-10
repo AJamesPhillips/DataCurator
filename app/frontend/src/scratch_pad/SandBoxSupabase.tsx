@@ -12,7 +12,7 @@ import SyncIcon from "@material-ui/icons/Sync"
 
 import "./SandBox.css"
 import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"
-import { get_contextless_new_wcomponent_object } from "../wcomponent/get_new_wcomponent_object"
+import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { sort_list } from "../shared/utils/sort"
@@ -728,7 +728,7 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
 
 function generate_default_data (base_id: number)
 {
-    const wc1 = get_contextless_new_wcomponent_object({ base_id, title: "wc1" })
+    const wc1 = prepare_new_contextless_wcomponent_object({ base_id, title: "wc1" })
     const wcomponents: WComponent[] = [wc1]
 
     const kv1 = get_new_knowledge_view_object({

@@ -8,7 +8,7 @@ import { EditableCheckbox } from "../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import {
     get_VAP_visuals_data,
-} from "../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+} from "../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../shared/utils/is_defined"
 import type {
     StateValueAndPredictionsSet as VAPSet,
@@ -16,7 +16,7 @@ import type {
 import { wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../wcomponent/interfaces/substate"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_prediction/utils"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
@@ -26,12 +26,11 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { toggle_item_in_list } from "../utils/list"
-import { get_simple_possibilities_from_VAP_sets } from "../knowledge/multiple_values/value_possibilities/get_possibilities_from_VAP_sets"
 import type { SimpleValuePossibility } from "../wcomponent/interfaces/possibility"
 import {
     get_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,
-} from "../knowledge/multiple_values/sub_state/get_sub_state_value_possibilities"
+} from "../wcomponent_derived/sub_state/get_sub_state_value_possibilities"
 
 
 

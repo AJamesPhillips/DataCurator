@@ -9,7 +9,7 @@ import {
     wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_title } from "../wcomponent/rich_text/get_rich_text"
+import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
 
 

@@ -1,6 +1,6 @@
 import type { Prediction } from "../shared/uncertainty/interfaces"
 import { rescale } from "../shared/utils/bounded"
-import { get_wcomponent_validity_value } from "../wcomponent/get_wcomponent_validity_value"
+import { get_wcomponent_validity_value } from "../wcomponent_derived/get_wcomponent_validity_value"
 import { Tense } from "../wcomponent/interfaces/datetime"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
@@ -47,15 +47,15 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     if (!is_editing && !is_selected && wcomponent_is_judgement_or_objective(wcomponent)) return false
 
 
-    const validity_value = get_wcomponent_validity_value(args)
+    const validity_certain = get_wcomponent_validity_value(args).certainty
     // Do not show nodes if they are invalid
     const is_invalid_for_display = get_wcomponent_is_invalid_for_display({
-        validity_value, validity_filter: args.validity_filter,
+        validity_certain, validity_filter: args.validity_filter,
     })
     if (is_invalid_for_display) return false
 
 
-    let certainty = validity_value.certainty
+    let certainty = validity_certain
     if (wcomponent_has_event_at(wcomponent))
     {
         const event_certainty = get_certainty_for_wcomponent_event_at({ event_at: wcomponent.event_at, sim_ms })
@@ -77,20 +77,19 @@ function wcomponent_is_not_yet_created (wcomponent: WComponent, display_at_datet
 
 interface GetWcomponentIsInvalidForDisplayArgs
 {
-    validity_value: CurrentValidityValueAndProbabilities
+    validity_certain: number
     validity_filter: ValidityFilterOption
 }
 function get_wcomponent_is_invalid_for_display (args: GetWcomponentIsInvalidForDisplayArgs)
 {
     let should_display = false
 
-    const { validity_filter: filter } = args
-    const { certainty } = args.validity_value
+    const { validity_certain, validity_filter: filter } = args
 
     if (filter.show_invalid) should_display = true
-    else if (filter.maybe_invalid) should_display = certainty > 0
-    else if (filter.only_maybe_valid) should_display = certainty > 0.5
-    else if (filter.only_certain_valid) should_display = certainty === 1
+    else if (filter.maybe_invalid) should_display = validity_certain > 0
+    else if (filter.only_maybe_valid) should_display = validity_certain > 0.5
+    else if (filter.only_certain_valid) should_display = validity_certain === 1
     else console.error("Unsupported validity_filter: " + JSON.stringify(filter))
 
     return !should_display

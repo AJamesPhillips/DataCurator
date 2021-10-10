@@ -28,7 +28,7 @@ import {
 } from "./common"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
-import { prepare_new_VAP_set } from "../../knowledge/multiple_values/value_and_prediction/prepare_new_VAP_set"
+import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 
 
 

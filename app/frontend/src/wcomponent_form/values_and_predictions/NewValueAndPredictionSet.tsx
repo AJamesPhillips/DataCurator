@@ -4,20 +4,18 @@ import { useState } from "preact/hooks"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
-import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
-import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { ACTION_OPTIONS } from "../../wcomponent/value_and_prediction/actions_value"
+import { ACTION_OPTIONS } from "../../wcomponent_derived/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
 import {
     get_details2_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_summary_for_single_VAP_set,
 } from "./common"
-import { get_current_value_of_VAP_set } from "../../knowledge/multiple_values/value_and_prediction/get_current_value"
-import { value_possibility_options } from "../../knowledge/multiple_values/value_possibilities/value_possibility_options"
+import { value_possibility_options } from "../../wcomponent_derived/value_possibilities/value_possibility_options"
+import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
 
 
 
@@ -40,7 +38,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_pos
             {VAPs_represent === VAPsType.action && <SimplifiedActionForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
             {hide_advanced_for_type_other && <SimplifiedOtherForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
 
-            <SimplifiedDatetimeForm VAP_set={VAP_set} on_change={update_item} />
+            <SimplifiedUncertainDatetimeForm VAP_set={VAP_set} on_change={update_item} />
 
             <Button
                 value={(show_advanced ? "Hide" : "Show") + " advanced options"}
@@ -151,7 +149,7 @@ function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
 {
     const { title, value_possibilities, VAP_set, default_options, on_change } = props
 
-    const selected_option_id = get_current_value_of_VAP_set(VAP_set)
+    const selected_option_id = get_VAP_set_certain_selected_value(VAP_set)
     const options = value_possibility_options(value_possibilities, default_options)
 
     return <div>
@@ -185,38 +183,19 @@ function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
 
 
 
-interface SimplifiedDatetimeFormProps
+function get_VAP_set_certain_selected_value (VAP_set: StateValueAndPredictionsSet): string | undefined
 {
-    VAP_set: StateValueAndPredictionsSet
-    on_change: (VAP_set: StateValueAndPredictionsSet) => void
-}
-function SimplifiedDatetimeForm (props: SimplifiedDatetimeFormProps)
-{
-    const { VAP_set, on_change } = props
+    let value: string | undefined = undefined
 
-    const entry = VAP_set.entries[0]
+    const conviction = VAP_set.shared_entry_values?.conviction || 0
+    const probability = VAP_set.shared_entry_values?.probability || 0
 
-    if (!entry) return null
+    VAP_set.entries.forEach(VAP =>
+    {
+        if (Math.max(conviction, VAP.conviction) !== 1) return
+        if (Math.max(probability, VAP.probability) !== 1) return
+        value = VAP.value
+    })
 
-
-    const datetime = get_uncertain_datetime(VAP_set.datetime)
-    const is_eternal = datetime === undefined
-
-
-    return <div>
-        {datetime ? date2str_auto({ date: datetime, time_resolution: undefined }) : "Is Eternal"}
-        <br />
-
-        {is_eternal && <Button
-            value="Set to 'From today'"
-            onClick={() => on_change({ ...VAP_set, datetime: { value: get_today_date() } })}
-        />}
-
-        {!is_eternal && <Button
-            value="Set to Eternal"
-            onClick={() => on_change({ ...VAP_set, datetime: {} })}
-        />}
-
-        <br /><br />
-    </div>
+    return value
 }

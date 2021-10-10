@@ -13,7 +13,7 @@ import type {
     KnowledgeView,
     KnowledgeViewWComponentEntry,
 } from "../../shared/interfaces/knowledge_view"
-import { get_title } from "../../wcomponent/rich_text/get_rich_text"
+import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"

@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasConnection.scss"
 import { CanvasConnnection } from "../../canvas/connections/CanvasConnnection"
 import { ConnectionEndType } from "../../canvas/connections/ConnectionEnd"
-import { get_VAP_visuals_data } from "../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+import { get_VAP_visuals_data } from "../../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
@@ -24,9 +24,9 @@ import {
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
     get_counterfactual_v2_VAP_set,
-} from "../../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
-import { get_current_VAP_set } from "../../wcomponent/value_and_prediction/get_current_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
+} from "../../wcomponent_derived/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import {

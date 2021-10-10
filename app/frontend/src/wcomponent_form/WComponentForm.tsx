@@ -10,10 +10,10 @@ import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { LabelsEditor } from "../labels/LabelsEditor"
-import { get_contextless_new_wcomponent_object } from "../wcomponent/get_new_wcomponent_object"
-import { get_updated_wcomponent } from "../wcomponent/get_updated_wcomponent"
-import { get_wcomponent_state_UI_value } from "../wcomponent/get_wcomponent_state_UI_value"
-import { UIValue, VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
+import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
+import { get_wcomponent_state_UI_value } from "../wcomponent_derived/get_wcomponent_state_UI_value"
+import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -31,15 +31,15 @@ import {
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../wcomponent/interfaces/state"
 import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
-import { get_title } from "../wcomponent/rich_text/get_rich_text"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_prediction/utils"
-import { wcomponent_type_to_text } from "../wcomponent/wcomponent_type_to_text"
+import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
+import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { DisplayValue } from "../knowledge/multiple_values/DisplayValue"
+import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
 import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
 import { WComponentFromTo } from "./WComponentFromTo"
@@ -54,10 +54,11 @@ import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../sharedf/Button"
 import { selector_chosen_base_id } from "../state/user_info/selector"
-import { ValuePossibilitiesComponent } from "../knowledge/multiple_values/ValuePossibilitiesComponent"
+import { ValuePossibilitiesComponent } from "./value_possibilities/ValuePossibilitiesComponent"
 import type { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
-import { update_VAPs_with_possibilities } from "../knowledge/multiple_values/value_possibilities/update_VAPs_with_possibilities"
+import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
+import type { DerivedValueForUI } from "../wcomponent_derived/interfaces"
 
 
 
@@ -150,7 +151,7 @@ function _WComponentForm (props: Props)
 
 
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
-    let UI_value: UIValue | undefined = undefined
+    let UI_value: DerivedValueForUI | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
@@ -197,7 +198,7 @@ function _WComponentForm (props: Props)
                     if (!type) return
 
                     // This ensures it will always have the fields it is expected to have
-                    const vanilla = get_contextless_new_wcomponent_object({ base_id, type }) as WComponent
+                    const vanilla = prepare_new_contextless_wcomponent_object({ base_id, type }) as WComponent
                     const new_wcomponent = { ...vanilla, ...wcomponent }
                     new_wcomponent.type = type
                     upsert_wcomponent(new_wcomponent)
@@ -369,7 +370,7 @@ function _WComponentForm (props: Props)
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_value_possibilities={value_possibilities =>
                     {
-                        const values_and_prediction_sets = update_VAPs_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
+                        const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
                         upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
                 />
