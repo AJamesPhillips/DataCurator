@@ -1,8 +1,8 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { calculate_judgement_value } from "../knowledge/judgements/calculate_judgement_value"
-import { JudgementBadge } from "../knowledge/judgements/JudgementBadge"
+import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
+import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
 import { get_wcomponent_state_UI_value } from "../wcomponent/get_wcomponent_state_UI_value"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"

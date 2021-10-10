@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
-import { JudgementBadgeConnected } from "../knowledge/judgements/JudgementBadgeConnected"
+import { JudgementBadgeConnected } from "../sharedf/judgement_badge/JudgementBadgeConnected"
 import type { WcIdToCounterfactualsV2Map } from "../wcomponent/interfaces/counterfactual"
 import {
     WComponent,

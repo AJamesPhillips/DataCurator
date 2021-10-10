@@ -16,8 +16,8 @@ import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_predictio
 import { get_wcomponent_counterfactuals_v2 } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { calculate_judgement_value } from "../knowledge/judgements/calculate_judgement_value"
-import { JudgementBadge } from "../knowledge/judgements/JudgementBadge"
+import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
+import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
 import { WComponentFromTo } from "./WComponentFromTo"
 
 

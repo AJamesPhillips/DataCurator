@@ -57,7 +57,7 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-// Refactor this file to rename this component
+
 function _JudgementBadgeConnected (props: Props)
 {
     const { judgement_or_objective_id: judgement_id, judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms, position } = props

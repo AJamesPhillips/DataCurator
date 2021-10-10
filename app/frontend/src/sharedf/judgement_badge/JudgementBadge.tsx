@@ -3,7 +3,7 @@ import { h } from "preact"
 import "./JudgementBadge.css"
 import type { JudgementValue } from "./calculate_judgement_value"
 import type { CanvasPoint } from "../../canvas/interfaces"
-import { Link } from "../../sharedf/Link"
+import { Link } from "../Link"
 import type { RoutingStateArgs } from "../../state/routing/interfaces"
 import { lefttop_to_xy } from "../../state/display_options/display"
 

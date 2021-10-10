@@ -4,9 +4,9 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentJudgements.css"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
-import { JudgementBadgeConnected } from "./JudgementBadgeConnected"
+import { JudgementBadgeConnected } from "../../sharedf/judgement_badge/JudgementBadgeConnected"
 import type { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import { JudgementBadgeSimple } from "./JudgementBadgeSimple"
+import { JudgementBadgeSimple } from "../../sharedf/judgement_badge/JudgementBadgeSimple"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 
 
