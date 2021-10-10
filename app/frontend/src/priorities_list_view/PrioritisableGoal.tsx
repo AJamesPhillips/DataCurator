@@ -3,8 +3,8 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { EditableNumber } from "../form/EditableNumber"
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
-import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
-import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
+import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
+import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 

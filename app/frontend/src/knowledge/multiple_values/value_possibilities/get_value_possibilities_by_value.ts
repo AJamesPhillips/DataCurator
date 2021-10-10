@@ -1,4 +1,4 @@
-import type { ValuePossibilitiesById, ValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
+import type { ValuePossibilitiesById, ValuePossibility } from "../../../wcomponent/interfaces/possibility"
 
 
 

@@ -1,6 +1,6 @@
 import type { AnyAction } from "redux"
 
-import type { CreationContext } from "../../shared/creation_context/state"
+import type { CreationContext } from "../../creation_context/interfaces"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import { is_toggle_use_creation_context, is_set_custom_created_at, is_set_label_ids } from "./actions"

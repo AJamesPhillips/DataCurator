@@ -1,6 +1,6 @@
 import { v4 as uuid_v4 } from "uuid"
 
-import type { SimpleValuePossibility, ValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
+import type { SimpleValuePossibility, ValuePossibility } from "../../../wcomponent/interfaces/possibility"
 import { get_max_value_possibilities_order } from "./get_max_value_possibilities_order"
 
 

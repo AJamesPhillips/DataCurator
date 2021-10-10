@@ -1,6 +1,6 @@
 import type {
     ConnectionTerminalType,
-} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

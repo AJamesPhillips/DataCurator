@@ -1,7 +1,7 @@
 import { Box, FormControl, FormControlLabel, TextField } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { WComponent } from "src/shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "src/wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "src/state/State"
 interface OwnProps
 {

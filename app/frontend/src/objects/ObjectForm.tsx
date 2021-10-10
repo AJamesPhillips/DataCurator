@@ -13,7 +13,7 @@ import type { ObjectWithCache, PatternAttribute, Pattern, ObjectAttribute, RootS
 import { LinkButton } from "../sharedf/Link"
 import { EditableObjectAttributesList } from "./EditableObjectAttributesList"
 import { object_content } from "./object_content"
-import type { CreationContextState } from "../shared/creation_context/state"
+import type { CreationContextState } from "../state/creation_context/state"
 
 
 

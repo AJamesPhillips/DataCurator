@@ -13,13 +13,13 @@ import type { ExpandableListContentProps } from "../../form/editable_list/interf
 import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
-import type { CreationContextState } from "../../shared/creation_context/state"
-import { Tense } from "../../shared/wcomponent/interfaces/datetime"
-import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import type { CreationContextState } from "../../state/creation_context/state"
+import { Tense } from "../../wcomponent/interfaces/datetime"
+import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet as VAPSet,
-} from "../../shared/wcomponent/interfaces/state"
+} from "../../wcomponent/interfaces/state"
 import { replace_element, remove_element } from "../../utils/list"
 import {
     get_summary_for_single_VAP_set,

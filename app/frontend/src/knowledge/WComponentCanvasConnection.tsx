@@ -4,14 +4,14 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasConnection.scss"
 import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
 import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
-import { get_VAP_visuals_data } from "../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+import { get_VAP_visuals_data } from "../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
 } from "../shared/interfaces/knowledge_view"
 import { bounded } from "../shared/utils/bounded"
-import { VAPsType } from "../shared/wcomponent/interfaces/generic_value"
-import type { WComponentJudgement } from "../shared/wcomponent/interfaces/judgement"
+import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
+import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -21,12 +21,12 @@ import {
     ConnectionTerminalType,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import {
     get_counterfactual_v2_VAP_set,
-} from "../shared/wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
-import { get_current_VAP_set } from "../shared/wcomponent/value_and_prediction/get_current_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../shared/wcomponent/value_and_prediction/utils"
+} from "../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_current_VAP_set } from "../wcomponent/value_and_prediction/get_current_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_prediction/utils"
 import { ACTIONS } from "../state/actions"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import {

@@ -5,20 +5,20 @@ import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../../shared/utils/sentence_case"
-import { get_boolean_representation } from "../../shared/wcomponent/get_wcomponent_state_UI_value"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { get_boolean_representation } from "../../wcomponent/get_wcomponent_state_UI_value"
+import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import {
     judgement_operators,
     WComponentJudgement,
-} from "../../shared/wcomponent/interfaces/judgement"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+} from "../../wcomponent/interfaces/judgement"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
 import { get_wcomponent_counterfactuals_v2 } from "../../state/derived/accessor"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "../judgements/calculate_judgement_value"
 import { JudgementBadge } from "../judgements/JudgementBadge"
-import { WComponentFromTo } from "../WComponentFromTo"
+import { WComponentFromTo } from "./WComponentFromTo"
 
 
 

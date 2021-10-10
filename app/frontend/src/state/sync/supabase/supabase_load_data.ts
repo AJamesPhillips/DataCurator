@@ -1,4 +1,4 @@
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_supabase } from "../../../supabase/get_supabase"
 import { supabase_get_knowledge_views } from "./knowledge_view"
 import { supabase_get_wcomponents } from "./wcomponent"

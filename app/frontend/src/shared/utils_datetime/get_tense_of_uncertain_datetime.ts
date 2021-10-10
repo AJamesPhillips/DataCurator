@@ -1,6 +1,6 @@
-import type { HasUncertainDatetime } from "../uncertainty/uncertainty"
+import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { test } from "../utils/test"
-import { Tense } from "../wcomponent/interfaces/datetime"
+import { Tense } from "../../wcomponent/interfaces/datetime"
 
 
 

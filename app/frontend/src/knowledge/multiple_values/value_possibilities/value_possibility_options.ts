@@ -1,6 +1,6 @@
 import type { AutocompleteOption } from "../../../form/Autocomplete/interfaces"
 import { sentence_case } from "../../../shared/utils/sentence_case"
-import type { ValuePossibilitiesById } from "../../../shared/wcomponent/interfaces/possibility"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
 
 
 

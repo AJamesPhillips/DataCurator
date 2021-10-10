@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 
 import { add_newlines_to_markdown } from "../form/utils"
-import { replace_ids_in_text } from "../shared/wcomponent/rich_text/get_rich_text"
+import { replace_ids_in_text } from "../wcomponent/rich_text/get_rich_text"
 import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 import { AnchorTag } from "./AnchorTag"

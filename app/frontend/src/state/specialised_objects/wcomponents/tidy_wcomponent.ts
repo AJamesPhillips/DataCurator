@@ -5,8 +5,8 @@ import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
-} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../../shared/wcomponent/value_and_prediction/utils"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../../../wcomponent/value_and_prediction/utils"
 
 
 

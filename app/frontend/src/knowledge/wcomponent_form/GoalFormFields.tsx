@@ -3,12 +3,12 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
-import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
-import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
+import type { WComponentNodeGoal } from "../../wcomponent/interfaces/goal"
+import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import {
     WComponent,
     alert_wcomponent_is_judgement_or_objective,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../state/actions"
 import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"

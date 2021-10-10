@@ -1,6 +1,6 @@
 import type { Store } from "redux"
 
-import type { SpecialisedObjectsFromToServer } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
 import type { RootState } from "../../State"

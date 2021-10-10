@@ -4,7 +4,7 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowl
 import type {
     ConnectionTerminalAttributeType,
     ConnectionTerminalType,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { CanvasPoint } from "../interfaces"
 
 

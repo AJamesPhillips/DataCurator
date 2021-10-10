@@ -4,8 +4,8 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { TemporalUncertainty } from "../../shared/uncertainty/uncertainty"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
 
 

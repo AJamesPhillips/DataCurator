@@ -1,14 +1,14 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { VAP_set_id_counterfactual_mapV2 } from "../shared/uncertainty/uncertainty"
-import { get_wcomponent_state_UI_value } from "../shared/wcomponent/get_wcomponent_state_UI_value"
-import type { UIValue } from "../shared/wcomponent/interfaces/generic_value"
+import { get_wcomponent_state_UI_value } from "../wcomponent/get_wcomponent_state_UI_value"
+import type { VAPSetIdToCounterfactualV2Map } from "../wcomponent/interfaces/counterfactual"
+import type { UIValue } from "../wcomponent/interfaces/value_probabilities_etc"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
     wcomponent_should_have_state_VAP_sets,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_counterfactuals_v2 } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
@@ -29,7 +29,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { created_at_ms, sim_ms } = state.routing.args
     const { wcomponent } = own_props
 
-    let wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
+    let wc_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
     let target_wcomponent: WComponent | undefined = undefined
     if (wcomponent_is_judgement_or_objective(wcomponent))
     {

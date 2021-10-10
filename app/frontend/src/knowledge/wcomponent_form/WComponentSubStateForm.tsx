@@ -8,15 +8,15 @@ import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import {
     get_VAP_visuals_data,
-} from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+} from "../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
     StateValueAndPredictionsSet as VAPSet,
-} from "../../shared/wcomponent/interfaces/state"
-import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../../shared/wcomponent/interfaces/substate"
-import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+} from "../../wcomponent/interfaces/state"
+import { wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../../wcomponent/interfaces/substate"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"
@@ -27,7 +27,7 @@ import {
 import type { RootState } from "../../state/State"
 import { toggle_item_in_list } from "../../utils/list"
 import { get_simple_possibilities_from_VAP_sets } from "../multiple_values/value_possibilities/get_possibilities_from_VAP_sets"
-import type { SimpleValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
+import type { SimpleValuePossibility } from "../../wcomponent/interfaces/possibility"
 import {
     get_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,

@@ -1,10 +1,10 @@
-import type { SimpleValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
+import type { SimpleValuePossibility } from "../../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet as VAPSet,
     WComponentNodeStateV2,
-} from "../../../shared/wcomponent/interfaces/state"
-import type { WComponentSubState } from "../../../shared/wcomponent/interfaces/substate"
-import { get_wcomponent_VAPs_represent } from "../../../shared/wcomponent/value_and_prediction/utils"
+} from "../../../wcomponent/interfaces/state"
+import type { WComponentSubState } from "../../../wcomponent/interfaces/substate"
+import { get_wcomponent_VAPs_represent } from "../../../wcomponent/value_and_prediction/utils"
 import { get_simple_possibilities_from_VAP_sets } from "../value_possibilities/get_possibilities_from_VAP_sets"
 
 

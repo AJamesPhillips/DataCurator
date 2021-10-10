@@ -1,4 +1,4 @@
-import type { Prediction } from "./uncertainty"
+import type { Prediction } from "./interfaces"
 
 
 

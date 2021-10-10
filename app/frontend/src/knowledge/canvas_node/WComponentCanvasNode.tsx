@@ -18,7 +18,7 @@ import {
     wcomponent_is_statev2,
     wcomponent_is_sub_state,
     wcomponent_should_have_state_VAP_sets,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
 import type { CanvasPoint } from "../../canvas/interfaces"
@@ -26,8 +26,8 @@ import { round_canvas_point } from "../../canvas/position_utils"
 import { SCALE_BY } from "../../canvas/zoom_utils"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import { get_title } from "../../shared/wcomponent/rich_text/get_rich_text"
-import { wcomponent_type_to_text } from "../../shared/wcomponent/wcomponent_type_to_text"
+import { get_title } from "../../wcomponent/rich_text/get_rich_text"
+import { wcomponent_type_to_text } from "../../wcomponent/wcomponent_type_to_text"
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"

@@ -1,6 +1,6 @@
 import { test } from "../../../shared/utils/test"
-import { get_contextless_new_wcomponent_object } from "../../../shared/wcomponent/get_new_wcomponent_object"
-import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { get_contextless_new_wcomponent_object } from "../../../wcomponent/get_new_wcomponent_object"
+import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
 
 

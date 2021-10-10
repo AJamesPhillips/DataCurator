@@ -4,8 +4,8 @@ import {
     wcomponent_can_render_connection,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_prioritisation,
-} from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdCounterfactualsV2Map } from "../../../shared/uncertainty/uncertainty"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
+import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent/interfaces/counterfactual"
 import { sort_list } from "../../../shared/utils/sort"
 import { update_substate } from "../../../utils/update_state"
 import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
@@ -23,10 +23,10 @@ import type {
 } from "../../../shared/interfaces/knowledge_view"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 import { is_uuid_v4 } from "../../../shared/utils/ids"
-import type { WComponentPrioritisation } from "../../../shared/wcomponent/interfaces/priorities"
+import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
 import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { is_defined } from "../../../shared/utils/is_defined"
-import type { WComponentType } from "../../../shared/wcomponent/interfaces/wcomponent_base"
+import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 
 
 
@@ -208,9 +208,9 @@ interface GetWcIdCounterfactualsV2MapArgs
     wc_ids_by_type: WComponentIdsByType
     wcomponents_by_id: WComponentsById
 }
-function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdCounterfactualsV2Map
+function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
 {
-    const map: WcIdCounterfactualsV2Map = {}
+    const map: WcIdToCounterfactualsV2Map = {}
 
     args.wc_ids_by_type.counterfactualv2.forEach(id =>
     {

@@ -1,7 +1,7 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
-import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { parse_wcomponent } from "../../../shared/wcomponent/parse_json/parse_wcomponent"
+import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponent"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"

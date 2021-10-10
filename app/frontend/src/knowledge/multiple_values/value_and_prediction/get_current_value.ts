@@ -1,4 +1,4 @@
-import type { StateValueAndPredictionsSet } from "../../../shared/wcomponent/interfaces/state"
+import type { StateValueAndPredictionsSet } from "../../../wcomponent/interfaces/state"
 
 
 

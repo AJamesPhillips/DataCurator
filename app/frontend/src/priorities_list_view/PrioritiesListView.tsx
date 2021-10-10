@@ -3,13 +3,13 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./PrioritiesListView.css"
 import { MainArea } from "../layout/MainArea"
-import type { WComponentNodeGoal } from "../shared/wcomponent/interfaces/goal"
+import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 import {
     alert_wcomponent_is_goal,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../shared/wcomponent/interfaces/priorities"
+import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../knowledge/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"

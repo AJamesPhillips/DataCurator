@@ -1,4 +1,4 @@
-import type { VAP_set_id_counterfactual_mapV2 } from "../../../shared/uncertainty/uncertainty"
+import type { VAPSetIdToCounterfactualV2Map } from "../../../wcomponent/interfaces/counterfactual"
 import type { RootState } from "../../State"
 import { get_current_composed_knowledge_view_from_state } from "../accessors"
 
@@ -9,7 +9,7 @@ export function get_partial_args_for_get_counterfactual_v2_VAP_set (wcomponent_i
     const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
 
     let active_counterfactual_v2_ids: string[] | undefined = undefined
-    let VAP_set_ids_to_counterfactuals_v2_map: VAP_set_id_counterfactual_mapV2 | undefined = undefined
+    let VAP_set_ids_to_counterfactuals_v2_map: VAPSetIdToCounterfactualV2Map | undefined = undefined
     if (current_composed_kv)
     {
         active_counterfactual_v2_ids = current_composed_kv.active_counterfactual_v2_ids

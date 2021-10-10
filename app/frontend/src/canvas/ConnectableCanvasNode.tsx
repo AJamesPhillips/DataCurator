@@ -7,7 +7,7 @@ import { COLOURS } from "./display"
 import type { CanvasPoint } from "./interfaces"
 import type {
     ConnectionTerminalType,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
 
 

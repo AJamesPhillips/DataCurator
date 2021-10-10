@@ -1,5 +1,5 @@
 import type { Base } from "./base"
-import type { Project } from "../wcomponent/interfaces/project"
+import type { Project } from "../../wcomponent/interfaces/project"
 
 
 

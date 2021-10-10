@@ -1,7 +1,7 @@
 import type {
     SimpleValuePossibility,
     ValuePossibilitiesById,
-} from "../../../shared/wcomponent/interfaces/possibility"
+} from "../../../wcomponent/interfaces/possibility"
 
 
 

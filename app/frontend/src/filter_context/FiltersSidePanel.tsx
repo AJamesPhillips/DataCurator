@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { LabelsEditor } from "../labels/LabelsEditor"
-import { wcomponent_types } from "../shared/wcomponent/interfaces/wcomponent_base"
+import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 

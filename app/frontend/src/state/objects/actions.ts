@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
-import type { CreationContextState } from "../../shared/creation_context/state"
+import type { CreationContextState } from "../creation_context/state"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_object_id } from "../../shared/utils/ids"
 import type { CoreObject, CoreObjectAttribute, ObjectWithCache } from "../State"

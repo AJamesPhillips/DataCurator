@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact"
 import "./PredictionSummary.css"
 import { uncertain_date_to_string } from "../../form/datetime_utils"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import type { TemporalUncertainty } from "../../shared/uncertainty/uncertainty"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 

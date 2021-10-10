@@ -4,7 +4,7 @@ import { Box, ButtonGroup, IconButton, Typography } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
 
 import "../../form/editable_list/EditableListEntry.css"
-import type { ValuePossibility } from "../../shared/wcomponent/interfaces/possibility"
+import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
 

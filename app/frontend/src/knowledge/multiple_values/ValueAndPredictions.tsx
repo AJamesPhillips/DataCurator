@@ -13,15 +13,15 @@ import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { StateValueAndPrediction } from "../../shared/wcomponent/interfaces/state"
+import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
 import { prepare_new_VAP } from "./value_and_prediction/utils"
 import { PredictionBadge } from "../predictions/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { remove_element, replace_element } from "../../utils/list"
 import { ValuePossibilityLink } from "./ValuePossibilityLink"
-import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 
 
 

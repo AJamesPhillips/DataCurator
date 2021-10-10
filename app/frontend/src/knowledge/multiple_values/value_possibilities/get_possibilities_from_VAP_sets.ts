@@ -1,13 +1,13 @@
 import type {
     StateValueAndPredictionsSet,
     StateValueAndPredictionsSet as VAPSet,
-} from "../../../shared/wcomponent/interfaces/state"
-import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
+} from "../../../wcomponent/interfaces/state"
+import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
 import type {
     SimpleValuePossibility,
     ValuePossibilitiesById,
     ValuePossibility,
-} from "../../../shared/wcomponent/interfaces/possibility"
+} from "../../../wcomponent/interfaces/possibility"
 import { default_possible_values } from "./default_possible_values"
 import { prepare_new_VAP } from "../value_and_prediction/utils"
 import { test } from "../../../shared/utils/test"

@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
-import type { WComponentCommon } from "../../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentCommon } from "../../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

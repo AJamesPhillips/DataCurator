@@ -3,15 +3,15 @@ import { useState } from "preact/hooks"
 import { Box } from "@material-ui/core"
 
 import "./ValueAndPredictionSetSummary.scss"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
 import { WComponentJudgements } from "../judgements/WComponentJudgements"
-import { get_VAP_visuals_data } from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+import { get_VAP_visuals_data } from "../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     ComposedCounterfactualStateValueAndPredictionSetV2,
     TargetVAPIdCounterfactualInfoEntry,
     TargetVAPIdCounterfactualInfoMap,
-} from "../../shared/wcomponent/interfaces/counterfactual"
+} from "../../wcomponent/interfaces/counterfactual"
 import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
 
@@ -41,9 +41,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             onPointerOver={() => set_show_all_judgements(true)}
             onPointerLeave={() => set_show_all_judgements(false)}
         >
-            {VAP_visuals_data.map((vap_visual, index) =>
+            {VAP_visuals_data.map((VAP_visual, index) =>
             {
-                const certainty_percent_num = vap_visual.certainty * 100
+                const certainty_percent_num = VAP_visual.certainty * 100
                 const certainty_percent_str = `${certainty_percent_num}%`
                 const rounded_certainty_percent = Math.round(certainty_percent_num)
                 const rounded_certainty_percent_str = `${rounded_certainty_percent}%`
@@ -53,7 +53,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                     font_size = rounded_certainty_percent * 1.25
                 }
                 const show_judgements = show_all_judgements || index === 0
-                const cf_entries = VAP_id_to_counterfactuals_info_map[vap_visual.id] || []
+                const cf_entries = VAP_id_to_counterfactuals_info_map[VAP_visual.VAP_id] || []
                 return (
                     <Box
                         className={`value_and_prediction prob-${rounded_certainty_percent}`}
@@ -77,11 +77,11 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             position="relative"
                             zIndex={10}
                         >
-                            {vap_visual.value_text}
+                            {VAP_visual.value_text}
                             {show_judgements && <WComponentJudgements
                                 wcomponent={props.wcomponent}
                                 target_VAPs_represent={VAPs_represent}
-                                value={vap_visual.value}
+                                value={VAP_visual.value}
                             />}
 
                             {cf_entries.map(entry => <CounterfactualLink

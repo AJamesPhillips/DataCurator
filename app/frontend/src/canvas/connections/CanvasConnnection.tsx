@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 
 import "./CanvasConnnection.css"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
 

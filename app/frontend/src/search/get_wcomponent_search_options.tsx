@@ -2,14 +2,14 @@ import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { JudgementBadgeConnected } from "../knowledge/judgements/JudgementBadgeConnected"
-import type { WcIdCounterfactualsV2Map } from "../shared/uncertainty/uncertainty"
+import type { WcIdToCounterfactualsV2Map } from "../wcomponent/interfaces/counterfactual"
 import {
     WComponent,
     WComponentsById,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
+} from "../wcomponent/interfaces/SpecialisedObjects"
+import { get_title } from "../wcomponent/rich_text/get_rich_text"
 
 
 
@@ -17,7 +17,7 @@ interface GetWcomponentSearchOptionsArgs
 {
     wcomponents?: WComponent[]
     wcomponents_by_id: WComponentsById
-    wc_id_counterfactuals_map: WcIdCounterfactualsV2Map | undefined
+    wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
     include_deleted?: boolean

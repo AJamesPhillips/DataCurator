@@ -1,5 +1,5 @@
 import { project_priorities_derived_reducer } from "../../priorities/old_project_priorities/project_priorities_derived_reducer"
-import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
@@ -7,8 +7,8 @@ import { knowledge_views_derived_reducer } from "../specialised_objects/knowledg
 import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
-import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
-import type { WComponentNodeGoal } from "../../shared/wcomponent/interfaces/goal"
+import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
+import type { WComponentNodeGoal } from "../../wcomponent/interfaces/goal"
 
 
 

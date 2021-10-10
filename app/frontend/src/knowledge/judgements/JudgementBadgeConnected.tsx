@@ -1,11 +1,11 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { VAP_set_id_counterfactual_mapV2 } from "../../shared/uncertainty/uncertainty"
+import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_counterfactuals_v2 } from "../../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
@@ -30,7 +30,7 @@ const map_state = (state: RootState, own_props: OwnProps) => {
 
 
     let target_wcomponent: WComponent | undefined = undefined
-    let target_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined = undefined
+    let target_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined = undefined
     if (judgement_wcomponent)
     {
         const target_id = judgement_wcomponent.judgement_target_wcomponent_id

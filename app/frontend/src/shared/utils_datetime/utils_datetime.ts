@@ -1,6 +1,6 @@
 import { test } from "../utils/test"
 import type { Base } from "../interfaces/base"
-import type { HasUncertainDatetime } from "../uncertainty/uncertainty"
+import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
 
 

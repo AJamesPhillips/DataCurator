@@ -1,5 +1,5 @@
-import type { ValuePossibilitiesById } from "../../../shared/wcomponent/interfaces/possibility"
-import type { StateValueAndPredictionsSet } from "../../../shared/wcomponent/interfaces/state"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
+import type { StateValueAndPredictionsSet } from "../../../wcomponent/interfaces/state"
 import { get_max_value_possibilities_order } from "./get_max_value_possibilities_order"
 
 

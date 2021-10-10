@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { CanvasPoint } from "../../../canvas/interfaces"
-import type { WComponent } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { bulk_editing_wcomponents_actions } from "./bulk_edit/actions"
 
 

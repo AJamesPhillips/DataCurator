@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 import Markdown from "markdown-to-jsx"
 
 import "./LabelV2.css"
-import { get_title } from "../shared/wcomponent/rich_text/get_rich_text"
+import { get_title } from "../wcomponent/rich_text/get_rich_text"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { color_to_opposite, color_to_string } from "../sharedf/color"

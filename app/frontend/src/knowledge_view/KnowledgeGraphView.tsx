@@ -7,7 +7,7 @@ import { WComponentCanvasConnection } from "../knowledge/WComponentCanvasConnect
 import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
-import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 

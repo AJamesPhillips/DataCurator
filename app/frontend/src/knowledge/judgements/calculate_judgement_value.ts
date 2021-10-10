@@ -1,9 +1,9 @@
-import type { WComponentJudgement } from "../../shared/wcomponent/interfaces/judgement"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
-import { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import type { VAP_set_id_counterfactual_mapV2 } from "../../shared/uncertainty/uncertainty"
-import { get_wcomponent_state_value_and_probabilities } from "../../shared/wcomponent/value_and_prediction/get_value"
+import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
+import { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
+import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent/value_and_prediction/get_value"
 
 
 
@@ -14,7 +14,7 @@ interface CalculateJudgementValueArgs
 {
     judgement_wcomponent: WComponentJudgement
     target_wcomponent: WComponent | undefined
-    target_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
+    target_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
     created_at_ms: number
     sim_ms: number
     // potential_world: PotentialWorld | undefined

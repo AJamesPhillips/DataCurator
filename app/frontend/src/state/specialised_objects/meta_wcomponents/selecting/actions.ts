@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 import type {
     ConnectionTerminalType,
-} from "../../../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

@@ -1,6 +1,6 @@
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { bounded } from "../../shared/utils/bounded"
-import type { ConnectionTerminalType } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_angle } from "../../utils/angles"
 import { get_magnitude } from "../../utils/vector"
 import { get_angle_from_start_connector, get_angle_from_end_connector } from "./angles"

@@ -6,19 +6,19 @@ import { EditableText } from "../../form/editable_text/EditableText"
 import type {
     StateValueAndPredictionsSet as VAPSet,
     StateValueAndPrediction,
-} from "../../shared/wcomponent/interfaces/state"
+} from "../../wcomponent/interfaces/state"
 import {
     get_probable_VAP_set_values,
     get_VAP_set_prob,
     get_VAP_set_conviction,
-} from "../../sharedf/wcomponent_state"
+} from "../../wcomponent/value_and_prediction/get_UI_value_of_VAP_set_attributes"
 import { PredictionSummary } from "../predictions/PredictionSummary"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { set_VAP_probabilities } from "./value_and_prediction/utils"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
-import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 
 
 

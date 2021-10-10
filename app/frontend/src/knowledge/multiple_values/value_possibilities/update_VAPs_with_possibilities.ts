@@ -1,6 +1,6 @@
 import { test } from "../../../shared/utils/test"
-import type { ValuePossibilitiesById } from "../../../shared/wcomponent/interfaces/possibility"
-import type { StateValueAndPredictionsSet } from "../../../shared/wcomponent/interfaces/state"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
+import type { StateValueAndPredictionsSet } from "../../../wcomponent/interfaces/state"
 import { prepare_new_VAP } from "../value_and_prediction/utils"
 import { get_value_possibilities_by_value } from "./get_value_possibilities_by_value"
 

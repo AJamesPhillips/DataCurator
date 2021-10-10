@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import "./DisplayValue.css"
-import type { UIValue } from "../../shared/wcomponent/interfaces/generic_value"
+import type { UIValue } from "../../wcomponent/interfaces/value_probabilities_etc"
 
 
 

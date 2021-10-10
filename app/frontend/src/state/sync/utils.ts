@@ -1,5 +1,5 @@
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ensure_item_in_set, ensure_item_not_in_set } from "../../utils/set"
 import { update_subsubstate, update_subsubsubstate } from "../../utils/update_state"
 import { tidy_wcomponent } from "../specialised_objects/wcomponents/tidy_wcomponent"

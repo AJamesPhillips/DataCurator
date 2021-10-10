@@ -1,14 +1,14 @@
 import type { Store } from "redux"
 import { round_canvas_point } from "../canvas/position_utils"
 
-import type { CreationContextState } from "../shared/creation_context/state"
-import { get_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
+import type { CreationContextState } from "../state/creation_context/state"
+import { get_new_wcomponent_object } from "../wcomponent/get_new_wcomponent_object"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_statev2,
     wcomponent_should_have_state_VAP_sets,
-} from "../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"

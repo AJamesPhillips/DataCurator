@@ -2,10 +2,10 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentJudgements.css"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
 import { JudgementBadgeConnected } from "./JudgementBadgeConnected"
-import type { ParsedValue, VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
+import type { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { JudgementBadgeSimple } from "./JudgementBadgeSimple"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 

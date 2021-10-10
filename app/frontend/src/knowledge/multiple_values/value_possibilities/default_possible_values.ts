@@ -1,7 +1,7 @@
 import { test } from "../../../shared/utils/test"
-import { action_statuses } from "../../../shared/wcomponent/interfaces/action"
-import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
-import type { SimpleValuePossibility } from "../../../shared/wcomponent/interfaces/possibility"
+import { action_statuses } from "../../../wcomponent/interfaces/action"
+import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { SimpleValuePossibility } from "../../../wcomponent/interfaces/possibility"
 
 
 

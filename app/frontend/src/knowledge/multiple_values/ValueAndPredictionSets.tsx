@@ -2,15 +2,15 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
-import type { VAPsType } from "../../shared/wcomponent/interfaces/generic_value"
-import type { ValuePossibilitiesById } from "../../shared/wcomponent/interfaces/possibility"
+import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
-} from "../../shared/wcomponent/interfaces/state"
+} from "../../wcomponent/interfaces/state"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
-} from "../../shared/wcomponent/value_and_prediction/utils"
+} from "../../wcomponent/value_and_prediction/utils"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { selector_chosen_base_id } from "../../state/user_info/selector"

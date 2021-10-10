@@ -2,7 +2,7 @@ import type {
     Perception,
     WComponent,
     WComponentsById,
-} from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import type {
     KnowledgeView,
     KnowledgeViewsById,

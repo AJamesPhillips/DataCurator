@@ -1,12 +1,12 @@
 import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet as VAPSet,
-} from "../../../shared/wcomponent/interfaces/state"
+} from "../../../wcomponent/interfaces/state"
 import { get_new_VAP_id } from "../../../shared/utils/ids"
 import { get_new_created_ats } from "../../../shared/utils/datetime"
-import type { CreationContextState } from "../../../shared/creation_context/state"
-import { VAPsType } from "../../../shared/wcomponent/interfaces/generic_value"
-import type { ValuePossibilitiesById } from "../../../shared/wcomponent/interfaces/possibility"
+import type { CreationContextState } from "../../../state/creation_context/state"
+import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
 import { get_possibilities_from_VAP_sets } from "../value_possibilities/get_possibilities_from_VAP_sets"
 
 

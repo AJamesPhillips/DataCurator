@@ -8,15 +8,15 @@ import { EditableCheckbox } from "../../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../../search/get_wcomponent_search_options"
 import {
     get_VAP_visuals_data,
-} from "../../shared/counterfactuals/convert_VAP_sets_to_visual_VAP_sets"
+} from "../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import { is_defined } from "../../shared/utils/is_defined"
 import type {
     WComponentCounterfactualV2,
-} from "../../shared/wcomponent/interfaces/counterfactual"
-import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
-import { get_counterfactual_v2_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
+} from "../../wcomponent/interfaces/counterfactual"
+import { wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import { get_counterfactual_v2_VAP_set } from "../../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
 import { ACTIONS } from "../../state/actions"
@@ -184,19 +184,19 @@ function _WComponentCounterfactualForm (props: Props)
                 sort: false,
             }).map(visual_VAP =>
             {
-                const { id, value_text, certainty } = visual_VAP
+                const { VAP_id, value_text, certainty } = visual_VAP
                 const checked = certainty === 1
 
                 return <div>
                     <input
                         type="radio"
                         disabled={!props.editing}
-                        id={id}
+                        id={VAP_id}
                         value={value_text}
                         checked={checked}
-                        onChange={() => upsert_wcomponent({ target_VAP_id: id })}
+                        onChange={() => upsert_wcomponent({ target_VAP_id: VAP_id })}
                     />
-                    <label for={id}>{value_text}</label>
+                    <label for={VAP_id}>{value_text}</label>
                 </div>
             })}
         </p>}

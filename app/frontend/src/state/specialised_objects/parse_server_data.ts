@@ -1,5 +1,5 @@
-import type { SpecialisedObjectsFromToServer } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { parse_specialised_objects_fromto_server } from "../../shared/wcomponent/parse_json/parse_specialised_objects"
+import type { SpecialisedObjectsFromToServer } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { parse_specialised_objects_fromto_server } from "../../wcomponent/parse_json/parse_specialised_objects"
 
 
 

@@ -6,7 +6,7 @@ import { ItemSelect } from "../search/ItemSelect"
 import type { Pattern, PatternAttribute, RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { EditablePatternAttributesList } from "./EditablePatternAttributesList"
-import type { CreationContextState } from "../shared/creation_context/state"
+import type { CreationContextState } from "../state/creation_context/state"
 
 
 

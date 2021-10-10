@@ -2,7 +2,7 @@ import type { AnyAction } from "redux"
 
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import { get_items_by_id } from "../../shared/utils/get_items"
-import type { WComponent } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { update_substate } from "../../utils/update_state"
 import { is_upsert_knowledge_view } from "../specialised_objects/knowledge_views/actions"
 import {
