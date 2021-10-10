@@ -9,6 +9,8 @@ import type {
 import { calc_is_uncertain } from "../uncertainty_utils"
 import { get_VAPs_ordered_by_prob, partition_and_prune_items_by_datetimes_and_versions } from "./utils"
 import type { ComposedCounterfactualStateValueAndPredictionV1 } from "../../counterfactuals/merge_v1"
+import { WComponent, wcomponent_should_have_state_VAP_sets } from "../interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPsType } from "../get_wcomponent_state_value"
 
 
 // CARNAGE
@@ -35,19 +37,30 @@ export function get_current_value (probabilities: CurrentValueAndProbabilities[]
 
 
 
-interface GetCurrentValueAndProbabilitiesArgs
+interface GetWcomponentStateValueArgs
 {
-    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represent: VAPsType
+    wcomponent: WComponent
     wc_counterfactuals: VAP_set_id_counterfactual_mapV2 | undefined
     created_at_ms: number
     sim_ms: number
 }
-// CARNAGE
-export function get_current_values_and_probabilities (args: GetCurrentValueAndProbabilitiesArgs): CurrentValueAndProbabilities[]
+export function get_wcomponent_state_value_and_probabilities (args: GetWcomponentStateValueArgs): CurrentValueAndProbabilities[]
 {
-    const counterfactual_VAPs = get_current_counterfactual_VAP_sets(args)
-    return get_probable_VAP_values(counterfactual_VAPs, args.VAPs_represent)
+    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
+
+
+    if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return []
+
+    const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
+
+    const counterfactual_VAPs = get_current_counterfactual_VAP_sets({
+        values_and_prediction_sets: wcomponent.values_and_prediction_sets,
+        VAPs_represent,
+        wc_counterfactuals,
+        created_at_ms,
+        sim_ms,
+    })
+    return get_probable_VAP_values(counterfactual_VAPs, VAPs_represent)
 }
 
 
