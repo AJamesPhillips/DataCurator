@@ -24,10 +24,7 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
 {
     const { judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = args
 
-    if (judgement_wcomponent.judgement_manual !== undefined) return judgement_wcomponent.judgement_manual
-
     if (!target_wcomponent) return undefined
-
 
     const possibilities = get_wcomponent_state_value_and_probabilities({
         wcomponent: target_wcomponent,
@@ -43,8 +40,8 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
         // (and probabilities >0.5) and then we can form a judgement based on all of these
         return undefined
     }
-    const current_value = possibilities[0]
-    const value = current_value!.value
+    const current_value = possibilities[0]!
+    const value = current_value.value
 
 
     const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
@@ -60,7 +57,6 @@ interface CoreCalculateJudgementValueArgs
     target_VAPs_represent: VAPsType
     value: ParsedValue
 }
-// Rename this
 export function core_calculate_judgement_value (args: CoreCalculateJudgementValueArgs)
 {
     const { judgement_wcomponent, target_VAPs_represent, value } = args

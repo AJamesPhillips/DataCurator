@@ -373,6 +373,8 @@ function test_rendering_title ()
         }
     }
 
+    // These tests are currently failing due to commented out line
+    // in `get_current_counterfactual_VAP_sets` for merging counterfactuals
     Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
     {
         const result = get_title_for_id({ id, rich_text: true, wc_id_counterfactuals_map })

@@ -7,10 +7,10 @@ import type {
     VAP_set_id_counterfactual_mapV2,
 } from "../../uncertainty/uncertainty"
 import { calc_is_uncertain } from "../uncertainty_utils"
-import { get_VAPs_ordered_by_prob, partition_and_prune_items_by_datetimes_and_versions } from "./utils"
-import type { ComposedCounterfactualStateValueAndPredictionV1 } from "../../counterfactuals/merge_v1"
+import { get_VAPs_ordered_by_prob, get_wcomponent_VAPs_represent, partition_and_prune_items_by_datetimes_and_versions } from "./utils"
 import { WComponent, wcomponent_should_have_state_VAP_sets } from "../interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPsType } from "../get_wcomponent_state_value"
+import { get_counterfactual_v2_VAP_set } from "./get_counterfactual_v2_VAP_set"
+import type { ComposedCounterfactualStateValueAndPredictionV1 } from "../interfaces/counterfactual"
 
 
 // CARNAGE
@@ -51,7 +51,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWcomponen
 
     if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return []
 
-    const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
 
     const counterfactual_VAPs = get_current_counterfactual_VAP_sets({
         values_and_prediction_sets: wcomponent.values_and_prediction_sets,

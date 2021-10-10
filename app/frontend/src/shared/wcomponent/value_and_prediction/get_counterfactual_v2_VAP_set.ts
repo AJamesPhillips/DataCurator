@@ -10,17 +10,16 @@ interface GetCounterfactualV2VAPSetArgs
     VAP_set_ids_to_counterfactuals_v2_map: VAP_set_id_counterfactual_mapV2 | undefined
     active_counterfactual_v2_ids: string[] | undefined
 }
-// CARNAGE
 export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualStateValueAndPredictionSetV2
 {
     const {
-        VAP_set_ids_to_counterfactuals_v2_map: VAP_set_ids_to_counterfactuals_map,
+        VAP_set_ids_to_counterfactuals_v2_map,
         active_counterfactual_v2_ids = [],
     } = args
     let { VAP_set } = args
 
 
-    const counterfactuals_v2 = VAP_set_ids_to_counterfactuals_map?.[VAP_set.id] || []
+    const counterfactuals_v2 = VAP_set_ids_to_counterfactuals_v2_map?.[VAP_set.id] || []
     const active_cf_ids = new Set(active_counterfactual_v2_ids)
 
 

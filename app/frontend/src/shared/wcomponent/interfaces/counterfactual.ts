@@ -1,4 +1,4 @@
-import type { StateValueAndPredictionsSet } from "./state"
+import type { StateValueAndPrediction, StateValueAndPredictionsSet } from "./state"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
@@ -14,6 +14,12 @@ export interface TargetVAPIdCounterfactualInfoMap
     [target_VAP_id: string]: TargetVAPIdCounterfactualInfoEntry[]
 }
 
+
+
+export interface ComposedCounterfactualStateValueAndPredictionV1 extends StateValueAndPrediction
+{
+    is_counterfactual: false
+}
 
 // This is a composed / denormalised form suitable for UI
 export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet

@@ -84,25 +84,24 @@ export interface WComponentCausalConnection extends WComponentConnection
 }
 
 
-export function wcomponent_is_event (wcomponent: WComponent): wcomponent is WComponentNodeEvent
+export function wcomponent_is_event (wcomponent: WComponent | undefined): wcomponent is WComponentNodeEvent
 {
-    return wcomponent.type === "event"
+    return wcomponent_is_a("event", wcomponent)
 }
 
 
 export function wcomponent_is_statev2 (wcomponent: WComponent | undefined): wcomponent is WComponentNodeStateV2
 {
-    if (!wcomponent) return false
-    return wcomponent.type === "statev2"
+    return wcomponent_is_a("statev2", wcomponent)
 }
 
-export function wcomponent_is_process (wcomponent: WComponent): wcomponent is WComponentNodeProcess
+export function wcomponent_is_process (wcomponent: WComponent | undefined): wcomponent is WComponentNodeProcess
 {
-    return wcomponent.type === "process"
+    return wcomponent_is_a("process", wcomponent)
 }
-export function wcomponent_is_action (wcomponent: WComponent): wcomponent is WComponentNodeAction
+export function wcomponent_is_action (wcomponent: WComponent | undefined): wcomponent is WComponentNodeAction
 {
-    return wcomponent.type === "action"
+    return wcomponent_is_a("action", wcomponent)
 }
 
 
@@ -150,17 +149,17 @@ export function alert_wcomponent_is_prioritisation (wcomponent: WComponent | und
 }
 
 
-export function wcomponent_is_causal_link (wcomponent: WComponent): wcomponent is WComponentCausalConnection
+export function wcomponent_is_causal_link (wcomponent: WComponent | undefined): wcomponent is WComponentCausalConnection
 {
-    return wcomponent.type === "causal_link"
+    return wcomponent_is_a("causal_link", wcomponent)
 }
 
-function wcomponent_is_relation_link (wcomponent: WComponent)
+function wcomponent_is_relation_link (wcomponent: WComponent | undefined)
 {
-    return wcomponent.type === "relation_link"
+    return wcomponent_is_a("relation_link", wcomponent)
 }
 
-export function wcomponent_is_plain_connection (wcomponent: WComponent): wcomponent is WComponentConnection
+export function wcomponent_is_plain_connection (wcomponent: WComponent | undefined): wcomponent is WComponentConnection
 {
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
@@ -185,7 +184,7 @@ export function alert_wcomponent_is_judgement_or_objective (wcomponent: WCompone
 }
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
-    return wcomponent.type === "objective"
+    return wcomponent_is_a("objective", wcomponent)
 }
 
 
@@ -255,7 +254,7 @@ export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcom
 
 
 
-export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
+export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)
 }

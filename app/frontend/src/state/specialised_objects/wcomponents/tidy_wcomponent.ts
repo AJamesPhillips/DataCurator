@@ -1,12 +1,12 @@
 import { set_VAP_probabilities } from "../../../knowledge/multiple_values/value_and_prediction/utils"
 import { sort_list } from "../../../shared/utils/sort"
-import { get_wcomponent_VAPsType } from "../../../shared/wcomponent/get_wcomponent_state_value"
+import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../../../shared/wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { get_wcomponent_VAPs_represent } from "../../../shared/wcomponent/value_and_prediction/utils"
 
 
 
@@ -23,7 +23,7 @@ export function tidy_wcomponent (wcomponent: WComponent): WComponent
     {
         const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
 
-        const VAPs_represent = get_wcomponent_VAPsType(wcomponent)
+        const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
 
         const corrected_VAPs_in_VAP_sets = sorted_VAP_sets.map(VAP_set => ({
             ...VAP_set,
