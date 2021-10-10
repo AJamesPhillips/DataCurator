@@ -6,7 +6,7 @@ import type { EventAt } from "../wcomponent/interfaces/event"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { selector_chosen_base_id } from "../state/user_info/selector"
-import { UncertainDateTime } from "../knowledge/uncertainty/datetime"
+import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
 
 
 
@@ -35,7 +35,7 @@ function _WComponentEventAtFormField (props: Props)
 
 
     return <p>
-        <UncertainDateTime
+        <UncertainDateTimeForm
             // Get a hacky implementation of event datetime
             datetime={event_at ? event_at.datetime : {}}
             on_change={datetime =>

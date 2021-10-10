@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import type { HasUncertainDatetime } from "../shared/uncertainty/interfaces"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
-import { UncertainDateTime } from "../knowledge/uncertainty/datetime"
+import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
 
 
 
@@ -32,7 +32,7 @@ function _WComponentDateTimeFormField (props: Props)
 
 
     return <p>
-        <UncertainDateTime
+        <UncertainDateTimeForm
             datetime={datetime}
             on_change={datetime => upsert_wcomponent({ datetime }) }
         />

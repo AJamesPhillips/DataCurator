@@ -3,7 +3,7 @@ import { h } from "preact"
 import { EditablePercentage } from "../../../form/EditablePercentage"
 import { EditableText } from "../../../form/editable_text/EditableText"
 import type { Prediction } from "../../../shared/uncertainty/interfaces"
-import { UncertainDateTime } from "../../../knowledge/uncertainty/datetime"
+import { UncertainDateTimeForm } from "../../uncertain_datetime/UncertainDateTimeForm"
 import { PredictionSummary } from "./PredictionSummary"
 
 
@@ -59,7 +59,7 @@ export function PredictionViewDetails (props: OwnProps_Details)
 
     return <div>
         <br />
-        <UncertainDateTime
+        <UncertainDateTimeForm
             datetime={prediction.datetime}
             on_change={datetime => update_prediction && update_prediction({ datetime })}
         />

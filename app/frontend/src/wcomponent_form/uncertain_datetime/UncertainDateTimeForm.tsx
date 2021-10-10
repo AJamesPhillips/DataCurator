@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./datetime.css"
+import "./UncertainDateTimeForm.css"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import type { RootState } from "../../state/State"
@@ -24,7 +24,7 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-function _UncertainDateTime (props: Props)
+function _UncertainDateTimeForm (props: Props)
 {
     const { datetime, on_change, show_unused_fields } = props
 
@@ -59,4 +59,4 @@ function _UncertainDateTime (props: Props)
     </div>
 }
 
-export const UncertainDateTime = connector(_UncertainDateTime) as FunctionalComponent<OwnProps>
+export const UncertainDateTimeForm = connector(_UncertainDateTimeForm) as FunctionalComponent<OwnProps>

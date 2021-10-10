@@ -13,7 +13,7 @@ import {
     get_VAP_set_conviction,
 } from "../../wcomponent/value_and_prediction/get_UI_value_of_VAP_set_attributes"
 import { PredictionSummary } from "./to_deprecate/PredictionSummary"
-import { UncertainDateTime } from "../../knowledge/uncertainty/datetime"
+import { UncertainDateTimeForm } from "../uncertain_datetime/UncertainDateTimeForm"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
 import { set_VAP_probabilities } from "../../knowledge/multiple_values/value_and_prediction/utils"
@@ -51,7 +51,7 @@ export const get_details_for_single_VAP_set = (value_possibilities: ValuePossibi
 
     return <div className="VAP_set_details">
         <br />
-        <UncertainDateTime
+        <UncertainDateTimeForm
             datetime={VAP_set.datetime}
             on_change={datetime => crud.update_item({ ...VAP_set, datetime })}
         />
