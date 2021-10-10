@@ -3,13 +3,13 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./CreateNewWComponent.css"
-import type { CreationContextState } from "../state/creation_context/state"
-import { WComponentType, wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
-import { wcomponent_type_to_text } from "../wcomponent/wcomponent_type_to_text"
-import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import { create_wcomponent } from "./create_wcomponent_type"
-import { selector_chosen_base_id } from "../state/user_info/selector"
+import type { CreationContextState } from "../../state/creation_context/state"
+import { WComponentType, wcomponent_types } from "../../wcomponent/interfaces/wcomponent_base"
+import { wcomponent_type_to_text } from "../../wcomponent/wcomponent_type_to_text"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { create_wcomponent } from "../../state/specialised_objects/wcomponents/create_wcomponent_type"
+import { selector_chosen_base_id } from "../../state/user_info/selector"
 
 
 

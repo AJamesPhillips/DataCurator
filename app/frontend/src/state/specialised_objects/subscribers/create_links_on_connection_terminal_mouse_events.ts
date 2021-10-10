@@ -1,6 +1,6 @@
 import type { Store } from "redux"
 
-import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
+import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentConnectionType } from "../../../wcomponent/interfaces/wcomponent_base"

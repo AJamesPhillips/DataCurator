@@ -16,7 +16,7 @@ import {
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { ExploreButtonHandle } from "../canvas_node/ExploreButtonHandle"
+import { ExploreButtonHandle } from "../canvas/node/ExploreButtonHandle"
 
 
 

@@ -2,16 +2,16 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentCanvasConnection.scss"
-import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
-import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
-import { get_VAP_visuals_data } from "../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+import { CanvasConnnection } from "../../../canvas/connections/CanvasConnnection"
+import { ConnectionEndType } from "../../../canvas/connections/ConnectionEnd"
+import { get_VAP_visuals_data } from "../../../wcomponent/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
-} from "../shared/interfaces/knowledge_view"
-import { bounded } from "../shared/utils/bounded"
-import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+} from "../../../shared/interfaces/knowledge_view"
+import { bounded } from "../../../shared/utils/bounded"
+import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { WComponentJudgement } from "../../../wcomponent/interfaces/judgement"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -21,24 +21,24 @@ import {
     ConnectionTerminalType,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
-} from "../wcomponent/interfaces/SpecialisedObjects"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
 import {
     get_counterfactual_v2_VAP_set,
-} from "../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
-import { get_current_VAP_set } from "../wcomponent/value_and_prediction/get_current_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/value_and_prediction/utils"
-import { ACTIONS } from "../state/actions"
-import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+} from "../../../wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
+import { get_current_VAP_set } from "../../../wcomponent/value_and_prediction/get_current_v2_VAP_set"
+import { get_wcomponent_VAPs_represent } from "../../../wcomponent/value_and_prediction/utils"
+import { ACTIONS } from "../../../state/actions"
+import { get_wcomponent_from_state } from "../../../state/specialised_objects/accessors"
 import {
     get_partial_args_for_get_counterfactual_v2_VAP_set,
-} from "../state/specialised_objects/counterfactuals/get_props_for_state_v2"
-import type { RootState } from "../state/State"
+} from "../../../state/specialised_objects/counterfactuals/get_props_for_state_v2"
+import type { RootState } from "../../../state/State"
 import {
     calc_connection_wcomponent_should_display,
     calc_judgement_connection_wcomponent_should_display,
     calc_display_opacity,
-} from "./calc_should_display"
-import { factory_on_pointer_down } from "./canvas_common"
+} from "../calc_should_display"
+import { factory_on_pointer_down } from "../canvas_common"
 
 
 

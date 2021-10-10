@@ -1,23 +1,23 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
-import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
-import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
-import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
-import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
-import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
-import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { ACTION_OPTIONS } from "../../wcomponent/value_and_prediction/actions_value"
-import { Button } from "../../sharedf/Button"
+import { AutocompleteText } from "../../../form/Autocomplete/AutocompleteText"
+import type { AutocompleteOption } from "../../../form/Autocomplete/interfaces"
+import type { ListItemCRUDRequiredU } from "../../../form/editable_list/EditableListEntry"
+import { get_uncertain_datetime } from "../../../shared/uncertainty/datetime"
+import { date2str_auto, get_today_date } from "../../../shared/utils/date_helpers"
+import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
+import type { StateValueAndPredictionsSet } from "../../../wcomponent/interfaces/state"
+import { ACTION_OPTIONS } from "../../../wcomponent/value_and_prediction/actions_value"
+import { Button } from "../../../sharedf/Button"
 import {
     get_details2_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_summary_for_single_VAP_set,
 } from "./common"
-import { get_current_value_of_VAP_set } from "./value_and_prediction/get_current_value"
-import { value_possibility_options } from "./value_possibilities/value_possibility_options"
+import { get_current_value_of_VAP_set } from "../../multiple_values/value_and_prediction/get_current_value"
+import { value_possibility_options } from "../../multiple_values/value_possibilities/value_possibility_options"
 
 
 

@@ -2,19 +2,19 @@ import { h, FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
+import type { StateValueAndPredictionsSet as VAPSet } from "../../../wcomponent/interfaces/state"
 import {
     get_summary_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_details2_for_single_VAP_set,
 } from "./common"
-import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
-import { create_new_VAP_set_version } from "./value_and_prediction/utils"
-import type { RootState } from "../../state/State"
-import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
+import type { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import { ExpandableListWithAddButton } from "../../../form/editable_list/ExpandableListWithAddButton"
+import { create_new_VAP_set_version } from "../../multiple_values/value_and_prediction/utils"
+import type { RootState } from "../../../state/State"
+import type { ListItemCRUDRequiredU } from "../../../form/editable_list/EditableListEntry"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
 
 
 

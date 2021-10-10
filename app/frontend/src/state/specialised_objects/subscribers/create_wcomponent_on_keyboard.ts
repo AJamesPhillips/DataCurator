@@ -1,6 +1,6 @@
 import type { Store } from "redux"
 
-import { create_wcomponent } from "../../../knowledge/create_wcomponent_type"
+import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 import type { CanvasPointerEvent } from "../../canvas/pub_sub"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"

@@ -7,20 +7,20 @@ import {
     EditableListEntry,
     ListItemCRUDRequiredCUD,
     ListItemCRUDRequiredCU,
-} from "../../form/editable_list/EditableListEntry"
-import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
-import type { ExpandableListContentProps } from "../../form/editable_list/interfaces"
-import { ListHeader } from "../../form/editable_list/ListHeader"
-import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
-import { NewItemForm } from "../../form/editable_list/NewItemForm"
-import type { CreationContextState } from "../../state/creation_context/state"
-import { Tense } from "../../wcomponent/interfaces/datetime"
-import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+} from "../../../form/editable_list/EditableListEntry"
+import { get_items_descriptor, ExpandableList } from "../../../form/editable_list/ExpandableList"
+import type { ExpandableListContentProps } from "../../../form/editable_list/interfaces"
+import { ListHeader } from "../../../form/editable_list/ListHeader"
+import { ListHeaderAddButton } from "../../../form/editable_list/ListHeaderAddButton"
+import { NewItemForm } from "../../../form/editable_list/NewItemForm"
+import type { CreationContextState } from "../../../state/creation_context/state"
+import { Tense } from "../../../wcomponent/interfaces/datetime"
+import type { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet as VAPSet,
-} from "../../wcomponent/interfaces/state"
-import { replace_element, remove_element } from "../../utils/list"
+} from "../../../wcomponent/interfaces/state"
+import { replace_element, remove_element } from "../../../utils/list"
 import {
     get_summary_for_single_VAP_set,
     get_details_for_single_VAP_set,
@@ -28,7 +28,7 @@ import {
 } from "./common"
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
-import { prepare_new_VAP_set } from "./value_and_prediction/prepare_new_VAP_set"
+import { prepare_new_VAP_set } from "../../multiple_values/value_and_prediction/prepare_new_VAP_set"
 
 
 

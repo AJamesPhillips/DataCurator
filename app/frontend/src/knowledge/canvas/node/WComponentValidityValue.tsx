@@ -1,13 +1,13 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_wcomponent_validity_value } from "../wcomponent/get_wcomponent_validity_value"
-import type { UIValue } from "../wcomponent/interfaces/value_probabilities_etc"
+import { get_wcomponent_validity_value } from "../../../wcomponent/get_wcomponent_validity_value"
+import type { UIValue } from "../../../wcomponent/interfaces/value_probabilities_etc"
 import type {
     WComponent,
-} from "../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../state/State"
-import { DisplayValue } from "./multiple_values/DisplayValue"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
+import type { RootState } from "../../../state/State"
+import { DisplayValue } from "../../multiple_values/DisplayValue"
 
 
 

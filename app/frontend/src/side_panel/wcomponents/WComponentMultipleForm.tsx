@@ -1,19 +1,19 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { ACTIONS } from "../state/actions"
-import type { RootState } from "../state/State"
-import { EditablePosition } from "../form/EditablePosition"
-import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
-import { Button } from "../sharedf/Button"
+import { ACTIONS } from "../../state/actions"
+import type { RootState } from "../../state/State"
+import { EditablePosition } from "../../form/EditablePosition"
+import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
+import { Button } from "../../sharedf/Button"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponents_id_map,
-} from "../state/specialised_objects/accessors"
-import { LabelsEditor } from "../labels/LabelsEditor"
-import { is_defined } from "../shared/utils/is_defined"
-import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
-import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
+} from "../../state/specialised_objects/accessors"
+import { LabelsEditor } from "../../labels/LabelsEditor"
+import { is_defined } from "../../shared/utils/is_defined"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 
 
 

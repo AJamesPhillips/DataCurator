@@ -1,25 +1,25 @@
 import type { Store } from "redux"
-import { round_canvas_point } from "../canvas/position_utils"
 
-import type { CreationContextState } from "../state/creation_context/state"
-import { get_new_wcomponent_object } from "../wcomponent/get_new_wcomponent_object"
+import { round_canvas_point } from "../../../canvas/position_utils"
+import type { CreationContextState } from "../../creation_context/state"
+import { get_new_wcomponent_object } from "../../../wcomponent/get_new_wcomponent_object"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_statev2,
     wcomponent_should_have_state_VAP_sets,
-} from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import { ACTIONS } from "../state/actions"
-import { get_middle_of_screen } from "../state/display_options/display"
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { ACTIONS } from "../../actions"
+import { get_middle_of_screen } from "../../display_options/display"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
-} from "../state/specialised_objects/accessors"
-import type { AddToKnowledgeViewArgs } from "../state/specialised_objects/wcomponents/actions"
-import type { RootState } from "../state/State"
-import { get_store } from "../state/store"
-import type { HasBaseId } from "../shared/interfaces/base"
+} from "../accessors"
+import type { AddToKnowledgeViewArgs } from "./actions"
+import type { RootState } from "../../State"
+import { get_store } from "../../store"
+import type { HasBaseId } from "../../../shared/interfaces/base"
 
 
 

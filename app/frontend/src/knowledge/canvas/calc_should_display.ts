@@ -1,18 +1,18 @@
-import type { Prediction } from "../shared/uncertainty/interfaces"
-import { rescale } from "../shared/utils/bounded"
-import { get_wcomponent_validity_value } from "../wcomponent/get_wcomponent_validity_value"
-import { Tense } from "../wcomponent/interfaces/datetime"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import type { Prediction } from "../../shared/uncertainty/interfaces"
+import { rescale } from "../../shared/utils/bounded"
+import { get_wcomponent_validity_value } from "../../wcomponent/get_wcomponent_validity_value"
+import { Tense } from "../../wcomponent/interfaces/datetime"
+import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import {
     WComponent,
     WComponentConnection,
     wcomponent_has_event_at,
     wcomponent_is_judgement_or_objective,
-} from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
-import { get_tense_of_uncertain_datetime } from "../shared/utils_datetime/get_tense_of_uncertain_datetime"
-import type { CurrentValidityValueAndProbabilities } from "../wcomponent/interfaces/value_probabilities_etc"
+} from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
+import type { ValidityFilterOption, CertaintyFormattingOption } from "../../state/display_options/state"
+import { get_tense_of_uncertain_datetime } from "../../shared/utils_datetime/get_tense_of_uncertain_datetime"
+import type { CurrentValidityValueAndProbabilities } from "../../wcomponent/interfaces/value_probabilities_etc"
 
 
 

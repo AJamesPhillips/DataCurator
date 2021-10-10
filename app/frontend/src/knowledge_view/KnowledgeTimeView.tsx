@@ -4,12 +4,12 @@ import { Box } from "@material-ui/core"
 
 import "./KnowledgeTimeView.scss"
 import type { RootState } from "../state/State"
-import { WComponentCanvasNode } from "../knowledge/canvas_node/WComponentCanvasNode"
+import { WComponentCanvasNode } from "../knowledge/canvas/node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
 import { sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
-import { ConnectedValueAndPredictionSetSummary } from "../knowledge/multiple_values/ConnectedValueAndPredictionSetSummary"
+import { ConnectedValueAndPredictionSetSummary } from "../knowledge/canvas/node/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
 
 

@@ -5,21 +5,21 @@ import type { Store } from "redux"
 import {
     get_new_knowledge_view_object,
     navigate_to_knowledge_view_or_kvwcomponent,
-} from "../../knowledge_view/create_new_knowledge_view"
-import { get_today_str } from "../../shared/utils/date_helpers"
-import { wcomponent_id_to_wcomponent_kv_id } from "../../shared/utils/ids"
+} from "../../../knowledge_view/create_new_knowledge_view"
+import { get_today_str } from "../../../shared/utils/date_helpers"
+import { wcomponent_id_to_wcomponent_kv_id } from "../../../shared/utils/ids"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
     KnowledgeViewWComponentEntry,
-} from "../../shared/interfaces/knowledge_view"
-import { get_title } from "../../wcomponent/rich_text/get_rich_text"
-import { ACTIONS } from "../../state/actions"
-import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
-import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
-import { get_store } from "../../state/store"
-import type { HasBaseId } from "../../shared/interfaces/base"
+} from "../../../shared/interfaces/knowledge_view"
+import { get_title } from "../../../wcomponent/rich_text/get_rich_text"
+import { ACTIONS } from "../../../state/actions"
+import { get_wc_id_counterfactuals_v2_map } from "../../../state/derived/accessor"
+import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../../state/specialised_objects/accessors"
+import type { RootState } from "../../../state/State"
+import { get_store } from "../../../state/store"
+import type { HasBaseId } from "../../../shared/interfaces/base"
 
 
 

@@ -1,21 +1,21 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
-import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
+import type { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import type { ValuePossibilitiesById } from "../../../wcomponent/interfaces/possibility"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
-} from "../../wcomponent/interfaces/state"
+} from "../../../wcomponent/interfaces/state"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
-} from "../../wcomponent/value_and_prediction/utils"
-import { ACTIONS } from "../../state/actions"
-import type { RootState } from "../../state/State"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
+} from "../../../wcomponent/value_and_prediction/utils"
+import { ACTIONS } from "../../../state/actions"
+import type { RootState } from "../../../state/State"
+import { selector_chosen_base_id } from "../../../state/user_info/selector"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
-import { update_value_possibilities } from "./value_possibilities/update_possibilities_with_VAPs"
+import { update_value_possibilities } from "../../multiple_values/value_possibilities/update_possibilities_with_VAPs"
 
 
 

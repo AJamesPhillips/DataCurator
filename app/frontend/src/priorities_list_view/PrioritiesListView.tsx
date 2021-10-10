@@ -11,7 +11,7 @@ import { get_current_composed_knowledge_view_from_state } from "../state/special
 import type { RootState } from "../state/State"
 import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
-import { create_wcomponent } from "../knowledge/create_wcomponent_type"
+import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableGoal } from "./PrioritisableGoal"

@@ -1,6 +1,6 @@
 import type { h } from "preact"
 
-import type { ActionChangeRouteArgs } from "../state/routing/actions"
+import type { ActionChangeRouteArgs } from "../../state/routing/actions"
 
 
 
