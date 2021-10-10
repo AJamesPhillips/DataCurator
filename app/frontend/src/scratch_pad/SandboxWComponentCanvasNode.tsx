@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps, Provider } from "react-redux"
 
-import { WComponentCanvasNode } from "../knowledge/canvas/node/WComponentCanvasNode"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import type { CreationContextState } from "../state/creation_context/state"
 import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"

@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { EditableNumber } from "../form/EditableNumber"
-import { WComponentCanvasNode } from "../knowledge/canvas/node/WComponentCanvasNode"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"

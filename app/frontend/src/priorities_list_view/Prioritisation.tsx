@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { WComponentCanvasNode } from "../knowledge/canvas/node/WComponentCanvasNode"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 
 import type { WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 
