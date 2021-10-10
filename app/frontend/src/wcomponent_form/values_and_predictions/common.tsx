@@ -12,7 +12,7 @@ import {
     get_VAP_set_prob,
     get_VAP_set_conviction,
 } from "../../wcomponent/value_and_prediction/get_UI_value_of_VAP_set_attributes"
-import { PredictionSummary } from "../../knowledge/predictions/PredictionSummary"
+import { PredictionSummary } from "./to_deprecate/PredictionSummary"
 import { UncertainDateTime } from "../../knowledge/uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"

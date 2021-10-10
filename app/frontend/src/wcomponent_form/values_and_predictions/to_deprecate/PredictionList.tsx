@@ -2,26 +2,26 @@ import { h, FunctionalComponent } from "preact"
 import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { Prediction } from "../../shared/uncertainty/interfaces"
-import { get_new_prediction_id } from "../../shared/utils/ids"
+import type { Prediction } from "../../../shared/uncertainty/interfaces"
+import { get_new_prediction_id } from "../../../shared/utils/ids"
 import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type {
     EditableListEntryItemProps,
     ListItemCRUD,
     ListItemCRUDRequiredC,
     ListItemCRUDRequiredU,
-} from "../../form/editable_list/EditableListEntry"
-import type { RootState } from "../../state/State"
-import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
-import { ListHeader } from "../../form/editable_list/ListHeader"
-import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
-import { NewItemForm } from "../../form/editable_list/NewItemForm"
-import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import { floor_datetime_to_resolution, get_new_created_ats } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../state/creation_context/state"
-import { partition_and_prune_items_by_datetimes_and_versions } from "../../wcomponent/value_and_prediction/utils"
-import { remove_element, replace_element } from "../../utils/list"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
+} from "../../../form/editable_list/EditableListEntry"
+import type { RootState } from "../../../state/State"
+import { get_items_descriptor, ExpandableList } from "../../../form/editable_list/ExpandableList"
+import { ListHeader } from "../../../form/editable_list/ListHeader"
+import { ListHeaderAddButton } from "../../../form/editable_list/ListHeaderAddButton"
+import { NewItemForm } from "../../../form/editable_list/NewItemForm"
+import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
+import { floor_datetime_to_resolution, get_new_created_ats } from "../../../shared/utils/datetime"
+import type { CreationContextState } from "../../../state/creation_context/state"
+import { partition_and_prune_items_by_datetimes_and_versions } from "../../../wcomponent/value_and_prediction/utils"
+import { remove_element, replace_element } from "../../../utils/list"
+import { selector_chosen_base_id } from "../../../state/user_info/selector"
 
 
 

@@ -41,7 +41,7 @@ import { get_wcomponent_from_state } from "../state/specialised_objects/accessor
 import type { RootState } from "../state/State"
 import { DisplayValue } from "../knowledge/multiple_values/DisplayValue"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
-import { PredictionList } from "../knowledge/predictions/PredictionList"
+import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
 import { WComponentFromTo } from "./WComponentFromTo"
 import { WComponentLatestPrediction } from "./WComponentLatestPrediction"
 import { GoalFormFields } from "./GoalFormFields"

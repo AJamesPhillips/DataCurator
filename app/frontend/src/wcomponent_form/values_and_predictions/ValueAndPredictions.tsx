@@ -15,7 +15,7 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
 import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
 import { prepare_new_VAP } from "../../knowledge/multiple_values/value_and_prediction/utils"
-import { PredictionBadge } from "../../knowledge/predictions/PredictionBadge"
+import { PredictionBadge } from "../../sharedf/prediction_badge/PredictionBadge"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
