@@ -265,10 +265,10 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
                 const value_args = get_partial_args_for_get_counterfactual_v2_VAP_set(from_wc.id, state)
                 const counterfactual_VAP_set = get_counterfactual_v2_VAP_set({ ...value_args, VAP_set })
                 const VAPs_represent = get_wcomponent_VAPs_represent(from_wc)
-                const raw_data = get_VAP_visuals_data({
+                const visual_VAPs = get_VAP_visuals_data({
                     wcomponent: from_wc, VAP_set: counterfactual_VAP_set, VAPs_represent
                 })
-                const value = raw_data[0]?.value
+                const value = visual_VAPs[0]?.value
 
                 if (value !== undefined && value !== null)
                 {

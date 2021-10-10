@@ -1,7 +1,7 @@
 import {
     ComposedCounterfactualStateValueAndPredictionV1,
     merge_all_counterfactuals_into_all_VAPs,
-} from "../../counterfactuals/merge"
+} from "../../counterfactuals/merge_v1"
 import { CurrentValue, CurrentValueAndProbabilities, VAPsType } from "../interfaces/generic_value"
 import type {
     StateValueAndPredictionsSet,
@@ -78,17 +78,6 @@ function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPS
 
 
 
-export function clean_VAP_set_entries (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
-{
-    const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
-        ? VAP_set.entries.slice(0, 1)
-        : VAP_set.entries
-
-    return { ...VAP_set, entries: subtype_specific_VAPs }
-}
-
-
-
 function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType)
 {
     let all_VAPs: StateValueAndPrediction[] = []
@@ -99,6 +88,17 @@ function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VA
     })
 
     return all_VAPs
+}
+
+
+
+export function clean_VAP_set_entries (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+{
+    const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
+        ? VAP_set.entries.slice(0, 1)
+        : VAP_set.entries
+
+    return { ...VAP_set, entries: subtype_specific_VAPs }
 }
 
 

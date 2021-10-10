@@ -8,7 +8,7 @@ import type {
     StateValueAndPrediction,
 } from "../../shared/wcomponent/interfaces/state"
 import { get_probable_VAP_set_values, get_VAP_set_prob, get_VAP_set_conviction } from "../../sharedf/wcomponent_state"
-import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge"
+import { merge_counterfactuals_into_VAPs } from "../../shared/counterfactuals/merge_v1"
 import { PredictionSummary } from "../predictions/PredictionSummary"
 import { UncertainDateTime } from "../uncertainty/datetime"
 import { ValueAndPredictions } from "./ValueAndPredictions"

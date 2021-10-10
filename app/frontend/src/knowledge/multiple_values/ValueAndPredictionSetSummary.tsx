@@ -59,7 +59,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                         className={`value_and_prediction prob-${rounded_certainty_percent}`}
                         p={2} boxSizing="border-box"
                         position="relative"
-                        bgcolor={counterfactual_VAP_set.has_counterfactual_applied ? "warning.main" : "primary.main"}
+                        bgcolor={counterfactual_VAP_set.has_any_counterfactual_applied ? "warning.main" : "primary.main"}
                         flexGrow={1} flexShrink={1} flexBasis="auto"
                         display="flex" flexDirection="row" justifyContent="center" alignItems="center"
                         fontSize={`${font_size}%`}
@@ -85,7 +85,7 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
                             />}
 
                             {cf_entries.map(entry => <CounterfactualLink
-                                any_active={counterfactual_VAP_set.has_counterfactual_applied}
+                                any_active={counterfactual_VAP_set.has_any_counterfactual_applied}
                                 counterfactual={entry}
                                 active_counterfactual_v2_id={counterfactual_VAP_set.active_counterfactual_v2_id}
                             />)}

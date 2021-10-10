@@ -28,8 +28,6 @@ interface VAPVisual
 }
 export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 {
-    const boolean_representation = get_boolean_representation({ wcomponent: args.wcomponent })
-
     const cleaned_VAP_set = clean_VAP_set_entries(args.VAP_set, args.VAPs_represent)
     const expanded_VAP_set = expand_booleans(cleaned_VAP_set, args.VAPs_represent)
 
@@ -37,6 +35,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
     let total_certainties = 0
 
 
+    const boolean_representation = get_boolean_representation({ wcomponent: args.wcomponent })
     const data: VAPVisual[] = expanded_VAP_set.entries.map((VAP, index) =>
     {
         let value = parse_VAP_value(VAP, args.VAPs_represent)

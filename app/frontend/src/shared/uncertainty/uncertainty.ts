@@ -159,7 +159,7 @@ export type WcIdCounterfactualsV2Map = {
 }
 interface WcCounterfactualsByAttribute {
     VAP_sets: VAP_set_id_counterfactual_mapV2
-    // validity_VAP_set: VAP_set_id_counterfactual_map
+    // validity_VAP_sets: VAP_set_id_counterfactual_map
 }
 export interface VAP_set_id_counterfactual_mapV2
 {

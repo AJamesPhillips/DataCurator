@@ -15,6 +15,7 @@ import type {
 } from "../../shared/wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../../shared/wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../../shared/wcomponent/interfaces/state"
+import { get_counterfactual_v2_VAP_set } from "../../shared/wcomponent/value_and_prediction/get_counterfactual_v2_VAP_set"
 import { get_wcomponent_VAPs_represent } from "../../shared/wcomponent/value_and_prediction/utils"
 import { ExternalLinkIcon } from "../../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../../sharedf/Link"
@@ -110,9 +111,13 @@ function _WComponentCounterfactualForm (props: Props)
     const { target_VAP_set_id, target_VAP_id } = wcomponent
     const target_VAP_set = target_VAP_sets.find(({ id }) => id === target_VAP_set_id)
 
-    // const counterfactual_VAP_set: CoreCounterfactualStateValueAndPredictionSetV2 | undefined = target_VAP_set
-    //     ? clean_VAP_set_for_counterfactual(target_VAP_set, target_VAP_id)
-    //     : undefined
+    const counterfactual_VAP_set = target_VAP_set
+        // ? get_counterfactual_v2_VAP_set({
+        //     VAP_set: target_VAP_set,
+        //     VAP_set_ids_to_counterfactuals_map,
+        //     target_VAP_id
+        // })
+        // : undefined
 
 
     let counterfactual_active_for_current_knowledge_view = false
@@ -170,7 +175,7 @@ function _WComponentCounterfactualForm (props: Props)
         </p>}
 
 
-        {/* {target_wcomponent && counterfactual_VAP_set && <p>
+        {target_wcomponent && counterfactual_VAP_set && <p>
             <span className="description_label">Counterfactual value</span> &nbsp;
             {get_VAP_visuals_data({
                 VAP_set: counterfactual_VAP_set,
@@ -194,7 +199,7 @@ function _WComponentCounterfactualForm (props: Props)
                     <label for={id}>{value_text}</label>
                 </div>
             })}
-        </p>} */}
+        </p>}
 
 
         {knowledge_view && <p>
@@ -213,7 +218,7 @@ function _WComponentCounterfactualForm (props: Props)
                     props.upsert_knowledge_view({ knowledge_view: kv })
                 }}
             />
-            {/* {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>} */}
+            {!counterfactual_VAP_set && counterfactual_active_for_current_knowledge_view && <span title="Will not be applied yet, you need to target a component and one of its value sets"><Warning /></span>}
         </p>}
     </div>
 }
