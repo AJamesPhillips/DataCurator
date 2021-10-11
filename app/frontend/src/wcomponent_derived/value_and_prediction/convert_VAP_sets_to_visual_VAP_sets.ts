@@ -8,7 +8,7 @@ import { parse_VAP_value } from "../value/parse_value"
 
 
 
-const VAP_visual_uncertainty_id = "uncertainty_id__undefined__"
+export const VAP_visual_uncertainty_id = "uncertainty_id__undefined__"
 const VAP_visual_false_id = "false_id__undefined__"
 
 

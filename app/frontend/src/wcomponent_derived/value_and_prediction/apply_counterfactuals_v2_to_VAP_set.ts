@@ -1,6 +1,7 @@
 import type { ComposedCounterfactualStateValueAndPredictionSetV2 } from "../../wcomponent/interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
 import type { VAPSetIdToCounterfactualV2Map } from "../interfaces/counterfactual"
+import { VAP_visual_uncertainty_id } from "./convert_VAP_sets_to_visual_VAP_sets"
 
 
 
@@ -49,22 +50,22 @@ interface CoreCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPr
 
 function distort_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
 {
-    const shared_entry_values = {
-        ...VAP_set.shared_entry_values,
-        conviction: 1,
-    }
-
-
     if (target_VAP_id === undefined)
     {
         target_VAP_id = VAP_set.entries[0]?.id
     }
 
+    const conviction = target_VAP_id === VAP_visual_uncertainty_id ? 0 : 1
+
+    const shared_entry_values = {
+        ...VAP_set.shared_entry_values,
+        conviction,
+    }
 
     const entries = VAP_set.entries.map(entry =>
     {
         const probability = entry.id === target_VAP_id ? 1 : 0
-        return { ...entry, probability, relative_probability: 0, conviction: 1 }
+        return { ...entry, probability, relative_probability: 0, conviction }
     })
 
 
