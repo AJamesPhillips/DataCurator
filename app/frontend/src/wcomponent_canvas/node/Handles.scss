@@ -33,6 +33,12 @@ $handle_width:1em;
 
 .node_handle.explore
 {
+    &.hidden
+    {
+        opacity: 0;
+        pointer-events: none;
+    }
+
     &.has_nested_knowledge_view
     {
         color: black; /* Can not colour unicode characters */
@@ -46,5 +52,14 @@ $handle_width:1em;
         {
             color: red;
         }
+    }
+}
+
+.node_handle.overlapping_nodes
+{
+    &.hidden
+    {
+        opacity: 0;
+        pointer-events: none;
     }
 }

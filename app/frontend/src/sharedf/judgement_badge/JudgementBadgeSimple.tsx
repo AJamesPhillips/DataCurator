@@ -10,7 +10,7 @@ import {
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import type { ParsedValue } from "../../wcomponent_derived/interfaces"
+import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 
 
 

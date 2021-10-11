@@ -8,9 +8,10 @@ import type {
     Perception,
     WComponent,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdToCounterfactualsV2Map } from "../../wcomponent/interfaces/counterfactual"
 import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
+import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
+import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
 
 
 
@@ -38,6 +39,7 @@ export type NestedKnowledgeViewIds = {
 export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 {
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    overlapping_wc_ids: OverlappingWcIdMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
     wc_id_to_counterfactuals_v2_map: WcIdToCounterfactualsV2Map

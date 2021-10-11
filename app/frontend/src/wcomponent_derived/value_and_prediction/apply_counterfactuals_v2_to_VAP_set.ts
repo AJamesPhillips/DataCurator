@@ -1,6 +1,6 @@
-import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
 import type { ComposedCounterfactualStateValueAndPredictionSetV2 } from "../../wcomponent/interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import type { VAPSetIdToCounterfactualV2Map } from "../interfaces/counterfactual"
 
 
 

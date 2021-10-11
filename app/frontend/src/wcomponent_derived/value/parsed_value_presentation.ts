@@ -1,5 +1,5 @@
 import { WComponent, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { ParsedValue } from "../interfaces"
+import type { ParsedValue } from "../interfaces/value"
 
 
 

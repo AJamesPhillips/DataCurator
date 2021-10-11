@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import type { DerivedValueForUI } from "../interfaces"
+import type { DerivedValueForUI } from "../interfaces/value"
 import "./DisplayValue.css"
 
 

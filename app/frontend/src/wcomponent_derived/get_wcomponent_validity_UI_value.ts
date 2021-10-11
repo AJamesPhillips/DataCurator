@@ -1,6 +1,6 @@
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_validity_value } from "./get_wcomponent_validity_value"
-import type { DerivedValueForUI } from "./interfaces"
+import type { DerivedValueForUI } from "./interfaces/value"
 
 
 

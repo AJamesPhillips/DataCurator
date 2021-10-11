@@ -2,7 +2,7 @@ import { sort_list } from "../../shared/utils/sort"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
-import type { ParsedValue } from "../interfaces"
+import type { ParsedValue } from "../interfaces/value"
 import { get_boolean_representation, parsed_value_to_string } from "../value/parsed_value_presentation"
 import { parse_VAP_value } from "../value/parse_value"
 

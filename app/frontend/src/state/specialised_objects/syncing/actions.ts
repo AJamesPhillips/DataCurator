@@ -3,9 +3,7 @@ import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfa
 
 
 
-interface ActionReplaceAllSpecialisedObjects extends Action {
-    specialised_objects: SpecialisedObjectsFromToServer
-}
+interface ActionReplaceAllSpecialisedObjects extends Action, ReplaceAllSpecialisedObjectsProps {}
 
 const replace_all_specialised_objects_type = "replace_all_specialised_objects"
 

@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
@@ -14,6 +13,7 @@ import {
 import type { RootState } from "../../state/State"
 import { calculate_judgement_value } from "./calculate_judgement_value"
 import { JudgementBadge } from "./JudgementBadge"
+import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 
 
 

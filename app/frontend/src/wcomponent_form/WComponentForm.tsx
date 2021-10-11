@@ -58,7 +58,7 @@ import { ValuePossibilitiesComponent } from "./value_possibilities/ValuePossibil
 import type { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
 import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
-import type { DerivedValueForUI } from "../wcomponent_derived/interfaces"
+import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 
 
 

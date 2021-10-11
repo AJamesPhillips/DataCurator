@@ -1,5 +1,5 @@
 import { WComponent, wcomponent_has_validity_predictions } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { DerivedValidityForUI } from "./interfaces"
+import type { DerivedValidityForUI } from "./interfaces/value"
 import { calc_prediction_certainty } from "./prediction_uncertainty"
 import {
     partition_and_prune_items_by_datetimes_and_versions,

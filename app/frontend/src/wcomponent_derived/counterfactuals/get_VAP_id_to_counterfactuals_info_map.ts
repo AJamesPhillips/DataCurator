@@ -1,11 +1,11 @@
 import { wcomponent_has_knowledge_view } from "../../state/specialised_objects/accessors"
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
-import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
 import type {
     TargetVAPIdCounterfactualInfoMap,
     TargetVAPIdCounterfactualInfoEntry,
 } from "../../wcomponent/interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import type { VAPSetIdToCounterfactualV2Map } from "../interfaces/counterfactual"
 
 
 

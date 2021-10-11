@@ -2,6 +2,7 @@ import { h } from "preact"
 
 import "./Handles.scss"
 import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
+import { OverlappingNodesHandle } from "./OverlappingNodesHandle"
 
 
 
@@ -14,6 +15,9 @@ export function Handles (props: HandlesProps)
             wcomponent_id={props.wcomponent_id}
             wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
             is_highlighted={props.is_highlighted}
+        />
+        <OverlappingNodesHandle
+            wcomponent_id={props.wcomponent_id}
         />
     </div>
 }

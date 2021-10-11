@@ -2,13 +2,13 @@ import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { JudgementBadgeConnected } from "../sharedf/judgement_badge/JudgementBadgeConnected"
-import type { WcIdToCounterfactualsV2Map } from "../wcomponent/interfaces/counterfactual"
 import {
     WComponent,
     WComponentsById,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { WcIdToCounterfactualsV2Map } from "../wcomponent_derived/interfaces/counterfactual"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
 

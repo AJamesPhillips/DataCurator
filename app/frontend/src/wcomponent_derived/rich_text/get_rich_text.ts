@@ -1,8 +1,6 @@
-import type { CreationContextState } from "../../state/creation_context/state"
-import type { WcIdToCounterfactualsV2Map } from "../../wcomponent/interfaces/counterfactual"
 import { test } from "../../shared/utils/test"
+import type { CreationContextState } from "../../state/creation_context/state"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
-import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import {
     WComponentsById,
     WComponent,
@@ -11,6 +9,8 @@ import {
     wcomponent_is_sub_state,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
+import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
+import type { WcIdToCounterfactualsV2Map } from "../interfaces/counterfactual"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 

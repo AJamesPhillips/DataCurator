@@ -1,6 +1,6 @@
 import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import type { ParsedValue } from "../interfaces"
+import type { ParsedValue } from "../interfaces/value"
 
 
 

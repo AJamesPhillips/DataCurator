@@ -1,7 +1,6 @@
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import type {
     ComposedCounterfactualStateValueAndPredictionSetV2,
-    VAPSetIdToCounterfactualV2Map,
 } from "../wcomponent/interfaces/counterfactual"
 import { calc_prediction_certainty, calc_prediction_is_uncertain } from "./prediction_uncertainty"
 import {
@@ -11,8 +10,9 @@ import { WComponent, wcomponent_should_have_state_VAP_sets } from "../wcomponent
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { get_VAPs_ordered_by_prob } from "./value_and_prediction/get_VAPs_ordered_by_prob"
 import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
-import type { CurrentValueAndProbability } from "./interfaces"
+import type { CurrentValueAndProbability } from "./interfaces/value"
 import { parse_VAP_value } from "./value/parse_value"
+import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 
 
 

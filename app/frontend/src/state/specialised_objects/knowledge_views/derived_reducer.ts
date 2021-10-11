@@ -1,32 +1,33 @@
-import {
-    WComponent,
-    WComponentsById,
-    wcomponent_can_render_connection,
-    wcomponent_is_counterfactual_v2,
-    wcomponent_is_prioritisation,
-} from "../../../wcomponent/interfaces/SpecialisedObjects"
-import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent/interfaces/counterfactual"
-import { sort_list } from "../../../shared/utils/sort"
-import { update_substate } from "../../../utils/update_state"
-import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
-import type { RootState } from "../../State"
-import {
-    get_base_knowledge_view,
-    get_nested_knowledge_view_ids,
-    get_wcomponents_from_state,
-    sort_nested_knowledge_map_ids_by_priority_then_title,
-} from "../accessors"
 import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/interfaces/knowledge_view"
-import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
 import { is_uuid_v4 } from "../../../shared/utils/ids"
-import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
-import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { is_defined } from "../../../shared/utils/is_defined"
+import { sort_list } from "../../../shared/utils/sort"
+import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { update_substate } from "../../../utils/update_state"
+import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
+import {
+    wcomponent_can_render_connection,
+    WComponentsById,
+    WComponent,
+    wcomponent_is_counterfactual_v2,
+    wcomponent_is_prioritisation,
+} from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
+import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
+import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
+import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
+import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
+import type { RootState } from "../../State"
+import {
+    get_base_knowledge_view,
+    get_nested_knowledge_view_ids,
+    sort_nested_knowledge_map_ids_by_priority_then_title,
+    get_wcomponents_from_state,
+} from "../accessors"
 
 
 
@@ -123,6 +124,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     // as many just want to know what ids are present in the knowledge view not the positions of
     // the components
     const wcomponent_ids = Object.keys(composed_wc_id_map)
+    const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map)
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
@@ -141,6 +143,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
         composed_wc_id_map,
+        overlapping_wc_ids,
         wcomponent_nodes,
         wcomponent_connections,
         wc_id_to_counterfactuals_v2_map,
@@ -305,4 +308,37 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
         ...current_composed_knowledge_view,
         filters: { wc_ids_excluded_by_filters }
     }
+}
+
+
+
+function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+{
+    const map: OverlappingWcIdMap = {}
+
+    const entries: { [coord: string]: string[] } = {}
+    const overlapping_coord_keys = new Set<string>()
+
+    Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
+    {
+        if (entry.deleted) return
+
+        const coord_key = `${entry.left},${entry.top}`
+        const ids = entries[coord_key] || []
+        ids.push(wcomponent_id)
+        entries[coord_key] = ids
+        if (ids.length > 1) overlapping_coord_keys.add(coord_key)
+    })
+
+    overlapping_coord_keys.forEach(coord_key =>
+    {
+        const overlapping_wcomponent_ids = entries[coord_key]!
+        overlapping_wcomponent_ids.forEach((id, index) =>
+        {
+            const i = index + 1
+            map[id] = [ ...overlapping_wcomponent_ids.slice(i), ...overlapping_wcomponent_ids.slice(0, i)]
+        })
+    })
+
+    return map
 }
