@@ -127,9 +127,14 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
-    const wc_id_counterfactuals_v2_map = get_wc_id_counterfactuals_v2_map({
+    const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
         wc_ids_by_type,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    })
+    const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
+        wc_ids_by_type,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        active_counterfactual_ids: current_kv.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
 
@@ -138,7 +143,8 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         composed_wc_id_map,
         wcomponent_nodes,
         wcomponent_connections,
-        wc_id_counterfactuals_v2_map,
+        wc_id_to_counterfactuals_v2_map,
+        wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() }
@@ -207,25 +213,31 @@ interface GetWcIdCounterfactualsV2MapArgs
 {
     wc_ids_by_type: WComponentIdsByType
     wcomponents_by_id: WComponentsById
+    active_counterfactual_ids?: string[]
 }
-function get_wc_id_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
+function get_wc_id_to_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
 {
     const map: WcIdToCounterfactualsV2Map = {}
+    const active_counterfactual_ids = args.active_counterfactual_ids
+        ? new Set(args.active_counterfactual_ids)
+        : false
 
     args.wc_ids_by_type.counterfactualv2.forEach(id =>
     {
+        if (active_counterfactual_ids && !active_counterfactual_ids.has(id)) return
+
         const counterfactual_v2 = args.wcomponents_by_id[id]
         if (!wcomponent_is_counterfactual_v2(counterfactual_v2)) return
 
         const { target_wcomponent_id, target_VAP_set_id } = counterfactual_v2
         if (!target_wcomponent_id || !target_VAP_set_id) return
 
-        const level_VAP_set_ids = map[target_wcomponent_id] || { VAP_sets: {} }
-        map[target_wcomponent_id] = level_VAP_set_ids
+        const counterfactuals_by_attribute = map[target_wcomponent_id] || { VAP_sets: {} }
+        map[target_wcomponent_id] = counterfactuals_by_attribute
 
-        const counterfactual_v2s = level_VAP_set_ids.VAP_sets[target_VAP_set_id] || []
+        const counterfactual_v2s = counterfactuals_by_attribute.VAP_sets[target_VAP_set_id] || []
         counterfactual_v2s.push(counterfactual_v2)
-        level_VAP_set_ids.VAP_sets[target_VAP_set_id] = counterfactual_v2s
+        counterfactuals_by_attribute.VAP_sets[target_VAP_set_id] = counterfactual_v2s
     })
 
     return map

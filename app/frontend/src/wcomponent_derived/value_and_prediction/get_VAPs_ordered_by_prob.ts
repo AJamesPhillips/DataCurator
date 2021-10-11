@@ -1,5 +1,5 @@
 import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 
 
 

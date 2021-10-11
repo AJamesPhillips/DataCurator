@@ -15,7 +15,7 @@ import {
 import { PredictionSummary } from "./to_deprecate/PredictionSummary"
 import { UncertainDateTimeForm } from "../uncertain_datetime/UncertainDateTimeForm"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { set_VAP_probabilities } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"

@@ -7,20 +7,17 @@ import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/st
 interface GetCounterfactualV2VAPSetArgs
 {
     VAP_set: StateValueAndPredictionsSet
-    VAP_set_ids_to_counterfactuals_v2_map: VAPSetIdToCounterfactualV2Map | undefined
-    active_counterfactual_v2_ids: string[] | undefined
+    VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
 }
-export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualStateValueAndPredictionSetV2
+export function apply_counterfactuals_v2_to_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualStateValueAndPredictionSetV2
 {
     const {
-        VAP_set_ids_to_counterfactuals_v2_map,
-        active_counterfactual_v2_ids = [],
+        VAP_set_id_to_counterfactual_v2_map,
     } = args
     let { VAP_set } = args
 
 
-    const counterfactuals_v2 = VAP_set_ids_to_counterfactuals_v2_map?.[VAP_set.id] || []
-    const active_cf_ids = new Set(active_counterfactual_v2_ids)
+    const counterfactuals_v2 = VAP_set_id_to_counterfactual_v2_map?.[VAP_set.id] || []
 
 
     let has_any_counterfactual_applied = false
@@ -31,12 +28,9 @@ export function get_counterfactual_v2_VAP_set (args: GetCounterfactualV2VAPSetAr
         const { target_VAP_id } = cf
         if (!target_VAP_id) return
 
-        if (active_cf_ids.has(cf.id) && !has_any_counterfactual_applied)
-        {
-            VAP_set = clean_VAP_set_for_counterfactual(VAP_set, target_VAP_id)
-            has_any_counterfactual_applied = true
-            active_counterfactual_v2_id = cf.id
-        }
+        VAP_set = distort_VAP_set_for_counterfactual(VAP_set, target_VAP_id)
+        has_any_counterfactual_applied = true
+        active_counterfactual_v2_id = cf.id
     })
 
     return {
@@ -53,7 +47,7 @@ interface CoreCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPr
     target_VAP_id: string | undefined
 }
 
-function clean_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
+function distort_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
 {
     const shared_entry_values = {
         ...VAP_set.shared_entry_values,

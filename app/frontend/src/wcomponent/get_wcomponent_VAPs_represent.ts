@@ -6,7 +6,7 @@ import {
     wcomponent_is_causal_link,
 } from "./interfaces/SpecialisedObjects"
 import type { WComponentStateV2SubType } from "./interfaces/state"
-import { VAPsType } from "./interfaces/value_probabilities_etc"
+import { VAPsType } from "./interfaces/VAPsType"
 
 
 

@@ -1,13 +1,33 @@
 
+export type ParsedValue = string | number | boolean | null
 
 
-// Contains strings for display and derived booleans for determining what else should be displayed
+export interface CurrentValueAndProbability
+{
+    parsed_value: ParsedValue
+    probability: number
+    conviction: number
+    certainty: number
+}
+
+
+
+// Contains values as string for display and derived booleans for determining
+// what else / how it should be displayed
 export interface DerivedValueForUI
 {
     is_defined: boolean
     values_string: string
-    probabilities_string: string
-    convictions_string: string
-    assumed?: boolean
+    counterfactual_applied?: boolean
     uncertain?: boolean
+}
+
+
+// Contains is_valid calculation and derived boolean and degree of certainty
+// for determining how it should be displayed
+export interface DerivedValidityForUI
+{
+    is_defined: boolean
+    is_valid: boolean
+    certainty: number
 }

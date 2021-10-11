@@ -13,7 +13,7 @@ import { LabelsEditor } from "../labels/LabelsEditor"
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
 import { get_wcomponent_state_UI_value } from "../wcomponent_derived/get_wcomponent_state_UI_value"
-import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -36,8 +36,8 @@ import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs
 import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
-import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
-import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
+import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
@@ -77,20 +77,19 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     }
 
 
-    const wc_id_counterfactuals_map = get_wc_id_counterfactuals_v2_map(state)
+    const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state)
 
 
     return {
         ready: state.sync.ready_for_reading,
         base_id: selector_chosen_base_id(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-        wc_id_counterfactuals_map,
+        wc_id_to_counterfactuals_map,
         from_wcomponent,
         to_wcomponent,
         editing: !state.display_options.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
-        creation_context: state.creation_context,
     }
 }
 
@@ -124,9 +123,9 @@ function _WComponentForm (props: Props)
     if (base_id === undefined) return <div>Choose a base first.</div>
 
 
-    const { wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, from_wcomponent, to_wcomponent,
-        editing, created_at_ms, sim_ms, creation_context } = props
-    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[wcomponent_id]?.VAP_sets
+    const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
+        editing, created_at_ms, sim_ms } = props
+    const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets
 
 
     if (previous_id !== wcomponent_id && previous_id !== undefined)
@@ -156,7 +155,7 @@ function _WComponentForm (props: Props)
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
     if (wcomponent_should_have_state_VAP_sets(wcomponent))
     {
-        UI_value = get_wcomponent_state_UI_value({ wcomponent, wc_counterfactuals, created_at_ms, sim_ms })
+        UI_value = get_wcomponent_state_UI_value({ wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
         orig_value_possibilities = wcomponent.value_possibilities
     }
@@ -166,7 +165,7 @@ function _WComponentForm (props: Props)
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
-                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
+                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={focus_title}
                 hide_label={true}

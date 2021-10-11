@@ -6,6 +6,7 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { ACTIONS } from "../state/actions"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
 } from "../state/specialised_objects/accessors"
@@ -32,7 +33,7 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     wcomponents: state.derived.wcomponents,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_v2_map,
+    wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
 })
@@ -55,6 +56,7 @@ function _WComponentFromTo (props: Props)
         connection_terminal_type,
         wcomponents,
         wcomponents_by_id,
+        wc_id_to_counterfactuals_map,
         on_update_id,
         on_update_type,
         set_highlighted_wcomponent,
@@ -65,8 +67,8 @@ function _WComponentFromTo (props: Props)
     const filtered_wcomponents = wcomponents.filter(wc => !wcomponent_is_plain_connection(wc))
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: filtered_wcomponents,
-        wcomponents_by_id: props.wcomponents_by_id,
-        wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
+        wcomponents_by_id,
+        wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })

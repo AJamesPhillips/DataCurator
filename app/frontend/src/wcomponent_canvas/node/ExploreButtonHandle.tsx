@@ -15,7 +15,7 @@ import type {
 } from "../../shared/interfaces/knowledge_view"
 import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
-import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
@@ -68,7 +68,7 @@ function _ExploreButtonHandle (props: Props)
 
     return <span
         className={class_name}
-        onPointerDown={e =>
+        onClick={e => // using onClick so that WComponentForm input onBlur functions can fire
         {
             e.preventDefault()
             e.stopImmediatePropagation()
@@ -110,7 +110,7 @@ export const ExploreButtonHandle = connector(_ExploreButtonHandle) as Functional
 
 
 
-function prepare_wcomponent_knowledge_view(props: Props, store: Store<RootState>)
+function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState>)
 {
     if (!props.wcomponent_current_kv_entry || !props.wcomponent) return false
 
@@ -123,7 +123,7 @@ function prepare_wcomponent_knowledge_view(props: Props, store: Store<RootState>
 
     const rendered_title = get_title({
         wcomponent: props.wcomponent,
-        wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
+        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         rich_text: true,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         created_at_ms: state.routing.args.created_at_ms,

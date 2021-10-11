@@ -15,7 +15,7 @@ import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButto
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import type { CreationContextState } from "../../state/creation_context/state"
 import { Tense } from "../../wcomponent/interfaces/datetime"
-import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet as VAPSet,

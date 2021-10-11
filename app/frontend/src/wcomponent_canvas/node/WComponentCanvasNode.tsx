@@ -41,7 +41,7 @@ import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSum
 import { WComponentValidityValue } from "./WComponentValidityValue"
 import { Handles } from "./Handles"
 import { NodeSubStateSummary } from "./NodeSubStateSummary"
-import { get_wc_id_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 
 
 
@@ -74,7 +74,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         on_current_knowledge_view,
         current_composed_knowledge_view,
         wcomponent: get_wcomponent_from_state(state, own_props.id),
-        wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
+        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
         is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),
@@ -114,7 +114,7 @@ function _WComponentCanvasNode (props: Props)
         id, on_graph = true,
         force_displaying,
         is_editing,
-        current_composed_knowledge_view: composed_kv, wcomponent, wc_id_counterfactuals_map, wcomponents_by_id,
+        current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id,
         is_current_item, is_selected, is_highlighted,
         shift_or_control_keys_are_down,
         created_at_ms, sim_ms, validity_filter, certainty_formatting,
@@ -189,7 +189,7 @@ function _WComponentCanvasNode (props: Props)
     ]
 
 
-    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms })
+    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
 
     const show_all_details = is_editing || is_current_item

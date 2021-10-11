@@ -1,6 +1,6 @@
 import { WComponent, wcomponent_has_validity_predictions } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { CurrentValidityValueAndProbabilities } from "../wcomponent/interfaces/value_probabilities_etc"
-import { calc_prediction_is_uncertain } from "./calc_prediction_is_uncertain"
+import type { DerivedValidityForUI } from "./interfaces"
+import { calc_prediction_certainty } from "./prediction_uncertainty"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
 } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
@@ -8,15 +8,10 @@ import {
 
 
 
-const default_value = (): CurrentValidityValueAndProbabilities => ({
-    probabilities: [],
+const default_value = (): DerivedValidityForUI => ({
     is_defined: false,
-    value: true,
-    probability: 1,
-    conviction: 1,
+    is_valid: true,
     certainty: 1,
-    uncertain: false,
-    assumed: false,
 })
 
 
@@ -26,7 +21,7 @@ interface GetWcomponentStateValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): CurrentValidityValueAndProbabilities
+export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): DerivedValidityForUI
 {
     const { wcomponent, created_at_ms, sim_ms } = args
 
@@ -46,19 +41,12 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
 
     if (!active_validity) return default_value()
 
-    const { probability, conviction } = active_validity
-    const valid = probability > 0.5
-    const uncertain = calc_prediction_is_uncertain({ probability, conviction })
-    const certainty = Math.min(probability, conviction)
+    const valid = active_validity.probability > 0.5
+    const certainty = calc_prediction_certainty(active_validity)
 
     return {
-        probabilities: [], // TODO this will get values once we're using VAPs
         is_defined: true,
-        value: valid,
-        uncertain,
-        probability,
-        conviction,
+        is_valid: valid,
         certainty,
-        assumed: false,
     }
 }

@@ -1,137 +1,55 @@
-import { percentage_to_string } from "../sharedf/percentages"
-import type { CurrentValueAndProbability, ParsedValue } from "../wcomponent/interfaces/value_probabilities_etc"
-import { WComponent, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { VAPSetIdToCounterfactualV2Map } from "../wcomponent/interfaces/counterfactual"
-import { get_wcomponent_state_value_and_probabilities } from "./value_and_prediction/get_value"
+import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value"
 import type { DerivedValueForUI } from "./interfaces"
+import { get_boolean_representation, parsed_value_to_string } from "./value/parsed_value_presentation"
 
 
 
 interface GetWcomponentStateUIValueArgs
 {
     wcomponent: WComponent
-    wc_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
+    VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
     created_at_ms: number
     sim_ms: number
 }
 export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): DerivedValueForUI
 {
-    const possibilities = get_wcomponent_state_value_and_probabilities(args)
-
-    const is_defined = possibilities.length > 0
-
-
-    const display_string_values = get_display_strings(args.wcomponent, possibilities)
-    const display_strings = reduce_display_string_values(display_string_values)
+    const {
+        most_probable_VAP_set_values,
+        any_uncertainty,
+        counterfactual_applied,
+    } = get_wcomponent_state_value_and_probabilities(args)
 
 
-    let assumed = false
-    let uncertain = false
-    possibilities.forEach(possibility =>
+    const boolean_representation = get_boolean_representation(args.wcomponent)
+    const value_strings: string[] = []
+    most_probable_VAP_set_values.forEach(possibility =>
     {
-        assumed = assumed || possibility.assumed
-        uncertain = uncertain || possibility.uncertain
+        const value_string = parsed_value_to_string(possibility.parsed_value, boolean_representation)
+        value_strings.push(value_string)
     })
 
+    const is_defined = most_probable_VAP_set_values.length > 0
+    const values_string = reduce_display_string_values(value_strings)
 
     return {
-        ...display_strings,
+        values_string,
         is_defined,
-        assumed,
-        uncertain,
+        counterfactual_applied,
+        uncertain: any_uncertainty,
     }
 }
 
 
-// Is `possibilities` mutuallly exculive?  If so rename to `possibilities_set`?
-function get_display_strings (wcomponent: WComponent, possibilities: CurrentValueAndProbability[])
-{
-    const boolean_representation = get_boolean_representation({ wcomponent })
 
-    const value_strings: string[] = []
-    const probability_strings: string[] = []
-    const conviction_strings: string[] = []
-    possibilities.forEach(({ value, probability, conviction }) =>
-    {
-        const value_string = VAP_value_to_string(value, boolean_representation)
-
-        value_strings.push(value_string)
-        probability_strings.push(percentage_to_string(probability))
-        conviction_strings.push(percentage_to_string(conviction))
-    })
-
-    return { value_strings, probability_strings, conviction_strings }
-}
-
-
-
-interface BooleanRepresentation
-{
-    true: string
-    false: string
-}
-export function get_boolean_representation (args: { wcomponent: WComponent | undefined, append_boolean?: boolean }): BooleanRepresentation
-{
-    const { wcomponent, append_boolean } = args
-
-
-    let boolean_true_str = ""
-    let boolean_false_str = ""
-
-
-    if (wcomponent_is_statev2(wcomponent))
-    {
-        boolean_true_str = wcomponent.boolean_true_str || boolean_true_str
-        boolean_false_str = wcomponent.boolean_false_str || boolean_false_str
-    }
-
-
-    boolean_true_str = boolean_true_str ? (append_boolean ? boolean_true_str + " (True)" : boolean_true_str) : "True"
-    boolean_false_str = boolean_false_str ? (append_boolean ? boolean_false_str + " (False)" : boolean_false_str) : "False"
-
-
-    return { true: boolean_true_str, false: boolean_false_str }
-}
-
-
-
-export function VAP_value_to_string (value: ParsedValue, boolean_representation: BooleanRepresentation)
-{
-    let value_string: string
-
-    if (typeof value === "boolean")
-    {
-        value_string = value ? boolean_representation.true : boolean_representation.false
-    }
-    else value_string = `${value}`
-
-    return value_string
-}
-
-
-
-interface ReduceDisplayStringValuesArgs
-{
-    value_strings: string[]
-    probability_strings: string[]
-    conviction_strings: string[]
-}
 const max_items = 3
-function reduce_display_string_values (args: ReduceDisplayStringValuesArgs)
+function reduce_display_string_values (value_strings: string[])
 {
-    const { value_strings, probability_strings, conviction_strings } = args
-
     let values_string = value_strings.length ? value_strings.slice(0, max_items).join(", ") : "not defined"
     if (value_strings.length > max_items) values_string += `, (${value_strings.length - max_items} more)`
 
-    let probabilities_string = probability_strings.length ? (probability_strings.slice(0, max_items).join(", ") + "%") : ""
-    if (probability_strings.length > max_items) probabilities_string += `, (${probability_strings.length - max_items} more)`
-
-    let convictions_string = conviction_strings.length ? (conviction_strings.slice(0, max_items).join(", ") + "%") : ""
-    if (conviction_strings.length > max_items) convictions_string += `, (${conviction_strings.length - max_items} more)`
-
-
-    return { values_string, probabilities_string, convictions_string }
+    return values_string
 }
 
 

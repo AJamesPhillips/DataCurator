@@ -1,5 +1,5 @@
 import { percentage_to_string } from "../../sharedf/percentages"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
 import { get_VAPs_ordered_by_prob } from "./get_VAPs_ordered_by_prob"
 

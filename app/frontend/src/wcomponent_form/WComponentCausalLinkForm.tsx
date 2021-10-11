@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { EditableNumber } from "../form/EditableNumber"
-import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { WComponent, WComponentCausalConnection, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 

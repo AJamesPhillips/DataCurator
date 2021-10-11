@@ -6,7 +6,7 @@ import {
     WComponent,
     wcomponent_is_judgement_or_objective,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_counterfactuals_v2 } from "../../state/derived/accessor"
+import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
@@ -30,21 +30,21 @@ const map_state = (state: RootState, own_props: OwnProps) => {
 
 
     let target_wcomponent: WComponent | undefined = undefined
-    let target_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined = undefined
+    let VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined = undefined
     if (judgement_wcomponent)
     {
         const target_id = judgement_wcomponent.judgement_target_wcomponent_id
         target_wcomponent = get_wcomponent_from_state(state, target_id)
-        target_counterfactuals = get_wcomponent_counterfactuals_v2(state, target_id)
+        VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_id)
     }
 
-    const kv = get_current_composed_knowledge_view_from_state(state)
-    const position = kv ? kv.composed_wc_id_map[own_props.judgement_or_objective_id] : undefined
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
+    const position = composed_kv?.composed_wc_id_map[own_props.judgement_or_objective_id]
 
     return {
         judgement_wcomponent,
         target_wcomponent,
-        target_counterfactuals,
+        VAP_set_id_to_counterfactual_v2_map,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         position,
@@ -60,11 +60,11 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementBadgeConnected (props: Props)
 {
-    const { judgement_or_objective_id: judgement_id, judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms, position } = props
+    const { judgement_or_objective_id: judgement_id, judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms, position } = props
 
     if (!judgement_wcomponent || !target_wcomponent) return null
 
-    const judgement_value = calculate_judgement_value({ judgement_wcomponent: judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
+    const judgement_value = calculate_judgement_value({ judgement_wcomponent: judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
 
     return <JudgementBadge judgement={judgement_value} judgement_or_objective_id={judgement_id} position={position} />
 }

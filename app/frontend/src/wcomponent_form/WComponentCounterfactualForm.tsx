@@ -15,7 +15,6 @@ import type {
 } from "../wcomponent/interfaces/counterfactual"
 import { wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_counterfactual_v2_VAP_set } from "../wcomponent_derived/value_and_prediction/get_counterfactual_v2_VAP_set"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
@@ -85,7 +84,7 @@ function _WComponentCounterfactualForm (props: Props)
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: wcomponent_statev2s_in_current_kv,
         wcomponents_by_id,
-        wc_id_counterfactuals_map: {},
+        wc_id_to_counterfactuals_map: {},
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })

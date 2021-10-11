@@ -105,9 +105,12 @@ export function wcomponent_is_action (wcomponent: WComponent | undefined): wcomp
 }
 
 
-function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefined, log_error_id = "")
+// * log_error_id   Accepts number so that downstream functions can use it as a type guard
+//                  in array.filter()  If a number is given it will be ignored.
+function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefined, log_error_id: number | string = "")
 {
     let yes = false
+    log_error_id = (typeof log_error_id === "string") ? log_error_id : ""
 
     if (!wcomponent)
     {
@@ -129,21 +132,13 @@ function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefin
 }
 
 
-export function wcomponent_is_goal (wcomponent: WComponent | undefined): wcomponent is WComponentNodeGoal
-{
-    return wcomponent_is_a("goal", wcomponent)
-}
-export function alert_wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentNodeGoal
+export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentNodeGoal
 {
     return wcomponent_is_a("goal", wcomponent, log_error_id)
 }
 
 
-export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined): wcomponent is WComponentPrioritisation
-{
-    return wcomponent_is_a("prioritisation", wcomponent)
-}
-export function alert_wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentPrioritisation
+export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentPrioritisation
 {
     return wcomponent_is_a("prioritisation", wcomponent, log_error_id)
 }
@@ -166,21 +161,9 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent | undefin
 
 
 
-export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined): wcomponent is WComponentJudgement
+export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentJudgement
 {
-    return wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
-}
-export function alert_wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: string): wcomponent is WComponentJudgement
-{
-    const result = wcomponent_is_a("judgement", wcomponent) || wcomponent_is_a("objective", wcomponent)
-
-    if (!result && log_error_id)
-    {
-        if (!wcomponent) console.error(`wcomponent with id "${log_error_id}" does not exist`)
-        else console.error(`wcomponent with id "${log_error_id}" is not a judgement or objective`)
-    }
-
-    return result
+    return wcomponent_is_a("judgement", wcomponent, log_error_id) || wcomponent_is_a("objective", wcomponent, log_error_id)
 }
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {

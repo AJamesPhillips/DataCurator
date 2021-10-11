@@ -14,9 +14,9 @@ export function get_wcomponent_validity_UI_value (props: GetWcomponentValidityUI
 {
     const { wcomponent, created_at_ms, sim_ms } = props
 
-    const { is_defined, value, uncertain, probability, conviction } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
+    const { is_defined, is_valid, certainty } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
 
-    const value_str = value ? "Valid" : "Invalid"
+    const values_string = is_valid ? "Valid" : "Invalid"
 
-    return { is_defined, values_string: value_str, probabilities_string: "", convictions_string: "" }
+    return { is_defined, values_string }
 }

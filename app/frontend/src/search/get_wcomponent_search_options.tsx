@@ -17,7 +17,7 @@ interface GetWcomponentSearchOptionsArgs
 {
     wcomponents?: WComponent[]
     wcomponents_by_id: WComponentsById
-    wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
+    wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
     include_deleted?: boolean
@@ -26,7 +26,7 @@ interface GetWcomponentSearchOptionsArgs
 
 export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutocompleteOption[]
 {
-    const { wcomponents: wcs, wcomponents_by_id, wc_id_counterfactuals_map, created_at_ms, sim_ms, include_deleted } = args
+    const { wcomponents: wcs, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms, include_deleted } = args
 
     const wcomponents = wcs || Object.values(wcomponents_by_id)
 
@@ -38,7 +38,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 rich_text: true,
                 render_links: false,
                 wcomponents_by_id,
-                wc_id_counterfactuals_map,
+                wc_id_to_counterfactuals_map,
                 created_at_ms,
                 sim_ms,
             })

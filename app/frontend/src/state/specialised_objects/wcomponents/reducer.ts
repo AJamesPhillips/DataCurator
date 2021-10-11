@@ -5,7 +5,7 @@ import { prepare_new_VAP } from "../../../wcomponent/CRUD_helpers/prepare_new_VA
 import type { CreationContextState } from "../../creation_context/state"
 import { test } from "../../../shared/utils/test"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
-import { VAPsType } from "../../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../../wcomponent/interfaces/VAPsType"
 import type { WComponentNodeStateV2, StateValueAndPrediction } from "../../../wcomponent/interfaces/state"
 import { update_subsubstate, update_substate } from "../../../utils/update_state"
 import type { RootState } from "../../State"

@@ -9,7 +9,7 @@ import {
     get_details2_for_single_VAP_set,
 } from "./common"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { ExpandableListWithAddButton } from "../../form/editable_list/ExpandableListWithAddButton"
 import { create_new_VAP_set_version } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import type { RootState } from "../../state/State"

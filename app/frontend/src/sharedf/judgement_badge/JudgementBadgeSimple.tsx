@@ -9,7 +9,8 @@ import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
-import type { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import type { ParsedValue } from "../../wcomponent_derived/interfaces"
 
 
 

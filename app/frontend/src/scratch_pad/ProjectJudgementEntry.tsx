@@ -9,7 +9,7 @@ import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { format_wcomponent_url } from "../wcomponent_derived/rich_text/templates"
 import { RichMarkDown } from "../sharedf/RichMarkDown"
-import { get_wc_id_counterfactuals_v2_map } from "../state/derived/accessor"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import { lefttop_to_xy } from "../state/display_options/display"
 import type { RootState } from "../state/State"
 
@@ -32,7 +32,7 @@ const map_state = (state: RootState, { judgement }: OwnProps) =>
     return {
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         target_wcomponent,
-        wc_id_counterfactuals_map: get_wc_id_counterfactuals_v2_map(state),
+        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     }
 }
 
@@ -45,8 +45,8 @@ const _ProjectJudgementEntry = (props: Props) =>
     if (!props.target_wcomponent) return <div>Can not find judgement's target wcomponent of id: {props.judgement.judgement_target_wcomponent_id}</div>
 
 
-    const { knowledge_view, judgement, target_wcomponent, wc_id_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms } = props
-    const wc_counterfactuals = wc_id_counterfactuals_map && wc_id_counterfactuals_map[target_wcomponent.id]?.VAP_sets
+    const { knowledge_view, judgement, target_wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id, created_at_ms, sim_ms } = props
+    const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[target_wcomponent.id]?.VAP_sets
 
     return <div style={{ display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa" }}>
         <div
@@ -59,11 +59,11 @@ const _ProjectJudgementEntry = (props: Props) =>
             }}
         >
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })}
+                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
             />
         </div>
         <div style={{ flex: "1", textAlign: "right" }}>
-            {get_wcomponent_state_UI_value({ wcomponent: target_wcomponent, wc_counterfactuals, created_at_ms, sim_ms }).values_string}
+            {get_wcomponent_state_UI_value({ wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms }).values_string}
         </div>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
@@ -78,11 +78,11 @@ const _ProjectJudgementEntry = (props: Props) =>
             })()}
         >
             <JudgementBadge
-                judgement={calculate_judgement_value({ judgement_wcomponent: judgement, target_wcomponent, target_counterfactuals: undefined, created_at_ms, sim_ms })}
+                judgement={calculate_judgement_value({ judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })}
             />
 
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_counterfactuals_map: undefined, created_at_ms, sim_ms })}
+                text={get_title({ rich_text: true, wcomponents_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
             />
         </a>
     </div>

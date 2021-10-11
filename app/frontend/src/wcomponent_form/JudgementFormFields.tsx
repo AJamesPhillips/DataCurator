@@ -5,20 +5,20 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../shared/utils/sentence_case"
-import { get_boolean_representation } from "../wcomponent_derived/get_wcomponent_state_UI_value"
-import { VAPsType } from "../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import {
     judgement_operators,
     WComponentJudgement,
 } from "../wcomponent/interfaces/judgement"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { get_wcomponent_counterfactuals_v2 } from "../state/derived/accessor"
+import { get_VAP_set_id_to_counterfactual_v2_map } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
 import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
 import { WComponentFromTo } from "./WComponentFromTo"
+import { get_boolean_representation } from "../wcomponent_derived/value/parsed_value_presentation"
 
 
 
@@ -33,11 +33,11 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 {
     const target_id = wcomponent.judgement_target_wcomponent_id
     const target_wcomponent = get_wcomponent_from_state(state, target_id)
-    const target_counterfactuals = get_wcomponent_counterfactuals_v2(state, target_id)
+    const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_id)
 
     return {
         target_wcomponent,
-        target_counterfactuals,
+        VAP_set_id_to_counterfactual_v2_map,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         is_editing: !state.display_options.consumption_formatting,
@@ -52,19 +52,19 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementFormFields (props: Props)
 {
-    const { wcomponent, upsert_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = props
+    const { wcomponent, upsert_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms } = props
 
     const { judgement_manual } = wcomponent
     const selected_option_id_for_manual = judgement_manual === undefined ? undefined : judgement_manual.toString()
 
-    const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms })
+    const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
 
 
     const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
     let boolean_options: AutocompleteOption[] = []
     if (target_VAPs_represent === VAPsType.boolean)
     {
-        const result = get_boolean_representation({ wcomponent: target_wcomponent, append_boolean: true })
+        const result = get_boolean_representation(target_wcomponent, true)
 
         boolean_options = [
             { id: "True", title: result.true },

@@ -40,7 +40,8 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
-    wc_id_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
+    wc_id_to_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
+    wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 

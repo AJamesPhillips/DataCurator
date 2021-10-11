@@ -31,6 +31,7 @@ import {
     get_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,
 } from "../wcomponent_derived/sub_state/get_sub_state_value_possibilities"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 
 
 
@@ -47,8 +48,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""]
     const target_wcomponent = wcomponent_is_statev2(maybe_target_wcomponent) && maybe_target_wcomponent
     // const knowledge_view = get_current_knowledge_view_from_state(state)
-    // const composed_kv = get_current_composed_knowledge_view_from_state(state)
-
 
     return {
         // knowledge_view,
@@ -59,6 +58,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         sim_ms: state.routing.args.sim_ms,
         editing: !state.display_options.consumption_formatting,
         target_wcomponent,
+        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     }
 }
 
@@ -80,6 +80,7 @@ function _WComponentSubStateForm (props: Props)
         wcomponent,
         upsert_wcomponent,
         target_wcomponent,
+        wc_id_to_counterfactuals_map,
     } = props
 
     const wcomponent_statev2s = Array.from(props.statev2_wcomponent_ids)
@@ -90,7 +91,7 @@ function _WComponentSubStateForm (props: Props)
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: wcomponent_statev2s,
         wcomponents_by_id,
-        wc_id_counterfactuals_map: {},
+        wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })

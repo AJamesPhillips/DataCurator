@@ -9,7 +9,7 @@ import type {
     ValuePossibility,
 } from "../interfaces/possibility"
 import type { StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
-import { VAPsType } from "../interfaces/value_probabilities_etc"
+import { VAPsType } from "../interfaces/VAPsType"
 import { default_possible_values } from "./default_possible_values"
 
 

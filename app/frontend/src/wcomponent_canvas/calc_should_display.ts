@@ -12,7 +12,6 @@ import {
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
 import { get_tense_of_uncertain_datetime } from "../shared/utils_datetime/get_tense_of_uncertain_datetime"
-import type { CurrentValidityValueAndProbabilities } from "../wcomponent/interfaces/value_probabilities_etc"
 
 
 

@@ -7,12 +7,13 @@ import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
-    alert_wcomponent_is_judgement_or_objective,
+    wcomponent_is_judgement_or_objective,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
 import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { set_union } from "../utils/set"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 
 
 
@@ -36,19 +37,19 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         get_wcomponents_from_state(state, ids)
         .forEach((wc, index) =>
         {
-            if (alert_wcomponent_is_judgement_or_objective(wc, ids[index]!)) filtered_wcomponents.push(wc)
+            if (wcomponent_is_judgement_or_objective(wc, ids[index]!)) filtered_wcomponents.push(wc)
         })
     }
 
 
-    const wc_id_counterfactuals_map = get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_v2_map
+    const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state)
 
 
     return {
         consumption_formatting: state.display_options.consumption_formatting,
         filtered_wcomponents,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-        wc_id_counterfactuals_map,
+        wc_id_to_counterfactuals_map,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }
@@ -75,7 +76,7 @@ function _GoalFormFields (props: Props)
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: props.filtered_wcomponents,
         wcomponents_by_id: props.wcomponents_by_id,
-        wc_id_counterfactuals_map: props.wc_id_counterfactuals_map,
+        wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
     })

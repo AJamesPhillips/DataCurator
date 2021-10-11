@@ -5,7 +5,7 @@ import { Box } from "@material-ui/core"
 import "../../form/editable_list/EditableListEntry.css"
 import { Button } from "../../sharedf/Button"
 import { get_items_by_id } from "../../shared/utils/get_items"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById, ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
 import {

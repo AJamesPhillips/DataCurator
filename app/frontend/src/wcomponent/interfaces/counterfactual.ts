@@ -16,11 +16,6 @@ export interface TargetVAPIdCounterfactualInfoMap
 
 
 
-export interface ComposedCounterfactualStateValueAndPredictionV1 extends StateValueAndPrediction
-{
-    is_counterfactual: false
-}
-
 // This is a composed / denormalised form suitable for UI
 export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
 {

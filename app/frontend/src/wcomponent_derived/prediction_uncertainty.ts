@@ -8,3 +8,10 @@ export function calc_prediction_is_uncertain ({ probability, conviction }: CalcU
 {
     return (probability > 0 && probability < 1) || conviction !== 1
 }
+
+
+
+export function calc_prediction_certainty ({ probability, conviction }: CalcUncertaintyArgs)
+{
+    return Math.min(probability, conviction)
+}

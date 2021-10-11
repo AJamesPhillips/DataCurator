@@ -1,9 +1,12 @@
 import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
-import { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent/interfaces/counterfactual"
-import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/value_and_prediction/get_value"
+import {
+    get_wcomponent_state_value_and_probabilities,
+} from "../../wcomponent_derived/get_wcomponent_state_value"
+import type { ParsedValue } from "../../wcomponent_derived/interfaces"
 
 
 
@@ -14,7 +17,7 @@ interface CalculateJudgementValueArgs
 {
     judgement_wcomponent: WComponentJudgement
     target_wcomponent: WComponent | undefined
-    target_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
+    VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
     created_at_ms: number
     sim_ms: number
     // potential_world: PotentialWorld | undefined
@@ -22,26 +25,26 @@ interface CalculateJudgementValueArgs
 
 export function calculate_judgement_value (args: CalculateJudgementValueArgs): JudgementValue
 {
-    const { judgement_wcomponent, target_wcomponent, target_counterfactuals, created_at_ms, sim_ms } = args
+    const { judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms } = args
 
     if (!target_wcomponent) return undefined
 
-    const possibilities = get_wcomponent_state_value_and_probabilities({
+    const { most_probable_VAP_set_values } = get_wcomponent_state_value_and_probabilities({
         wcomponent: target_wcomponent,
-        wc_counterfactuals: target_counterfactuals,
+        VAP_set_id_to_counterfactual_v2_map,
         created_at_ms,
         sim_ms,
     })
 
 
-    if (possibilities.length !== 1)
+    if (most_probable_VAP_set_values.length !== 1)
     {
         // TODO perhaps if multiple values we will want to check if all the values are the same
         // (and probabilities >0.5) and then we can form a judgement based on all of these
         return undefined
     }
-    const current_value = possibilities[0]!
-    const value = current_value.value
+    const current_value = most_probable_VAP_set_values[0]!
+    const value = current_value.parsed_value
 
 
     const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)

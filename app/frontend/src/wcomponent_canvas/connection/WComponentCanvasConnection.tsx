@@ -10,7 +10,7 @@ import type {
     KnowledgeViewWComponentEntry,
 } from "../../shared/interfaces/knowledge_view"
 import { bounded } from "../../shared/utils/bounded"
-import { VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import {
     WComponent,
@@ -23,15 +23,12 @@ import {
     wcomponent_is_statev2,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
-    get_counterfactual_v2_VAP_set,
-} from "../../wcomponent_derived/value_and_prediction/get_counterfactual_v2_VAP_set"
+    apply_counterfactuals_v2_to_VAP_set,
+} from "../../wcomponent_derived/value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
 import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import { ACTIONS } from "../../state/actions"
 import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
-import {
-    get_partial_args_for_get_counterfactual_v2_VAP_set,
-} from "../../state/specialised_objects/counterfactuals/get_props_for_state_v2"
 import type { RootState } from "../../state/State"
 import {
     calc_connection_wcomponent_should_display,
@@ -39,6 +36,7 @@ import {
     calc_display_opacity,
 } from "../calc_should_display"
 import { factory_on_pointer_down } from "../canvas_common"
+import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 
 
 
@@ -262,8 +260,10 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
 
             if (VAP_set)
             {
-                const value_args = get_partial_args_for_get_counterfactual_v2_VAP_set(from_wc.id, state)
-                const counterfactual_VAP_set = get_counterfactual_v2_VAP_set({ ...value_args, VAP_set })
+                const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, from_wc.id)
+                const counterfactual_VAP_set = apply_counterfactuals_v2_to_VAP_set({
+                    VAP_set, VAP_set_id_to_counterfactual_v2_map,
+                })
                 const VAPs_represent = get_wcomponent_VAPs_represent(from_wc)
                 const visual_VAPs = get_VAP_visuals_data({
                     wcomponent: from_wc, VAP_set: counterfactual_VAP_set, VAPs_represent

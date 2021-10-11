@@ -1,162 +1,98 @@
-import { CurrentValueAndProbabilities, CurrentValueAndProbability, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import type {
-    StateValueAndPredictionsSet,
-    StateValueAndPrediction,
-} from "../../wcomponent/interfaces/state"
-import type {
+    ComposedCounterfactualStateValueAndPredictionSetV2,
     VAPSetIdToCounterfactualV2Map,
-} from "../../wcomponent/interfaces/counterfactual"
-import { calc_prediction_is_uncertain } from "../calc_prediction_is_uncertain"
+} from "../wcomponent/interfaces/counterfactual"
+import { calc_prediction_certainty, calc_prediction_is_uncertain } from "./prediction_uncertainty"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
-} from "./partition_and_prune_items_by_datetimes_and_versions"
-import { WComponent, wcomponent_should_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { ComposedCounterfactualStateValueAndPredictionV1 } from "../../wcomponent/interfaces/counterfactual"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
-import { get_VAPs_ordered_by_prob } from "./get_VAPs_ordered_by_prob"
-
-
-// CARNAGE
-export function get_current_value (probabilities: CurrentValueAndProbability[]): CurrentValueAndProbabilities
-{
-    let value: CurrentValueAndProbabilities = {
-        probabilities,
-        is_defined: probabilities.length > 0,
-        value: undefined,
-        probability: 1,
-        conviction: 1,
-        certainty: 1,
-        uncertain: probabilities.length > 1,
-        assumed: false,
-    }
-
-    if (probabilities.length === 1)
-    {
-        value = { ...value, ...probabilities[0], probabilities }
-    }
-
-    return value
-}
+} from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import { WComponent, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
+import { get_VAPs_ordered_by_prob } from "./value_and_prediction/get_VAPs_ordered_by_prob"
+import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
+import type { CurrentValueAndProbability } from "./interfaces"
+import { parse_VAP_value } from "./value/parse_value"
 
 
 
-interface GetWcomponentStateValueArgs
+interface GetWComponentStateValueAndProbabilitiesArgs
 {
     wcomponent: WComponent
-    wc_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
+    VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_state_value_and_probabilities (args: GetWcomponentStateValueArgs): CurrentValueAndProbability[]
+interface GetWComponentStateValueAndProbabilitiesReturn
 {
-    const { wcomponent, wc_counterfactuals, created_at_ms, sim_ms } = args
+    most_probable_VAP_set_values: CurrentValueAndProbability[]
+    any_uncertainty?: boolean
+    counterfactual_applied?: boolean
+}
+export function get_wcomponent_state_value_and_probabilities (args: GetWComponentStateValueAndProbabilitiesArgs): GetWComponentStateValueAndProbabilitiesReturn
+{
+    const { wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms } = args
 
 
-    if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return []
+    if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [] }
 
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
 
-    const counterfactual_VAPs = get_current_counterfactual_VAP_sets({
-        values_and_prediction_sets: wcomponent.values_and_prediction_sets,
-        VAPs_represent,
-        wc_counterfactuals,
-        created_at_ms,
-        sim_ms,
+    const counterfactual_VAP_sets = wcomponent.values_and_prediction_sets.map(VAP_set =>
+    {
+        return apply_counterfactuals_v2_to_VAP_set({
+            VAP_set,
+            VAP_set_id_to_counterfactual_v2_map,
+        })
     })
-    return get_probable_VAP_values(counterfactual_VAPs, VAPs_represent)
-}
-
-
-
-interface GetCurrentCounterfactualVAPSetsArgs
-{
-    values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined
-    VAPs_represent: VAPsType
-    wc_counterfactuals: VAPSetIdToCounterfactualV2Map | undefined
-    created_at_ms: number
-    sim_ms: number
-}
-function get_current_counterfactual_VAP_sets (args: GetCurrentCounterfactualVAPSetsArgs): ComposedCounterfactualStateValueAndPredictionV1[]
-{
-    const { values_and_prediction_sets, VAPs_represent, wc_counterfactuals,
-        created_at_ms, sim_ms } = args
 
     const { present_item } = partition_and_prune_items_by_datetimes_and_versions({
-        items: values_and_prediction_sets || [], created_at_ms, sim_ms,
-    })
-    const present_items = present_item ? [present_item] : []
-    const all_present_VAPs = get_all_VAPs_from_VAP_sets(present_items, VAPs_represent)
-    const VAP_counterfactuals_maps = Object.values(wc_counterfactuals || {})
-    // return merge_all_counterfactuals_into_all_VAPs(all_present_VAPs, VAP_counterfactuals_maps)
-    return all_present_VAPs.map(VAP => ({ ...VAP, is_counterfactual: false }))
-}
-
-
-
-function get_all_VAPs_from_VAP_sets (VAP_sets: StateValueAndPredictionsSet[], VAPs_represent: VAPsType)
-{
-    let all_VAPs: StateValueAndPrediction[] = []
-    VAP_sets.forEach(VAP_set =>
-    {
-        const subtype_specific_VAPs = clean_VAP_set_entries(VAP_set, VAPs_represent).entries
-        all_VAPs = all_VAPs.concat(subtype_specific_VAPs)
+        items: counterfactual_VAP_sets, created_at_ms, sim_ms,
     })
 
-    return all_VAPs
+
+    const { most_probable_VAP_set_values, any_uncertainty } = get_most_probable_VAP_set_values(present_item, VAPs_represent)
+
+    return {
+        most_probable_VAP_set_values,
+        any_uncertainty,
+        counterfactual_applied: present_item?.has_any_counterfactual_applied,
+    }
 }
 
 
 
-export function clean_VAP_set_entries (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualStateValueAndPredictionSetV2 | undefined, VAPs_represent: VAPsType): { most_probable_VAP_set_values: CurrentValueAndProbability[], any_uncertainty: boolean }
 {
-    const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
-        ? VAP_set.entries.slice(0, 1)
-        : VAP_set.entries
-
-    return { ...VAP_set, entries: subtype_specific_VAPs }
-}
+    if (!VAP_set || VAP_set.entries.length === 0) return { most_probable_VAP_set_values: [], any_uncertainty: false }
 
 
+    const VAPs_by_prob = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent)
 
-export function parse_VAP_value (VAP: StateValueAndPrediction, VAPs_represent: VAPsType)
-{
-    // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
-    const value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
-        : (VAPs_represent === VAPsType.number ? parseFloat(VAP.value)
-        : VAP.value)
+    let any_uncertainty = false
+    const most_probable_VAP_set_values: CurrentValueAndProbability[] = []
 
-    return value
-}
-
-
-
-function get_probable_VAP_values (all_VAPs: ComposedCounterfactualStateValueAndPredictionV1[], VAPs_represent: VAPsType): CurrentValueAndProbability[]
-{
-    if (!all_VAPs.length) return []
-
-
-    const VAPs_by_prob = get_VAPs_ordered_by_prob(all_VAPs, VAPs_represent)
-
-
-    const possibilities: CurrentValueAndProbability[] = VAPs_by_prob.map(VAP =>
+    VAPs_by_prob.forEach(VAP =>
     {
-        const value = parse_VAP_value(VAP, VAPs_represent)
-        const certainty = Math.min(VAP.probability, VAP.conviction)
+        const parsed_value = parse_VAP_value(VAP, VAPs_represent)
+        const certainty = calc_prediction_certainty(VAP)
 
-        return {
-            ...VAP,
-            certainty,
-            uncertain: calc_prediction_is_uncertain(VAP),
-            assumed: VAP.is_counterfactual,
-            value,
+        const uncertain = calc_prediction_is_uncertain(VAP)
+        any_uncertainty = any_uncertainty || uncertain
+
+        const include = VAPs_represent === VAPsType.boolean || uncertain || VAP.probability !== 0
+        if (include)
+        {
+            most_probable_VAP_set_values.push({
+                probability: VAP.probability,
+                conviction: VAP.conviction,
+                certainty,
+                parsed_value,
+            })
         }
     })
-    .filter(possibility =>
-    {
-        return VAPs_represent === VAPsType.boolean || possibility.uncertain || possibility.probability > 0
-    })
 
-    return possibilities
+    return { most_probable_VAP_set_values, any_uncertainty }
 }
 
 

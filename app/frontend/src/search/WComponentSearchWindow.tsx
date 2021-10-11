@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 import { get_wcomponent_search_options } from "./get_wcomponent_search_options"
 import { SearchWindow } from "./SearchWindow"
@@ -18,7 +18,7 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    wc_id_counterfactuals_map: get_current_composed_knowledge_view_from_state(state)?.wc_id_counterfactuals_v2_map,
+    wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
 })

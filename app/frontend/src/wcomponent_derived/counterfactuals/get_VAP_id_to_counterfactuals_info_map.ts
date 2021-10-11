@@ -12,18 +12,18 @@ import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/st
 interface GetVAPCounterfactualsMapArgs
 {
     VAP_set: StateValueAndPredictionsSet
-    VAP_set_ids_to_counterfactuals_v2_map: VAPSetIdToCounterfactualV2Map | undefined
+    VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
     knowledge_views_by_id: KnowledgeViewsById
 }
 export function get_VAP_id_to_counterfactuals_info_map (args: GetVAPCounterfactualsMapArgs)
 {
     const {
         VAP_set,
-        VAP_set_ids_to_counterfactuals_v2_map,
+        VAP_set_id_to_counterfactual_v2_map,
         knowledge_views_by_id,
     } = args
 
-    const counterfactuals_v2 = VAP_set_ids_to_counterfactuals_v2_map?.[VAP_set.id] || []
+    const counterfactuals_v2 = VAP_set_id_to_counterfactual_v2_map?.[VAP_set.id] || []
 
 
     const target_VAP_id_counterfactual_map: TargetVAPIdCounterfactualInfoMap = {}

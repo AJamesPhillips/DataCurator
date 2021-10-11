@@ -27,12 +27,12 @@ interface PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 }
 export function partition_and_prune_items_by_datetimes_and_versions <U extends Base & HasUncertainDatetime> (args: PartitionItemsByDatetimeFuturesArgs<U>): PartitionAndPruneItemsByDatetimesAndVersionsReturn<U>
 {
-    const result = partition_items_by_created_at_datetime(args)
-    const { latest, previous_versions_by_id } = group_versions_by_id(result.current_items)
+    const partitioned_by_created_at = partition_items_by_created_at_datetime(args)
+    const { latest, previous_versions_by_id } = group_versions_by_id(partitioned_by_created_at.current_items)
     const partition_by_temporal = partition_and_sort_by_uncertain_event_datetimes({ items: latest, sim_ms: args.sim_ms })
 
     return {
-        invalid_future_items: result.invalid_future_items,
+        invalid_future_items: partitioned_by_created_at.invalid_future_items,
         ...partition_by_temporal,
         previous_versions_by_id,
     }

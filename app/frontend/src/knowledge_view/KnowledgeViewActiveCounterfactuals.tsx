@@ -57,7 +57,7 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
                 rich_text: true,
                 render_links: false,
                 wcomponents_by_id,
-                wc_id_counterfactuals_map: {},
+                wc_id_to_counterfactuals_map: {},
                 created_at_ms: FUTURE_TIME_MS,
                 sim_ms: FUTURE_TIME_MS,
             }),

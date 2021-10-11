@@ -24,7 +24,7 @@ interface ReplaceIdsArgs
     rich_text: boolean
     render_links?: boolean
     wcomponents_by_id: WComponentsById
-    wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
+    wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
     depth_limit?: number
@@ -40,7 +40,7 @@ export interface GetFieldTextArgs extends ReplaceIdsArgs
 export function get_title (args: GetFieldTextArgs): string
 {
     const {
-        wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms,
+        wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms,
     } = args
 
     if (!args.rich_text) return wcomponent.title
@@ -73,7 +73,7 @@ export function get_title (args: GetFieldTextArgs): string
             if (target_wc_id) title = `Sub state of: @@${target_wc_id} <auto generated>`
         }
     }
-    const text = replace_value_in_text({ text: title, wcomponent, wc_id_counterfactuals_map, created_at_ms, sim_ms })
+    const text = replace_value_in_text({ text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
     return replace_ids_in_text({ ...args, text })
 }
@@ -91,21 +91,21 @@ interface ReplaceValueInTextArgs
 {
     text: string
     wcomponent: WComponent
-    wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
+    wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
 }
 function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
-    let { text, wcomponent, wc_id_counterfactuals_map = {} } = args
+    let { text, wcomponent, wc_id_to_counterfactuals_map = {} } = args
 
     if (!text.includes("${value}")) return text
 
-    const wc_counterfactuals = wc_id_counterfactuals_map[wcomponent.id]?.VAP_sets
+    const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map[wcomponent.id]?.VAP_sets
 
     const value = get_wcomponent_state_UI_value({
         wcomponent,
-        wc_counterfactuals,
+        VAP_set_id_to_counterfactual_v2_map,
         created_at_ms: args.created_at_ms,
         sim_ms: args.sim_ms,
     })
@@ -126,21 +126,21 @@ export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
         depth_limit = DEFAULT_MAX_DEPTH_LIMIT,
         current_depth = 0,
         root_url = "",
-        wc_id_counterfactuals_map,
+        wc_id_to_counterfactuals_map,
         created_at_ms,
         sim_ms,
     } = args
 
     if (!rich_text) return text
 
-    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit, current_depth, root_url, wc_id_counterfactuals_map, created_at_ms, sim_ms)
+    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms)
 
     return replaced_text
 }
 
 
 
-function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
+function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
 {
     // TODO: document why we do not render links at top level i.e. when current_depth === 0 ?
     render_links = render_links === false ? false : current_depth === 0
@@ -151,7 +151,7 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
             rich_text: true,
             render_links,
             wcomponents_by_id,
-            wc_id_counterfactuals_map,
+            wc_id_to_counterfactuals_map,
             created_at_ms,
             sim_ms,
             depth_limit,
@@ -192,7 +192,7 @@ function test_replace_ids_in_text ()
     const args: ReplaceIdsArgs = {
         rich_text: true,
         wcomponents_by_id,
-        wc_id_counterfactuals_map: undefined,
+        wc_id_to_counterfactuals_map: undefined,
         created_at_ms: ms,
         sim_ms: ms,
     }
@@ -312,18 +312,18 @@ function test_rendering_title ()
         id: string
         rich_text: boolean
         render_links?: boolean
-        wc_id_counterfactuals_map?: WcIdToCounterfactualsV2Map
+        wc_id_to_counterfactuals_map?: WcIdToCounterfactualsV2Map
     }
     function get_title_for_id (args: GetTitleForIdArgs)
     {
-        const { id, rich_text, render_links, wc_id_counterfactuals_map } = args
+        const { id, rich_text, render_links, wc_id_to_counterfactuals_map } = args
 
         return get_title({
             rich_text,
             render_links,
             wcomponents_by_id,
             wcomponent: wcomponents_by_id[id]!,
-            wc_id_counterfactuals_map,
+            wc_id_to_counterfactuals_map,
             created_at_ms: ms,
             sim_ms: ms,
         })
@@ -353,7 +353,7 @@ function test_rendering_title ()
     test(result, "ggg [fff eee True ddd @@333](#wcomponents/666&view=knowledge)")
 
 
-    const wc_id_counterfactuals_map: WcIdToCounterfactualsV2Map = {
+    const wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map = {
         [wcomponent3.id]: {
             VAP_sets: {
                 "vps333": [
@@ -377,7 +377,7 @@ function test_rendering_title ()
     // in `get_current_counterfactual_VAP_sets` for merging counterfactuals
     Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
     {
-        const result = get_title_for_id({ id, rich_text: true, wc_id_counterfactuals_map })
+        const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })
         test(result, expected_title)
     })
 

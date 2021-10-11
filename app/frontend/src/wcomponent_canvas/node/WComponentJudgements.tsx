@@ -5,9 +5,10 @@ import "./WComponentJudgements.css"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../state/State"
 import { JudgementBadgeConnected } from "../../sharedf/judgement_badge/JudgementBadgeConnected"
-import type { ParsedValue, VAPsType } from "../../wcomponent/interfaces/value_probabilities_etc"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { JudgementBadgeSimple } from "../../sharedf/judgement_badge/JudgementBadgeSimple"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import type { ParsedValue } from "../../wcomponent_derived/interfaces"
 
 
 

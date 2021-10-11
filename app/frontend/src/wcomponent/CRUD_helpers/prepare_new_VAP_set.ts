@@ -2,7 +2,7 @@ import type { CreationContextState } from "../../state/creation_context/state"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_value_and_prediction_set_id } from "../../shared/utils/ids"
 import { test } from "../../shared/utils/test"
-import { VAPsType } from "../interfaces/value_probabilities_etc"
+import { VAPsType } from "../interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type {
     StateValueAndPrediction,

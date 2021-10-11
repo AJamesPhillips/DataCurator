@@ -1,9 +1,10 @@
 import { sort_list } from "../../shared/utils/sort"
-import { get_boolean_representation, VAP_value_to_string } from "../get_wcomponent_state_UI_value"
-import { VAPsType, ParsedValue } from "../../wcomponent/interfaces/value_probabilities_etc"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { clean_VAP_set_entries, parse_VAP_value } from "./get_value"
+import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
+import type { ParsedValue } from "../interfaces"
+import { get_boolean_representation, parsed_value_to_string } from "../value/parsed_value_presentation"
+import { parse_VAP_value } from "../value/parse_value"
 
 
 
@@ -14,7 +15,7 @@ const VAP_visual_false_id = "false_id__undefined__"
 
 interface GetVAPVisualsDataArgs
 {
-    VAP_set: StateValueAndPredictionsSet
+    VAP_set: VAPSet
     VAPs_represent: VAPsType
     wcomponent: WComponent
     sort?: boolean
@@ -28,14 +29,14 @@ interface VAPVisual
 }
 export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 {
-    const cleaned_VAP_set = clean_VAP_set_entries(args.VAP_set, args.VAPs_represent)
+    const cleaned_VAP_set = ensure_VAP_set_entries_length_consistent_with_representing_type(args.VAP_set, args.VAPs_represent)
     const expanded_VAP_set = expand_booleans(cleaned_VAP_set, args.VAPs_represent)
 
     const shared_conviction = expanded_VAP_set.shared_entry_values?.conviction
     let total_certainties = 0
 
 
-    const boolean_representation = get_boolean_representation({ wcomponent: args.wcomponent })
+    const boolean_representation = get_boolean_representation(args.wcomponent)
     const data: VAPVisual[] = expanded_VAP_set.entries.map((VAP, index) =>
     {
         let value = parse_VAP_value(VAP, args.VAPs_represent)
@@ -43,7 +44,7 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
         {
             value = index === 0
         }
-        const value_text = VAP_value_to_string(value, boolean_representation)
+        const value_text = parsed_value_to_string(value, boolean_representation)
         const certainty = VAP.probability * (shared_conviction !== undefined ? shared_conviction : VAP.conviction)
         total_certainties += certainty
 
@@ -74,7 +75,18 @@ export function get_VAP_visuals_data (args: GetVAPVisualsDataArgs): VAPVisual[]
 
 
 
-function expand_booleans (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+function ensure_VAP_set_entries_length_consistent_with_representing_type <E extends VAPSet> (VAP_set: E, VAPs_represent: VAPsType): E
+{
+    const subtype_specific_VAPs = VAPs_represent === VAPsType.boolean
+        ? VAP_set.entries.slice(0, 1)
+        : VAP_set.entries
+
+    return { ...VAP_set, entries: subtype_specific_VAPs }
+}
+
+
+
+function expand_booleans (VAP_set: VAPSet, VAPs_represent: VAPsType)
 {
     if (VAPs_represent === VAPsType.boolean)
     {

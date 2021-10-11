@@ -4,9 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./PrioritiesListView.css"
 import { MainArea } from "../layout/MainArea"
 import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
-import {
-    alert_wcomponent_is_goal,
-} from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_goal } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
@@ -50,7 +48,7 @@ const map_state = (state: RootState) =>
         {
             const goal = wcomponents_by_id[id]
 
-            if (!alert_wcomponent_is_goal(goal, id)) return
+            if (!wcomponent_is_goal(goal, id)) return
 
             goals.push(goal)
         })
@@ -64,7 +62,7 @@ const map_state = (state: RootState) =>
 
                 const goal = wcomponents_by_id[id]
 
-                if (!alert_wcomponent_is_goal(goal, id)) return
+                if (!wcomponent_is_goal(goal, id)) return
 
                 goals.push(goal)
             })

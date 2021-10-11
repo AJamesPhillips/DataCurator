@@ -1,6 +1,6 @@
 import { test } from "../../shared/utils/test"
 import { action_statuses } from "../interfaces/action"
-import { VAPsType } from "../interfaces/value_probabilities_etc"
+import { VAPsType } from "../interfaces/VAPsType"
 import type { SimpleValuePossibility } from "../interfaces/possibility"
 
 
