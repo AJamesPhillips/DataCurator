@@ -183,8 +183,8 @@ function _WComponentCounterfactualForm (props: Props)
                 sort: false,
             }).map(visual_VAP =>
             {
-                const { VAP_id, value_text, certainty } = visual_VAP
-                const checked = certainty === 1
+                const { VAP_id, value_text } = visual_VAP
+                const checked = VAP_id === wcomponent.target_VAP_id
 
                 return <div>
                     <input
