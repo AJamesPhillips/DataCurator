@@ -102,7 +102,10 @@ export function ConnectableCanvasNode (props: OwnProps)
                     e.stopImmediatePropagation()
                 }}
             />}
-            <CardContent>
+            <CardContent
+                // manually set padding to 16 as material-ui gives last child padding-bottom of 24px
+                style={{ padding: 16 }}
+            >
                 {props.node_main_content}
             </CardContent>
         </Card>

@@ -87,6 +87,7 @@
     bottom: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none; /* Alternatively set mackground image z-index to 0 and all other elements in node to 1 with positive relative */
 }
 
 .wcomponent_canvas_node img.background_image.actor

@@ -42,6 +42,7 @@ import { WComponentValidityValue } from "./WComponentValidityValue"
 import { Handles } from "./Handles"
 import { NodeSubStateSummary } from "./NodeSubStateSummary"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
 
 
 
@@ -268,7 +269,6 @@ function _WComponentCanvasNode (props: Props)
             </Box>}
 
             {sub_state_wcomponent && <Box display="flex" maxWidth="100%" overflow="hidden">
-                {/* {is_editing && <Box pr={2}>sub state</Box>} */}
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeSubStateSummary
                         wcomponent={sub_state_wcomponent}
@@ -278,9 +278,11 @@ function _WComponentCanvasNode (props: Props)
                 </Box>
             </Box>}
 
-            <div className="description_label">
-                {(is_editing || wcomponent.type === "actor") && wcomponent_type_to_text(wcomponent.type)}
-            </div>
+            {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
+
+            {is_editing && <div className="description_label">
+                {wcomponent_type_to_text(wcomponent.type)}
+            </div>}
 
             <LabelsListV2 label_ids={wcomponent.label_ids} />
         </div>}

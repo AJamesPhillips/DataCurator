@@ -6,7 +6,7 @@ import type { StateValueAndPrediction as VAP } from "../../wcomponent/interfaces
 import { AddLinkIcon } from "../../sharedf/icons/AddLinkIcon"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import { useMemo } from "preact/hooks"
-import { LinkWorkingIcon } from "../../sharedf/icons/LinkWorking"
+import { LinkWorkingIcon } from "../../sharedf/icons/LinkWorkingIcon"
 import { get_value_possibilities_by_value } from "../../wcomponent/value_possibilities/get_value_possibilities_by_value"
 
 

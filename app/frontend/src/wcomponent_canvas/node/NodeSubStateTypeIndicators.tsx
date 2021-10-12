@@ -4,16 +4,14 @@ import { connect, ConnectedProps } from "react-redux"
 import { wcomponent_should_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentSubState } from "../../wcomponent/interfaces/substate"
 import type { RootState } from "../../state/State"
-import { ConnectedValueAndPredictionSetSummary } from "./ConnectedValueAndPredictionSetSummary"
-import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
+import { LockClockIcon } from "../../sharedf/icons/LockClockIcon"
+import { ReducedPossibilitiesIcon } from "../../sharedf/icons/ReducedPossibilitiesIcon"
 
 
 
 interface OwnProps
 {
     wcomponent: WComponentSubState
-    created_at_ms: number
-    sim_ms: number
 }
 
 
@@ -32,7 +30,7 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-function _NodeSubStateSummary (props: Props)
+function _NodeSubStateTypeIndicators (props: Props)
 {
     const { target_wcomponent } = props
     if (!target_wcomponent) return null
@@ -40,28 +38,22 @@ function _NodeSubStateSummary (props: Props)
     const { selector } = props.wcomponent
     const { target_VAP_set_id, target_value_id_type, target_value } = selector || {}
 
-    if (!target_VAP_set_id && (!target_value_id_type || !target_value))
-    {
-        return <NodeValueAndPredictionSetSummary
-            wcomponent={target_wcomponent}
-            created_at_ms={props.created_at_ms}
-            sim_ms={props.sim_ms}
+    const time_substate = target_VAP_set_id !== undefined
+    const possibility_substate = target_value_id_type !== undefined && target_value !== undefined
+
+    const time_substate_color = time_substate ? "rgba(50,50,50,0.8)" : "rgba(200,200,200,0.4)"
+    const possibility_substate_color = possibility_substate ? "rgba(50,50,50,0.8)" : "rgba(200,200,200,0.4)"
+
+    return <div>
+        <LockClockIcon
+            style={{ color: time_substate_color }}
+            title={time_substate ? `Set to ${""}` : "Not set"}
         />
-    }
-
-    const VAP_sets = target_wcomponent.values_and_prediction_sets || []
-    const target_VAP_set = VAP_sets.find(({ id }) => id === target_VAP_set_id)
-    // if (target_VAP_set_id && !target_VAP_set) return ""
-
-    if (target_VAP_set) return <ConnectedValueAndPredictionSetSummary
-        wcomponent={target_wcomponent}
-        VAP_set={target_VAP_set}
-    />
-
-
-    // if (!VAP_set) return null
-
-    return <div>Target: {target_wcomponent.title}</div>
+        <ReducedPossibilitiesIcon
+            style={{ color: possibility_substate_color }}
+            title={possibility_substate ? `Set to ${""}` : "Not set"}
+        />
+    </div>
 }
 
-export const NodeSubStateSummary = connector(_NodeSubStateSummary) as FunctionalComponent<OwnProps>
+export const NodeSubStateTypeIndicators = connector(_NodeSubStateTypeIndicators) as FunctionalComponent<OwnProps>
