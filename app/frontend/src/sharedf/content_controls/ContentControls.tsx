@@ -24,6 +24,7 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
+    display_time_marks: state.display_options.display_time_marks,
     display_time_sliders: state.controls.display_time_sliders,
     editing: !state.display_options.consumption_formatting,
     created_at_ms: state.routing.args.created_at_ms,
@@ -35,6 +36,7 @@ const map_dispatch = {
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+    set_display_time_marks: ACTIONS.display.set_display_time_marks,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -47,10 +49,6 @@ function _ContentControls (props: Props)
 {
     const invert_classes = invert_disabled_appearance()
     const { created_events, sim_events, move_to_component_id } = props
-    const set_knowledge_view_type = (e: h.JSX.TargetedMouseEvent<HTMLButtonElement>) => {
-        const display_by_simulated_time = JSON.parse(e.currentTarget.value)
-        props.set_display_by_simulated_time({ display_by_simulated_time })
-    }
 
     const display_sliders = props.editing || props.display_time_sliders
 
@@ -112,11 +110,25 @@ function _ContentControls (props: Props)
                     <ButtonGroup
                         disableElevation
                         variant="contained"
+                        value={props.display_time_marks}
+                    >
+                        <Button
+                            onClick={() => props.set_display_time_marks(!props.display_time_marks)}
+                            aria-label="Toggle displaying time markers"
+                        >
+                            {props.display_time_marks ? "Hide" : "Show"} Time
+                        </Button>
+                    </ButtonGroup>
+                </Box>
+
+                <Box component="label">
+                    <ButtonGroup
+                        disableElevation
+                        variant="contained"
                         value={props.display_by_simulated_time}
                     >
                         <Button
-                            value={true}
-                            onClick={set_knowledge_view_type}
+                            onClick={() => props.set_display_by_simulated_time(true)}
                             aria-label="Display by simulated time"
                             className={invert_classes.inverse_disabled}
                             disabled={props.display_by_simulated_time}
@@ -124,8 +136,7 @@ function _ContentControls (props: Props)
                             Time
                         </Button>
                         <Button
-                            value={false}
-                            onClick={set_knowledge_view_type}
+                            onClick={() => props.set_display_by_simulated_time(false)}
                             aria-label="Display by relationships"
                             className={invert_classes.inverse_disabled}
                             disabled={!props.display_by_simulated_time}

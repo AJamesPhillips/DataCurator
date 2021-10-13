@@ -24,6 +24,7 @@ export interface DisplayOptionsState
     focused_mode: boolean
     time_resolution: TimeResolution
     display_by_simulated_time: boolean
+    display_time_marks: boolean
     collapsed_side_panel: boolean
     show_help_menu: boolean
 

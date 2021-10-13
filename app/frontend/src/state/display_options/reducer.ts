@@ -10,6 +10,7 @@ import {
     is_set_display_by_simulated_time,
     is_toggle_focused_mode,
     is_set_show_help_menu,
+    is_set_display_time_marks,
 } from "./actions"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
@@ -54,6 +55,12 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
     if (is_set_display_by_simulated_time(action))
     {
         state = update_substate(state, "display_options", "display_by_simulated_time", action.display_by_simulated_time)
+    }
+
+
+    if (is_set_display_time_marks(action))
+    {
+        state = update_substate(state, "display_options", "display_time_marks", action.display_time_marks)
     }
 
 

@@ -100,13 +100,32 @@ interface ActionSetDisplayBySimulatedTime extends Action, SetDisplayBySimulatedT
 
 const set_display_by_simulated_time_type = "set_display_by_simulated_time"
 
-const set_display_by_simulated_time = (args: SetDisplayBySimulatedTimeArgs): ActionSetDisplayBySimulatedTime =>
+const set_display_by_simulated_time = (display_by_simulated_time: boolean): ActionSetDisplayBySimulatedTime =>
 {
-    return { type: set_display_by_simulated_time_type, ...args }
+    return { type: set_display_by_simulated_time_type, display_by_simulated_time }
 }
 
 export const is_set_display_by_simulated_time = (action: AnyAction): action is ActionSetDisplayBySimulatedTime => {
     return action.type === set_display_by_simulated_time_type
+}
+
+
+
+interface SetDisplayTimeMarksArgs
+{
+    display_time_marks: boolean
+}
+interface ActionSetDisplayTimeMarks extends Action, SetDisplayTimeMarksArgs {}
+
+const set_display_time_marks_type = "set_display_time_marks"
+
+const set_display_time_marks = (display_time_marks: boolean): ActionSetDisplayTimeMarks =>
+{
+    return { type: set_display_time_marks_type, display_time_marks }
+}
+
+export const is_set_display_time_marks = (action: AnyAction): action is ActionSetDisplayTimeMarks => {
+    return action.type === set_display_time_marks_type
 }
 
 
@@ -137,5 +156,6 @@ export const display_actions = {
     set_validity_filter,
     set_certainty_formatting,
     set_display_by_simulated_time,
+    set_display_time_marks,
     set_show_help_menu,
 }

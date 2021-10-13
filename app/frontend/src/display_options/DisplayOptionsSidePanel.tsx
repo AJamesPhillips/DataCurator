@@ -15,6 +15,7 @@ const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
     certainty_formatting: state.display_options.certainty_formatting,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
+    display_time_marks: state.display_options.display_time_marks,
     display_time_sliders: state.controls.display_time_sliders,
 })
 
@@ -23,6 +24,7 @@ const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+    set_display_time_marks: ACTIONS.display.set_display_time_marks,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
 }
 
@@ -110,14 +112,22 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
+            <b>Show time markers</b>
+
+            <EditableCheckbox
+                value={props.display_time_marks}
+                on_change={props.set_display_time_marks}
+            />
+        </p>
+
+
+
+        <p className="section">
             <b>Display by simulated time</b>
 
             <EditableCheckbox
                 value={props.display_by_simulated_time}
-                on_change={display_by_simulated_time =>
-                {
-                    props.set_display_by_simulated_time({ display_by_simulated_time })
-                }}
+                on_change={props.set_display_by_simulated_time}
             />
         </p>
 
