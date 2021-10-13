@@ -11,6 +11,11 @@ export function ViewsSidePanel(props: {}) {
         <Box p={1} pt={5} class="views_side_panel">
             Current View:
             <KnowledgeViewForm />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             <TopLevelKnowledgeViewListsSet />
         </Box>
     )

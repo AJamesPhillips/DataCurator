@@ -55,9 +55,11 @@ function _FoundationKnowledgeViewsList (props: Props)
 
 
     const total = foundation_knowledge_views.length
+    const { parent_knowledge_view_id } = owner_knowledge_view
+    const parent_used_as_foundation = !!foundation_knowledge_views.find(kv => kv.id === parent_knowledge_view_id)
 
     return <div>
-        {editing ? "Foundational Views" : (foundation_knowledge_views.length > 0 && "Foundations" )}
+        {editing ? "Foundational Views" : (foundation_knowledge_views.length > 0 && "Foundational Views" )}
         {editing && <span>({total})</span>}
 
         {editing && <SelectKnowledgeView
@@ -68,6 +70,12 @@ function _FoundationKnowledgeViewsList (props: Props)
                 if (!id) return
                 on_change([id, ...foundation_knowledge_view_ids])
             }}
+        />}
+
+
+        {editing && parent_knowledge_view_id && !parent_used_as_foundation && <Button
+            value="Use parent view as foundation"
+            onClick={() => on_change([parent_knowledge_view_id, ...foundation_knowledge_view_ids])}
         />}
 
 
