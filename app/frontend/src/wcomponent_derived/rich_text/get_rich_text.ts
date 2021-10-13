@@ -11,6 +11,7 @@ import {
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import type { WcIdToCounterfactualsV2Map } from "../interfaces/counterfactual"
+import { VAP_visual_false_id } from "../value_and_prediction/utils_to_convert_VAP_set_to_visuals"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -366,15 +367,13 @@ function test_rendering_title ()
                         description: "",
                         target_wcomponent_id: wcomponent3.id,
                         target_VAP_set_id: "vps333",
-                        target_VAP_id: "VAP333",
+                        target_VAP_id: VAP_visual_false_id,
                     }
                 ]
             }
         }
     }
 
-    // These tests are currently failing due to commented out line
-    // in `get_current_counterfactual_VAP_sets` for merging counterfactuals
     Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
     {
         const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })

@@ -16,7 +16,7 @@ export const VAP_visual_uncertainty_id = "VAP_uncertainty_id__undefined__"
 // const VAP_visual_true_id // we should NEVER use this, VAP ids are a unique identify for an
 // attribute, at a point in time for a possible value.  We allow the use of VAP_false_id__undefined__
 // because this will always be present.
-const VAP_visual_false_id = "VAP_false_id__undefined__"
+export const VAP_visual_false_id = "VAP_false_id__undefined__"
 
 
 
