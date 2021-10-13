@@ -86,12 +86,11 @@ const use_styles = makeStyles(theme => ({
     animated_icon_container: {
         flexGrow:1,
         display: "flex", justifyContent:"flex-end"
-
     },
     animated_icon: {
         animationName: "bounce_pointer",
         animationDuration: "0.7777777s",
-        animationIterationCount: "infinite",
+        animationIterationCount: "2.5",
         animationTtimingFunction: "ease-in-out",
     }
 }))
