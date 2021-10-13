@@ -15,13 +15,13 @@ export interface TargetVAPIdCounterfactualInfoMap
 }
 
 
-
-// This is a composed / denormalised form suitable for UI
-export interface ComposedCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPredictionsSet
+export interface CounterfactualV2StateValueAndPredictionSetInfo
 {
     has_any_counterfactual_applied: boolean
     active_counterfactual_v2_id: string | undefined
 }
+// This is a composed / denormalised form suitable for UI
+export interface ComposedCounterfactualV2StateValueAndPredictionSet extends StateValueAndPredictionsSet, CounterfactualV2StateValueAndPredictionSetInfo {}
 
 
 

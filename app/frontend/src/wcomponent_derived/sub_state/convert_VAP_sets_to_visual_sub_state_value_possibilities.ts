@@ -1,0 +1,78 @@
+import type { SimpleValuePossibility } from "../../wcomponent/interfaces/possibility"
+import type {
+    HasVAPSetsAndMaybeValuePossibilities,
+    StateValueAndPredictionsSet as VAPSet,
+    StateValueCore,
+} from "../../wcomponent/interfaces/state"
+import type { WComponentSubStateSelector } from "../../wcomponent/interfaces/substate"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
+import {
+    get_simple_possibilities_from_values,
+} from "../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { convert_VAP_set_to_VAP_visuals } from "../value_and_prediction/convert_VAP_set_to_VAP_visuals"
+
+
+
+export interface SimpleValuePossibilityWithSelected extends SimpleValuePossibility
+{
+    selected: boolean | undefined
+}
+
+
+
+interface Args
+{
+    selector: WComponentSubStateSelector | undefined
+    target_wcomponent: WComponent & HasVAPSetsAndMaybeValuePossibilities
+}
+
+// Related to but different from convert_VAP_set_to_VAP_visuals
+export function convert_VAP_sets_to_visual_sub_state_value_possibilities (args: Args): SimpleValuePossibilityWithSelected[]
+{
+    const { selector, target_wcomponent } = args
+    const { target_VAP_set_id, target_value_id_type, target_value } = selector || {}
+
+    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
+
+
+    let target_VAP_sets: VAPSet[] = target_wcomponent.values_and_prediction_sets || []
+    if (target_VAP_set_id) target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
+
+    const values: StateValueCore[] = []
+    target_VAP_sets.forEach(VAP_set =>
+    {
+        convert_VAP_set_to_VAP_visuals({ VAP_set, VAPs_represent, wcomponent: target_wcomponent })
+        .forEach(({ value_id, value_text }) => values.push({ value_id, value: value_text }))
+    })
+
+    const simple_possibilities = get_simple_possibilities_from_values(target_wcomponent.value_possibilities, values)
+
+    return simple_possibilities.map(possilibity =>
+    {
+        const selected = predicate_target_value_possibility({
+            target_value_id_type, target_value,
+            value_text: possilibity.value, value_id: possilibity.id,
+        })
+
+        return { ...possilibity, selected }
+    })
+}
+
+
+
+interface PredicateTargetValuePossibilityArgs
+{
+    target_value_id_type?: "id" | "value_string"
+    target_value?: string
+    value_text?: string
+    value_id?: string
+}
+export function predicate_target_value_possibility (args: PredicateTargetValuePossibilityArgs)
+{
+    const selected = args.target_value_id_type === undefined ? undefined
+        : args.target_value_id_type === "value_string" ? args.value_text === args.target_value
+        : args.value_id === args.target_value
+
+    return selected
+}

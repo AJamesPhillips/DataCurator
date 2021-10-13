@@ -37,8 +37,8 @@ function sandbox_code ()
         base_id: -1,
         title: "wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title wc11 title ",
         description: "wc11 description",
-        boolean_false_str: "this is false",
-        boolean_true_str: "this is true",
+        // boolean_false_str: "this is false",
+        // boolean_true_str: "this is true",
         values_and_prediction_sets: [
             VAP_set1,
         ]

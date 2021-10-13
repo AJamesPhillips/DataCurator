@@ -43,7 +43,7 @@ export function ValuePossibilityComponent (props: OwnProps)
                         {
                             update_value_possibility({
                                 ...value_possibility,
-                                value,
+                                value: value,
                             })
                         }}
                     />

@@ -8,56 +8,67 @@ import type {
     SimpleValuePossibility,
     ValuePossibility,
 } from "../interfaces/possibility"
-import type { StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
+import type { StateValueAndPredictionsSet as VAPSet, StateValueCore } from "../interfaces/state"
 import { VAPsType } from "../interfaces/VAPsType"
 import { default_possible_values } from "./default_possible_values"
 
 
 
-export function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
+export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities_by_id: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): ValuePossibility[]
 {
-    let simple_possibilities: SimpleValuePossibility[] = []
-    const possible_value_strings: Set<string> = new Set()
+    const simple_possibilities = get_simple_possibilities_from_VAP_sets(VAPs_represent, value_possibilities_by_id, VAP_sets)
+    const possibilities: ValuePossibility[] = ensure_possible_values_have_ids(simple_possibilities)
 
-
-    VAP_sets.forEach(VAP_set =>
-    {
-        VAP_set.entries.forEach(({ value_id }) =>
-        {
-            const value_possibility = value_possibilities && value_possibilities[value_id || ""]
-            if (!value_possibility || possible_value_strings.has(value_possibility.value)) return
-
-            simple_possibilities.push(value_possibility)
-            // Use the source of truth for the value not the denormalised `value` on the VAP
-            possible_value_strings.add(value_possibility.value)
-        })
-    })
-
-
-    VAP_sets.forEach(VAP_set =>
-    {
-        VAP_set.entries.forEach(({ value }) =>
-        {
-            if (possible_value_strings.has(value)) return
-            simple_possibilities.push({ value })
-            possible_value_strings.add(value)
-        })
-    })
-
-
-    simple_possibilities = default_possible_values(VAPs_represent, simple_possibilities)
-
-    return simple_possibilities
+    return possibilities
 }
 
 
 
-export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): ValuePossibility[]
+export function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities_by_id: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
 {
-    const simple_possibilities = get_simple_possibilities_from_VAP_sets(VAPs_represent, value_possibilities, VAP_sets)
-    const possibilities: ValuePossibility[] = ensure_possible_values_have_ids(simple_possibilities)
+    const value_cores: StateValueCore[] = []
 
-    return possibilities
+    VAP_sets.forEach(VAP_set =>
+    {
+        VAP_set.entries.forEach(({ value_id, value }) =>
+        {
+            value_cores.push({ value_id, value })
+        })
+    })
+
+    const simple_possibilities = get_simple_possibilities_from_values(value_possibilities_by_id, value_cores)
+
+    return default_possible_values(VAPs_represent, simple_possibilities)
+}
+
+
+
+export function get_simple_possibilities_from_values (value_possibilities_by_id: ValuePossibilitiesById | undefined, values: StateValueCore[]): SimpleValuePossibility[]
+{
+    let simple_possibilities: SimpleValuePossibility[] = []
+    const possible_value_strings: Set<string> = new Set()
+    let max_order = 0
+
+
+    values.forEach(({ value_id }) =>
+    {
+        const value_possibility = value_possibilities_by_id && value_possibilities_by_id[value_id || ""]
+        if (!value_possibility || possible_value_strings.has(value_possibility.value)) return
+
+        simple_possibilities.push(value_possibility)
+        max_order = Math.max(max_order, value_possibility.order)
+        // Use the source of truth for the value not the denormalised `value` on the VAP
+        possible_value_strings.add(value_possibility.value)
+    })
+
+    values.forEach(({ value }) =>
+    {
+        if (possible_value_strings.has(value)) return
+        simple_possibilities.push({ value, order: ++max_order })
+        possible_value_strings.add(value)
+    })
+
+    return simple_possibilities.sort((a, b) => (a.order ?? 0) < (b.order ?? 0) ? -1 : 1)
 }
 
 

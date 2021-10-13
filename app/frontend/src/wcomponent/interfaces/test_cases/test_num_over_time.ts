@@ -34,8 +34,8 @@ function test_num_over_time__test_case ()
         subtype: "boolean",
         title: "Political pressure ${value}",
         description: "@@Senator_ABC, facing re-election next month, put pressure on @@made-up-state_DPH to:\n * report higher tests than actuallly being conducted.",
-        boolean_true_str: "existed",
-        boolean_false_str: "did not exist",
+        // boolean_true_str: "existed",
+        // boolean_false_str: "did not exist",
         values_and_prediction_sets: [
             {
                 id: "1",
@@ -86,8 +86,8 @@ function test_num_over_time__test_case ()
         subtype: "boolean",
         title: "State DPH ${value} fradulently increase test count",
         description: "state DPH fradulently increased test count to be higher than actually being conducted.",
-        boolean_true_str: "did",
-        boolean_false_str: "did not",
+        // boolean_true_str: "did",
+        // boolean_false_str: "did not",
         values_and_prediction_sets: [
             {
                 id: "1",

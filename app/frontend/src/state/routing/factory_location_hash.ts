@@ -3,6 +3,7 @@ import type { Store } from "redux"
 import { throttle } from "../../utils/throttle"
 import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
+import type { ActionChangeRouteArgs } from "./actions"
 import type { RoutingState } from "./interfaces"
 import { merge_route_params_prioritising_url_over_state, routing_state_to_string } from "./routing"
 
@@ -86,8 +87,9 @@ function record_location_hash_change (store: Store<RootState>)
      * Or from when the page first loads and the route changes then.
      */
     // let promise_state_ready: Promise<void>
-    window.onhashchange = (e: HashChangeEvent) =>
+    window.onhashchange = (ev: Event) =>
     {
+        const e = ev as HashChangeEvent
         const state = store.getState()
         if (!state.sync.ready_for_reading)
         {
@@ -120,7 +122,11 @@ function record_location_hash_change (store: Store<RootState>)
             if (window.DEBUG_ROUTING) console .log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state)
 
             store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
-            const routing_params = merge_route_params_prioritising_url_over_state(e.newURL, state.routing)
+            const routing_params: ActionChangeRouteArgs = merge_route_params_prioritising_url_over_state(e.newURL, state.routing)
+
+            if (routing_params?.args?.created_at_ms !== undefined) delete routing_params?.args?.created_at_datetime
+            if (routing_params?.args?.sim_ms !== undefined) delete routing_params?.args?.sim_datetime
+
             store.dispatch(ACTIONS.routing.change_route(routing_params))
         }
     }

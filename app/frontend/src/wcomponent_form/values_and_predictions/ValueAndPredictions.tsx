@@ -180,7 +180,15 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
             </div>}
         </div>
 
-        <div className="probabilities" style={{ display: "inline-flex" }}>
+        <div className="predictions">
+            {is_boolean && <div>
+                <EditablePercentage
+                    placeholder="Confidence"
+                    value={orig_conviction}
+                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
+                />
+            </div>}
+
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
                 <EditablePercentage
                     disabled={disabled_prob}
@@ -191,7 +199,6 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                         crud.update_item({ ...VAP, probability: new_probability })
                     }}
                 />
-                <br />
             </div>}
 
             {!is_boolean && orig_relative_probability !== undefined && <div className={disabled_rel_prob ? "disabled" : ""}>
@@ -206,14 +213,6 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                         new_relative_probability = is_boolean ? undefined : (new_relative_probability || 0)
                         crud.update_item({ ...VAP, relative_probability: new_relative_probability })
                     }}
-                />
-            </div>}
-
-            {is_boolean && <div>
-                <EditablePercentage
-                    placeholder="Confidence"
-                    value={orig_conviction}
-                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
                 />
             </div>}
 

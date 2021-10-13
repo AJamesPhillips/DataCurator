@@ -21,8 +21,8 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase
     subtype: WComponentStateV2SubType
 
     // boolean subtype specific explainable fields
-    boolean_true_str?: string
-    boolean_false_str?: string
+    // boolean_true_str?: string
+    // boolean_false_str?: string
 }
 
 
@@ -68,19 +68,22 @@ export interface StateValueAndPredictionsSet extends Base
 }
 
 
-
-export interface StateValueAndPrediction extends PredictionBase
+export interface StateValueCore
 {
-    id: string
     value_id?: string // if present, will attempt to set `value` and `description` from ValuePossibilitiesById
     value: string
-    description: string
     // The min and max refer to original author's assessment.  If we are recording a value reported by
     // author ABC then if ABC does not enter +/- values for a given probability then leave these values
     // blank.  If we disagree with, and or want to add our own +/- values then this should be a second
     // entry with the author_id set to me / us.
     min?: string
     max?: string
+    description?: string
+}
+export interface StateValueAndPrediction extends StateValueCore, PredictionBase
+{
+    id: string
+    description: string
     author_id?: string
     // This is not out of 100, it is the portion of the total probability that this
     // value has

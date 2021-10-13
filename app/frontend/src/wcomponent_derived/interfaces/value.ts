@@ -31,3 +31,14 @@ export interface DerivedValidityForUI
     is_valid: boolean
     certainty: number
 }
+
+
+
+export interface VAPVisual
+{
+    VAP_id: string
+    value_id?: string
+    parsed_value: ParsedValue
+    value_text: string
+    certainty: number
+}

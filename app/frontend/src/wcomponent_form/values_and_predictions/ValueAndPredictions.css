@@ -15,3 +15,8 @@
 {
     border-color: rgba(0, 0, 0, 0);
 }
+
+.value_and_predictions .predictions
+{
+    display: inline-flex;
+}

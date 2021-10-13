@@ -33,7 +33,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
 {
     const [show_value_possibilities, set_show_value_possibilities] = useState(false)
 
-    if (props.VAPs_represent === VAPsType.undefined || props.VAPs_represent === VAPsType.boolean) return null
+    if (props.VAPs_represent === VAPsType.undefined) return null
 
     const value_possibilities_list = value_possibilities_as_list(props.value_possibilities)
     const { count_of_value_possibilities, max_count } = get_count_of_value_possibilities(value_possibilities_list)
@@ -121,7 +121,7 @@ function get_count_of_value_possibilities (value_possibilities: ValuePossibility
     const count_of_value_possibilities: {[value: string]: number} = {}
     let max_count = 0
 
-    value_possibilities.forEach(({ value }) =>
+    value_possibilities.forEach(({ value: value }) =>
     {
         value = value.toLowerCase()
         const count = (count_of_value_possibilities[value] || 0) + 1

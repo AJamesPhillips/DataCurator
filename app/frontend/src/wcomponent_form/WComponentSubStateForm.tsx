@@ -7,13 +7,13 @@ import { uncertain_date_to_string } from "../form/datetime_utils"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import {
-    get_VAP_visuals_data,
-} from "../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+    convert_VAP_set_to_VAP_visuals,
+} from "../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { is_defined } from "../shared/utils/is_defined"
 import type {
     StateValueAndPredictionsSet as VAPSet,
 } from "../wcomponent/interfaces/state"
-import { wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../wcomponent/interfaces/substate"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
@@ -28,9 +28,9 @@ import type { RootState } from "../state/State"
 import { toggle_item_in_list } from "../utils/list"
 import type { SimpleValuePossibility } from "../wcomponent/interfaces/possibility"
 import {
-    get_sub_state_value_possibilities,
+    convert_VAP_sets_to_visual_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,
-} from "../wcomponent_derived/sub_state/get_sub_state_value_possibilities"
+} from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 
 
@@ -46,7 +46,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const { target_wcomponent_id } = own_props.wcomponent
     const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""]
-    const target_wcomponent = wcomponent_is_statev2(maybe_target_wcomponent) && maybe_target_wcomponent
+    const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
     // const knowledge_view = get_current_knowledge_view_from_state(state)
 
     return {
@@ -96,8 +96,10 @@ function _WComponentSubStateForm (props: Props)
         sim_ms: props.sim_ms,
     })
 
+    const selector: Partial<WComponentSubStateSelector> = wcomponent.selector || {}
 
-    // Copied from WComponentCounterfactualForm
+
+    // Adapted from WComponentCounterfactualForm
     let target_VAP_sets: StateValueAndPredictionsSet[] = []
     let VAP_set_id_options: { id: string, title: string }[] = []
     let simple_possibilities: SimpleValuePossibilityWithSelected[] = []
@@ -112,24 +114,8 @@ function _WComponentSubStateForm (props: Props)
                 return { id, title }
             })
 
-        simple_possibilities = get_sub_state_value_possibilities(wcomponent, target_wcomponent)
+        simple_possibilities = convert_VAP_sets_to_visual_sub_state_value_possibilities({ selector: wcomponent.selector, target_wcomponent })
     }
-
-
-    const selector: Partial<WComponentSubStateSelector> = wcomponent.selector || {}
-    // const VAPs_represent = wcomponent_VAPs_represent(target_wcomponent)
-
-    const target_VAP_set = target_VAP_sets.find(({ id }) => id === selector.target_VAP_set_id)
-
-
-
-    // let counterfactual_active_for_current_knowledge_view = false
-    // if (knowledge_view)
-    // {
-    //     const ids = (knowledge_view.active_counterfactual_v2_ids || [])
-    //     counterfactual_active_for_current_knowledge_view = ids.includes(wcomponent.id)
-    // }
-
 
 
     return <div>
@@ -182,19 +168,37 @@ function _WComponentSubStateForm (props: Props)
 
         {target_wcomponent && <p>
             <span className="description_label">Select value possibility of interest to limit display by</span> &nbsp;
+
+            <div>
+                <input
+                    type="radio"
+                    disabled={!props.editing}
+                    id="not_set_target_value"
+                    checked={selector.target_value === undefined || selector.target_value_id_type === undefined}
+                    onChange={() =>
+                    {
+                        const new_selector = make_valid_selector({
+                            ...selector,
+                            target_value: undefined,
+                            target_value_id_type: undefined,
+                        })
+
+                        upsert_wcomponent({ selector: new_selector })
+                    }}
+                />
+                <label for="not_set_target_value">Not set</label>
+            </div>
+
             {simple_possibilities.map(value_possibility =>
             {
-                const { value, id, selected } = value_possibility
+                const { value: value, id, selected } = value_possibility
 
                 return <div>
                     <input
                         type="radio"
                         disabled={!props.editing}
                         id={id}
-                        name="counterfactual_vap"
-                        value={value}
-                        checked={selected}
-                        ref={el => el && (el.indeterminate = selected === undefined)}
+                        checked={selected || false}
                         onChange={() =>
                         {
                             const new_selector = make_valid_selector({

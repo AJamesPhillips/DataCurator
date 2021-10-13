@@ -228,7 +228,7 @@ function _WComponentForm (props: Props)
             />
         </FormControl>}
 
-        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) &&
+        {/* {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) &&
         <FormControl fullWidth={true} margin="normal">
             <EditableTextSingleLine
                 placeholder="True..."
@@ -245,7 +245,7 @@ function _WComponentForm (props: Props)
                 value={wcomponent.boolean_false_str || ""}
                 conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
             />
-        </FormControl>}
+        </FormControl>} */}
 
         {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
             wcomponent={wcomponent}
@@ -361,7 +361,7 @@ function _WComponentForm (props: Props)
 
             <hr />
             <br />
-            {VAPs_represent !== VAPsType.undefined && VAPs_represent !== VAPsType.boolean && <div>
+            {VAPs_represent !== VAPsType.undefined && <div>
                 <ValuePossibilitiesComponent
                     editing={editing}
                     VAPs_represent={VAPs_represent}

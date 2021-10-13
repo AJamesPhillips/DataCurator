@@ -8,5 +8,5 @@ export function value_possibility_options (value_possibilities: ValuePossibiliti
 {
     return value_possibilities === undefined
         ? default_options
-        : Object.values(value_possibilities).map(({ value }) => ({ id: value, title: sentence_case(value) }))
+        : Object.values(value_possibilities).map(({ value: value }) => ({ id: value, title: sentence_case(value) }))
 }

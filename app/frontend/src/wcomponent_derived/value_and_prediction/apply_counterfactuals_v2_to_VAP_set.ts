@@ -1,7 +1,7 @@
-import type { ComposedCounterfactualStateValueAndPredictionSetV2 } from "../../wcomponent/interfaces/counterfactual"
+import type { ComposedCounterfactualV2StateValueAndPredictionSet } from "../../wcomponent/interfaces/counterfactual"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
 import type { VAPSetIdToCounterfactualV2Map } from "../interfaces/counterfactual"
-import { VAP_visual_uncertainty_id } from "./convert_VAP_sets_to_visual_VAP_sets"
+import { VAP_visual_uncertainty_id } from "./utils_to_convert_VAP_set_to_visuals"
 
 
 
@@ -10,7 +10,7 @@ interface GetCounterfactualV2VAPSetArgs
     VAP_set: StateValueAndPredictionsSet
     VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
 }
-export function apply_counterfactuals_v2_to_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualStateValueAndPredictionSetV2
+export function apply_counterfactuals_v2_to_VAP_set (args: GetCounterfactualV2VAPSetArgs): ComposedCounterfactualV2StateValueAndPredictionSet
 {
     const {
         VAP_set_id_to_counterfactual_v2_map,

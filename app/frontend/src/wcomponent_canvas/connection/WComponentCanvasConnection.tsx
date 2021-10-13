@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./WComponentCanvasConnection.scss"
 import { CanvasConnnection } from "../../canvas/connections/CanvasConnnection"
 import { ConnectionEndType } from "../../canvas/connections/ConnectionEnd"
-import { get_VAP_visuals_data } from "../../wcomponent_derived/value_and_prediction/convert_VAP_sets_to_visual_VAP_sets"
+import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeViewWComponentEntry,
@@ -265,10 +265,10 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
                     VAP_set, VAP_set_id_to_counterfactual_v2_map,
                 })
                 const VAPs_represent = get_wcomponent_VAPs_represent(from_wc)
-                const visual_VAPs = get_VAP_visuals_data({
+                const visual_VAPs = convert_VAP_set_to_VAP_visuals({
                     wcomponent: from_wc, VAP_set: counterfactual_VAP_set, VAPs_represent
                 })
-                const value = visual_VAPs[0]?.value
+                const value = visual_VAPs[0]?.parsed_value
 
                 if (value !== undefined && value !== null)
                 {

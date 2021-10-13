@@ -1,6 +1,6 @@
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import type {
-    ComposedCounterfactualStateValueAndPredictionSetV2,
+    ComposedCounterfactualV2StateValueAndPredictionSet,
 } from "../wcomponent/interfaces/counterfactual"
 import { calc_prediction_certainty, calc_prediction_is_uncertain } from "./prediction_uncertainty"
 import {
@@ -11,7 +11,7 @@ import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs
 import { get_VAPs_ordered_by_prob } from "./value_and_prediction/get_VAPs_ordered_by_prob"
 import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
 import type { CurrentValueAndProbability } from "./interfaces/value"
-import { parse_VAP_value } from "./value/parse_value"
+import { parse_VAP_value } from "../wcomponent/value/parse_value"
 import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 
 
@@ -62,7 +62,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
 
 
-function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualStateValueAndPredictionSetV2 | undefined, VAPs_represent: VAPsType): { most_probable_VAP_set_values: CurrentValueAndProbability[], any_uncertainty: boolean }
+function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2StateValueAndPredictionSet | undefined, VAPs_represent: VAPsType): { most_probable_VAP_set_values: CurrentValueAndProbability[], any_uncertainty: boolean }
 {
     if (!VAP_set || VAP_set.entries.length === 0) return { most_probable_VAP_set_values: [], any_uncertainty: false }
 
