@@ -390,4 +390,4 @@ function run_tests ()
     test_rendering_title()
 }
 
-run_tests()
+// run_tests()
