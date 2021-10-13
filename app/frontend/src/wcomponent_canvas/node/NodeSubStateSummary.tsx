@@ -69,6 +69,8 @@ function _NodeSubStateSummary (props: Props)
                 sim_ms={props.sim_ms}
             />
         }
+        // type guard
+        else if (target_value_id_type === undefined || target_value === undefined) return null
         else
         {
             let value_text = target_value
