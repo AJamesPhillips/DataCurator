@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 
 import "./CanvasConnnection.css"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type { ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
 
@@ -15,6 +15,7 @@ interface OwnProps {
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
     hidden?: boolean
+    line_behaviour?: ConnectionLineBehaviour
     thickness?: number
     intensity?: number
     blur?: number
@@ -31,11 +32,12 @@ export function CanvasConnnection (props: OwnProps)
     // const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
 
 
-    const { from_node_position, to_node_position, from_connection_type, to_connection_type } = props
+    const { from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour } = props
     if (!from_node_position || !to_node_position) return null
 
     const { x1, y1, x2, y2, control_point1, control_point2, end_angle } = derive_coords({
-        from_node_position, to_node_position, from_connection_type, to_connection_type
+        from_node_position, to_node_position, from_connection_type, to_connection_type,
+        line_behaviour,
     })
 
 
@@ -62,7 +64,7 @@ export function CanvasConnnection (props: OwnProps)
     const style_line: h.JSX.CSSProperties = {
         strokeOpacity: opacity,
         strokeWidth: thickness,
-        filter: `url(#blur_filter_${Math.round(blur)})`,
+        filter: blur ? `url(#blur_filter_${Math.round(blur)})` : "",
     }
 
     const extra_line_classes = `${hovered ? "hovered" : (props.is_highlighted ? "highlighted" : "")}`

@@ -71,7 +71,7 @@ export function get_title (args: GetFieldTextArgs): string
             title = `Sub state (no target set) <auto generated>`
 
             const target_wc_id = wcomponent.target_wcomponent_id
-            if (target_wc_id) title = `Sub state of: @@${target_wc_id} <auto generated>`
+            if (target_wc_id) title = `@@${target_wc_id} <auto generated>`
         }
     }
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })

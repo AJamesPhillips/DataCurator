@@ -67,6 +67,9 @@ export interface ConnectionTerminalType
 }
 
 
+// Should move this to the canvas perhaps?
+export type ConnectionLineBehaviour = "curve" | "straight" // | "heirarchy"
+export const connection_line_behaviours: ConnectionLineBehaviour[] = ["curve", "straight"]//, "heirarchy"]
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
 export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
 {
@@ -75,6 +78,9 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
     to_id: string
     from_type: ConnectionTerminalAttributeType
     to_type: ConnectionTerminalAttributeType
+
+    line_behaviour?: ConnectionLineBehaviour
+    line_number?: number
 }
 export interface WComponentCausalConnection extends WComponentConnection
 {

@@ -59,6 +59,7 @@ import type { ValuePossibilitiesById } from "../wcomponent/interfaces/possibilit
 import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
+import { WComponentConnectionForm } from "./WComponentConnectionForm"
 
 
 
@@ -282,6 +283,13 @@ function _WComponentForm (props: Props)
         {wcomponent_is_causal_link(wcomponent) && <WComponentCausalLinkForm
             wcomponent={wcomponent}
             from_wcomponent={from_wcomponent}
+            editing={editing}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
+
+
+        {wcomponent_is_plain_connection(wcomponent) && <WComponentConnectionForm
+            wcomponent={wcomponent}
             editing={editing}
             upsert_wcomponent={upsert_wcomponent}
         />}

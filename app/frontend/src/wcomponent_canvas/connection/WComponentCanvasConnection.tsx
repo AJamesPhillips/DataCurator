@@ -21,6 +21,7 @@ import {
     ConnectionTerminalType,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
+    ConnectionLineBehaviour,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
     apply_counterfactuals_v2_to_VAP_set,
@@ -188,12 +189,16 @@ function _WComponentCanvasConnection (props: Props)
         }
     }
 
+    let line_behaviour: ConnectionLineBehaviour | undefined = undefined
+    if (wcomponent_is_plain_connection(wcomponent)) line_behaviour = wcomponent.line_behaviour
+
     return <CanvasConnnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
         on_pointer_down={on_pointer_down}
+        line_behaviour={line_behaviour}
         thickness={thickness}
         connection_end_type={connection_end_type}
         intensity={validity_opacity}
