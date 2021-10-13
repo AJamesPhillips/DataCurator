@@ -92,6 +92,15 @@ function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id
 
 function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_view: KnowledgeView, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
 {
+    // Special case changing entry from deleted to re-add to ensure the component
+    // gets rendered last and on top of other components
+    const existing_entry = knowledge_view.wc_id_map[wcomponent_id]
+    if (existing_entry && existing_entry.deleted && !entry.deleted)
+    {
+        knowledge_view = {...knowledge_view, wc_id_map: {...knowledge_view.wc_id_map}}
+        delete knowledge_view.wc_id_map[wcomponent_id]
+    }
+
     const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry)
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)
