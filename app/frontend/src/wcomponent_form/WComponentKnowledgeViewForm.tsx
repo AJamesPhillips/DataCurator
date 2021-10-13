@@ -75,10 +75,11 @@ function _WComponentKnowledgeViewForm (props: Props)
         .filter(({ wc_id_map }) => wc_id_map[wcomponent_id])
 
 
-    function update (knowledge_view_id: string)
+    function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
     {
         const new_entry: KnowledgeViewWComponentEntry = {
             ...(composed_knowledge_view_entry || { left: props.middle_position_left, top: props.middle_position_top }),
+            ...new_entry_partial,
         }
 
         props.upsert_knowledge_view_entry({
@@ -104,7 +105,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             {editing && <Button
                 value={(knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view"}
                 extra_class_names="left"
-                onClick={() => update(knowledge_view_id)}
+                onClick={() => upsert_entry(knowledge_view_id, { deleted: undefined })}
             />}
         </div>}
 
@@ -115,9 +116,10 @@ function _WComponentKnowledgeViewForm (props: Props)
                     defaultValue={1}
                     marks
                     min={0.25} max={2}
-                    onChange={(e:Event, val:any) => {
-                        knowledge_view_entry.s = val;
-                        update(knowledge_view_id);
+                    onChange={(e: Event, val: number | number[]) =>
+                    {
+                        const size = Array.isArray(val) ? val[0] : val
+                        upsert_entry(knowledge_view_id, { s: size })
                     }}
                     step={0.25}
                     value={knowledge_view_entry.s ? knowledge_view_entry.s : 1}
@@ -159,7 +161,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                 {
                     if (!knowledge_view_id) return
 
-                    update(knowledge_view_id)
+                    upsert_entry(knowledge_view_id)
                 }}
             />
         </p>}
