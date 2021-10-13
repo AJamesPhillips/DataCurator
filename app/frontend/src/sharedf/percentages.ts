@@ -2,7 +2,7 @@ import { bounded } from "../shared/utils/bounded"
 
 
 
-export function percentage_to_string (value: number | undefined): string
+export function ratio_to_percentage_string (value: number | undefined): string
 {
     if (value === undefined) return ""
 

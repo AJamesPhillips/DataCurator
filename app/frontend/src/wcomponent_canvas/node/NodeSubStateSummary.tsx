@@ -17,7 +17,7 @@ import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
 import type { CounterfactualV2StateValueAndPredictionSetInfo } from "../../wcomponent/interfaces/counterfactual"
 import { ValueAndPredictionEntryRow } from "./ValueAndPredictionEntryRow"
 import { value_possibility_for_UI } from "../../wcomponent/value/parse_value"
-import { percentage_to_string } from "../../sharedf/percentages"
+import { ratio_to_percentage_string } from "../../sharedf/percentages"
 
 
 
@@ -133,7 +133,7 @@ function _NodeSubStateSummary (props: Props)
     }))
     if (!VAP_visual) return <div>Invalid configuration</div>
 
-    const value_text = VAP_visual.value_text + ` ${percentage_to_string(VAP_visual.certainty * 100)}%`
+    const value_text = VAP_visual.value_text + ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
     VAP_visual = {...VAP_visual, value_text, certainty: 1}
 
     return <ValueAndPredictionEntryRow

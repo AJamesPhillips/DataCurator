@@ -3,7 +3,7 @@ import { h } from "preact"
 import "./Editable.css"
 import { bounded } from "../shared/utils/bounded"
 import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
-import { percentage_to_string } from "../sharedf/percentages"
+import { ratio_to_percentage_string } from "../sharedf/percentages"
 
 
 
@@ -19,7 +19,7 @@ interface OwnProps
 
 export function EditablePercentage (props: OwnProps)
 {
-    const value = percentage_to_string(props.value)
+    const value = ratio_to_percentage_string(props.value)
 
     const { conditional_on_change, conditional_on_blur, disabled } = props
     if ((!conditional_on_change && !conditional_on_blur) || disabled)
