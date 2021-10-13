@@ -53,7 +53,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         // knowledge_view,
         // composed_wc_id_map: composed_kv && composed_kv.composed_wc_id_map,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-        statev2_wcomponent_ids: state.derived.wcomponent_ids_by_type.statev2,
+        wcomponent_ids_with_state_VAPs: state.derived.wcomponent_ids_by_type.any_state_VAPs,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         editing: !state.display_options.consumption_formatting,
@@ -83,13 +83,13 @@ function _WComponentSubStateForm (props: Props)
         wc_id_to_counterfactuals_map,
     } = props
 
-    const wcomponent_statev2s = Array.from(props.statev2_wcomponent_ids)
+    const wcomponents_with_state_VAP_sets = Array.from(props.wcomponent_ids_with_state_VAPs)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
-        .filter(wcomponent_is_statev2)
+        .filter(wcomponent_should_have_state_VAP_sets)
 
     const wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: wcomponent_statev2s,
+        wcomponents: wcomponents_with_state_VAP_sets,
         wcomponents_by_id,
         wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,

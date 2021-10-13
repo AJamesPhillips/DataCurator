@@ -237,6 +237,7 @@ export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcom
 
 
 
+// Need to keep in sync with wc_ids_by_type.any_state_VAPs
 export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)

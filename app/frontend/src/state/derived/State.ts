@@ -53,7 +53,7 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link" | "any_state_VAPs"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 

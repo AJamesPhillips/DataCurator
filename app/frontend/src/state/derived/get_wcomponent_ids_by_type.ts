@@ -21,6 +21,7 @@ export const get_empty_wcomponent_ids_by_type = (): WComponentIdsByType => ({
 
     judgement_or_objective: new Set(),
     any_link: new Set(),
+    any_state_VAPs: new Set(),
 })
 
 
@@ -43,6 +44,8 @@ export function get_wcomponent_ids_by_type (state: RootState, ids: string[])
 
     wc_ids_by_type.judgement_or_objective = set_union(wc_ids_by_type.judgement, wc_ids_by_type.objective)
     wc_ids_by_type.any_link = set_union(wc_ids_by_type.causal_link, wc_ids_by_type.relation_link)
+    // Need to keep in sync with wcomponent_should_have_state_VAP_sets
+    wc_ids_by_type.any_state_VAPs = set_union(wc_ids_by_type.statev2,  wc_ids_by_type.causal_link, wc_ids_by_type.action)
 
     return wc_ids_by_type
 }

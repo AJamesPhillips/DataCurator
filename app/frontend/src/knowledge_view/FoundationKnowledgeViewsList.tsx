@@ -47,7 +47,7 @@ function _FoundationKnowledgeViewsList (props: Props)
         else unfound_ids.push(id)
     })
 
-    if (unfound_ids.length) console.warn(`Unfounded foundational knowledge view ids: ${unfound_ids.join(", ")}`)
+    if (unfound_ids.length) console.warn(`Did not find foundational knowledge view ids: ${unfound_ids.join(", ")}`)
 
 
     const exclude_ids = new Set(foundation_knowledge_view_ids_set)

@@ -45,10 +45,9 @@ export function ensure_item_not_in_set <E> (set: Set<E>, item: E): Set<E>
 
 
 
-export function set_union <E> (set1: Set<E>, set2: Set<E>)
+export function set_union <E> (...sets: Set<E>[])
 {
-    return new Set([
-        ...Array.from(set1),
-        ...Array.from(set2),
-    ])
+    let elements: E[] = []
+    sets.forEach(set => elements = elements.concat(Array.from(set)))
+    return new Set(elements)
 }
