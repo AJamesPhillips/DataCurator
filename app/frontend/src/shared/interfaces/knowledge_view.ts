@@ -19,7 +19,11 @@ export interface KnowledgeView extends Base, Project {
     // Used for semantically organising knowledge views in relation to each other
     parent_knowledge_view_id?: string
     sort_type: KnowledgeViewSortType
+
     active_counterfactual_v2_ids?: string[]
+
+    time_origin_ms?: number
+    time_scale?: number
 }
 
 

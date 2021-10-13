@@ -12,6 +12,8 @@ import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import type { KnowledgeViewFormProps } from "./interfaces"
 import { KnowledgeViewActiveCounterFactuals } from "./KnowledgeViewActiveCounterfactuals"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
+import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { EditableNumber } from "../form/EditableNumber"
 
 
 
@@ -118,6 +120,38 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 on_change={sort_type => sort_type && crud.update_item({ ...knowledge_view, sort_type })}
             />
         </p>}
+
+
+        <hr />
+
+
+        {(editing || knowledge_view.time_origin_ms !== undefined) && <p>
+            <EditableCustomDateTime
+                title="Time origin"
+                value={knowledge_view.time_origin_ms ? new Date(knowledge_view.time_origin_ms) : undefined}
+                on_change={time_origin_date =>
+                {
+                    const new_time_origin_ms = time_origin_date ? time_origin_date.getTime() : undefined
+                    crud.update_item({ ...knowledge_view, time_origin_ms: new_time_origin_ms })
+                }}
+            />
+        </p>}
+
+        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_scale !== undefined)) && <p>
+            <EditableNumber
+                placeholder="Time scale"
+                value={knowledge_view.time_scale}
+                allow_undefined={true}
+                conditional_on_blur={new_time_scale =>
+                {
+                    crud.update_item({ ...knowledge_view, time_scale: new_time_scale })
+                }}
+            />
+        </p>}
+
+
+        <br />
+        <br />
 
 
         {(editing || children.length > 0) && <p>
