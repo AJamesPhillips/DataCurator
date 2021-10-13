@@ -8,7 +8,7 @@ import { useState } from "react"
 
 export function ActiveUserWidget ()
 {
-    const active_user_count = 10 + 0
+    const active_user_count = 0 + 0
     const classes = use_styles()
     const [user_list_is_open, set_user_list_is_open] = useState(false)
 
