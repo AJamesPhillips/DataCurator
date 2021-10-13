@@ -97,7 +97,9 @@ function _EditableCustomDateTime (props: Props)
         />}
         {editing && show_today_shortcut_button && <Button
             value="Today"
-            onClick={() => {
+            // MUST use onPointerDown otherwise onClick is never fired.  As expected, the onBlur
+            // fires first but unexpectedly this onClick does not fire
+            onPointerDown={() => {
                 const today_dt_str = get_today_str()
                 on_change(new Date(today_dt_str))
             }}
