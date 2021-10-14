@@ -24,6 +24,7 @@ export interface EditableTextCommonOwnProps
     select_all_on_focus?: boolean
     size?: "small" | "medium"
     hide_label?: boolean
+    style?: h.JSX.CSSProperties
 }
 
 
@@ -130,7 +131,7 @@ function _EditableTextCommon (props: Props)
     }
 
 
-    return <div className={class_name}>
+    return <div className={class_name} style={props.style}>
         {props.component({
             value,
             on_render,

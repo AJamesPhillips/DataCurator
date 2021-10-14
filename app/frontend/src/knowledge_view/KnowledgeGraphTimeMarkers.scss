@@ -1,0 +1,28 @@
+
+.datetime_container
+{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+
+    .datetime_line
+    {
+        height: 100%;
+        border-left: 1px rgba(100,100,100, 0.5) dashed;
+    }
+
+    .rotater
+    {
+        white-space: nowrap;
+        transform: translate(-0%, 700%) rotate(-90deg);
+        transform-origin: left top;
+        display: inline-block;
+
+        .date_label
+        {
+            display: inline-block;
+            vertical-align: top;
+        }
+    }
+}

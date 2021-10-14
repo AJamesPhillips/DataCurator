@@ -8,6 +8,7 @@ import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/dis
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
 import { EditableCheckbox } from "../form/EditableCheckbox"
+import { EditableNumber } from "../form/EditableNumber"
 
 
 

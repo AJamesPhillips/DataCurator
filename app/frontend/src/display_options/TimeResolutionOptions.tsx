@@ -3,7 +3,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
-import { time_resolution_types } from "../state/display_options/state"
+import { time_resolution_types as all_time_resolution_types } from "../state/display_options/state"
 import type { RootState } from "../state/State"
 import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
 
@@ -51,3 +51,6 @@ function _TimeResolutionOptions (props: Props)
 }
 
 export const TimeResolutionOptions = connector(_TimeResolutionOptions) as FunctionalComponent<OwnProps>
+
+
+const time_resolution_types = all_time_resolution_types.filter(type => type !== "second")

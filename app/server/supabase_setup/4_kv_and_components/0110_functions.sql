@@ -27,7 +27,7 @@ BEGIN
   UPDATE knowledge_views
   SET
     modified_at = now(),
-    -- base_id = item.base_id,
+    -- base_id = item.base_id,  // do not allow changing the base_id
     title = item.title,
     json = item.json
   WHERE id = item.id AND modified_at = item.modified_at;
@@ -89,7 +89,7 @@ BEGIN
   UPDATE wcomponents
   SET
     modified_at = now(),
-    -- base_id = item.base_id,
+    -- base_id = item.base_id,  // do not allow changing the base_id
     title = item.title,
     json = item.json
   WHERE id = item.id AND modified_at = item.modified_at;

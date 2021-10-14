@@ -12,7 +12,7 @@ export function display_options_persist (state: RootState)
         "consumption_formatting",
         "time_resolution",
         "display_by_simulated_time",
-        // "display_time_marks",
+        "display_time_marks",
         "validity_filter",
         "certainty_formatting",
         "collapsed_side_panel",

@@ -14,6 +14,7 @@ type OwnProps =
     placeholder: string
     default_value_when_invalid?: number
     size?: "small" | "medium"
+    style?: h.JSX.CSSProperties
 } & (
 {
     value: number
@@ -71,10 +72,11 @@ function _EditableNumber (props: Props)
     }
 
 
-    return <div className={class_name}>
+    return <div className={class_name} style={props.style}>
         <EditableTextSingleLine
             placeholder={props.placeholder}
             size={props.size || "small"}
+            style={props.style}
             value={value}
             select_all_on_focus={true}
             conditional_on_change={new_value =>

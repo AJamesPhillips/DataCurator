@@ -24,6 +24,7 @@ interface OwnProps
 {
     svg_children?: preact.ComponentChildren[] | null
     svg_upper_children?: preact.ComponentChildren[] | null
+    overlay?: preact.ComponentChildren | preact.ComponentChildren[] | null
     plain_background?: boolean
 }
 
@@ -327,6 +328,9 @@ class _Canvas extends Component<Props, State>
                             color={this.props.control_key_down ? "red" : "blue"}
                         />}
                     </div>
+                </div>
+                <div>
+                    {this.props.overlay}
                 </div>
             </div>
         </div>

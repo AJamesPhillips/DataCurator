@@ -24,6 +24,8 @@ export interface KnowledgeView extends Base, Project {
 
     time_origin_ms?: number
     time_scale?: number
+    time_line_number?: number
+    time_line_spacing_days?: number
 }
 
 

@@ -8,6 +8,7 @@ import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvas
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
 
 
 
@@ -52,6 +53,7 @@ function _KnowledgeGraphView (props: Props)
         main_content={<Canvas
             svg_children={[]}
             svg_upper_children={get_svg_upper_children(props)}
+            overlay={get_overlay_children()}
             plain_background={props.presenting}
         >
             {elements}
@@ -81,10 +83,13 @@ const get_children = (props: Props): ChildrenRawData =>
 
 
 
-const no_svg_upper_children: h.JSX.Element[] = []
-const get_svg_upper_children = ({ wcomponent_connections }: Props) =>
+const get_svg_upper_children = ({ wcomponent_connections = [] }: Props) =>
 {
-    if (!wcomponent_connections) return no_svg_upper_children
-
     return wcomponent_connections.map(({ id }) => <WComponentCanvasConnection key={id} id={id} />)
+}
+
+
+const get_overlay_children = () =>
+{
+    return <KnowledgeGraphTimeMarkers />
 }

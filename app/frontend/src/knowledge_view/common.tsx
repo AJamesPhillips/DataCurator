@@ -149,6 +149,32 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             />
         </p>}
 
+        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_line_number !== undefined)) && <p>
+            <EditableNumber
+                placeholder="Time line number"
+                value={knowledge_view.time_line_number}
+                allow_undefined={true}
+                conditional_on_blur={new_time_line_number =>
+                {
+                    crud.update_item({ ...knowledge_view, time_line_number: new_time_line_number })
+                }}
+                style={{ width: "70%" }}
+            />
+        </p>}
+
+        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_line_spacing_days !== undefined)) && <p>
+            <EditableNumber
+                placeholder="Days between time line"
+                value={knowledge_view.time_line_spacing_days}
+                allow_undefined={true}
+                conditional_on_blur={new_time_line_spacing_days =>
+                {
+                    crud.update_item({ ...knowledge_view, time_line_spacing_days: new_time_line_spacing_days })
+                }}
+                style={{ width: "70%" }}
+            />
+        </p>}
+
 
         <br />
         <br />
