@@ -1,4 +1,5 @@
 import type {
+    DatetimeConfig,
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
@@ -117,8 +118,11 @@ function get_knowledge_view (state: RootState, id: string)
 
 function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
-    const composed_wc_id_map = get_composed_wc_id_map(current_kv, state.specialised_objects.knowledge_views_by_id)
-    remove_deleted_wcomponents(composed_wc_id_map, state.specialised_objects.wcomponents_by_id)
+    const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
+
+    const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
+    const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
+    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
     // Possible optimisation: store a set of wcomponent_ids and only run the following code when
     // this set changes... may save a bunch of views from updating (and also help them run faster)
     // as many just want to know what ids are present in the knowledge view not the positions of
@@ -131,14 +135,15 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
         wc_ids_by_type,
-        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        wcomponents_by_id,
     })
     const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
         wc_ids_by_type,
-        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        wcomponents_by_id,
         active_counterfactual_ids: current_kv.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
+    const datetime_config = get_composed_datetime_config(foundational_knowledge_views)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
@@ -150,7 +155,8 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
-        filters: { wc_ids_excluded_by_filters: new Set() }
+        filters: { wc_ids_excluded_by_filters: new Set() },
+        ...datetime_config, // put here incase there are attributes with value "undefined" in current_kv
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_composed_knowledge_view as any).wc_id_map
@@ -160,29 +166,25 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 
 
 
-export function get_composed_wc_id_map (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
+function get_foundational_knowledge_views (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
 {
-    const to_compose: KnowledgeViewWComponentIdEntryMap[] = []
+    const { foundation_knowledge_view_ids = [] } = knowledge_view
+    const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
+        .filter(is_defined)
+    foundation_knowledge_views.push(knowledge_view)
 
-    const foundation_knowledge_view_ids = knowledge_view.foundation_knowledge_view_ids || []
-
-    foundation_knowledge_view_ids.forEach(id =>
-    {
-        const new_kv = knowledge_views_by_id[id]
-        if (!new_kv) return
-
-        to_compose.push(new_kv.wc_id_map)
-    })
-
-    to_compose.push(knowledge_view.wc_id_map)
+    return foundation_knowledge_views
+}
 
 
+
+export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[])
+{
     const composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-    to_compose.forEach(map =>
+    foundation_knowledge_views.forEach(foundational_kv =>
     {
-        Object.entries(map).forEach(([id, entry]) => composed_wc_id_map[id] = entry)
+        Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry)
     })
-
 
     return composed_wc_id_map
 }
@@ -254,6 +256,23 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
         .filter(wcomponent_is_prioritisation)
 
     return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")
+}
+
+
+
+function get_composed_datetime_config (foundation_knowledge_views: KnowledgeView[]): DatetimeConfig
+{
+    const config: DatetimeConfig = {}
+
+    foundation_knowledge_views.forEach(foundational_kv =>
+    {
+        config.time_origin_ms = foundational_kv.time_origin_ms ?? config.time_origin_ms
+        config.time_scale = foundational_kv.time_scale ?? config.time_scale
+        config.time_line_number = foundational_kv.time_line_number ?? config.time_line_number
+        config.time_line_spacing_days = foundational_kv.time_line_spacing_days ?? config.time_line_spacing_days
+    })
+
+    return config
 }
 
 
