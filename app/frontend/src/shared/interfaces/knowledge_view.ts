@@ -7,15 +7,16 @@ export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived
 export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
 
 
-export interface DatetimeConfig
+export interface DatetimeLineConfig
 {
     time_origin_ms?: number
+    time_origin_x?: number
     time_scale?: number
     time_line_number?: number
     time_line_spacing_days?: number
 }
 
-export interface KnowledgeView extends Base, Project, DatetimeConfig {
+export interface KnowledgeView extends Base, Project, DatetimeLineConfig {
     // Explainable
     title: string
     description: string

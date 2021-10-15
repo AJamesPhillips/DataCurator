@@ -1,5 +1,5 @@
 import type {
-    DatetimeConfig,
+    DatetimeLineConfig,
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
@@ -143,7 +143,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         active_counterfactual_ids: current_kv.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
-    const datetime_config = get_composed_datetime_config(foundational_knowledge_views)
+    const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
@@ -156,7 +156,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         wc_ids_by_type,
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() },
-        ...datetime_config, // put here incase there are attributes with value "undefined" in current_kv
+        ...datetime_lines_config, // put here incase there are attributes with value "undefined" in current_kv
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_composed_knowledge_view as any).wc_id_map
@@ -166,12 +166,13 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 
 
 
-function get_foundational_knowledge_views (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById)
+export function get_foundational_knowledge_views (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById, include_self = true)
 {
     const { foundation_knowledge_view_ids = [] } = knowledge_view
     const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
         .filter(is_defined)
-    foundation_knowledge_views.push(knowledge_view)
+
+    if (include_self) foundation_knowledge_views.push(knowledge_view)
 
     return foundation_knowledge_views
 }
@@ -260,13 +261,14 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
 
 
 
-function get_composed_datetime_config (foundation_knowledge_views: KnowledgeView[]): DatetimeConfig
+export function get_composed_datetime_lines_config (foundation_knowledge_views: KnowledgeView[]): DatetimeLineConfig
 {
-    const config: DatetimeConfig = {}
+    const config: DatetimeLineConfig = {}
 
     foundation_knowledge_views.forEach(foundational_kv =>
     {
         config.time_origin_ms = foundational_kv.time_origin_ms ?? config.time_origin_ms
+        config.time_origin_x = foundational_kv.time_origin_x ?? config.time_origin_x
         config.time_scale = foundational_kv.time_scale ?? config.time_scale
         config.time_line_number = foundational_kv.time_line_number ?? config.time_line_number
         config.time_line_spacing_days = foundational_kv.time_line_spacing_days ?? config.time_line_spacing_days

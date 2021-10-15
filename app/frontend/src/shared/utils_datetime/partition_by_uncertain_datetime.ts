@@ -223,7 +223,7 @@ function test_sort_by_uncertain_event_datetimes ()
 
         // Should get same result from items forwards or backwards
         test(result, result2, "", false)
-        console.log(items.map(({ id }) => id).join(", "))
+        console .log(items.map(({ id }) => id).join(", "))
         test(result, expected_ids, "", false)
     }
 

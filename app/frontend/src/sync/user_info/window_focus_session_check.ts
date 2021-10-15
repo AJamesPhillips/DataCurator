@@ -45,7 +45,7 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
 {
     if (!store.getState().user_info.user)
     {
-        console.log("User not signed in once yet.")
+        console .log("User not signed in once yet.")
         return CheckConnectionAndSessionResult.no_user
     }
 
@@ -62,7 +62,7 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
         }
         else if (response.error?.message === "Network request failed")
         {
-            console.log("Network error")
+            console .log("Network error")
             return CheckConnectionAndSessionResult.no_network_connection
         }
         else if (response.error)
@@ -95,7 +95,7 @@ function handle_connection_and_session_check_result (result: CheckConnectionAndS
     else if (result === CheckConnectionAndSessionResult.not_signed_in)
     {
         // TODO research how to attempt to refresh the session and iff that fails, only then call signout
-        console.log("User not logged in.  Reloading page.")
+        console .log("User not logged in.  Reloading page.")
         window.location.reload()
         return
     }

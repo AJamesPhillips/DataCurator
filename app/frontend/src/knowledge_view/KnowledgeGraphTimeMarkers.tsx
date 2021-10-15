@@ -10,6 +10,7 @@ import { SCALE_BY } from "../canvas/zoom_utils"
 import { bounded } from "../shared/utils/bounded"
 import { useMemo } from "preact/hooks"
 import { date2str } from "../shared/utils/date_helpers"
+import { DEFAULT_DATETIME_LINE_CONFIG } from "./constants"
 
 
 
@@ -19,6 +20,7 @@ const map_state = (state: RootState) =>
     return {
         display_time_marks: state.display_options.display_time_marks,
         time_origin_ms: current_composed_knowledge_view?.time_origin_ms,
+        time_origin_x: current_composed_knowledge_view?.time_origin_x,
         time_scale: current_composed_knowledge_view?.time_scale,
         time_line_number: current_composed_knowledge_view?.time_line_number,
         time_line_spacing_days: current_composed_knowledge_view?.time_line_spacing_days,
@@ -32,10 +34,19 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector>
 
 
+// Not actually to do with milliseconds in the hour just seems to be a good number
+const time_scale_days_to_ms_pixels_fudge_factor = 1000 * 60 * 60
+
 
 function _KnowledgeGraphTimeMarkers (props: Props)
 {
-    const { sim_ms, time_origin_ms, time_line_number = 4, time_line_spacing_days = 30 } = props
+    const {
+        sim_ms, time_origin_ms,
+        time_origin_x = DEFAULT_DATETIME_LINE_CONFIG.time_origin_x,
+        time_scale = DEFAULT_DATETIME_LINE_CONFIG.time_scale,
+        time_line_number = DEFAULT_DATETIME_LINE_CONFIG.time_line_number,
+        time_line_spacing_days = DEFAULT_DATETIME_LINE_CONFIG.time_line_spacing_days,
+    } = props
     if (!props.display_time_marks || time_origin_ms === undefined) return null
 
     const other_datetime_lines = useMemo(() => get_other_datetime_lines({
@@ -43,18 +54,18 @@ function _KnowledgeGraphTimeMarkers (props: Props)
     }), [time_line_number, time_line_spacing_days])
 
     const { x, zoom } = props
-    const xd = (zoom / SCALE_BY)
-    const xm = x * xd
-    const time_scale = (props.time_scale ?? 1) / (1000 * 60 * 60) * xd
+    const xd = zoom / SCALE_BY
+    const xm = (x - time_origin_x) * xd
+    const time_scale_ms_to_pixels_fudge = (time_scale / time_scale_days_to_ms_pixels_fudge_factor) * xd
 
-    return <div style={{ width: "100%", height: "100%", position: "absolute" }}>
+    return <div className="datetime_lines_container">
         {other_datetime_lines.map(config =>
         {
             return <DatetimeLine
                 key={config.key}
                 date_ms={sim_ms + config.offset}
                 time_origin_ms={time_origin_ms}
-                time_scale={time_scale}
+                time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
                 xm={xm}
                 xd={xd}
                 color="black"
@@ -65,7 +76,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
         <DatetimeLine
             date_ms={new Date().getTime()}
             time_origin_ms={time_origin_ms}
-            time_scale={time_scale}
+            time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
             xm={xm}
             xd={xd}
             color="red"
@@ -74,7 +85,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
         <DatetimeLine
             date_ms={sim_ms}
             time_origin_ms={time_origin_ms}
-            time_scale={time_scale}
+            time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
             xm={xm}
             xd={xd}
             color="blue"
@@ -92,7 +103,7 @@ interface DatetimeLineProps
 {
     date_ms: number
     time_origin_ms: number
-    time_scale: number
+    time_scale_ms_to_pixels_fudge: number
     xm: number
     xd: number
     color?: string
@@ -102,7 +113,7 @@ interface DatetimeLineProps
 function DatetimeLine (props: DatetimeLineProps)
 {
     const { color, opacity } = props
-    let left = ((props.date_ms - props.time_origin_ms) * props.time_scale) - props.xm
+    let left = ((props.date_ms - props.time_origin_ms) * props.time_scale_ms_to_pixels_fudge) - props.xm
     const max_left = document.body.clientWidth - 20
 
     const off_left = left < 0

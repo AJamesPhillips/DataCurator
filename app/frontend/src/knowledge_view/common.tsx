@@ -12,8 +12,11 @@ import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import type { KnowledgeViewFormProps } from "./interfaces"
 import { KnowledgeViewActiveCounterFactuals } from "./KnowledgeViewActiveCounterfactuals"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
-import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { EditableNumber } from "../form/EditableNumber"
+import {
+    get_composed_datetime_lines_config,
+    get_foundational_knowledge_views,
+} from "../state/specialised_objects/knowledge_views/derived_reducer"
+import { KnowledgeViewDatetimeLinesConfigForm } from "./KnowledgeViewDatetimeLinesConfigForm"
 
 
 
@@ -43,6 +46,9 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
+    const foundational_knowledge_view = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)
+    const composed_datetime_config = get_composed_datetime_lines_config(foundational_knowledge_view)
+
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
         <p style={{ display: "inline-flex" }}>
@@ -51,7 +57,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 value={knowledge_view.title}
                 conditional_on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "All" : make_default_kv_title()
-                    crud.update_item({ ...knowledge_view, title: new_title || default_title })
+                    crud.update_item({ ...knowledge_view, title: new_title ?? default_title })
                 }}
             />
         </p>
@@ -125,58 +131,15 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
         <hr />
 
 
-        {(editing || knowledge_view.time_origin_ms !== undefined) && <p>
-            <EditableCustomDateTime
-                title="Time origin"
-                value={knowledge_view.time_origin_ms ? new Date(knowledge_view.time_origin_ms) : undefined}
-                on_change={time_origin_date =>
-                {
-                    const new_time_origin_ms = time_origin_date ? time_origin_date.getTime() : undefined
-                    crud.update_item({ ...knowledge_view, time_origin_ms: new_time_origin_ms })
-                }}
-            />
-        </p>}
-
-        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_scale !== undefined)) && <p>
-            <EditableNumber
-                placeholder="Time scale"
-                value={knowledge_view.time_scale}
-                allow_undefined={true}
-                conditional_on_blur={new_time_scale =>
-                {
-                    crud.update_item({ ...knowledge_view, time_scale: new_time_scale })
-                }}
-            />
-        </p>}
-
-        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_line_number !== undefined)) && <p>
-            <EditableNumber
-                placeholder="Time line number"
-                value={knowledge_view.time_line_number}
-                allow_undefined={true}
-                conditional_on_blur={new_time_line_number =>
-                {
-                    crud.update_item({ ...knowledge_view, time_line_number: new_time_line_number })
-                }}
-                style={{ width: "70%" }}
-            />
-        </p>}
-
-        {(editing || (knowledge_view.time_origin_ms !== undefined && knowledge_view.time_line_spacing_days !== undefined)) && <p>
-            <EditableNumber
-                placeholder="Days between time line"
-                value={knowledge_view.time_line_spacing_days}
-                allow_undefined={true}
-                conditional_on_blur={new_time_line_spacing_days =>
-                {
-                    crud.update_item({ ...knowledge_view, time_line_spacing_days: new_time_line_spacing_days })
-                }}
-                style={{ width: "70%" }}
-            />
-        </p>}
+        <KnowledgeViewDatetimeLinesConfigForm
+            editing={editing}
+            knowledge_view={knowledge_view}
+            knowledge_views_by_id={props.knowledge_views_by_id}
+            update_item={crud.update_item}
+        />
 
 
-        <br />
+        <hr />
         <br />
 
 

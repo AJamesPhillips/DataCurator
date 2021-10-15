@@ -11,6 +11,7 @@ import { TimeSlider } from "../../time_control/TimeSlider"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
+import { ToggleDatetimeMarkers } from "./ToggleDatetimeMarkers"
 
 
 
@@ -24,7 +25,6 @@ interface OwnProps
 const map_state = (state: RootState) => ({
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
-    display_time_marks: state.display_options.display_time_marks,
     display_time_sliders: state.controls.display_time_sliders,
     editing: !state.display_options.consumption_formatting,
     created_at_ms: state.routing.args.created_at_ms,
@@ -36,7 +36,6 @@ const map_dispatch = {
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
-    set_display_time_marks: ACTIONS.display.set_display_time_marks,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -106,20 +105,7 @@ function _ContentControls (props: Props)
                     <TimeResolutionOptions  />
                 </Box>
 
-                <Box component="label">
-                    <ButtonGroup
-                        disableElevation
-                        variant="contained"
-                        value={props.display_time_marks}
-                    >
-                        <Button
-                            onClick={() => props.set_display_time_marks(!props.display_time_marks)}
-                            aria-label="Toggle displaying time markers"
-                        >
-                            {props.display_time_marks ? "Hide" : "Show"} Time
-                        </Button>
-                    </ButtonGroup>
-                </Box>
+                <ToggleDatetimeMarkers />
 
                 <Box component="label">
                     <ButtonGroup

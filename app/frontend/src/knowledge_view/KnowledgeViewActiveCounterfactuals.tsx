@@ -5,8 +5,9 @@ import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteTex
 import { is_defined } from "../shared/utils/is_defined"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { get_composed_wc_id_map } from "../state/specialised_objects/knowledge_views/derived_reducer"
+import { get_composed_wc_id_map, get_foundational_knowledge_views } from "../state/specialised_objects/knowledge_views/derived_reducer"
 import type { RootState } from "../state/State"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -45,23 +46,31 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
 
     const selected_option_ids = knowledge_view.active_counterfactual_v2_ids || []
 
-    const wc_id_map = get_composed_wc_id_map(knowledge_view, knowledge_views_by_id)
-    const options = Object.keys(wc_id_map)
-        .map(id => wcomponents_by_id[id])
-        .filter(is_defined)
-        .filter(({ type }) => type === "counterfactualv2")
-        .map(wcomponent => ({
-            id: wcomponent.id,
-            title: get_title({
-                wcomponent,
-                rich_text: true,
-                render_links: false,
-                wcomponents_by_id,
-                wc_id_to_counterfactuals_map: {},
-                created_at_ms: FUTURE_TIME_MS,
-                sim_ms: FUTURE_TIME_MS,
-            }),
-        }))
+    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
+    const options = useMemo(() =>
+    {
+        const wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
+
+        const options = Object.keys(wc_id_map)
+            .map(id => wcomponents_by_id[id])
+            .filter(is_defined)
+            .filter(({ type }) => type === "counterfactualv2")
+            .map(wcomponent => ({
+                id: wcomponent.id,
+                title: get_title({
+                    wcomponent,
+                    rich_text: true,
+                    render_links: false,
+                    wcomponents_by_id,
+                    wc_id_to_counterfactuals_map: {},
+                    created_at_ms: FUTURE_TIME_MS,
+                    sim_ms: FUTURE_TIME_MS,
+                }),
+            }))
+
+        return options
+    }, [wcomponents_by_id, ...foundational_knowledge_views])
+
 
     if (editing)
     {
