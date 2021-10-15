@@ -1,7 +1,10 @@
-import type {
+import {
     Perception,
     WComponent,
     WComponentsById,
+    wcomponent_is_event,
+    wcomponent_is_sub_state,
+    wcomponent_should_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type {
     KnowledgeView,
@@ -11,7 +14,7 @@ import type {
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
-import { wcomponent_id_to_wcomponent_kv_id } from "../../shared/utils/ids"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 
 
 
@@ -21,12 +24,12 @@ export function get_wcomponent_from_state (state: RootState, id: string | null):
 }
 
 
-export function get_wcomponents_id_map (wcomponents_by_id: WComponentsById, ids: string[] | Set<string> | undefined): (WComponent | undefined)[]
+export function get_wcomponents_from_ids (wcomponents_by_id: WComponentsById, ids: string[] | Set<string> | undefined): (WComponent | undefined)[]
 {
     ids = ids || []
     ids = ids instanceof Set ? Array.from(ids): ids
 
-    return ids.map(id => id ? wcomponents_by_id[id] : undefined)
+    return ids.map(id => wcomponents_by_id[id])
 }
 
 
@@ -203,4 +206,43 @@ function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: Nest
 export function wcomponent_has_knowledge_view (wcomponent_id: string, knowledge_views_by_id: KnowledgeViewsById)
 {
     return !!knowledge_views_by_id[wcomponent_id]
+}
+
+
+
+// Need to keep in sync with wc_ids_by_type.has_single_datetime
+export function get_single_temporal_uncertainty_from_wcomponent (wcomponent_id: string, state: RootState): TemporalUncertainty | undefined
+{
+    const { wcomponents_by_id } = state.specialised_objects
+    const wcomponent = wcomponents_by_id[wcomponent_id]
+
+    if (wcomponent_is_event(wcomponent))
+    {
+        const prediction = wcomponent.event_at && wcomponent.event_at[0]
+        return prediction?.datetime
+    }
+
+    if (wcomponent_is_sub_state(wcomponent))
+    {
+        const { target_wcomponent_id, selector } = wcomponent
+        const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""]
+        const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
+        if (!target_wcomponent || !selector) return undefined
+
+        const { target_VAP_set_id } = selector
+        if (!target_VAP_set_id) return undefined
+
+        let { values_and_prediction_sets: target_VAP_sets } = target_wcomponent
+
+        // We know that counterfactuals do not effect the time yet so we don't need to to this yet.
+        // const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_wcomponent_id)
+
+        target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
+        const target_VAP_set = target_VAP_sets[0]
+        if (!target_VAP_set) return undefined
+
+        return target_VAP_set.datetime
+    }
+
+    return undefined
 }

@@ -12,10 +12,6 @@ import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import type { KnowledgeViewFormProps } from "./interfaces"
 import { KnowledgeViewActiveCounterFactuals } from "./KnowledgeViewActiveCounterfactuals"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
-import {
-    get_composed_datetime_lines_config,
-    get_foundational_knowledge_views,
-} from "../state/specialised_objects/knowledge_views/derived_reducer"
 import { KnowledgeViewDatetimeLinesConfigForm } from "./KnowledgeViewDatetimeLinesConfigForm"
 
 
@@ -45,9 +41,6 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
-
-    const foundational_knowledge_view = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)
-    const composed_datetime_config = get_composed_datetime_lines_config(foundational_knowledge_view)
 
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>

@@ -1,4 +1,4 @@
-import type { WComponentNodeBase } from "./wcomponent_base";
+import type { WComponentNodeBase } from "./wcomponent_base"
 
 
 

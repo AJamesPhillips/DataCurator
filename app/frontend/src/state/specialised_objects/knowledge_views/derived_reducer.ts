@@ -1,3 +1,4 @@
+import { DefaultDatetimeLineConfig, DEFAULT_DATETIME_LINE_CONFIG } from "../../../knowledge_view/constants"
 import type {
     DatetimeLineConfig,
     KnowledgeView,
@@ -143,7 +144,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         active_counterfactual_ids: current_kv.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
-    const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views)
+    const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
@@ -156,7 +157,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         wc_ids_by_type,
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() },
-        ...datetime_lines_config, // put here incase there are attributes with value "undefined" in current_kv
+        composed_datetime_line_config: datetime_lines_config,
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_composed_knowledge_view as any).wc_id_map
@@ -261,17 +262,27 @@ function get_prioritisations (state: RootState, prioritisation_ids: Set<string>)
 
 
 
-export function get_composed_datetime_lines_config (foundation_knowledge_views: KnowledgeView[]): DatetimeLineConfig
+export function get_composed_datetime_lines_config (foundation_knowledge_views: KnowledgeView[], use_defaults: false): DatetimeLineConfig
+export function get_composed_datetime_lines_config (foundation_knowledge_views: KnowledgeView[], use_defaults: true): DatetimeLineConfig & DefaultDatetimeLineConfig
+export function get_composed_datetime_lines_config (foundation_knowledge_views: KnowledgeView[], use_defaults: boolean): DatetimeLineConfig
 {
-    const config: DatetimeLineConfig = {}
+    let config: DatetimeLineConfig = {}
+
+    if (use_defaults)
+    {
+        config = { ...DEFAULT_DATETIME_LINE_CONFIG }
+    }
 
     foundation_knowledge_views.forEach(foundational_kv =>
     {
-        config.time_origin_ms = foundational_kv.time_origin_ms ?? config.time_origin_ms
-        config.time_origin_x = foundational_kv.time_origin_x ?? config.time_origin_x
-        config.time_scale = foundational_kv.time_scale ?? config.time_scale
-        config.time_line_number = foundational_kv.time_line_number ?? config.time_line_number
-        config.time_line_spacing_days = foundational_kv.time_line_spacing_days ?? config.time_line_spacing_days
+        const { datetime_line_config } = foundational_kv
+        if (!datetime_line_config) return
+
+        config.time_origin_ms = datetime_line_config.time_origin_ms ?? config.time_origin_ms
+        config.time_origin_x = datetime_line_config.time_origin_x ?? config.time_origin_x
+        config.time_scale = datetime_line_config.time_scale ?? config.time_scale
+        config.time_line_number = datetime_line_config.time_line_number ?? config.time_line_number
+        config.time_line_spacing_days = datetime_line_config.time_line_spacing_days ?? config.time_line_spacing_days
     })
 
     return config

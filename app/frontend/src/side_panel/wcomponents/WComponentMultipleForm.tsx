@@ -8,12 +8,13 @@ import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
 import { Button } from "../../sharedf/Button"
 import {
     get_current_composed_knowledge_view_from_state,
-    get_wcomponents_id_map,
+    get_wcomponents_from_ids,
 } from "../../state/specialised_objects/accessors"
 import { LabelsEditor } from "../../labels/LabelsEditor"
 import { is_defined } from "../../shared/utils/is_defined"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
+import { ButtonSnapXToDatetime } from "../../wcomponent_form/ButtonSnapXToDatetime"
 
 
 
@@ -55,7 +56,7 @@ function _WComponentMultipleForm (props: Props)
     if (!props.ready) return <div>Loading...</div>
 
     const {
-        wcomponent_ids: ids,
+        wcomponent_ids: wcomponent_ids_set,
         composed_wc_id_map,
         knowledge_view_id,
         wcomponents_by_id,
@@ -66,8 +67,8 @@ function _WComponentMultipleForm (props: Props)
         snap_to_grid_knowledge_view_entries,
         bulk_edit_wcomponents,
     } = props
-    const wcomponent_ids = Array.from(ids)
-    const wcomponents = get_wcomponents_id_map(wcomponents_by_id, wcomponent_ids).filter(is_defined)
+    const wcomponents = get_wcomponents_from_ids(wcomponents_by_id, wcomponent_ids_set).filter(is_defined)
+    const wcomponent_ids = Array.from(wcomponent_ids_set)
     const all_wcomponent_ids_present_in_current_kv = calc_all_wcomponent_ids_present_in_current_kv(wcomponent_ids, composed_wc_id_map)
 
 
@@ -80,7 +81,7 @@ function _WComponentMultipleForm (props: Props)
         <h2>{editing ? "Bulk editing" : "Viewing"} {wcomponent_ids.length} components</h2>
 
         {editing && <p>
-            Position:
+            <h3>Position</h3>
             <EditablePosition
                 point={{ left: 0, top: 0 }}
                 on_update={p => {
@@ -94,6 +95,7 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {editing && <p>
+            <h3>Align</h3>
             <Button
                 disabled={!knowledge_view_id}
                 value="Snap to grid"
@@ -104,10 +106,11 @@ function _WComponentMultipleForm (props: Props)
                 }}
                 is_left={true}
             />
+            <ButtonSnapXToDatetime />
         </p>}
 
         {(editing || label_ids.length > 0) && <p>
-            Label
+            <h3>Label</h3>
             <LabelsEditor
                 label_ids={label_ids}
                 on_change={label_ids => bulk_edit_wcomponents({ wcomponent_ids, change: { label_ids } })}
@@ -115,7 +118,7 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {editing && <p>
-            Add to knowledge view
+            <h3>Add to knowledge view</h3>
             {all_wcomponent_ids_present_in_current_kv ?
             <SelectKnowledgeView
                 exclude_ids={new Set(knowledge_view_id ? [knowledge_view_id]: [])}

@@ -2,7 +2,7 @@ import type { DatetimeLineConfig } from "../shared/interfaces/knowledge_view"
 
 
 
-interface DefaultDatetimeLineConfig extends DatetimeLineConfig
+export interface DefaultDatetimeLineConfig extends DatetimeLineConfig
 {
     time_origin_x: number
     time_scale: number

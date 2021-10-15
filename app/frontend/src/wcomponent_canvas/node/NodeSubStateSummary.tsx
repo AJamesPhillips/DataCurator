@@ -110,6 +110,7 @@ function _NodeSubStateSummary (props: Props)
 
     if (!have_target_value)
     {
+        // Counterfactuals are still applied but happens inside / by this component
         return <ConnectedValueAndPredictionSetSummary
             wcomponent={target_wcomponent}
             VAP_set={target_VAP_set}

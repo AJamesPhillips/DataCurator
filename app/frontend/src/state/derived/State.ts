@@ -1,5 +1,6 @@
 import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
+    DatetimeLineConfig,
     KnowledgeView,
     KnowledgeViewSortType,
     KnowledgeViewWComponentIdEntryMap,
@@ -12,6 +13,7 @@ import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base
 import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
+import type { DefaultDatetimeLineConfig } from "../../knowledge_view/constants"
 
 
 
@@ -36,7 +38,7 @@ export type NestedKnowledgeViewIds = {
 }
 
 
-export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
+export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_map">, "datetime_line_config">
 {
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
     overlapping_wc_ids: OverlappingWcIdMap
@@ -47,13 +49,15 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map">
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 
+    composed_datetime_line_config: DatetimeLineConfig & DefaultDatetimeLineConfig
+
     filters: {
         wc_ids_excluded_by_filters: Set<string>
     }
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link" | "any_state_VAPs"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 

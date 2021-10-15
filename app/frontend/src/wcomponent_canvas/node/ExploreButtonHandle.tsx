@@ -7,7 +7,6 @@ import {
     navigate_to_knowledge_view_or_kvwcomponent,
 } from "../../knowledge_view/create_new_knowledge_view"
 import { get_today_str } from "../../shared/utils/date_helpers"
-import { wcomponent_id_to_wcomponent_kv_id } from "../../shared/utils/ids"
 import type {
     KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,

@@ -7,6 +7,7 @@ export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived
 export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
 
 
+// TODO should move this to it's own top level directory like datetime_lines ?
 export interface DatetimeLineConfig
 {
     time_origin_ms?: number
@@ -16,7 +17,7 @@ export interface DatetimeLineConfig
     time_line_spacing_days?: number
 }
 
-export interface KnowledgeView extends Base, Project, DatetimeLineConfig {
+export interface KnowledgeView extends Base, Project {
     // Explainable
     title: string
     description: string
@@ -30,6 +31,8 @@ export interface KnowledgeView extends Base, Project, DatetimeLineConfig {
     sort_type: KnowledgeViewSortType
 
     active_counterfactual_v2_ids?: string[]
+
+    datetime_line_config?: DatetimeLineConfig
 }
 
 

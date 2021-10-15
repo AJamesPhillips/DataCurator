@@ -19,7 +19,7 @@ interface OwnProps { }
 const map_state = (state: RootState) =>
 {
     const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
-    const time_origin_ms_present = (current_composed_kv && current_composed_kv.time_origin_ms) !== undefined
+    const time_origin_ms_present = (current_composed_kv && current_composed_kv.composed_datetime_line_config.time_origin_ms) !== undefined
     const current_kv = get_current_knowledge_view_from_state(state)
 
     return {
@@ -60,8 +60,11 @@ function _ToggleDatetimeMarkers (props: Props)
                         const left = get_middle_of_screen(store.getState()).left
                         const new_knowledge_view: KnowledgeView = {
                             ...current_kv,
-                            time_origin_ms: props.sim_ms,
-                            time_origin_x: left,
+                            datetime_line_config: {
+                                ...current_kv.datetime_line_config,
+                                time_origin_ms: props.sim_ms,
+                                time_origin_x: left,
+                            },
                         }
                         props.upsert_knowledge_view({ knowledge_view: new_knowledge_view })
                     }

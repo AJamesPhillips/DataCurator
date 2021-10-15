@@ -24,18 +24,31 @@ interface OwnProps
 
 export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
 {
-    const { editing, knowledge_view, update_item } = props
+    const { editing, knowledge_view } = props
 
     const foundational_knowledge_view = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)
-    const composed = get_composed_datetime_lines_config(foundational_knowledge_view)
+    const composed = get_composed_datetime_lines_config(foundational_knowledge_view, false)
+
+    const { datetime_line_config: orig_datetime_line_config = {} } = knowledge_view
+
+    const final_time_origin_ms = orig_datetime_line_config.time_origin_ms ?? composed.time_origin_ms // There is no DEFAULT_DATETIME_LINE_CONFIG.time_origin_ms
 
 
-    const final_time_origin_ms = knowledge_view.time_origin_ms ?? composed.time_origin_ms // There is no DEFAULT_DATETIME_LINE_CONFIG.time_origin_ms
+    const update_item = (config: DatetimeLineConfig) =>
+    {
+        const new_datetime_line_config: DatetimeLineConfig = {
+            ...orig_datetime_line_config,
+            ...config,
+        }
+        props.update_item({ ...knowledge_view, datetime_line_config: new_datetime_line_config })
+    }
+
 
     if (final_time_origin_ms === undefined)
     {
         if (!editing) return null
         return <div>
+            <h4>Configure X Axis Datetime</h4>
             <p>
                 <EditableCustomDateTime
                     title="Time origin"
@@ -43,7 +56,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                     on_change={new_time_origin_date =>
                     {
                         const new_time_origin_ms = new_time_origin_date ? new_time_origin_date.getTime() : undefined
-                        update_item({ ...knowledge_view, time_origin_ms: new_time_origin_ms })
+                        update_item({ time_origin_ms: new_time_origin_ms })
                     }}
                 />
             </p>
@@ -52,13 +65,14 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
 
 
 
-    const final_time_origin_x = inherit_or_default(knowledge_view, composed, "time_origin_x")
-    const final_time_scale = inherit_or_default(knowledge_view, composed, "time_scale")
-    const final_time_line_number = inherit_or_default(knowledge_view, composed, "time_line_number")
-    const final_time_line_spacing_days = inherit_or_default(knowledge_view, composed, "time_line_spacing_days")
+    const final_time_origin_x = inherit_or_default(orig_datetime_line_config, composed, "time_origin_x")
+    const final_time_scale = inherit_or_default(orig_datetime_line_config, composed, "time_scale")
+    const final_time_line_number = inherit_or_default(orig_datetime_line_config, composed, "time_line_number")
+    const final_time_line_spacing_days = inherit_or_default(orig_datetime_line_config, composed, "time_line_spacing_days")
 
 
     return <div>
+        <h4>Configure X Axis Datetime</h4>
         <p>
             <EditableCustomDateTime
                 title="Time origin"
@@ -66,7 +80,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 on_change={new_time_origin_date =>
                 {
                     const new_time_origin_ms = new_time_origin_date ? new_time_origin_date.getTime() : undefined
-                    update_item({ ...knowledge_view, time_origin_ms: new_time_origin_ms })
+                    update_item({ time_origin_ms: new_time_origin_ms })
                 }}
             />
         </p>
@@ -78,7 +92,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 allow_undefined={true}
                 conditional_on_blur={new_time_origin_x =>
                 {
-                    update_item({ ...knowledge_view, time_origin_x: new_time_origin_x })
+                    update_item({ time_origin_x: new_time_origin_x })
                 }}
                 style={{ width: "70%" }}
             />
@@ -92,7 +106,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 allow_undefined={true}
                 conditional_on_blur={new_time_scale =>
                 {
-                    update_item({ ...knowledge_view, time_scale: new_time_scale })
+                    update_item({ time_scale: new_time_scale })
                 }}
                 style={{ width: "70%" }}
             />
@@ -106,7 +120,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 allow_undefined={true}
                 conditional_on_blur={new_time_line_number =>
                 {
-                    update_item({ ...knowledge_view, time_line_number: new_time_line_number })
+                    update_item({ time_line_number: new_time_line_number })
                 }}
                 style={{ width: "70%" }}
             />
@@ -120,7 +134,7 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 allow_undefined={true}
                 conditional_on_blur={new_time_line_spacing_days =>
                 {
-                    update_item({ ...knowledge_view, time_line_spacing_days: new_time_line_spacing_days })
+                    update_item({ time_line_spacing_days: new_time_line_spacing_days })
                 }}
                 style={{ width: "70%" }}
             />
@@ -134,7 +148,6 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 onClick={() =>
                 {
                     update_item({
-                        ...knowledge_view,
                         time_scale: undefined,
                         time_line_number: undefined,
                         time_line_spacing_days: undefined,
@@ -149,7 +162,6 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 onClick={() =>
                 {
                     update_item({
-                        ...knowledge_view,
                         time_scale: 0.3,
                         time_line_number: 2,
                         time_line_spacing_days: 365,

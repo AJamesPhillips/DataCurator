@@ -37,4 +37,4 @@ export const is_knowledge_view_id = (id: string | undefined | null) => !!id && k
 const uuidv4_regex = new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
 export const is_uuid_v4 = (id: string | undefined | null) => !!id && uuidv4_regex.test(id)
 
-export const wcomponent_id_to_wcomponent_kv_id = (id: string) => "kv" + id
+// export const wcomponent_id_to_wcomponent_kv_id = (id: string) => "kv" + id
