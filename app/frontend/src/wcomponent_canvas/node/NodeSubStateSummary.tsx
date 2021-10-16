@@ -18,6 +18,7 @@ import type { CounterfactualV2StateValueAndPredictionSetInfo } from "../../wcomp
 import { ValueAndPredictionEntryRow } from "./ValueAndPredictionEntryRow"
 import { value_possibility_for_UI } from "../../wcomponent/value/parse_value"
 import { ratio_to_percentage_string } from "../../sharedf/percentages"
+import { prune_items_by_created_at_and_versions } from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
 
 
@@ -105,6 +106,7 @@ function _NodeSubStateSummary (props: Props)
     }
 
     target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
+    target_VAP_sets = prune_items_by_created_at_and_versions(target_VAP_sets, props.created_at_ms)
     const target_VAP_set = target_VAP_sets[0]
     if (!target_VAP_set) return <div>Invalid configuration</div>
 

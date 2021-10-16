@@ -31,7 +31,6 @@ export function partition_and_sort_by_uncertain_event_datetimes <U extends HasUn
 export function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
 {
 
-
     const sorted_items = sort_list(items, ({ datetime }) =>
     {
         if (uncertain_datetime_is_eternal(datetime)) return Number.NEGATIVE_INFINITY

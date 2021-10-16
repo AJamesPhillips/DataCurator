@@ -40,10 +40,18 @@ export function partition_and_prune_items_by_datetimes_and_versions <U extends B
 
 
 
-export function prune_items_by_created_at_and_versions_and_sort_by_datetimes <U extends Base & HasUncertainDatetime> (items: U[], created_at_ms: number): U[]
+export function prune_items_by_created_at_and_versions <U extends Base & HasUncertainDatetime> (items: U[], created_at_ms: number): U[]
 {
     const { current_items } = partition_items_by_created_at_datetime({ items, created_at_ms })
     const { latest } = group_versions_by_id(current_items)
+    return latest
+}
+
+
+
+export function prune_items_by_created_at_and_versions_and_sort_by_datetimes <U extends Base & HasUncertainDatetime> (items: U[], created_at_ms: number): U[]
+{
+    const latest = prune_items_by_created_at_and_versions(items, created_at_ms)
     const sorted = sort_by_uncertain_event_datetimes(latest)
     return sorted
 }
