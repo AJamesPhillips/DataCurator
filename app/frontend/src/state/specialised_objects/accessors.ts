@@ -15,6 +15,7 @@ import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
+import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 
 
 
@@ -211,14 +212,16 @@ export function wcomponent_has_knowledge_view (wcomponent_id: string, knowledge_
 
 
 // Need to keep in sync with wc_ids_by_type.has_single_datetime
-export function get_single_temporal_uncertainty_from_wcomponent (wcomponent_id: string, state: RootState): TemporalUncertainty | undefined
+export function get_current_temporal_uncertainty_from_wcomponent (wcomponent_id: string, wcomponents_by_id: WComponentsById, created_at_ms: number): TemporalUncertainty | undefined
 {
-    const { wcomponents_by_id } = state.specialised_objects
     const wcomponent = wcomponents_by_id[wcomponent_id]
 
     if (wcomponent_is_event(wcomponent))
     {
-        const prediction = wcomponent.event_at && wcomponent.event_at[0]
+        let { event_at = [] } = wcomponent
+        event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
+        event_at = sort_list(event_at, get_created_at_ms, "descending")
+        const prediction = event_at[0]
         return prediction?.datetime
     }
 
@@ -238,6 +241,8 @@ export function get_single_temporal_uncertainty_from_wcomponent (wcomponent_id: 
         // const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_wcomponent_id)
 
         target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
+        target_VAP_sets = partition_items_by_created_at_datetime({ items: target_VAP_sets, created_at_ms }).current_items
+        target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, "descending")
         const target_VAP_set = target_VAP_sets[0]
         if (!target_VAP_set) return undefined
 

@@ -2,14 +2,14 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { round_coordinate_small_step } from "../canvas/position_utils"
 import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
-import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
+import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import {
     get_current_composed_knowledge_view_from_state,
     get_current_knowledge_view_from_state,
-    get_single_temporal_uncertainty_from_wcomponent,
+    get_current_temporal_uncertainty_from_wcomponent,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
@@ -85,7 +85,10 @@ function _ButtonSnapXToDatetime (props: Props)
 
                     const store = get_store()
                     const state = store.getState()
-                    const temporal_uncertainty = get_single_temporal_uncertainty_from_wcomponent(id, state)
+                    const { wcomponents_by_id } = state.specialised_objects
+                    const { created_at_ms } = state.routing.args
+
+                    const temporal_uncertainty = get_current_temporal_uncertainty_from_wcomponent(id, wcomponents_by_id, created_at_ms)
                     if (!temporal_uncertainty) return
 
                     const datetime = get_uncertain_datetime(temporal_uncertainty)
