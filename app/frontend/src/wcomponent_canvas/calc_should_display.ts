@@ -12,6 +12,7 @@ import {
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
 import { get_tense_of_uncertain_datetime } from "../shared/utils_datetime/get_tense_of_uncertain_datetime"
+import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
 
 
 
@@ -21,6 +22,7 @@ interface CalcWcomponentShouldDisplayArgs
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponent
+    kv_entry: KnowledgeViewWComponentEntry | undefined
     created_at_ms: number
     sim_ms: number
     validity_filter: ValidityFilterOption
@@ -28,7 +30,10 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { is_editing, force_displaying, is_selected, wcomponent, sim_ms, wc_ids_excluded_by_filters } = args
+    const { is_editing, force_displaying, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters } = args
+
+
+    if (!kv_entry || kv_entry.deleted) return false
 
 
     if (force_displaying || is_selected) return { display_certainty: 1 }
@@ -122,27 +127,34 @@ interface CalculateConnectionCertaintyArgs
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentConnection
+    kv_entry: KnowledgeViewWComponentEntry | undefined
     validity_filter: ValidityFilterOption
     from_wc: WComponent | undefined
     to_wc: WComponent | undefined
+    from_wc__kv_entry: KnowledgeViewWComponentEntry | undefined
+    to_wc__kv_entry: KnowledgeViewWComponentEntry | undefined
     created_at_ms: number
     sim_ms: number
     wc_ids_excluded_by_filters: Set<string>
 }
 export function calc_connection_wcomponent_should_display (args: CalculateConnectionCertaintyArgs): false | { display_certainty: number }
 {
-    const { from_wc, to_wc } = args
+    const { from_wc, from_wc__kv_entry, to_wc, to_wc__kv_entry } = args
 
-    if (!from_wc || !to_wc) return false
+    if (!from_wc || !to_wc || !from_wc__kv_entry || !to_wc__kv_entry) return false
 
 
     const connection_validity_value = calc_wcomponent_should_display(args)
     if (!connection_validity_value) return false
 
-    const from_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: from_wc })
+    const from_node_validity_value = calc_wcomponent_should_display({
+        ...args, wcomponent: from_wc, kv_entry: from_wc__kv_entry,
+    })
     if (!from_node_validity_value) return false
 
-    const to_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: to_wc })
+    const to_node_validity_value = calc_wcomponent_should_display({
+        ...args, wcomponent: to_wc, kv_entry: to_wc__kv_entry,
+    })
     if (!to_node_validity_value) return false
 
     // TODO add existence prediction
@@ -165,23 +177,27 @@ interface CalculateJudgementCertaintyArgs
     force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentJudgement
+    kv_entry: KnowledgeViewWComponentEntry | undefined
     validity_filter: ValidityFilterOption
     target_wc: WComponent | undefined
+    target_wc__kv_entry: KnowledgeViewWComponentEntry | undefined
     created_at_ms: number
     sim_ms: number
     wc_ids_excluded_by_filters: Set<string>
 }
 export function calc_judgement_connection_wcomponent_should_display (args: CalculateJudgementCertaintyArgs): false | { display_certainty: number }
 {
-    const { target_wc } = args
+    const { target_wc, target_wc__kv_entry } = args
 
-    if (!target_wc) return false
+    if (!target_wc || !target_wc__kv_entry) return false
 
 
     const judgement_connection_validity_value = calc_wcomponent_should_display(args)
     if (!judgement_connection_validity_value) return false
 
-    const target_node_validity_value = calc_wcomponent_should_display({ ...args, wcomponent: target_wc })
+    const target_node_validity_value = calc_wcomponent_should_display({
+        ...args, wcomponent: target_wc, kv_entry: target_wc__kv_entry
+    })
     if (!target_node_validity_value) return false
 
     const judgement_connection_certainty = Math.min(

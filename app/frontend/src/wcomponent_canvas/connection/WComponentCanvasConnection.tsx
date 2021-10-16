@@ -68,15 +68,21 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     else
     {
         const { wc_ids_excluded_by_filters } = composed_kv.filters
-
+        const kv_entry = composed_kv.composed_wc_id_map[wcomponent.id]
 
         if (wcomponent_is_plain_connection(wcomponent))
         {
             from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
             to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
+            const from_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.from_id]
+            const to_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.to_id]
 
             validity_value = calc_connection_wcomponent_should_display({
-                is_editing, force_displaying, is_selected, wcomponent, validity_filter, from_wc, to_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
+                is_editing, force_displaying, is_selected,
+                wcomponent, kv_entry,
+                validity_filter,
+                from_wc, to_wc, from_wc__kv_entry, to_wc__kv_entry,
+                created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
 
             // TODO move all of this into a derived reducer
@@ -84,10 +90,14 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         }
         else if (wcomponent_is_judgement_or_objective(wcomponent))
         {
-            const target_wc = get_wcomponent_from_state(state, wcomponent.judgement_target_wcomponent_id)
+            const target_id = wcomponent.judgement_target_wcomponent_id
+            const target_wc = get_wcomponent_from_state(state, target_id)
+            const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id]
 
             validity_value = calc_judgement_connection_wcomponent_should_display({
-                is_editing, force_displaying, is_selected, wcomponent, validity_filter, target_wc, created_at_ms, sim_ms, wc_ids_excluded_by_filters,
+                is_editing, force_displaying, is_selected, wcomponent, kv_entry, validity_filter,
+                target_wc, target_wc__kv_entry,
+                created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })
         }
     }
