@@ -106,6 +106,7 @@ function _WComponentMultipleForm (props: Props)
                 }}
                 is_left={true}
             />
+            &nbsp;
             <ButtonSnapXToDatetime />
         </p>}
 

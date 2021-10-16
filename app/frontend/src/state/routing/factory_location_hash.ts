@@ -37,13 +37,14 @@ export const factory_location_hash = (store: Store<RootState>) =>
 declare global {
     interface Window { DEBUG_ROUTING: any }
 }
-
+let hash_pending_update = false
 function factory_throttled_update_location_hash ()
 {
     const update_location_hash_after_1000 = throttle((routing_state: RoutingState) => {
         const route = routing_state_to_string(routing_state)
         if (window.DEBUG_ROUTING) console .log("DELAYED changing route from ", window.location.hash.toString(), "   to:   ", route)
         window.location.hash = route
+        hash_pending_update = false
     }, 1000)
 
 
@@ -51,11 +52,13 @@ function factory_throttled_update_location_hash ()
         const route = routing_state_to_string(routing_state)
         if (window.DEBUG_ROUTING) console .log("Debounced changing route from ", window.location.hash.toString(), "   to:   ", route)
         window.location.hash = route
+        hash_pending_update = false
     }, 0)
 
 
     return (changed_only_xy: boolean, routing_state: RoutingState) =>
     {
+        hash_pending_update = true
         if (changed_only_xy)
         {
             update_location_hash_after_1000.throttled(routing_state)
@@ -89,6 +92,8 @@ function record_location_hash_change (store: Store<RootState>)
     // let promise_state_ready: Promise<void>
     window.onhashchange = (ev: Event) =>
     {
+        if (hash_pending_update) return
+
         const e = ev as HashChangeEvent
         const state = store.getState()
         if (!state.sync.ready_for_reading)
