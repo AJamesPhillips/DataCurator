@@ -32,6 +32,7 @@ import {
     SimpleValuePossibilityWithSelected,
 } from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
+import { prune_items_by_created_at_and_versions_and_sort_by_datetimes } from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
 
 
@@ -107,6 +108,8 @@ function _WComponentSubStateForm (props: Props)
     {
         target_VAP_sets = target_wcomponent.values_and_prediction_sets || []
 
+        target_VAP_sets = prune_items_by_created_at_and_versions_and_sort_by_datetimes(target_VAP_sets, props.created_at_ms)
+
         VAP_set_id_options = target_VAP_sets
             .map(({ id, datetime }) =>
             {
@@ -161,6 +164,13 @@ function _WComponentSubStateForm (props: Props)
 
                         upsert_wcomponent({ selector: new_selector })
                     }}
+                    // As of 2021-10-16 code base, a threshold_minimum_score of -10 works well for the different
+                    // dates e.g. searching for "202" with 2021-01-01 and 2020-02-02 will score -7 for each, but
+                    // searching for "2021" will score -11 and -6 respectively, thus removing 2021-01-01 from the
+                    // list of options.  But not using as then other options are hidden when first clicked and
+                    // focused on the element.
+                    // threshold_minimum_score={-10}
+                    retain_options_order={true}
                 />
             </div>
         </p>}

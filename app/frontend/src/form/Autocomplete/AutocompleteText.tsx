@@ -34,6 +34,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     search_type?: SearchType
     set_search_type_used?: (search_type_used: SearchType | undefined) => void
     threshold_minimum_score?: false | number
+    retain_options_order?: boolean
 }
 
 
@@ -107,7 +108,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "best", threshold_minimum_score)
+        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "best", threshold_minimum_score, props.retain_options_order || false)
         set_options_to_display(result.options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
@@ -354,7 +355,7 @@ const OPTION_NONE: InternalAutocompleteOption = {
     unlimited_total_text: "",
 }
 
-function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[], flexsearch_index: Index<{}>, search_type: SearchType, threshold_minimum_score: false | number): { options: InternalAutocompleteOption[], search_type_used: SearchType | undefined }
+function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[], flexsearch_index: Index<{}>, search_type: SearchType, threshold_minimum_score: false | number, retain_options_order: boolean): { options: InternalAutocompleteOption[], search_type_used: SearchType | undefined }
 {
 
     let search_type_used: SearchType | undefined = undefined
@@ -411,7 +412,9 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
     const filterd_options = threshold_minimum_score === false
         ? options
         : options.filter(o => option_to_score(o) > threshold_minimum_score)
-    const options_to_display: InternalAutocompleteOption[] = sort_list(filterd_options, option_to_score, "descending")
+
+    let options_to_display = filterd_options
+    if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, "descending")
 
     return { options: options_to_display, search_type_used }
 }

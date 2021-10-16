@@ -28,7 +28,7 @@ export function partition_and_sort_by_uncertain_event_datetimes <U extends HasUn
 
 
 
-function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
+export function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
 {
 
 
