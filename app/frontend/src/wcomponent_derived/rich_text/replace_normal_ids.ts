@@ -38,7 +38,7 @@ export function replace_normal_ids (text: string, wcomponents_by_id: WComponents
 
 function get_ids_from_text (text: string): string[]
 {
-    const matches = [...text.matchAll(uuids_regex), ...text.matchAll(old_ids_regex)]
+    const matches = [ ...text.matchAll(uuids_regex)] //, ...text.matchAll(old_ids_regex)]
     return matches.map(entry => entry[1]!.slice(2))
 }
 

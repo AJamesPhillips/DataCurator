@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { round_coordinate_small_step } from "../canvas/position_utils"
 import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
 import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
 
@@ -97,7 +98,8 @@ function _ButtonSnapXToDatetime (props: Props)
                         time_origin_x,
                         time_scale
                     })
-                    const new_kv_entry = { ...kv_entry, left }
+                    const rounded_left = round_coordinate_small_step(left)
+                    const new_kv_entry = { ...kv_entry, left: rounded_left }
 
                     new_wc_id_map[id] = new_kv_entry
                 })
