@@ -9,7 +9,7 @@ import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledg
 import { Button } from "../sharedf/Button"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
-import { get_middle_of_screen } from "../state/display_options/display"
+import { get_middle_of_screen, lefttop_to_xy } from "../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
@@ -170,11 +170,22 @@ function _WComponentKnowledgeViewForm (props: Props)
         {other_knowledge_views.length > 0 && <div>
             <br />
             Also in:
-            {other_knowledge_views.map(kv => <div>
-                <Link route={undefined} sub_route={undefined} item_id={undefined} args={{ subview_id: kv.id }}>
-                    {kv.title}
-                </Link>
-            </div>)}
+            {other_knowledge_views.map(kv =>
+            {
+                const entry = kv.wc_id_map[wcomponent_id]
+                const pos = lefttop_to_xy(entry, true)
+
+                return <div>
+                    <Link
+                        route={undefined}
+                        sub_route={undefined}
+                        item_id={undefined}
+                        args={{ subview_id: kv.id, ...pos }}
+                    >
+                        {kv.title}
+                    </Link>
+                </div>
+            })}
         </div>}
     </div>
 }

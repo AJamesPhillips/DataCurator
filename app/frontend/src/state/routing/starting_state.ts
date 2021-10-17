@@ -3,6 +3,8 @@ import { merge_route_params_prioritising_url_over_state } from "./routing"
 
 
 
+export const STARTING_ZOOM = 100
+
 export function get_routing_starting_state (): RoutingState
 {
     const now = new Date()

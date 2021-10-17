@@ -1,6 +1,7 @@
 import type { ContentCoordinate, PositionAndZoom } from "../../canvas/interfaces"
 import { h_step, round_number, v_step } from "../../canvas/position_utils"
 import { SCALE_BY } from "../../canvas/zoom_utils"
+import { STARTING_ZOOM } from "../routing/starting_state"
 // import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
 // import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
@@ -41,10 +42,10 @@ export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined
 {
     if (!position) return undefined
 
-    const { left: x, top, zoom } = position
+    const { left: x, top, zoom = STARTING_ZOOM } = position
     const y = top !== undefined ? -1 * top : undefined
 
-    if (middle && x !== undefined && y !== undefined && zoom !== undefined)
+    if (middle && x !== undefined && y !== undefined)
     {
         const middle = calculate_xy_for_put_middle({ x, y, zoom })
         return { ...middle, zoom }
