@@ -125,7 +125,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     }
 
 
-    const title = editing
+    const VAPSets_items_descriptor = editing
         ? get_items_descriptor(item_descriptor, all_VAP_sets.length, editing)
         : item_descriptor
 
@@ -137,7 +137,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
     return <div className="value_and_prediction_sets">
         <ListHeader
-            items_descriptor={title}
+            items_descriptor={VAPSets_items_descriptor}
             on_click_header={undefined}
             other_content={() => !editing ? null : <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
@@ -164,6 +164,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             content={render_future_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Future", future_items, previous_versions_by_id, editing)}
+            items_descriptor_title={count_and_versions_title("Future", future_items, previous_versions_by_id)}
             disable_collapsed={true}
         />}
 
@@ -173,6 +174,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             content={render_present_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Present", present_items, previous_versions_by_id, editing)}
+            items_descriptor_title={count_and_versions_title("Present", present_items, previous_versions_by_id)}
             disable_collapsed={true}
         />}
 
@@ -182,6 +184,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             content={render_past_list_content}
             item_descriptor=""
             items_descriptor={count_and_versions("Past", past_items, previous_versions_by_id, editing)}
+            items_descriptor_title={count_and_versions_title("Past", past_items, previous_versions_by_id)}
             disable_collapsed={true}
         />}
     </div>
@@ -221,7 +224,22 @@ function count_and_versions (title: string, all_latest: {id: string}[], previous
         return get_items_descriptor(title, all_latest.length, editing)
     }
 
-    return `${title} (${all_latest.length} (${all_latest.length + previous_version_count}))`
+    return `${title} (${all_latest.length}+)`
+    // return `${title} (${all_latest.length} & older)`
+    // return `${title} (${all_latest.length} +${previous_version_count} older)`
+}
+
+function count_and_versions_title (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: {}[]})
+{
+    let previous_version_count = 0
+    all_latest.forEach(({ id }) => previous_version_count += ((previous_versions_by_id[id] || []).length))
+
+    if (previous_version_count === 0)
+    {
+        return `${all_latest.length} ${title} items`
+    }
+
+    return `${all_latest.length} ${title} items with ${previous_version_count} older versions`
 }
 
 

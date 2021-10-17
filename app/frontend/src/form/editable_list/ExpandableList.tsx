@@ -21,6 +21,7 @@ export interface ExpandableList2Props {
     content: (props: ExpandableListContentProps) => h.JSX.Element | null
     items_count?: number
     items_descriptor?: string
+    items_descriptor_title?: string
     item_descriptor: string
     disable_collapsed?: boolean
     disable_partial_collapsed?: boolean
@@ -56,6 +57,7 @@ function _ExpandableList (props: Props)
         items_count,
         item_descriptor,
         items_descriptor = get_items_descriptor(item_descriptor, items_count, props.editing),
+        items_descriptor_title,
         disable_partial_collapsed = false,
     } = props
 
@@ -72,6 +74,7 @@ function _ExpandableList (props: Props)
     return <div>
         <ListHeader
             items_descriptor={items_descriptor}
+            items_descriptor_title={items_descriptor_title}
             on_click_header={toggle_expansion}
             other_content={header_content}
         />
