@@ -15,6 +15,7 @@ import { is_defined } from "../../shared/utils/is_defined"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { ButtonSnapXToDatetime } from "../../wcomponent_form/ButtonSnapXToDatetime"
+import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 
 
 
@@ -115,6 +116,14 @@ function _WComponentMultipleForm (props: Props)
             <LabelsEditor
                 label_ids={label_ids}
                 on_change={label_ids => bulk_edit_wcomponents({ wcomponent_ids, change: { label_ids } })}
+            />
+        </p>}
+
+        {editing && <p>
+            <h3>Created at</h3>
+            <EditableCustomDateTime
+                value={undefined}
+                on_change={custom_created_at => bulk_edit_wcomponents({ wcomponent_ids, change: { custom_created_at } })}
             />
         </p>}
 
