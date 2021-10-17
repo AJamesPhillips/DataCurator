@@ -1,5 +1,6 @@
-import type { Base } from "./base"
 import type { Project } from "../../wcomponent/interfaces/project"
+import type { Base } from "./base"
+import type { DatetimeLineConfig } from "./datetime_lines"
 
 
 
@@ -7,15 +8,6 @@ export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived
 export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
 
 
-// TODO should move this to it's own top level directory like datetime_lines ?
-export interface DatetimeLineConfig
-{
-    time_origin_ms?: number
-    time_origin_x?: number
-    time_scale?: number
-    time_line_number?: number
-    time_line_spacing_days?: number
-}
 
 export interface KnowledgeView extends Base, Project {
     // Explainable

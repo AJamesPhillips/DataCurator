@@ -1,9 +1,16 @@
-import { DefaultDatetimeLineConfig, DEFAULT_DATETIME_LINE_CONFIG } from "../../../knowledge_view/constants"
+import {
+    calculate_canvas_x_for_wcomponent_temporal_uncertainty,
+    DEFAULT_DATETIME_LINE_CONFIG,
+} from "../../../knowledge_view/datetime_line"
 import type {
     DatetimeLineConfig,
+    DefaultDatetimeLineConfig,
+} from "../../../shared/interfaces/datetime_lines"
+import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
+    // PartialKnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/interfaces/knowledge_view"
 import { is_uuid_v4 } from "../../../shared/utils/ids"
 import { is_defined } from "../../../shared/utils/is_defined"
@@ -61,22 +68,35 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
+
     const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
     const filters_changed = initial_state.filter_context !== state.filter_context
+
+    const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks
+    const ephemeral_overrides_might_have_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms || display_time_marks_changed
 
 
     if (current_kv)
     {
         if (composed_kv_needs_update)
         {
-            const current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv)
-            const current_composed_knowledge_view_updated_filters = update_filters(state, current_composed_knowledge_view)
+            let current_composed_knowledge_view: ComposedKnowledgeView | undefined = update_current_composed_knowledge_view_state(state, current_kv)
+            current_composed_knowledge_view = update_filters(state, current_composed_knowledge_view)
+            current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view)
 
-            state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view_updated_filters)
+            state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
         }
         else if (filters_changed)
         {
             const current_composed_knowledge_view = update_filters(state, state.derived.current_composed_knowledge_view)
+            state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
+        }
+        else if (ephemeral_overrides_might_have_changed)
+        {
+            let { current_composed_knowledge_view } = state.derived
+
+            current_composed_knowledge_view = update_ephemeral_overrides_of_current_composed_kv(current_composed_knowledge_view, display_time_marks_changed, state, current_kv)
+
             state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
         }
     }
@@ -158,6 +178,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() },
         composed_datetime_line_config: datetime_lines_config,
+        // ephemeral_override_wc_id_map: {},
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_composed_knowledge_view as any).wc_id_map
@@ -373,4 +394,68 @@ function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEn
     })
 
     return map
+}
+
+
+
+function update_ephemeral_overrides_of_current_composed_kv (current_composed_knowledge_view: ComposedKnowledgeView | undefined, display_time_marks_changed: boolean, state: RootState, current_kv: KnowledgeView)
+{
+    if (!current_composed_knowledge_view) return undefined
+
+    if (display_time_marks_changed && !state.display_options.display_time_marks)
+    {
+        // restore original composed_wc_id_map
+        const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
+        const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
+        const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
+        remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
+        current_composed_knowledge_view = {
+            ...current_composed_knowledge_view,
+            composed_wc_id_map,
+        }
+    }
+    else
+    {
+        current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view)
+    }
+
+    return current_composed_knowledge_view
+}
+
+
+
+function add_ephemeral_overrides_to_wc_id_map (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
+{
+    if (!current_composed_knowledge_view) return undefined
+
+    const { display_time_marks } = state.display_options
+    const { wc_ids_by_type, composed_wc_id_map, composed_datetime_line_config } = current_composed_knowledge_view
+    const { time_origin_ms, time_origin_x, time_scale } = composed_datetime_line_config
+    const { wcomponents_by_id } = state.specialised_objects
+    const { created_at_ms } = state.routing.args
+
+    if (!display_time_marks || time_origin_ms === undefined) return current_composed_knowledge_view
+
+    const new_map: KnowledgeViewWComponentIdEntryMap = { ...composed_wc_id_map }
+    let changed = false
+
+    Array.from(wc_ids_by_type.has_single_datetime)
+        .forEach(wcomponent_id =>
+        {
+            const existing_entry = composed_wc_id_map[wcomponent_id]
+            if (!existing_entry) return
+
+            const left = calculate_canvas_x_for_wcomponent_temporal_uncertainty({
+                wcomponent_id, wcomponents_by_id, created_at_ms, time_origin_ms, time_origin_x, time_scale,
+            })
+            if (left === undefined || existing_entry.left === left) return
+
+            changed = true
+            new_map[wcomponent_id] = { ...existing_entry, left }
+        })
+
+    return !changed ? current_composed_knowledge_view : {
+        ...current_composed_knowledge_view,
+        composed_wc_id_map: new_map,
+    }
 }

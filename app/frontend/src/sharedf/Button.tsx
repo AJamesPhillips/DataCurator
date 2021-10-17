@@ -7,7 +7,8 @@ import { Hidden } from "@material-ui/core"
 
 interface SpecificProps
 {
-    value?: string,
+    value?: string
+    title?: string
     is_hidden?: boolean
     onPointerDown?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
     onClick?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
@@ -17,7 +18,7 @@ export function Button (props: ButtonProps & SpecificProps)
 {
 
     return (
-        <Hidden xsUp={props.is_hidden}>
+        <Hidden xsUp={props.is_hidden} title={props.title}>
             <MaterialButton
                 title={props.title}
                 color={props.color || "primary"}

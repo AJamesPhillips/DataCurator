@@ -1,6 +1,5 @@
 import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
-    DatetimeLineConfig,
     KnowledgeView,
     KnowledgeViewSortType,
     KnowledgeViewWComponentIdEntryMap,
@@ -13,7 +12,7 @@ import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base
 import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
-import type { DefaultDatetimeLineConfig } from "../../knowledge_view/constants"
+import type { ComposedDatetimeLineConfig } from "../../shared/interfaces/datetime_lines"
 
 
 
@@ -49,7 +48,7 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 
-    composed_datetime_line_config: DatetimeLineConfig & DefaultDatetimeLineConfig
+    composed_datetime_line_config: ComposedDatetimeLineConfig
 
     filters: {
         wc_ids_excluded_by_filters: Set<string>

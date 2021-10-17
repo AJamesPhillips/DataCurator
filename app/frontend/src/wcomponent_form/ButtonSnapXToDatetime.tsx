@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { round_coordinate_small_step } from "../canvas/position_utils"
+import { calculate_canvas_x_for_wcomponent_temporal_uncertainty } from "../knowledge_view/datetime_line"
 import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
 import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 
@@ -13,6 +14,7 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
+import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -62,11 +64,15 @@ function _ButtonSnapXToDatetime (props: Props)
         || time_origin_ms === undefined
         || time_origin_x === undefined
         || time_scale === undefined
+    const title = !disabled ? "" :
+        time_origin_ms === undefined ? "Disabled as time origin not set" :
+        time_origin_x === undefined ? "Disabled as time origin X position is not set" : "Diabled"
 
 
     return <Button
         disabled={disabled}
         value="X by time"
+        title={title}
         onClick={() =>
         {
             if (disabled) return
@@ -75,36 +81,27 @@ function _ButtonSnapXToDatetime (props: Props)
             if (!kv || !wc_id_map || time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined) return
 
             const new_wc_id_map = {...wc_id_map}
+            const store = get_store()
+            const state = store.getState()
+            const { wcomponents_by_id } = state.specialised_objects
+            const { created_at_ms } = state.routing.args
 
             Array.from(has_single_datetime_wc_ids || [])
-                .forEach(id =>
+                .forEach(wcomponent_id =>
                 {
-                    const kv_entry = wc_id_map[id]
-                    // type guard.  Later we might implment that it updates position in foundational knowledge view
+                    const kv_entry = wc_id_map[wcomponent_id]
+                    // type guard.  Later we might implment that it updates position in foundational knowledge view.
+                    // This current implmentation behaviour is inconsistent with the other bulk edits though so
+                    // perhaps we should move to using the composed knowledge view's composed_wc_id_map
                     if (!kv_entry) return
 
-                    const store = get_store()
-                    const state = store.getState()
-                    const { wcomponents_by_id } = state.specialised_objects
-                    const { created_at_ms } = state.routing.args
-
-                    const temporal_uncertainty = get_current_temporal_uncertainty_from_wcomponent(id, wcomponents_by_id, created_at_ms)
-                    if (!temporal_uncertainty) return
-
-                    const datetime = get_uncertain_datetime(temporal_uncertainty)
-                    if (!datetime) return
-
-
-                    const left = calculate_canvas_x({
-                        datetime,
-                        time_origin_ms,
-                        time_origin_x,
-                        time_scale
+                    const rounded_left = calculate_canvas_x_for_wcomponent_temporal_uncertainty({
+                        wcomponent_id, wcomponents_by_id, created_at_ms, time_origin_ms, time_origin_x, time_scale,
                     })
-                    const rounded_left = round_coordinate_small_step(left)
+                    if (rounded_left === undefined) return
                     const new_kv_entry = { ...kv_entry, left: rounded_left }
 
-                    new_wc_id_map[id] = new_kv_entry
+                    new_wc_id_map[wcomponent_id] = new_kv_entry
                 })
 
             upsert_knowledge_view({ knowledge_view: { ...kv, wc_id_map: new_wc_id_map } })
@@ -114,20 +111,3 @@ function _ButtonSnapXToDatetime (props: Props)
 }
 
 export const ButtonSnapXToDatetime = connector(_ButtonSnapXToDatetime) as FunctionalComponent<OwnProps>
-
-
-
-interface CalculateCanvasXArgs
-{
-    datetime: Date
-    time_origin_ms: number
-    time_origin_x: number
-    time_scale: number
-}
-function calculate_canvas_x (args: CalculateCanvasXArgs)
-{
-    const time_diff = args.datetime.getTime() - args.time_origin_ms
-    const time_scalar = args.time_scale / time_scale_days_to_ms_pixels_fudge_factor
-
-    return (time_diff * time_scalar) + args.time_origin_x
-}

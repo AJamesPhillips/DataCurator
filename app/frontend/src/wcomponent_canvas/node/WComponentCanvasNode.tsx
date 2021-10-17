@@ -127,7 +127,7 @@ function _WComponentCanvasNode (props: Props)
     if (!wcomponent) return <div>Could not find component of id {id}</div>
 
 
-    let kv_entry_maybe = composed_kv.composed_wc_id_map[id]
+    const kv_entry_maybe = composed_kv.composed_wc_id_map[id]
     if (!kv_entry_maybe && on_graph) return <div>Could not find knowledge view entry for id {id}</div>
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
