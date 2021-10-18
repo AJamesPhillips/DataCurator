@@ -427,10 +427,15 @@ function _WComponentForm (props: Props)
         />}
 
         {editing && <p>
-            <span className="description_label">Hide (node) title</span>
+            <span className="description_label">Hide node title</span>
             <EditableCheckbox
                 value={wcomponent.hide_title}
                 on_change={hide_title => upsert_wcomponent({ hide_title })}
+            />
+            <span className="description_label">Hide node state</span>
+            <EditableCheckbox
+                value={wcomponent.hide_state}
+                on_change={hide_state => upsert_wcomponent({ hide_state })}
             />
 
             <hr />

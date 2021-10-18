@@ -34,6 +34,7 @@ export interface WComponentBase extends Base
     // Explainable
     title: string
     hide_title?: boolean
+    hide_state?: boolean
     description: string
 }
 

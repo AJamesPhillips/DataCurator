@@ -236,13 +236,15 @@ function _WComponentCanvasNode (props: Props)
 
     const show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
     const show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(wcomponent))
-        || wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
-        || wcomponent_is_judgement_or_objective(wcomponent)
-        || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
-        // || is_highlighted
-        // || is_current_item
-        || props.have_judgements
-    const sub_state_wcomponent = wcomponent_is_sub_state(wcomponent) && wcomponent
+        || (!wcomponent.hide_state && (
+            wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
+            || wcomponent_is_judgement_or_objective(wcomponent)
+            || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
+            // || is_highlighted
+            // || is_current_item
+            || props.have_judgements
+        ))
+    const sub_state_wcomponent = (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
 
     const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
 
