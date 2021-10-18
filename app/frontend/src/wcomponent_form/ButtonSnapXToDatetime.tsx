@@ -1,6 +1,8 @@
 import { FunctionalComponent, h } from "preact"
+import { useState } from "react"
 import { connect, ConnectedProps } from "react-redux"
 import { calculate_canvas_x_for_wcomponent_temporal_uncertainty } from "../knowledge_view/datetime_line"
+import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
 
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
@@ -13,19 +15,23 @@ import { get_store } from "../state/store"
 
 
 
-interface OwnProps {}
+type OwnProps = {
+    wcomponent_id: string
+    wcomponent_ids?: undefined
+} | {
+    wcomponent_id?: undefined
+    wcomponent_ids: string[]
+}
 
 
 const map_state = (state: RootState) =>
 {
     const composed_kv = get_current_composed_knowledge_view_from_state(state)
     const kv = get_current_knowledge_view_from_state(state)
-    const has_single_datetime_wc_ids = composed_kv?.wc_ids_by_type.has_single_datetime
     const composed_datetime_line_config = composed_kv?.composed_datetime_line_config
 
     return {
         kv,
-        has_single_datetime_wc_ids,
         time_origin_ms: composed_datetime_line_config?.time_origin_ms,
         time_origin_x: composed_datetime_line_config?.time_origin_x,
         time_scale: composed_datetime_line_config?.time_scale,
@@ -45,12 +51,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ButtonSnapXToDatetime (props: Props)
 {
+    const [changed, set_changed] = useState<number | undefined>(undefined)
+
     const {
-        kv,
+        kv, wcomponent_id,
         time_origin_ms, time_origin_x, time_scale,
-        has_single_datetime_wc_ids,
         upsert_knowledge_view,
     } = props
+    const wcomponent_ids: string[] = (wcomponent_id ? [wcomponent_id] : props.wcomponent_ids) || []
 
     const { id: knowledge_view_id, wc_id_map } = kv || {}
     const disabled = !kv
@@ -64,45 +72,79 @@ function _ButtonSnapXToDatetime (props: Props)
         time_origin_x === undefined ? "Disabled as time origin X position is not set" : "Diabled"
 
 
-    return <Button
-        disabled={disabled}
-        value="X by time"
-        title={title}
-        onClick={() =>
-        {
-            if (disabled) return
+    return <div style={{ display: "inline-block" }}>
+        <Button
+            disabled={disabled}
+            value="X by time"
+            title={title}
+            onClick={() =>
+            {
+                if (disabled) return
 
-            // type guard as compiler erroring despite VSCode ok.  Different typescript versions?
-            if (!kv || !wc_id_map || time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined) return
-
-            const new_wc_id_map = {...wc_id_map}
-            const store = get_store()
-            const state = store.getState()
-            const { wcomponents_by_id } = state.specialised_objects
-            const { created_at_ms } = state.routing.args
-
-            Array.from(has_single_datetime_wc_ids || [])
-                .forEach(wcomponent_id =>
-                {
-                    const kv_entry = wc_id_map[wcomponent_id]
-                    // type guard.  Later we might implment that it updates position in foundational knowledge view.
-                    // This current implmentation behaviour is inconsistent with the other bulk edits though so
-                    // perhaps we should move to using the composed knowledge view's composed_wc_id_map
-                    if (!kv_entry) return
-
-                    const rounded_left = calculate_canvas_x_for_wcomponent_temporal_uncertainty({
-                        wcomponent_id, wcomponents_by_id, created_at_ms, time_origin_ms, time_origin_x, time_scale,
-                    })
-                    if (rounded_left === undefined) return
-                    const new_kv_entry = { ...kv_entry, left: rounded_left }
-
-                    new_wc_id_map[wcomponent_id] = new_kv_entry
+                const { changed, knowledge_view } = calulate_new_positions({
+                    wcomponent_ids, kv, wc_id_map,
+                    time_origin_ms, time_origin_x, time_scale,
                 })
 
-            upsert_knowledge_view({ knowledge_view: { ...kv, wc_id_map: new_wc_id_map } })
-        }}
-        is_left={true}
-    />
+                if (changed) upsert_knowledge_view({ knowledge_view })
+                set_changed(changed)
+                setTimeout(() => set_changed(undefined), 1000)
+            }}
+            is_left={true}
+        />
+        {changed !== undefined && changed ? `Changed ${changed}` : "No changes"}
+    </div>
 }
 
 export const ButtonSnapXToDatetime = connector(_ButtonSnapXToDatetime) as FunctionalComponent<OwnProps>
+
+
+
+interface CalulateNewPositionsArgs
+{
+    wcomponent_ids: string[]
+    kv: KnowledgeView
+    wc_id_map: KnowledgeViewWComponentIdEntryMap
+    time_origin_ms: number
+    time_origin_x: number
+    time_scale: number
+}
+function calulate_new_positions (args: CalulateNewPositionsArgs)
+{
+    const { wcomponent_ids, kv, wc_id_map, time_origin_ms, time_origin_x, time_scale } = args
+
+    let changed = 0
+
+    // type guard as compiler erroring despite VSCode ok.  Different typescript versions?
+    if (!kv || !wc_id_map || time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined)
+    {
+        return { changed, knowledge_view: kv }
+    }
+
+
+    const new_wc_id_map = {...wc_id_map}
+    const store = get_store()
+    const state = store.getState()
+    const { wcomponents_by_id } = state.specialised_objects
+    const { created_at_ms } = state.routing.args
+
+    wcomponent_ids.forEach(wcomponent_id =>
+    {
+        const kv_entry = wc_id_map[wcomponent_id]
+        // type guard.  Later we might implment that it updates position in foundational knowledge view.
+        // This current implmentation behaviour is inconsistent with the other bulk edits though so
+        // perhaps we should move to using the composed knowledge view's composed_wc_id_map
+        if (!kv_entry) return
+
+        const rounded_left = calculate_canvas_x_for_wcomponent_temporal_uncertainty({
+            wcomponent_id, wcomponents_by_id, created_at_ms, time_origin_ms, time_origin_x, time_scale,
+        })
+        if (rounded_left === undefined) return
+        const new_kv_entry = { ...kv_entry, left: rounded_left }
+
+        new_wc_id_map[wcomponent_id] = new_kv_entry
+        changed += 1
+    })
+
+    return { changed, knowledge_view: { ...kv, wc_id_map: new_wc_id_map } }
+}

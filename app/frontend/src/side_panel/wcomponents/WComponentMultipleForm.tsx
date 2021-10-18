@@ -16,6 +16,7 @@ import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { ButtonSnapXToDatetime } from "../../wcomponent_form/ButtonSnapXToDatetime"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
+import { AlignComponentForm } from "../../wcomponent_form/AlignComponentForm"
 
 
 
@@ -24,12 +25,12 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const kv = get_current_composed_knowledge_view_from_state(state)
-    const wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_set
+    const wcomponent_ids_set = state.meta_wcomponents.selected_wcomponent_ids_set
     const { wcomponents_by_id } = state.specialised_objects
 
     return {
         ready: state.sync.ready_for_reading,
-        wcomponent_ids,
+        wcomponent_ids_set,
         wcomponents_by_id,
         knowledge_view_id: kv?.id,
         composed_wc_id_map: kv?.composed_wc_id_map,
@@ -57,7 +58,7 @@ function _WComponentMultipleForm (props: Props)
     if (!props.ready) return <div>Loading...</div>
 
     const {
-        wcomponent_ids: wcomponent_ids_set,
+        wcomponent_ids_set,
         composed_wc_id_map,
         knowledge_view_id,
         wcomponents_by_id,
@@ -96,19 +97,7 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {editing && <p>
-            <h3>Align</h3>
-            <Button
-                disabled={!knowledge_view_id}
-                value="Snap to grid"
-                onClick={() =>
-                {
-                    if (!knowledge_view_id) return
-                    snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })
-                }}
-                is_left={true}
-            />
-            &nbsp;
-            <ButtonSnapXToDatetime />
+            <AlignComponentForm wcomponent_ids={wcomponent_ids} />
         </p>}
 
         {(editing || label_ids.length > 0) && <p>

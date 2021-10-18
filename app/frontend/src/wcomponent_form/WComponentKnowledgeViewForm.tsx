@@ -17,6 +17,7 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ExploreButtonHandle } from "../wcomponent_canvas/node/ExploreButtonHandle"
+import { AlignComponentForm } from "./AlignComponentForm"
 
 
 
@@ -128,12 +129,17 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
+        {editing && <p>
+            <AlignComponentForm wcomponent_id={wcomponent_id} />
+            <br />
+        </p>}
+
         {composed_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
-            <MoveToWComponentButton wcomponent_id={wcomponent.id} />
+            <MoveToWComponentButton wcomponent_id={wcomponent_id} />
 
             <Box zIndex={10} m={4} class="node_handle">
                 <ExploreButtonHandle
-                    wcomponent_id={wcomponent.id}
+                    wcomponent_id={wcomponent_id}
                     wcomponent_current_kv_entry={composed_knowledge_view_entry}
                     is_highlighted={true}
                 />

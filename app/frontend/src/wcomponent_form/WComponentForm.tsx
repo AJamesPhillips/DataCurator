@@ -341,7 +341,7 @@ function _WComponentForm (props: Props)
                     predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
                     update_predictions={new_predictions => upsert_wcomponent({
                         existence: new_predictions.length ? new_predictions : undefined
-                    }) }
+                    })}
                 />
             </p>
 
