@@ -24,6 +24,7 @@ import {
     WComponent,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_prioritisation,
+    wcomponent_is_plain_connection,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
@@ -149,7 +150,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     // as many just want to know what ids are present in the knowledge view not the positions of
     // the components
     const wcomponent_ids = Object.keys(composed_wc_id_map)
-    const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map)
+    const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id)
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
     const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
@@ -365,7 +366,7 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
 
 
 
-function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, wcomponents_by_id: WComponentsById)
 {
     const map: OverlappingWcIdMap = {}
 
@@ -375,6 +376,8 @@ function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEn
     Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
     {
         if (entry.deleted) return
+
+        if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id])) return
 
         const coord_key = `${entry.left},${entry.top}`
         const ids = entries[coord_key] || []
