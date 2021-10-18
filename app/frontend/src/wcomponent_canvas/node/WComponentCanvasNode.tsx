@@ -112,6 +112,7 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState(false)
     const [node_is_draggable, set_node_is_draggable] = useState(false)
+    const [temporary_drag_kv_entry, set_temporary_drag_kv_entry] = useState<KnowledgeViewWComponentEntry | undefined>(undefined)
 
     const {
         id, on_graph = true,
@@ -237,7 +238,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     return <ConnectableCanvasNode
-        position={on_graph ? kv_entry : undefined}
+        position={on_graph ? (temporary_drag_kv_entry || kv_entry) : undefined}
         cover_image={wcomponent.summary_image}
         node_main_content={<div>
             <img className={"background_image " + wcomponent.type} />
@@ -313,23 +314,22 @@ function _WComponentCanvasNode (props: Props)
                     // Then clears the manually set opacity to allow it to be shown again.
                     ;(e.target as any).style.opacity = "0.3"
                 }, 0)
-
-                const { width, height } = e.currentTarget.getBoundingClientRect()
-                const scale = get_scale()
-                const size = { width: width * scale, height: height * scale }
-                pub_sub.canvas.pub("canvas_node_drag_size", size)
             },
 
             onDrag: e =>
             {
-                const new_position = calculate_new_node_position_from_drag(kv_entry, e)
-                pub_sub.canvas.pub("canvas_node_drag_position", new_position)
+                const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
+                pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position)
+                const new_position = calculate_new_position(kv_entry, new_relative_position)
+                set_temporary_drag_kv_entry(new_position)
             },
 
             onDragEnd: e => {
-                const new_position = calculate_new_node_position_from_drag(kv_entry, e)
+                const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
+                pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
+                const new_position = calculate_new_position(kv_entry, new_relative_position)
                 update_position(new_position)
-                pub_sub.canvas.pub("canvas_node_drag_position", undefined)
+                set_temporary_drag_kv_entry(undefined)
                 set_node_is_moving(false)
                 set_node_is_draggable(false)
             }
@@ -380,23 +380,23 @@ function get_wcomponent_color (wcomponent: WComponent)
 
 
 
-function calculate_new_node_position_from_drag (kv_entry: KnowledgeViewWComponentEntry, e: h.JSX.TargetedDragEvent<HTMLDivElement>)
+function calculate_new_node_relative_position_from_drag (e: h.JSX.TargetedDragEvent<HTMLDivElement>, kv_entry_size?: number)
 {
     const scale = get_scale()
     const top_fudge = -18 * (scale / 2)
     const left_fudge = 8 / (scale / 2)
     // maybe explore using e.currentTarget.offsetLeft?
-    const node_size_fudge = (kv_entry.s || 1)
+    const node_size_fudge = kv_entry_size ?? 1
     // Note that e.offsetY and e.offsetX do NOT take into account the position the user's cursor was
     // relative to the move icon when it was clicked.  However the drag annimation provided by the browser
     // does so that means the position will usually be wrong in one or both dimensions.
     // TODO find a value which does reflect where the user pressed down on the move icon
-    const top = kv_entry.top + (e.offsetY * node_size_fudge) + top_fudge
-    const left = kv_entry.left + (e.offsetX * node_size_fudge) + left_fudge
+    const top = (e.offsetY * node_size_fudge) + top_fudge
+    const left = (e.offsetX * node_size_fudge) + left_fudge
     // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
     // console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
-    const new_position = round_canvas_point({ top, left })
-    return new_position
+    const new_relative_position = round_canvas_point({ top, left })
+    return new_relative_position
 }
 
 
@@ -406,4 +406,15 @@ function get_scale ()
     const store = get_store()
     const zoom = store.getState().routing.args.zoom
     return zoom / SCALE_BY
+}
+
+
+
+function calculate_new_position (kv_entry: KnowledgeViewWComponentEntry, new_relative_position: CanvasPoint)
+{
+    return {
+        ...kv_entry,
+        left: kv_entry.left + new_relative_position.left,
+        top: kv_entry.top + new_relative_position.top,
+    }
 }

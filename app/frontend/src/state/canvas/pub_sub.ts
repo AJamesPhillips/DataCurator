@@ -24,19 +24,18 @@ interface CanvasMsgMap
     canvas_double_tap: CanvasPointerEvent
     canvas_right_click: CanvasPointerEvent
     canvas_area_select: CanvasAreaSelectEvent
-    canvas_node_drag_size: { width: number; height: number } | undefined
-    canvas_node_drag_position: CanvasPoint | undefined
+    canvas_node_drag_relative_position: CanvasPoint | undefined
 }
 
 
 export const canvas_pub_sub = pub_sub_factory<CanvasMsgMap>({
-    canvas_node_drag_position: canvas_node_drag_position_middleware,
+    canvas_node_drag_relative_position: canvas_node_drag_relative_position_middleware,
 })
 
 
 
 let last_node_drag_position: CanvasPoint | undefined = undefined
-function canvas_node_drag_position_middleware (message: CanvasPoint | undefined)
+function canvas_node_drag_relative_position_middleware (message: CanvasPoint | undefined)
 {
     const continue_ = (
         last_node_drag_position?.left !== message?.left
