@@ -21,6 +21,8 @@ import { get_next_specialised_state_id_to_save } from "./needs_save"
 let global_attempts = 0
 export async function save_state (store: StoreType, is_manual_save = false)
 {
+    if (1 > 0) return // Disable saving for now
+
     const state = store.getState()
 
     if (!state.sync.ready_for_writing)

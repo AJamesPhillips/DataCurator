@@ -64,6 +64,8 @@ async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeView
 {
     const item = knowledge_view_app_to_supabase(args.knowledge_view)
 
+    if (1 > 0) throw new Error("Should not be saving")  // Disable saving for now
+
     const result = await args.supabase.rpc("update_knowledge_view", { item })
     if (result.status === 401)
     {

@@ -15,7 +15,7 @@ import { specialised_objects_subscribers } from "./specialised_objects/subscribe
 import { get_starting_state } from "./starting_state"
 import type { RootState } from "./State"
 import { sync_subscribers } from "./sync/subscribers"
-import { conditionally_save_state, conditional_ctrl_s_save } from "./sync/utils/conditionally_save_state"
+import { conditionally_save_state } from "./sync/utils/conditionally_save_state"
 import { setup_warning_of_unsaved_data_beforeunload } from "./unsaved_warning_onbeforeunload"
 import { user_info_subscribers } from "./user_info/subscribers"
 
@@ -50,13 +50,14 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     cached_store = store as any
 
 
-    const save = () =>
-    {
-        const state = store.getState()
-        persist_relevant_state(state)
-        conditionally_save_state(store)
-    }
-    store.subscribe(save)
+    // Disable saving for now
+    // const save = () =>
+    // {
+    //     const state = store.getState()
+    //     persist_relevant_state(state)
+    //     conditionally_save_state(store)
+    // }
+    // store.subscribe(save)
 
     setup_warning_of_unsaved_data_beforeunload(load_state_from_storage, store)
 
