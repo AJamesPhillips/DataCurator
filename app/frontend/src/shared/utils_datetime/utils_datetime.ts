@@ -50,7 +50,6 @@ export function partition_items_by_created_at_datetime <U extends Base> (args: P
     const invalid_future_items: U[] = []
     const current_items: U[] = []
 
-
     items.forEach(item =>
     {
         if (get_created_at_ms(item) > created_at_ms)

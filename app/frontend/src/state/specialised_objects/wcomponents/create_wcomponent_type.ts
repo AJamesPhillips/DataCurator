@@ -59,8 +59,8 @@ export function create_wcomponent (args: CreateWComponentArgs)
         return false
     }
 
-
-    const created_at_ms = Math.max(get_created_at_ms(wcomponent) + 60000, state.routing.args.created_at_ms)
+    const one_minute = 60 * 1000
+    const created_at_ms = Math.max(get_created_at_ms(wcomponent) + one_minute, state.routing.args.created_at_ms)
     const datetime = new Date(created_at_ms)
 
 

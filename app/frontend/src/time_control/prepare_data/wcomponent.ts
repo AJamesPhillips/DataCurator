@@ -85,6 +85,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
         }
 
 
+        // FEATURE_TODO::EVENT_AT_CREATED_AT -- display the created_at of event_at entry(s)
         if (wcomponent_has_event_at(wcomponent))
         {
             wcomponent.event_at.forEach(({ /*created_at, custom_created_at,*/ datetime }) =>

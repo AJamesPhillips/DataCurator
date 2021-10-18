@@ -16,7 +16,7 @@ import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
 import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
-import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
+import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
@@ -230,12 +230,17 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
     if (wcomponent_is_event(wcomponent))
     {
         let { event_at = [] } = wcomponent
-        event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
-        event_at = sort_list(event_at, get_created_at_ms, "descending")
+        // For now there is only one or 0 event_at predictions
+        // event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
+        // event_at = sort_list(event_at, get_created_at_ms, "descending")
         const prediction = event_at[0]
         if (!prediction) return undefined
 
-        return { temporal_uncertainty: prediction.datetime, certainty: prediction.probability * prediction.conviction }
+        const temporal_uncertainty = prediction.datetime
+        // Have not yet implmented setting confidence or probability of events
+        const certainty = 1 // prediction.probability * prediction.conviction
+
+        return { temporal_uncertainty, certainty }
     }
 
     else if (wcomponent_is_sub_state(wcomponent))
