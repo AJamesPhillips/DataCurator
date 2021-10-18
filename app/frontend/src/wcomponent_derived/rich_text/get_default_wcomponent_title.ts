@@ -1,4 +1,4 @@
-import { GetFieldTextArgs, get_title } from "./get_rich_text"
+import type { GetFieldTextArgs } from "./get_rich_text"
 import {
     wcomponent_is_plain_connection,
     wcomponent_is_counterfactual_v2,
@@ -15,11 +15,20 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
     {
         const from_wc = args.wcomponents_by_id[args.wcomponent.from_id]
         const to_wc = args.wcomponents_by_id[args.wcomponent.to_id]
-        const current_depth = (args.current_depth || 0) + 1
-        const from_title = from_wc ? get_title({ ...args, current_depth, wcomponent: from_wc }) : "_"
-        const to_title = to_wc ? get_title({ ...args, current_depth, wcomponent: to_wc }) : "_"
 
-        title = `${from_title} -> ${to_title} <auto generated>`
+        if (from_wc || to_wc)
+        {
+            title = `${from_wc ? ("@@" + from_wc.id) : "_"} -> ${to_wc ? ("@@" + to_wc.id) : "_"} <auto generated>`
+        }
+
+        // const current_depth = (args.current_depth || 0) + 1
+        // const from_title = from_wc ? get_title({ ...args, current_depth, wcomponent: from_wc }) : ""
+        // const to_title = to_wc ? get_title({ ...args, current_depth, wcomponent: to_wc }) : ""
+
+        // if (from_title || to_title)
+        // {
+        //     title = `${from_title || "_"} -> ${to_title || "_"} <auto generated>`
+        // }
     }
     else if (wcomponent_is_counterfactual_v2(args.wcomponent))
     {

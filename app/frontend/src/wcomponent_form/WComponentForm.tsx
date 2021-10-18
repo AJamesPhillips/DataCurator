@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useMemo, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
@@ -37,7 +37,7 @@ import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_t
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
@@ -60,6 +60,7 @@ import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/up
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
+import { get_default_wcomponent_title } from "../wcomponent_derived/rich_text/get_default_wcomponent_title"
 
 
 
@@ -119,13 +120,22 @@ function _WComponentForm (props: Props)
     }, [wcomponent_id])
 
 
+    const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
+        editing, created_at_ms, sim_ms } = props
+
+    const default_title = useMemo(() =>
+    {
+        return get_default_wcomponent_title({
+            wcomponent, rich_text: false, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
+        })
+    }, [wcomponent_id])
+
+
     const { ready, base_id } = props
     if (!ready) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>
 
 
-    const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
-        editing, created_at_ms, sim_ms } = props
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets
 
 
@@ -166,7 +176,7 @@ function _WComponentForm (props: Props)
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
-                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
+                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms }) || default_title}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={focus_title}
                 hide_label={true}
