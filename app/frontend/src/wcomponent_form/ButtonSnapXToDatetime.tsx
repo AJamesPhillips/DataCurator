@@ -51,7 +51,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ButtonSnapXToDatetime (props: Props)
 {
-    const [changed, set_changed] = useState<number | undefined>(undefined)
+    const [number_changed, set_number_changed] = useState<number | undefined>(undefined)
 
     const {
         kv, wcomponent_id,
@@ -81,18 +81,18 @@ function _ButtonSnapXToDatetime (props: Props)
             {
                 if (disabled) return
 
-                const { changed, knowledge_view } = calulate_new_positions({
+                const { number_changed, knowledge_view } = calulate_new_positions({
                     wcomponent_ids, kv, wc_id_map,
                     time_origin_ms, time_origin_x, time_scale,
                 })
 
-                if (changed) upsert_knowledge_view({ knowledge_view })
-                set_changed(changed)
-                setTimeout(() => set_changed(undefined), 1000)
+                if (number_changed && knowledge_view) upsert_knowledge_view({ knowledge_view })
+                set_number_changed(number_changed)
+                setTimeout(() => set_number_changed(undefined), 1000)
             }}
             is_left={true}
         />
-        {changed !== undefined && changed ? `Changed ${changed}` : "No changes"}
+        {number_changed !== undefined && (number_changed ? `Changed ${number_changed}` : "No changes")}
     </div>
 }
 
@@ -103,22 +103,22 @@ export const ButtonSnapXToDatetime = connector(_ButtonSnapXToDatetime) as Functi
 interface CalulateNewPositionsArgs
 {
     wcomponent_ids: string[]
-    kv: KnowledgeView
-    wc_id_map: KnowledgeViewWComponentIdEntryMap
-    time_origin_ms: number
-    time_origin_x: number
-    time_scale: number
+    kv: KnowledgeView | undefined
+    wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined
+    time_origin_ms: number | undefined
+    time_origin_x: number | undefined
+    time_scale: number | undefined
 }
 function calulate_new_positions (args: CalulateNewPositionsArgs)
 {
     const { wcomponent_ids, kv, wc_id_map, time_origin_ms, time_origin_x, time_scale } = args
 
-    let changed = 0
+    let number_changed = 0
 
     // type guard as compiler erroring despite VSCode ok.  Different typescript versions?
     if (!kv || !wc_id_map || time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined)
     {
-        return { changed, knowledge_view: kv }
+        return { number_changed, knowledge_view: undefined }
     }
 
 
@@ -143,8 +143,11 @@ function calulate_new_positions (args: CalulateNewPositionsArgs)
         const new_kv_entry = { ...kv_entry, left: rounded_left }
 
         new_wc_id_map[wcomponent_id] = new_kv_entry
-        changed += 1
+        number_changed += 1
     })
 
-    return { changed, knowledge_view: { ...kv, wc_id_map: new_wc_id_map } }
+
+    const new_knowledge_view = number_changed ? { ...kv, wc_id_map: new_wc_id_map } : undefined
+
+    return { number_changed, knowledge_view: new_knowledge_view }
 }

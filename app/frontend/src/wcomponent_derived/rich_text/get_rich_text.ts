@@ -9,7 +9,7 @@ import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../w
 import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import type { WcIdToCounterfactualsV2Map } from "../interfaces/counterfactual"
 import { VAP_visual_false_id } from "../value_and_prediction/utils_to_convert_VAP_set_to_visuals"
-import { get_default_wcomponent_title } from "./default_title"
+import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
