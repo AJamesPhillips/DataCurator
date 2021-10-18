@@ -3,12 +3,14 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
-import { WComponentCanvasConnection } from "../wcomponent_canvas/connection/WComponentCanvasConnection"
+import {
+    WComponentCanvasConnection,
+} from "../wcomponent_canvas/connection/WComponentCanvasConnection"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
+import { TemporaryDraggedCanvasNode } from "../canvas/TemporaryDraggedCanvasNode"
 
 
 
@@ -21,20 +23,14 @@ const map_state = (state: RootState) =>
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
+    const { wcomponent_nodes, wcomponent_connections } = current_composed_knowledge_view || {}
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
-
-
-    let wcomponent_nodes: WComponent[] = []
-    if (current_composed_knowledge_view)
-    {
-        wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
-    }
 
 
     return {
         ready,
         wcomponent_nodes,
-        wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
+        wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
     }
@@ -70,13 +66,14 @@ const get_children = (props: Props): ChildrenRawData =>
 {
     const { ready } = props
     let { wcomponent_nodes } = props
-    if (!ready || wcomponent_nodes.length === 0) return no_children
+    if (!ready || !wcomponent_nodes || wcomponent_nodes.length === 0) return no_children
 
 
     const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode
         key={id}
         id={id}
     />)
+    elements.push(<TemporaryDraggedCanvasNode />)
 
     return elements
 }

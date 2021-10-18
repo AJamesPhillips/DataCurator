@@ -43,6 +43,7 @@ import { Handles } from "./Handles"
 import { NodeSubStateSummary } from "./NodeSubStateSummary"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
 
 
 
@@ -109,7 +110,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentCanvasNode (props: Props)
 {
-    const [node_is_moving, set_node_is_moving] = useState<boolean>(false)
+    const [node_is_moving, set_node_is_moving] = useState(false)
+    const [node_is_draggable, set_node_is_draggable] = useState(false)
 
     const {
         id, on_graph = true,
@@ -150,6 +152,7 @@ function _WComponentCanvasNode (props: Props)
         certainty_formatting,
         focused_mode: props.focused_mode,
     })
+    const opacity = validity_opacity
 
 
     const on_pointer_down = factory_on_pointer_down({
@@ -173,15 +176,12 @@ function _WComponentCanvasNode (props: Props)
             knowledge_view_id: composed_kv.id,
             entry: new_entry,
         })
-
-        set_node_is_moving(false)
-        return
     }
 
 
     const children: h.JSX.Element[] = [
         <Handles
-            set_node_is_moving={(!on_graph || !is_editing || !is_highlighted) ? undefined : (() => set_node_is_moving(true))}
+            user_requested_node_move={(on_graph && is_editing && is_highlighted) ? () => set_node_is_draggable(true) : undefined}
             wcomponent_id={wcomponent.id}
             wcomponent_current_kv_entry={kv_entry}
             is_highlighted={is_highlighted}
@@ -286,7 +286,7 @@ function _WComponentCanvasNode (props: Props)
             <LabelsListV2 label_ids={wcomponent.label_ids} />
         </div>}
         extra_css_class={extra_css_class}
-        opacity={validity_opacity}
+        opacity={opacity}
         unlimited_width={false}
         glow={glow}
         color={color}
@@ -296,31 +296,42 @@ function _WComponentCanvasNode (props: Props)
         terminals={terminals}
         pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
         extra_args={{
-            // draggable: node_allowed_to_move && node_is_moving,
-            draggable: node_is_moving,
+            draggable: node_is_draggable,
             onDragStart: e =>
             {
+                set_node_is_moving(true)
                 // Prevent green circle with white cross "copy / add" cursor icon
                 // https://stackoverflow.com/a/56699962/539490
                 e.dataTransfer!.dropEffect = "move"
+
+                // This is a hack.  It makes the node disappear.  So the (stupidly unconfigurable) ghost node
+                // provided by the browser is not shown.
+                e.currentTarget.style.opacity = "0"
+                setTimeout(() =>
+                {
+                    if (!e.target) return
+                    // Then clears the manually set opacity to allow it to be shown again.
+                    ;(e.target as any).style.opacity = "0.3"
+                }, 0)
+
+                const { width, height } = e.currentTarget.getBoundingClientRect()
+                const scale = get_scale()
+                const size = { width: width * scale, height: height * scale }
+                pub_sub.canvas.pub("canvas_node_drag_size", size)
+            },
+
+            onDrag: e =>
+            {
+                const new_position = calculate_new_node_position_from_drag(kv_entry, e)
+                pub_sub.canvas.pub("canvas_node_drag_position", new_position)
             },
 
             onDragEnd: e => {
-                const store = get_store()
-                const zoom = store.getState().routing.args.zoom
-                const scale = zoom / SCALE_BY
-                const top_fudge = -8 * (scale / 2)
-                const left_fudge = 6 / (scale / 2)
-                // maybe explore using e.currentTarget.offsetLeft?
-                const node_size_fudge = (kv_entry.s || 1)
-                const top = kv_entry.top + (e.offsetY * node_size_fudge) + top_fudge
-                const left = kv_entry.left + (e.offsetX * node_size_fudge) + left_fudge
-                // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
-                // console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
-                update_position(round_canvas_point({
-                    top: top,
-                    left: left,
-                }))
+                const new_position = calculate_new_node_position_from_drag(kv_entry, e)
+                update_position(new_position)
+                pub_sub.canvas.pub("canvas_node_drag_position", undefined)
+                set_node_is_moving(false)
+                set_node_is_draggable(false)
             }
         }}
         other_children={children}
@@ -365,4 +376,34 @@ function get_wcomponent_color (wcomponent: WComponent)
         : ((wcomponent_is_goal(wcomponent)
         // || wcomponent_is_judgement_or_objective(wcomponent)
         ) ? "rgb(207, 255, 198)" : "")
+}
+
+
+
+function calculate_new_node_position_from_drag (kv_entry: KnowledgeViewWComponentEntry, e: h.JSX.TargetedDragEvent<HTMLDivElement>)
+{
+    const scale = get_scale()
+    const top_fudge = -18 * (scale / 2)
+    const left_fudge = 8 / (scale / 2)
+    // maybe explore using e.currentTarget.offsetLeft?
+    const node_size_fudge = (kv_entry.s || 1)
+    // Note that e.offsetY and e.offsetX do NOT take into account the position the user's cursor was
+    // relative to the move icon when it was clicked.  However the drag annimation provided by the browser
+    // does so that means the position will usually be wrong in one or both dimensions.
+    // TODO find a value which does reflect where the user pressed down on the move icon
+    const top = kv_entry.top + (e.offsetY * node_size_fudge) + top_fudge
+    const left = kv_entry.left + (e.offsetX * node_size_fudge) + left_fudge
+    // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
+    // console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
+    const new_position = round_canvas_point({ top, left })
+    return new_position
+}
+
+
+
+function get_scale ()
+{
+    const store = get_store()
+    const zoom = store.getState().routing.args.zoom
+    return zoom / SCALE_BY
 }

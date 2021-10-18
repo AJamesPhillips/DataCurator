@@ -136,8 +136,10 @@ function _NodeSubStateSummary (props: Props)
     }))
     if (!VAP_visual) return <div>Invalid configuration</div>
 
-    const value_text = VAP_visual.value_text + ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
-    VAP_visual = {...VAP_visual, value_text, certainty: 1}
+    let value_text = VAP_visual.value_text
+    // If not 100% certain then show probability
+    value_text += VAP_visual.certainty === 1 ? "" :` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
+    VAP_visual = { ...VAP_visual, value_text, certainty: 1 }
 
     return <ValueAndPredictionEntryRow
         wcomponent={props.wcomponent}

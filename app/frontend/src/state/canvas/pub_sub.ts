@@ -1,3 +1,4 @@
+import type { CanvasPoint } from "../../canvas/interfaces"
 import { pub_sub_factory } from "../pub_sub/pub_sub_factory"
 
 
@@ -23,9 +24,29 @@ interface CanvasMsgMap
     canvas_double_tap: CanvasPointerEvent
     canvas_right_click: CanvasPointerEvent
     canvas_area_select: CanvasAreaSelectEvent
+    canvas_node_drag_size: { width: number; height: number } | undefined
+    canvas_node_drag_position: CanvasPoint | undefined
 }
 
-export const canvas_pub_sub = pub_sub_factory<CanvasMsgMap>()
+
+export const canvas_pub_sub = pub_sub_factory<CanvasMsgMap>({
+    canvas_node_drag_position: canvas_node_drag_position_middleware,
+})
+
+
+
+let last_node_drag_position: CanvasPoint | undefined = undefined
+function canvas_node_drag_position_middleware (message: CanvasPoint | undefined)
+{
+    const continue_ = (
+        last_node_drag_position?.left !== message?.left
+        || last_node_drag_position?.top !== message?.top
+    )
+
+    last_node_drag_position = message
+
+    return { continue: continue_, message }
+}
 
 // canvas_pub_sub.sub("canvas_double_tap", (msg: CanvasPointerEvent) =>
 // {

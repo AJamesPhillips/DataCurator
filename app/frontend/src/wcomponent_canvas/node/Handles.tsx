@@ -10,7 +10,7 @@ interface HandlesProps extends HandleForMovingProps, ExploreButtonHandleOwnProps
 export function Handles (props: HandlesProps)
 {
     return <div className="handles">
-        <HandleForMoving set_node_is_moving={props.set_node_is_moving} />
+        <HandleForMoving user_requested_node_move={props.user_requested_node_move} />
         <ExploreButtonHandle
             wcomponent_id={props.wcomponent_id}
             wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
@@ -26,11 +26,11 @@ export function Handles (props: HandlesProps)
 
 interface HandleForMovingProps
 {
-    set_node_is_moving?: () => void
+    user_requested_node_move?: () => void
 }
 function HandleForMoving (props: HandleForMovingProps)
 {
-    const { set_node_is_moving } = props
+    const { user_requested_node_move: set_node_is_moving } = props
 
     if (!set_node_is_moving) return <div
         className="node_handle movement"
