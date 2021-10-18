@@ -1,6 +1,6 @@
 .wcomponent_canvas_node.connectable_canvas_node.node
 {
-    transition: left 0.2s, top 0.2s;
+    transition: left 0.2s ease-in-out, top 0.2s ease-in-out;
 }
 .wcomponent_canvas_node.connectable_canvas_node.node.node_is_moving
 {
@@ -20,7 +20,7 @@
     white-space: initial;
     overflow: initial;
     /* Attempt to allow opacity to transition smoothly */
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, opacity 0.2s;
+    transition: background-color 0.5s, color 0.5s, box-shadow 0.2s, opacity 0.2s;
 }
 
 

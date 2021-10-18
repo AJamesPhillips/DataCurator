@@ -1,20 +1,15 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { round_coordinate_small_step } from "../canvas/position_utils"
 import { calculate_canvas_x_for_wcomponent_temporal_uncertainty } from "../knowledge_view/datetime_line"
-import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
-import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import {
     get_current_composed_knowledge_view_from_state,
     get_current_knowledge_view_from_state,
-    get_current_temporal_uncertainty_from_wcomponent,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
-import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 

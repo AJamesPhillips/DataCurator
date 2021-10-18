@@ -1,0 +1,49 @@
+
+// Surely there must be a better way than this for getting link and text color inheritance?
+
+// Keep in sync with display.ts -> COLOURS
+.color_green
+{
+    color: #C8F7B8;
+}
+
+.color_yellow
+{
+    color: #FDE6A8;
+}
+
+.color_blue
+{
+    color: #C5D6FD;
+}
+
+.color_red
+{
+    color: #F7D2DE;
+}
+
+.color_white
+{
+    color: #FFF;
+}
+
+
+// $colors: [(r: 255, g: 255, b: 255)];
+
+// Putting .node_title as quick hack to override Material-UI stylesheets
+.color_light .node_title
+{
+    color: rgb(255, 255, 255);
+}
+.color_light .node_title a
+{
+    color: rgb(195, 195, 255);
+}
+
+// This would be stupid with ~132,000 classes
+// $step: 5;
+// @for $r from 0 through 51 {
+//     .color-#{$r*$step}-#{$r*$step}-#{$r*$step} {
+//         color: rgb($r*$step, $i*$step, $i*$step);
+//     }
+// }

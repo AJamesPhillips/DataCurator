@@ -31,6 +31,7 @@ export const action_y = y_factory(8)
 export const action_height = 1 * SCALE
 
 
+// Keep in sync with display_colors.scss
 export const COLOURS = {
     green: "#C8F7B8",
     yellow: "#FDE6A8",

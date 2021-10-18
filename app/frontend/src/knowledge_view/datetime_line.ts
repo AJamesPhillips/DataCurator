@@ -1,8 +1,7 @@
 import { round_coordinate_small_step } from "../canvas/position_utils"
 import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
 import type { DefaultDatetimeLineConfig } from "../shared/interfaces/datetime_lines"
-import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
-import { get_current_temporal_uncertainty_from_wcomponent } from "../state/specialised_objects/accessors"
+import { get_current_datetime_from_wcomponent } from "../state/specialised_objects/accessors"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -27,10 +26,7 @@ interface CalculateCanvasXForWcomponentSingleDatetimeArgs
 }
 export function calculate_canvas_x_for_wcomponent_temporal_uncertainty (args: CalculateCanvasXForWcomponentSingleDatetimeArgs): number | undefined
 {
-    const temporal_uncertainty = get_current_temporal_uncertainty_from_wcomponent(args.wcomponent_id, args.wcomponents_by_id, args.created_at_ms)
-    if (!temporal_uncertainty) return undefined
-
-    const datetime = get_uncertain_datetime(temporal_uncertainty)
+    const datetime = get_current_datetime_from_wcomponent(args.wcomponent_id, args.wcomponents_by_id, args.created_at_ms)
     if (!datetime) return undefined
 
 

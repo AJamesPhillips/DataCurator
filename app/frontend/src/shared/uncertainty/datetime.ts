@@ -2,9 +2,9 @@ import type { TemporalUncertainty } from "./interfaces"
 
 
 
-export function get_uncertain_datetime (datetime: TemporalUncertainty)
+export function get_uncertain_datetime (datetime?: TemporalUncertainty)
 {
-    return (datetime.min || datetime.value || datetime.max)
+    return datetime && (datetime.min || datetime.value || datetime.max)
 }
 
 

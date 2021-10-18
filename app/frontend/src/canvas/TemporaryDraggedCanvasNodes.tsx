@@ -44,9 +44,11 @@ export function TemporaryDraggedCanvasNodes ()
 
     if (!relative_position) return null
 
-    return wcomponent_ids.map(wcomponent_id => <WComponentCanvasNode
-        key={`temporary_dragged_canvas_node_${wcomponent_id}`}
-        id={wcomponent_id}
-        drag_relative_position={relative_position}
-    />)
+    return <div>
+        {wcomponent_ids.map(wcomponent_id => <WComponentCanvasNode
+            key={`temporary_dragged_canvas_node_${wcomponent_id}`}
+            id={wcomponent_id}
+            drag_relative_position={relative_position}
+        />)}
+    </div>
 }

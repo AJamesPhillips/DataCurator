@@ -8,6 +8,7 @@ import {
 import {
     partition_and_sort_by_uncertain_event_datetimes, sort_by_uncertain_event_datetimes,
 } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
+import { group_versions_by_id } from "./group_versions_by_id"
 
 
 
@@ -54,35 +55,4 @@ export function prune_items_by_created_at_and_versions_and_sort_by_datetimes <U 
     const latest = prune_items_by_created_at_and_versions(items, created_at_ms)
     const sorted = sort_by_uncertain_event_datetimes(latest)
     return sorted
-}
-
-
-
-interface GroupVersionsByIdReturn <U>
-{
-    latest: U[]
-    previous_versions_by_id: {[id: string]: U[]}
-}
-function group_versions_by_id <U extends Base> (items: U[]): GroupVersionsByIdReturn<U>
-{
-    const by_id: {[id: string]: U[]} = {}
-    items.forEach(item =>
-    {
-        const sub_items = by_id[item.id] || []
-        sub_items.push(item)
-        by_id[item.id] = sub_items
-    })
-
-    const previous_versions_by_id: {[id: string]: U[]} = {}
-    const latest: U[] = Object.values(by_id).map(sub_items =>
-    {
-        const sorted = sort_list(sub_items, get_created_at_ms, "descending")
-
-        const latest = sorted[0]!
-        previous_versions_by_id[latest.id] = sorted.slice(1)
-
-        return latest
-    })
-
-    return { latest, previous_versions_by_id }
 }

@@ -3,6 +3,7 @@ import {
     WComponent,
     WComponentsById,
     wcomponent_is_event,
+    wcomponent_is_statev2,
     wcomponent_is_sub_state,
     wcomponent_should_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -14,8 +15,11 @@ import type {
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
 import { sort_list } from "../../shared/utils/sort"
-import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
+import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
+import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
+import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
+import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
 
 
 
@@ -211,8 +215,15 @@ export function wcomponent_has_knowledge_view (wcomponent_id: string, knowledge_
 
 
 
+export function get_current_datetime_from_wcomponent (wcomponent_id: string, wcomponents_by_id: WComponentsById, created_at_ms: number): Date | undefined
+{
+    const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(wcomponent_id, wcomponents_by_id, created_at_ms)
+
+    return get_uncertain_datetime(temporal_value_certainty?.temporal_uncertainty)
+}
+
 // Need to keep in sync with wc_ids_by_type.has_single_datetime
-export function get_current_temporal_uncertainty_from_wcomponent (wcomponent_id: string, wcomponents_by_id: WComponentsById, created_at_ms: number): TemporalUncertainty | undefined
+export function get_current_temporal_value_certainty_from_wcomponent (wcomponent_id: string, wcomponents_by_id: WComponentsById, created_at_ms: number): TemporalValueCertainty | undefined
 {
     const wcomponent = wcomponents_by_id[wcomponent_id]
 
@@ -222,10 +233,12 @@ export function get_current_temporal_uncertainty_from_wcomponent (wcomponent_id:
         event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
         event_at = sort_list(event_at, get_created_at_ms, "descending")
         const prediction = event_at[0]
-        return prediction?.datetime
+        if (!prediction) return undefined
+
+        return { temporal_uncertainty: prediction.datetime, certainty: prediction.probability * prediction.conviction }
     }
 
-    if (wcomponent_is_sub_state(wcomponent))
+    else if (wcomponent_is_sub_state(wcomponent))
     {
         const { target_wcomponent_id, selector } = wcomponent
         const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""]
@@ -244,10 +257,44 @@ export function get_current_temporal_uncertainty_from_wcomponent (wcomponent_id:
         target_VAP_sets = partition_items_by_created_at_datetime({ items: target_VAP_sets, created_at_ms }).current_items
         target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, "descending")
         const target_VAP_set = target_VAP_sets[0]
-        if (!target_VAP_set) return undefined
+        return convert_VAP_set_to_temporal_certainty(target_VAP_set)
+    }
 
-        return target_VAP_set.datetime
+    else if (wcomponent_is_statev2(wcomponent))
+    {
+        let VAP_sets = wcomponent.values_and_prediction_sets || []
+        VAP_sets = group_versions_by_id(VAP_sets).latest
+        if (VAP_sets.length === 1)
+        {
+            const VAP_set = VAP_sets[0]
+            return convert_VAP_set_to_temporal_certainty(VAP_set)
+        }
     }
 
     return undefined
+}
+
+
+
+// I do not like making up new names but I don't know what else to call this.
+// It is a predictions place in time and how much certainty it reflects.
+interface TemporalValueCertainty
+{
+    temporal_uncertainty: TemporalUncertainty
+    certainty: number | undefined
+}
+function convert_VAP_set_to_temporal_certainty (VAP_set?: StateValueAndPredictionsSet)
+{
+    if (!VAP_set) return undefined
+
+    let certainty: number | undefined = undefined
+
+    const shared_conviction = VAP_set.shared_entry_values?.conviction
+    VAP_set.entries.forEach(VAP =>
+    {
+        const VAP_certainty = VAP.probability * (shared_conviction !== undefined ? shared_conviction : VAP.conviction)
+        certainty = Math.max(certainty || 0, VAP_certainty)
+    })
+
+    return { temporal_uncertainty: VAP_set.datetime, certainty }
 }

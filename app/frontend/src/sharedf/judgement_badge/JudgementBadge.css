@@ -10,7 +10,8 @@
 
 .judgement_badge.positive
 {
-    background-color: rgb(56, 175, 35);
+    /* background-color: rgb(56, 175, 35); */
+    background-color: rgb(74, 167, 141);
 }
 
 .judgement_badge.negative

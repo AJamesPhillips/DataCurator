@@ -33,12 +33,9 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities (args: 
     const { selector, target_wcomponent } = args
     const { target_VAP_set_id, target_value_id_type, target_value } = selector || {}
 
+    const target_VAP_sets = get_substate_target_VAP_sets(target_wcomponent, target_VAP_set_id)
+
     const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
-
-
-    let target_VAP_sets: VAPSet[] = target_wcomponent.values_and_prediction_sets || []
-    if (target_VAP_set_id) target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
-
     const values: StateValueCore[] = []
     target_VAP_sets.forEach(VAP_set =>
     {
@@ -57,6 +54,16 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities (args: 
 
         return { ...possilibity, selected }
     })
+}
+
+
+
+function get_substate_target_VAP_sets (target_wcomponent: WComponent & HasVAPSetsAndMaybeValuePossibilities, target_VAP_set_id?: string): VAPSet[]
+{
+    let target_VAP_sets: VAPSet[] = target_wcomponent.values_and_prediction_sets || []
+    if (target_VAP_set_id) target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
+
+    return target_VAP_sets
 }
 
 

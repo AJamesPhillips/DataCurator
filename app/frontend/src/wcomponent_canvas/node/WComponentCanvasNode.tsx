@@ -4,11 +4,12 @@ import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, makeStyles } from "@material-ui/core"
 
-import "./WComponentCanvasNode.css"
+import "./WComponentCanvasNode.scss"
 import {
     connection_terminal_attributes,
     connection_terminal_directions,
     WComponent,
+    WComponentsById,
     wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_has_validity_predictions,
@@ -31,7 +32,7 @@ import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_typ
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
-import { is_on_current_knowledge_view, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
+import { is_on_current_knowledge_view, get_wcomponent_from_state, get_current_temporal_value_certainty_from_wcomponent } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
@@ -44,6 +45,7 @@ import { NodeSubStateSummary } from "./NodeSubStateSummary"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
+import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 
 
 
@@ -215,6 +217,9 @@ function _WComponentCanvasNode (props: Props)
         }
     }))
     const classes = use_styles()
+    const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
+    const color = get_wcomponent_color({ wcomponent, wcomponents_by_id, sim_ms, created_at_ms })
+
     const extra_css_class = (
         ` wcomponent_canvas_node `
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
@@ -225,9 +230,8 @@ function _WComponentCanvasNode (props: Props)
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
         + (show_all_details ? " compact_title " : "") + classes.sizer
+        + (color.font ? color.font : "")
     )
-    const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
-    const color = get_wcomponent_color(wcomponent)
 
 
     const show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
@@ -298,7 +302,7 @@ function _WComponentCanvasNode (props: Props)
         opacity={opacity}
         unlimited_width={false}
         glow={glow}
-        color={color}
+        color={color.background}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
@@ -376,12 +380,47 @@ function get_terminals (args: { on_graph: boolean; is_editing: boolean; is_highl
 
 
 
-function get_wcomponent_color (wcomponent: WComponent)
+interface GetWcomponentColorArgs
 {
-    return wcomponent_is_action(wcomponent) ? "rgb(255, 238, 198)"
-        : ((wcomponent_is_goal(wcomponent)
-        // || wcomponent_is_judgement_or_objective(wcomponent)
-        ) ? "rgb(207, 255, 198)" : "")
+    wcomponent: WComponent
+    wcomponents_by_id: WComponentsById
+    created_at_ms: number
+    sim_ms: number
+}
+function get_wcomponent_color (args: GetWcomponentColorArgs)
+{
+    let background = ""
+    let font = ""
+
+    const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
+    if (temporal_value_certainty)
+    {
+        const { temporal_uncertainty, certainty } = temporal_value_certainty
+        const datetime = get_uncertain_datetime(temporal_uncertainty)
+        if (datetime && datetime.getTime() < args.sim_ms)
+        {
+            if (certainty === 1 || certainty === undefined)
+            {
+                background = "rgb(62, 55, 90)"
+                font = " color_light "
+            }
+            else
+            {
+                // Warning that either you need to update your data or this is warning that this is uncertain
+                background = "pink"
+            }
+        }
+
+    }
+    else
+    {
+        background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
+            : ((wcomponent_is_goal(args.wcomponent)
+            // || wcomponent_is_judgement_or_objective(wcomponent)
+            ) ? "rgb(207, 255, 198)" : "")
+    }
+
+    return { background, font }
 }
 
 

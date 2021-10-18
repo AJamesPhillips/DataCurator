@@ -4,11 +4,13 @@ import { Card, CardContent, CardMedia, makeStyles } from "@material-ui/core"
 import "./ConnectableCanvasNode.css"
 import { CanvasNode } from "./CanvasNode"
 import { COLOURS } from "./display"
+import "./display_colors.scss"
 import type { CanvasPoint } from "./interfaces"
 import type {
     ConnectionTerminalType,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
+
 
 
 interface OwnProps

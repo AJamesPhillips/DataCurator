@@ -24,6 +24,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
     return {
         target_wcomponent,
+        presenting: state.display_options.consumption_formatting,
     }
 }
 
@@ -40,8 +41,8 @@ enum SubStateTypeStatus {
 
 function _NodeSubStateTypeIndicators (props: Props)
 {
-    const { target_wcomponent } = props
-    if (!target_wcomponent) return null
+    const { target_wcomponent, presenting } = props
+    if (!target_wcomponent || presenting) return null
 
     const { selector } = props.wcomponent
     const { target_VAP_set_id, target_value_id_type, target_value } = selector || {}
