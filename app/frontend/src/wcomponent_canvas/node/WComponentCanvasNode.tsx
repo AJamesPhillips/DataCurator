@@ -32,7 +32,11 @@ import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_typ
 import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
-import { is_on_current_knowledge_view, get_wcomponent_from_state, get_current_temporal_value_certainty_from_wcomponent } from "../../state/specialised_objects/accessors"
+import {
+    is_on_current_knowledge_view,
+    get_wcomponent_from_state,
+    get_current_temporal_value_certainty_from_wcomponent,
+} from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
@@ -271,8 +275,8 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden">
-                {is_editing && <Box pr={2}>state</Box>}
+            {show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_state_container">
+                {is_editing && <div className="description_label">state &nbsp;</div>}
                 {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeValueAndPredictionSetSummary
@@ -283,7 +287,7 @@ function _WComponentCanvasNode (props: Props)
                 </Box>
             </Box>}
 
-            {sub_state_wcomponent && <Box display="flex" maxWidth="100%" overflow="hidden">
+            {sub_state_wcomponent && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_sub_state_container">
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeSubStateSummary
                         wcomponent={sub_state_wcomponent}

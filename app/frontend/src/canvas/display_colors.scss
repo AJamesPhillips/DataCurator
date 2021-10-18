@@ -28,22 +28,53 @@
 }
 
 
-// $colors: [(r: 255, g: 255, b: 255)];
 
 // Putting .node_title as quick hack to override Material-UI stylesheets
-.color_light .node_title
+.color_light
 {
-    color: rgb(255, 255, 255);
-}
-.color_light .node_title a
-{
-    color: rgb(195, 195, 255);
+    .node_title, .node_validity_value_container
+    {
+        color: rgb(255, 255, 255);
+    }
+    .node_title a
+    {
+        color: rgb(195, 195, 255);
+    }
 }
 
-// This would be stupid with ~132,000 classes
-// $step: 5;
-// @for $r from 0 through 51 {
-//     .color-#{$r*$step}-#{$r*$step}-#{$r*$step} {
-//         color: rgb($r*$step, $i*$step, $i*$step);
-//     }
-// }
+// TODO move this to WComponentCanvasNode.scss
+.sub_state_type_indicators
+{
+    .sub_state_type_status__set
+    {
+        color: rgba(50, 50, 50, 0.8);
+    }
+
+    .sub_state_type_status__not_set
+    {
+        color: rgba(200, 200, 200, 0.4);
+    }
+
+    .sub_state_type_status__invalid
+    {
+        color: rgba(200, 0, 0, 0.8);
+    }
+}
+
+.color_light .sub_state_type_indicators
+{
+    .sub_state_type_status__set
+    {
+        color: rgba(200, 200, 200, 1);
+    }
+
+    .sub_state_type_status__not_set
+    {
+        color: rgba(120, 120, 120, 1);
+    }
+
+    .sub_state_type_status__invalid
+    {
+        color: rgba(255, 100, 100, 1);
+    }
+}

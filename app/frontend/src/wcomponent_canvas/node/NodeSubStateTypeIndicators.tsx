@@ -62,14 +62,14 @@ function _NodeSubStateTypeIndicators (props: Props)
     const time_substate_color = sub_state_type_status_to_color(time_substate)
     const possibility_substate_color = sub_state_type_status_to_color(possibility_substate)
 
-    return <div>
+    return <div className="sub_state_type_indicators">
         <LockClockIcon
-            style={{ color: time_substate_color }}
-            title={sub_state_type_status_to_title(time_substate)}
+            className={time_substate_color}
+            title={"Specific Time" + sub_state_type_status_to_title(time_substate)}
         />
         <ReducedPossibilitiesIcon
-            style={{ color: possibility_substate_color }}
-            title={sub_state_type_status_to_title(possibility_substate)}
+            className={possibility_substate_color}
+            title={"Specific Possibility" + sub_state_type_status_to_title(possibility_substate)}
         />
     </div>
 }
@@ -80,9 +80,9 @@ export const NodeSubStateTypeIndicators = connector(_NodeSubStateTypeIndicators)
 
 function sub_state_type_status_to_color (status: SubStateTypeStatus)
 {
-    if (status === SubStateTypeStatus.set) return "rgba(50,50,50,0.8)"
-    if (status === SubStateTypeStatus.not_set) return "rgba(200,200,200,0.4)"
-    return "rgba(200,0,0,0.8)"
+    if (status === SubStateTypeStatus.set) return " sub_state_type_status__set "
+    if (status === SubStateTypeStatus.not_set) return " sub_state_type_status__not_set "
+    return " sub_state_type_status__invalid "
 }
 
 function sub_state_type_status_to_title (status: SubStateTypeStatus)

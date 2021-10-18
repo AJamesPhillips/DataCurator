@@ -40,6 +40,13 @@
     width: 100%;
     align-items: center;
 }
+.color_light
+{
+    .node_validity_container, .node_state_container
+    {
+        border-top: thin solid #555;
+    }
+}
 
 
 .node_is_selected
