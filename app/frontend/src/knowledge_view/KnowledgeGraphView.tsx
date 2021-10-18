@@ -10,7 +10,7 @@ import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvas
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
-import { TemporaryDraggedCanvasNode } from "../canvas/TemporaryDraggedCanvasNode"
+import { TemporaryDraggedCanvasNodes } from "../canvas/TemporaryDraggedCanvasNodes"
 
 
 
@@ -73,7 +73,7 @@ const get_children = (props: Props): ChildrenRawData =>
         key={id}
         id={id}
     />)
-    elements.push(<TemporaryDraggedCanvasNode />)
+    elements.push(<TemporaryDraggedCanvasNodes />)
 
     return elements
 }

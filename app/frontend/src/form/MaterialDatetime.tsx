@@ -81,7 +81,7 @@ function _MaterialDateTime (props: Props)
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
 
     console.group(current_type)
-    console.log(current_format_str)
+    console .log(current_format_str)
     console.groupEnd()
     return (
         <Box display="flex" justifyContent="space-between">

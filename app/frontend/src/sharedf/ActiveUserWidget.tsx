@@ -2,7 +2,7 @@ import { h } from "preact"
 import { Avatar, Badge, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, withStyles } from "@material-ui/core"
 import PersonIcon from "@material-ui/icons/Person"
 import PeopleIcon from "@material-ui/icons/People"
-import { useState } from "react"
+import { useState } from "preact/hooks"
 
 
 

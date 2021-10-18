@@ -1,14 +1,19 @@
+// TODO document difference between these two
 
 
 
-export function throttle <A extends any[]> (func: (...args: A) => void, delay: number)
+export function throttle <A extends any[]> (func: (...args: A) => void, delay_ms: number)
 {
     let timeout: NodeJS.Timeout | undefined = undefined
 
 
     const cancel = () =>
     {
-        if (timeout) clearTimeout(timeout)
+        if (timeout)
+        {
+            clearTimeout(timeout)
+            timeout = undefined
+        }
     }
 
 
@@ -22,7 +27,7 @@ export function throttle <A extends any[]> (func: (...args: A) => void, delay: n
         {
             func(...args)
             pending_args = undefined
-        }, delay)
+        }, delay_ms)
     }
 
 
@@ -43,7 +48,7 @@ export function throttle <A extends any[]> (func: (...args: A) => void, delay: n
 
 
 
-export function min_throttle <A extends any[], B extends any> (func: (...args: A) => B | undefined, delay: number)
+export function min_throttle <A extends any[], B extends any> (func: (...args: A) => B | undefined, delay_ms: number)
 {
     let timeout: NodeJS.Timeout | undefined = undefined
 
@@ -71,9 +76,9 @@ export function min_throttle <A extends any[], B extends any> (func: (...args: A
                 func(...pending_args.args!)
                 pending_args.args = undefined
                 timeout = undefined
-            }, delay)
+            }, delay_ms)
 
-            next_call_at_ms = performance.now() + delay
+            next_call_at_ms = performance.now() + delay_ms
         }
 
         return next_call_at_ms!

@@ -51,6 +51,7 @@ interface OwnProps
 {
     id: string
     on_graph?: boolean
+    drag_relative_position?: CanvasPoint | undefined
 }
 
 
@@ -112,7 +113,6 @@ function _WComponentCanvasNode (props: Props)
 {
     const [node_is_moving, set_node_is_moving] = useState(false)
     const [node_is_draggable, set_node_is_draggable] = useState(false)
-    const [temporary_drag_kv_entry, set_temporary_drag_kv_entry] = useState<KnowledgeViewWComponentEntry | undefined>(undefined)
 
     const {
         id, on_graph = true,
@@ -135,6 +135,13 @@ function _WComponentCanvasNode (props: Props)
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
+    let temporary_drag_kv_entry: KnowledgeViewWComponentEntry | undefined = undefined
+    if (props.drag_relative_position)
+    {
+        temporary_drag_kv_entry = { ...kv_entry }
+        temporary_drag_kv_entry.left += props.drag_relative_position.left
+        temporary_drag_kv_entry.top += props.drag_relative_position.top
+    }
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
@@ -153,7 +160,7 @@ function _WComponentCanvasNode (props: Props)
         certainty_formatting,
         focused_mode: props.focused_mode,
     })
-    const opacity = validity_opacity
+    const opacity = props.drag_relative_position ? 0.3 : validity_opacity
 
 
     const on_pointer_down = factory_on_pointer_down({
@@ -212,6 +219,7 @@ function _WComponentCanvasNode (props: Props)
         ` wcomponent_canvas_node `
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
         + (node_is_moving ? " node_is_moving " : "")
+        + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "")
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
@@ -301,37 +309,35 @@ function _WComponentCanvasNode (props: Props)
             onDragStart: e =>
             {
                 set_node_is_moving(true)
+                pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", [wcomponent.id])
                 // Prevent green circle with white cross "copy / add" cursor icon
                 // https://stackoverflow.com/a/56699962/539490
                 e.dataTransfer!.dropEffect = "move"
 
                 // This is a hack.  It makes the node disappear.  So the (stupidly unconfigurable) ghost node
-                // provided by the browser is not shown.
+                // provided by the browser is not shown.  Also it seems the ghost node can not tolerant being
+                // moved as this throws off the onDrag event values?
                 e.currentTarget.style.opacity = "0"
-                setTimeout(() =>
-                {
-                    if (!e.target) return
-                    // Then clears the manually set opacity to allow it to be shown again.
-                    ;(e.target as any).style.opacity = "0.3"
-                }, 0)
             },
 
             onDrag: e =>
             {
                 const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
                 pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position)
-                const new_position = calculate_new_position(kv_entry, new_relative_position)
-                set_temporary_drag_kv_entry(new_position)
             },
 
             onDragEnd: e => {
+                // Remove opacity hack
+                e.currentTarget.style.removeProperty("opacity")
+
                 const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
                 pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
                 const new_position = calculate_new_position(kv_entry, new_relative_position)
                 update_position(new_position)
-                set_temporary_drag_kv_entry(undefined)
-                set_node_is_moving(false)
                 set_node_is_draggable(false)
+                // Second "hack" to stop the transition from applying until after the node has moved
+                // to its new position
+                setTimeout(() => set_node_is_moving(false), 0)
             }
         }}
         other_children={children}
