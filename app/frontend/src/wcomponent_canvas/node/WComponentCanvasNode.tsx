@@ -191,7 +191,8 @@ function _WComponentCanvasNode (props: Props)
 
     const children: h.JSX.Element[] = [
         <Handles
-            user_requested_node_move={(on_graph && is_editing && is_highlighted) ? () => set_node_is_draggable(true) : undefined}
+            show_move_handle={on_graph && is_editing && is_highlighted}
+            user_requested_node_move={() => set_node_is_draggable(true)}
             wcomponent_id={wcomponent.id}
             wcomponent_current_kv_entry={kv_entry}
             is_highlighted={is_highlighted}

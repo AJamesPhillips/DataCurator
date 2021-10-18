@@ -10,7 +10,10 @@ interface HandlesProps extends HandleForMovingProps, ExploreButtonHandleOwnProps
 export function Handles (props: HandlesProps)
 {
     return <div className="handles">
-        <HandleForMoving user_requested_node_move={props.user_requested_node_move} />
+        <HandleForMoving
+            show_move_handle={props.show_move_handle}
+            user_requested_node_move={props.user_requested_node_move}
+        />
         <ExploreButtonHandle
             wcomponent_id={props.wcomponent_id}
             wcomponent_current_kv_entry={props.wcomponent_current_kv_entry}
@@ -26,13 +29,14 @@ export function Handles (props: HandlesProps)
 
 interface HandleForMovingProps
 {
-    user_requested_node_move?: () => void
+    show_move_handle: boolean
+    user_requested_node_move: () => void
 }
 function HandleForMoving (props: HandleForMovingProps)
 {
-    const { user_requested_node_move: set_node_is_moving } = props
+    const { show_move_handle, user_requested_node_move } = props
 
-    if (!set_node_is_moving) return <div
+    if (!show_move_handle) return <div
         className="node_handle movement"
     >&nbsp;</div>
 
@@ -40,7 +44,7 @@ function HandleForMoving (props: HandleForMovingProps)
     const handle_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
         e.stopPropagation() // stop propagation otherwise ConnectionNode will become deselected / selected
-        set_node_is_moving()
+        user_requested_node_move()
     }
 
     return <div
