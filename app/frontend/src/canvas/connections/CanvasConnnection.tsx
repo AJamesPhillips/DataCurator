@@ -35,7 +35,7 @@ export function CanvasConnnection (props: OwnProps)
     const { from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour } = props
     if (!from_node_position || !to_node_position) return null
 
-    const { x1, y1, x2, y2, control_point1, control_point2, end_angle } = derive_coords({
+    const { x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle } = derive_coords({
         from_node_position, to_node_position, from_connection_type, to_connection_type,
         line_behaviour,
     })
@@ -78,14 +78,14 @@ export function CanvasConnnection (props: OwnProps)
     >
         <path
             className={"connection_line_background " + extra_background_classes}
-            d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}
+            d={`M ${x1} ${-y1} C ${x1 + relative_control_point1.x},${-y1 - relative_control_point1.y}, ${x2 + relative_control_point2.x},${-y2 - relative_control_point2.y}, ${x2},${-y2}`}
             onPointerOver={() => set_hovered(true)}
             onPointerOut={() => set_hovered(false)}
             style={style_line_background}
         />
         <path
             className={"connection_line " + extra_line_classes}
-            d={`M ${x1} ${-y1} C ${x1 + control_point1.x},${-y1 - control_point1.y}, ${x2 + control_point2.x},${-y2 - control_point2.y}, ${x2},${-y2}`}
+            d={`M ${x1} ${-y1} C ${x1 + relative_control_point1.x},${-y1 - relative_control_point1.y}, ${x2 + relative_control_point2.x},${-y2 - relative_control_point2.y}, ${x2},${-y2}`}
             style={style_line}
         />
 
