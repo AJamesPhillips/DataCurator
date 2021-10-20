@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "react"
+import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+
 import { calculate_canvas_x_for_wcomponent_temporal_uncertainty } from "../knowledge_view/datetime_line"
 import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
-
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import {
