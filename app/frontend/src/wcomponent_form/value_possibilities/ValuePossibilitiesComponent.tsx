@@ -86,7 +86,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                 />)}
             </Box>
 
-            <Button
+            {props.editing && <Button
                 value="New possibility"
                 fullWidth={true}
                 onClick={() =>
@@ -98,9 +98,9 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                     }
                     props.update_value_possibilities(modified_value_possibilities)
                 }}
-            />
+            />}
 
-            {props.value_possibilities === undefined && <Button
+            {props.editing && props.value_possibilities === undefined && <Button
                 value="Use defaults"
                 fullWidth={true}
                 onClick={() =>

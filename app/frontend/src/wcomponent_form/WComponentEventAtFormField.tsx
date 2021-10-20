@@ -10,6 +10,7 @@ import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeFor
 import { EditablePercentage } from "../form/EditablePercentage"
 import type { Prediction } from "../shared/uncertainty/interfaces"
 import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
+import { Button } from "../sharedf/Button"
 
 
 
@@ -23,6 +24,7 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     creation_context_state: state.creation_context,
+    editing: !state.display_options.consumption_formatting,
     base_id: selector_chosen_base_id(state),
 })
 
@@ -81,6 +83,18 @@ function _WComponentEventAtFormField (props: Props)
                 conviction={event_at.conviction}
             />}
         </div>
+
+        <br /><br />
+
+        {props.editing && <Button
+            fullWidth={true}
+            value={event_at ? "Clear Event" : "Create Default Event"}
+            onClick={() =>
+            {
+                if (event_at) upsert_wcomponent({ event_at: [] })
+                else upsert_event_at({ conviction: 1, probability: 1 })
+            }}
+        />}
     </p>
 }
 
