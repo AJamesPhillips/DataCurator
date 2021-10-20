@@ -35,7 +35,10 @@ function optionally_remove_invalid_wc_ids (kv: KnowledgeView, wcomponent_ids?: S
         else dropped_ids.push(id)
     })
 
-    if (dropped_ids.length > 0) console.warn(`Dropped ${dropped_ids.length} invalid ids from KnowledgeView: ${kv.id}`)
+    if (dropped_ids.length > 0)
+    {
+        console.warn(`Dropped ${dropped_ids.length} invalid ids from KnowledgeView: ${kv.id}`)
+    }
 
     return new_wc_id_map
 }

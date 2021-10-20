@@ -50,7 +50,6 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     cached_store = store as any
 
 
-    // Disable saving for now
     const save = () =>
     {
         const state = store.getState()
@@ -58,6 +57,7 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
         conditionally_save_state(store)
     }
     store.subscribe(save)
+
 
     setup_warning_of_unsaved_data_beforeunload(load_state_from_storage, store)
 

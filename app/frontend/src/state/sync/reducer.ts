@@ -131,10 +131,10 @@ function get_ready_for_fields_for_data_type (state: SyncStateForDataType)
 function prepare_specialised_object_ids_pending_save (args: { wcomponents: WComponent[], knowledge_views: KnowledgeView[] }): SpecialisedObjectIdsPendingSave
 {
     const wcomponent_ids = new Set<string>(
-        args.wcomponents.filter(wc => wc.needs_save).map(({ id }) => id)
+        args.wcomponents.filter(item => item.needs_save).map(({ id }) => id)
     )
     const knowledge_view_ids = new Set<string>(
-        args.knowledge_views.filter(wc => wc.needs_save).map(({ id }) => id)
+        args.knowledge_views.filter(item => item.needs_save).map(({ id }) => id)
     )
 
     return { wcomponent_ids, knowledge_view_ids }

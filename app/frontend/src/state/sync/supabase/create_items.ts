@@ -16,8 +16,6 @@ export async function supabase_create_item <SWrite extends { id: string }, SRead
 {
     const item_to_insert = args.converter_app_to_supabase(args.item)
 
-    // if (1 > 0) throw new Error("Should not be saving")  // Disable saving for now
-
     const result = await args.supabase
         .from<SWrite>(args.table)
         .insert(item_to_insert)

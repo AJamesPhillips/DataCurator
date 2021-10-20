@@ -39,10 +39,6 @@ export function load_state (store: Store<RootState>)
     get_state_data(storage_type, chosen_base_id)
     .then(specialised_objects =>
     {
-        // temp
-        specialised_objects.wcomponents.forEach(item => item.needs_save = true)
-        specialised_objects.knowledge_views.forEach(item => item.needs_save = true)
-
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
 
         ensure_any_knowledge_view_displayed(store)
