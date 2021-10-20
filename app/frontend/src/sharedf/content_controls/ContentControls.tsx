@@ -199,8 +199,6 @@ function calculate_if_nodes_on_screen (state: RootState)
 
             return left >= x && left <= max_x && -top <= y && -top >= max_y
         })
-
-        if (!nodes_on_screen) debugger
     }
 
     return nodes_on_screen
