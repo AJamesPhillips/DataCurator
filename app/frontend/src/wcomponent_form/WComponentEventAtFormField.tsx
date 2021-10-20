@@ -7,6 +7,9 @@ import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { selector_chosen_base_id } from "../state/user_info/selector"
 import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
+import { EditablePercentage } from "../form/EditablePercentage"
+import type { Prediction } from "../shared/uncertainty/interfaces"
+import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
 
 
 
@@ -34,27 +37,50 @@ function _WComponentEventAtFormField (props: Props)
     const event_at = wcomponent.event_at && wcomponent.event_at[0]
 
 
+    const upsert_event_at = (partial_event_at_prediction: Partial<Prediction>) =>
+    {
+        const partial_wcomponent: EventAt =
+        {
+            event_at: [{
+                probability: 1,
+                conviction: 1,
+                datetime: {},
+                id: "",
+                base_id: base_id || -1, // base id should be present but default to -1 just in case
+                explanation: "",
+                ...(event_at || { ...get_new_created_ats(creation_context_state) }),
+                ...partial_event_at_prediction,
+            }]
+        }
+        upsert_wcomponent(partial_wcomponent)
+    }
+
+
     return <p>
         <UncertainDateTimeForm
             // Get a hacky implementation of event datetime
             datetime={event_at ? event_at.datetime : {}}
-            on_change={datetime =>
-            {
-                const partial_wcomponent: EventAt =
-                {
-                    event_at: [{
-                        ...(event_at || { ...get_new_created_ats(creation_context_state) }),
-                        id: "",
-                        base_id: base_id || -1, // base id should be present but default to -1 just in case
-                        explanation: "",
-                        probability: 1,
-                        conviction: 1,
-                        datetime,
-                    }]
-                }
-                upsert_wcomponent(partial_wcomponent)
-            }}
+            on_change={datetime => upsert_event_at({ datetime })}
         />
+        <br />
+        <div style={{ display: "inline-flex" }}>
+            <EditablePercentage
+                placeholder="Confidence"
+                value={event_at?.conviction}
+                conditional_on_blur={new_conviction => upsert_event_at({ conviction: new_conviction })}
+            />
+            <EditablePercentage
+                placeholder="Probability"
+                value={event_at?.probability}
+                conditional_on_blur={new_probability => upsert_event_at({ probability: new_probability })}
+            />
+            &nbsp; {event_at && <PredictionBadge
+                disabled={true}
+                size={20}
+                probability={event_at.probability}
+                conviction={event_at.conviction}
+            />}
+        </div>
     </p>
 }
 

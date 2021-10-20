@@ -237,8 +237,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
         if (!prediction) return undefined
 
         const temporal_uncertainty = prediction.datetime
-        // Have not yet implmented setting confidence or probability of events
-        const certainty = 1 // prediction.probability * prediction.conviction
+        const certainty = prediction.probability * prediction.conviction
 
         return { temporal_uncertainty, certainty }
     }

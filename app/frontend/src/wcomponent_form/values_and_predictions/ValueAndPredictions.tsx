@@ -192,7 +192,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
                 <EditablePercentage
                     disabled={disabled_prob}
-                    placeholder="probability"
+                    placeholder="Probability"
                     value={orig_probability}
                     conditional_on_blur={new_probability =>
                     {
