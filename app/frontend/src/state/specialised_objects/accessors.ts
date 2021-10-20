@@ -17,9 +17,9 @@ import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../deriv
 import { sort_list } from "../../shared/utils/sort"
 import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
-import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
+import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
-import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 
 
 
@@ -267,16 +267,31 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
 
     else if (wcomponent_is_statev2(wcomponent))
     {
-        let VAP_sets = wcomponent.values_and_prediction_sets || []
-        VAP_sets = group_versions_by_id(VAP_sets).latest
-        if (VAP_sets.length === 1)
+        const VAP_set = wcomponent_has_single_statev2_datetime(wcomponent)
+        if (VAP_set)
         {
-            const VAP_set = VAP_sets[0]
             return convert_VAP_set_to_temporal_certainty(VAP_set)
         }
     }
 
     return undefined
+}
+
+
+
+export function wcomponent_has_single_statev2_datetime (wcomponent: WComponentNodeStateV2)
+{
+
+    let VAP_sets = wcomponent.values_and_prediction_sets || []
+    VAP_sets = group_versions_by_id(VAP_sets).latest
+        .filter(VAP_set => !uncertain_datetime_is_eternal(VAP_set.datetime))
+    const VAP_set = VAP_sets[0]
+    if (VAP_set && VAP_sets.length === 1)
+    {
+        return VAP_set
+    }
+
+    return false
 }
 
 

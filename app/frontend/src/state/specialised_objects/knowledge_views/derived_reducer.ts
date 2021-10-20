@@ -179,7 +179,6 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         prioritisations,
         filters: { wc_ids_excluded_by_filters: new Set() },
         composed_datetime_line_config: datetime_lines_config,
-        // ephemeral_override_wc_id_map: {},
     }
     // do not need to do this but helps reduce confusion when debugging
     delete (current_composed_knowledge_view as any).wc_id_map
