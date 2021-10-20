@@ -283,11 +283,17 @@ export function wcomponent_has_single_statev2_datetime (wcomponent: WComponentNo
 
     let VAP_sets = wcomponent.values_and_prediction_sets || []
     VAP_sets = group_versions_by_id(VAP_sets).latest
-        .filter(VAP_set => !uncertain_datetime_is_eternal(VAP_set.datetime))
     const VAP_set = VAP_sets[0]
     if (VAP_set && VAP_sets.length === 1)
     {
         return VAP_set
+    }
+
+    const non_eternal_VAP_sets = VAP_sets.filter(VAP_set => !uncertain_datetime_is_eternal(VAP_set.datetime))
+    const non_eternal_VAP_set = non_eternal_VAP_sets[0]
+    if (non_eternal_VAP_set && non_eternal_VAP_sets.length === 1)
+    {
+        return non_eternal_VAP_set
     }
 
     return false

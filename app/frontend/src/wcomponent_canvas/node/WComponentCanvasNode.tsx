@@ -417,6 +417,14 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
                 background = "pink"
             }
         }
+        else if (!datetime) // is eternal
+        {
+            if (certainty === 1 || certainty === undefined)
+            {
+                background = "rgb(62, 55, 90)"
+                font = " color_light "
+            }
+        }
 
     }
     else
