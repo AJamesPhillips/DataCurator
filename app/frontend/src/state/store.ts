@@ -51,13 +51,13 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
 
 
     // Disable saving for now
-    // const save = () =>
-    // {
-    //     const state = store.getState()
-    //     persist_relevant_state(state)
-    //     conditionally_save_state(store)
-    // }
-    // store.subscribe(save)
+    const save = () =>
+    {
+        const state = store.getState()
+        persist_relevant_state(state)
+        conditionally_save_state(store)
+    }
+    store.subscribe(save)
 
     setup_warning_of_unsaved_data_beforeunload(load_state_from_storage, store)
 

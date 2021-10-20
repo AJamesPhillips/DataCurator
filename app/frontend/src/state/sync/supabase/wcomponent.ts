@@ -64,7 +64,7 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): 
 {
     const item = wcomponent_app_to_supabase(args.wcomponent)
 
-    if (1 > 0) throw new Error("Should not be saving")  // Disable saving for now
+    // if (1 > 0) throw new Error("Should not be saving")  // Disable saving for now
 
     const result = await args.supabase.rpc("update_wcomponent", { item })
     if (result.status === 401)
