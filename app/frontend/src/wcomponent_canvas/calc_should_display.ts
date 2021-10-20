@@ -113,9 +113,9 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
     const event_prediction = event_at[0]
     if (!event_prediction) return undefined
 
-    const tense = get_tense_of_uncertain_datetime(event_prediction, sim_ms)
-
-    return (tense === Tense.future) ? 0 : 1
+    return event_prediction.probability * event_prediction.conviction
+    // const tense = get_tense_of_uncertain_datetime(event_prediction, sim_ms)
+    // return (tense === Tense.future) ? 0 : 1
 }
 
 
@@ -160,7 +160,9 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
     // TODO add existence prediction
 
     const connection_certainty = Math.min(
-        connection_validity_value.display_certainty, from_node_validity_value.display_certainty, to_node_validity_value.display_certainty
+        connection_validity_value.display_certainty,
+        from_node_validity_value.display_certainty,
+        // to_node_validity_value.display_certainty,
     )
 
     return {
