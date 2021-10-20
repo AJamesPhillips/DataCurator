@@ -84,7 +84,7 @@ function _MoveToWComponentButton (props: Props)
     const move = () => position && props.move(go_to_datetime_ms, position)
 
     return (
-        <Box zIndex={10} m={2} title={position ? "" : "No components present"}>
+        <Box zIndex={10} m={2} title={position ? "Move to component(s)" : "No components present"}>
             <IconButton
                 size="small"
                 onClick={move}

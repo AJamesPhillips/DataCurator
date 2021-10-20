@@ -51,3 +51,12 @@ export function set_union <E> (...sets: Set<E>[])
     sets.forEach(set => elements = elements.concat(Array.from(set)))
     return new Set(elements)
 }
+
+
+
+export function set_difference <E> (set_a: Set<E>, set_b: Set<E>)
+{
+    const new_set_a = new Set(set_a)
+    set_b.forEach(element => new_set_a.delete(element))
+    return new_set_a.size === set_a.size ? set_a : new_set_a
+}

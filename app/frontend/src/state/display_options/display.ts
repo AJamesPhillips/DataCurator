@@ -8,21 +8,22 @@ import type { RootState } from "../State"
 
 
 
-// TODO move this to some dynamic measure of screen size
-const half_screen_width = 1000 / 2
-const half_screen_height = 600 / 2
+export const screen_width = () => document.body.clientWidth
+export const screen_height = () => document.body.clientHeight
+const half_screen_width = () => screen_width() / 2
+const half_screen_height = () => screen_height() / 2
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
-    const x = round_number(args.x + (half_screen_width * (SCALE_BY / args.zoom)), h_step)
-    const y = round_number(args.y - (half_screen_height * (SCALE_BY / args.zoom)), v_step)
+    const x = round_number(args.x + (half_screen_width() * (SCALE_BY / args.zoom)), h_step)
+    const y = round_number(args.y - (half_screen_height() * (SCALE_BY / args.zoom)), v_step)
 
     return { x, y }
 }
 
 function calculate_xy_for_put_middle (args: { x: number, y: number, zoom: number }): { x: number, y: number }
 {
-    const x = args.x - ((half_screen_width * (SCALE_BY / args.zoom)) - (h_step / 2))
-    const y = args.y + ((half_screen_height * (SCALE_BY / args.zoom)) - (v_step / 2))
+    const x = args.x - ((half_screen_width() * (SCALE_BY / args.zoom)) - (h_step / 2))
+    const y = args.y + ((half_screen_height() * (SCALE_BY / args.zoom)) - (v_step / 2))
 
     return { x, y }
 }

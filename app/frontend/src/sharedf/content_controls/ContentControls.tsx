@@ -12,6 +12,9 @@ import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import { ToggleDatetimeMarkers } from "./ToggleDatetimeMarkers"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { screen_height, screen_width } from "../../state/display_options/display"
+import { SCALE_BY } from "../../canvas/zoom_utils"
 
 
 
@@ -22,13 +25,25 @@ interface OwnProps
     sim_events: TimeSliderEvent[]
 }
 
-const map_state = (state: RootState) => ({
-    linked_datetime_sliders: state.controls.linked_datetime_sliders,
-    display_by_simulated_time: state.display_options.display_by_simulated_time,
-    display_time_sliders: state.controls.display_time_sliders,
-    editing: !state.display_options.consumption_formatting,
-    created_at_ms: state.routing.args.created_at_ms,
-})
+let displayed_pulse_circle_on_move_to_components = true
+const map_state = (state: RootState) =>
+{
+    let nodes_on_screen: boolean | undefined = undefined
+    if (displayed_pulse_circle_on_move_to_components)
+    {
+        nodes_on_screen = calculate_if_nodes_on_screen(state)
+    }
+
+    return {
+        linked_datetime_sliders: state.controls.linked_datetime_sliders,
+        display_by_simulated_time: state.display_options.display_by_simulated_time,
+        display_time_sliders: state.controls.display_time_sliders,
+        editing: !state.display_options.consumption_formatting,
+        created_at_ms: state.routing.args.created_at_ms,
+        nodes_on_screen,
+    }
+}
+
 
 const map_dispatch = {
     change_display_at_created_datetime: ACTIONS.display_at_created_datetime.change_display_at_created_datetime,
@@ -42,17 +57,15 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-let displayed_pulse_circle_on_move_to_components = false
 
 function _ContentControls (props: Props)
 {
     const invert_classes = invert_disabled_appearance()
-    const { created_events, sim_events, move_to_component_id } = props
+    const { created_events, sim_events, move_to_component_id, nodes_on_screen } = props
 
     const display_sliders = props.editing || props.display_time_sliders
 
     const classes = use_styles()
-    displayed_pulse_circle_on_move_to_components = true
 
 
     return (
@@ -84,8 +97,12 @@ function _ContentControls (props: Props)
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                     <div
-                        className={(!move_to_component_id || displayed_pulse_circle_on_move_to_components) ? "" : "pulsating_circle"}
-                        ref={e => setTimeout(() => e?.classList.remove("pulsating_circle"), 6000)}
+                        className={(!move_to_component_id || !displayed_pulse_circle_on_move_to_components || nodes_on_screen) ? "" : "pulsating_circle"}
+                        ref={e => setTimeout(() =>
+                        {
+                            e?.classList.remove("pulsating_circle")
+                            displayed_pulse_circle_on_move_to_components = false
+                        }, 10000)}
                     />
                 </Box>
                 <ActiveCreatedAtFilterWarning />
@@ -152,3 +169,39 @@ const use_styles = makeStyles(theme => ({
         color: theme.palette.warning.main
     },
 }))
+
+
+
+function calculate_if_nodes_on_screen (state: RootState)
+{
+    let nodes_on_screen: boolean | undefined = undefined
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
+
+    if (composed_kv)
+    {
+        const { composed_wc_id_map, wc_ids_by_type } = composed_kv
+        const { x, y, zoom } = state.routing.args
+        const max_x = x + (screen_width() * (zoom / SCALE_BY))
+        const max_y = y - (screen_height() * (zoom / SCALE_BY))
+
+        nodes_on_screen = !!Array.from(wc_ids_by_type.any_node).find(id => {
+            const position = composed_wc_id_map[id]
+
+            // console.group(state.specialised_objects.wcomponents_by_id[id]?.title, position?.left, position?.top)
+
+            if (!position) return false
+            const { left, top } = position
+            // console .log("left >= x", left >= x, `${left} >= ${x}`)
+            // console .log("left <= max_x", left <= max_x, `${left} <= ${max_x}`)
+            // console .log("-top <= y", -top <= y, `${-top} <= ${y}`)
+            // console .log("-top >= max_y", -top >= max_y, `${-top} >= ${max_y}`)
+            // console.groupEnd()
+
+            return left >= x && left <= max_x && -top <= y && -top >= max_y
+        })
+
+        if (!nodes_on_screen) debugger
+    }
+
+    return nodes_on_screen
+}
