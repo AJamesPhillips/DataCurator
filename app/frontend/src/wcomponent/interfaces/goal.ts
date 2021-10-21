@@ -1,3 +1,4 @@
+import type { HasObjectives } from "./judgement";
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 
@@ -16,10 +17,7 @@ import type { WComponentNodeBase } from "./wcomponent_base"
 // export type GoalInactiveStatuses = "completed" | "invalid" | "rejected"
 
 
-export interface WComponentNodeGoal extends WComponentNodeBase
+export interface WComponentNodeGoal extends WComponentNodeBase, HasObjectives
 {
     type: "goal"
-    // status: GoalStatuses
-    // status_reason: string
-    objective_ids: string[] // ids from WComponentJudgement
 }

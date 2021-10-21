@@ -35,3 +35,12 @@ const _judgement_operators: {[P in JudgementOperator]: true} = {
     ">=": true,
 }
 export const judgement_operators: JudgementOperator[] = Object.keys(_judgement_operators) as any
+
+
+
+export interface HasObjectives
+{
+    // status: GoalStatuses
+    // status_reason: string
+    objective_ids?: string[] // ids from WComponentJudgement
+}

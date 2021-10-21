@@ -3,14 +3,16 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import type { HasObjectives, WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
-import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_state } from "../state/specialised_objects/accessors"
+import {
+    get_current_composed_knowledge_view_from_state,
+    get_wcomponents_from_state,
+} from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { set_union } from "../utils/set"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
@@ -19,7 +21,7 @@ import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 
 interface OwnProps
 {
-    wcomponent: WComponentNodeGoal
+    wcomponent: WComponent & HasObjectives
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
@@ -68,9 +70,10 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _GoalFormFields (props: Props)
+function _ChosenObjectivesFormFields (props: Props)
 {
-    if (props.consumption_formatting && props.wcomponent.objective_ids.length === 0) return null
+    const { objective_ids = [] } = props.wcomponent
+    if (props.consumption_formatting && objective_ids.length === 0) return null
 
 
     const wcomponent_id_options = get_wcomponent_search_options({
@@ -87,7 +90,7 @@ function _GoalFormFields (props: Props)
 
             <MultiAutocompleteText
                 placeholder="Objectives..."
-                selected_option_ids={props.wcomponent.objective_ids}
+                selected_option_ids={objective_ids}
                 options={wcomponent_id_options}
                 allow_none={true}
                 on_change={objective_ids => props.upsert_wcomponent({ objective_ids })}
@@ -101,4 +104,4 @@ function _GoalFormFields (props: Props)
     </div>
 }
 
-export const GoalFormFields = connector(_GoalFormFields) as FunctionalComponent<OwnProps>
+export const ChosenObjectivesFormFields = connector(_ChosenObjectivesFormFields) as FunctionalComponent<OwnProps>

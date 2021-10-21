@@ -1,12 +1,5 @@
+import type { HasObjectives } from "./judgement"
 import type { WComponentNodeBase } from "./wcomponent_base"
-
-
-export interface StartedStoppedAt
-{
-    // started_at and stopped_at are not necessary if WComponentBase or Base are versioned
-    started_at?: Date
-    stopped_at?: Date
-}
 
 
 
@@ -27,7 +20,7 @@ export const action_statuses: ActionStatusType[] = [
 export const action_statuses_set = new Set(action_statuses)
 
 
-export interface WComponentNodeAction extends WComponentNodeBase, StartedStoppedAt
+export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
 {
     type: "action"
     // +++ 2021-05-24

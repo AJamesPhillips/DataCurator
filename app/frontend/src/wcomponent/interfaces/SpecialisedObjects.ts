@@ -1,8 +1,8 @@
-import type { StartedStoppedAt, WComponentNodeAction } from "./action"
+import type { WComponentNodeAction } from "./action"
 import type { Base } from "../../shared/interfaces/base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
-import type { WComponentJudgement } from "./judgement"
+import type { HasObjectives, WComponentJudgement } from "./judgement"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
@@ -106,10 +106,6 @@ export function wcomponent_is_process (wcomponent: WComponent | undefined): wcom
 {
     return wcomponent_is_a("process", wcomponent)
 }
-export function wcomponent_is_action (wcomponent: WComponent | undefined): wcomponent is WComponentNodeAction
-{
-    return wcomponent_is_a("action", wcomponent)
-}
 
 
 // * log_error_id   Accepts number so that downstream functions can use it as a type guard
@@ -139,10 +135,22 @@ function wcomponent_is_a (type: WComponentType, wcomponent: WComponent | undefin
 }
 
 
+
+export function wcomponent_is_action (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentNodeAction
+{
+    return wcomponent_is_a("action", wcomponent, log_error_id)
+}
+
 export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentNodeGoal
 {
     return wcomponent_is_a("goal", wcomponent, log_error_id)
 }
+
+export function wcomponent_has_objectives (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponent & HasObjectives
+{
+    return wcomponent_is_action(wcomponent, log_error_id) || wcomponent_is_goal(wcomponent, log_error_id)
+}
+
 
 
 export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentPrioritisation
@@ -234,13 +242,6 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 // {
 //     return (wcomponent as WComponentNodeStateV2).value_possibilities !== undefined
 // }
-
-
-// TODO refactor this to use the action's VAPs?
-export function wcomponent_has_started_stopped_at (wcomponent: WComponent): wcomponent is (WComponent & StartedStoppedAt)
-{
-    return (wcomponent as WComponentNodeAction).started_at !== undefined || (wcomponent as WComponentNodeAction).stopped_at !== undefined
-}
 
 
 

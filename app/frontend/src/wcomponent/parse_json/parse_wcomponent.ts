@@ -9,7 +9,6 @@ import {
     wcomponent_has_VAP_sets,
     wcomponent_has_event_at,
     wcomponent_is_plain_connection,
-    wcomponent_has_started_stopped_at,
     ConnectionTerminalAttributeType,
     wcomponent_is_process,
     wcomponent_has_existence_predictions,
@@ -17,7 +16,7 @@ import {
     wcomponent_is_goal,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
-import { parse_base_dates, optional_date } from "./parse_dates"
+import { parse_base_dates } from "./parse_dates"
 
 
 
@@ -57,13 +56,6 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
         wcomponent.from_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.from_type)
         wcomponent.to_type = upgrade_2021_05_31_connection_fromto_types(wcomponent.to_type)
-    }
-
-    // TODO refactor this to use the action's VAPs?
-    if (wcomponent_has_started_stopped_at(wcomponent))
-    {
-        wcomponent.started_at = optional_date(wcomponent.started_at)
-        wcomponent.stopped_at = optional_date(wcomponent.stopped_at)
     }
 
     return wcomponent

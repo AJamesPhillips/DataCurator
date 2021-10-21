@@ -28,6 +28,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_goal,
     wcomponent_is_sub_state,
+    wcomponent_has_objectives,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../wcomponent/interfaces/state"
 import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
@@ -44,7 +45,7 @@ import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredict
 import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
 import { WComponentFromTo } from "./WComponentFromTo"
 import { WComponentLatestPrediction } from "./WComponentLatestPrediction"
-import { GoalFormFields } from "./GoalFormFields"
+import { ChosenObjectivesFormFields } from "./ChosenObjectivesFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
@@ -398,7 +399,7 @@ function _WComponentForm (props: Props)
 
 
 
-        {wcomponent_is_goal(wcomponent) && <GoalFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
+        {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
         <FormControl fullWidth={true}>
             <EditableCustomDateTime
                 title="Created at"
