@@ -1,5 +1,3 @@
-// const { v4: uuid_v4 } = require("uuid")
-
 import { get_new_value_and_prediction_set_id } from "./shared/utils/ids"
 import type { WComponent } from "./wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "./wcomponent/interfaces/state"
@@ -13,7 +11,7 @@ export const wcomponents: WComponent[] = [
     // ... etc
 ].map(wc =>
 {
-    const base_id = 13
+    const base_id = 14
 
     const { values_and_prediction_sets } = wc as any as WComponentNodeStateV2
     let vap_sets: StateValueAndPredictionsSet[] | undefined = values_and_prediction_sets && values_and_prediction_sets.map(vap_set =>
@@ -82,40 +80,3 @@ interface V1State
     description: string
     value: string
 }
-
-// const wcomponent_ids = wcomponents.map((wc_str, index) =>
-// {
-//     const new_id = uuid_v4()
-//     const wc = JSON.parse(wc_str)
-//     const old_id = wc.id
-
-//     const new_description = (wc.description || "") + `\n\n(Old id: ${old_id})`
-//     const new_wc = { ...wc, description: new_description }
-//     const new_wc_str = JSON.stringify(new_wc)
-//     wcomponents[index] = new_wc_str
-
-//     return { old_id, new_id }
-// })
-// // we have some old ids like wc1, wc2 etc which are causing problems if used first
-// .sort((a, b) => a.old_id.length > b.old_id.length ? -1 : 1)
-
-// if (wcomponent_ids.find(wc => !wc.old_id)) throw new Error(`Found wcomponent with no id`)
-
-
-// wcomponent_ids.forEach(ids =>
-// {
-//     const regexp = new RegExp(ids.old_id, "g")
-
-//     wcomponents.forEach((wc_str, index) =>
-//     {
-//         const new_wc_str = wc_str.replace(regexp, ids.new_id)
-//         wcomponents[index] = new_wc_str
-//     })
-// })
-
-// console.log(JSON.stringify(wcomponent_ids))
-// console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
-// console.log(wcomponents.join(",\n"))
-// // console.log(wcomponents.map(wc_str => JSON.parse(wc_str).id).join(",\n"))
-// // console.log(wcomponent_ids.map(ids => `${ids.old_id} -> ${ids.new_id}`).join("\n"))
-

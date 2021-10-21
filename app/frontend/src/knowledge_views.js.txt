@@ -1,0 +1,75 @@
+const { v4: uuid_v4 } = require("uuid")
+
+
+
+const wcomponent_ids = [
+    // {"old_id":"wc2","new_id":"fd8..."},
+    // ...
+]
+
+
+
+const knowledge_views = [
+    // "{\"id\":\"kvwc8...", ...}",
+    // ...
+]
+
+const wcomponent_ids_map_new_to_old = {}
+wcomponent_ids.forEach(ids =>
+    {
+        wcomponent_ids_map_new_to_old[ids.new_id] = ids.old_id
+
+        const regexp = new RegExp("k?v?" + ids.old_id, "g")
+
+        knowledge_views.forEach((kv_str, index) =>
+    {
+        const new_kv_str = kv_str.replace(regexp, ids.new_id)
+        knowledge_views[index] = new_kv_str
+    })
+})
+
+
+
+const knowledge_view_ids_map_new_to_old = {}
+const knowledge_view_ids = knowledge_views.map((kv_str, index) =>
+{
+    const kv = JSON.parse(kv_str)
+    const maybe_new_or_old_id = kv.id
+    const old_id = wcomponent_ids_map_new_to_old[maybe_new_or_old_id] || maybe_new_or_old_id
+    const new_id = wcomponent_ids_map_new_to_old[maybe_new_or_old_id] ? maybe_new_or_old_id : uuid_v4()
+    knowledge_view_ids_map_new_to_old[new_id] = old_id
+
+    return { old_id, new_id }
+})
+// we have some old ids like kv1, kv2 etc which are causing problems if used first
+.sort((a, b) => a.old_id.length > b.old_id.length ? -1 : 1)
+
+
+
+knowledge_view_ids.forEach(ids =>
+{
+    const regexp = new RegExp(ids.old_id, "g")
+
+    knowledge_views.forEach((kv_str, index) =>
+    {
+        const new_kv_str = kv_str.replace(regexp, ids.new_id)
+        knowledge_views[index] = new_kv_str
+    })
+})
+
+
+
+knowledge_views.forEach((kv_str, index) =>
+{
+    const kv = JSON.parse(kv_str)
+    const new_id = kv.id
+    const old_id = knowledge_view_ids_map_new_to_old[new_id]
+
+    const new_description = (kv.description || "") + `\n\n(Old id: ${old_id})`
+    const new_kv = { ...kv, description: new_description }
+    const new_kv_str = JSON.stringify(new_kv)
+
+    knowledge_views[index] = new_kv_str
+})
+
+console.log(knowledge_views.join(",\n"))

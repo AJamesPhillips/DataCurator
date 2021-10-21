@@ -9,7 +9,7 @@ import { wcomponents } from "../../../wcomponents"
 
 export async function supabase_load_data (base_id: number)
 {
-    if (base_id !== 13) throw new Error("Nope, needs base_id 13 not " + base_id)
+    if (base_id !== 14) throw new Error("Nope, needs base_id 14 not " + base_id)
 
 
 
