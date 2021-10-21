@@ -99,17 +99,6 @@ function _WComponentKnowledgeViewForm (props: Props)
         })
     }
     return <div>
-        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
-            {(knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view"}
-            {composed_knowledge_view_entry && " but is present in a foundational knowledge view"}
-            <br />
-            {editing && <Button
-                value={(knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view"}
-                extra_class_names="left"
-                onClick={() => upsert_entry(knowledge_view_id, { deleted: undefined })}
-            />}
-        </div>}
-
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <FormControl component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
                 <Slider
@@ -150,6 +139,17 @@ function _WComponentKnowledgeViewForm (props: Props)
             Position:
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
+
+        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
+            {(knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view"}
+            {composed_knowledge_view_entry && !composed_knowledge_view_entry.deleted && " but is present in a foundational knowledge view"}
+            <br />
+            {editing && <Button
+                value={(knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view"}
+                extra_class_names="left"
+                onClick={() => upsert_entry(knowledge_view_id, { deleted: undefined })}
+            />}
+        </div>}
 
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <div>
             <ConfirmatoryDeleteButton
