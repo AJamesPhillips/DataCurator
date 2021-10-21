@@ -148,7 +148,7 @@ export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_erro
 
 export function wcomponent_has_objectives (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponent & HasObjectives
 {
-    return wcomponent_is_action(wcomponent, log_error_id) || wcomponent_is_goal(wcomponent, log_error_id)
+    return wcomponent_is_action(wcomponent, undefined) || wcomponent_is_goal(wcomponent, log_error_id)
 }
 
 
@@ -178,7 +178,7 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent | undefin
 
 export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentJudgement
 {
-    return wcomponent_is_a("judgement", wcomponent, log_error_id) || wcomponent_is_a("objective", wcomponent, log_error_id)
+    return wcomponent_is_a("judgement", wcomponent, undefined) || wcomponent_is_a("objective", wcomponent, log_error_id)
 }
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
