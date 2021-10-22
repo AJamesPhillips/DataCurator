@@ -23,6 +23,11 @@ $handle_width:1em;
 .node_handle:hover
 {
     color: rgba(0,0,0,1);
+
+    &.disabled
+    {
+        color: rgba(0,0,0,0.3);
+    }
 }
 
 
@@ -39,7 +44,7 @@ $handle_width:1em;
         pointer-events: none;
     }
 
-    &.has_nested_knowledge_view
+    &.has_knowledge_view
     {
         color: black; /* Can not colour unicode characters */
     }

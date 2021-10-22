@@ -73,7 +73,7 @@ function _WComponentKnowledgeViewForm (props: Props)
 
     const other_knowledge_views = all_knowledge_views
         .filter(({ id }) => id !== knowledge_view_id)
-        .filter(({ wc_id_map }) => wc_id_map[wcomponent_id])
+        .filter(({ wc_id_map }) => wc_id_map[wcomponent_id] && !wc_id_map[wcomponent_id]?.deleted)
 
 
     function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
@@ -116,7 +116,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             <br />
         </p>}
 
-        {composed_knowledge_view_entry && <div style={{ display: "inline-flex" }}>
+        <div style={{ display: "inline-flex" }}>
             <MoveToWComponentButton wcomponent_id={wcomponent_id} />
 
             <Box zIndex={10} m={4} class="node_handle">
@@ -126,7 +126,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                     is_highlighted={true}
                 />
             </Box>
-        </div>}
+        </div>
 
         {/* {knowledge_view_entry && !wcomponent_is_plain_connection(wcomponent) && <div>
             Position:

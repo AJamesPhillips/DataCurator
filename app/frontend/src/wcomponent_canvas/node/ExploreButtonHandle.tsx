@@ -19,6 +19,7 @@ import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_sta
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import type { HasBaseId } from "../../shared/interfaces/base"
+import { get_middle_of_screen } from "../../state/display_options/display"
 
 
 
@@ -34,14 +35,12 @@ export interface ExploreButtonHandleOwnProps
 const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
 {
     const wcomponent = get_wcomponent_from_state(state, own_props.wcomponent_id)
-    const kvwc_id = own_props.wcomponent_id
 
     return {
         wcomponent,
-        kvwc_id,
-        kvwc: state.specialised_objects.knowledge_views_by_id[kvwc_id],
+        kvwc: state.specialised_objects.knowledge_views_by_id[own_props.wcomponent_id],
         subview_id: state.routing.args.subview_id,
-        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids.map[kvwc_id],
+        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids.map[own_props.wcomponent_id],
         presenting: state.display_options.consumption_formatting,
     }
 }
@@ -57,17 +56,38 @@ function _ExploreButtonHandle (props: Props)
 
     const hidden = !kvwc && (props.presenting || (!props.presenting && !is_highlighted))
 
-    const is_current_knowledge_view = props.subview_id === props.kvwc_id
+    const is_current_knowledge_view = props.subview_id === props.wcomponent_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
+    const enable_creating_new_kv = !props.presenting && !!props.wcomponent
+
+    const click_outcome = is_current_knowledge_view ? (
+            parent_knowledge_view_id
+                ? ClickOutComes.navigate_up_to_kv_parent
+                : ClickOutComes.disabled__current_but_no_parent
+        ) : kvwc
+            ? ClickOutComes.navigate_to_kv
+            : enable_creating_new_kv
+                ? ClickOutComes.create_then_navigate
+                : ClickOutComes.disabled__need_component_to_create_then_navigate
+
     const current_but_no_parent = is_current_knowledge_view && !parent_knowledge_view_id
 
     const class_name = `node_handle explore `
         + (hidden ? " hidden " : "")
-        + (kvwc ? " has_nested_knowledge_view " : "")
+        + (kvwc ? " has_knowledge_view " : "")
         + (current_but_no_parent ? " current_but_no_parent " : "")
+        + (click_outcome < 0 ? " disabled " : "")
+
+    const title = click_outcome === ClickOutComes.navigate_up_to_kv_parent ? "Navigate up to parent"
+        : click_outcome === ClickOutComes.disabled__current_but_no_parent ? "No parent to navigate up to"
+        : click_outcome === ClickOutComes.navigate_to_kv ? "Navigate to knowledge view"
+        : click_outcome === ClickOutComes.create_then_navigate ? "Create then navigate to knowledge view"
+        : click_outcome === ClickOutComes.disabled__need_component_to_create_then_navigate ? "Need component to create a new knowledge view"
+        : "Unknown error"
 
     return <span
         className={class_name}
+        title={title}
         onClick={e => // using onClick so that WComponentForm input onBlur functions can fire
         {
             e.preventDefault()
@@ -109,17 +129,27 @@ export const ExploreButtonHandle = connector(_ExploreButtonHandle) as Functional
 
 
 
+enum ClickOutComes
+{
+    disabled__current_but_no_parent = -1,
+    navigate_to_kv = 1,
+    navigate_up_to_kv_parent = 2,
+    disabled__need_component_to_create_then_navigate = -2,
+    create_then_navigate = 3,
+}
+
+
 
 function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState>)
 {
-    if (!props.wcomponent_current_kv_entry || !props.wcomponent) return false
-
-    const wc_id_map: KnowledgeViewWComponentIdEntryMap = {
-        [props.wcomponent.id]: props.wcomponent_current_kv_entry,
-    }
+    if (!props.wcomponent) return false
 
     const state = store.getState()
+    const middle_of_screen = get_middle_of_screen(state)
 
+    const wc_id_map: KnowledgeViewWComponentIdEntryMap = {
+        [props.wcomponent.id]: props.wcomponent_current_kv_entry || middle_of_screen,
+    }
 
     const rendered_title = get_title({
         wcomponent: props.wcomponent,
@@ -129,7 +159,7 @@ function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     })
-    const title = rendered_title || `World Component ${props.wcomponent.id} created: ${get_today_str()}`
+    const title = rendered_title || `Knowledge view for ${props.wcomponent.id} created: ${get_today_str()}`
 
 
     const current_kv = get_current_composed_knowledge_view_from_state(state)
@@ -137,11 +167,11 @@ function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState
 
 
     const partial_knowledge_view_wcomponent: Partial<KnowledgeView> & HasBaseId = {
-        id: props.kvwc_id,
+        id: props.wcomponent.id,
         base_id: props.wcomponent.base_id,
         wc_id_map,
         title,
-        sort_type: current_kv_id ? "normal" : "hidden",
+        sort_type: current_kv_id ? "normal" : "hidden", // todo document what the logic is doing here
         parent_knowledge_view_id: current_kv_id,
     }
 

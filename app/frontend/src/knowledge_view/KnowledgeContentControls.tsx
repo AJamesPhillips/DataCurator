@@ -11,7 +11,6 @@ import { ContentControls } from "../sharedf/content_controls/ContentControls"
 
 
 const map_state = (state: RootState) => ({
-    selected_component_id: state.routing.item_id,
     wcomponents: state.derived.wcomponents,
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     linked_datetime_sliders: state.controls.linked_datetime_sliders,
@@ -33,7 +32,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _KnowledgeContentControls (props: Props)
 {
-    const { wcomponents, current_composed_knowledge_view, selected_component_id } = props
+    const { wcomponents, current_composed_knowledge_view } = props
 
     if (!current_composed_knowledge_view) return <div></div>
     const { composed_wc_id_map } = current_composed_knowledge_view
@@ -43,19 +42,11 @@ function _KnowledgeContentControls (props: Props)
     , [wcomponents, composed_wc_id_map])
 
 
-    let move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id
-    if (move_to_component_id && !composed_wc_id_map[move_to_component_id])
-    {
-        move_to_component_id = undefined
-    }
-
-
     const { created_events, sim_events } = useMemo(() =>
         get_wcomponent_time_slider_data(wcomponents_on_kv)
     , [wcomponents_on_kv])
 
     return <ContentControls
-        move_to_component_id={move_to_component_id}
         created_events={created_events}
         sim_events={sim_events}
     />

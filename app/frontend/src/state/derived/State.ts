@@ -39,7 +39,11 @@ export type NestedKnowledgeViewIds = {
 
 export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_map">, "datetime_line_config">
 {
+    // Should contain all kv entries where .deleted === (false or undefined)
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    // Should contain all kv entries where .deleted === true
+    composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
+
     overlapping_wc_ids: OverlappingWcIdMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
@@ -48,10 +52,14 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 
+
     composed_datetime_line_config: ComposedDatetimeLineConfig
 
     filters: {
+        wc_ids_excluded_by_any_filter: Set<string>
+
         wc_ids_excluded_by_filters: Set<string>
+        wc_ids_excluded_by_created_at_datetime_filter: Set<string>
     }
 }
 

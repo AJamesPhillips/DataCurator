@@ -58,8 +58,6 @@ function handle_canvas_area_select (store: Store<RootState>)
         const ids: string[] = Object.entries(kv.composed_wc_id_map)
             .filter(([ id, entry ]) =>
             {
-                if (entry.deleted) return false
-
                 return entry.left >= start_x && entry.left <= end_x
                     && entry.top <= start_top && entry.top >= end_top
             })

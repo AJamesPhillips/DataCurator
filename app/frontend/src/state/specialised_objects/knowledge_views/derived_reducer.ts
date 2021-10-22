@@ -15,7 +15,8 @@ import type {
 import { is_uuid_v4 } from "../../../shared/utils/ids"
 import { is_defined } from "../../../shared/utils/is_defined"
 import { sort_list } from "../../../shared/utils/sort"
-import { get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { set_union } from "../../../utils/set"
 import { update_substate } from "../../../utils/update_state"
 import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
 import {
@@ -71,10 +72,12 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
 
     const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
-    const filters_changed = initial_state.filter_context !== state.filter_context
+
+    const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms
+    const filters_changed = initial_state.filter_context !== state.filter_context || created_at_changed || one_or_more_wcomponents_changed
 
     const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks
-    const ephemeral_overrides_might_have_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms || display_time_marks_changed
+    const ephemeral_overrides_might_have_changed = created_at_changed || display_time_marks_changed
 
 
     if (current_kv)
@@ -138,23 +141,22 @@ function get_knowledge_view (state: RootState, id: string)
 
 
 
+// Possible optimisation: store a set of wcomponent_ids and only run the following code when
+// this set changes... may save a bunch of views from updating (and also help them run faster)
+// as many just want to know what ids are present in the knowledge view not the positions of
+// the components
 function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
 
     const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
-    const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
-    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
-    // Possible optimisation: store a set of wcomponent_ids and only run the following code when
-    // this set changes... may save a bunch of views from updating (and also help them run faster)
-    // as many just want to know what ids are present in the knowledge view not the positions of
-    // the components
+    const {
+        composed_wc_id_map, composed_blocked_wc_id_map
+    } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
+
     const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id)
 
-    // const wcomponent_ids = Object.keys(composed_wc_id_map)
-    const non_deleted_wcomponent_ids = Object.entries(composed_wc_id_map)
-        .filter(([wcomponent_id, entry]) => !entry.deleted)
-        .map(([wcomponent_id, entry]) => wcomponent_id)
+    const non_deleted_wcomponent_ids = Object.keys(composed_wc_id_map)
 
     const wc_ids_by_type = get_wcomponent_ids_by_type(state, non_deleted_wcomponent_ids)
     const wcomponents = get_wcomponents_from_state(state, non_deleted_wcomponent_ids).filter(is_defined)
@@ -175,6 +177,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         ...current_kv,
         composed_wc_id_map,
+        composed_blocked_wc_id_map,
         overlapping_wc_ids,
         wcomponent_nodes,
         wcomponent_connections,
@@ -182,7 +185,11 @@ function update_current_composed_knowledge_view_state (state: RootState, current
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
-        filters: { wc_ids_excluded_by_filters: new Set() },
+        filters: {
+            wc_ids_excluded_by_any_filter: new Set(),
+            wc_ids_excluded_by_filters: new Set(),
+            wc_ids_excluded_by_created_at_datetime_filter: new Set(),
+        },
         composed_datetime_line_config: datetime_lines_config,
     }
     // do not need to do this but helps reduce confusion when debugging
@@ -206,18 +213,22 @@ export function get_foundational_knowledge_views (knowledge_view: KnowledgeView,
 
 
 
-export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[])
+export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById)
 {
-    const composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+    let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     foundation_knowledge_views.forEach(foundational_kv =>
     {
         Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry)
     })
 
-    return composed_wc_id_map
+    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
+
+    const result = partition_wc_id_map_on_blocked_component(composed_wc_id_map)
+    composed_wc_id_map = result.composed_wc_id_map
+    const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map
+
+    return { composed_wc_id_map, composed_blocked_wc_id_map }
 }
-
-
 
 function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, wcomponents_by_id: WComponentsById)
 {
@@ -227,6 +238,22 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
         if (!wcomponent) delete composed_wc_id_map[id]
         else if (wcomponent.deleted_at) delete composed_wc_id_map[id]
     })
+}
+
+function partition_wc_id_map_on_blocked_component (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+{
+    const composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+
+    Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
+    {
+        if (entry.deleted)
+        {
+            composed_blocked_wc_id_map[wcomponent_id] = entry
+            delete composed_wc_id_map[wcomponent_id]
+        }
+    })
+
+    return { composed_wc_id_map, composed_blocked_wc_id_map }
 }
 
 
@@ -321,7 +348,14 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
     if (!current_composed_knowledge_view) return undefined
 
 
-    let wc_ids_excluded_by_filters: Set<string> = new Set()
+    let {
+        wc_ids_excluded_by_filters,
+        wc_ids_excluded_by_created_at_datetime_filter,
+    } = current_composed_knowledge_view.filters
+
+
+    const current_wc_ids = Object.keys(current_composed_knowledge_view.composed_wc_id_map)
+    const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined)
 
 
     if (state.filter_context.apply_filter)
@@ -337,9 +371,7 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
         const exclude_by_component_types = new Set(exclude_by_component_types_list)
         const include_by_component_types = new Set(include_by_component_types_list)
 
-        const current_wc_ids = Object.keys(current_composed_knowledge_view.composed_wc_id_map)
-        const wc_ids_to_exclude = get_wcomponents_from_state(state, current_wc_ids)
-        .filter(is_defined)
+        const wc_ids_to_exclude = wcomponents_on_kv
         .filter(wcomponent =>
         {
             const { label_ids = [], type } = wcomponent
@@ -362,9 +394,26 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
     }
 
 
+    const { created_at_ms } = state.routing.args
+    const component_ids_excluded_by_created_at = wcomponents_on_kv
+        .filter(kv => get_created_at_ms(kv) > created_at_ms)
+        .map(({ id }) => id)
+    wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at)
+
+
+    const wc_ids_excluded_by_any_filter = set_union(
+        wc_ids_excluded_by_filters,
+        wc_ids_excluded_by_created_at_datetime_filter,
+    )
+
+
     return {
         ...current_composed_knowledge_view,
-        filters: { wc_ids_excluded_by_filters }
+        filters: {
+            wc_ids_excluded_by_any_filter,
+            wc_ids_excluded_by_filters,
+            wc_ids_excluded_by_created_at_datetime_filter,
+        }
     }
 }
 
@@ -379,8 +428,6 @@ function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEn
 
     Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
     {
-        if (entry.deleted) return
-
         if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id])) return
 
         const coord_key = `${entry.left},${entry.top}`
@@ -414,11 +461,11 @@ function update_ephemeral_overrides_of_current_composed_kv (current_composed_kno
         // restore original composed_wc_id_map
         const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
         const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
-        const composed_wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
-        remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
+        const composed_wc_id_maps = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
+
         current_composed_knowledge_view = {
             ...current_composed_knowledge_view,
-            composed_wc_id_map,
+            ...composed_wc_id_maps,
         }
     }
     else

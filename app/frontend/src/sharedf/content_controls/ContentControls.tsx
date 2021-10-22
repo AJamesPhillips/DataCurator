@@ -1,4 +1,5 @@
 import { FunctionalComponent, h } from "preact"
+import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse } from "@material-ui/core"
 
@@ -12,35 +13,24 @@ import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import { ToggleDatetimeMarkers } from "./ToggleDatetimeMarkers"
-import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
-import { screen_height, screen_width } from "../../state/display_options/display"
-import { SCALE_BY } from "../../canvas/zoom_utils"
 
 
 
 interface OwnProps
 {
-    move_to_component_id: string | undefined
     created_events: TimeSliderEvent[]
     sim_events: TimeSliderEvent[]
 }
 
-let displayed_pulse_circle_on_move_to_components = true
+
 const map_state = (state: RootState) =>
 {
-    let components_on_screen: boolean | undefined = undefined
-    if (displayed_pulse_circle_on_move_to_components)
-    {
-        components_on_screen = calculate_if_components_on_screen(state)
-    }
-
     return {
         linked_datetime_sliders: state.controls.linked_datetime_sliders,
         display_by_simulated_time: state.display_options.display_by_simulated_time,
         display_time_sliders: state.controls.display_time_sliders,
         editing: !state.display_options.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
-        components_on_screen,
     }
 }
 
@@ -60,14 +50,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ContentControls (props: Props)
 {
+    const [allow_drawing_attention, set_allow_drawing_attention] = useState(true)
+
     const invert_classes = invert_disabled_appearance()
-    const { created_events, sim_events, move_to_component_id, components_on_screen } = props
+    const { created_events, sim_events } = props
 
     const display_sliders = props.editing || props.display_time_sliders
 
     const classes = use_styles()
-
-    const draw_attention_to_move_to_wcomponent_button = move_to_component_id && displayed_pulse_circle_on_move_to_components && !components_on_screen
 
 
     return (
@@ -96,17 +86,10 @@ function _ContentControls (props: Props)
                 </Box>
             </Collapse>
             <Toolbar className={classes.toolbar} variant="dense">
-                <Box>
-                    <MoveToWComponentButton wcomponent_id={move_to_component_id} />
-                    <div
-                        className={draw_attention_to_move_to_wcomponent_button ? "pulsating_circle" : ""}
-                        ref={e => setTimeout(() =>
-                        {
-                            e?.classList.remove("pulsating_circle")
-                            displayed_pulse_circle_on_move_to_components = false
-                        }, 10000)}
-                    />
-                </Box>
+                <MoveToWComponentButton
+                    allow_drawing_attention={allow_drawing_attention}
+                    have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
+                />
                 <ActiveCreatedAtFilterWarning />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
@@ -171,37 +154,3 @@ const use_styles = makeStyles(theme => ({
         color: theme.palette.warning.main
     },
 }))
-
-
-
-function calculate_if_components_on_screen (state: RootState)
-{
-    let components_on_screen: boolean | undefined = undefined
-    const composed_kv = get_current_composed_knowledge_view_from_state(state)
-
-    if (composed_kv)
-    {
-        const { composed_wc_id_map, wc_ids_by_type } = composed_kv
-        const { x, y, zoom } = state.routing.args
-        const max_x = x + (screen_width() * (SCALE_BY / zoom))
-        const max_y = y - (screen_height() * (SCALE_BY / zoom))
-
-        components_on_screen = !!Array.from(wc_ids_by_type.any_node).find(id => {
-            const position = composed_wc_id_map[id]
-
-            // console.group(state.specialised_objects.wcomponents_by_id[id]?.title, position?.left, position?.top)
-
-            if (!position) return false
-            const { left, top } = position
-            // console .log("left >= x", left >= x, `${left} >= ${x}`)
-            // console .log("left <= max_x", left <= max_x, `${left} <= ${max_x}`)
-            // console .log("-top <= y", -top <= y, `${-top} <= ${y}`)
-            // console .log("-top >= max_y", -top >= max_y, `${-top} >= ${max_y}`)
-            // console.groupEnd()
-
-            return left >= x && left <= max_x && -top <= y && -top >= max_y
-        })
-    }
-
-    return components_on_screen
-}
