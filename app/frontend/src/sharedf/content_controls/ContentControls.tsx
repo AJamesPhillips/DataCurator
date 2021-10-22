@@ -28,10 +28,10 @@ interface OwnProps
 let displayed_pulse_circle_on_move_to_components = true
 const map_state = (state: RootState) =>
 {
-    let nodes_on_screen: boolean | undefined = undefined
+    let components_on_screen: boolean | undefined = undefined
     if (displayed_pulse_circle_on_move_to_components)
     {
-        nodes_on_screen = calculate_if_nodes_on_screen(state)
+        components_on_screen = calculate_if_components_on_screen(state)
     }
 
     return {
@@ -40,7 +40,7 @@ const map_state = (state: RootState) =>
         display_time_sliders: state.controls.display_time_sliders,
         editing: !state.display_options.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
-        nodes_on_screen,
+        components_on_screen,
     }
 }
 
@@ -61,13 +61,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ContentControls (props: Props)
 {
     const invert_classes = invert_disabled_appearance()
-    const { created_events, sim_events, move_to_component_id, nodes_on_screen } = props
+    const { created_events, sim_events, move_to_component_id, components_on_screen } = props
 
     const display_sliders = props.editing || props.display_time_sliders
 
     const classes = use_styles()
 
-    const draw_attention_to_move_to_wcomponent_button = move_to_component_id && displayed_pulse_circle_on_move_to_components && !nodes_on_screen
+    const draw_attention_to_move_to_wcomponent_button = move_to_component_id && displayed_pulse_circle_on_move_to_components && !components_on_screen
 
 
     return (
@@ -174,19 +174,19 @@ const use_styles = makeStyles(theme => ({
 
 
 
-function calculate_if_nodes_on_screen (state: RootState)
+function calculate_if_components_on_screen (state: RootState)
 {
-    let nodes_on_screen: boolean | undefined = undefined
+    let components_on_screen: boolean | undefined = undefined
     const composed_kv = get_current_composed_knowledge_view_from_state(state)
 
     if (composed_kv)
     {
         const { composed_wc_id_map, wc_ids_by_type } = composed_kv
         const { x, y, zoom } = state.routing.args
-        const max_x = x + (screen_width() * (zoom / SCALE_BY))
-        const max_y = y - (screen_height() * (zoom / SCALE_BY))
+        const max_x = x + (screen_width() * (SCALE_BY / zoom))
+        const max_y = y - (screen_height() * (SCALE_BY / zoom))
 
-        nodes_on_screen = !!Array.from(wc_ids_by_type.any_node).find(id => {
+        components_on_screen = !!Array.from(wc_ids_by_type.any_node).find(id => {
             const position = composed_wc_id_map[id]
 
             // console.group(state.specialised_objects.wcomponents_by_id[id]?.title, position?.left, position?.top)
@@ -203,5 +203,5 @@ function calculate_if_nodes_on_screen (state: RootState)
         })
     }
 
-    return nodes_on_screen
+    return components_on_screen
 }
