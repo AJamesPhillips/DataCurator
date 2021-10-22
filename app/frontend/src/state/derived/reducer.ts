@@ -7,8 +7,7 @@ import { knowledge_views_derived_reducer } from "../specialised_objects/knowledg
 import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
-import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
-import type { WComponentNodeGoal } from "../../wcomponent/interfaces/goal"
+import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 
 
 
@@ -59,8 +58,8 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
             .filter(is_defined)
             .filter(wcomponent_is_goal)
 
-        const judgement_or_objective_ids_by_goal_id = update_judgement_or_objective_ids_by_goal_id(goals)
-        state = update_substate(state, "derived", "judgement_or_objective_ids_by_goal_id", judgement_or_objective_ids_by_goal_id)
+        const judgement_or_objective_ids_by_goal_or_action_id = update_judgement_or_objective_ids_by_goal_or_action_id(goals)
+        state = update_substate(state, "derived", "judgement_or_objective_ids_by_goal_or_action_id", judgement_or_objective_ids_by_goal_or_action_id)
     }
 
 
@@ -84,8 +83,9 @@ function update_judgement_or_objective_ids_by_target_id (judgement_or_objectives
         const target_id = judgement.judgement_target_wcomponent_id
         if (!target_id) return
 
-        judgement_or_objective_ids_by_target_id[target_id] = judgement_or_objective_ids_by_target_id[target_id] || []
-        judgement_or_objective_ids_by_target_id[target_id]!.push(judgement.id)
+        const judgement_or_objective_ids = judgement_or_objective_ids_by_target_id[target_id] || []
+        judgement_or_objective_ids.push(judgement.id)
+        judgement_or_objective_ids_by_target_id[target_id] = judgement_or_objective_ids
     })
 
     return judgement_or_objective_ids_by_target_id
@@ -93,16 +93,16 @@ function update_judgement_or_objective_ids_by_target_id (judgement_or_objectives
 
 
 
-function update_judgement_or_objective_ids_by_goal_id (goals: WComponentNodeGoal[])
+function update_judgement_or_objective_ids_by_goal_or_action_id (goals_and_actions: WComponentHasObjectives[])
 {
-    const judgement_or_objective_ids_by_goal_id: { [goal_id: string]: string[] } = {}
+    const judgement_or_objective_ids_by_goal_or_action_id: { [goal_or_action_id: string]: string[] } = {}
 
-    goals
+    goals_and_actions
     // .sort () // some kind of sort so that front end display is stable and predictable
-    .forEach(({ id: goal_id, objective_ids }) =>
+    .forEach(({ id: goal_or_action_id, objective_ids }) =>
     {
-        judgement_or_objective_ids_by_goal_id[goal_id] = objective_ids
+        judgement_or_objective_ids_by_goal_or_action_id[goal_or_action_id] = objective_ids || []
     })
 
-    return judgement_or_objective_ids_by_goal_id
+    return judgement_or_objective_ids_by_goal_or_action_id
 }

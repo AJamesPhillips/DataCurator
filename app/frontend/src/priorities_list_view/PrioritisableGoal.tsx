@@ -3,16 +3,16 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { EditableNumber } from "../form/EditableNumber"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
+import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 
 
 
 interface OwnProps
 {
-    goal: WComponentNodeGoal
+    goal: WComponentHasObjectives
     selected_prioritisation: WComponentPrioritisation | undefined
 }
 
@@ -42,7 +42,7 @@ function _PrioritisableGoal (props: Props)
     const effort = goal_prioritisation_attributes[goal.id]?.effort
 
     return <div style={{ display: "flex" }}>
-        <WComponentCanvasNode id={goal.id} on_graph={false} />
+        <WComponentCanvasNode id={goal.id} is_movable={false} always_show={true} />
 
         {selected_prioritisation && (editing || !!effort) && <div>
             <br />

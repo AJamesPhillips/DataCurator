@@ -13,5 +13,5 @@ interface Props
 
 export function Prioritisation ({ prioritisation }: Props)
 {
-    return <WComponentCanvasNode id={prioritisation.id} on_graph={false} />
+    return <WComponentCanvasNode id={prioritisation.id} is_movable={false} always_show={true} />
 }

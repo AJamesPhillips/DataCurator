@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    overflow-y: scroll;
+    /* margin-bottom: 100px; -- does not work as it overlaps the content */
 }
 
 .priorities_list_view_content .goals

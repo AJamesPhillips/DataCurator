@@ -268,7 +268,7 @@ class DateRange {
                                         top={0}
                                     >
                                         {/* <Box component="small">{wc.created_at.toLocaleString()}</Box><br /> */}
-                                        <WComponentCanvasNode id={wc.id} on_graph={false} />
+                                        <WComponentCanvasNode id={wc.id} is_movable={false} />
                                     </Box>
 
                                     <Box className="vaps"

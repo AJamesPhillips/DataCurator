@@ -56,7 +56,7 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 
@@ -71,7 +71,7 @@ export interface DerivedState
     nested_knowledge_view_ids: NestedKnowledgeViewIds
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
-    judgement_or_objective_ids_by_goal_id: { [goal_wcomponent_id: string]: string[] }
+    judgement_or_objective_ids_by_goal_or_action_id: { [goal_wcomponent_id: string]: string[] }
 
     current_composed_knowledge_view: ComposedKnowledgeView | undefined
 

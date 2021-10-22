@@ -146,6 +146,7 @@ export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_erro
     return wcomponent_is_a("goal", wcomponent, log_error_id)
 }
 
+// Need to keep in sync with wc_ids_by_type.has_objectives
 export function wcomponent_has_objectives (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponent & HasObjectives
 {
     return wcomponent_is_action(wcomponent, undefined) || wcomponent_is_goal(wcomponent, log_error_id)

@@ -149,10 +149,15 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     // this set changes... may save a bunch of views from updating (and also help them run faster)
     // as many just want to know what ids are present in the knowledge view not the positions of
     // the components
-    const wcomponent_ids = Object.keys(composed_wc_id_map)
     const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id)
-    const wc_ids_by_type = get_wcomponent_ids_by_type(state, wcomponent_ids)
-    const wcomponents = get_wcomponents_from_state(state, wcomponent_ids).filter(is_defined)
+
+    // const wcomponent_ids = Object.keys(composed_wc_id_map)
+    const non_deleted_wcomponent_ids = Object.entries(composed_wc_id_map)
+        .filter(([wcomponent_id, entry]) => !entry.deleted)
+        .map(([wcomponent_id, entry]) => wcomponent_id)
+
+    const wc_ids_by_type = get_wcomponent_ids_by_type(state, non_deleted_wcomponent_ids)
+    const wcomponents = get_wcomponents_from_state(state, non_deleted_wcomponent_ids).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({

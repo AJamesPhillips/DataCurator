@@ -1,3 +1,4 @@
+import type { WComponent } from "./SpecialisedObjects"
 import type { WComponentBase } from "./wcomponent_base"
 
 
@@ -44,3 +45,4 @@ export interface HasObjectives
     // status_reason: string
     objective_ids?: string[] // ids from WComponentJudgement
 }
+export type WComponentHasObjectives = WComponent & HasObjectives

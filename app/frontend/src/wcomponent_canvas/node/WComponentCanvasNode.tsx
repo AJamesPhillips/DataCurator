@@ -12,6 +12,7 @@ import {
     WComponentsById,
     wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_has_objectives,
     wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_goal,
@@ -56,7 +57,8 @@ import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 interface OwnProps
 {
     id: string
-    on_graph?: boolean
+    is_movable?: boolean
+    always_show?: boolean
     drag_relative_position?: CanvasPoint | undefined
 }
 
@@ -73,7 +75,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const wc_id_map = current_composed_knowledge_view?.composed_wc_id_map || {}
     const judgement_or_objective_ids = [
         ...(state.derived.judgement_or_objective_ids_by_target_id[own_props.id] || []),
-        ...(state.derived.judgement_or_objective_ids_by_goal_id[own_props.id] || []),
+        ...(state.derived.judgement_or_objective_ids_by_goal_or_action_id[own_props.id] || []),
     ]
     .filter(id => !!wc_id_map[id])
 
@@ -121,7 +123,8 @@ function _WComponentCanvasNode (props: Props)
     const [node_is_draggable, set_node_is_draggable] = useState(false)
 
     const {
-        id, on_graph = true,
+        id,
+        is_movable = true, always_show = false,
         force_displaying,
         is_editing,
         current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id,
@@ -137,7 +140,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const kv_entry_maybe = composed_kv.composed_wc_id_map[id]
-    if (!kv_entry_maybe && on_graph) return <div>Could not find knowledge view entry for id {id}</div>
+    if (!kv_entry_maybe && !always_show) return <div>Could not find knowledge view entry for id {id}</div>
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
@@ -151,7 +154,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
-    const validity_value = calc_wcomponent_should_display({
+    const validity_value = always_show ? { display_certainty: 1 } : calc_wcomponent_should_display({
         is_editing, force_displaying, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
@@ -195,7 +198,7 @@ function _WComponentCanvasNode (props: Props)
 
     const children: h.JSX.Element[] = [
         <Handles
-            show_move_handle={on_graph && is_editing && is_highlighted}
+            show_move_handle={is_movable && is_editing && is_highlighted}
             user_requested_node_move={() => set_node_is_draggable(true)}
             wcomponent_id={wcomponent.id}
             wcomponent_current_kv_entry={kv_entry}
@@ -244,20 +247,20 @@ function _WComponentCanvasNode (props: Props)
         || (!wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
             || wcomponent_is_judgement_or_objective(wcomponent)
-            || (wcomponent_is_goal(wcomponent) && wcomponent.objective_ids.length > 0)
+            || (wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0)
             // || is_highlighted
             // || is_current_item
             || props.have_judgements
         ))
     const sub_state_wcomponent = (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
 
-    const terminals = get_terminals({ on_graph, is_editing, is_highlighted })
+    const terminals = get_terminals({ is_movable, is_editing, is_highlighted })
 
     const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
 
 
     return <ConnectableCanvasNode
-        position={on_graph ? (temporary_drag_kv_entry || kv_entry) : undefined}
+        position={is_movable ? (temporary_drag_kv_entry || kv_entry) : undefined}
         cover_image={wcomponent.summary_image}
         node_main_content={<div>
             <img className={"background_image " + wcomponent.type} />
@@ -376,9 +379,9 @@ connection_terminal_attributes.forEach(attribute =>
 
 
 
-function get_terminals (args: { on_graph: boolean; is_editing: boolean; is_highlighted: boolean })
+function get_terminals (args: { is_movable: boolean; is_editing: boolean; is_highlighted: boolean })
 {
-    if (!args.on_graph) return no_terminals
+    if (!args.is_movable) return no_terminals
     if (!args.is_editing) return no_terminals
     if (!args.is_highlighted) return no_terminals
 

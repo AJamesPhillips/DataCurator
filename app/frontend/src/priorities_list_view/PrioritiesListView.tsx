@@ -3,11 +3,13 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./PrioritiesListView.css"
 import { MainArea } from "../layout/MainArea"
-import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
-import { wcomponent_is_goal } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_has_objectives } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
+import type {
+    PrioritisedGoalAttributes,
+    WComponentPrioritisation,
+} from "../wcomponent/interfaces/priorities"
 import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"
@@ -16,6 +18,7 @@ import { PrioritisableGoal } from "./PrioritisableGoal"
 import { sort_list } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { selector_chosen_base_id } from "../state/user_info/selector"
+import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 
 
 
@@ -33,46 +36,42 @@ const map_state = (state: RootState) =>
     const wcomponents_by_id = state.specialised_objects.wcomponents_by_id
 
     const knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    const goals: WComponentNodeGoal[] = []
+    const goals_and_actions: WComponentHasObjectives[] = []
     let prioritisations: WComponentPrioritisation[] = []
     let selected_prioritisation: WComponentPrioritisation | undefined = undefined
 
     if (knowledge_view)
     {
+        knowledge_view.wc_ids_by_type.has_objectives.forEach(id =>
+        {
+            const goal_or_action = wcomponents_by_id[id]
+
+            if (!wcomponent_has_objectives(goal_or_action, id)) return
+
+            goals_and_actions.push(goal_or_action)
+        })
+
+
         prioritisations = knowledge_view.prioritisations
 
         const { item_id } = state.routing
         selected_prioritisation = prioritisations.find(({ id }) => id === item_id)
-
-        knowledge_view.wc_ids_by_type.goal.forEach(id =>
+        Object.keys(selected_prioritisation?.goals || {}).forEach(id =>
         {
-            const goal = wcomponents_by_id[id]
+            if (knowledge_view.wc_ids_by_type.has_objectives.has(id)) return
 
-            if (!wcomponent_is_goal(goal, id)) return
+            const goal_or_action = wcomponents_by_id[id]
 
-            goals.push(goal)
+            if (!wcomponent_has_objectives(goal_or_action, id)) return
+
+            goals_and_actions.push(goal_or_action)
         })
-
-
-        if (selected_prioritisation)
-        {
-            Object.keys(selected_prioritisation.goals).forEach(id =>
-            {
-                if (knowledge_view.wc_ids_by_type.goal.has(id)) return
-
-                const goal = wcomponents_by_id[id]
-
-                if (!wcomponent_is_goal(goal, id)) return
-
-                goals.push(goal)
-            })
-        }
     }
 
 
     return {
         knowledge_view_id: knowledge_view && knowledge_view.id,
-        goals,
+        goals_and_actions,
         prioritisations,
         editing: !state.display_options.consumption_formatting,
         creation_context: state.creation_context,
@@ -94,11 +93,11 @@ type Props = ConnectedProps<typeof connector>
 
 function _PrioritiesListViewContent (props: Props)
 {
-    const { goals, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id } = props
+    const { goals_and_actions, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id } = props
 
 
     const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals
-    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals, goal_prioritisation_attributes)
+    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals_and_actions, goal_prioritisation_attributes)
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
 
@@ -107,15 +106,27 @@ function _PrioritiesListViewContent (props: Props)
         <div className="goals">
             <h1>Potential</h1>
 
-            {potential_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
+            {potential_goals.map(goal => <PrioritisableGoal
+                key={goal.id}
+                goal={goal}
+                selected_prioritisation={selected_prioritisation}
+            />)}
 
             <h1>Prioritised</h1>
 
-            {prioritised_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
+            {prioritised_goals.map(goal => <PrioritisableGoal
+                key={goal.id}
+                goal={goal}
+                selected_prioritisation={selected_prioritisation}
+            />)}
 
             <h1>Deprioritised</h1>
 
-            {deprioritised_goals.map(goal => <PrioritisableGoal goal={goal} selected_prioritisation={selected_prioritisation} />)}
+            {deprioritised_goals.map(goal => <PrioritisableGoal
+                key={goal.id}
+                goal={goal}
+                selected_prioritisation={selected_prioritisation}
+            />)}
         </div>
 
 
@@ -152,15 +163,15 @@ const PrioritiesListViewContent = connector(_PrioritiesListViewContent) as Funct
 
 interface PartitionAndSortGoalsReturn
 {
-    potential_goals: WComponentNodeGoal[]
-    prioritised_goals: WComponentNodeGoal[]
-    deprioritised_goals: WComponentNodeGoal[]
+    potential_goals: WComponentHasObjectives[]
+    prioritised_goals: WComponentHasObjectives[]
+    deprioritised_goals: WComponentHasObjectives[]
 }
-function partition_and_sort_goals (goals: WComponentNodeGoal[], goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined): PartitionAndSortGoalsReturn
+function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined): PartitionAndSortGoalsReturn
 {
-    let potential_goals: WComponentNodeGoal[] = []
-    let prioritised_goals: WComponentNodeGoal[] = []
-    let deprioritised_goals: WComponentNodeGoal[] = []
+    let potential_goals: WComponentHasObjectives[] = []
+    let prioritised_goals: WComponentHasObjectives[] = []
+    let deprioritised_goals: WComponentHasObjectives[] = []
 
 
     if (!goal_prioritisation_attributes)
@@ -192,5 +203,5 @@ function partition_and_sort_goals (goals: WComponentNodeGoal[], goal_prioritisat
 
 function factory_get_effort (goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined)
 {
-    return (goal: WComponentNodeGoal) => ((goal_prioritisation_attributes || {})[goal.id]?.effort) || 0
+    return (goal: WComponentHasObjectives) => ((goal_prioritisation_attributes || {})[goal.id]?.effort) || 0
 }
