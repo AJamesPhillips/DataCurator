@@ -103,16 +103,22 @@ function handle_bulk_remove_from_knowledge_view (state: RootState, action: Actio
     const { wcomponent_ids } = action
 
     const kv = get_current_knowledge_view_from_state(state)
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
 
-    if (!kv)
+    if (!kv || !composed_kv)
     {
-        console.error("There should always be a current knowledge view if bulk editing (removing) positions of world components")
+        console.error("There should always be a current and current composed knowledge view if bulk editing (removing) positions of world components")
     }
     else
     {
         const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = { ...kv.wc_id_map }
 
-        wcomponent_ids.forEach(id => new_wc_id_map[id] = { ...new_wc_id_map[id]!, deleted: true })
+        wcomponent_ids.forEach(id =>
+        {
+            const entry = composed_kv.composed_wc_id_map[id]
+            if (!entry) return
+            new_wc_id_map[id] = { ...entry, deleted: true }
+        })
 
         const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
         state = handle_upsert_knowledge_view(state, new_kv)

@@ -1,7 +1,7 @@
 import type { AnyAction } from "redux"
 
 import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
-import { update_substate, update_subsubstate, update_subsubsubstate } from "../../../utils/update_state"
+import { update_substate, update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_update_specialised_object_sync_info } from "../../sync/actions"
 import {get_knowledge_view_from_state } from "../accessors"
@@ -9,7 +9,6 @@ import { is_upsert_wcomponent } from "../wcomponents/actions"
 import {
     is_upsert_knowledge_view,
     is_upsert_knowledge_view_entry,
-    is_delete_knowledge_view_entry,
 } from "./actions"
 import { bulk_editing_knowledge_view_entries_reducer } from "./bulk_edit/reducer"
 import { handle_upsert_knowledge_view } from "./utils"
@@ -43,13 +42,6 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
     {
         state = handle_upsert_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id, action.entry)
     }
-
-
-    if (is_delete_knowledge_view_entry(action))
-    {
-        state = handle_delete_knowledge_view_entry(state, action.knowledge_view_id, action.wcomponent_id)
-    }
-
 
 
     if (is_update_specialised_object_sync_info(action) && action.object_type === "knowledge_view")
@@ -102,23 +94,6 @@ function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_vie
     }
 
     const new_knowledge_view = update_substate(knowledge_view, "wc_id_map", wcomponent_id, entry)
-
-    return handle_upsert_knowledge_view(state, new_knowledge_view)
-}
-
-function handle_delete_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string): RootState
-{
-    const knowledge_view = get_knowledge_view_from_state(state, knowledge_view_id)
-
-    if (!knowledge_view)
-    {
-        console.error(`Could not find knowledge_view for id: "${knowledge_view_id}"`)
-        return state
-    }
-
-    const new_wc_id_map = { ...knowledge_view.wc_id_map }
-    new_wc_id_map[wcomponent_id] = { ...new_wc_id_map[wcomponent_id]!, deleted: true }
-    const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)
 }

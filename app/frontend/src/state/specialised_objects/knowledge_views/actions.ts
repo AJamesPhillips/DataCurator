@@ -27,24 +27,6 @@ export const is_upsert_knowledge_view_entry = (action: AnyAction): action is Act
 
 
 
-interface DeleteWComponentKnowledgeViewEntryArgs
-{
-    wcomponent_id: string
-    knowledge_view_id: string
-}
-interface ActionDeleteWComponentKnowledgeViewEntry extends Action, DeleteWComponentKnowledgeViewEntryArgs {}
-
-const delete_knowledge_view_entry_type = "delete_knowledge_view_entry"
-
-const delete_knowledge_view_entry = (args: DeleteWComponentKnowledgeViewEntryArgs): ActionDeleteWComponentKnowledgeViewEntry =>
-    ({ type: delete_knowledge_view_entry_type, ...args })
-
-export const is_delete_knowledge_view_entry = (action: AnyAction): action is ActionDeleteWComponentKnowledgeViewEntry => {
-    return action.type === delete_knowledge_view_entry_type
-}
-
-
-
 interface UpsertKnowledgeViewArgs
 {
     knowledge_view: KnowledgeView
@@ -65,7 +47,6 @@ export const is_upsert_knowledge_view = (action: AnyAction): action is ActionUps
 
 export const knowledge_view_actions = {
     upsert_knowledge_view_entry,
-    delete_knowledge_view_entry,
     upsert_knowledge_view,
     ...bulk_editing_knowledge_view_entries_actions,
 }

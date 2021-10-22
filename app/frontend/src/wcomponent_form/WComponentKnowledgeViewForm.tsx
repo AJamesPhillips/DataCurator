@@ -55,7 +55,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 const map_dispatch = {
     upsert_knowledge_view_entry: ACTIONS.specialised_object.upsert_knowledge_view_entry,
-    delete_knowledge_view_entry: ACTIONS.specialised_object.delete_knowledge_view_entry,
+    bulk_remove_from_knowledge_view: ACTIONS.specialised_object.bulk_remove_from_knowledge_view,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -91,13 +91,6 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
 
 
-    function delete_entry (knowledge_view_id: string)
-    {
-        props.delete_knowledge_view_entry({
-            wcomponent_id,
-            knowledge_view_id,
-        })
-    }
     return <div>
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <FormControl component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
@@ -151,11 +144,17 @@ function _WComponentKnowledgeViewForm (props: Props)
             />}
         </div>}
 
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <div>
+        {(editing && knowledge_view_entry && !knowledge_view_entry.deleted) && <div>
             <ConfirmatoryDeleteButton
-                button_text="Remove from knowledge view"
+                button_text="Remove from knowledge view (block)"
                 tooltip_text={"Remove from current knowledge view (" + knowledge_view_title + ")"}
-                on_delete={() => delete_entry(knowledge_view_id)}
+                on_delete={() =>
+                {
+                    props.bulk_remove_from_knowledge_view({
+                        wcomponent_ids: [wcomponent_id],
+                        remove_type: "block"
+                    })
+                }}
             />
         </div>}
 

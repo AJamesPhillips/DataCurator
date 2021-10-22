@@ -66,6 +66,7 @@ export const is_bulk_add_to_knowledge_view = (action: AnyAction): action is Acti
 interface BulkRemoveFromKnowledgeViewProps
 {
     wcomponent_ids: string[]
+    remove_type: "block" | "passthrough" // Not used yet
 }
 export interface ActionBulkRemoveFromKnowledgeView extends Action, BulkRemoveFromKnowledgeViewProps {}
 
