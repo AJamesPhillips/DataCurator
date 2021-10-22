@@ -67,6 +67,8 @@ function _ContentControls (props: Props)
 
     const classes = use_styles()
 
+    const draw_attention_to_move_to_wcomponent_button = move_to_component_id && displayed_pulse_circle_on_move_to_components && !nodes_on_screen
+
 
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main" position="relative">
@@ -97,7 +99,7 @@ function _ContentControls (props: Props)
                 <Box>
                     <MoveToWComponentButton wcomponent_id={move_to_component_id} />
                     <div
-                        className={(!move_to_component_id || !displayed_pulse_circle_on_move_to_components || nodes_on_screen) ? "" : "pulsating_circle"}
+                        className={draw_attention_to_move_to_wcomponent_button ? "pulsating_circle" : ""}
                         ref={e => setTimeout(() =>
                         {
                             e?.classList.remove("pulsating_circle")

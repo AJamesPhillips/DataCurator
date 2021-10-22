@@ -36,13 +36,19 @@ function _KnowledgeContentControls (props: Props)
     const { wcomponents, current_composed_knowledge_view, selected_component_id } = props
 
     if (!current_composed_knowledge_view) return <div></div>
+    const { composed_wc_id_map } = current_composed_knowledge_view
 
     const wcomponents_on_kv = useMemo(() =>
-        wcomponents
-        .filter(wc => !!current_composed_knowledge_view.composed_wc_id_map[wc.id])
-    , [wcomponents, current_composed_knowledge_view])
+        wcomponents.filter(wc => !!composed_wc_id_map[wc.id])
+    , [wcomponents, composed_wc_id_map])
 
-    const move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id
+
+    let move_to_component_id = selected_component_id || wcomponents_on_kv[0]?.id
+    if (move_to_component_id && !composed_wc_id_map[move_to_component_id])
+    {
+        move_to_component_id = undefined
+    }
+
 
     const { created_events, sim_events } = useMemo(() =>
         get_wcomponent_time_slider_data(wcomponents_on_kv)
