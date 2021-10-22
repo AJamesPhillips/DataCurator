@@ -64,6 +64,6 @@ export function create_links_on_connection_terminal_mouse_events (store: Store<R
         const connection_type: WComponentConnectionType = either_meta ? "relation_link" : "causal_link"
 
         const wcomponent: Partial<WComponent> & HasBaseId = { base_id, type: connection_type, from_id, to_id, from_type, to_type }
-        create_wcomponent({ wcomponent, creation_context: state.creation_context })
+        create_wcomponent({ wcomponent })
     }
 }

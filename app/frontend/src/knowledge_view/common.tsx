@@ -13,6 +13,9 @@ import type { KnowledgeViewFormProps } from "./interfaces"
 import { KnowledgeViewActiveCounterFactuals } from "./KnowledgeViewActiveCounterfactuals"
 import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 import { KnowledgeViewDatetimeLinesConfigForm } from "./KnowledgeViewDatetimeLinesConfigForm"
+import { Link } from "../sharedf/Link"
+import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
+import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 
 
 
@@ -41,6 +44,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
+    const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""]
 
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
@@ -53,6 +57,28 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                     crud.update_item({ ...knowledge_view, title: new_title ?? default_title })
                 }}
             />
+
+            {has_wcomponent && <Link
+                route="wcomponents"
+                sub_route={undefined}
+                item_id={knowledge_view.id}
+                args={undefined}
+            ><ExternalLinkIcon />Component</Link>}
+
+            {!has_wcomponent && editing && <span
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                {
+                    create_wcomponent({ wcomponent: {
+                        base_id: knowledge_view.base_id,
+                        id: knowledge_view.id,
+                        title: knowledge_view.title,
+                        type: "statev2",
+                    }})
+                }}
+            >
+                <ExternalLinkIcon />Create Component
+            </span>}
         </p>
 
 

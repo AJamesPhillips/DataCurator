@@ -11,7 +11,12 @@ import type {
 } from "./state"
 import type { ExistencePredictions } from "../../shared/uncertainty/existence"
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
-import type { WComponentBase, WComponentConnectionType, WComponentNodeBase, WComponentType } from "./wcomponent_base"
+import type {
+    WComponentBase,
+    WComponentConnectionType,
+    WComponentNodeBase,
+    WComponentType,
+} from "./wcomponent_base"
 import type { WComponentPrioritisation } from "./priorities"
 import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { WComponentSubState } from "./substate"

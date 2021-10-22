@@ -3,7 +3,6 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./CreateNewWComponent.css"
-import type { CreationContextState } from "../../state/creation_context/state"
 import { WComponentType, wcomponent_types } from "../../wcomponent/interfaces/wcomponent_base"
 import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
@@ -15,7 +14,6 @@ import { selector_chosen_base_id } from "../../state/user_info/selector"
 
 const map_state = (state: RootState) => ({
     // a_selected_wcomponent_id: state.meta_wcomponents.selected_wcomponent_ids_list[0] || "",
-    creation_context: state.creation_context,
     current_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     editing: !state.display_options.consumption_formatting,
     base_id: selector_chosen_base_id(state),
@@ -28,7 +26,6 @@ function _CreateNewWComponent (props: Props)
 {
     const {
         // a_selected_wcomponent_id: judgement_target_wcomponent_id,
-        creation_context,
         current_knowledge_view,
         editing,
         base_id,
@@ -52,7 +49,7 @@ function _CreateNewWComponent (props: Props)
             Create new component
         </h3>
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
-            {wcomponent_types.map(type => <Button onClick={() => create_wcomponent_type(base_id, type, creation_context)}>
+            {wcomponent_types.map(type => <Button onClick={() => create_wcomponent_type(base_id, type)}>
                 {wcomponent_type_to_text(type)}
             </Button>)}
         </ButtonGroup>
@@ -60,7 +57,7 @@ function _CreateNewWComponent (props: Props)
             value={type}
             extra_class_names="creation_option left"
             size="normal"
-            on_pointer_down={() => create_wcomponent_type(type, creation_context)}
+            on_pointer_down={() => create_wcomponent_type(type)}
         />)} */}
     </div>
 }
@@ -69,7 +66,7 @@ export const CreateNewWComponent = connector(_CreateNewWComponent) as Functional
 
 
 
-function create_wcomponent_type (base_id: number, type: WComponentType, creation_context: CreationContextState)
+function create_wcomponent_type (base_id: number, type: WComponentType)
 {
-    create_wcomponent({ wcomponent: { base_id, type }, creation_context })
+    create_wcomponent({ wcomponent: { base_id, type } })
 }

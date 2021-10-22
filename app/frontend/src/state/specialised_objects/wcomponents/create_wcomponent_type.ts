@@ -1,7 +1,6 @@
 import type { Store } from "redux"
 
 import { round_canvas_point } from "../../../canvas/position_utils"
-import type { CreationContextState } from "../../creation_context/state"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
@@ -26,7 +25,6 @@ import type { HasBaseId } from "../../../shared/interfaces/base"
 interface CreateWComponentArgs
 {
     wcomponent: Partial<WComponent> & HasBaseId
-    creation_context: CreationContextState
     add_to_knowledge_view?: AddToKnowledgeViewArgs
     must_add_to_knowledge_view?: boolean
     store?: Store<RootState>
@@ -36,8 +34,9 @@ export function create_wcomponent (args: CreateWComponentArgs)
 {
     const store = args.store || get_store()
     const state = store.getState()
+    const creation_context = state.creation_context
 
-    let wcomponent = prepare_new_wcomponent_object(args.wcomponent, args.creation_context)
+    let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
 
 

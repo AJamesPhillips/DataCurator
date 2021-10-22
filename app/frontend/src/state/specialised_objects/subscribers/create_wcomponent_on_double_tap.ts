@@ -42,7 +42,6 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
 
         create_wcomponent({
             wcomponent: { base_id, type: "statev2" },
-            creation_context: state.creation_context,
             add_to_knowledge_view,
             store,
         })

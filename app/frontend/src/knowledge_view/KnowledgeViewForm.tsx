@@ -23,6 +23,7 @@ const map_state = (state: RootState) =>
         editing: !state.display_options.consumption_formatting,
         current_view: state.routing.args.view,
         current_subview_id: state.routing.args.subview_id,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     }
 }
 

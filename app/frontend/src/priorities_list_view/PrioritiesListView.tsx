@@ -74,7 +74,6 @@ const map_state = (state: RootState) =>
         goals_and_actions,
         prioritisations,
         editing: !state.display_options.consumption_formatting,
-        creation_context: state.creation_context,
         selected_prioritisation,
         base_id: selector_chosen_base_id(state),
     }
@@ -141,7 +140,6 @@ function _PrioritiesListViewContent (props: Props)
                     {
                         create_wcomponent({
                             wcomponent: { base_id, type: "prioritisation", goals: goal_prioritisation_attributes || {} },
-                            creation_context: props.creation_context,
                             add_to_knowledge_view: {
                                 id: knowledge_view_id,
                                 position: { left: 0, top: 0 },
