@@ -5,7 +5,6 @@ import { Box, IconButton } from "@material-ui/core"
 
 import {
     get_current_composed_knowledge_view_from_state,
-    get_wcomponent_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
@@ -13,6 +12,9 @@ import { lefttop_to_xy } from "../state/display_options/display"
 import type { PositionAndZoom } from "./interfaces"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { calculate_if_components_on_screen } from "./calculate_if_components_on_screen"
+import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
+import { useMemo } from "preact/hooks"
+import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
 
 
 
@@ -28,45 +30,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const initial_wcomponent_id = own_props.wcomponent_id
         || state.routing.item_id // selected component id
         || ""
-    let go_to_datetime_ms = state.routing.args.created_at_ms
-
-    let wcomponent_created_at_ms: number | undefined = undefined
-    let position: PositionAndZoom | undefined = undefined
-
-
-    const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    if (own_props.allow_drawing_attention && current_composed_knowledge_view)
-    {
-        let wcomponent = get_wcomponent_from_state(state, initial_wcomponent_id)
-        wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
-        let view_entry = current_composed_knowledge_view.composed_wc_id_map[initial_wcomponent_id]
-
-        if (!view_entry)
-        {
-            Object.entries(current_composed_knowledge_view.composed_visible_wc_id_map)
-                .find(([wcomponent_id, an_entry]) =>
-                {
-                    wcomponent = get_wcomponent_from_state(state, wcomponent_id)
-                    wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
-
-                    view_entry = an_entry
-                    return true
-                })
-        }
-
-        if (wcomponent_created_at_ms)
-        {
-            go_to_datetime_ms = Math.max(go_to_datetime_ms, wcomponent_created_at_ms)
-        }
-
-        if (view_entry)
-        {
-            position = {
-                ...view_entry,
-                zoom: 100,
-            }
-        }
-    }
 
 
     let components_on_screen: boolean | undefined = undefined
@@ -77,9 +40,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     return {
-        go_to_datetime_ms,
-        position: lefttop_to_xy(position, true),
+        initial_wcomponent_id,
+        created_at_ms: state.routing.args.created_at_ms,
         components_on_screen,
+        composed_visible_wc_id_map: get_current_composed_knowledge_view_from_state(state)?.composed_visible_wc_id_map,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     }
 }
 
@@ -101,9 +66,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _MoveToWComponentButton (props: Props)
 {
     const {
-        go_to_datetime_ms, position, components_on_screen,
+        components_on_screen,
         have_finished_drawing_attention = () => {},
     } = props
+
+
+    const { position, go_to_datetime_ms } = useMemo(() =>
+        calculate_spatial_temporal_position_to_move_to(props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms)
+    , [props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms])
 
     const move = () => position && props.move(go_to_datetime_ms, position)
 
@@ -131,3 +101,43 @@ function _MoveToWComponentButton (props: Props)
     </Box>
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton) as FunctionalComponent<OwnProps>
+
+
+
+function calculate_spatial_temporal_position_to_move_to (composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined, wcomponents_by_id: WComponentsById, initial_wcomponent_id: string, go_to_datetime_ms: number)
+{
+    let wcomponent_created_at_ms: number | undefined = undefined
+    let position: PositionAndZoom | undefined = undefined
+
+    if (composed_visible_wc_id_map)
+    {
+        let wcomponent = wcomponents_by_id[initial_wcomponent_id]
+        wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
+        let view_entry = composed_visible_wc_id_map[initial_wcomponent_id]
+
+        if (!view_entry)
+        {
+            Object.entries(composed_visible_wc_id_map)
+                .find(([wcomponent_id, an_entry]) =>
+                {
+                    wcomponent = wcomponents_by_id[wcomponent_id]
+                    wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
+
+                    view_entry = an_entry
+                    return true
+                })
+        }
+
+        if (wcomponent_created_at_ms)
+        {
+            go_to_datetime_ms = Math.max(go_to_datetime_ms, wcomponent_created_at_ms)
+        }
+
+        if (view_entry)
+        {
+            position = lefttop_to_xy({ ...view_entry, zoom: 100 }, true)
+        }
+    }
+
+    return { position, go_to_datetime_ms }
+}
