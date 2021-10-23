@@ -13,6 +13,7 @@ import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import { ToggleDatetimeMarkers } from "./ToggleDatetimeMarkers"
+import { get_actually_display_time_sliders } from "../../state/controls/accessors"
 
 
 
@@ -29,6 +30,7 @@ const map_state = (state: RootState) =>
         linked_datetime_sliders: state.controls.linked_datetime_sliders,
         display_by_simulated_time: state.display_options.display_by_simulated_time,
         display_time_sliders: state.controls.display_time_sliders,
+        actually_display_time_sliders: get_actually_display_time_sliders(state),
         editing: !state.display_options.consumption_formatting,
         created_at_ms: state.routing.args.created_at_ms,
     }
@@ -55,14 +57,12 @@ function _ContentControls (props: Props)
     const invert_classes = invert_disabled_appearance()
     const { created_events, sim_events } = props
 
-    const display_sliders = props.editing || props.display_time_sliders
-
     const classes = use_styles()
 
 
     return (
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main" position="relative">
-            <Collapse in={display_sliders}>
+            <Collapse in={props.actually_display_time_sliders}>
                 <Box className={classes.drawer_content}>
                     <Button onClick={() => props.toggle_linked_datetime_sliders()}>
                         {props.linked_datetime_sliders ? "Unlink" : "Link"}
@@ -98,7 +98,7 @@ function _ContentControls (props: Props)
                         disabled={props.editing}
                         onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
                     >
-                        {display_sliders ? "Hide" : "Show"} time sliders
+                        {props.display_time_sliders ? "Hide" : "Show"} time sliders
                     </Button>
                 </Box>
 

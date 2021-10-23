@@ -49,7 +49,7 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
     const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
     const options = useMemo(() =>
     {
-        const wc_id_map = get_composed_wc_id_map(foundational_knowledge_views)
+        const wc_id_map = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
 
         const options = Object.keys(wc_id_map)
             .map(id => wcomponents_by_id[id])

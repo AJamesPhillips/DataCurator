@@ -35,7 +35,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    if (current_composed_knowledge_view)
+    if (own_props.allow_drawing_attention && current_composed_knowledge_view)
     {
         let wcomponent = get_wcomponent_from_state(state, initial_wcomponent_id)
         wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
@@ -43,18 +43,14 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
         if (!view_entry)
         {
-            Object.keys(current_composed_knowledge_view.composed_wc_id_map || {})
-                .find(wcomponent_id =>
+            Object.entries(current_composed_knowledge_view.composed_visible_wc_id_map)
+                .find(([wcomponent_id, an_entry]) =>
                 {
-                    const excluded = current_composed_knowledge_view.filters.wc_ids_excluded_by_any_filter.has(wcomponent_id)
-                    if (excluded) return false
-
                     wcomponent = get_wcomponent_from_state(state, wcomponent_id)
-                    if (!wcomponent) return false
-                    wcomponent_created_at_ms = get_created_at_ms(wcomponent)
+                    wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
 
-                    view_entry = current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
-                    return !!view_entry
+                    view_entry = an_entry
+                    return true
                 })
         }
 
@@ -74,7 +70,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     let components_on_screen: boolean | undefined = undefined
-    if (position)
+    if (own_props.allow_drawing_attention)
     {
         components_on_screen = calculate_if_components_on_screen(state)
     }

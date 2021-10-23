@@ -175,6 +175,7 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
+        composed_visible_wc_id_map: {},
         ...current_kv,
         composed_wc_id_map,
         composed_blocked_wc_id_map,
@@ -353,8 +354,8 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
         wc_ids_excluded_by_created_at_datetime_filter,
     } = current_composed_knowledge_view.filters
 
-
-    const current_wc_ids = Object.keys(current_composed_knowledge_view.composed_wc_id_map)
+    const { composed_wc_id_map } = current_composed_knowledge_view
+    const current_wc_ids = Object.keys(composed_wc_id_map)
     const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined)
 
 
@@ -407,8 +408,16 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
     )
 
 
+    const composed_visible_wc_id_map = { ...composed_wc_id_map }
+    wc_ids_excluded_by_any_filter.forEach(id =>
+    {
+        delete composed_visible_wc_id_map[id]
+    })
+
+
     return {
         ...current_composed_knowledge_view,
+        composed_visible_wc_id_map,
         filters: {
             wc_ids_excluded_by_any_filter,
             wc_ids_excluded_by_filters,

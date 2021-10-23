@@ -40,7 +40,9 @@ export type NestedKnowledgeViewIds = {
 export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_map">, "datetime_line_config">
 {
     // Should contain all kv entries where .deleted === (false or undefined)
+    // Maybe excluded by a filter
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap
     // Should contain all kv entries where .deleted === true
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
 
