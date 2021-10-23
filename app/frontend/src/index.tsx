@@ -80,7 +80,7 @@ if (root)
     }
     else if (window.location.pathname === "/app/" || window.location.pathname === "/app")
     {
-        const store = get_store({ load_state_from_storage: true })
+        const store = get_store({ load_state_from_storage: false })
         render(<Provider store={store}><App /></Provider>, root)
     }
     else

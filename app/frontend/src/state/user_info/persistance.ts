@@ -4,6 +4,8 @@ import { get_persisted_state_object, persist_state_object } from "../persistence
 import type { UserInfoState } from "./state"
 import { random_animal } from "../../utils/list_of_animals"
 import { get_supabase } from "../../supabase/get_supabase"
+import type { User } from "@supabase/gotrue-js"
+import { local_user } from "../sync/local/data"
 
 
 
@@ -19,15 +21,19 @@ export function user_info_persist (state: RootState)
 
 
 
-export function user_info_starting_state (storage_location: number | undefined): UserInfoState
+export function user_info_starting_state (load_state_from_storage: boolean, storage_location: number | undefined): UserInfoState
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
     // const user_name = ensure_user_name("")
     const need_to_handle_password_recovery = document.location.hash.includes("type=recovery")
     const chosen_base_id = storage_location !== undefined ? storage_location : obj.chosen_base_id
 
+
+    let user: User | null = load_state_from_storage ? get_supabase().auth.user() : local_user
+
+
     let state: UserInfoState = {
-        user: get_supabase().auth.user(),
+        user,
         need_to_handle_password_recovery,
         users_by_id: undefined,
         bases_by_id: undefined,

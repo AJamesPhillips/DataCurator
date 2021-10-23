@@ -42,7 +42,7 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
 
 
     const preloaded_state: RootState = {
-        ...get_starting_state(),
+        ...get_starting_state(load_state_from_storage),
         ...override_preloaded_state,
     }
     const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state) as any as StoreType

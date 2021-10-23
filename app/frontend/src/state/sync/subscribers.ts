@@ -1,12 +1,10 @@
-import type { Store } from "redux"
-
 import { pub_sub } from "../pub_sub/pub_sub"
-import type { RootState } from "../State"
+import type { StoreType } from "../store"
 import { load_state } from "./utils/load_state"
 
 
 
-export function sync_subscribers (store: Store<RootState>)
+export function sync_subscribers (store: StoreType)
 {
     pub_sub.user.sub("changed_user", () => load_state(store))
     pub_sub.user.sub("changed_chosen_base_id", () => load_state(store))

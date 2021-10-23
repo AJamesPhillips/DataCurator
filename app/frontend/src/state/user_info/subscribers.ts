@@ -1,17 +1,16 @@
-import type { Store } from "redux"
-
 import { get_supabase } from "../../supabase/get_supabase"
 import type { SupabaseUser } from "../../supabase/interfaces"
 import { ACTIONS } from "../actions"
 import { pub_sub } from "../pub_sub/pub_sub"
-import type { RootState } from "../State"
+import type { StoreType } from "../store"
 import { refresh_bases_for_current_user } from "./utils"
 
 
 
-export function user_info_subscribers (store: Store<RootState>)
+export function user_info_subscribers (store: StoreType)
 {
     const starting_state = store.getState()
+    if (!store.load_state_from_storage) return
 
     const { user, users_by_id, bases_by_id: bases } = starting_state.user_info
     // We may start with a supabase user (from the synchronous restore from localstorage state)
@@ -32,7 +31,7 @@ export function user_info_subscribers (store: Store<RootState>)
 
 
 
-async function get_users (store: Store<RootState>)
+async function get_users (store: StoreType)
 {
     const { user } = store.getState().user_info
 

@@ -45,7 +45,7 @@ function _UserInfo (props: Props)
         const previous_signed_out = !previous_user.current && user
         previous_user.current = user
 
-        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : (previous_signed_out ?"hidden" : form_state))
+        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : (previous_signed_out ? "hidden" : form_state))
         set_form_state(new_form_state)
     }, [user, need_to_set_user_name])
 

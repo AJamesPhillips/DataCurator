@@ -3,15 +3,15 @@ import type { Store } from "redux"
 import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../actions"
 import { parse_specialised_objects_from_server_data } from "../../specialised_objects/parse_server_data"
-import type { RootState } from "../../State"
 import { error_to_string, SyncError } from "./errors"
 import { supabase_load_data } from "../supabase/supabase_load_data"
 import type { StorageType } from "../state"
 import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
+import type { StoreType } from "../../store"
 
 
 
-export function load_state (store: Store<RootState>)
+export function load_state (store: StoreType)
 {
     let state = store.getState()
     const { dispatch } = store
@@ -36,7 +36,7 @@ export function load_state (store: Store<RootState>)
 
     dispatch(ACTIONS.sync.update_sync_status({ status: "LOADING", data_type: "specialised_objects" }))
 
-    get_state_data(storage_type, chosen_base_id)
+    get_state_data(store.load_state_from_storage, storage_type, chosen_base_id)
     .then(specialised_objects =>
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
@@ -55,7 +55,7 @@ export function load_state (store: Store<RootState>)
 
 
 
-export function get_state_data (storage_type: StorageType, chosen_base_id: number)
+export function get_state_data (load_state_from_storage: boolean, storage_type: StorageType, chosen_base_id: number)
 {
     let promise_data: Promise<SpecialisedObjectsFromToServer | null>
 
@@ -79,7 +79,7 @@ export function get_state_data (storage_type: StorageType, chosen_base_id: numbe
     // }
     if (storage_type === "supabase")
     {
-        promise_data = supabase_load_data(chosen_base_id)
+        promise_data = supabase_load_data(load_state_from_storage, chosen_base_id)
     }
     else
     {

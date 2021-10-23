@@ -24,3 +24,5 @@ deploy/roles/env_all/tasks/users.yml
 
 app/server/state_backup
 app/server/config.json
+
+raw_data.ts
