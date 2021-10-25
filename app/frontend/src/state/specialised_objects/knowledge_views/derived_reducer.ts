@@ -149,7 +149,25 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 {
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
 
-    const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
+    return calculate_composed_knowledge_view({
+        knowledge_view: current_kv,
+        knowledge_views_by_id,
+        wcomponents_by_id,
+    })
+}
+
+
+interface CalculateComposedKnowledgeViewArgs
+{
+    knowledge_view: KnowledgeView
+    knowledge_views_by_id: KnowledgeViewsById
+    wcomponents_by_id: WComponentsById
+}
+export function calculate_composed_knowledge_view (args: CalculateComposedKnowledgeViewArgs)
+{
+    const { knowledge_view, knowledge_views_by_id, wcomponents_by_id } = args
+
+    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
     const {
         composed_wc_id_map, composed_blocked_wc_id_map
     } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
@@ -158,8 +176,8 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 
     const non_deleted_wcomponent_ids = Object.keys(composed_wc_id_map)
 
-    const wc_ids_by_type = get_wcomponent_ids_by_type(state, non_deleted_wcomponent_ids)
-    const wcomponents = get_wcomponents_from_state(state, non_deleted_wcomponent_ids).filter(is_defined)
+    const wc_ids_by_type = get_wcomponent_ids_by_type(wcomponents_by_id, non_deleted_wcomponent_ids)
+    const wcomponents = non_deleted_wcomponent_ids.map(id => wcomponents_by_id[id]).filter(is_defined)
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
@@ -169,14 +187,14 @@ function update_current_composed_knowledge_view_state (state: RootState, current
     const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
         wc_ids_by_type,
         wcomponents_by_id,
-        active_counterfactual_ids: current_kv.active_counterfactual_v2_ids,
+        active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids,
     })
-    const prioritisations = get_prioritisations(state, wc_ids_by_type.prioritisation)
+    const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         composed_visible_wc_id_map: {},
-        ...current_kv,
+        ...knowledge_view,
         composed_wc_id_map,
         composed_blocked_wc_id_map,
         overlapping_wc_ids,
@@ -306,9 +324,9 @@ function get_wc_id_to_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapA
 
 
 
-function get_prioritisations (state: RootState, prioritisation_ids: Set<string>): WComponentPrioritisation[]
+function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id: WComponentsById): WComponentPrioritisation[]
 {
-    const prioritisations = get_wcomponents_from_state(state, prioritisation_ids)
+    const prioritisations = Array.from(prioritisation_ids).map(id => wcomponents_by_id[id])
         .filter(wcomponent_is_prioritisation)
 
     return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")

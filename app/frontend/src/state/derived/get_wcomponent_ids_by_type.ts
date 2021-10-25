@@ -1,5 +1,5 @@
 import { set_difference, set_union } from "../../utils/set"
-import { wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponentsById, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_has_single_statev2_datetime } from "../specialised_objects/accessors"
 import type { RootState } from "../State"
 import type { WComponentIdsByType } from "./State"
@@ -34,14 +34,14 @@ export function get_empty_wcomponent_ids_by_type (): WComponentIdsByType
 
 
 
-export function get_wcomponent_ids_by_type (state: RootState, ids: string[])
+export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, ids: string[])
 {
     const wc_ids_by_type = get_empty_wcomponent_ids_by_type()
 
     const wc_statev2_ids_with_single_datetime = new Set<string>()
     ids.forEach(id =>
     {
-        const wc = state.specialised_objects.wcomponents_by_id[id]
+        const wc = wcomponents_by_id[id]
         if (!wc)
         {
             console.error(`Could not find wcomponent by id: ${id}`)

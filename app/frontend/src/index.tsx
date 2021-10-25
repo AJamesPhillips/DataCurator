@@ -21,6 +21,7 @@ import { SandBoxSupabase } from "./scratch_pad/SandBoxSupabase"
 import { setup_window_on_focus_listener } from "./utils/window_on_focus_listener"
 import { LandingPage } from "./home/LandingPage"
 import { DevLandingPage } from "./home/DevLandingPage"
+import { SimHome } from "./x_sim_app/SimHome"
 
 
 const root = document.getElementById("root")
@@ -82,6 +83,10 @@ if (root)
     {
         const store = get_store({ load_state_from_storage: true })
         render(<Provider store={store}><App /></Provider>, root)
+    }
+    else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim")
+    {
+        render(<SimHome />, root)
     }
     else
     {

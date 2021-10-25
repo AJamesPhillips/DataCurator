@@ -42,7 +42,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         //     // first loading of the application data when the `replace_all_specialised_objects` action
         //     // is fired.
         const ids = Object.keys(state.specialised_objects.wcomponents_by_id)
-        const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state, ids)
+        const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state.specialised_objects.wcomponents_by_id, ids)
         state = update_substate(state, "derived", "wcomponent_ids_by_type", wcomponent_ids_by_type)
         // }
 
