@@ -2,7 +2,11 @@ import { test } from "../../shared/utils/test"
 import { action_statuses } from "../interfaces/action"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { SimpleValuePossibility } from "../interfaces/possibility"
-import { VALUE_POSSIBILITY_IDS } from "../value/parse_value"
+import {
+    ACTION_VALUE_POSSIBILITY_IDS,
+    VALUE_POSSIBILITY_IDS,
+    VALUE_POSSIBILITY_IDS_to_text,
+} from "../value/parse_value"
 
 
 
@@ -11,18 +15,26 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
     if (VAPs_represent === VAPsType.boolean)
     {
         simple_possibilities = [
-            { value: "True", id: VALUE_POSSIBILITY_IDS.boolean.true, order: 0 },
-            { value: "False", id: VALUE_POSSIBILITY_IDS.boolean.false, order: 1 },
+            { value: "True", id: VALUE_POSSIBILITY_IDS.boolean_true, order: 0 },
+            { value: "False", id: VALUE_POSSIBILITY_IDS.boolean_false, order: 1 },
         ]
     }
     else if (simple_possibilities.length === 0)
     {
-        (VAPs_represent === VAPsType.action ? action_statuses
-            : VAPs_represent === VAPsType.number ? ["1"] : [""])
+        if (VAPs_represent === VAPsType.action)
+        {
+            simple_possibilities = ACTION_VALUE_POSSIBILITY_IDS.map((id, index) => ({
+                id, value: VALUE_POSSIBILITY_IDS_to_text[id] || "?", order: index
+            }))
+        }
+        else
+        {
+            (VAPs_represent === VAPsType.number ? ["1"] : [""])
             .forEach((value, index) =>
             {
                 simple_possibilities.push({ value: value, order: index })
             })
+        }
     }
 
     return simple_possibilities

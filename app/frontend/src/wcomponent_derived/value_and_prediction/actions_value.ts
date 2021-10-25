@@ -1,6 +1,5 @@
-import { sentence_case } from "../../shared/utils/sentence_case"
-import { action_statuses } from "../../wcomponent/interfaces/action"
+import { ACTION_VALUE_POSSIBILITY_IDS, VALUE_POSSIBILITY_IDS_to_text } from "../../wcomponent/value/parse_value"
 
 
 
-export const ACTION_OPTIONS = action_statuses.map(status => ({ id: status, title: sentence_case(status) }))
+export const ACTION_OPTIONS = ACTION_VALUE_POSSIBILITY_IDS.map(id => ({ id, title: VALUE_POSSIBILITY_IDS_to_text[id] || "?" }))

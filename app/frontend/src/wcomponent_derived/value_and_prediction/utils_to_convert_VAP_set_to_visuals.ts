@@ -40,11 +40,11 @@ function expand_booleans (entries: VAP[], VAPs_represent: VAPsType)
             ...VAP_true,
             probability: 1 - VAP_true.probability,
             id: VAP_visual_false_id,
-            value_id: VALUE_POSSIBILITY_IDS.boolean.false,
+            value_id: VALUE_POSSIBILITY_IDS.boolean_false,
             description: "",
         }
 
-        entries = [{...VAP_true, value_id: VALUE_POSSIBILITY_IDS.boolean.true}, VAP_false ]
+        entries = [{...VAP_true, value_id: VALUE_POSSIBILITY_IDS.boolean_true}, VAP_false ]
     }
 
     return entries
