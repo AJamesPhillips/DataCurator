@@ -14,7 +14,7 @@ export function replace_element<T> (existing: T[], replacement: T, predicate: (e
 
 
 
-export function upsert_entry<I> (existing: I[], new_item: I, predicate: (element: I) => boolean, debug_item_descriptor: string)
+export function upsert_entry<I> (existing: I[], new_item: I, predicate: (element: I) => boolean, debug_item_descriptor: string = "")
 {
     let matched_index = -1
     const matches = existing.filter((item, index) =>
