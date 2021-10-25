@@ -266,7 +266,7 @@ function _WComponentCanvasNode (props: Props)
             <img className={"background_image " + wcomponent.type} />
 
             <div className="node_title">
-                {kv_entry_maybe === undefined && <span>
+                {kv_entry_maybe === undefined && is_editing && <span>
                     <WarningTriangle message="Missing from this knowledge view" />
                     &nbsp;
                 </span>}

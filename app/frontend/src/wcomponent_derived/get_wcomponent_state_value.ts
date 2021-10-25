@@ -90,6 +90,7 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
                 conviction: VAP.conviction,
                 certainty,
                 parsed_value,
+                value_id: VAP.value_id,
             })
         }
     })

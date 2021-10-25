@@ -5,6 +5,7 @@ export type ParsedValue = string | number | boolean | null
 export interface CurrentValueAndProbability
 {
     parsed_value: ParsedValue
+    value_id?: string
     probability: number
     conviction: number
     certainty: number

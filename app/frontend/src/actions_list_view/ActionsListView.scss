@@ -1,0 +1,32 @@
+
+.action_list_view_content
+{
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow-y: scroll;
+    /* margin-bottom: 100px; -- does not work as it overlaps the content */
+}
+
+.action_list_view_content
+{
+    .icebox, .todo, .in_progress, .done_or_rejected
+    {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .icebox, .todo, .in_progress
+    {
+        border-right: thin solid #aaa;
+    }
+}
+
+
+.prioritisations_header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
