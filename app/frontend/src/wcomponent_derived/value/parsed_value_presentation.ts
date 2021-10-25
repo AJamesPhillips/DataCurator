@@ -1,8 +1,5 @@
 import { WComponent, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import {
-    value_possibility_visual_true_id,
-    value_possibility_visual_false_id,
-} from "../../wcomponent/value/parse_value"
+import { VALUE_POSSIBILITY_IDS } from "../../wcomponent/value/parse_value"
 import type { ParsedValue } from "../interfaces/value"
 
 
@@ -22,9 +19,8 @@ export function get_boolean_representation (wcomponent: WComponent | undefined, 
     if (wcomponent_is_statev2(wcomponent))
     {
         const { value_possibilities = {} } = wcomponent
-        const value_true = value_possibilities[value_possibility_visual_true_id]
-        const value_false = value_possibilities[value_possibility_visual_false_id]
-        // if ()
+        const value_true = value_possibilities[VALUE_POSSIBILITY_IDS.boolean.true]
+        const value_false = value_possibilities[VALUE_POSSIBILITY_IDS.boolean.false]
 
         boolean_true_str = value_true?.value || boolean_true_str
         boolean_false_str = value_false?.value || boolean_false_str

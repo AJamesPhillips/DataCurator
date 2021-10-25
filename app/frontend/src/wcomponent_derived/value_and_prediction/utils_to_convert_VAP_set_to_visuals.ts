@@ -3,11 +3,7 @@ import type {
     StateValueAndPredictionsSet as VAPSet,
 } from "../../wcomponent/interfaces/state"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import {
-    value_possibility_visual_false_id,
-    value_possibility_visual_true_id,
-    value_possibility_visual_uncertainty_id,
-} from "../../wcomponent/value/parse_value"
+import { VALUE_POSSIBILITY_IDS } from "../../wcomponent/value/parse_value"
 import type { VAPVisual } from "../interfaces/value"
 
 
@@ -44,11 +40,11 @@ function expand_booleans (entries: VAP[], VAPs_represent: VAPsType)
             ...VAP_true,
             probability: 1 - VAP_true.probability,
             id: VAP_visual_false_id,
-            value_id: value_possibility_visual_false_id,
+            value_id: VALUE_POSSIBILITY_IDS.boolean.false,
             description: "",
         }
 
-        entries = [{...VAP_true, value_id: value_possibility_visual_true_id}, VAP_false ]
+        entries = [{...VAP_true, value_id: VALUE_POSSIBILITY_IDS.boolean.true}, VAP_false ]
     }
 
     return entries
@@ -61,7 +57,7 @@ export function add_uncertain_VAP_visual (total_certainties: number, VAP_visuals
     const uncertainty = 1 - total_certainties
     const uncertainty_VAP_visual: VAPVisual = {
         VAP_id: VAP_visual_uncertainty_id,
-        value_id: value_possibility_visual_uncertainty_id,
+        value_id: VALUE_POSSIBILITY_IDS.uncertainty,
         value_text: "?",
         certainty: uncertainty,
         parsed_value: null, // should result in `undefined` as a judgemnet

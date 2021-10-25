@@ -6,9 +6,14 @@ import type { SimpleValuePossibility } from "../interfaces/possibility"
 
 
 // Do NOT change these otherwise you will break people's existing data
-export const value_possibility_visual_uncertainty_id = "value_possibility_uncertainty_id__undefined__"
-export const value_possibility_visual_true_id = "value_possibility_true_id"
-export const value_possibility_visual_false_id = "value_possibility_false_id"
+export const VALUE_POSSIBILITY_IDS = {
+    uncertainty: "value_possibility_uncertainty_id__undefined__",
+    boolean: {
+        true: "value_possibility_true_id",
+        false: "value_possibility_false_id",
+    }
+}
+
 
 
 export function parse_VAP_value (VAP: VAP, VAPs_represent: VAPsType): ParsedValue
@@ -25,7 +30,7 @@ export function parse_VAP_value (VAP: VAP, VAPs_represent: VAPsType): ParsedValu
 
 export function value_possibility_for_UI (value_possibility: SimpleValuePossibility, VAPs_represent: VAPsType): ParsedValue
 {
-    let parsed_value = VAPs_represent === VAPsType.boolean ? value_possibility.id === value_possibility_visual_true_id
+    let parsed_value = VAPs_represent === VAPsType.boolean ? value_possibility.id === VALUE_POSSIBILITY_IDS.boolean.true
         : (VAPs_represent === VAPsType.number ? parseFloat(value_possibility.value)
         : value_possibility.value)
 
@@ -38,7 +43,7 @@ export function get_VAPs_representing_parsed_value (VAP: VAP, VAPs_represent: VA
 {
     let parsed_value = parse_VAP_value(VAP, VAPs_represent)
     if (VAPs_represent === VAPsType.boolean) {
-        parsed_value = VAP.value_id === value_possibility_visual_true_id
+        parsed_value = VAP.value_id === VALUE_POSSIBILITY_IDS.boolean.true
     }
 
     return parsed_value

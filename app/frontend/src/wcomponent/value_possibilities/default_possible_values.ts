@@ -2,7 +2,7 @@ import { test } from "../../shared/utils/test"
 import { action_statuses } from "../interfaces/action"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { SimpleValuePossibility } from "../interfaces/possibility"
-import { value_possibility_visual_true_id, value_possibility_visual_false_id } from "../value/parse_value"
+import { VALUE_POSSIBILITY_IDS } from "../value/parse_value"
 
 
 
@@ -11,8 +11,8 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
     if (VAPs_represent === VAPsType.boolean)
     {
         simple_possibilities = [
-            { value: "True", id: value_possibility_visual_true_id, order: 0 },
-            { value: "False", id: value_possibility_visual_false_id, order: 1 },
+            { value: "True", id: VALUE_POSSIBILITY_IDS.boolean.true, order: 0 },
+            { value: "False", id: VALUE_POSSIBILITY_IDS.boolean.false, order: 1 },
         ]
     }
     else if (simple_possibilities.length === 0)
