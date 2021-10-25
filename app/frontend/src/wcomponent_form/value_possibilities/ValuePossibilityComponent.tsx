@@ -7,6 +7,7 @@ import "../../form/editable_list/EditableListEntry.css"
 import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
+import { VALUE_POSSIBILITY_IDS_to_text } from "../../wcomponent/value/parse_value"
 
 
 
@@ -29,29 +30,30 @@ export function ValuePossibilityComponent (props: OwnProps)
     const warning = count > 1 ? `Current value "${current_value}" is already present in other possible values.` : ""
 
 
-    return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px">
-        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
-            <Box style={{ width: "100%" }}>
-                <ValuePossibilityDuplicate warning={warning} />
-                <Typography noWrap textOverflow="ellipsis" variant="caption">
-                    <EditableTextSingleLine
-                        placeholder="Possible value"
-                        hide_label={true}
-                        value={value_possibility.value}
-                        conditional_on_change={value => set_current_value(value)}
-                        conditional_on_blur={value =>
-                        {
-                            update_value_possibility({
-                                ...value_possibility,
-                                value: value,
-                            })
-                        }}
-                    />
-                </Typography>
-            </Box>
-            {editing && <IconButton onClick={() => update_value_possibility(undefined)}>
-                <DeleteIcon />
-            </IconButton>}
-        </ButtonGroup>
+    return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>
+        <Box style={{ width: "100%" }}>
+            <ValuePossibilityDuplicate warning={warning} />
+            <Typography noWrap textOverflow="ellipsis" variant="caption">
+                <EditableTextSingleLine
+                    placeholder="Possible value"
+                    hide_label={true}
+                    value={value_possibility.value}
+                    conditional_on_change={value => set_current_value(value)}
+                    conditional_on_blur={value =>
+                    {
+                        update_value_possibility({
+                            ...value_possibility,
+                            value: value,
+                        })
+                    }}
+                />
+            </Typography>
+        </Box>
+        <Box style={{ width: 100, color: "#cb4", cursor: "pointer" }} title="Using interoperable ID">
+            {VALUE_POSSIBILITY_IDS_to_text[value_possibility.id]}
+        </Box>
+        {editing && <IconButton onClick={() => update_value_possibility(undefined)}>
+            <DeleteIcon />
+        </IconButton>}
     </Box>
 }
