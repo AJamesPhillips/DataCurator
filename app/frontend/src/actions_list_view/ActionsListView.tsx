@@ -21,6 +21,7 @@ import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
+import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 
 
 
@@ -86,19 +87,20 @@ function _ActionsListViewContent (props: Props)
     const actions_done_or_rejected: WComponentNodeAction[] = []
 
     const now = new Date().getTime()
-    action_ids.forEach(id =>
-    {
-        const action = wcomponents_by_id[id]
-        if (!wcomponent_is_action(action, id)) return
+    let actions = Array.from(action_ids).map(id => wcomponents_by_id[id])
+        .filter(wcomponent_is_action)
+    actions = sort_list(actions, a => get_created_at_ms(a), "descending")
 
+    actions.forEach(action =>
+    {
         const attribute_values = get_wcomponent_state_value_and_probabilities({
             wcomponent: action,
             VAP_set_id_to_counterfactual_v2_map: {}, created_at_ms: now, sim_ms: now
         })
 
         const most_probable = attribute_values.most_probable_VAP_set_values[0]
-        if (most_probable?.value_id === "") actions_in_progress.push(action)
-        else if (most_probable?.value_id === "") actions_done_or_rejected.push(action)
+        if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_in_progress) actions_in_progress.push(action)
+        else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed) actions_done_or_rejected.push(action)
         else actions_icebox.push(action)
     })
 
@@ -140,7 +142,7 @@ function _ActionsListViewContent (props: Props)
 
         <div className="done_or_rejected">
             <div className="prioritisations_header">
-                <h1>Done (or rejected)</h1>
+                <h1>Done</h1>
             </div>
 
             {actions_done_or_rejected.map(action => <PrioritisableAction

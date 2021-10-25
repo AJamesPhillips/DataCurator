@@ -16,6 +16,7 @@ import type { RootState } from "../../state/State"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
 import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
+import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 
 
 
@@ -76,11 +77,14 @@ function _ValueAndPredictionSets (props: Props)
                 value_possibilities, values_and_prediction_sets: new_values_and_prediction_sets
             })
 
-            const orig_latest_created_at_ms = get_latest_created_at_VAP_set_ms(orig_values_and_prediction_sets, current_created_at_ms)
-            const new_latest_created_at_ms = get_latest_created_at_VAP_set_ms(new_values_and_prediction_sets, current_created_at_ms)
-            if (new_latest_created_at_ms > orig_latest_created_at_ms)
+            const orig_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(orig_values_and_prediction_sets, current_created_at_ms)
+            const new_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(new_values_and_prediction_sets, current_created_at_ms)
+            if (new_latest_datetimes_ms.latest_created_at_ms > orig_latest_datetimes_ms.latest_created_at_ms)
             {
-                change_route({ args: { created_at_ms: new_latest_created_at_ms + (1000 * 60) } })
+                const created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + (1000 * 60)
+                // Move to latest sim_ms so that when changing an action's status it updates appropriately
+                const sim_ms = new_latest_datetimes_ms.latest_sim_ms
+                change_route({ args: { created_at_ms, sim_ms } })
             }
         }}
 
@@ -103,13 +107,17 @@ export const ValueAndPredictionSets = connector(_ValueAndPredictionSets) as Func
 
 
 
-function get_latest_created_at_VAP_set_ms (values_and_prediction_sets: StateValueAndPredictionsSet[], latest_ms = 0)
+function get_latest_VAP_set_datetimes_ms (values_and_prediction_sets: StateValueAndPredictionsSet[], latest_created_at_ms = 0)
 {
+    let latest_sim_ms = Number.NEGATIVE_INFINITY
 
     values_and_prediction_sets.forEach(VAP_set =>
     {
-        latest_ms = Math.max(get_created_at_ms(VAP_set), latest_ms)
+        latest_created_at_ms = Math.max(get_created_at_ms(VAP_set), latest_created_at_ms)
+
+        const sim_datetime = get_uncertain_datetime(VAP_set.datetime)
+        if (sim_datetime) latest_sim_ms = Math.max(sim_datetime.getTime(), latest_sim_ms)
     })
 
-    return latest_ms
+    return { latest_created_at_ms, latest_sim_ms }
 }

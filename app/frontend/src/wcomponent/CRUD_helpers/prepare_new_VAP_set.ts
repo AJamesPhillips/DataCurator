@@ -10,6 +10,7 @@ import type {
 } from "../interfaces/state"
 import { prepare_new_VAP, set_VAP_probabilities } from "./prepare_new_VAP"
 import { get_possibilities_from_VAP_sets } from "../value_possibilities/get_possibilities_from_VAP_sets"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 
 
 
@@ -21,11 +22,14 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, value_possibiliti
     const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets)
 
 
+    const datetime: TemporalUncertainty = VAPs_represent === VAPsType.action ? { value: new Date() } : {}
+
+
     const new_VAP_set = {
         id: get_new_value_and_prediction_set_id(),
         ...dates,
         base_id,
-        datetime: {}, // min: now },
+        datetime,
         entries: entries_with_probabilities,
     }
 
