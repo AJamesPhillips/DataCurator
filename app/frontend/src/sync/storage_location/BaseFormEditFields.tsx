@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 import type { PostgrestError } from "@supabase/postgrest-js"
 
@@ -24,6 +24,7 @@ export function BaseFormEditFields (props: OwnProps)
     const { base, on_save_or_exit, user } = props
 
     const [modified_base, set_modified_base] = useState(base)
+    useEffect(() => set_modified_base(base), [base])
     const [error_modifying_base, set_error_modifying_base] = useState<PostgrestError | undefined>(undefined)
 
 
