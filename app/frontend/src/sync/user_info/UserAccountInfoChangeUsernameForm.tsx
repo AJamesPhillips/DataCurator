@@ -72,7 +72,7 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
         set_save_state(error ? "error" : "success")
     }
 
-    const classes = use_styles();
+    const classes = use_styles()
 
     return <FormGroup className="section">
         <Box className={classes.root}>
@@ -80,9 +80,14 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
             <FormControl>
                 <TextField
                     disabled={is_saving}
-                    onKeyUp={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
-                    onChange={(e: h.JSX.TargetedEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
-                    onBlur={async (e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => set_username(e.currentTarget.value)}
+                    onChange={(e: h.JSX.TargetedEvent<HTMLInputElement>) =>
+                    {
+                        set_username(e.currentTarget.value)
+                    }}
+                    onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) =>
+                    {
+                        set_username(e.currentTarget.value)
+                    }}
                     placeholder="Username"
                     size="small"
                     value={username}

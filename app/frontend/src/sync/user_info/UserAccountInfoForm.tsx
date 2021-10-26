@@ -77,21 +77,6 @@ function _UserAccountInfoForm (props: Props)
     if (!user) return null
 
 
-    async function log_out ()
-    {
-        const supabase = get_supabase()
-
-        try
-        {
-            save_and_optionally_signout(true)
-        }
-        catch (err)
-        {
-            // todo handle failure
-        }
-    }
-
-
     if (form_state === "updating_password" || need_to_handle_password_recovery)
     {
         return <UserAccountInfoChangePasswordForm on_close={() => set_form_state("initial")} />
@@ -112,7 +97,7 @@ function _UserAccountInfoForm (props: Props)
                 </p>
                 <Box>
                     <Button
-                        onClick={log_out}
+                        onClick={() => save_and_optionally_signout(true)}
                         variant="contained"
                         endIcon={<LogoutIcon />}
                     >
@@ -128,7 +113,7 @@ function _UserAccountInfoForm (props: Props)
             </Typography>
             <Box>
                 <Button className={classes.button} variant="contained" onClick={() => set_form_state("updating_username")}>
-                    {`${need_to_set_user_name ? "Set" : "Change"} username`}
+                    {need_to_set_user_name ? "Set" : "Change"} username
                 </Button>
                 <br />
                 <Button variant="contained" onClick={() => set_form_state("updating_password")}>
