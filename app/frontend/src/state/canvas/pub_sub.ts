@@ -24,7 +24,6 @@ interface CanvasMsgMap
     canvas_double_tap: CanvasPointerEvent
     canvas_right_click: CanvasPointerEvent
     canvas_area_select: CanvasAreaSelectEvent
-    canvas_node_drag_wcomponent_ids: string[]
     canvas_node_drag_relative_position: CanvasPoint | undefined
 }
 

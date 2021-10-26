@@ -88,7 +88,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         is_current_item: state.routing.item_id === own_props.id,
-        is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id),
+        selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
         shift_or_control_keys_are_down,
         created_at_ms: state.routing.args.created_at_ms,
@@ -98,6 +98,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         certainty_formatting: state.display_options.derived_certainty_formatting,
         focused_mode: state.display_options.focused_mode,
         have_judgements: judgement_or_objective_ids.length > 0,
+        wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
     }
 }
 
@@ -108,8 +109,8 @@ const map_dispatch = {
     clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
     change_route: ACTIONS.routing.change_route,
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
-    upsert_knowledge_view_entry: ACTIONS.specialised_object.upsert_knowledge_view_entry,
     pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
+    set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move,
 }
 
 
@@ -119,7 +120,6 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentCanvasNode (props: Props)
 {
-    const [node_is_moving, set_node_is_moving] = useState(false)
     const [node_is_draggable, set_node_is_draggable] = useState(false)
 
     const {
@@ -128,7 +128,7 @@ function _WComponentCanvasNode (props: Props)
         force_displaying,
         is_editing,
         current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id,
-        is_current_item, is_selected, is_highlighted,
+        is_current_item, selected_wcomponent_ids_set, is_highlighted,
         shift_or_control_keys_are_down,
         created_at_ms, sim_ms, validity_filter, certainty_formatting,
         clicked_wcomponent, clear_selected_wcomponents,
@@ -154,6 +154,7 @@ function _WComponentCanvasNode (props: Props)
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
+    const is_selected = selected_wcomponent_ids_set.has(id)
     const validity_value = always_show ? { display_certainty: 1 } : calc_wcomponent_should_display({
         is_editing, force_displaying, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
@@ -169,7 +170,10 @@ function _WComponentCanvasNode (props: Props)
         certainty_formatting,
         focused_mode: props.focused_mode,
     })
-    const opacity = props.drag_relative_position ? 0.3 : validity_opacity
+
+    const node_is_moving = props.wcomponent_ids_to_move_set.has(id)
+    const opacity = props.drag_relative_position ? 0.3
+        : node_is_moving ? 0 : validity_opacity
 
 
     const on_pointer_down = factory_on_pointer_down({
@@ -180,20 +184,6 @@ function _WComponentCanvasNode (props: Props)
         change_route,
         is_current_item,
     })
-
-
-    const update_position = (new_position: CanvasPoint) =>
-    {
-        const new_entry: KnowledgeViewWComponentEntry = {
-            ...kv_entry,
-            ...new_position,
-        }
-        props.upsert_knowledge_view_entry({
-            wcomponent_id: props.id,
-            knowledge_view_id: composed_kv.id,
-            entry: new_entry,
-        })
-    }
 
 
     const children: h.JSX.Element[] = [
@@ -322,16 +312,12 @@ function _WComponentCanvasNode (props: Props)
             draggable: node_is_draggable,
             onDragStart: e =>
             {
-                set_node_is_moving(true)
-                pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", [wcomponent.id])
+                props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: selected_wcomponent_ids_set })
+                // pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", wcomponent_ids_to_move)
+
                 // Prevent green circle with white cross "copy / add" cursor icon
                 // https://stackoverflow.com/a/56699962/539490
                 e.dataTransfer!.dropEffect = "move"
-
-                // This is a hack.  It makes the node disappear.  So the (stupidly unconfigurable) ghost node
-                // provided by the browser is not shown.  Also it seems the ghost node can not tolerant being
-                // moved as this throws off the onDrag event values?
-                e.currentTarget.style.opacity = "0"
             },
 
             onDrag: e =>
@@ -341,17 +327,8 @@ function _WComponentCanvasNode (props: Props)
             },
 
             onDragEnd: e => {
-                // Remove opacity hack
-                e.currentTarget.style.removeProperty("opacity")
-
-                const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
                 pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
-                const new_position = calculate_new_position(kv_entry, new_relative_position)
-                update_position(new_position)
                 set_node_is_draggable(false)
-                // Second "hack" to stop the transition from applying until after the node has moved
-                // to its new position
-                setTimeout(() => set_node_is_moving(false), 0)
             }
         }}
         other_children={children}

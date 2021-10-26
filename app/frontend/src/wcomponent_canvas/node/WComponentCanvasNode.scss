@@ -8,6 +8,7 @@
 }
 .wcomponent_canvas_node.connectable_canvas_node.node.node_is_temporary_dragged_representation
 {
+    z-index: 100;
     transition: left 0.01s, top 0.01s;
 }
 
@@ -62,11 +63,6 @@
 .node_is_highlighted
 {
     z-index: 99;
-}
-
-.node_is_moving
-{
-    z-index: 100;
 }
 
 .node_is_type_action > .node_main_content

@@ -1,54 +1,71 @@
 import { FunctionalComponent, h } from "preact"
-import { useEffect, useMemo, useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { is_defined } from "../shared/utils/is_defined"
+import { ACTIONS } from "../state/actions"
 
 import { pub_sub } from "../state/pub_sub/pub_sub"
-import { get_wcomponents_from_ids } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { throttle } from "../utils/throttle"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import { ConnectableCanvasNode } from "./ConnectableCanvasNode"
 import type { CanvasPoint } from "./interfaces"
 
 
 
-export function TemporaryDraggedCanvasNodes ()
+const map_state = (state: RootState) =>
+({
+    wcomponent_ids_to_move_list: state.meta_wcomponents.wcomponent_ids_to_move_list,
+})
+
+
+const map_dispatch = {
+    bulk_edit_knowledge_view_entries: ACTIONS.specialised_object.bulk_edit_knowledge_view_entries,
+    set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move,
+}
+
+
+const connector = connect(map_state, map_dispatch)
+type Props = ConnectedProps<typeof connector>
+
+
+
+function _TemporaryDraggedCanvasNodes (props: Props)
 {
-    const [wcomponent_ids, set_wcomponent_ids] = useState<string[]>([])
-    const [relative_position, _set_relative_position] = useState<CanvasPoint | undefined>(undefined)
-    const set_relative_position = useMemo(() =>
-    {
-        const set_relative_position = (new_rel_pos: CanvasPoint | undefined) => _set_relative_position(new_rel_pos)
-        const throttle_set_relative_position = throttle(set_relative_position, 30)
-        return throttle_set_relative_position
-    }, [])
+    const [relative_position, set_relative_position] = useState<CanvasPoint | undefined>(undefined)
 
     useEffect(() =>
     {
-        const unsubscribe_ids = pub_sub.canvas.sub("canvas_node_drag_wcomponent_ids", ids =>
-        {
-            set_wcomponent_ids(ids)
-        })
-
         const unsubscribe_position = pub_sub.canvas.sub("canvas_node_drag_relative_position", new_relative_position =>
         {
-            set_relative_position.throttled(new_relative_position)
-            if (new_relative_position === undefined) set_relative_position.flush()
+            if (relative_position && new_relative_position === undefined)
+            {
+                props.bulk_edit_knowledge_view_entries({
+                    wcomponent_ids: props.wcomponent_ids_to_move_list,
+                    change_left: relative_position.left,
+                    change_top: relative_position.top,
+                })
+
+                // Hack to get nodes to move to new position before becoming visible
+                setTimeout(() =>
+                {
+                    props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: new Set() })
+                }, 0)
+            }
+
+            set_relative_position(new_relative_position)
         })
 
-        return () => { unsubscribe_ids(); unsubscribe_position(); }
+        return () => unsubscribe_position()
     })
 
 
     if (!relative_position) return null
 
     return <div>
-        {wcomponent_ids.map(wcomponent_id => <WComponentCanvasNode
+        {props.wcomponent_ids_to_move_list.map(wcomponent_id => <WComponentCanvasNode
             key={`temporary_dragged_canvas_node_${wcomponent_id}`}
             id={wcomponent_id}
             drag_relative_position={relative_position}
         />)}
     </div>
 }
+
+export const TemporaryDraggedCanvasNodes = connector(_TemporaryDraggedCanvasNodes) as FunctionalComponent<{}>

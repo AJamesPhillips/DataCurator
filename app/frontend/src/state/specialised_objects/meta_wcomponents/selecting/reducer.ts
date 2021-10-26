@@ -10,6 +10,7 @@ import {
     is_clear_pointerupdown_on_connection_terminal,
     is_set_selected_wcomponents,
     ActionSetSelectedWcomponents,
+    is_set_wcomponent_ids_to_move,
 } from "./actions"
 
 
@@ -81,6 +82,13 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_clear_pointerupdown_on_connection_terminal(action))
     {
         state = update_substate(state, "meta_wcomponents", "last_pointer_down_connection_terminal", undefined)
+    }
+
+
+    if (is_set_wcomponent_ids_to_move(action))
+    {
+        state = update_substate(state, "meta_wcomponents", "wcomponent_ids_to_move_list", Array.from(action.wcomponent_ids_to_move))
+        state = update_substate(state, "meta_wcomponents", "wcomponent_ids_to_move_set", action.wcomponent_ids_to_move)
     }
 
 

@@ -101,10 +101,30 @@ export const is_clear_pointerupdown_on_connection_terminal = (action: AnyAction)
 
 
 
+interface SetWComponentIdsToMoveProps
+{
+    wcomponent_ids_to_move: Set<string>
+}
+interface ActionSetWComponentIdsToMove extends Action, SetWComponentIdsToMoveProps {}
+
+const set_wcomponent_ids_to_move_type = "set_wcomponent_ids_to_move"
+
+const set_wcomponent_ids_to_move = (args: SetWComponentIdsToMoveProps): ActionSetWComponentIdsToMove =>
+{
+    return { type: set_wcomponent_ids_to_move_type, ...args }
+}
+
+export const is_set_wcomponent_ids_to_move = (action: AnyAction): action is ActionSetWComponentIdsToMove => {
+    return action.type === set_wcomponent_ids_to_move_type
+}
+
+
+
 export const selecting_actions = {
     clicked_wcomponent,
     clear_selected_wcomponents,
     set_selected_wcomponents,
     pointerupdown_on_connection_terminal,
     clear_pointerupdown_on_connection_terminal,
+    set_wcomponent_ids_to_move,
 }
