@@ -369,7 +369,7 @@ function _WComponentForm (props: Props)
                 {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
                     VAPs_represent={VAPs_represent}
-                    value_possibilities={orig_value_possibilities}
+                    existing_value_possibilities={orig_value_possibilities}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_values_and_predictions={({ value_possibilities, values_and_prediction_sets }) =>
                     {

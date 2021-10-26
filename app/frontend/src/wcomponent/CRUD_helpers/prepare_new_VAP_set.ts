@@ -14,12 +14,12 @@ import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 
 
 
-export function prepare_new_VAP_set (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
 {
     const dates = get_new_created_ats(creation_context)
     // const now = new Date(get_created_at_ms(dates))
 
-    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, value_possibilities, existing_VAP_sets)
+    const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets)
 
 
     const datetime: TemporalUncertainty = VAPs_represent === VAPsType.action ? { value: new Date() } : {}
@@ -38,9 +38,9 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, value_possibiliti
 
 
 
-function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[])
+function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[])
 {
-    const possibilities = get_possibilities_from_VAP_sets(VAPs_represent, value_possibilities, existing_VAP_sets)
+    const possibilities = get_possibilities_from_VAP_sets(VAPs_represent, existing_value_possibilities, existing_VAP_sets)
 
     const vanilla_entries: StateValueAndPrediction[] = possibilities.map(possibility =>
         ({

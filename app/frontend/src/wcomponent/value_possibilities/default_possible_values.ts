@@ -24,7 +24,9 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
         if (VAPs_represent === VAPsType.action)
         {
             simple_possibilities = ACTION_VALUE_POSSIBILITY_IDS.map((id, index) => ({
-                id, value: VALUE_POSSIBILITY_IDS_to_text[id] || "?", order: index
+                id,
+                value: VALUE_POSSIBILITY_IDS_to_text[id] || "?",
+                order: index
             }))
         }
         else
@@ -32,7 +34,7 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
             (VAPs_represent === VAPsType.number ? ["1"] : [""])
             .forEach((value, index) =>
             {
-                simple_possibilities.push({ value: value, order: index })
+                simple_possibilities.push({ value, order: index })
             })
         }
     }

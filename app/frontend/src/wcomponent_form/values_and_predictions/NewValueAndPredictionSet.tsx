@@ -7,21 +7,21 @@ import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableLis
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { ACTION_OPTIONS } from "../../wcomponent_derived/value_and_prediction/actions_value"
 import { Button } from "../../sharedf/Button"
 import {
     get_details2_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_summary_for_single_VAP_set,
 } from "./common"
-import { value_possibility_options } from "../../wcomponent_derived/value_possibilities/value_possibility_options"
 import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
+import { sentence_case } from "../../shared/utils/sentence_case"
+import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
 
 
 
-export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_possibilities: ValuePossibilitiesById | undefined) =>
+export const new_value_and_prediction_set = (VAPs_represent: VAPsType, possible_value_possibilities: ValuePossibilitiesById | undefined) =>
 {
-    const any_value_possibilities = Object.keys(value_possibilities || {}).length > 0
+    const any_value_possibilities = Object.keys(possible_value_possibilities || {}).length > 0
     const hide_advanced_for_type_other = VAPs_represent === VAPsType.other && any_value_possibilities
     const initial_hide_advanced = VAPs_represent === VAPsType.boolean || VAPs_represent === VAPsType.action || hide_advanced_for_type_other
 
@@ -31,12 +31,28 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_pos
 
     return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUDRequiredU<StateValueAndPredictionsSet>) =>
     {
+        if (possible_value_possibilities === undefined)
+        {
+            possible_value_possibilities = update_value_possibilities_with_VAPSets({}, [VAP_set])
+        }
+
         const { update_item } = crud
 
         return <div>
-            {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm VAP_set={VAP_set} on_change={update_item} />}
-            {VAPs_represent === VAPsType.action && <SimplifiedActionForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
-            {hide_advanced_for_type_other && <SimplifiedOtherForm value_possibilities={value_possibilities} VAP_set={VAP_set} on_change={update_item} />}
+            {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm
+                VAP_set={VAP_set}
+                on_change={update_item}
+            />}
+            {VAPs_represent === VAPsType.action && <SimplifiedActionForm
+                possible_value_possibilities={possible_value_possibilities}
+                VAP_set={VAP_set}
+                on_change={update_item}
+            />}
+            {hide_advanced_for_type_other && <SimplifiedOtherForm
+                possible_value_possibilities={possible_value_possibilities}
+                VAP_set={VAP_set}
+                on_change={update_item}
+            />}
 
             <SimplifiedUncertainDatetimeForm VAP_set={VAP_set} on_change={update_item} />
 
@@ -51,7 +67,7 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, value_pos
                 <hr />
 
                 {get_summary_for_single_VAP_set(VAPs_represent, false)(VAP_set, crud)}
-                {get_details_for_single_VAP_set(value_possibilities, VAPs_represent)(VAP_set, crud)}
+                {get_details_for_single_VAP_set(possible_value_possibilities, VAPs_represent)(VAP_set, crud)}
                 {get_details2_for_single_VAP_set(VAPs_represent, true)(VAP_set, crud)}
             </div>}
 
@@ -105,34 +121,26 @@ function SimplifiedBooleanForm (props: SimplifiedBooleanFormProps)
 
 interface SimplifiedActionFormProps
 {
-    value_possibilities: ValuePossibilitiesById | undefined
+    possible_value_possibilities: ValuePossibilitiesById | undefined
     VAP_set: StateValueAndPredictionsSet
     on_change: (VAP_set: StateValueAndPredictionsSet) => void
 }
 function SimplifiedActionForm (props: SimplifiedActionFormProps)
 {
-    return <SimplifiedFormHeader
-        {...props}
-        title="Set action status to:"
-        default_options={ACTION_OPTIONS}
-    />
+    return <SimplifiedFormHeader {...props} title="Set action status to:" />
 }
 
 
 
 interface SimplifiedOtherFormProps
 {
-    value_possibilities: ValuePossibilitiesById | undefined
+    possible_value_possibilities: ValuePossibilitiesById | undefined
     VAP_set: StateValueAndPredictionsSet
     on_change: (VAP_set: StateValueAndPredictionsSet) => void
 }
 function SimplifiedOtherForm (props: SimplifiedOtherFormProps)
 {
-    return <SimplifiedFormHeader
-        {...props}
-        title="Set value to:"
-        default_options={[]}
-    />
+    return <SimplifiedFormHeader {...props} title="Set value to:" />
 }
 
 
@@ -140,17 +148,16 @@ function SimplifiedOtherForm (props: SimplifiedOtherFormProps)
 interface SimplifiedFormHeaderProps
 {
     title: string
-    value_possibilities: ValuePossibilitiesById | undefined
+    possible_value_possibilities: ValuePossibilitiesById | undefined
     VAP_set: StateValueAndPredictionsSet
-    default_options: AutocompleteOption[]
     on_change: (VAP_set: StateValueAndPredictionsSet) => void
 }
 function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
 {
-    const { title, value_possibilities, VAP_set, default_options, on_change } = props
+    const { title, possible_value_possibilities, VAP_set, on_change } = props
 
     const selected_option_id = get_VAP_set_certain_selected_value(VAP_set)
-    const options = value_possibility_options(value_possibilities, default_options)
+    const options = value_possibility_options(possible_value_possibilities)
 
     return <div>
         {title}
@@ -179,6 +186,15 @@ function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
 
         <br /><br />
     </div>
+}
+
+
+
+function value_possibility_options (value_possibilities: ValuePossibilitiesById | undefined): AutocompleteOption[]
+{
+    return value_possibilities === undefined
+        ? []
+        : Object.values(value_possibilities).map(({ value: value }) => ({ id: value, title: sentence_case(value) }))
 }
 
 

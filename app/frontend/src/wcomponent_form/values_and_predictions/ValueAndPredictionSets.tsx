@@ -24,7 +24,7 @@ interface OwnProps
 {
     wcomponent_id: string
     VAPs_represent: VAPsType
-    value_possibilities: ValuePossibilitiesById | undefined
+    existing_value_possibilities: ValuePossibilitiesById | undefined
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     update_values_and_predictions: (args: HasVAPSetsAndMaybeValuePossibilities) => void
 }
@@ -72,7 +72,7 @@ function _ValueAndPredictionSets (props: Props)
         VAPs_represent={VAPs_represent}
         update_values_and_predictions={new_values_and_prediction_sets =>
         {
-            const value_possibilities = update_value_possibilities_with_VAPSets(props.value_possibilities, new_values_and_prediction_sets)
+            const value_possibilities = update_value_possibilities_with_VAPSets(props.existing_value_possibilities, new_values_and_prediction_sets)
             props.update_values_and_predictions({
                 value_possibilities, values_and_prediction_sets: new_values_and_prediction_sets
             })
@@ -88,7 +88,7 @@ function _ValueAndPredictionSets (props: Props)
             }
         }}
 
-        value_possibilities={props.value_possibilities}
+        existing_value_possibilities={props.existing_value_possibilities}
 
         values_and_prediction_sets={orig_values_and_prediction_sets}
         invalid_future_items={invalid_future_items}

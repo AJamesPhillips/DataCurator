@@ -4,20 +4,20 @@ import { get_max_value_possibilities_order } from "../value_possibilities/get_ma
 
 
 
-export function update_value_possibilities_with_VAPSets (value_possibilities: ValuePossibilitiesById | undefined, values_and_prediction_sets: VAPSet[])
+export function update_value_possibilities_with_VAPSets (existing_value_possibilities: ValuePossibilitiesById | undefined, values_and_prediction_sets: VAPSet[])
 {
-    let max_order = get_max_value_possibilities_order(value_possibilities)
-    if (value_possibilities) value_possibilities = { ...value_possibilities }
+    let max_order = get_max_value_possibilities_order(existing_value_possibilities)
+    if (existing_value_possibilities) existing_value_possibilities = { ...existing_value_possibilities }
 
 
     values_and_prediction_sets.forEach(VAP_set => {
         VAP_set.entries.forEach(VAP => {
             if (!VAP.value_id) return
-            value_possibilities = value_possibilities || {}
+            existing_value_possibilities = existing_value_possibilities || {}
 
-            const order = value_possibilities[VAP.value_id]?.order ?? ++max_order
+            const order = existing_value_possibilities[VAP.value_id]?.order ?? ++max_order
 
-            value_possibilities[VAP.value_id] = {
+            existing_value_possibilities[VAP.value_id] = {
                 id: VAP.value_id,
                 value: VAP.value,
                 description: VAP.description,
@@ -26,5 +26,5 @@ export function update_value_possibilities_with_VAPSets (value_possibilities: Va
         })
     })
 
-    return value_possibilities
+    return existing_value_possibilities
 }
