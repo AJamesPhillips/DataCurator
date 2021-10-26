@@ -79,12 +79,24 @@ function _ValueAndPredictionSets (props: Props)
 
             const orig_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(orig_values_and_prediction_sets, current_created_at_ms)
             const new_latest_datetimes_ms = get_latest_VAP_set_datetimes_ms(new_values_and_prediction_sets, current_created_at_ms)
+
+            const _1_minute = 1 * 60 * 1000
+            const _10_minutes = 10 * _1_minute
+
             if (new_latest_datetimes_ms.latest_created_at_ms > orig_latest_datetimes_ms.latest_created_at_ms)
             {
-                const created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + (1000 * 60)
-                // Move to latest sim_ms so that when changing an action's status it updates appropriately
-                const sim_ms = new_latest_datetimes_ms.latest_sim_ms
-                change_route({ args: { created_at_ms, sim_ms } })
+                const created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + _1_minute
+                change_route({ args: { created_at_ms } })
+            }
+
+            // Move to current sim_ms so that when changing an action's status it updates appropriately
+            const current_ms = new Date().getTime()
+            const sim_ms = new_latest_datetimes_ms.latest_sim_ms
+            const sim_ms_is_current = sim_ms < (current_ms + _1_minute) && sim_ms > (current_ms - _10_minutes)
+
+            if (props.sim_ms < sim_ms && sim_ms_is_current)
+            {
+                change_route({ args: { sim_ms } })
             }
         }}
 
