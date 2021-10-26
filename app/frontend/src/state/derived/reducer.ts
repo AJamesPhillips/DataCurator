@@ -3,7 +3,7 @@ import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../
 import { is_defined } from "../../shared/utils/is_defined"
 import { sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
-import { knowledge_views_derived_reducer } from "../specialised_objects/knowledge_views/derived_reducer"
+import { knowledge_views_derived_reducer } from "../specialised_objects/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"

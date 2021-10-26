@@ -1,8 +1,6 @@
 import { h } from "preact"
-import { useMemo } from "preact/hooks"
 
 import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
-import { calculate_composed_knowledge_view } from "../state/specialised_objects/knowledge_views/derived_reducer"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { Simulation } from "./simulations"
 import { SimulationScenarioSummary } from "./SimulationScenarioSummary"

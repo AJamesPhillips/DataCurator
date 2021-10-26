@@ -1,13 +1,13 @@
 import { FunctionalComponent, h } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { get_composed_wc_id_map, get_foundational_knowledge_views } from "../state/specialised_objects/knowledge_views/derived_reducer"
+import { get_composed_wc_id_map, get_foundational_knowledge_views } from "../state/specialised_objects/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../state/State"
-import { useMemo } from "preact/hooks"
 
 
 
