@@ -25,5 +25,5 @@ export interface ScenarioRunResult<E>
     status: "pending" | "running" | "complete"
     stop_reason: undefined | "time_limit" | "end_condition" | "manual"
 
-    results: E
+    result: E
 }

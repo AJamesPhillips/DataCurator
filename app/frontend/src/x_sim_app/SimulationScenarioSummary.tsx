@@ -10,7 +10,7 @@ import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_deri
 import { ScenarioGroupRunResultComponent } from "./ScenarioGroupRunResult"
 import type { ScenarioGroupRunArgs, ScenarioGroupRunResult } from "./scenario_run_results"
 import type { Simulation } from "./simulations"
-import { BeerGameArgs, BeerGameResults, beer_game_simulator } from "./simulators"
+import { BeerGameArgs, SimulationResult_BeerGame, beer_game_simulator } from "./simulators"
 import "./SimulationScenarioSummary.scss"
 import { upsert_entry } from "../utils/list"
 
@@ -32,8 +32,8 @@ export function SimulationScenarioSummary (props: Props)
     const { scenario_kv_id, knowledge_views_by_id, wcomponents_by_id, created_at_ms, sim_ms } = props
     const scenario_kv = knowledge_views_by_id[scenario_kv_id]
 
-    const [scenario_group_run_results, set_scenario_group_run_results] = useState<ScenarioGroupRunResult<BeerGameResults>[]>([])
-    const upsert_scenario_group_run_results = (scenario_group_run_result: ScenarioGroupRunResult<BeerGameResults>) =>
+    const [scenario_group_run_results, set_scenario_group_run_results] = useState<ScenarioGroupRunResult<SimulationResult_BeerGame>[]>([])
+    const upsert_scenario_group_run_results = (scenario_group_run_result: ScenarioGroupRunResult<SimulationResult_BeerGame>) =>
     {
         const new_scenario_group_run_results = upsert_entry(scenario_group_run_results, scenario_group_run_result, s => s.id === scenario_group_run_result.id)
         set_scenario_group_run_results(new_scenario_group_run_results)

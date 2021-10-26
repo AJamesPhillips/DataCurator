@@ -2,5 +2,8 @@
 
 .scenario_group_run_result
 {
-    color: red;
+    &.incomplete
+    {
+        color: red;
+    }
 }
