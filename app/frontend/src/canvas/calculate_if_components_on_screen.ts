@@ -1,5 +1,4 @@
-import { get_actually_display_time_sliders } from "../state/controls/accessors"
-import { screen_width, screen_height } from "../state/display_options/display"
+import { screen_width, screen_height, TOP_HEADER_FUDGE, bottom_controls_fudge } from "../state/display_options/display"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { SCALE_BY } from "./zoom_utils"
@@ -18,14 +17,9 @@ export function calculate_if_components_on_screen (state: RootState)
 
         const scale_pixel_to_canvas = SCALE_BY / zoom
 
-        // todo improve how these are calculated
-        const side_panel_fudge = state.controls.display_side_panel ? 440 : 0
-        const top_header_fudge = 48
-        const bottom_controls_fudge = get_actually_display_time_sliders(state) ? 215 : 57
-
-        const max_x = min_x + ((screen_width() - side_panel_fudge) * scale_pixel_to_canvas)
-        const min_y = y - (top_header_fudge * scale_pixel_to_canvas)
-        const max_y = min_y - ((screen_height() - top_header_fudge - bottom_controls_fudge) * scale_pixel_to_canvas)
+        const max_x = min_x + (screen_width(state.controls.display_side_panel) * scale_pixel_to_canvas)
+        const min_y = y - (TOP_HEADER_FUDGE * scale_pixel_to_canvas)
+        const max_y = min_y - ((screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(state)) * scale_pixel_to_canvas)
 
         components_on_screen = !!Array.from(wc_ids_by_type.any_node).find(id => {
             const position = composed_visible_wc_id_map[id]
