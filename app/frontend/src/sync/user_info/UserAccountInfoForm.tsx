@@ -83,7 +83,7 @@ function _UserAccountInfoForm (props: Props)
 
         try
         {
-            save_and_optionally_signout()
+            save_and_optionally_signout(true)
         }
         catch (err)
         {
