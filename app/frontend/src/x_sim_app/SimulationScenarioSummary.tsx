@@ -54,19 +54,74 @@ export function SimulationScenarioSummary (props: Props)
         created_at_ms,
         sim_ms,
     }
+
+
+    const consumers_initial_demand = get_attribute_initial_number("consumers_initial_demand", get_attribute_args)
+    const consumers_demand_increase_delay_days = get_attribute_initial_number("consumers_demand_increase_delay_days", get_attribute_args)
+    const consumers_increased_demand = get_attribute_initial_number("consumers_increased_demand", get_attribute_args)
+    if (!consumers_initial_demand) return <div>{scenario_kv.title} missing consumers_initial_demand attribute</div>
+    if (!consumers_demand_increase_delay_days) return <div>{scenario_kv.title} missing consumers_demand_increase_delay_days attribute</div>
+    if (!consumers_increased_demand) return <div>{scenario_kv.title} missing consumers_increased_demand attribute</div>
+
+
+    const retailer_initial_price = get_attribute_initial_number("retailer_initial_price", get_attribute_args)
+    const retailer_initial_balance = get_attribute_initial_number("retailer_initial_balance", get_attribute_args)
     const retailer_initial_stock = get_attribute_initial_number("retailer_initial_stock", get_attribute_args)
     const retailer_storage = get_attribute_initial_number("retailer_storage", get_attribute_args)
+    if (!retailer_initial_price) return <div>{scenario_kv.title} missing retailer_initial_price attribute</div>
+    if (!retailer_initial_balance) return <div>{scenario_kv.title} missing retailer_initial_balance attribute</div>
     if (!retailer_initial_stock) return <div>{scenario_kv.title} missing retailer_initial_stock attribute</div>
     if (!retailer_storage) return <div>{scenario_kv.title} missing retailer_storage attribute</div>
 
+
+    const wholesaler_initial_price = get_attribute_initial_number("wholesaler_initial_price", get_attribute_args)
+    if (!wholesaler_initial_price) return <div>{scenario_kv.title} missing wholesaler_initial_price attribute</div>
+
+
+    const distributor_initial_price = get_attribute_initial_number("distributor_initial_price", get_attribute_args)
+    if (!distributor_initial_price) return <div>{scenario_kv.title} missing distributor_initial_price attribute</div>
+
+
+    const manufacturer_initial_price = get_attribute_initial_number("manufacturer_initial_price", get_attribute_args)
+    const manufacturing_delay_in_days = get_attribute_initial_number("manufacturing_delay_in_days", get_attribute_args)
+    if (!manufacturer_initial_price) return <div>{scenario_kv.title} missing manufacturer_initial_price attribute</div>
+    if (!manufacturing_delay_in_days) return <div>{scenario_kv.title} missing manufacturing_delay_in_days attribute</div>
+
+
+    const demand_signal_multiplier = get_attribute_initial_number("demand_signal_multiplier", get_attribute_args)
+    if (!demand_signal_multiplier) return <div>{scenario_kv.title} missing demand_signal_multiplier attribute</div>
+    const days_between_stock_take = get_attribute_initial_number("days_between_stock_take", get_attribute_args)
+    if (!days_between_stock_take) return <div>{scenario_kv.title} missing days_between_stock_take attribute</div>
+    const transport_time_in_days = get_attribute_initial_number("transport_time_in_days", get_attribute_args)
+    if (!transport_time_in_days) return <div>{scenario_kv.title} missing transport_time_in_days attribute</div>
+
+
     const scenario_group_args: ScenarioGroupRunArgs = {
         total_to_run: 1,
-        max_sim_time_seconds: 365 * 24 * 3600,
+        max_sim_time_seconds: 3600 * 24 * 20 //365,
     }
     const beer_game_args: BeerGameArgs = {
+        consumers_initial_demand: consumers_initial_demand.parsed_value,
+        consumers_demand_increase_delay_days: consumers_demand_increase_delay_days.parsed_value,
+        consumers_increased_demand: consumers_increased_demand.parsed_value,
+
+        retailer_initial_price: retailer_initial_price.parsed_value,
+        retailer_initial_balance: retailer_initial_balance.parsed_value,
         retailer_initial_stock: retailer_initial_stock.parsed_value,
         retailer_storage: retailer_storage.parsed_value,
+
+        wholesaler_initial_price: wholesaler_initial_price.parsed_value,
+
+        distributor_initial_price: distributor_initial_price.parsed_value,
+
+        manufacturer_initial_price: manufacturer_initial_price.parsed_value,
+        manufacturing_delay_in_days: manufacturing_delay_in_days.parsed_value,
+
+        demand_signal_multiplier: demand_signal_multiplier.parsed_value,
+        days_between_stock_take: days_between_stock_take.parsed_value,
+        transport_time_in_days: transport_time_in_days.parsed_value,
     }
+
 
     return <div className="scenario_summary">
         {scenario_kv.title}
@@ -89,8 +144,14 @@ export function SimulationScenarioSummary (props: Props)
         </div>
 
         <br />
-        retailer_initial_stock: {retailer_initial_stock?.parsed_value} {(retailer_initial_stock?.certainty || 1) * 100}%
-        retailer_storage: {retailer_storage?.parsed_value} {(retailer_storage?.certainty || 1) * 100}%
+        retailer_initial_stock: {retailer_initial_stock?.parsed_value}
+        {/* {(retailer_initial_stock?.certainty || 1) * 100}% */}
+        &nbsp;
+        retailer_storage: {retailer_storage?.parsed_value}
+        {/* {(retailer_storage?.certainty || 1) * 100}% */}
+        &nbsp;
+        demand_signal_multiplier: {demand_signal_multiplier?.parsed_value}
+        {/* {(demand_signal_multiplier?.certainty || 1) * 100}% */}
 
         <br />
         {scenario_group_run_results.map(i => <ScenarioGroupRunResultComponent

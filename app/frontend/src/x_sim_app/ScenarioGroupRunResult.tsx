@@ -46,11 +46,11 @@ export function ScenarioGroupRunResultComponent (props: Props)
 
         const total_sim_time_mean_days = round_number((total_sim_time / total_to_run) / (3600 * 24), 1)
         const percent_solvent = as_percent(number_solvent / total_to_run)
-        const customer_demand_fulfilled_percentage_mean = customer_demand_fulfilled_percentage / total_to_run
-        const total_company_profit_mean = round_number((total_company_profit / total_to_run) / 1000, 100)
+        const customer_demand_fulfilled_percentage_mean = round_number(customer_demand_fulfilled_percentage / total_to_run, 1)
+        const total_company_profit_mean = round_number((total_company_profit / total_to_run), 1)
 
 
-        const result_string = `Mean --- Run time (days) ${total_sim_time_mean_days} --- %Solvent: ${percent_solvent}% --- %Demand met: ${customer_demand_fulfilled_percentage_mean}% --- Company profit ${total_company_profit_mean}k$`
+        const result_string = `Mean --- Run time (days) ${total_sim_time_mean_days} --- Solvent: ${percent_solvent}% --- Demand met: ${customer_demand_fulfilled_percentage_mean}% --- Company profit ${total_company_profit_mean}$`
 
 
         return result_string
@@ -59,7 +59,7 @@ export function ScenarioGroupRunResultComponent (props: Props)
 
     return <div className={class_name}>
         {date2str_auto({ date: group_run.started, time_resolution: "second" })}
-        {percent_complete}%
+        &nbsp; {percent_complete}%
 
         &nbsp; &nbsp;
         {result_string}
