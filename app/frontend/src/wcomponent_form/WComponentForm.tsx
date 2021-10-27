@@ -8,7 +8,6 @@ import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { EditableText } from "../form/editable_text/EditableText"
-import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
@@ -26,7 +25,6 @@ import {
     wcomponent_is_event,
     wcomponent_is_prioritisation,
     wcomponent_has_existence_predictions,
-    wcomponent_is_goal,
     wcomponent_is_sub_state,
     wcomponent_has_objectives,
 } from "../wcomponent/interfaces/SpecialisedObjects"
@@ -62,6 +60,7 @@ import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { get_default_wcomponent_title } from "../wcomponent_derived/rich_text/get_default_wcomponent_title"
+import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 
 
 
@@ -436,6 +435,9 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
         />}
+        {!editing && wcomponent.summary_image && <p>
+            <a href={wcomponent.summary_image} target="_blank"><ExternalLinkIcon />Open image</a>
+        </p>}
 
         {editing && <p>
             <span className="description_label">Hide node title</span>
