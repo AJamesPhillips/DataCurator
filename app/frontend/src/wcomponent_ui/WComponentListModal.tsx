@@ -1,7 +1,7 @@
 import { h } from "preact"
 
 import { Modal } from "../modal/Modal"
-import { ObjectsList } from "./ObjectsList"
+import { WComponentsList } from "./WComponentsList"
 
 
 
@@ -13,11 +13,11 @@ interface OwnProps
 }
 
 
-export function ObjectsListModal (props: OwnProps)
+export function WComponentListModal (props: OwnProps)
 {
     return <Modal
         on_close={props.on_close}
         title={props.title || "Objects"}
-        child={<ObjectsList object_ids={props.object_ids} />}
+        child={<WComponentsList wcomponent_ids={props.object_ids} />}
     />
 }

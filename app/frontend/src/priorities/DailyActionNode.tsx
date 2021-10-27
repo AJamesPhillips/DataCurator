@@ -1,15 +1,15 @@
 import { h } from "preact"
+import { useState } from "preact/hooks"
 
-import { CanvasNode } from "../../canvas/CanvasNode"
-import type { DailyActionNodeProps } from "../../canvas/interfaces"
-import { DailyActionsList } from "./DailyActionsList"
+import { CanvasNode } from "../canvas/CanvasNode"
+import type { DailyActionNodeProps } from "../canvas/interfaces"
+import { WComponentListModal } from "../wcomponent_ui/WComponentListModal"
 
 
 
 export function DailyActionNode (props: DailyActionNodeProps)
 {
-    // This will not work at the moment
-    const [action_ids_to_show, set_action_ids_to_show] = [[], (action_ids: string[]) => {}]
+    const [action_ids_to_show, set_action_ids_to_show] = useState<string[]>([])
 
     const { x, y, width, height, display, action_ids } = props
 
@@ -30,9 +30,10 @@ export function DailyActionNode (props: DailyActionNodeProps)
     if (action_ids_to_show.length === 0) return canvas_node
     else return <div>
         {canvas_node}
-        <DailyActionsList
-            action_ids_to_show={action_ids_to_show}
+        <WComponentListModal
+            object_ids={action_ids_to_show}
             on_close={() => set_action_ids_to_show([])}
+            title="Actions"
         />
     </div>
 }

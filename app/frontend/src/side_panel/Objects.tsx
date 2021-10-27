@@ -2,7 +2,6 @@ import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
-import { ObjectsList } from "../objects/ObjectsList"
 import { ObjectForm } from "../objects/ObjectForm"
 import { ObjectBulkImport } from "../objects/ObjectBulkImport/ObjectBulkImport"
 import { ObjectBulkImportSetup } from "../objects/ObjectBulkImport/ObjectBulkImportSetup"
@@ -32,7 +31,7 @@ function _Objects (props: Props)
         <ObjectForm object={props.object}/>
         <hr />
         Objects: {props.object_count}
-        <ObjectsList />
+        {/* <WComponentsList /> */}
     </div>
 }
 

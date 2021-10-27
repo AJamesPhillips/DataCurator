@@ -12,6 +12,7 @@ import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type { WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
+import { DailyActionNode } from "./DailyActionNode"
 import { ProjectPriorityNode } from "./old_project_priorities/ProjectPriorityNode"
 
 
@@ -51,7 +52,7 @@ const get_children = (props: Props) =>
 
     let offset = 0
     const goal_or_action_id_to_offset: {[goal_or_action_id: string]: number} = {}
-    const goal_or_action_data: {
+    const prioritised_goal_or_action_data: {
         prioritisation_id: string, goal_or_action_id: string, effort: number
     }[] = []
     const prioritisation_data_by_id: {[prioritisation_id: string]: {
@@ -68,7 +69,7 @@ const get_children = (props: Props) =>
         {
             total_effort += prioritisation_entry.effort
 
-            goal_or_action_data.push({
+            prioritised_goal_or_action_data.push({
                 prioritisation_id: prioritisation.id,
                 goal_or_action_id,
                 effort: prioritisation_entry.effort,
@@ -92,8 +93,7 @@ const get_children = (props: Props) =>
 
     const { time_origin_ms, time_origin_x, time_scale } = default_time_origin_parameters(props)
 
-
-    const elements: h.JSX.Element[] = goal_or_action_data.map(({ prioritisation_id, goal_or_action_id, effort }) =>
+    const elements: h.JSX.Element[] = prioritised_goal_or_action_data.map(({ prioritisation_id, goal_or_action_id, effort }) =>
     {
         const offset = goal_or_action_id_to_offset[goal_or_action_id] || 0
         const { total_effort, start_date, end_date } = prioritisation_data_by_id[prioritisation_id]!
@@ -115,6 +115,10 @@ const get_children = (props: Props) =>
             display={true}
         />
     })
+
+    // elements.push(<DailyActionNode
+    //     action_ids={[]} width={10} height={10} display={true} x={x1} y={0}
+    // />)
 
 
     return elements
