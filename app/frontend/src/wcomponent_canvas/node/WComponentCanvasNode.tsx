@@ -260,7 +260,7 @@ function _WComponentCanvasNode (props: Props)
         position={is_movable ? (temporary_drag_kv_entry || kv_entry) : undefined}
         cover_image={wcomponent.summary_image}
         node_main_content={<div>
-            <img className={"background_image " + wcomponent.type} />
+            {!wcomponent.summary_image && <div className={"background_image " + wcomponent.type} />}
 
             <div className="node_title">
                 {kv_entry_maybe === undefined && is_editing && <span>

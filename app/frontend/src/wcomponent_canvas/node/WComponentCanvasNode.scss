@@ -93,7 +93,7 @@
 {
     position: relative;
 }
-.wcomponent_canvas_node img.background_image
+.wcomponent_canvas_node .background_image
 {
     /* background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Wroclaw_Most_Mlynski_w_porannej_mgle_przed_switem.jpg/1280px-Wroclaw_Most_Mlynski_w_porannej_mgle_przed_switem.jpg); */
     background-size: contain;
@@ -108,7 +108,7 @@
     pointer-events: none; /* Alternatively set mackground image z-index to 0 and all other elements in node to 1 with positive relative */
 }
 
-.wcomponent_canvas_node img.background_image.actor
+.wcomponent_canvas_node .background_image.actor
 {
     background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
 }
