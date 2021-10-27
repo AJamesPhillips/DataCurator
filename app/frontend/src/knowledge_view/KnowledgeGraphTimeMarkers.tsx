@@ -14,6 +14,12 @@ import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
 
 
 
+interface OwnProps
+{
+    force_display?: boolean
+}
+
+
 const map_state = (state: RootState) =>
 {
     const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
@@ -33,20 +39,38 @@ const map_state = (state: RootState) =>
 }
 
 const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector>
+type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
 function _KnowledgeGraphTimeMarkers (props: Props)
 {
+    if (!(props.force_display ?? props.display_time_marks)) return null
+
+    let {
+        time_origin_ms: _time_origin_ms,
+        time_origin_x: _time_origin_x,
+        time_scale: _time_scale,
+    } = props
+
+    if (props.force_display)
+    {
+        _time_origin_ms = _time_origin_ms ?? new Date().getTime()
+        _time_origin_x = _time_origin_x ?? 0
+        _time_scale = _time_scale ?? 1
+    }
+
+    if (_time_origin_ms === undefined || _time_origin_x === undefined || _time_scale === undefined) return null
+
     const {
-        sim_ms, time_origin_ms,
-        time_origin_x,
-        time_scale,
+        sim_ms,
         time_line_number,
         time_line_spacing_days,
     } = props
-    if (!props.display_time_marks || time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined) return null
+    const time_origin_ms = _time_origin_ms
+    const time_origin_x = _time_origin_x
+    const time_scale = _time_scale
+
 
     const other_datetime_lines = useMemo(() => get_other_datetime_lines({
         time_line_number, time_line_spacing_days,
@@ -93,7 +117,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
     </div>
 }
 
-export const KnowledgeGraphTimeMarkers = connector(_KnowledgeGraphTimeMarkers) as FunctionalComponent<{}>
+export const KnowledgeGraphTimeMarkers = connector(_KnowledgeGraphTimeMarkers) as FunctionalComponent<OwnProps>
 
 
 
