@@ -61,12 +61,12 @@ export function derive_coords (args: DeriveCoordsArgs )
 
 function loop_curve (x1: number, y1: number, x2: number, y2: number, angle: number, from_connection_type: ConnectionTerminalType, end_angle: number, to_connection_type: ConnectionTerminalType, relative_control_point1: Vector, relative_control_point2: Vector)
 {
-    const magnitude = get_magnitude(x1, y1, x2, y2) / 3
+    const magnitude = (get_magnitude(x1, y1, x2, y2) * 100) ** 0.5
 
     const start_angle = get_angle_from_start_connector(angle, from_connection_type.direction)
     end_angle = get_angle_from_end_connector(angle, to_connection_type.direction)
 
-    const control_point_magnitude = bounded(magnitude, 10, 300)
+    const control_point_magnitude = bounded(magnitude, 10, 200)
     relative_control_point1 = to_vec(start_angle, control_point_magnitude)
     relative_control_point2 = to_vec(end_angle, control_point_magnitude)
     return { end_angle, relative_control_point1, relative_control_point2 }
