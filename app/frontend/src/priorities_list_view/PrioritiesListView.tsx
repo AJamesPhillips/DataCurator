@@ -111,17 +111,20 @@ function _PrioritiesListViewContent (props: Props)
                 selected_prioritisation={selected_prioritisation}
             />)}
 
-            <h1>Prioritised</h1>
+            <h1>Deprioritised</h1>
 
-            {prioritised_goals.map(goal => <PrioritisableGoal
+            {deprioritised_goals.map(goal => <PrioritisableGoal
                 key={goal.id}
                 goal={goal}
                 selected_prioritisation={selected_prioritisation}
             />)}
+        </div>
 
-            <h1>Deprioritised</h1>
 
-            {deprioritised_goals.map(goal => <PrioritisableGoal
+        <div className="goals">
+            <h1>Prioritised</h1>
+
+            {prioritised_goals.map(goal => <PrioritisableGoal
                 key={goal.id}
                 goal={goal}
                 selected_prioritisation={selected_prioritisation}

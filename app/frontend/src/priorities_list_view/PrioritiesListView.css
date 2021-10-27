@@ -12,7 +12,7 @@
 .priorities_list_view_content .goals
 {
     flex: 1;
-    margin: 20px;
+    padding: 40px;
     border-right: thin solid #aaa;
 }
 
