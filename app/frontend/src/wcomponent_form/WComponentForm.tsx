@@ -217,7 +217,7 @@ function _WComponentForm (props: Props)
             />
         </FormControl>
 
-        {wcomponent_is_statev2(wcomponent) &&
+        {wcomponent_is_statev2(wcomponent) && (editing || (orig_values_and_prediction_sets?.length || 0) > 0) &&
         <p>
             <span className="description_label">Sub type</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
