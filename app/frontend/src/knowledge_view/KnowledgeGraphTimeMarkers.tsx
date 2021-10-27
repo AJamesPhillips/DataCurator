@@ -11,12 +11,14 @@ import { bounded } from "../shared/utils/bounded"
 import { useMemo } from "preact/hooks"
 import { date2str } from "../shared/utils/date_helpers"
 import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
+import { default_time_origin_parameters } from "./datetime_line"
 
 
 
 interface OwnProps
 {
     force_display?: boolean
+    show_by_now?: boolean
 }
 
 
@@ -47,29 +49,20 @@ function _KnowledgeGraphTimeMarkers (props: Props)
 {
     if (!(props.force_display ?? props.display_time_marks)) return null
 
-    let {
-        time_origin_ms: _time_origin_ms,
-        time_origin_x: _time_origin_x,
-        time_scale: _time_scale,
-    } = props
+    let { time_origin_ms, time_origin_x, time_scale } = props
 
     if (props.force_display)
     {
-        _time_origin_ms = _time_origin_ms ?? new Date().getTime()
-        _time_origin_x = _time_origin_x ?? 0
-        _time_scale = _time_scale ?? 1
+        ({ time_origin_ms, time_origin_x, time_scale } = default_time_origin_parameters({ time_origin_ms, time_origin_x, time_scale }))
     }
 
-    if (_time_origin_ms === undefined || _time_origin_x === undefined || _time_scale === undefined) return null
+    if (time_origin_ms === undefined || time_origin_x === undefined || time_scale === undefined) return null
 
     const {
         sim_ms,
         time_line_number,
         time_line_spacing_days,
     } = props
-    const time_origin_ms = _time_origin_ms
-    const time_origin_x = _time_origin_x
-    const time_scale = _time_scale
 
 
     const other_datetime_lines = useMemo(() => get_other_datetime_lines({
@@ -81,13 +74,17 @@ function _KnowledgeGraphTimeMarkers (props: Props)
     const xm = (x - time_origin_x) * xd
     const time_scale_ms_to_pixels_fudge = (time_scale / time_scale_days_to_ms_pixels_fudge_factor) * xd
 
+
+    const now_ms = new Date().getTime()
+
+
     return <div className="datetime_lines_container">
         {other_datetime_lines.map(config =>
         {
             return <DatetimeLine
                 key={config.key}
-                date_ms={sim_ms + config.offset}
-                time_origin_ms={time_origin_ms}
+                date_ms={(props.show_by_now ? now_ms : sim_ms) + config.offset}
+                time_origin_ms={time_origin_ms!} // strange requirement for `!` type assertion
                 time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
                 xm={xm}
                 xd={xd}
@@ -97,7 +94,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
         })}
 
         <DatetimeLine
-            date_ms={new Date().getTime()}
+            date_ms={now_ms}
             time_origin_ms={time_origin_ms}
             time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
             xm={xm}
@@ -105,7 +102,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
             color="red"
             left_label_when_off_screen={true}
         />
-        <DatetimeLine
+        {!props.show_by_now && <DatetimeLine
             date_ms={sim_ms}
             time_origin_ms={time_origin_ms}
             time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
@@ -113,7 +110,7 @@ function _KnowledgeGraphTimeMarkers (props: Props)
             xd={xd}
             color="blue"
             left_label_when_off_screen={true}
-        />
+        />}
     </div>
 }
 

@@ -16,7 +16,6 @@ import { connection_radius, Terminal } from "./connections/terminal"
 interface OwnProps
 {
     cover_image?: string
-    get_ref?: (ref: HTMLDivElement) => void
     position?: CanvasPoint
     node_main_content: h.JSX.Element
     hidden?: boolean
@@ -79,7 +78,6 @@ export function ConnectableCanvasNode (props: OwnProps)
 
 
     return <CanvasNode
-        get_ref={ref => props.get_ref && props.get_ref(ref)}
         position={props.position}
         on_pointer_down={props.on_pointer_down}
         on_click={props.on_click}
@@ -91,7 +89,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     >
     {/* <Box className="node_main_content" style={main_content_styles}> */}
         <Card
-            className={`node_main_content ${classes.card}`}
+            className="node_main_content"
             variant="outlined" style={main_content_styles}
         >
             {(props.cover_image) && <CardMedia component="img"
@@ -130,9 +128,6 @@ export function ConnectableCanvasNode (props: OwnProps)
 
 
 const use_styles = makeStyles(theme => ({
-    card: {
-        borderColor: "black"
-    },
     image: {
         maxHeight: "200px",
         maxWidth: "100%",

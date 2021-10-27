@@ -29,6 +29,8 @@ export interface PositionAndZoom extends Partial<Position>
 
 
 
+// \/ \/ \/ \/ \/ \/ \/ TODO remove everything below this line \/ \/ \/ \/ \/ \/ \/
+
 export interface NodeField
 {
     name: string

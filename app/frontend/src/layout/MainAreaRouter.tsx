@@ -40,7 +40,7 @@ function _MainAreaRouter (props: Props)
         else el = <KnowledgeGraphView />
     }
     else if (props.view === "objectives") el = <ObjectivesView />
-    else if (props.view === "priorities") el = <OldPrioritiesView /> // <PrioritiesView />
+    else if (props.view === "priorities") el = <PrioritiesView />
     else if (props.view === "priorities_list") el = <PrioritiesListView />
     else if (props.view === "actions_list") el = <ActionsListView />
 

@@ -1,30 +1,59 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
-import type { Dispatch } from "redux"
 import { connect, ConnectedProps } from "react-redux"
+import Markdown from "markdown-to-jsx"
 
-import type { ProjectPriorityNodeProps } from "../../canvas/interfaces"
 import { ACTIONS } from "../../state/actions"
 import { CanvasNode } from "../../canvas/CanvasNode"
+import type { RootState } from "../../state/State"
+import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
+import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
 
 
+
+interface ProjectPriorityNodeProps
+{
+    wcomponent_id: string
+    effort: number
+    x: number
+    y: number
+    width: number
+    height: number
+
+    display: boolean
+}
 
 type OwnProps = ProjectPriorityNodeProps
 
 
-const map_dispatch = (dispatch: Dispatch, own_props: OwnProps) => ({
-    change_route: () => dispatch(ACTIONS.routing.change_route({ route: "objects", item_id: own_props.id }))
+
+const map_state = (state: RootState) =>
+({
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    created_at_ms: state.routing.args.created_at_ms,
 })
 
-const connector = connect(null, map_dispatch)
+const map_dispatch = {
+    change_route: ACTIONS.routing.change_route,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 function _ProjectPriorityNode (props: Props)
 {
-    const [is_focused, set_is_focused] = useState(false)
+    const { wcomponents_by_id, created_at_ms, x, y, width, height, effort, display } = props
+    const wcomponent = wcomponents_by_id[props.wcomponent_id]
+    if (!wcomponent) return null
 
-    const { x, y, width, height, title, fields, effort, display } = props
+    const title = get_title({
+        rich_text: true,
+        wcomponent,
+        wcomponents_by_id,
+        wc_id_to_counterfactuals_map: {},
+        created_at_ms,
+        sim_ms: new Date().getTime(),
+    })
 
     const w = effort > 0 ? Math.max(width, 150) : 150
 
@@ -32,24 +61,30 @@ function _ProjectPriorityNode (props: Props)
     const backgroundImage = `linear-gradient(to top, #a6eaff ${percent}, rgba(0,0,0,0) ${percent})`
     const style_inner: h.JSX.CSSProperties = {
         backgroundImage,
+        backgroundColor: "white",
     }
 
     return <CanvasNode
         position={{ left: x, top: y, width: w, height }}
         display={display}
-        extra_css_class={is_focused ? "focused" : ""}
-        on_pointer_enter={() => set_is_focused(true)}
-        on_pointer_leave={() => set_is_focused(false)}
-        on_click={() => props.change_route()}
+        on_pointer_down={e =>
+        {
+            e.stopImmediatePropagation()
+            e.preventDefault()
+            props.change_route({ item_id: props.wcomponent_id })
+        }}
     >
         <div className="node_main_content" style={style_inner}>
-            <span title={title}>{title}</span>
+            &nbsp;<span title={title}>
+                <Markdown options={MARKDOWN_OPTIONS}>
+                    {title}
+                </Markdown>
+            </span>
 
-            <hr />
-
-            {fields.map(field => <div>
-                {field.name}: {field.value}
-            </div>)}
+            {effort > 0 && <div>
+                <hr />
+                Effort {percent}
+            </div>}
         </div>
     </CanvasNode>
 }

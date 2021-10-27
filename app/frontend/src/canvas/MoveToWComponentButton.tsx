@@ -67,7 +67,7 @@ function _MoveToWComponentButton (props: Props)
 {
     const {
         components_on_screen,
-        have_finished_drawing_attention = () => {},
+        have_finished_drawing_attention,
     } = props
 
 
@@ -80,25 +80,12 @@ function _MoveToWComponentButton (props: Props)
     const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && position && !components_on_screen
 
 
-    return <Box>
-        <Box zIndex={10} m={2} title={position ? "Move to component(s)" : "No components present"}>
-            <IconButton
-                size="small"
-                onClick={move}
-                disabled={!position}
-            >
-                <FilterCenterFocusIcon />
-            </IconButton>
-        </Box>
-        <div
-            className={draw_attention_to_move_to_wcomponent_button ? "pulsating_circle" : ""}
-            ref={e => setTimeout(() =>
-            {
-                e?.classList.remove("pulsating_circle")
-                have_finished_drawing_attention()
-            }, 10000)}
-        />
-    </Box>
+    return <MoveToItemButton
+        position={position}
+        move={move}
+        draw_attention={draw_attention_to_move_to_wcomponent_button}
+        have_finished_drawing_attention={have_finished_drawing_attention}
+    />
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton) as FunctionalComponent<OwnProps>
 
@@ -140,4 +127,42 @@ function calculate_spatial_temporal_position_to_move_to (composed_visible_wc_id_
     }
 
     return { position, go_to_datetime_ms }
+}
+
+
+
+
+interface MoveToItemButtonProps
+{
+    position: PositionAndZoom | undefined
+    move?: () => void
+    draw_attention?: boolean
+    have_finished_drawing_attention?: () => void
+}
+export function MoveToItemButton (props: MoveToItemButtonProps)
+{
+    const {
+        position, move, draw_attention,
+        have_finished_drawing_attention = () => {},
+    } = props
+
+    return <Box>
+        <Box zIndex={10} m={2} title={position ? "Move to component(s)" : "No components present"}>
+            <IconButton
+                size="small"
+                onClick={move}
+                disabled={!position}
+            >
+                <FilterCenterFocusIcon />
+            </IconButton>
+        </Box>
+        <div
+            className={draw_attention ? "pulsating_circle" : ""}
+            ref={e => setTimeout(() =>
+            {
+                e?.classList.remove("pulsating_circle")
+                have_finished_drawing_attention()
+            }, 10000)}
+        />
+    </Box>
 }

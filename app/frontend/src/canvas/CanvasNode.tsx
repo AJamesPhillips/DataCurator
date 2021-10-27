@@ -6,7 +6,6 @@ import type { NodePositionAndDimensions } from "./interfaces"
 
 interface CanvasNodeProps
 {
-    get_ref?: (ref: HTMLDivElement) => void
     position?: NodePositionAndDimensions
     extra_styles?: h.JSX.CSSProperties
     display?: boolean
@@ -41,7 +40,6 @@ export class CanvasNode extends Component<CanvasNodeProps>
 
         return <div
             {...(this.props.extra_args || {})}
-            ref={ref => ref && this.props.get_ref && this.props.get_ref(ref)}
             className={css_class_names}
             style={style_outer}
             title={title}

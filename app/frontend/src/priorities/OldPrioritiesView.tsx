@@ -17,12 +17,12 @@ import { convert_project_priorities_to_nodes } from "./old_project_priorities/pr
 const map_state = (state: RootState) => {
     const display_at_datetime_ms = state.routing.args.created_at_ms
 
-    const daily_actions_meta = get_daily_actions_meta_c(state)
+    // const daily_actions_meta = get_daily_actions_meta_c(state)
 
     return {
         display_at_datetime_ms,
         project_priorities_meta: state.derived.project_priorities_meta,
-        daily_actions_meta,
+        daily_actions_meta: {},
     }
 }
 
@@ -51,7 +51,7 @@ const get_children = (props: Props) =>
     } = get_nodes_from_props(props)
 
     const elements = [
-        ...project_priority_nodes.map(node_props => <ProjectPriorityNode {...node_props} />),
+        // ...project_priority_nodes.map(node_props => <ProjectPriorityNode {...node_props} />),
         ...daily_action_nodes.map(node_props => <DailyActionNode
             {...node_props}
         />),

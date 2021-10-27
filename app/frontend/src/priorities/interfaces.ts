@@ -25,7 +25,7 @@ export interface ProjectPrioritiesMeta
 
 export interface ProjectPrioritiesByProjectId
 {
-    [ project_id: string ]: {
+    [ goal_or_action_id: string ]: {
         project_priorities: ProjectPriority[]
         vertical_position: number
     }

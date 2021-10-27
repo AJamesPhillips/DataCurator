@@ -13,6 +13,15 @@ export const DEFAULT_DATETIME_LINE_CONFIG: DefaultDatetimeLineConfig = {
     time_line_spacing_days: 30,
 }
 
+export function default_time_origin_parameters (args: { time_origin_ms: number | undefined, time_origin_x: number | undefined, time_scale: number | undefined })
+{
+    const time_origin_ms = args.time_origin_ms ?? new Date().getTime()
+    const time_origin_x = args.time_origin_x ?? 0
+    const time_scale = args.time_scale ?? 1
+
+    return { time_origin_ms, time_origin_x, time_scale }
+}
+
 
 
 interface CalculateCanvasXForWcomponentSingleDatetimeArgs
@@ -47,7 +56,7 @@ interface CalculateCanvasXArgs
     time_origin_x: number
     time_scale: number
 }
-function calculate_canvas_x_for_datetime (args: CalculateCanvasXArgs)
+export function calculate_canvas_x_for_datetime (args: CalculateCanvasXArgs)
 {
     const time_diff = args.datetime.getTime() - args.time_origin_ms
     const time_scalar = args.time_scale / time_scale_days_to_ms_pixels_fudge_factor

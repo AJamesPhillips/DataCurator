@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./PrioritiesListView.css"
+import "./PrioritiesListView.scss"
 import { MainArea } from "../layout/MainArea"
 import { wcomponent_has_objectives } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
@@ -142,7 +142,11 @@ function _PrioritiesListViewContent (props: Props)
                     on_pointer_down_new_list_entry={() =>
                     {
                         create_wcomponent({
-                            wcomponent: { base_id, type: "prioritisation", goals: goal_prioritisation_attributes || {} },
+                            wcomponent: {
+                                base_id,
+                                type: "prioritisation",
+                                goals: goal_prioritisation_attributes || {}
+                            },
                             add_to_knowledge_view: {
                                 id: knowledge_view_id,
                                 position: { left: 0, top: 0 },
@@ -152,8 +156,9 @@ function _PrioritiesListViewContent (props: Props)
                 />}
             </div>
 
-
-            {prioritisations.map(p => <Prioritisation prioritisation={p}/>)}
+            <div className="prioritisations_list">
+                {prioritisations.map(p => <Prioritisation prioritisation={p}/>)}
+            </div>
         </div>
     </div>
 }
