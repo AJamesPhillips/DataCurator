@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown from "markdown-to-jsx"
 
+import "./ProjectPriorityNode.scss"
 import { ACTIONS } from "../../state/actions"
 import { CanvasNode } from "../../canvas/CanvasNode"
 import type { RootState } from "../../state/State"
@@ -73,6 +74,7 @@ function _ProjectPriorityNode (props: Props)
             e.preventDefault()
             props.change_route({ item_id: props.wcomponent_id })
         }}
+        extra_css_class=" unlimited_width_on_hover "
     >
         <div className="node_main_content" style={style_inner}>
             &nbsp;<span title={title}>
@@ -82,8 +84,8 @@ function _ProjectPriorityNode (props: Props)
             </span>
 
             {effort > 0 && <div>
-                <hr />
-                Effort {percent}
+                <br />
+                <span style={{ color: "grey", fontSize: 10 }}>&nbsp; Effort {percent}</span>
             </div>}
         </div>
     </CanvasNode>
