@@ -237,7 +237,12 @@ export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeVie
     let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     foundation_knowledge_views.forEach(foundational_kv =>
     {
-        Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) => composed_wc_id_map[id] = entry)
+        Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) =>
+        {
+            // ensure it is deleted first so that when (re)added it will placed last (on top)
+            delete composed_wc_id_map[id]
+            composed_wc_id_map[id] = entry
+        })
     })
 
     remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
