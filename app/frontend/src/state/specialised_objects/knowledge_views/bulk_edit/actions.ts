@@ -43,6 +43,25 @@ export const is_snap_to_grid_knowledge_view_entries = (action: AnyAction): actio
 
 
 
+interface MoveCurrentKnowledgeViewEntriesToTopProps
+{
+    wcomponent_ids: string[]
+}
+export interface ActionMoveCurrentKnowledgeViewEntriesToTop extends Action, MoveCurrentKnowledgeViewEntriesToTopProps {}
+
+const move_current_knowledge_view_entries_to_top_type = "move_current_knowledge_view_entries_to_top"
+
+const move_current_knowledge_view_entries_to_top = (args: MoveCurrentKnowledgeViewEntriesToTopProps): ActionMoveCurrentKnowledgeViewEntriesToTop =>
+{
+    return { type: move_current_knowledge_view_entries_to_top_type, ...args }
+}
+
+export const is_move_current_knowledge_view_entries_to_top = (action: AnyAction): action is ActionMoveCurrentKnowledgeViewEntriesToTop => {
+    return action.type === move_current_knowledge_view_entries_to_top_type
+}
+
+
+
 interface BulkAddToKnowledgeViewProps
 {
     wcomponent_ids: string[]
@@ -88,4 +107,5 @@ export const bulk_editing_knowledge_view_entries_actions = {
     bulk_add_to_knowledge_view,
     bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries,
+    move_current_knowledge_view_entries_to_top,
 }

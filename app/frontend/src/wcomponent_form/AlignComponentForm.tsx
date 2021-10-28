@@ -32,6 +32,7 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
+    move_current_knowledge_view_entries_to_top: ACTIONS.specialised_object.move_current_knowledge_view_entries_to_top,
 }
 
 
@@ -59,6 +60,15 @@ function _AlignComponentForm (props: Props)
         />
         &nbsp;
         <ButtonSnapXToDatetime {...props} />
+        &nbsp;
+        <Button
+            value="Move to top"
+            onClick={() =>
+            {
+                props.move_current_knowledge_view_entries_to_top({ wcomponent_ids: ids })
+            }}
+            is_left={true}
+        />
     </div>
 }
 

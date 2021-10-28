@@ -15,10 +15,12 @@ import {
     ActionBulkAddToKnowledgeView,
     ActionBulkEditKnowledgeViewEntries,
     ActionBulkRemoveFromKnowledgeView,
+    ActionMoveCurrentKnowledgeViewEntriesToTop,
     ActionSnapToGridKnowledgeViewEntries,
     is_bulk_add_to_knowledge_view,
     is_bulk_edit_knowledge_view_entries,
     is_bulk_remove_from_knowledge_view,
+    is_move_current_knowledge_view_entries_to_top,
     is_snap_to_grid_knowledge_view_entries,
 } from "./actions"
 
@@ -36,6 +38,12 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
     if (is_snap_to_grid_knowledge_view_entries(action))
     {
         state = handle_snap_to_grid_knowledge_view_entries(state, action)
+    }
+
+
+    if (is_move_current_knowledge_view_entries_to_top(action))
+    {
+        state = handle_move_current_knowledge_view_entries_to_top(state, action)
     }
 
 
@@ -141,10 +149,42 @@ function handle_snap_to_grid_knowledge_view_entries (state: RootState, action: A
         wcomponent_ids.forEach(wcomponent_id =>
         {
             const entry = kv.wc_id_map[wcomponent_id]
-            if (!entry) return
+            if (!entry) return // possible todo: go through foundational kvs and move them to grid
 
             const new_entry = round_canvas_point(entry, "large")
             new_wc_id_map[wcomponent_id] = new_entry
+        })
+
+        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
+        state = handle_upsert_knowledge_view(state, new_kv)
+    }
+
+    return state
+}
+
+
+
+function handle_move_current_knowledge_view_entries_to_top (state: RootState, action: ActionMoveCurrentKnowledgeViewEntriesToTop)
+{
+    const { wcomponent_ids } = action
+
+    const kv = get_current_knowledge_view_from_state(state)
+    const composed_kv = get_current_composed_knowledge_view_from_state(state)
+    if (!kv || !composed_kv)
+    {
+        console.error("There should always be a current and current composed knowledge view if bulk editing (moving to top) world components")
+    }
+    else
+    {
+        const new_wc_id_map = { ...kv.wc_id_map }
+
+        wcomponent_ids.forEach(wcomponent_id =>
+        {
+            const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id]
+            if (!existing_entry) return // error
+
+            delete new_wc_id_map[wcomponent_id]
+            new_wc_id_map[wcomponent_id] = existing_entry
         })
 
         const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
@@ -162,7 +202,8 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
 
     const kv = get_current_knowledge_view_from_state(state)
     const composed_kv = get_current_composed_knowledge_view_from_state(state)
-    if (kv && composed_kv) {
+    if (kv && composed_kv)
+    {
         const new_wc_id_map = { ...kv.wc_id_map }
 
         wcomponent_ids.forEach(id => {
@@ -180,8 +221,8 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
 
         state = handle_upsert_knowledge_view(state, new_kv)
     }
-
-    else {
+    else
+    {
         console.error("There should always be a current knowledge view if bulk editing position of world components")
     }
 
