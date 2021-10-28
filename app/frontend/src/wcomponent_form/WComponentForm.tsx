@@ -399,6 +399,10 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
+
+        <br />
+        <br />
+
         <FormControl fullWidth={true}>
             <EditableCustomDateTime
                 title="Created at"
