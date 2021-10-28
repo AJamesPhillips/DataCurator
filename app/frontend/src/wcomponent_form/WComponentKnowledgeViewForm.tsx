@@ -17,6 +17,7 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ExploreButtonHandle } from "../wcomponent_canvas/node/ExploreButtonHandle"
+import { WComponentBackReferences } from "../wcomponent_ui/WComponentBackReferences"
 import { AlignComponentForm } from "./AlignComponentForm"
 
 
@@ -192,6 +193,10 @@ function _WComponentKnowledgeViewForm (props: Props)
                 </div>
             })}
         </div>}
+
+        <p>
+            <WComponentBackReferences wcomponent_id={wcomponent_id} />
+        </p>
     </div>
 }
 
