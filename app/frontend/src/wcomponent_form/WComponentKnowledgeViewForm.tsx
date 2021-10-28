@@ -117,7 +117,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </p>}
 
         <div style={{ display: "inline-flex" }}>
-            <MoveToWComponentButton wcomponent_id={wcomponent_id} />
+            <MoveToWComponentButton wcomponent_id={wcomponent_id} disable_if_not_present={true} />
 
             <Box zIndex={10} m={4} class="node_handle">
                 <ExploreButtonHandle

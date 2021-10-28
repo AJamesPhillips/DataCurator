@@ -21,6 +21,7 @@ import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/kno
 interface OwnProps
 {
     wcomponent_id?: string
+    disable_if_not_present?: boolean
     allow_drawing_attention?: boolean
     have_finished_drawing_attention?: () => void
 }
@@ -72,8 +73,8 @@ function _MoveToWComponentButton (props: Props)
 
 
     const { position, go_to_datetime_ms } = useMemo(() =>
-        calculate_spatial_temporal_position_to_move_to(props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms)
-    , [props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms])
+        calculate_spatial_temporal_position_to_move_to(props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms, props.disable_if_not_present)
+    , [props.composed_visible_wc_id_map, props.wcomponents_by_id, props.initial_wcomponent_id, props.created_at_ms, props.disable_if_not_present])
 
     const move = () => position && props.move(go_to_datetime_ms, position)
 
@@ -91,7 +92,7 @@ export const MoveToWComponentButton = connector(_MoveToWComponentButton) as Func
 
 
 
-function calculate_spatial_temporal_position_to_move_to (composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined, wcomponents_by_id: WComponentsById, initial_wcomponent_id: string, go_to_datetime_ms: number)
+function calculate_spatial_temporal_position_to_move_to (composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined, wcomponents_by_id: WComponentsById, initial_wcomponent_id: string, go_to_datetime_ms: number, disable_if_not_present: boolean | undefined)
 {
     let wcomponent_created_at_ms: number | undefined = undefined
     let position: PositionAndZoom | undefined = undefined
@@ -102,7 +103,7 @@ function calculate_spatial_temporal_position_to_move_to (composed_visible_wc_id_
         wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
         let view_entry = composed_visible_wc_id_map[initial_wcomponent_id]
 
-        if (!view_entry)
+        if (!view_entry && !disable_if_not_present)
         {
             Object.entries(composed_visible_wc_id_map)
                 .find(([wcomponent_id, an_entry]) =>
@@ -147,7 +148,7 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
     } = props
 
     return <Box>
-        <Box zIndex={10} m={2} title={position ? "Move to component(s)" : "No components present"}>
+        <Box zIndex={10} m={2} title={position ? "Move to component(s)" : "No component(s) present"}>
             <IconButton
                 size="small"
                 onClick={move}
