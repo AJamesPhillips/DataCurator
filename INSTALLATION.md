@@ -1,5 +1,7 @@
 
-# Installation
+# Installing dependencies for developing locally
+
+You do not need to follow these steps if you just want to use the application: you can sign up at datacurator.org/app and start using it straight away.
 
 ## Mac
 
