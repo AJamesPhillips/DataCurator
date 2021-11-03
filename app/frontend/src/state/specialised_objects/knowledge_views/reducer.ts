@@ -35,6 +35,13 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
             state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry)
         }
+
+        const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id]
+        if (associated_kv && associated_kv.title !== wcomponent.title)
+        {
+            const updated_knowledge_view = { ...associated_kv, title: wcomponent.title }
+            state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.source_of_truth)
+        }
     }
 
 
