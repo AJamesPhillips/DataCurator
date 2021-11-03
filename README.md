@@ -1,7 +1,7 @@
 
 # Data curator
 
-Sign up at [datacurator.org](https://datacurator.org/app/).
+Sign up at [datacurator.org](https://datacurator.org/app/)
 
 A collaborative real time planning application for complex projects.  Integrates a subset of features from:
 
