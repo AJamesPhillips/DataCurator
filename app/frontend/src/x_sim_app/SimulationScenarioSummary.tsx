@@ -98,7 +98,7 @@ export function SimulationScenarioSummary (props: Props)
 
     const scenario_group_args: ScenarioGroupRunArgs = {
         total_to_run: 1,
-        max_sim_time_seconds: 3600 * 24 * 20 //365,
+        max_sim_time_seconds: 3600 * 24 * 365,
     }
     const beer_game_args: BeerGameArgs = {
         consumers_initial_demand: consumers_initial_demand.parsed_value,

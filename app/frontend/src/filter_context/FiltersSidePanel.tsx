@@ -7,6 +7,7 @@ import { LabelsEditor } from "../labels/LabelsEditor"
 import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
+import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 
 
 
@@ -107,4 +108,4 @@ export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalCompon
 
 
 
-const wcomponent_type_options = () => wcomponent_types.map(type => ({ id: type, title: type }))
+const wcomponent_type_options = () => wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
