@@ -1,10 +1,10 @@
 import { h } from "preact"
 import { useMemo } from "preact/hooks"
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 
 import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"
 import { EditableListEntry, EditableListEntryItemProps, ListItemCRUDRequiredC } from "./EditableListEntry"
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
 
 
 

@@ -16,6 +16,7 @@ import {
 import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
 import { sentence_case } from "../../shared/utils/sentence_case"
 import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
+import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabilities"
 
 
 
@@ -54,7 +55,10 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, possible_
                 on_change={update_item}
             />}
 
-            <SimplifiedUncertainDatetimeForm VAP_set={VAP_set} on_change={update_item} />
+            <SimplifiedUncertainDatetimeForm
+                VAP_set={VAP_set}
+                on_change={update_item}
+            />
 
             <Button
                 value={(show_advanced ? "Hide" : "Show") + " advanced options"}
@@ -156,7 +160,7 @@ function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
 {
     const { title, possible_value_possibilities, VAP_set, on_change } = props
 
-    const selected_option_id = get_VAP_set_certain_selected_value(VAP_set)
+    const selected_option_id = get_VAP_set_certain_selected_value_id(VAP_set)
     const options = value_possibility_options(possible_value_possibilities)
 
     return <div>
@@ -165,20 +169,11 @@ function SimplifiedFormHeader (props: SimplifiedFormHeaderProps)
             selected_option_id={selected_option_id}
             options={options}
             allow_none={true}
-            on_change={new_status =>
+            on_change={new_status_id =>
             {
-                if (!new_status) return
+                if (!new_status_id) return
 
-                const entries = VAP_set.entries.map(VAP =>
-                {
-                    const probability = VAP.value === new_status ? 1 : 0
-                    return {
-                        ...VAP,
-                        relative_probability: probability,
-                        probability: probability,
-                        conviction: 1,
-                    }
-                })
+                const entries = update_VAP_set_VAP_probabilities(VAP_set, new_status_id)
 
                 on_change({ ...VAP_set, entries })
             }}
@@ -194,14 +189,14 @@ function value_possibility_options (value_possibilities: ValuePossibilitiesById 
 {
     return value_possibilities === undefined
         ? []
-        : Object.values(value_possibilities).map(({ value: value }) => ({ id: value, title: sentence_case(value) }))
+        : Object.values(value_possibilities).map(({ id, value }) => ({ id, title: sentence_case(value) }))
 }
 
 
 
-function get_VAP_set_certain_selected_value (VAP_set: StateValueAndPredictionsSet): string | undefined
+function get_VAP_set_certain_selected_value_id (VAP_set: StateValueAndPredictionsSet): string | undefined
 {
-    let value: string | undefined = undefined
+    let value_id: string | undefined = undefined
 
     const conviction = VAP_set.shared_entry_values?.conviction || 0
     const probability = VAP_set.shared_entry_values?.probability || 0
@@ -210,8 +205,8 @@ function get_VAP_set_certain_selected_value (VAP_set: StateValueAndPredictionsSe
     {
         if (Math.max(conviction, VAP.conviction) !== 1) return
         if (Math.max(probability, VAP.probability) !== 1) return
-        value = VAP.value
+        value_id = VAP.value_id
     })
 
-    return value
+    return value_id
 }

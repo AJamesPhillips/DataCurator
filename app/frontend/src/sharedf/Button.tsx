@@ -3,6 +3,8 @@ import { Button as MaterialButton } from "@material-ui/core"
 import type { ButtonProps } from "@material-ui/core/Button"
 import { Hidden } from "@material-ui/core"
 
+import "./Button.scss"
+
 
 
 interface SpecificProps

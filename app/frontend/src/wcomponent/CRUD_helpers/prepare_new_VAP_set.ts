@@ -22,7 +22,9 @@ export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_value_po
     const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets)
 
 
-    const datetime: TemporalUncertainty = VAPs_represent === VAPsType.action ? { value: new Date() } : {}
+    const datetime: TemporalUncertainty = VAPs_represent === VAPsType.action ? { value: new Date() }
+        // If there are existing VAP sets then default time to current time
+        : existing_VAP_sets.length > 0 ? { value: new Date() } : {}
 
 
     const new_VAP_set = {

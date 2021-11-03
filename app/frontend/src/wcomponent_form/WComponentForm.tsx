@@ -61,6 +61,7 @@ import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { get_default_wcomponent_title } from "../wcomponent_derived/rich_text/get_default_wcomponent_title"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
+import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 
 
 
@@ -365,12 +366,21 @@ function _WComponentForm (props: Props)
                 {VAPs_represent === VAPsType.undefined && <div>
                     Values: Set subtype to view
                 </div>}
+                {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
+                    VAPs_represent={VAPs_represent}
+                    existing_value_possibilities={orig_value_possibilities}
+                    values_and_prediction_sets={orig_values_and_prediction_sets}
+                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
+                    {
+                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
+                    }}
+                />}
                 {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
                     wcomponent_id={wcomponent.id}
                     VAPs_represent={VAPs_represent}
                     existing_value_possibilities={orig_value_possibilities}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_values_and_predictions={({ value_possibilities, values_and_prediction_sets }) =>
+                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
                     {
                         upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
