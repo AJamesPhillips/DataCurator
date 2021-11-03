@@ -107,8 +107,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     })
 
 
-    const has_existing_VAP_sets = all_VAP_sets.length === 0
-    const possible_value_possibilities = has_existing_VAP_sets ? undefined : update_value_possibilities_with_VAPSets(existing_value_possibilities, all_VAP_sets)
+    const possible_value_possibilities = existing_value_possibilities // update_value_possibilities_with_VAPSets(existing_value_possibilities, all_VAP_sets)
 
     const new_VAP_set_form_item_props: EditableListEntryItemProps<VAPSet, ListItemCRUDRequiredCU<VAPSet>> = {
         get_created_at: get_actual_created_at_datetime,

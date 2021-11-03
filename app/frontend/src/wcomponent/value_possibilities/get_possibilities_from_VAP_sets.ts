@@ -24,9 +24,10 @@ export function get_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value
 
 
 
-export function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities_by_id: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
+function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value_possibilities_by_id: ValuePossibilitiesById | undefined, VAP_sets: VAPSet[]): SimpleValuePossibility[]
 {
-    const value_cores: StateValueCore[] = []
+    const value_cores: StateValueCore[] = Object.values(value_possibilities_by_id || {})
+        .map(possibility => ({ ...possibility, id: undefined, value_id: possibility.id }))
 
     VAP_sets.forEach(VAP_set =>
     {
@@ -36,14 +37,14 @@ export function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType
         })
     })
 
-    const simple_possibilities = get_simple_possibilities_from_values(value_possibilities_by_id, value_cores)
+    const simple_possibilities = get_simple_possibilities_from_values(value_cores, value_possibilities_by_id)
 
     return default_possible_values(VAPs_represent, simple_possibilities)
 }
 
 
 
-export function get_simple_possibilities_from_values (value_possibilities_by_id: ValuePossibilitiesById | undefined, values: StateValueCore[]): SimpleValuePossibility[]
+export function get_simple_possibilities_from_values (values: StateValueCore[], value_possibilities_by_id: ValuePossibilitiesById | undefined): SimpleValuePossibility[]
 {
     let simple_possibilities: SimpleValuePossibility[] = []
     const possible_value_strings: Set<string> = new Set()
@@ -61,10 +62,10 @@ export function get_simple_possibilities_from_values (value_possibilities_by_id:
         possible_value_strings.add(value_possibility.value)
     })
 
-    values.forEach(({ value }) =>
+    values.forEach(({ value, value_id }) =>
     {
         if (possible_value_strings.has(value)) return
-        simple_possibilities.push({ value, order: ++max_order })
+        simple_possibilities.push({ value, id: value_id, order: ++max_order })
         possible_value_strings.add(value)
     })
 

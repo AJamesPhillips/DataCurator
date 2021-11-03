@@ -32,10 +32,10 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, possible_
 
     return (VAP_set: StateValueAndPredictionsSet, crud: ListItemCRUDRequiredU<StateValueAndPredictionsSet>) =>
     {
-        if (possible_value_possibilities === undefined)
-        {
-            possible_value_possibilities = update_value_possibilities_with_VAPSets({}, [VAP_set])
-        }
+        // if (possible_value_possibilities === undefined)
+        // {
+        //     possible_value_possibilities = update_value_possibilities_with_VAPSets({}, [VAP_set])
+        // }
 
         const { update_item } = crud
 

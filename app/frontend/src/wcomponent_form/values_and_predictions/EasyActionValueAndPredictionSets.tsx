@@ -103,28 +103,22 @@ function _EasyActionValueAndPredictionSets (props: Props)
         {allow_in_progress && <Button
             value="In Progress"
             fullWidth={true}
-            style={style}
+            color="secondary"
             onClick={() => mark_as(VALUE_POSSIBILITY_IDS.action_in_progress)}
         />}
         {allow_pause && <Button
             value="Pause"
             fullWidth={true}
-            style={style}
+            color="secondary"
             onClick={() => mark_as(VALUE_POSSIBILITY_IDS.action_paused)}
         />}
         {allow_completed && <Button
             value="Completed"
             fullWidth={true}
-            style={style}
+            color="secondary"
             onClick={() => mark_as(VALUE_POSSIBILITY_IDS.action_completed)}
         />}
     </div>
 }
 
 export const EasyActionValueAndPredictionSets = connector(_EasyActionValueAndPredictionSets) as FunctionalComponent<OwnProps>
-
-
-
-const style: h.JSX.CSSProperties = {
-    backgroundColor: "#efefef",
-}

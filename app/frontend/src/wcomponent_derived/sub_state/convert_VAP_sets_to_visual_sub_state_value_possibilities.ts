@@ -43,13 +43,15 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities (args: 
         .forEach(({ value_id, value_text }) => values.push({ value_id, value: value_text }))
     })
 
-    const simple_possibilities = get_simple_possibilities_from_values(target_wcomponent.value_possibilities, values)
+    const simple_possibilities = get_simple_possibilities_from_values(values, target_wcomponent.value_possibilities)
 
     return simple_possibilities.map(possilibity =>
     {
         const selected = predicate_target_value_possibility({
-            target_value_id_type, target_value,
-            value_text: possilibity.value, value_id: possilibity.id,
+            target_value_id_type,
+            target_value,
+            value_text: possilibity.value,
+            value_id: possilibity.id,
         })
 
         return { ...possilibity, selected }
