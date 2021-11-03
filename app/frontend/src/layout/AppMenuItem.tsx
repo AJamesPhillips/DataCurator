@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact"
+import { ComponentChildren, FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { MenuItem as MaterialMenuItem } from "@material-ui/core"
 
@@ -42,12 +42,11 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _AppMenuItem (props: Props)
 {
     const title = get_title(props.id)
-    return <MaterialMenuItem
-        style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
-        onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+    return <CustomisableAppMenuItem
+        on_pointer_down={() =>
         {
-            e.stopImmediatePropagation()
-            // TODO remove this function once the <Button /> in <Link /> takes up all the horizontal space
+            // TODO remove this call of `change_route` once the <Button /> in <Link /> takes
+            // up all the horizontal space
             props.change_route({ route: props.id, sub_route: null, item_id: null })
             props.on_pointer_down()
         }}
@@ -61,7 +60,23 @@ function _AppMenuItem (props: Props)
         >
             {title}
         </Link>
-    </MaterialMenuItem>
+    </CustomisableAppMenuItem>
 }
 
 export const AppMenuItem = connector(_AppMenuItem) as FunctionComponent<OwnProps>
+
+
+
+export function CustomisableAppMenuItem (props: { on_pointer_down: () => void } & { children: ComponentChildren })
+{
+    return <MaterialMenuItem
+        style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
+        onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+        {
+            e.stopImmediatePropagation()
+            props.on_pointer_down()
+        }}
+    >
+        {props.children}
+    </MaterialMenuItem>
+}

@@ -4,9 +4,10 @@ import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+import { ACTIONS } from "../state/actions"
 import { ALLOWED_ROUTES, ROUTE_TYPES } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
-import { AppMenuItem } from "./AppMenuItem"
+import { AppMenuItem, CustomisableAppMenuItem } from "./AppMenuItem"
 
 
 
@@ -19,7 +20,11 @@ const map_state = (state: RootState) => ({
     editing: !state.display_options.consumption_formatting,
 })
 
-const connector = connect(map_state)
+const map_dispatch = {
+    set_show_help_menu: ACTIONS.display.set_show_help_menu,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -64,6 +69,15 @@ function _AppMenuItemsContainer (props: Props)
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
                 {routes.map(route => <AppMenuItem id={route} on_pointer_down={handleClose} />)}
+                <CustomisableAppMenuItem
+                    on_pointer_down={() =>
+                    {
+                        handleClose()
+                        props.set_show_help_menu({ show: true })
+                    }}
+                >
+                    Help
+                </CustomisableAppMenuItem>
 
                 <MaterialMenuItem
                     onClick={() => set_show_all_routes(!show_all_routes)}

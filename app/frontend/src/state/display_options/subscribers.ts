@@ -13,6 +13,7 @@ export function display_options_subscribers (store: StoreType)
 }
 
 
+// todo update name of function to reflect all the other things it does now
 function toggle_consumption_formatting_on_key_press (store: StoreType)
 {
     let key_combination = ""
