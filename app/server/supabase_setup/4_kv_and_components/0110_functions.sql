@@ -13,10 +13,10 @@ DECLARE
   num_of_rows int;
   existing knowledge_views%ROWTYPE;
 BEGIN
-  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_or_viewable_for_authorised_user(false));
+  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
 
   -- IF item.base_id not in allowed_base_ids THEN
-  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_or_viewable_for_authorised_user(false)) THEN
+  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
     RAISE sqlstate 'PT403' using
       message = 'Forbidden',
       detail = 'Invalid base',
@@ -75,10 +75,10 @@ DECLARE
   num_of_rows int;
   existing wcomponents%ROWTYPE;
 BEGIN
-  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_or_viewable_for_authorised_user(false));
+  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
 
   -- IF item.base_id not in allowed_base_ids THEN
-  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_or_viewable_for_authorised_user(false)) THEN
+  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
     RAISE sqlstate 'PT403' using
       message = 'Forbidden',
       detail = 'Invalid base',
@@ -117,5 +117,58 @@ BEGIN
 
 
   return existing;
+END;
+$$;
+
+
+
+
+
+CREATE OR REPLACE FUNCTION move_ids_to_new_base (ids uuid[], from_base_id bigint, to_base_id bigint)
+returns int
+language plpgsql
+security definer -- can use "security definer" as we check
+-- in the function if they have the privileges to edit these rows
+SET search_path = public
+as $$
+DECLARE
+  num_of_wcomponent_rows int;
+  num_of_knowledge_view_rows int;
+BEGIN
+
+  IF from_base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
+    RAISE sqlstate 'PT403' using
+      message = 'Forbidden',
+      detail = 'Invalid from_base_id',
+      hint = 'You do not own or are an editor of this base and its wcomponents';
+  END IF;
+
+
+  IF to_base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
+    RAISE sqlstate 'PT403' using
+      message = 'Forbidden',
+      detail = 'Invalid to_base_id',
+      hint = 'You do not own or are an editor of this base and its wcomponents';
+  END IF;
+
+
+  UPDATE wcomponents
+  SET
+    modified_at = now(),
+    base_id = to_base_id
+  WHERE id = ANY (ids) AND base_id = from_base_id;
+
+  GET DIAGNOSTICS num_of_wcomponent_rows = ROW_COUNT;
+
+
+  UPDATE knowledge_views
+  SET
+    modified_at = now(),
+    base_id = to_base_id
+  WHERE id = ANY (ids) AND base_id = from_base_id;
+
+  GET DIAGNOSTICS num_of_knowledge_view_rows = ROW_COUNT;
+
+  return (num_of_wcomponent_rows + num_of_knowledge_view_rows);
 END;
 $$;

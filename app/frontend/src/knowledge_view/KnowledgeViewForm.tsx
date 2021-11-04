@@ -15,6 +15,7 @@ const map_state = (state: RootState) =>
     const knowledge_view = get_current_knowledge_view_from_state(state)
 
     return {
+        ready_for_reading: state.sync.ready_for_reading,
         knowledge_view,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         knowledge_views: state.derived.knowledge_views,
@@ -41,6 +42,7 @@ function _KnowledgeViewForm (props: Props)
 {
     const { knowledge_view, upsert_knowledge_view } = props
 
+    if (!props.ready_for_reading) return <div>Loading...</div>
     if (!knowledge_view) return <div>No knowledge view selected</div>
 
     const possible_parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))

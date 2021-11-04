@@ -36,7 +36,7 @@ export interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 }
 export interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 {
-    access_level?: ACCESS_CONTROL_LEVEL
+    access_level: ACCESS_CONTROL_LEVEL
 }
 
 
@@ -47,7 +47,7 @@ export type SupabaseKnowledgeBaseWithAccessById = { [id: string]: SupabaseKnowle
 
 // ++++++++++++++++ public.access_controls ++++++++++++++++
 
-export type ACCESS_CONTROL_LEVEL = "editor" | "viewer" | "none"
+export type ACCESS_CONTROL_LEVEL = "owner" | "editor" | "viewer" | "none"
 export interface DBSupabaseAccessControl
 {
     base_id: number

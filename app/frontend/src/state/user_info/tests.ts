@@ -19,7 +19,7 @@ export function run_tests ()
 
     const an_owned_base: SupabaseKnowledgeBaseWithAccess = {
         id: 1, inserted_at, updated_at, owner_user_id: user_id, public_read: false, title: "owned by this user",
-        access_level: undefined // access_level is currently undefined when user is the owner
+        access_level: "owner"
     }
     const a_base_with_editor_access: SupabaseKnowledgeBaseWithAccess = {
         id: 2, inserted_at, updated_at, owner_user_id: other_user_id, public_read: false, title: "editable by this user",
@@ -31,6 +31,7 @@ export function run_tests ()
     }
     const a_public_base: SupabaseKnowledgeBaseWithAccess = {
         id: 3, inserted_at, updated_at, owner_user_id: other_user_id, public_read: true, title: "public viewable by this user",
+        access_level: "viewer",
     }
     const bases = [
         an_owned_base,

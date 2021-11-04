@@ -8,7 +8,7 @@ import type {
 
 
 
-export async function get_all_bases ()
+export async function get_all_bases (user_id: string)
 {
     const supabase = get_supabase()
     const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
@@ -18,7 +18,7 @@ export async function get_all_bases ()
 
     const data: SupabaseKnowledgeBaseWithAccess[] | undefined = !res.data ? undefined : res.data.map(r =>
     {
-        return base_supabase_to_app(r, r.access_controls)
+        return base_supabase_to_app(r, r.access_controls, user_id)
     })
 
     return { error: res.error, data }
@@ -60,14 +60,14 @@ function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
 
 
 
-function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls?: JoinedAccessControlsPartial[]): SupabaseKnowledgeBaseWithAccess
+function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls: JoinedAccessControlsPartial[] | undefined, user_id: string): SupabaseKnowledgeBaseWithAccess
 {
-    let { inserted_at, updated_at } = base
+    let { inserted_at, updated_at, owner_user_id, public_read } = base
     inserted_at = new Date(inserted_at)
     updated_at = new Date(updated_at)
 
     const access_control = access_controls && access_controls[0]
-    const access_level = access_control && access_control.access_level
+    const access_level = access_control?.access_level || (user_id === owner_user_id ? "owner" : (public_read ? "viewer" : "none"))
 
     return { ...santise_base(base), inserted_at, updated_at, access_level }
 }

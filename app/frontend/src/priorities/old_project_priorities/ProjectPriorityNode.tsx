@@ -51,7 +51,7 @@ function _ProjectPriorityNode (props: Props)
         rich_text: true,
         wcomponent,
         wcomponents_by_id,
-        wc_id_to_counterfactuals_map: {},
+        wc_id_to_counterfactuals_map: undefined,
         created_at_ms,
         sim_ms: new Date().getTime(),
     })

@@ -13,7 +13,7 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
     knowledge_view = {
         ...knowledge_view,
         ...parse_base_dates(knowledge_view),
-        wc_id_map: optionally_remove_invalid_wc_ids(knowledge_view, wcomponent_ids),
+        wc_id_map: optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids),
         sort_type: knowledge_view.sort_type || "normal",
     }
 
@@ -22,23 +22,34 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
 
 
 
-function optionally_remove_invalid_wc_ids (kv: KnowledgeView, wcomponent_ids?: Set<string>): KnowledgeViewWComponentIdEntryMap
+function optionally_remove_invalid_wc_ids (kv: KnowledgeView, remove_missing: boolean, wcomponent_ids?: Set<string>): KnowledgeViewWComponentIdEntryMap
 {
     if (!wcomponent_ids) return kv.wc_id_map
 
     const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-    const dropped_ids: string[] = []
+    const missing_ids: string[] = []
 
     Object.entries(kv.wc_id_map).forEach(([id, value]) =>
     {
-        if (wcomponent_ids.has(id)) new_wc_id_map[id] = value
-        else dropped_ids.push(id)
+        if (remove_missing)
+        {
+            if (wcomponent_ids.has(id)) new_wc_id_map[id] = value
+            else missing_ids.push(id)
+        }
+        else
+        {
+            new_wc_id_map[id] = value
+            if (!wcomponent_ids.has(id)) missing_ids.push(id)
+        }
     })
 
-    if (dropped_ids.length > 0)
+
+    if (missing_ids.length > 0)
     {
-        console.warn(`Dropped ${dropped_ids.length} invalid ids from KnowledgeView: ${kv.id}`)
+        if (remove_missing) console.warn(`Dropped ${missing_ids.length} invalid ids from KnowledgeView: ${kv.id}`)
+        else console.warn(`${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`)
     }
+
 
     return new_wc_id_map
 }

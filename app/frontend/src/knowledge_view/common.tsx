@@ -16,6 +16,7 @@ import { KnowledgeViewDatetimeLinesConfigForm } from "./KnowledgeViewDatetimeLin
 import { Link } from "../sharedf/Link"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
+import { KnowledgeViewChangeBase } from "./change_base/KnowledgeViewChangeBase"
 
 
 
@@ -45,6 +46,9 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
     const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""]
+
+
+    const is_current_kv = props.current_subview_id === knowledge_view.id
 
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
@@ -149,17 +153,35 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
 
         <hr />
 
+        {editing && !is_current_kv && <div>
+            <Link
+                route={undefined}
+                sub_route={undefined}
+                item_id={undefined}
+                args={{ subview_id: knowledge_view.id }}
+            >
+                Change to this knowledge view
+            </Link> to edit datetime lines config and change the base.
+        </div>}
 
-        <KnowledgeViewDatetimeLinesConfigForm
-            editing={editing}
-            knowledge_view={knowledge_view}
-            knowledge_views_by_id={props.knowledge_views_by_id}
-            update_item={crud.update_item}
-        />
+        {editing && is_current_kv && <div>
+            <KnowledgeViewDatetimeLinesConfigForm
+                editing={editing}
+                knowledge_view={knowledge_view}
+                knowledge_views_by_id={props.knowledge_views_by_id}
+                update_item={crud.update_item}
+            />
+
+            <hr />
+
+            <KnowledgeViewChangeBase
+                knowledge_view={knowledge_view}
+            />
 
 
-        <hr />
-        <br />
+            <hr />
+            <br />
+        </div>}
 
 
         {(editing || children.length > 0) && <p>

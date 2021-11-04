@@ -278,6 +278,8 @@ export function SandBoxSupabase ()
     </div>
 
 
+    const user_id = user.id
+
     return <div>
         Logged in with {user.email} {user.id}<br />
         {async_request_in_progress && <SyncIcon className="animate spinning" />}
@@ -295,8 +297,8 @@ export function SandBoxSupabase ()
         <br />
         <br />
 
-        <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases })} value="Get all bases" />
-        <input type="button" onClick={() => get_or_create_an_owned_base({ user_id: user.id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
+        <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases, user_id })} value="Get all bases" />
+        <input type="button" onClick={() => get_or_create_an_owned_base({ user_id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
 
         <br />
         <br />
@@ -323,7 +325,7 @@ export function SandBoxSupabase ()
                     /> &nbsp;
                     {base.public_read ? "Public" : "Private"} &nbsp;
                     title: {base.title} &nbsp;
-                    owned by: {get_user_name_for_display({ users_by_id: users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id })} &nbsp;
+                    owned by: {get_user_name_for_display({ users_by_id: users_by_id, current_user_id: user_id, other_user_id: base.owner_user_id })} &nbsp;
                     id: {base.id} &nbsp;
                     {base.owner_user_id !== user.id && <span>
                         access: {access_description} &nbsp;
@@ -342,28 +344,28 @@ export function SandBoxSupabase ()
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, title: "Title changed" }
-                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases, user_id })
                 }} value="Modify base (change title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, title: "Primary" }
-                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases, user_id })
                 }} value="Modify base (reset title)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, owner_user_id: user_1_id }
-                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases, user_id })
                 }} value="Modify base (change owner to user_1 -- should FAIL if different user)" />
             <br />
 
             <input type="button" onClick={() =>
                 {
                     const modified_base = { ...current_base, public_read: !current_base.public_read }
-                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases })
+                    modify_base_wrapper({ base: modified_base, set_postgrest_error, set_bases, user_id })
                 }} value="Modify base (toggle public read)" />
             <br />
         </div>}
@@ -575,12 +577,13 @@ async function get_an_owned_base (user_id: string)
 
 interface GetAllBasesArgs
 {
+    user_id: string
     set_postgrest_error: (error: PostgrestError | null) => void
     set_bases: (bases: SupabaseKnowledgeBaseWithAccess[] | undefined) => void
 }
 async function get_all_bases2 (args: GetAllBasesArgs)
 {
-    const res = await get_all_bases()
+    const res = await get_all_bases(args.user_id)
 
     args.set_postgrest_error(res.error)
     args.set_bases(res.data)
@@ -590,9 +593,10 @@ async function get_all_bases2 (args: GetAllBasesArgs)
 
 interface ModifyBaseArgs
 {
+    user_id: string
     base: SupabaseKnowledgeBase
     set_postgrest_error: (a: PostgrestError | null) => void
-    set_bases: (a: SupabaseKnowledgeBase[] | undefined) => void
+    set_bases: (a: SupabaseKnowledgeBaseWithAccess[] | undefined) => void
 }
 async function modify_base_wrapper (args: ModifyBaseArgs)
 {
@@ -601,7 +605,7 @@ async function modify_base_wrapper (args: ModifyBaseArgs)
     const res = await modify_base(base)
     set_postgrest_error(res.error)
 
-    if (!res.error) await get_all_bases2({ set_postgrest_error, set_bases })
+    if (!res.error) await get_all_bases2({ set_postgrest_error, set_bases, user_id: args.user_id })
 }
 
 

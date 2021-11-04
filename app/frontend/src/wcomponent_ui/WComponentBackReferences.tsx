@@ -76,7 +76,7 @@ function _WComponentBackReferences (props: Props)
                     args={undefined}
                 >
                     <Markdown>
-                        {get_title({ rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: {}, created_at_ms, sim_ms })}
+                        {get_title({ rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
                     </Markdown>
                 </Link>
             </div>

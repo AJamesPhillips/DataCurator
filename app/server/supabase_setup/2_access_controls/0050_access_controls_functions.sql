@@ -32,6 +32,19 @@ $$;
 
 
 
+CREATE OR REPLACE FUNCTION get_bases_editable_for_authorised_user()
+returns setof bigint
+stable
+language sql
+security definer
+SET search_path = public
+as $$
+  select get_bases_editable_or_viewable_for_authorised_user(false);
+$$;
+
+
+
+
 CREATE OR REPLACE FUNCTION get_owned_access_control_user_ids_for_authorised_user()
 returns setof uuid
 stable
