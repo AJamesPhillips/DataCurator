@@ -10,6 +10,7 @@ import { get_items_by_id } from "../shared/utils/get_items"
 
 
 
+const base_id = 16
 const initial_data = {}
 
 export function SimHome ()
@@ -20,7 +21,7 @@ export function SimHome ()
 
     useEffect(() =>
     {
-        supabase_load_data(true, 14).then(data =>
+        supabase_load_data(true, base_id).then(data =>
         {
             set_knowledge_views_by_id(get_items_by_id(data.knowledge_views, ""))
             set_wcomponents_by_id(get_items_by_id(data.wcomponents, ""))
