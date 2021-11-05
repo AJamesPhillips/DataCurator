@@ -13,7 +13,7 @@ interface OwnProps
 {
     label_ids: string[] | undefined
     on_change: (new_label_ids: string[]) => void
-    always_allow_editing?: boolean
+    force_editable?: boolean
 }
 
 
@@ -68,7 +68,7 @@ function _LabelsEditor (props: Props)
             }}
             on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
             on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
-            always_allow_editing={props.always_allow_editing}
+            force_editable={props.force_editable}
         />
     )
 }

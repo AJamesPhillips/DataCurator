@@ -9,6 +9,11 @@ import { WComponentMultipleForm } from "./WComponentMultipleForm"
 import { LinkButton } from "../../sharedf/Link"
 import { Button } from "../../sharedf/Button"
 import { ACTIONS } from "../../state/actions"
+import { useState } from "preact/hooks"
+import { useEffect } from "react"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_supabase } from "../../supabase/get_supabase"
+import { supabase_get_wcomponent_from_any_base } from "../../state/sync/supabase/wcomponent"
 
 
 
@@ -38,15 +43,62 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentsSidePanel (props: Props)
 {
-    if (!props.ready) return <div>Loading...</div>
+    const [searching_for_unfound, set_searching_for_unfound] = useState<boolean | undefined>(undefined)
+    const [searched_for_wcomponent, set_searched_for_wcomponent] = useState<WComponent | undefined>(undefined)
+
+    const { id } = props
+    const wcomponent = props.wcomponent || searched_for_wcomponent
+
+    const display_type: DisplayType = !props.ready ? DisplayType.loading
+        : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple
+        : id === null ? DisplayType.no_id
+        : wcomponent ? DisplayType.wcomponent_present : DisplayType.no_wcomponent_present
 
 
-    if (props.sub_route === "wcomponents_edit_multiple") return <div>
+    function clear_old_wcomponent_from_other_base ()
+    {
+        if (id && wcomponent && wcomponent.id !== id)
+        {
+            set_searching_for_unfound(undefined)
+            set_searched_for_wcomponent(undefined)
+        }
+    }
+
+
+    function look_for_wcomponent_in_any_base ()
+    {
+        if (display_type === DisplayType.no_wcomponent_present && searching_for_unfound === undefined && id !== null)
+        {
+            (async () => {
+                let component_form_closed = false
+
+                set_searching_for_unfound(true)
+                const result = await search_for_wcomponent_in_all_bases(id)
+                if (component_form_closed) return
+
+                set_searching_for_unfound(false)
+                set_searched_for_wcomponent(result.wcomponent)
+
+                return () => {
+                    component_form_closed = true
+                }
+            })()
+        }
+    }
+
+    useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id])
+    useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id])
+
+
+    if (display_type === DisplayType.loading) return <div>Loading...</div>
+
+
+    if (display_type === DisplayType.edit_multiple) return <div>
         <WComponentMultipleForm />
     </div>
 
 
-    if (!props.id) return <div>
+    if (display_type === DisplayType.no_id) return <div>
 
         {props.selected_ids.length > 0 && <p>
             <div style={{ display: "inline-flex" }}>
@@ -77,11 +129,41 @@ function _WComponentsSidePanel (props: Props)
     </div>
 
 
-    if (!props.wcomponent) return <div>Component not found for id: {props.id}</div>
+    if (display_type === DisplayType.wcomponent_present)
+    {
+        const wcomponent_from_different_base = !props.wcomponent && !!searched_for_wcomponent
+        return <WComponentForm wcomponent={wcomponent!} wcomponent_from_different_base={wcomponent_from_different_base} />
+    }
 
 
-    return <WComponentForm wcomponent={props.wcomponent} />
+    return <div>
+        Component not found for id: {id}
+
+        <br />
+        <br />
+
+        {searching_for_unfound && <div>Searching in other bases...</div>}
+        {!searching_for_unfound && <div>Not found in other bases (that you have access to).</div>}
+    </div>
 }
 
 
 export const WComponentsSidePanel = connector(_WComponentsSidePanel) as FunctionComponent<OwnProps>
+
+
+
+enum DisplayType {
+    loading,
+    edit_multiple,
+    no_id,
+    no_wcomponent_present,
+    wcomponent_present,
+}
+
+
+
+function search_for_wcomponent_in_all_bases (wcomponent_id: string)
+{
+    const supabase = get_supabase()
+    return supabase_get_wcomponent_from_any_base({ supabase, id: wcomponent_id })
+}

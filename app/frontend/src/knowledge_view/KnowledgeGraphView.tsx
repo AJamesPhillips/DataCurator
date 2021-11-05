@@ -23,7 +23,7 @@ const map_state = (state: RootState) =>
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
-    const { wcomponent_nodes, wcomponent_connections } = current_composed_knowledge_view || {}
+    const { wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
     const { selected_wcomponent_ids_map } = state.meta_wcomponents
 
 
@@ -31,6 +31,7 @@ const map_state = (state: RootState) =>
         ready,
         wcomponent_nodes,
         wcomponent_connections,
+        wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_map,
     }
@@ -64,15 +65,22 @@ export const KnowledgeGraphView = connector(_KnowledgeGraphView) as FunctionalCo
 const no_children: h.JSX.Element[] = []
 const get_children = (props: Props): ChildrenRawData =>
 {
-    const { ready } = props
-    let { wcomponent_nodes } = props
-    if (!ready || !wcomponent_nodes || wcomponent_nodes.length === 0) return no_children
+    const { ready, wcomponent_nodes = [], wcomponent_unfound_ids = [] } = props
+    if (!ready) return no_children
+    if (wcomponent_nodes.length === 0 && wcomponent_unfound_ids.length === 0) return no_children
 
 
-    const elements = wcomponent_nodes.map(({ id }) => <WComponentCanvasNode
-        key={id}
-        id={id}
-    />)
+    const elements = [
+        ...wcomponent_nodes.map(({ id }) => <WComponentCanvasNode
+            key={id}
+            id={id}
+        />),
+
+        ...wcomponent_unfound_ids.map(id => <WComponentCanvasNode
+            key={id}
+            id={id}
+        />)
+    ]
     elements.push(<TemporaryDraggedCanvasNodes />)
 
     return elements

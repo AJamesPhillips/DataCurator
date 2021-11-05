@@ -25,13 +25,13 @@ interface OwnProps <E extends AutocompleteOption = AutocompleteOption>
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
-    always_allow_editing?: boolean
+    force_editable?: boolean
 }
 
 
 
 const map_state = (state: RootState, own_props: OwnProps) => ({
-    editable: own_props.always_allow_editing || !state.display_options.consumption_formatting,
+    editable: own_props.force_editable !== undefined ? own_props.force_editable : !state.display_options.consumption_formatting,
 })
 
 const map_dispatch = {
@@ -68,7 +68,7 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                     if (id === undefined) return
                     props.on_change([...selected_option_ids, id])
                 }}
-                allow_editing_when_presenting={editable}
+                force_editable={editable}
             />}
 
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">

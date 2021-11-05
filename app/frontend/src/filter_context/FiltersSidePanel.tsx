@@ -50,7 +50,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, exclude_by_label_ids } })
                 }}
-                always_allow_editing={true}
+                force_editable={true}
             />
         </p>
 
@@ -64,7 +64,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, include_by_label_ids } })
                 }}
-                always_allow_editing={true}
+                force_editable={true}
             />
         </p>
 
@@ -81,7 +81,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, exclude_by_component_types } })
                 }}
-                always_allow_editing={true}
+                force_editable={true}
             />
         </p>
 
@@ -98,7 +98,7 @@ function _FiltersSidePanel (props: Props)
                 {
                     props.set_filters({ filters: { ...props.filters, include_by_component_types } })
                 }}
-                always_allow_editing={true}
+                force_editable={true}
             />
         </p>
     </div>

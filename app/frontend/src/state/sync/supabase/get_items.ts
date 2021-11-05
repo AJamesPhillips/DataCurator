@@ -9,6 +9,7 @@ type GetItemsArgs<S, U> =
     table: string
     converter: (item: S) => U
     offset?: number
+    specific_id?: string // todo rename function to semantically match getting multiple items or just one
 } & ({
     base_id: number
     all_bases?: false
@@ -32,6 +33,7 @@ export async function supabase_get_items <S extends { id: string, base_id: numbe
         .range(offset, offset + SUPABASE_MAX_ROWS - 1)
 
     if (args.base_id !== undefined) query = query.eq("base_id", args.base_id as any)
+    if (args.specific_id !== undefined) query = query.eq("id", args.specific_id as any)
 
     const res1 = await query
     let error = res1.error || undefined

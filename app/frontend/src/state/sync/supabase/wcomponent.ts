@@ -34,6 +34,30 @@ export function supabase_get_wcomponents (args: GetWComponentsArgs)
 
 
 
+type GetWComponentFromAnyBaseArgs =
+{
+    supabase: SupabaseClient
+    id: string
+}
+export async function supabase_get_wcomponent_from_any_base (args: GetWComponentFromAnyBaseArgs)
+{
+    const result = await supabase_get_items<SupabaseReadWComponent, WComponent>({
+        supabase: args.supabase,
+        all_bases: true,
+        base_id: undefined,
+        specific_id: args.id,
+        table: TABLE_NAME,
+        converter: wcomponent_supabase_to_app,
+    })
+
+    return {
+        error: result.error,
+        wcomponent: result.items[0],
+    }
+}
+
+
+
 interface SupabaseUpsertWComponentArgs
 {
     supabase: SupabaseClient

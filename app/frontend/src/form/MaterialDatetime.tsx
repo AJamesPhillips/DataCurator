@@ -16,7 +16,7 @@ interface OwnProps
     invariant_value?: Date | undefined
     value?: Date | undefined
     on_change?: (new_datetime: Date | undefined) => void
-    always_allow_editing?: boolean
+    force_editable?: boolean
     fullWidth?: boolean
     required?: boolean
     type?: string,
@@ -43,7 +43,7 @@ function _MaterialDateTime (props: Props)
         set_popover_anchor(null)
     }
 
-    const not_editable = props.always_allow_editing ? false : props.presenting
+    const not_editable = props.force_editable ? false : props.presenting
     const is_popover_open: boolean = Boolean(popover_anchor)
 
     const on_popover_value_changed = (event: any) => {

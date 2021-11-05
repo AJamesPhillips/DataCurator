@@ -136,7 +136,7 @@ function _WComponentCanvasNode (props: Props)
     const { change_route, set_highlighted_wcomponent } = props
 
     if (!composed_kv) return <div>No current knowledge view</div>
-    if (!wcomponent) return <div>Could not find component of id {id}</div>
+    // if (!wcomponent) return <div>Could not find component of id {id}</div>
 
 
     const kv_entry_maybe = composed_kv.composed_wc_id_map[id]
@@ -155,7 +155,7 @@ function _WComponentCanvasNode (props: Props)
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
     const is_selected = selected_wcomponent_ids_set.has(id)
-    const validity_value = always_show ? { display_certainty: 1 } : calc_wcomponent_should_display({
+    const validity_value = (always_show || !wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
         is_editing, force_displaying, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
@@ -186,7 +186,7 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const children: h.JSX.Element[] = [
+    const children: h.JSX.Element[] = !wcomponent ? [] : [
         <Handles
             show_move_handle={is_movable && is_editing && is_highlighted}
             user_requested_node_move={() =>
@@ -204,7 +204,7 @@ function _WComponentCanvasNode (props: Props)
     ]
 
 
-    const title = get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = !wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
 
     const show_all_details = is_editing || is_current_item
@@ -233,15 +233,15 @@ function _WComponentCanvasNode (props: Props)
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
-        + ` node_is_type_${wcomponent.type} `
+        + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "")
         + (show_all_details ? " compact_title " : "") + classes.sizer
         + color.font
         + color.background
     )
 
 
-    const show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
-    const show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(wcomponent))
+    const show_validity_value = !wcomponent ? false : (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
+    const show_state_value = !wcomponent ? false : (is_editing && wcomponent_should_have_state_VAP_sets(wcomponent))
         || (!wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
             || wcomponent_is_judgement_or_objective(wcomponent)
@@ -250,7 +250,7 @@ function _WComponentCanvasNode (props: Props)
             // || is_current_item
             || props.have_judgements
         ))
-    const sub_state_wcomponent = (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
+    const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
 
     const terminals = get_terminals({ is_movable, is_editing, is_highlighted })
 
@@ -259,24 +259,24 @@ function _WComponentCanvasNode (props: Props)
 
     return <ConnectableCanvasNode
         position={is_movable ? (temporary_drag_kv_entry || kv_entry) : undefined}
-        cover_image={wcomponent.summary_image}
+        cover_image={wcomponent?.summary_image}
         node_main_content={<div>
-            {!wcomponent.summary_image && <div className={"background_image " + wcomponent.type} />}
+            {!wcomponent?.summary_image && <div className="background_image" />}
 
             <div className="node_title">
                 {kv_entry_maybe === undefined && is_editing && <span>
                     <WarningTriangle message="Missing from this knowledge view" />
                     &nbsp;
                 </span>}
-                {(is_editing || !wcomponent.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
+                {(is_editing || !wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
             </div>
 
-            {show_validity_value && <div className="node_validity_container">
+            {wcomponent && show_validity_value && <div className="node_validity_container">
                 {is_editing && <div className="description_label">validity</div>}
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_state_container">
+            {wcomponent && show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_state_container">
                 {is_editing && <div className="description_label">state &nbsp;</div>}
                 {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
@@ -300,11 +300,11 @@ function _WComponentCanvasNode (props: Props)
 
             {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
 
-            {is_editing && <div className="description_label">
+            {wcomponent && is_editing && <div className="description_label">
                 {wcomponent_type_to_text(wcomponent.type)}
             </div>}
 
-            <LabelsListV2 label_ids={wcomponent.label_ids} />
+            {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
         </div>}
         extra_css_class={extra_css_class}
         opacity={opacity}
@@ -376,7 +376,7 @@ function get_terminals (args: { is_movable: boolean; is_editing: boolean; is_hig
 
 interface GetWcomponentColorArgs
 {
-    wcomponent: WComponent
+    wcomponent?: WComponent
     wcomponents_by_id: WComponentsById
     created_at_ms: number
     sim_ms: number
@@ -386,40 +386,47 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     let background = ""
     let font = ""
 
-    const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
-    if (temporal_value_certainty)
+    if (args.wcomponent)
     {
-        const { temporal_uncertainty, certainty } = temporal_value_certainty
-        const datetime = get_uncertain_datetime(temporal_uncertainty)
-        if (datetime && datetime.getTime() < args.sim_ms)
+        const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
+        if (temporal_value_certainty)
         {
-            if (certainty === 1 || certainty === undefined)
+            const { temporal_uncertainty, certainty } = temporal_value_certainty
+            const datetime = get_uncertain_datetime(temporal_uncertainty)
+            if (datetime && datetime.getTime() < args.sim_ms)
             {
-                background = " past_certain "
-                font = " color_light "
+                if (certainty === 1 || certainty === undefined)
+                {
+                    background = " past_certain "
+                    font = " color_light "
+                }
+                else
+                {
+                    // Warning that either you need to update your data or this is warning that this is uncertain
+                    background = " past_uncertain "
+                }
             }
-            else
+            else if (!datetime) // is eternal
             {
-                // Warning that either you need to update your data or this is warning that this is uncertain
-                background = " past_uncertain "
+                if (certainty === 1 || certainty === undefined)
+                {
+                    background = " past_certain "
+                    font = " color_light "
+                }
             }
-        }
-        else if (!datetime) // is eternal
-        {
-            if (certainty === 1 || certainty === undefined)
-            {
-                background = " past_certain "
-                font = " color_light "
-            }
-        }
 
+        }
+        else
+        {
+            // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
+            //     : ((wcomponent_is_goal(args.wcomponent)
+            //     // || wcomponent_is_judgement_or_objective(wcomponent)
+            //     ) ? "rgb(207, 255, 198)" : "")
+        }
     }
     else
     {
-        // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
-        //     : ((wcomponent_is_goal(args.wcomponent)
-        //     // || wcomponent_is_judgement_or_objective(wcomponent)
-        //     ) ? "rgb(207, 255, 198)" : "")
+        background = " node_missing "
     }
 
     return { background, font }

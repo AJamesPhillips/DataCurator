@@ -49,6 +49,8 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
     overlapping_wc_ids: OverlappingWcIdMap
     wcomponent_nodes: WComponent[]
     wcomponent_connections: WComponent[]
+    wcomponent_unfound_ids: string[]
+
     wc_id_to_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType

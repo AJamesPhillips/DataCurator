@@ -111,7 +111,7 @@ function _ViewsBreadcrumb (props: Props)
                 options={level.options}
                 on_change={subview_id => props.change_route({ args: { subview_id } })}
                 on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
-                allow_editing_when_presenting={true}
+                force_editable={true}
                 threshold_minimum_score={false}
             />
         </Box>

@@ -28,7 +28,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
     extra_styles?: h.JSX.CSSProperties
     start_expanded?: boolean
-    allow_editing_when_presenting?: boolean
+    force_editable?: boolean
     retain_invalid_search_term_on_blur?: boolean
     search_fields?: SearchFields
     search_type?: SearchType
@@ -229,7 +229,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         style={props.extra_styles}
     >
         <TextField
-            disabled={props.allow_editing_when_presenting ? false : props.presenting}
+            disabled={props.force_editable !== undefined ? !props.force_editable : props.presenting}
             ref={((el: HTMLDivElement) =>
             {
                 if (!el) return

@@ -177,7 +177,14 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     const non_deleted_wcomponent_ids = Object.keys(composed_wc_id_map)
 
     const wc_ids_by_type = get_wcomponent_ids_by_type(wcomponents_by_id, non_deleted_wcomponent_ids)
-    const wcomponents = non_deleted_wcomponent_ids.map(id => wcomponents_by_id[id]).filter(is_defined)
+    const wcomponents: WComponent[] = []
+    const wcomponent_unfound_ids: string[] = []
+    non_deleted_wcomponent_ids.forEach(id =>
+    {
+        const wcomponent = wcomponents_by_id[id]
+        if (wcomponent) wcomponents.push(wcomponent)
+        else wcomponent_unfound_ids.push(id)
+    })
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
     const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
@@ -200,6 +207,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         overlapping_wc_ids,
         wcomponent_nodes,
         wcomponent_connections,
+        wcomponent_unfound_ids,
         wc_id_to_counterfactuals_v2_map,
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
@@ -259,8 +267,9 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
     Object.keys(composed_wc_id_map).forEach(id =>
     {
         const wcomponent = wcomponents_by_id[id]
-        if (!wcomponent) delete composed_wc_id_map[id]
-        else if (wcomponent.deleted_at) delete composed_wc_id_map[id]
+        // Allow not found wcomponents to be kept as they may be from a different base and just not loaded
+        // if (!wcomponent) delete composed_wc_id_map[id]
+        if (wcomponent?.deleted_at) delete composed_wc_id_map[id]
     })
 }
 
@@ -455,6 +464,8 @@ function get_overlapping_wc_ids (composed_wc_id_map: KnowledgeViewWComponentIdEn
 
     Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
     {
+        // Temporary check until we compute the actual location of connections as being half way between nodes
+        // AND display the connection "node"
         if (wcomponent_is_plain_connection(wcomponents_by_id[wcomponent_id])) return
 
         const coord_key = `${entry.left},${entry.top}`

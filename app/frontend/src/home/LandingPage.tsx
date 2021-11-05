@@ -42,7 +42,10 @@ export function LandingPage() {
 
                     <h3>What is <strong>Data Curator</strong>?</h3>
                     <p>
-                        DataCurator is a tool for building, and sharing our mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential versions of these models in the future, present and past.
+                        DataCurator is a tool for mapping complex systems and potential interventions.
+                    </p>
+                    <p>
+                        It allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present.
                     </p>
                 </Box>
                 <Box component="footer">

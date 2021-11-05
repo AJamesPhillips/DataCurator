@@ -10,7 +10,7 @@ import { Autocomplete } from "@material-ui/lab"
 
 export interface AutocompleteProps <E>
 {
-    allow_editing_when_presenting?: boolean
+    force_editable?: boolean
     disableClearable?: boolean
     label?: string // TODO can remove this now that it always has a "-" in it?
     selected_option?: any | undefined
@@ -39,7 +39,7 @@ function _MaterialAutoComplete <E> (props: Props<E>)
             clearOnBlur={true}
             clearOnEscape={true}
             // debug={true}
-            disabled={props.allow_editing_when_presenting ? false : props.presenting}
+            disabled={props.force_editable ? false : props.presenting}
             disableClearable={props.disableClearable || false}
             disableListWrap={true}
             disablePortal={true}

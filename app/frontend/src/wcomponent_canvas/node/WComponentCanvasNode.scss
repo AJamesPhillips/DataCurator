@@ -67,6 +67,10 @@
 
 
 //
+.node_missing > .node_main_content
+{
+    background-color: rgb(233, 233, 233);
+}
 
 .past_certain > .node_main_content
 {
@@ -123,7 +127,7 @@
     pointer-events: none; /* Alternatively set mackground image z-index to 0 and all other elements in node to 1 with positive relative */
 }
 
-.wcomponent_canvas_node .background_image.actor
+.wcomponent_canvas_node.node_is_type_actor .background_image
 {
     background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
 }

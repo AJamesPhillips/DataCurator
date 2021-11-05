@@ -62,14 +62,16 @@ import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { get_default_wcomponent_title } from "../wcomponent_derived/rich_text/get_default_wcomponent_title"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
+import { WarningTriangle } from "../sharedf/WarningTriangle"
 
 
 
 interface OwnProps {
     wcomponent: WComponent
+    wcomponent_from_different_base?: boolean // Quick hack to deal with loading wcomponents from other bases
 }
 
-const map_state = (state: RootState, { wcomponent }: OwnProps) =>
+const map_state = (state: RootState, { wcomponent, wcomponent_from_different_base }: OwnProps) =>
 {
     let from_wcomponent: WComponent | undefined = undefined
     let to_wcomponent: WComponent | undefined = undefined
@@ -90,7 +92,8 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         wc_id_to_counterfactuals_map,
         from_wcomponent,
         to_wcomponent,
-        editing: !state.display_options.consumption_formatting,
+        editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
+        force_editable: wcomponent_from_different_base ? false : undefined,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }
@@ -100,6 +103,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 const map_dispatch = {
     upsert_wcomponent: ACTIONS.specialised_object.upsert_wcomponent,
     delete_wcomponent: ACTIONS.specialised_object.delete_wcomponent,
+    update_chosen_base_id: ACTIONS.user_info.update_chosen_base_id,
 }
 
 
@@ -122,7 +126,7 @@ function _WComponentForm (props: Props)
 
 
     const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
-        editing, created_at_ms, sim_ms } = props
+        editing, force_editable, created_at_ms, sim_ms } = props
 
     const default_title = useMemo(() =>
     {
@@ -153,6 +157,8 @@ function _WComponentForm (props: Props)
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
+        if (props.wcomponent_from_different_base) return
+
         const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent
         props.upsert_wcomponent({ wcomponent: updated })
     }
@@ -174,8 +180,17 @@ function _WComponentForm (props: Props)
 
 
     return <Box className={`editable-${wcomponent_id}`}>
+        {props.wcomponent_from_different_base && <div
+            style={{ cursor: "pointer" }}
+            onClick={() => props.update_chosen_base_id({ base_id: props.wcomponent.base_id })}
+        >
+            <WarningTriangle message="" />
+            Editing disabled.  Change to base {props.wcomponent.base_id} to edit
+        </div>}
+
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
+                force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms }) || default_title}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
@@ -201,6 +216,7 @@ function _WComponentForm (props: Props)
 
         <FormControl component="fieldset" fullWidth={true} margin="normal">
             <AutocompleteText
+                force_editable={force_editable}
                 placeholder="Type: "
                 selected_option_id={wcomponent.type}
                 options={wcomponent_type_options}
@@ -222,6 +238,7 @@ function _WComponentForm (props: Props)
             <span className="description_label">Sub type</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
+                    force_editable={force_editable}
                     placeholder="Sub type..."
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
@@ -233,6 +250,7 @@ function _WComponentForm (props: Props)
 
         {(editing || wcomponent.description) && <FormControl fullWidth={true} margin="normal">
             <EditableText
+                force_editable={force_editable}
                 placeholder="Description..."
                 value={wcomponent.description}
                 conditional_on_blur={description => upsert_wcomponent({ description })}
@@ -408,13 +426,18 @@ function _WComponentForm (props: Props)
 
 
 
-        {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
+        {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields
+            force_editable={force_editable}
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        /> }
 
         <br />
         <br />
 
         <FormControl fullWidth={true}>
             <EditableCustomDateTime
+                force_editable={force_editable}
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
