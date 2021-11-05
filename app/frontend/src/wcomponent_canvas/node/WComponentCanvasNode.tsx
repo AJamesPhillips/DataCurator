@@ -99,6 +99,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         focused_mode: state.display_options.focused_mode,
         have_judgements: judgement_or_objective_ids.length > 0,
         wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
+        display_time_marks: state.display_options.display_time_marks,
     }
 }
 
@@ -223,7 +224,9 @@ function _WComponentCanvasNode (props: Props)
     }))
     const classes = use_styles()
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
-    const color = get_wcomponent_color({ wcomponent, wcomponents_by_id, sim_ms, created_at_ms })
+    const color = get_wcomponent_color({
+        wcomponent, wcomponents_by_id, sim_ms, created_at_ms, display_time_marks: props.display_time_marks,
+    })
 
     const extra_css_class = (
         ` wcomponent_canvas_node `
@@ -380,6 +383,7 @@ interface GetWcomponentColorArgs
     wcomponents_by_id: WComponentsById
     created_at_ms: number
     sim_ms: number
+    display_time_marks: boolean | undefined
 }
 function get_wcomponent_color (args: GetWcomponentColorArgs)
 {
@@ -388,33 +392,36 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
 
     if (args.wcomponent)
     {
-        const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
-        if (temporal_value_certainty)
+        if (args.display_time_marks)
         {
-            const { temporal_uncertainty, certainty } = temporal_value_certainty
-            const datetime = get_uncertain_datetime(temporal_uncertainty)
-            if (datetime && datetime.getTime() < args.sim_ms)
+            const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
+            if (temporal_value_certainty)
             {
-                if (certainty === 1 || certainty === undefined)
+                const { temporal_uncertainty, certainty } = temporal_value_certainty
+                const datetime = get_uncertain_datetime(temporal_uncertainty)
+                if (datetime && datetime.getTime() < args.sim_ms)
                 {
-                    background = " past_certain "
-                    font = " color_light "
+                    if (certainty === 1 || certainty === undefined)
+                    {
+                        background = " past_certain "
+                        font = " color_light "
+                    }
+                    else
+                    {
+                        // Warning that either you need to update your data or this is warning that this is uncertain
+                        background = " past_uncertain "
+                    }
                 }
-                else
+                else if (!datetime) // is eternal
                 {
-                    // Warning that either you need to update your data or this is warning that this is uncertain
-                    background = " past_uncertain "
+                    if (certainty === 1 || certainty === undefined)
+                    {
+                        background = " past_certain "
+                        font = " color_light "
+                    }
                 }
-            }
-            else if (!datetime) // is eternal
-            {
-                if (certainty === 1 || certainty === undefined)
-                {
-                    background = " past_certain "
-                    font = " color_light "
-                }
-            }
 
+            }
         }
         else
         {
