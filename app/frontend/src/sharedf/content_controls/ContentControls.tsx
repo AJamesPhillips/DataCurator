@@ -109,7 +109,7 @@ function _ContentControls (props: Props)
 
                 <ToggleDatetimeMarkers />
 
-                <Box component="label">
+                {/* <Box component="label">
                     <ButtonGroup
                         disableElevation
                         variant="contained"
@@ -132,7 +132,7 @@ function _ContentControls (props: Props)
                             Relationships
                         </Button>
                     </ButtonGroup>
-                </Box>
+                </Box> */}
             </Toolbar>
         </Box>
     )

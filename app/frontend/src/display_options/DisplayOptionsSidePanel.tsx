@@ -130,6 +130,11 @@ function _DisplayOptionsSidePanel (props: Props)
                 value={props.display_by_simulated_time}
                 on_change={props.set_display_by_simulated_time}
             />
+
+            <br />
+            <span style={{ backgroundColor: "pink" }}>
+                Experimental view not optimised for data sets over a large period of time
+            </span>
         </p>
 
 
