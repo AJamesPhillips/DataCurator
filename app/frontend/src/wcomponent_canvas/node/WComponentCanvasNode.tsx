@@ -235,7 +235,8 @@ function _WComponentCanvasNode (props: Props)
         + (is_selected ? " node_is_selected " : "")
         + ` node_is_type_${wcomponent.type} `
         + (show_all_details ? " compact_title " : "") + classes.sizer
-        + (color.font ? color.font : "")
+        + color.font
+        + color.background
     )
 
 
@@ -309,7 +310,6 @@ function _WComponentCanvasNode (props: Props)
         opacity={opacity}
         unlimited_width={false}
         glow={glow}
-        color={color.background}
         on_pointer_down={on_pointer_down}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
@@ -395,20 +395,20 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
         {
             if (certainty === 1 || certainty === undefined)
             {
-                background = "rgb(62, 55, 90)"
+                background = " past_certain "
                 font = " color_light "
             }
             else
             {
                 // Warning that either you need to update your data or this is warning that this is uncertain
-                background = "pink"
+                background = " past_uncertain "
             }
         }
         else if (!datetime) // is eternal
         {
             if (certainty === 1 || certainty === undefined)
             {
-                background = "rgb(62, 55, 90)"
+                background = " past_certain "
                 font = " color_light "
             }
         }
@@ -416,10 +416,10 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     }
     else
     {
-        background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
-            : ((wcomponent_is_goal(args.wcomponent)
-            // || wcomponent_is_judgement_or_objective(wcomponent)
-            ) ? "rgb(207, 255, 198)" : "")
+        // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
+        //     : ((wcomponent_is_goal(args.wcomponent)
+        //     // || wcomponent_is_judgement_or_objective(wcomponent)
+        //     ) ? "rgb(207, 255, 198)" : "")
     }
 
     return { background, font }

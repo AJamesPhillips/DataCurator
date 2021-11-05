@@ -46,8 +46,8 @@ function optionally_remove_invalid_wc_ids (kv: KnowledgeView, remove_missing: bo
 
     if (missing_ids.length > 0)
     {
-        if (remove_missing) console.warn(`Dropped ${missing_ids.length} invalid ids from KnowledgeView: ${kv.id}`)
-        else console.warn(`${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`)
+        console.warn(`${remove_missing ? "Dropped " : ""}${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`)
+        console.warn(missing_ids)
     }
 
 

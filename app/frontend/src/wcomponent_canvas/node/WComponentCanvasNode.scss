@@ -65,15 +65,30 @@
     z-index: 99;
 }
 
+
+//
+
+.past_certain > .node_main_content
+{
+    background-color: rgb(62, 55, 90);
+}
+
+.past_uncertain > .node_main_content
+{
+    background-color: pink;
+}
+
 .node_is_type_action > .node_main_content
 {
     box-shadow: inset orange 0px 0px 4px 2px;
+    background-color: rgb(255, 238, 198);
 }
 .node_is_type_goal > .node_main_content
 , .node_is_type_judgement > .node_main_content
 , .node_is_type_objective > .node_main_content
 {
     box-shadow: inset #67c767 0px 0px 4px 2px;
+    background-color: rgb(207, 255, 198);
 }
 
 .wcomponent_canvas_node.compact_title .node_main_content .node_title
