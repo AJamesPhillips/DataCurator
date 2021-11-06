@@ -1,7 +1,7 @@
 import type { AnyAction } from "redux"
 
 import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
-import { update_substate, update_subsubstate } from "../../../utils/update_state"
+import { update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_update_specialised_object_sync_info } from "../../sync/actions"
 import {get_knowledge_view_from_state } from "../accessors"
@@ -26,12 +26,12 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
     if (is_upsert_wcomponent(action))
     {
-        const { wcomponent, add_to_knowledge_view } = action
+        const { wcomponent, add_to_knowledge_view, add_to_top } = action
 
         if (add_to_knowledge_view)
         {
             const entry: KnowledgeViewWComponentEntry = { ...add_to_knowledge_view.position }
-            state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry)
+            state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry, add_to_top)
 
             state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry)
         }
@@ -74,7 +74,7 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
 
 
-function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
+function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string, entry: KnowledgeViewWComponentEntry, add_to_top?: boolean): RootState
 {
     const knowledge_view = get_knowledge_view_from_state(state, knowledge_view_id)
 
@@ -84,25 +84,32 @@ function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id
         return state
     }
 
-    return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry)
+    return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry, add_to_top)
 }
 
 
 
-function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_view: KnowledgeView, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
+function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_view: KnowledgeView, wcomponent_id: string, entry: KnowledgeViewWComponentEntry, add_to_top: boolean = true): RootState
 {
-    const wc_id_map = { ...knowledge_view.wc_id_map }
+    let new_wc_id_map = { ...knowledge_view.wc_id_map }
 
     // Special case changing entry from deleted to re-add to ensure the component
     // gets rendered last and on top of other components
-    const existing_entry = wc_id_map[wcomponent_id]
+    const existing_entry = new_wc_id_map[wcomponent_id]
     if (existing_entry && existing_entry.deleted && !entry.deleted)
     {
-        delete wc_id_map[wcomponent_id]
+        delete new_wc_id_map[wcomponent_id]
     }
 
-    wc_id_map[wcomponent_id] = entry
-    const new_knowledge_view = { ...knowledge_view, wc_id_map }
+    if (add_to_top)
+    {
+        new_wc_id_map[wcomponent_id] = entry
+    }
+    else
+    {
+        new_wc_id_map = { [wcomponent_id]: entry, ...new_wc_id_map }
+    }
+    const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)
 }
