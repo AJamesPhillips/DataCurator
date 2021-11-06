@@ -62,22 +62,17 @@ function set_judgement_or_objective_target (wcomponent: WComponent, state: RootS
 {
     if (wcomponent_is_judgement_or_objective(wcomponent))
     {
-        const selected_wcomponents = state.meta_wcomponents.selected_wcomponent_ids_list
+        const selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_list
+        const selected_wcomponent_id = selected_wcomponent_ids[0]
 
-        if (selected_wcomponents.length === 1)
+        if (selected_wcomponent_ids.length === 1 && selected_wcomponent_id)
         {
-            const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponents[0]!)
-            if (selected_wcomponent && wcomponent_should_have_state_VAP_sets(selected_wcomponent))
+            const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponent_id)
+            if (selected_wcomponent)
             {
                 wcomponent = {
                     ...wcomponent,
                     judgement_target_wcomponent_id: selected_wcomponent.id,
-                }
-
-                if (wcomponent_is_statev2(selected_wcomponent) && selected_wcomponent.subtype === "boolean")
-                {
-                    wcomponent.judgement_operator = "=="
-                    wcomponent.judgement_comparator_value = "True"
                 }
             }
         }
