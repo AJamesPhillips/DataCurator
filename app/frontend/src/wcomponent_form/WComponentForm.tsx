@@ -92,8 +92,13 @@ const map_state = (state: RootState, { wcomponent, wcomponent_from_different_bas
         wc_id_to_counterfactuals_map,
         from_wcomponent,
         to_wcomponent,
+
+        // todo refactor these names.  It's confusing that we're using the unmodified_editing,
+        // editing and force_editable
+        unmodified_editing: !state.display_options.consumption_formatting,
         editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
         force_editable: wcomponent_from_different_base ? false : undefined,
+
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }
@@ -185,7 +190,10 @@ function _WComponentForm (props: Props)
             onClick={() => props.update_chosen_base_id({ base_id: props.wcomponent.base_id })}
         >
             <WarningTriangle message="" />
-            Editing disabled.  Change to base {props.wcomponent.base_id} to edit
+            &nbsp;
+            {props.unmodified_editing
+                ? <span>Editing disabled. Change to base {props.wcomponent.base_id} to edit</span>
+                : <span>Change to base {props.wcomponent.base_id} to view</span>}
         </div>}
 
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>

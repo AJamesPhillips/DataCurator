@@ -16,7 +16,7 @@ export function replace_normal_ids (text: string, wcomponents_by_id: WComponents
         const referenced_wcomponent = wcomponents_by_id[id]
         if (!referenced_wcomponent)
         {
-            text = text.replace(replacer, format_wcomponent_id_error("not found", id))
+            text = text.replace(replacer, format_wcomponent_id_error(root_url, id, "not found"))
             return
         }
 
