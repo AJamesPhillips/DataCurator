@@ -257,7 +257,7 @@ function _WComponentCanvasNode (props: Props)
 
     const terminals = get_terminals({ is_movable, is_editing, is_highlighted })
 
-    const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
+    // const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
 
 
     return <ConnectableCanvasNode
@@ -281,7 +281,7 @@ function _WComponentCanvasNode (props: Props)
 
             {wcomponent && show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_state_container">
                 {is_editing && <div className="description_label">state &nbsp;</div>}
-                {show_judgements_when_no_state_values && <WComponentJudgements wcomponent={wcomponent} />}
+                <WComponentJudgements wcomponent={wcomponent} />
                 <Box flexGrow={1} flexShrink={1} overflow="hidden">
                     <NodeValueAndPredictionSetSummary
                         wcomponent={wcomponent}

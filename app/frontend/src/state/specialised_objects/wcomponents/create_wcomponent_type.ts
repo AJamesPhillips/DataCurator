@@ -5,8 +5,6 @@ import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/
 import {
     WComponent,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_statev2,
-    wcomponent_should_have_state_VAP_sets,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { ACTIONS } from "../../actions"
