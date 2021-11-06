@@ -18,11 +18,11 @@ interface OwnProps
 
 export function SimulationSummary (props: OwnProps)
 {
-    const { base_knowledge_view_id, scenario_knowledge_view_ids } = props.simulation
+    const { foundational_knowledge_view_id, scenario_knowledge_view_ids } = props.simulation
     const { knowledge_views_by_id, wcomponents_by_id } = props
-    const base_kv = knowledge_views_by_id[base_knowledge_view_id]
+    const base_kv = knowledge_views_by_id[foundational_knowledge_view_id]
 
-    if (!base_kv) return <div>Unknown simulation base knowledge view for id: {base_knowledge_view_id}</div>
+    if (!base_kv) return <div>Unknown simulation base knowledge view for id: {foundational_knowledge_view_id}</div>
 
 
     const created_at_ms = new Date().getTime()

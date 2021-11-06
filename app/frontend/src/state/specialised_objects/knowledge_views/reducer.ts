@@ -33,7 +33,8 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
             const entry: KnowledgeViewWComponentEntry = { ...add_to_knowledge_view.position }
             state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry, add_to_top)
 
-            state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry)
+            // See issue #170
+            // state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry)
         }
 
         const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id]
