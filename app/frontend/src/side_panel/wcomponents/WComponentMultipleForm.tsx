@@ -101,10 +101,17 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {(editing || label_ids.length > 0) && <p>
-            <h3>Label</h3>
+            <h3>Labels</h3>
             <LabelsEditor
                 label_ids={label_ids}
-                on_change={label_ids => bulk_edit_wcomponents({ wcomponent_ids, change: { label_ids } })}
+                on_change={new_label_ids =>
+                {
+                    const new_label_ids_set = new Set(new_label_ids)
+                    const remove_label_ids = new Set(label_ids.filter(id => !new_label_ids_set.has(id)))
+                    const add_label_ids = new Set(new_label_ids.filter(id => !label_ids_set.has(id)))
+
+                    bulk_edit_wcomponents({ wcomponent_ids, change: {}, remove_label_ids, add_label_ids })
+                }}
             />
         </p>}
 

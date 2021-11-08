@@ -8,6 +8,8 @@ interface BulkEditWComponentsProps
 {
     wcomponent_ids: string[]
     change: Partial<WComponentCommon>
+    remove_label_ids?: Set<string>
+    add_label_ids?: Set<string>
 }
 export interface ActionBulkEditWComponents extends Action, BulkEditWComponentsProps {}
 
