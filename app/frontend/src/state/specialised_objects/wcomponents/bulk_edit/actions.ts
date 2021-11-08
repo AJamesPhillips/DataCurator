@@ -1,13 +1,13 @@
 import type { Action, AnyAction } from "redux"
 
-import type { WComponentCommon } from "../../../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 
 interface BulkEditWComponentsProps
 {
     wcomponent_ids: string[]
-    change: Partial<WComponentCommon>
+    change: Partial<WComponent>
     remove_label_ids?: Set<string>
     add_label_ids?: Set<string>
 }

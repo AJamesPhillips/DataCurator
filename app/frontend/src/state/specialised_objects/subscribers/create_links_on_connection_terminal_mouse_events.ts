@@ -26,7 +26,7 @@ export function create_links_on_connection_terminal_mouse_events__subscriber (st
         if (base_id === undefined) return
 
 
-        if (state.global_keys.last_key === "Escape")
+        if (state.global_keys.last_key === "Escape" || state.display_options.consumption_formatting)
         {
             store.dispatch(ACTIONS.specialised_object.clear_pointerupdown_on_connection_terminal({}))
             return
