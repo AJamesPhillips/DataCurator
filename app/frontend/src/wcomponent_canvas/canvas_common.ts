@@ -13,7 +13,7 @@ interface FactoryOnPointerDownArgs
     is_current_item: boolean
     clear_selected_wcomponents: (args: {}) => void
 }
-export function factory_on_pointer_down (args: FactoryOnPointerDownArgs)
+export function factory_on_click (args: FactoryOnPointerDownArgs)
 {
     const {
         wcomponent_id: id,
@@ -25,7 +25,7 @@ export function factory_on_pointer_down (args: FactoryOnPointerDownArgs)
     } = args
 
 
-    return (e: h.JSX.TargetedEvent<HTMLDivElement | SVGElement, PointerEvent>) => {
+    return (e: h.JSX.TargetedEvent<HTMLDivElement | SVGElement, MouseEvent>) => {
         e.stopImmediatePropagation()
         e.preventDefault()
 

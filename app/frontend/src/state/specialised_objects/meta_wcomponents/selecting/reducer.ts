@@ -11,6 +11,7 @@ import {
     is_set_selected_wcomponents,
     ActionSetSelectedWcomponents,
     is_set_wcomponent_ids_to_move,
+    is_pointerdown_on_component,
 } from "./actions"
 
 
@@ -70,6 +71,12 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     //     }
     // }
 
+
+    if (is_pointerdown_on_component(action))
+    {
+        const value = { wcomponent_id: action.wcomponent_id, terminal_type: undefined }
+        state = update_substate(state, "meta_wcomponents", "last_pointer_down_connection_terminal", value)
+    }
 
     if (is_pointerdown_on_connection_terminal(action))
     {

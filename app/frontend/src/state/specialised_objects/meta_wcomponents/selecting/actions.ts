@@ -85,6 +85,32 @@ export const is_pointerdown_on_connection_terminal = (action: AnyAction): action
 
 
 
+interface PointerUpDownOnComponentProps
+{
+    wcomponent_id: string
+    up_down: "up" | "down"
+}
+interface ActionPointerUpDownOnComponent extends Action, PointerUpDownOnComponentProps {}
+
+const pointerupdown_on_component_type = "pointerupdown_on_component"
+
+const pointerupdown_on_component = (args: PointerUpDownOnComponentProps): ActionPointerUpDownOnComponent =>
+{
+    return { type: pointerupdown_on_component_type, ...args }
+}
+
+const is_pointerupdown_on_component = (action: AnyAction): action is ActionPointerUpDownOnComponent => {
+    return action.type === pointerupdown_on_component_type
+}
+export const is_pointerup_on_component = (action: AnyAction): action is ActionPointerUpDownOnComponent => {
+    return is_pointerupdown_on_component(action) && action.up_down === "up"
+}
+export const is_pointerdown_on_component = (action: AnyAction): action is ActionPointerUpDownOnComponent => {
+    return is_pointerupdown_on_component(action) && action.up_down === "down"
+}
+
+
+
 interface ClearPointerUpDownOnConnectionTerminalProps {}
 interface ActionClearPointerUpDownOnConnectionTerminal extends Action, ClearPointerUpDownOnConnectionTerminalProps {}
 
@@ -125,6 +151,7 @@ export const selecting_actions = {
     clear_selected_wcomponents,
     set_selected_wcomponents,
     pointerupdown_on_connection_terminal,
+    pointerupdown_on_component,
     clear_pointerupdown_on_connection_terminal,
     set_wcomponent_ids_to_move,
 }

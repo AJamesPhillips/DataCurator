@@ -27,7 +27,8 @@ interface OwnProps
     extra_node_styles?: h.JSX.CSSProperties
     other_children?: h.JSX.Element[]
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
-    on_click?: () => void
+    on_pointer_up?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
+    on_click?: (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => void
     on_pointer_enter?: () => void
     on_pointer_leave?: () => void
     terminals: Terminal[]
@@ -80,6 +81,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     return <CanvasNode
         position={props.position}
         on_pointer_down={props.on_pointer_down}
+        on_pointer_up={props.on_pointer_up}
         on_click={props.on_click}
         on_pointer_enter={props.on_pointer_enter}
         on_pointer_leave={props.on_pointer_leave}

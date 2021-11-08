@@ -23,6 +23,8 @@ interface CanvasMsgMap
 {
     canvas_double_tap: CanvasPointerEvent
     canvas_right_click: CanvasPointerEvent
+    canvas_pointer_down: true
+    canvas_pointer_up: true
     canvas_area_select: CanvasAreaSelectEvent
     canvas_node_drag_relative_position: CanvasPoint | undefined
 }

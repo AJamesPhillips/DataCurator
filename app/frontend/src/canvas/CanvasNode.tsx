@@ -14,6 +14,7 @@ interface CanvasNodeProps
     on_pointer_enter?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_pointer_leave?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
+    on_pointer_up?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_click?: (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => void
     extra_args?: h.JSX.HTMLAttributes<HTMLDivElement>
 }
@@ -25,7 +26,7 @@ export class CanvasNode extends Component<CanvasNodeProps>
     render ()
     {
         const { position, extra_styles, display, extra_css_class, title, children } = this.props
-        const { on_pointer_enter, on_pointer_leave, on_pointer_down, on_click } = this.props
+        const { on_pointer_enter, on_pointer_leave, on_pointer_down, on_pointer_up, on_click } = this.props
 
         const style_outer: h.JSX.CSSProperties = {
             ...position,
@@ -34,7 +35,7 @@ export class CanvasNode extends Component<CanvasNodeProps>
             ...extra_styles,
         }
 
-        const mouseable = (on_pointer_down || on_click || on_pointer_enter || on_pointer_leave) ? "mouseable" : ""
+        const mouseable = (on_pointer_down || on_pointer_up || on_click || on_pointer_enter || on_pointer_leave) ? "mouseable" : ""
 
         const css_class_names = `node ${mouseable} ${extra_css_class || ""}`
 
@@ -44,6 +45,7 @@ export class CanvasNode extends Component<CanvasNodeProps>
             style={style_outer}
             title={title}
             onPointerDown={on_pointer_down}
+            onPointerUp={on_pointer_up}
             onClick={on_click}
             onPointerEnter={on_pointer_enter}
             onPointerLeave={on_pointer_leave}

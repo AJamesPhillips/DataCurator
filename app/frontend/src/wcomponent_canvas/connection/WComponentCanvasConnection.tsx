@@ -36,7 +36,7 @@ import {
     calc_judgement_connection_wcomponent_should_display,
     calc_display_opacity,
 } from "../calc_should_display"
-import { factory_on_pointer_down } from "../canvas_common"
+import { factory_on_click } from "../canvas_common"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 
 
@@ -165,7 +165,7 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_pointer_down = factory_on_pointer_down({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
+    const on_click = factory_on_click({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
 
 
     const { from_node_position, to_node_position, from_connection_type, to_connection_type,
@@ -207,7 +207,7 @@ function _WComponentCanvasConnection (props: Props)
         to_node_position={to_node_position}
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
-        on_pointer_down={on_pointer_down}
+        on_click={on_click}
         line_behaviour={line_behaviour}
         thickness={thickness}
         connection_end_type={connection_end_type}

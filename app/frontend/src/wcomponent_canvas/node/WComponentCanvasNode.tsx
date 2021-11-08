@@ -1,11 +1,12 @@
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
+import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, makeStyles } from "@material-ui/core"
 
 import "./WComponentCanvasNode.scss"
 import {
+    ConnectionTerminalType,
     connection_terminal_attributes,
     connection_terminal_directions,
     WComponent,
@@ -41,7 +42,7 @@ import {
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
-import { factory_on_pointer_down } from "../canvas_common"
+import { factory_on_click } from "../canvas_common"
 import { WComponentJudgements } from "./WComponentJudgements"
 import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
 import { WComponentValidityValue } from "./WComponentValidityValue"
@@ -110,6 +111,7 @@ const map_dispatch = {
     clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
     change_route: ACTIONS.routing.change_route,
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
+    pointerupdown_on_component: ACTIONS.specialised_object.pointerupdown_on_component,
     pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
     set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move,
 }
@@ -177,7 +179,7 @@ function _WComponentCanvasNode (props: Props)
         : node_is_moving ? 0 : validity_opacity
 
 
-    const on_pointer_down = factory_on_pointer_down({
+    const on_click = factory_on_click({
         wcomponent_id: id,
         clicked_wcomponent,
         clear_selected_wcomponents,
@@ -260,6 +262,27 @@ function _WComponentCanvasNode (props: Props)
     // const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
 
 
+    const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
+    {
+        e.stopImmediatePropagation()
+        e.preventDefault()
+
+        props.pointerupdown_on_component({ up_down: "down", wcomponent_id: id })
+    }
+
+    const on_pointer_up = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
+    {
+        e.stopImmediatePropagation()
+        e.preventDefault()
+
+        props.pointerupdown_on_component({ up_down: "up", wcomponent_id: id })
+    }
+
+    const pointerupdown_on_connection_terminal = (connection_location: ConnectionTerminalType, up_down: "up" | "down") => props.pointerupdown_on_connection_terminal({
+        terminal_type: connection_location, up_down, wcomponent_id: id
+    })
+
+
     return <ConnectableCanvasNode
         position={is_movable ? (temporary_drag_kv_entry || kv_entry) : undefined}
         cover_image={wcomponent?.summary_image}
@@ -313,11 +336,13 @@ function _WComponentCanvasNode (props: Props)
         opacity={opacity}
         unlimited_width={false}
         glow={glow}
-        on_pointer_down={on_pointer_down}
+        on_click={on_click}
         on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
         on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
         terminals={terminals}
-        pointerupdown_on_connection_terminal={(connection_location, up_down) => props.pointerupdown_on_connection_terminal({ terminal_type: connection_location, up_down, wcomponent_id: id })}
+        on_pointer_down={on_pointer_down}
+        on_pointer_up={on_pointer_up}
+        pointerupdown_on_connection_terminal={pointerupdown_on_connection_terminal}
         extra_args={{
             draggable: node_is_draggable,
             onDragStart: e =>

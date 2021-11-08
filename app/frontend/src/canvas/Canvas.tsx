@@ -134,6 +134,8 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        pub_sub.canvas.pub("canvas_pointer_down", true)
+
         const right_button = e.button === 2
         if (right_button) return
 
@@ -167,8 +169,13 @@ class _Canvas extends Component<Props, State>
     }
 
 
-    on_pointer_up = () =>
+    on_pointer_up = (e?: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        // const right_button = e?.button === 2
+        // if (right_button) return
+
+        pub_sub.canvas.pub("canvas_pointer_up", true)
+
         if (this.state.pointer_state.area_select)
         {
             const args = area_selection_args(this.state)
