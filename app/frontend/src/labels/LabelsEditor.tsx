@@ -12,6 +12,7 @@ import type { RootState } from "../state/State"
 interface OwnProps
 {
     label_ids: string[] | undefined
+    allowed_label_ids?: Set<string>
     on_change: (new_label_ids: string[]) => void
     force_editable?: boolean
 }
@@ -50,6 +51,7 @@ function _LabelsEditor (props: Props)
 
 
     const wcomponent_id_options = get_wcomponent_search_options({
+        allowed_wcomponent_ids: props.allowed_label_ids,
         wcomponents_by_id: props.wcomponents_by_id,
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,

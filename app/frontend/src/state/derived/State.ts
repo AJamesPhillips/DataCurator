@@ -59,6 +59,8 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 
     composed_datetime_line_config: ComposedDatetimeLineConfig
 
+    available_filter_options: DerivedAvailableFilterOptions
+
     filters: {
         wc_ids_excluded_by_any_filter: Set<string>
 
@@ -70,6 +72,14 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 
 type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
+
+
+export interface DerivedAvailableFilterOptions
+{
+    wc_label_ids: Set<string>
+    wc_types: WComponentType[]
+}
+
 
 
 export interface DerivedState

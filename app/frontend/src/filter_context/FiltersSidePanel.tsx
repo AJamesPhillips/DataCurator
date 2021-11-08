@@ -1,20 +1,31 @@
 import { FunctionalComponent, h } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { LabelsEditor } from "../labels/LabelsEditor"
-import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 
 
 
-const map_state = (state: RootState) => ({
-    apply_filter: state.filter_context.apply_filter,
-    filters: state.filter_context.filters,
-})
+const map_state = (state: RootState) =>
+{
+    const {
+        wc_label_ids,
+        wc_types,
+    } = state.derived.current_composed_knowledge_view?.available_filter_options || {}
+
+    return {
+        wc_label_ids,
+        wc_types,
+        apply_filter: state.filter_context.apply_filter,
+        filters: state.filter_context.filters,
+    }
+}
+
 
 const map_dispatch = {
     set_apply_filter: ACTIONS.filter_context.set_apply_filter,
@@ -28,6 +39,12 @@ type Props = ConnectedProps<typeof connector>
 
 function _FiltersSidePanel (props: Props)
 {
+    const { wc_label_ids, wc_types } = props
+
+    const wcomponent_type_options = useMemo(() =>
+    {
+        return (wc_types || []).map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
+    }, [wc_types])
 
 
     return <div>
@@ -45,6 +62,7 @@ function _FiltersSidePanel (props: Props)
             Exclude by label:
 
             <LabelsEditor
+                allowed_label_ids={wc_label_ids}
                 label_ids={props.filters.exclude_by_label_ids}
                 on_change={exclude_by_label_ids =>
                 {
@@ -59,6 +77,7 @@ function _FiltersSidePanel (props: Props)
             Filter (include) by label:
 
             <LabelsEditor
+                allowed_label_ids={wc_label_ids}
                 label_ids={props.filters.include_by_label_ids}
                 on_change={include_by_label_ids =>
                 {
@@ -75,7 +94,7 @@ function _FiltersSidePanel (props: Props)
             <MultiAutocompleteText
                 placeholder=""
                 selected_option_ids={props.filters.exclude_by_component_types}
-                options={wcomponent_type_options()}
+                options={wcomponent_type_options}
                 allow_none={true}
                 on_change={exclude_by_component_types =>
                 {
@@ -92,7 +111,7 @@ function _FiltersSidePanel (props: Props)
             <MultiAutocompleteText
                 placeholder=""
                 selected_option_ids={props.filters.include_by_component_types}
-                options={wcomponent_type_options()}
+                options={wcomponent_type_options}
                 allow_none={true}
                 on_change={include_by_component_types =>
                 {
@@ -105,7 +124,3 @@ function _FiltersSidePanel (props: Props)
 }
 
 export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent<{}>
-
-
-
-const wcomponent_type_options = () => wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))

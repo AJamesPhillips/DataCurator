@@ -16,6 +16,7 @@ import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 interface GetWcomponentSearchOptionsArgs
 {
     wcomponents?: WComponent[]
+    allowed_wcomponent_ids?: Set<string>
     wcomponents_by_id: WComponentsById
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
@@ -26,9 +27,10 @@ interface GetWcomponentSearchOptionsArgs
 
 export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutocompleteOption[]
 {
-    const { wcomponents: wcs, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms, include_deleted } = args
+    const { wcomponents: wcs, allowed_wcomponent_ids, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms, include_deleted } = args
 
-    const wcomponents = wcs || Object.values(wcomponents_by_id)
+    let wcomponents = wcs || Object.values(wcomponents_by_id)
+    if (allowed_wcomponent_ids) wcomponents = wcomponents.filter(({ id }) => allowed_wcomponent_ids.has(id))
 
     const options = wcomponents
         .filter(wc => include_deleted || !wc.deleted_at)

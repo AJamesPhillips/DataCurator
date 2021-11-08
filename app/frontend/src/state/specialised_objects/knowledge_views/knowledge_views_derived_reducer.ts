@@ -31,7 +31,7 @@ import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_b
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
 import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
 import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
-import type { ComposedKnowledgeView, WComponentIdsByType } from "../../derived/State"
+import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../../derived/State"
 import type { RootState } from "../../State"
 import {
     get_base_knowledge_view,
@@ -197,6 +197,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
+    const available_filter_options = get_available_filter_options(wcomponents)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
@@ -212,6 +213,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
+        available_filter_options,
         filters: {
             wc_ids_excluded_by_any_filter: new Set(),
             wc_ids_excluded_by_filters: new Set(),
@@ -344,6 +346,24 @@ function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id
         .filter(wcomponent_is_prioritisation)
 
     return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")
+}
+
+
+
+function get_available_filter_options (wcomponents: WComponent[]): DerivedAvailableFilterOptions
+{
+    const wc_label_ids = new Set<string>()
+    const wc_types_set = new Set<WComponentType>()
+
+    wcomponents.forEach(wc =>
+    {
+        if (wc.label_ids) wc.label_ids.forEach(id => wc_label_ids.add(id))
+        wc_types_set.add(wc.type)
+    })
+
+    const wc_types: WComponentType[] = Array.from(wc_types_set).sort()
+
+    return { wc_label_ids, wc_types }
 }
 
 
