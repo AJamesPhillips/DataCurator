@@ -7,7 +7,7 @@ import type { WComponent } from "../../../../wcomponent/interfaces/SpecialisedOb
 interface BulkEditWComponentsProps
 {
     wcomponent_ids: string[]
-    change: Partial<WComponent>
+    change: Partial<WComponent> & { type?: undefined }
     remove_label_ids?: Set<string>
     add_label_ids?: Set<string>
 }

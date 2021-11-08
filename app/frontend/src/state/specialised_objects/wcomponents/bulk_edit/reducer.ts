@@ -32,13 +32,13 @@ function handle_bulk_edit_wcomponents (state: RootState, action: ActionBulkEditW
 {
     const { wcomponent_ids, change, remove_label_ids, add_label_ids } = action
 
-    const wcomponents = get_wcomponents_from_state(state, wcomponent_ids)
+    const wcomponents: WComponent[] = get_wcomponents_from_state(state, wcomponent_ids)
         .filter(is_defined)
 
     if (wcomponents.length)
     {
         wcomponents.forEach(wcomponent => {
-            const wcomponent_with_change = { ...wcomponent, ...change }
+            const wcomponent_with_change: WComponent = { ...wcomponent, ...change }
 
             const edited_wcomponent = modify_label_ids(wcomponent_with_change, remove_label_ids, add_label_ids)
 
