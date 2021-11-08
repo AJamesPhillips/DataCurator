@@ -1,15 +1,12 @@
-import { Link } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
+import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import {
-    get_current_composed_knowledge_view_from_state,
-} from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import {
     ConnectionTerminalAttributeType,
