@@ -1,4 +1,5 @@
 import type { CanvasPoint } from "../../canvas/interfaces"
+import { min_throttle } from "../../utils/throttle"
 import { pub_sub_factory } from "../pub_sub/pub_sub_factory"
 
 
@@ -27,6 +28,7 @@ interface CanvasMsgMap
     canvas_pointer_up: true
     canvas_area_select: CanvasAreaSelectEvent
     canvas_node_drag_relative_position: CanvasPoint | undefined
+    throttled_canvas_node_drag_relative_position: CanvasPoint | undefined
 }
 
 
@@ -48,6 +50,19 @@ function canvas_node_drag_relative_position_middleware (message: CanvasPoint | u
 
     return { continue: continue_, message }
 }
+
+
+
+function handle_canvas_node_drag_relative_position (new_relative_position: CanvasPoint | undefined)
+{
+    canvas_pub_sub.pub("throttled_canvas_node_drag_relative_position", new_relative_position)
+}
+
+const throttled_handle_canvas_node_drag_relative_position = min_throttle(handle_canvas_node_drag_relative_position, 30)
+
+canvas_pub_sub.sub("canvas_node_drag_relative_position", throttled_handle_canvas_node_drag_relative_position.throttled)
+
+
 
 // canvas_pub_sub.sub("canvas_double_tap", (msg: CanvasPointerEvent) =>
 // {

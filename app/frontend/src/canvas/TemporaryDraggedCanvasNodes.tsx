@@ -33,7 +33,7 @@ function _TemporaryDraggedCanvasNodes (props: Props)
 
     useEffect(() =>
     {
-        const unsubscribe_position = pub_sub.canvas.sub("canvas_node_drag_relative_position", new_relative_position =>
+        function handle_canvas_node_drag_relative_position (new_relative_position: CanvasPoint | undefined)
         {
             if (relative_position && new_relative_position === undefined)
             {
@@ -51,7 +51,10 @@ function _TemporaryDraggedCanvasNodes (props: Props)
             }
 
             set_relative_position(new_relative_position)
-        })
+        }
+
+
+        const unsubscribe_position = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", handle_canvas_node_drag_relative_position)
 
         return () => unsubscribe_position()
     })
