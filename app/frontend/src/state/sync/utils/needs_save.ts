@@ -17,15 +17,11 @@ export function get_next_specialised_state_id_to_save (state: RootState): GetNex
 {
     const { wcomponent_ids, knowledge_view_ids } = state.sync.specialised_object_ids_pending_save
 
-    const knowledge_view_ids_iterator = knowledge_view_ids.values()
-    const knowledge_view_id = knowledge_view_ids_iterator.next()
-    if (!knowledge_view_id.done)
-    {
-        const id = knowledge_view_id.value
-        return { id, object_type: "knowledge_view" }
-    }
-
-
+    // Save wcomponent first so that adding new components to a large knowledge view is faster
+    // This is a "hack" to minimise chance of someone adding a new component, changing a field's value
+    // and then having that value overwritten when the wcomponent is finally saved to the DB
+    // ... a better solution would be to prioritise the changed value of the field over the values
+    // returned from the DB.
     const wcomponent_ids_iterator = wcomponent_ids.values()
     const wcomponent_id = wcomponent_ids_iterator.next()
     if (!wcomponent_id.done)
@@ -34,6 +30,14 @@ export function get_next_specialised_state_id_to_save (state: RootState): GetNex
         return { id, object_type: "wcomponent" }
     }
 
+
+    const knowledge_view_ids_iterator = knowledge_view_ids.values()
+    const knowledge_view_id = knowledge_view_ids_iterator.next()
+    if (!knowledge_view_id.done)
+    {
+        const id = knowledge_view_id.value
+        return { id, object_type: "knowledge_view" }
+    }
 
     return undefined
 }
