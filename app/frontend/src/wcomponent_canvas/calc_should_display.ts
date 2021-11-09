@@ -16,7 +16,6 @@ import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledg
 interface CalcWcomponentShouldDisplayArgs
 {
     is_editing: boolean
-    force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponent
     kv_entry: KnowledgeViewWComponentEntry | undefined
@@ -27,13 +26,13 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { is_editing, force_displaying, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters } = args
+    const { is_editing, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters } = args
 
 
     if (!kv_entry || kv_entry.deleted) return false
 
 
-    if (force_displaying || is_selected) return { display_certainty: 1 }
+    if (is_selected) return { display_certainty: 1 }
 
 
     if (wc_ids_excluded_by_filters.has(wcomponent.id)) return false
@@ -122,7 +121,6 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
 interface CalculateConnectionCertaintyArgs
 {
     is_editing: boolean
-    force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentConnection
     kv_entry: KnowledgeViewWComponentEntry | undefined
@@ -178,7 +176,6 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 interface CalculateJudgementCertaintyArgs
 {
     is_editing: boolean
-    force_displaying: boolean
     is_selected: boolean
     wcomponent: WComponentJudgement
     kv_entry: KnowledgeViewWComponentEntry | undefined

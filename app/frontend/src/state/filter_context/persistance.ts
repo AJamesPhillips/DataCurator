@@ -38,7 +38,6 @@ export function filter_context_starting_state (): FilterContextState
     const state: FilterContextState = {
         apply_filter,
         filters,
-        force_display: false,
     }
 
     return state

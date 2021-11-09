@@ -52,7 +52,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { id: wcomponent_id } = own_props
     const wcomponent = get_wcomponent_from_state(state, wcomponent_id)
 
-    const { force_display: force_displaying } = state.filter_context
     const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id)
     const { current_composed_knowledge_view: composed_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
@@ -79,7 +78,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const to_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.to_id]
 
             validity_value = calc_connection_wcomponent_should_display({
-                is_editing, force_displaying, is_selected,
+                is_editing, is_selected,
                 wcomponent, kv_entry,
                 validity_filter,
                 from_wc, to_wc, from_wc__kv_entry, to_wc__kv_entry,
@@ -96,7 +95,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id]
 
             validity_value = calc_judgement_connection_wcomponent_should_display({
-                is_editing, force_displaying, is_selected, wcomponent, kv_entry, validity_filter,
+                is_editing, is_selected, wcomponent, kv_entry, validity_filter,
                 target_wc, target_wc__kv_entry,
                 created_at_ms, sim_ms, wc_ids_excluded_by_filters,
             })

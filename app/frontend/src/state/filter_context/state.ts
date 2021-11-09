@@ -6,7 +6,6 @@ export interface FilterContextState
 {
     apply_filter: boolean
     filters: FilterContextFilters
-    force_display: boolean
 }
 
 

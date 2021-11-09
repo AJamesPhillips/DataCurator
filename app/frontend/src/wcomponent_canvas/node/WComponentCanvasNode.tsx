@@ -84,7 +84,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
     return {
-        force_displaying: state.filter_context.force_display,
         on_current_knowledge_view,
         current_composed_knowledge_view,
         wcomponent: get_wcomponent_from_state(state, wcomponent_id),
@@ -131,7 +130,6 @@ function _WComponentCanvasNode (props: Props)
     const {
         id,
         is_movable = true, always_show = false,
-        force_displaying,
         is_editing,
         current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id,
         is_current_item, selected_wcomponent_ids_set, is_highlighted,
@@ -162,7 +160,7 @@ function _WComponentCanvasNode (props: Props)
     const { wc_ids_excluded_by_filters } = composed_kv.filters
     const is_selected = selected_wcomponent_ids_set.has(id)
     const validity_value = (always_show || !wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
-        is_editing, force_displaying, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
+        is_editing, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
 

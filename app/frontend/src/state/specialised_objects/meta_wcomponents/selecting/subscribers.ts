@@ -53,7 +53,7 @@ function handle_canvas_area_select (store: Store<RootState>)
         const start_top = -start_y
         const end_top = -end_y
 
-        const ids: string[] = Object.entries(kv.composed_wc_id_map)
+        const ids: string[] = Object.entries(kv.composed_visible_wc_id_map)
             .filter(([ id, entry ]) =>
             {
                 return entry.left >= start_x && entry.left <= end_x
