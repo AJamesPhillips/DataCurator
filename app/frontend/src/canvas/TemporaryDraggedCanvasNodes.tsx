@@ -42,12 +42,6 @@ function _TemporaryDraggedCanvasNodes (props: Props)
                     change_left: relative_position.left,
                     change_top: relative_position.top,
                 })
-
-                // Hack to get nodes to move to new position before becoming visible
-                setTimeout(() =>
-                {
-                    props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: new Set() })
-                }, 0)
             }
 
             set_relative_position(new_relative_position)
@@ -58,6 +52,17 @@ function _TemporaryDraggedCanvasNodes (props: Props)
 
         return () => unsubscribe_position()
     })
+
+
+    useEffect(() =>
+    {
+        if (relative_position !== undefined) return
+        if (props.wcomponent_ids_to_move_list.length === 0) return
+
+        // We call this here as a hack to get nodes to move to new position before becoming visible
+        // so that they do not animate to the new position
+        props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: new Set() })
+    }, [relative_position])
 
 
     if (!relative_position) return null
