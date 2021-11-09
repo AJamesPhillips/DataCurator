@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import FilterNoneIcon from "@material-ui/icons/FilterNone"
 
 import type { RootState } from "../state/State"
+import { ACTIONS } from "../state/actions"
 
 
 
@@ -11,7 +12,11 @@ const map_state = (state: RootState) => ({
     apply_filter: state.filter_context.apply_filter,
 })
 
-const connector = connect(map_state)
+const map_dispatch = {
+    change_route: ACTIONS.routing.change_route,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
@@ -28,8 +33,8 @@ function _ActiveFilterWarning(props: Props)
         <IconButton
             className={classes.warning_button}
             component="span"
-            disableRipple disableElevation
             size="small"
+            onClick={() => props.change_route({ route: "filter" })}
         >
             <FilterNoneIcon className={classes.warning_icon} />
         </IconButton>
