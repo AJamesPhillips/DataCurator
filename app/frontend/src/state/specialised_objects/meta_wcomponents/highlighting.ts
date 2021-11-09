@@ -33,7 +33,7 @@ export const highlighting_reducer = (state: RootState, action: AnyAction): RootS
             if (current_kv)
             {
                 neighbour_ids_of_highlighted_wcomponent = new Set()
-                if (id !== undefined)
+                if (id !== undefined && action.highlighted)
                 {
                     const connected_ids = current_kv.wc_id_connections_map[id]
                     if (connected_ids)

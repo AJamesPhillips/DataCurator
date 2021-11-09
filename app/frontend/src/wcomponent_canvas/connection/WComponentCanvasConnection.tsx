@@ -128,6 +128,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 const map_dispatch = {
     clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
     clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+    set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
     change_route: ACTIONS.routing.change_route,
 }
 
@@ -211,6 +212,7 @@ function _WComponentCanvasConnection (props: Props)
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
         on_click={on_click}
+        on_pointer_over_out={over => props.set_highlighted_wcomponent({ id, highlighted: over })}
         line_behaviour={line_behaviour}
         thickness={thickness}
         connection_end_type={connection_end_type}

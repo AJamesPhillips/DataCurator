@@ -22,6 +22,7 @@ interface OwnProps {
     connection_end_type?: ConnectionEndType
     is_highlighted?: boolean
     on_click?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
+    on_pointer_over_out?: (over: boolean) => void
     extra_css_classes?: string
 }
 
@@ -32,7 +33,11 @@ export function CanvasConnnection (props: OwnProps)
     // const [fade_inout_opacity, set_fade_inout_opacity] = useState(0)
 
 
-    const { from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour } = props
+    const {
+        from_node_position, to_node_position, from_connection_type, to_connection_type,
+        line_behaviour,
+        on_pointer_over_out = () => {},
+    } = props
     if (!from_node_position || !to_node_position) return null
 
     const { x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle } = derive_coords({
@@ -79,8 +84,16 @@ export function CanvasConnnection (props: OwnProps)
         <path
             className={"connection_line_background " + extra_background_classes}
             d={`M ${x1} ${-y1} C ${x1 + relative_control_point1.x},${-y1 - relative_control_point1.y}, ${x2 + relative_control_point2.x},${-y2 - relative_control_point2.y}, ${x2},${-y2}`}
-            onPointerOver={() => set_hovered(true)}
-            onPointerOut={() => set_hovered(false)}
+            onPointerOver={() =>
+            {
+                set_hovered(true)
+                on_pointer_over_out(true)
+            }}
+            onPointerOut={() =>
+            {
+                set_hovered(false)
+                on_pointer_over_out(false)
+            }}
             style={style_line_background}
         />
         <path

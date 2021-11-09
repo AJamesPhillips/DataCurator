@@ -197,7 +197,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
-    const wc_id_connections_map = get_wc_id_connections_map()
+    const wc_id_connections_map = get_wc_id_connections_map(wc_ids_by_type.any_link, wcomponents_by_id)
     const available_filter_options = get_available_filter_options(wcomponents)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
@@ -352,9 +352,33 @@ function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id
 
 
 
-function get_wc_id_connections_map ()
+function get_wc_id_connections_map (link_ids: Set<string>, wcomponents_by_id: WComponentsById)
 {
-    return {}
+    const map: {[wc_id: string]: Set<string>} = {}
+
+    function add_entry (id: string, to_id: string)
+    {
+        const entries = map[id] || new Set()
+        entries.add(to_id)
+        map[id] = entries
+    }
+
+    function add_both_entries (connection_id: string, to_node_id: string)
+    {
+        add_entry(connection_id, to_node_id)
+        add_entry(to_node_id, connection_id)
+    }
+
+    link_ids.forEach(id =>
+    {
+        const wcomponent = wcomponents_by_id[id]
+        if (!wcomponent_is_plain_connection(wcomponent)) return // type guard
+
+        if (wcomponent.from_id) add_both_entries(wcomponent.from_id, wcomponent.id)
+        if (wcomponent.to_id) add_both_entries(wcomponent.to_id, wcomponent.id)
+    })
+
+    return map
 }
 
 
