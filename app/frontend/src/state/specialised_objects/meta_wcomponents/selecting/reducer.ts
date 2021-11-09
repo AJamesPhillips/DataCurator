@@ -135,7 +135,7 @@ export function update_derived_selected_wcomponent_ids (state: RootState)
     const meta_wcomponents = {
         ...state.meta_wcomponents,
         selected_wcomponent_ids_set,
-        selected_wcomponent_ids_map: map,
+        selected_wcomponent_ids_to_ordinal_position_map: map,
     }
 
     return { ...state, meta_wcomponents }

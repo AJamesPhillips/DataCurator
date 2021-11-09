@@ -74,7 +74,7 @@ function _FiltersSidePanel (props: Props)
 
 
         <p>
-            Filter (include) by label:
+            Filter (include) by any label (OR):
 
             <LabelsEditor
                 allowed_label_ids={wc_label_ids}

@@ -221,6 +221,7 @@ interface CalcDisplayOpacityArgs
     certainty: number
     is_editing: boolean
     is_highlighted?: boolean
+    connected_neighbour_is_highlighted?: boolean
     is_selected?: boolean
     is_current_item: boolean
     certainty_formatting: CertaintyFormattingOption
@@ -231,6 +232,8 @@ export function calc_display_opacity (args: CalcDisplayOpacityArgs)
     if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item) return 1
 
     if (args.certainty_formatting.render_100_opacity && !args.focused_mode) return 1
+
+    if (args.connected_neighbour_is_highlighted) return 1
 
     if (args.focused_mode) return 0.2
 

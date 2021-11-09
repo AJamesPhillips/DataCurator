@@ -22,7 +22,7 @@ const map_state = (state: RootState) =>
 
     if (ready && !current_composed_knowledge_view) console .log("No current_composed_knowledge_view")
 
-    const { selected_wcomponent_ids_map } = state.meta_wcomponents
+    const { selected_wcomponent_ids_to_ordinal_position_map } = state.meta_wcomponents
     const { created_at_ms, sim_ms } = state.routing.args
 
 
@@ -38,7 +38,7 @@ const map_state = (state: RootState) =>
         wcomponent_nodes,
         wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
-        selected_wcomponent_ids_map,
+        selected_wcomponent_ids_to_ordinal_position_map,
         created_at_ms,
         sim_ms,
     }
@@ -316,11 +316,11 @@ function _KnowledgeTimeView (props: Props)
 {
     // const properties = get_children(props)
     let { wcomponent_nodes } = props
-    const { selected_wcomponent_ids_map } = props
+    const { selected_wcomponent_ids_to_ordinal_position_map } = props
     const dates: Date[] = []
     const get_key = (wc: WComponent) =>
     {
-        const entry = selected_wcomponent_ids_map[wc.id]
+        const entry = selected_wcomponent_ids_to_ordinal_position_map[wc.id]
         if (entry !== undefined) return entry
         else return get_created_at_ms(wc)
     }

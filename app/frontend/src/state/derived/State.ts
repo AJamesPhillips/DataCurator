@@ -56,6 +56,8 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]
 
+    wc_id_connections_map: {[wc_id: string]: Set<string>}
+
 
     composed_datetime_line_config: ComposedDatetimeLineConfig
 

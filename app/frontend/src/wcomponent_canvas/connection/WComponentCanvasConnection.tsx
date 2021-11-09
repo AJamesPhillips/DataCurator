@@ -49,10 +49,11 @@ interface OwnProps
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const wcomponent = get_wcomponent_from_state(state, own_props.id)
+    const { id: wcomponent_id } = own_props
+    const wcomponent = get_wcomponent_from_state(state, wcomponent_id)
 
     const { force_display: force_displaying } = state.filter_context
-    const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(own_props.id)
+    const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id)
     const { current_composed_knowledge_view: composed_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
     const { derived_validity_filter: validity_filter } = state.display_options
@@ -111,13 +112,14 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         wcomponent,
         connection_effect,
         validity_value,
-        is_current_item: state.routing.item_id === own_props.id,
+        is_current_item: state.routing.item_id === wcomponent_id,
         is_selected,
-        is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(own_props.id),
+        is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
         is_editing,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         shift_or_control_keys_are_down,
         focused_mode: state.display_options.focused_mode,
+        connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
     }
 }
 
@@ -176,6 +178,7 @@ function _WComponentCanvasConnection (props: Props)
         is_editing: props.is_editing,
         certainty: validity_value.display_certainty,
         is_current_item,
+        connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
         certainty_formatting: props.certainty_formatting,
         focused_mode: props.focused_mode,
     })

@@ -197,6 +197,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids,
     })
     const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
+    const wc_id_connections_map = get_wc_id_connections_map()
     const available_filter_options = get_available_filter_options(wcomponents)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
@@ -213,6 +214,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
+        wc_id_connections_map,
         available_filter_options,
         filters: {
             wc_ids_excluded_by_any_filter: new Set(),
@@ -350,6 +352,13 @@ function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id
 
 
 
+function get_wc_id_connections_map ()
+{
+    return {}
+}
+
+
+
 function get_available_filter_options (wcomponents: WComponent[]): DerivedAvailableFilterOptions
 {
     const wc_label_ids = new Set<string>()
@@ -401,12 +410,13 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
     if (!current_composed_knowledge_view) return undefined
 
 
-    const { composed_wc_id_map } = current_composed_knowledge_view
-    const current_wc_ids = Object.keys(composed_wc_id_map)
-    const wcomponents_on_kv = get_wcomponents_from_state(state, current_wc_ids).filter(is_defined)
+    const { wc_ids_by_type, composed_wc_id_map } = current_composed_knowledge_view
+    const wcomponents_nodes_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_node).filter(is_defined)
+    const wcomponents_links_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_link).filter(wcomponent_is_plain_connection)
+    const wcomponents_on_kv = wcomponents_nodes_on_kv.concat(wcomponents_links_on_kv)
 
 
-    let wc_ids_to_exclude: string[] = []
+    const wc_ids_to_exclude = new Set<string>()
     if (state.filter_context.apply_filter)
     {
         const {
@@ -417,26 +427,39 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
         } = state.filter_context.filters
 
         const exclude_by_label_ids = new Set(exclude_by_label_ids_list)
+        const include_by_label_ids = new Set(include_by_label_ids_list)
         const exclude_by_component_types = new Set(exclude_by_component_types_list)
         const include_by_component_types = new Set(include_by_component_types_list)
 
-        wc_ids_to_exclude = wcomponents_on_kv
-        .filter(wcomponent =>
+        const args = {
+            exclude_by_label_ids,
+            include_by_label_ids,
+            include_by_label_ids_list,
+            exclude_by_component_types,
+            include_by_component_types,
+        }
+
+        wcomponents_nodes_on_kv.forEach(wcomponent =>
         {
-            const { label_ids = [], type } = wcomponent
-            const applied_ids = new Set(label_ids)
+            const { should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args)
 
-            const labels__should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
-            const labels__lacks_include = !!(include_by_label_ids_list.find(label_id => !applied_ids.has(label_id)))
-
-            const types__should_exclude = exclude_by_component_types.has(type)
-            const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type)
-
-            const should_exclude = labels__should_exclude || labels__lacks_include || types__should_exclude || types__lacks_include
-
-            return should_exclude
+            if (should_exclude || lacks_include) wc_ids_to_exclude.add(wcomponent.id)
         })
-        .map(({ id }) => id)
+
+        wcomponents_links_on_kv.forEach(wcomponent =>
+        {
+            const { from_id, to_id } = wcomponent
+            let should_exclude = !from_id || !to_id
+
+            should_exclude = should_exclude || wc_ids_to_exclude.has(from_id) || wc_ids_to_exclude.has(to_id)
+
+            // For connections we're only using the `should_exclude` and ignoring the `lacks_include` for now
+            // later we could put this under a flag so that connections also have to have a positive inclusion
+            // otherwise they will be excluded
+            should_exclude = should_exclude || calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args).should_exclude
+
+            if (should_exclude) wc_ids_to_exclude.add(wcomponent.id)
+        })
     }
 
     const wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude)
@@ -471,6 +494,45 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
             wc_ids_excluded_by_created_at_datetime_filter,
         }
     }
+}
+
+
+
+// todo give this a better name
+interface ExclusionArgs
+{
+    exclude_by_label_ids: Set<string>
+    include_by_label_ids: Set<string>
+    include_by_label_ids_list: string[]
+    exclude_by_component_types: Set<WComponentType>
+    include_by_component_types: Set<WComponentType>
+}
+function calc_if_wcomponent_should_exclude_because_label_or_type (wcomponent: WComponent, exclusion_args: ExclusionArgs)
+{
+    const { label_ids = [], type } = wcomponent
+    // const applied_ids = new Set(label_ids)
+
+    const {
+        exclude_by_label_ids,
+        include_by_label_ids,
+        include_by_label_ids_list,
+        exclude_by_component_types,
+        include_by_component_types,
+    } = exclusion_args
+
+    const labels__should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
+    // OR inclusion:
+    const labels__lacks_include = !(label_ids.find(label_id => include_by_label_ids.has(label_id)))
+    // AND inclusion:
+    // const labels__lacks_include = !!(include_by_label_ids_list.find(label_id => !applied_ids.has(label_id)))
+
+    const types__should_exclude = exclude_by_component_types.has(type)
+    const types__lacks_include = include_by_component_types.size > 0 && !include_by_component_types.has(type)
+
+    const should_exclude = labels__should_exclude || types__should_exclude
+    const lacks_include = labels__lacks_include || types__lacks_include
+
+    return { should_exclude, lacks_include }
 }
 
 

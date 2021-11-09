@@ -24,7 +24,6 @@ const map_state = (state: RootState) =>
 
 
     const { wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
-    const { selected_wcomponent_ids_map } = state.meta_wcomponents
 
 
     return {
@@ -33,7 +32,6 @@ const map_state = (state: RootState) =>
         wcomponent_connections,
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
-        selected_wcomponent_ids_map,
     }
 }
 
