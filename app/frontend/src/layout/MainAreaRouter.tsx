@@ -31,7 +31,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _MainAreaRouter (props: Props)
 {
     let el = <div>
-        Unsupported view: {props.view} for display_by_simulated_time: {"" + props.display_by_simulated_time}
+        Unsupported view: {props.view}
     </div>
 
     if (props.view === "knowledge")

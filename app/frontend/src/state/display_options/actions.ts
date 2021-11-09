@@ -130,6 +130,25 @@ export const is_set_display_time_marks = (action: AnyAction): action is ActionSe
 
 
 
+interface SetOrToggleAnimateCausalLinksArgs
+{
+    animate_causal_links: boolean | undefined
+}
+interface ActionSetOrToggleAnimateCausalLinks extends Action, SetOrToggleAnimateCausalLinksArgs {}
+
+const set_or_toggle_animate_causal_links_type = "set_or_toggle_animate_causal_links"
+
+const set_or_toggle_animate_causal_links = (animate_causal_links?: boolean): ActionSetOrToggleAnimateCausalLinks =>
+{
+    return { type: set_or_toggle_animate_causal_links_type, animate_causal_links }
+}
+
+export const is_set_or_toggle_animate_causal_links = (action: AnyAction): action is ActionSetOrToggleAnimateCausalLinks => {
+    return action.type === set_or_toggle_animate_causal_links_type
+}
+
+
+
 interface SetShowHelpMenuArgs
 {
     show: boolean
@@ -157,5 +176,6 @@ export const display_actions = {
     set_certainty_formatting,
     set_display_by_simulated_time,
     set_display_time_marks,
+    set_or_toggle_animate_causal_links,
     set_show_help_menu,
 }

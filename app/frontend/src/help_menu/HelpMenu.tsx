@@ -116,6 +116,7 @@ const keyboard_shortcuts: KeyboardShortcutProps[] = [
     { keyboard_shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off` },
     { keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders` },
     { keyboard_shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel` },
+    { keyboard_shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating causal links` },
     { keyboard_shortcut: ["Shift"], outcome: "Shows all hidden nodes (hidden due to filters or being invalid)" },
     { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes" },
     { keyboard_shortcut: ["Ctrl", "click", "drag"], outcome: "Deselect multiple nodes" },

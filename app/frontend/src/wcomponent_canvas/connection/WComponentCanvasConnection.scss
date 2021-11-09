@@ -43,3 +43,24 @@
         stroke: #aaa;
     }
 }
+
+
+
+.animate_causal_links
+{
+    .connection_type_causal_link .connection_line
+    {
+        stroke-dasharray: 120 10;
+        stroke-dashoffset: 10;
+        animation: animate_dash 2s infinite linear;
+    }
+}
+
+@keyframes animate_dash {
+    from {
+        stroke-dashoffset: 10;
+    }
+    to {
+        stroke-dashoffset: -120;
+    }
+}

@@ -30,24 +30,27 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _TimeResolutionOptions (props: Props)
 {
-    const classes = invert_disabled_appearance();
-    return (!props.display_by_simulated_time) &&
-        <ButtonGroup
-            disableElevation
-            variant="contained"
-            value={props.time_resolution}
-        >
-            {time_resolution_types.map(type => (
-                <Button
-                    value={type} // can remove this?
-                    onClick={() => props.set_time_resolution({ time_resolution: type })}
-                    className={classes.inverse_disabled}
-                    disabled={props.time_resolution === type}
-                >
-                    {type}
-                </Button>)
-            )}
-        </ButtonGroup>
+    const classes = invert_disabled_appearance()
+
+    if (props.display_by_simulated_time) return null
+
+
+    return <ButtonGroup
+        disableElevation
+        variant="contained"
+        value={props.time_resolution}
+    >
+        {time_resolution_types.map(type => (
+            <Button
+                value={type} // can remove this?
+                onClick={() => props.set_time_resolution({ time_resolution: type })}
+                className={classes.inverse_disabled}
+                disabled={props.time_resolution === type}
+            >
+                {type}
+            </Button>)
+        )}
+    </ButtonGroup>
 }
 
 export const TimeResolutionOptions = connector(_TimeResolutionOptions) as FunctionalComponent<OwnProps>

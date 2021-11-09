@@ -31,6 +31,7 @@ import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 const map_state = (state: RootState) =>
 ({
     display_side_panel: state.controls.display_side_panel,
+    animate_causal_links: state.display_options.animate_causal_links,
     network_functional: state.sync.network_functional,
     network_function_last_checked: state.sync.network_function_last_checked,
 })
@@ -44,6 +45,7 @@ type Props = ConnectedProps<typeof connector>
 function App(props: Props)
 {
     const classes = use_styles()
+
     useEffect(() =>
     {
         if (props.network_functional) return
@@ -91,7 +93,14 @@ function App(props: Props)
                     </Toolbar>
                 </AppBar>
 
-                <Box id="app_content" component="main" className={clsx(classes.content, { [classes.content_with_open_side_panel]: props.display_side_panel })}>
+                <Box
+                    id="app_content"
+                    component="main"
+                    className={clsx(classes.content, {
+                        [classes.content_with_open_side_panel]: props.display_side_panel,
+                        animate_causal_links: props.animate_causal_links,
+                    })}
+                >
                     <MainAreaRouter />
                 </Box>
 
