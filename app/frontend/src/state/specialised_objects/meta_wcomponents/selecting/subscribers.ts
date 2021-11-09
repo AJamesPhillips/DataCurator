@@ -28,7 +28,7 @@ export function handle_ctrl_a (store: StoreType, e: ActionKeyEventArgs)
     const viewing_knowledge = state.routing.args.view === "knowledge"
     if (!viewing_knowledge) return
 
-    const ids = Object.keys(kv.composed_wc_id_map)
+    const ids = Object.keys(kv.composed_visible_wc_id_map)
         // .filter(id => !kv.wc_ids_by_type.any_link.has(id))
 
     store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
