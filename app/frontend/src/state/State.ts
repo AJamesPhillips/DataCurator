@@ -99,11 +99,12 @@ export type PatternState = Pattern[]
 export type ObjectsState = ObjectWithCache[]
 export interface RootStateCore
 {
-    // TODO replace with map by id
+    specialised_objects: SpecialisedObjectsState
+
+    // TODO remove
     statements: StatementState
     patterns: PatternState
     objects: ObjectsState
-    specialised_objects: SpecialisedObjectsState
 }
 export interface RootState extends RootStateCore
 {
