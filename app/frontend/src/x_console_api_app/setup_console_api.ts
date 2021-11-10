@@ -1,7 +1,9 @@
 import { is_defined } from "../shared/utils/is_defined"
+import type { ComposedKnowledgeView } from "../state/derived/State"
 import type { RootState } from "../state/State"
 import {
     WComponent,
+    WComponentsById,
     wcomponent_is_causal_link,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
@@ -11,7 +13,12 @@ import {
 interface ConsoleApi
 {
     get_current_visible_graph: () => KnowledgeGraphApi
+
+    matrix_component_ids_to_labels: (component_id_to_label_names_map: ComponentIdToLabelNamesMapApiResult, matrix: ConnectionMatrixApiResult) => ConnectionMatrixApiResult
+    matrix_component_ids_to_titles: (wcomponents_by_id: WComponentsById, matrix: ConnectionMatrixApiResult) => ConnectionMatrixApiResult
     matrix_to_csv: (matrix: ConnectionMatrixApiResult) => string
+    get_current_kv: () => ComposedKnowledgeView | undefined
+    get_wcomponents_by_id: () => WComponentsById
 }
 
 interface KnowledgeGraphApi
@@ -182,6 +189,68 @@ function get_component_id_to_label_names_map (): ComponentIdToLabelNamesMapApiRe
 
 
 
+function convert_matrix_component_ids (matrix: ConnectionMatrixApiResult, converter: (component_id: string) => string): ConnectionMatrixApiResult
+{
+    const connection_matrix_using_label_names = matrix.map(row =>
+    {
+        return row.map(cell =>
+        {
+            if (typeof cell !== "string") return cell
+
+            if (!cell) return ""
+
+            return converter(cell)
+        })
+    })
+
+
+    return connection_matrix_using_label_names
+}
+
+
+
+function matrix_component_ids_to_labels (component_id_to_label_names_map: ComponentIdToLabelNamesMapApiResult, matrix: ConnectionMatrixApiResult): ConnectionMatrixApiResult
+{
+    const component_id_to_compound_label_name: {[component_id: string]: string} = {}
+    const compound_compound_label_name_count: {[compound_label_name: string]: number} = {}
+
+
+    const connection_matrix_using_label_names = convert_matrix_component_ids(matrix, cell =>
+    {
+        let compound_label_name = component_id_to_compound_label_name[cell] || ""
+        if (!compound_label_name)
+        {
+            const label_names = component_id_to_label_names_map[cell] || []
+            compound_label_name = label_names.join(",")
+
+            const count = (compound_compound_label_name_count[compound_label_name] || 0) + 1
+            compound_compound_label_name_count[compound_label_name] = count
+
+            compound_label_name += `_${count}`
+            component_id_to_compound_label_name[cell] = compound_label_name
+        }
+
+        return compound_label_name
+    })
+
+
+    return connection_matrix_using_label_names
+}
+
+
+
+function matrix_component_ids_to_titles (wcomponents_by_id: WComponentsById, matrix: ConnectionMatrixApiResult): ConnectionMatrixApiResult
+{
+    const connection_matrix_using_component_titles = convert_matrix_component_ids(matrix, cell =>
+    {
+        return wcomponents_by_id[cell]?.title || ""
+    })
+
+    return connection_matrix_using_component_titles
+}
+
+
+
 function matrix_to_csv (matrix: ConnectionMatrixApiResult)
 {
     const csv: string[] = []
@@ -222,8 +291,13 @@ function get_current_visible_graph (): KnowledgeGraphApi
 export function setup_console_api ()
 {
     const console_api: ConsoleApi = {
-        matrix_to_csv,
         get_current_visible_graph,
+
+        matrix_component_ids_to_labels,
+        matrix_component_ids_to_titles,
+        matrix_to_csv,
+        get_current_kv,
+        get_wcomponents_by_id,
     }
 
     ;(window as any).console_api = console_api

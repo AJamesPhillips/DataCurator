@@ -33,6 +33,33 @@ The data is store in a Supabase account we operate.  In future we would like to 
 Then visit [http://localhost:8080/app#wcomponents/&view=knowledge](http://localhost:8080/app#wcomponents/&view=knowledge)
 
 
+## Console API
+
+You can navigate to a knowledge view, open the developer console, and use the following script to get a matrix of the connected components:
+
+```javascript
+    current_visible_graph = window.console_api.get_current_visible_graph()
+    connection_matrix = current_visible_graph.get_connection_matrix()
+
+    console.log(window.console_api.matrix_to_csv(connection_matrix))
+```
+
+If you want to get the components by title instead of ID you can use:
+
+```javascript
+    connection_matrix_using_titles = window.console_api.matrix_component_ids_to_titles(window.console_api.get_wcomponents_by_id(), connection_matrix)
+    console.log(window.console_api.matrix_to_csv(connection_matrix_using_titles))
+```
+
+If you want to get the components by a compound of their labels and an ordinal you can use:
+
+```javascript
+    component_id_to_label_names_map = current_visible_graph.get_component_id_to_label_names_map()
+    connection_matrix_using_label_names = window.console_api.matrix_component_ids_to_labels(component_id_to_label_names_map, connection_matrix)
+    console.log(window.console_api.matrix_to_csv(connection_matrix_using_label_names))
+```
+
+
 ## Disabled ~~Optional: Output data to Obsidian / Markdown~~
 
 This does not work at the moment because the support for the local server has been removed in favour of collaborative "source of truth" central DB in the form of supabase.
