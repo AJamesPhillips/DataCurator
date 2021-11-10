@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useMemo, useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
@@ -59,7 +59,6 @@ import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/up
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
-import { get_default_wcomponent_title } from "../wcomponent_derived/rich_text/get_default_wcomponent_title"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
@@ -133,13 +132,6 @@ function _WComponentForm (props: Props)
     const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
         editing, force_editable, created_at_ms, sim_ms } = props
 
-    const default_title = useMemo(() =>
-    {
-        return get_default_wcomponent_title({
-            wcomponent, rich_text: false, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
-        })
-    }, [wcomponent_id])
-
 
     const { ready, base_id } = props
     if (!ready) return <div>Loading...</div>
@@ -200,7 +192,7 @@ function _WComponentForm (props: Props)
             <EditableText
                 force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
-                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms }) || default_title}
+                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
                 force_focus={focus_title}
                 hide_label={true}
