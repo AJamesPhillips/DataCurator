@@ -1,6 +1,6 @@
 .wcomponent_canvas_node.connectable_canvas_node.node
 {
-    transition: left 0.2s ease-in-out, top 0.2s ease-in-out;
+    transition: left 0.5s linear, top 0.5s linear;
 }
 .wcomponent_canvas_node.connectable_canvas_node.node.node_is_moving
 {
