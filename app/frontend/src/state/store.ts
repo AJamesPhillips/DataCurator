@@ -1,5 +1,6 @@
 import { createStore, Action, Store } from "redux"
 import { register_window_focus_session_check } from "../sync/user_info/window_focus_session_check"
+import { controls_subscribers } from "./controls/subscribers"
 
 import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
@@ -65,6 +66,7 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
 
 
     store.subscribe(specialised_objects_subscribers(store))
+    controls_subscribers(store)
     display_options_subscribers(store)
     meta_wcomponents_selecting_subscribers(store)
 
