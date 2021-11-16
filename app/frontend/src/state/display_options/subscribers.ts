@@ -76,7 +76,7 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
             }
             else if (e.key === "s")
             {
-                store.dispatch(ACTIONS.controls.toggle_display_side_panel())
+                store.dispatch(ACTIONS.controls.set_or_toggle_display_side_panel())
             }
             else if (e.key === "a")
             {

@@ -16,7 +16,7 @@ const map_state = (state: RootState) =>
 
 
 const map_dispatch = {
-    toggle_display_side_panel: ACTIONS.controls.toggle_display_side_panel,
+    set_or_toggle_display_side_panel: ACTIONS.controls.set_or_toggle_display_side_panel,
 }
 
 
@@ -31,7 +31,7 @@ function _SidePanelOrMenuButton (props: Props)
         aria-label="open side panel"
         color="inherit"
         edge="end"
-        onClick={props.toggle_display_side_panel}
+        onClick={props.set_or_toggle_display_side_panel}
         size="small"
     >
         {props.display_side_panel ? <CloseIcon /> : <MenuIcon />}

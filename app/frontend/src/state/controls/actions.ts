@@ -48,15 +48,24 @@ export const is_toggle_display_time_sliders = (action: AnyAction): action is Act
 
 
 
-const toggle_display_side_panel_type = "toggle_display_side_panel"
-
-const toggle_display_side_panel = (): Action =>
+interface ActionSetOrToggleDisplaySidePanel extends Action
 {
-    return { type: toggle_display_side_panel_type }
+    display_side_panel?: boolean
 }
 
-export const is_toggle_display_side_panel = (action: AnyAction): action is Action => {
-    return action.type === toggle_display_side_panel_type
+const set_or_toggle_display_side_panel_type = "set_or_toggle_display_side_panel"
+
+const set_or_toggle_display_side_panel = (display_side_panel?: boolean): ActionSetOrToggleDisplaySidePanel =>
+{
+    // Protect against events being passed into this function from material-ui onClick handlers with
+    // incorrect typings
+    if (typeof display_side_panel !== "boolean") display_side_panel = undefined
+
+    return { type: set_or_toggle_display_side_panel_type, display_side_panel }
+}
+
+export const is_set_or_toggle_display_side_panel = (action: AnyAction): action is ActionSetOrToggleDisplaySidePanel => {
+    return action.type === set_or_toggle_display_side_panel_type
 }
 
 
@@ -65,5 +74,5 @@ export const controls_actions = {
     toggle_linked_datetime_sliders,
     set_display_time_sliders,
     toggle_display_time_sliders,
-    toggle_display_side_panel,
+    set_or_toggle_display_side_panel,
 }
