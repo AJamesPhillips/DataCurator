@@ -1,5 +1,5 @@
 import type { ContentCoordinate, PositionAndZoom } from "../../canvas/interfaces"
-import { h_step, round_number, v_step } from "../../canvas/position_utils"
+import { h_step, position_to_point, round_number, v_step } from "../../canvas/position_utils"
 import { SCALE_BY } from "../../canvas/zoom_utils"
 import { get_actually_display_time_sliders } from "../controls/accessors"
 import { STARTING_ZOOM } from "../routing/starting_state"
@@ -40,7 +40,7 @@ export function get_middle_of_screen (state: RootState)
 {
     const result = calculate_xy_for_middle(state.routing.args, state.controls.display_side_panel)
 
-    return { left: result.x, top: -result.y }
+    return position_to_point(result)
 }
 
 

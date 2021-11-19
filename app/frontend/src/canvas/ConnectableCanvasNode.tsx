@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { Card, CardContent, CardMedia, makeStyles } from "@material-ui/core"
 
-import "./ConnectableCanvasNode.css"
+import "./ConnectableCanvasNode.scss"
 import { CanvasNode } from "./CanvasNode"
 import { COLOURS } from "./display"
 import "./display_colors.scss"

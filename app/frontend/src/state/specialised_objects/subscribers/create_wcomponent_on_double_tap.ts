@@ -1,5 +1,5 @@
 import type { Store } from "redux"
-import { round_canvas_point } from "../../../canvas/position_utils"
+import { offset_by_half_node, position_to_point, round_canvas_point } from "../../../canvas/position_utils"
 
 import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 import type { CanvasPointerEvent } from "../../canvas/pub_sub"
@@ -36,7 +36,8 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
         if (state.display_options.consumption_formatting) return
 
 
-        const position = round_canvas_point({ left: double_tap.x - 20, top: -double_tap.y - 20 }, "large")
+        const point = offset_by_half_node(position_to_point(double_tap))
+        const position = round_canvas_point(point, "large")
         const add_to_knowledge_view: AddToKnowledgeViewArgs = { id: current_knowledge_view.id, position }
 
 

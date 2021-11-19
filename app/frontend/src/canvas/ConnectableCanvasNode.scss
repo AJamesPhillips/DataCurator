@@ -2,7 +2,7 @@
 .connectable_canvas_node
 {
     box-sizing: content-box;
-    width: 250px;
+    width: 250px;  // keep in sync with `node_width` in position_utils.ts
 }
 
 .connectable_canvas_node.node .node_main_content
