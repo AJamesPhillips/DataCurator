@@ -21,19 +21,19 @@ interface GetWcomponentSearchOptionsArgs
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
-    include_deleted?: boolean
+    // include_deleted?: boolean
 }
 
 
 export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutocompleteOption[]
 {
-    const { wcomponents: wcs, allowed_wcomponent_ids, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms, include_deleted } = args
+    const { wcomponents: wcs, allowed_wcomponent_ids, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms } = args
 
     let wcomponents = wcs || Object.values(wcomponents_by_id)
     if (allowed_wcomponent_ids) wcomponents = wcomponents.filter(({ id }) => allowed_wcomponent_ids.has(id))
 
     const options = wcomponents
-        .filter(wc => include_deleted || !wc.deleted_at)
+        .filter(wc => !wc.deleted_at)
         .map(wcomponent => {
             const title = get_title({
                 wcomponent,

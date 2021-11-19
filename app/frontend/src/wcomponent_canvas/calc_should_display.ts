@@ -29,7 +29,7 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     const { is_editing, is_selected, wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters } = args
 
 
-    if (!kv_entry || kv_entry.deleted) return false
+    if (!kv_entry || kv_entry.blocked) return false
 
 
     if (is_selected) return { display_certainty: 1 }

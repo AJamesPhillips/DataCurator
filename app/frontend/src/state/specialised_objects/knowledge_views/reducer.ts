@@ -96,10 +96,15 @@ function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_vie
 
     // Special case changing entry from deleted to re-add to ensure the component
     // gets rendered last and on top of other components
+    // And same for passthrough (if it's before the entry has been removed on reloading
+    // the knowledge view from the server)
     const existing_entry = new_wc_id_map[wcomponent_id]
-    if (existing_entry && existing_entry.deleted && !entry.deleted)
+    if (existing_entry)
     {
-        delete new_wc_id_map[wcomponent_id]
+        if ((existing_entry.blocked && !entry.blocked) || (existing_entry.passthrough && !entry.passthrough))
+        {
+            delete new_wc_id_map[wcomponent_id]
+        }
     }
 
     if (add_to_top)

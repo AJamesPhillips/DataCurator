@@ -37,7 +37,8 @@ export interface KnowledgeViewWComponentEntry {
     left: number
     top: number
     s?: number
-    deleted?: true
+    blocked?: true
+    passthrough?: true
 }
 
 

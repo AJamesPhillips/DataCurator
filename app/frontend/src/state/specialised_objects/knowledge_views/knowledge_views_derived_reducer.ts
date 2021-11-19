@@ -259,7 +259,7 @@ export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeVie
 
     remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
 
-    const result = partition_wc_id_map_on_blocked_component(composed_wc_id_map)
+    const result = partition_wc_id_map_on_blocked_and_remove_passthrough(composed_wc_id_map)
     composed_wc_id_map = result.composed_wc_id_map
     const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map
 
@@ -277,15 +277,19 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
     })
 }
 
-function partition_wc_id_map_on_blocked_component (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+function partition_wc_id_map_on_blocked_and_remove_passthrough (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
 {
     const composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
 
     Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
     {
-        if (entry.deleted)
+        if (entry.blocked)
         {
             composed_blocked_wc_id_map[wcomponent_id] = entry
+            delete composed_wc_id_map[wcomponent_id]
+        }
+        else if (entry.passthrough)
+        {
             delete composed_wc_id_map[wcomponent_id]
         }
     })

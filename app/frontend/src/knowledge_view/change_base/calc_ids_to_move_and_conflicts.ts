@@ -100,7 +100,7 @@ function get_ids_to_move (args: GetWComponentIdsToMoveArgs)
 
         Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) =>
         {
-            if (kv_entry.deleted) return
+            if (kv_entry.blocked || kv_entry.passthrough) return
 
             const kv_ids = conflicted_wc_ids_in_kvs_to_keep[wc_id] || []
             kv_ids.push({ kv_id: kv.id, left: kv_entry.left, top: kv_entry.top })
@@ -115,7 +115,7 @@ function get_ids_to_move (args: GetWComponentIdsToMoveArgs)
     args.knowledge_views_to_move.forEach(kv => Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) =>
     {
         // for now, leave behind any wcomponents that have been deleted and aren't present in another knowledge_views_to_move
-        if (kv_entry.deleted) return
+        if (kv_entry.blocked || kv_entry.passthrough) return
         if (!args.wcomponents_by_id[wc_id]) return // probably belongs to another base
 
         const conflicts = conflicted_wc_ids_in_kvs_to_keep[wc_id]

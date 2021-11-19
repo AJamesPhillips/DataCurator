@@ -74,7 +74,11 @@ function _WComponentKnowledgeViewForm (props: Props)
 
     const other_knowledge_views = all_knowledge_views
         .filter(({ id }) => id !== knowledge_view_id)
-        .filter(({ wc_id_map }) => wc_id_map[wcomponent_id] && !wc_id_map[wcomponent_id]?.deleted)
+        .filter(({ wc_id_map }) =>
+        {
+            const entry = wc_id_map[wcomponent_id]
+            return entry && !entry.blocked && !entry.passthrough
+        })
 
 
     function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
@@ -93,7 +97,7 @@ function _WComponentKnowledgeViewForm (props: Props)
 
 
     return <div>
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.deleted) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
                 <Slider
                     color="secondary"
@@ -134,26 +138,42 @@ function _WComponentKnowledgeViewForm (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.deleted) && <div>
-            {(knowledge_view_entry?.deleted ? "Deleted from" : "Not present in") + " this knowledge view"}
-            {composed_knowledge_view_entry && !composed_knowledge_view_entry.deleted && " but is present in a foundational knowledge view"}
+        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough) && <div>
+            {(knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view"}
+            {composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view"}
             <br />
             {editing && <Button
-                value={(knowledge_view_entry?.deleted ? "Re-add" : "Add") + " to current knowledge view"}
+                value={(knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view"}
                 extra_class_names="left"
-                onClick={() => upsert_entry(knowledge_view_id, { deleted: undefined })}
+                onClick={() => upsert_entry(knowledge_view_id, { blocked: undefined, passthrough: undefined })}
             />}
         </div>}
 
-        {(editing && knowledge_view_entry && !knowledge_view_entry.deleted) && <div>
+
+        {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <div>
             <ConfirmatoryDeleteButton
-                button_text="Remove from knowledge view (block)"
-                tooltip_text={"Remove from current knowledge view (" + knowledge_view_title + ")"}
+                button_text="Delete from knowledge view (allow passthrough from foundations)"
+                tooltip_text={"Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations"}
                 on_delete={() =>
                 {
                     props.bulk_remove_from_knowledge_view({
                         wcomponent_ids: [wcomponent_id],
-                        remove_type: "block"
+                        remove_type: "passthrough",
+                    })
+                }}
+            />
+        </div>}
+
+
+        {(editing && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough) && <div>
+            <ConfirmatoryDeleteButton
+                button_text="Block from knowledge view"
+                tooltip_text={"Block from showing in current knowledge view (" + knowledge_view_title + ")"}
+                on_delete={() =>
+                {
+                    props.bulk_remove_from_knowledge_view({
+                        wcomponent_ids: [wcomponent_id],
+                        remove_type: "block",
                     })
                 }}
             />

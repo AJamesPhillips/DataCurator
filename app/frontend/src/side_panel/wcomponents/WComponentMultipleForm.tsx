@@ -168,10 +168,26 @@ function _WComponentMultipleForm (props: Props)
             : " (Disabled - not all components present in current view)" }
         </p>}
 
+
         {editing && <p>
             <ConfirmatoryDeleteButton
-                button_text="Remove from knowledge view (block)"
-                tooltip_text="Remove from current knowledge view"
+                button_text="Delete from knowledge view (allow passthrough from foundations)"
+                tooltip_text="Delete from knowledge view (allow passthrough from foundations)"
+                on_delete={() =>
+                {
+                    bulk_remove_from_knowledge_view({
+                        wcomponent_ids: Array.from(wcomponent_ids),
+                        remove_type: "passthrough",
+                    })
+                }}
+            />
+        </p>}
+
+
+        {editing && <p>
+            <ConfirmatoryDeleteButton
+                button_text="Block from knowledge view"
+                tooltip_text="Block from showing in current knowledge view"
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({
