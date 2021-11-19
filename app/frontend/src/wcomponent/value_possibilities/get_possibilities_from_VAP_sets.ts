@@ -44,7 +44,7 @@ function get_simple_possibilities_from_VAP_sets (VAPs_represent: VAPsType, value
 
 
 
-export function get_simple_possibilities_from_values (values: StateValueCore[], value_possibilities_by_id: ValuePossibilitiesById | undefined): SimpleValuePossibility[]
+export function get_simple_possibilities_from_values (values: StateValueCore[], value_possibilities_by_id: ValuePossibilitiesById = {}): SimpleValuePossibility[]
 {
     let simple_possibilities: SimpleValuePossibility[] = []
     const possible_value_strings: Set<string> = new Set()
@@ -53,7 +53,7 @@ export function get_simple_possibilities_from_values (values: StateValueCore[], 
 
     values.forEach(({ value_id }) =>
     {
-        const value_possibility = value_possibilities_by_id && value_possibilities_by_id[value_id || ""]
+        const value_possibility = value_possibilities_by_id[value_id || ""]
         if (!value_possibility || possible_value_strings.has(value_possibility.value)) return
 
         simple_possibilities.push(value_possibility)
@@ -68,6 +68,11 @@ export function get_simple_possibilities_from_values (values: StateValueCore[], 
         simple_possibilities.push({ value, id: value_id, order: ++max_order })
         possible_value_strings.add(value)
     })
+
+    if (values.length === 0)
+    {
+        simple_possibilities = Object.values(value_possibilities_by_id)
+    }
 
     return simple_possibilities.sort((a, b) => (a.order ?? 0) < (b.order ?? 0) ? -1 : 1)
 }
