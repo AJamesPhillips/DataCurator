@@ -2,9 +2,15 @@ import { ACTIONS } from "../actions"
 import type { ActionKeyEventArgs } from "../global_keys/actions"
 import { pub_sub } from "../pub_sub/pub_sub"
 import { conditional_ctrl_f_search } from "../search/conditional_ctrl_f_search"
+import {
+    conditionally_contract_selected_components,
+    conditionally_expand_selected_components,
+    conditionally_select_all_components,
+    conditionally_select_forward_causal_components,
+    conditionally_select_source_causal_components,
+} from "../specialised_objects/meta_wcomponents/selecting/helpers"
 import { handle_ctrl_a } from "../specialised_objects/meta_wcomponents/selecting/subscribers"
 import type { StoreType } from "../store"
-import { conditional_ctrl_s_save } from "../sync/utils/conditionally_save_state"
 
 
 
@@ -49,7 +55,6 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         {
             handle_ctrl_a(store, e)
             conditional_ctrl_f_search(store, e)
-            conditional_ctrl_s_save(store)
         }
     })
 
@@ -66,26 +71,11 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         let clear_key_combination = true
         if (key_combination === "d")
         {
-            if (e.key === "f")
-            {
-                store.dispatch(ACTIONS.display.toggle_focused_mode({}))
-            }
-            else if (e.key === "t")
-            {
-                store.dispatch(ACTIONS.controls.toggle_display_time_sliders())
-            }
-            else if (e.key === "s")
-            {
-                store.dispatch(ACTIONS.controls.set_or_toggle_display_side_panel())
-            }
-            else if (e.key === "a")
-            {
-                store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links())
-            }
-            else
-            {
-                clear_key_combination = false
-            }
+            clear_key_combination = handle_display_key_combo(e.key, store)
+        }
+        else if (key_combination === "s")
+        {
+            clear_key_combination = handle_selection_key_combo(e.key, store)
         }
         else
         {
@@ -100,4 +90,68 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
 
 
 
-const root_key_combo = new Set(["d"])
+const root_key_combo = new Set(["d", "s"])
+
+
+
+function handle_display_key_combo (key: string, store: StoreType)
+{
+    let clear_key_combination = true
+
+    if (key === "f")
+    {
+        store.dispatch(ACTIONS.display.toggle_focused_mode({}))
+    }
+    else if (key === "t")
+    {
+        store.dispatch(ACTIONS.controls.toggle_display_time_sliders())
+    }
+    else if (key === "s")
+    {
+        store.dispatch(ACTIONS.controls.set_or_toggle_display_side_panel())
+    }
+    else if (key === "a")
+    {
+        store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links())
+    }
+    else
+    {
+        clear_key_combination = false
+    }
+
+    return clear_key_combination
+}
+
+
+
+function handle_selection_key_combo (key: string, store: StoreType)
+{
+    let clear_key_combination = true
+
+    if (key === "a")
+    {
+        conditionally_select_all_components(store)
+    }
+    else if (key === "e")
+    {
+        conditionally_expand_selected_components(store)
+    }
+    else if (key === "d")
+    {
+        conditionally_contract_selected_components(store)
+    }
+    else if (key === "f")
+    {
+        conditionally_select_forward_causal_components(store)
+    }
+    else if (key === "c")
+    {
+        conditionally_select_source_causal_components(store)
+    }
+    else
+    {
+        clear_key_combination = false
+    }
+
+    return clear_key_combination
+}

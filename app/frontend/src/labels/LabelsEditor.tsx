@@ -50,8 +50,9 @@ function _LabelsEditor (props: Props)
     if (!ready) return <div>Loading labels...</div>
 
 
+    const allowed_wcomponent_ids = new Set(label_ids.concat(Array.from(props.allowed_label_ids || [])))
     const wcomponent_id_options = get_wcomponent_search_options({
-        allowed_wcomponent_ids: props.allowed_label_ids,
+        allowed_wcomponent_ids,
         wcomponents_by_id: props.wcomponents_by_id,
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,

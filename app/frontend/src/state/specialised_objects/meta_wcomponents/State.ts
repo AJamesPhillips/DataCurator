@@ -8,6 +8,8 @@ export interface MetaWComponentsState
 {
     selected_wcomponent_ids_list: string[]
     selected_wcomponent_ids_set: Set<string>
+    // todo, deprecate `selected_wcomponent_ids_to_ordinal_position_map` if prototype nodes
+    // by time view is removed
     selected_wcomponent_ids_to_ordinal_position_map: { [id: string]: number }
     highlighted_wcomponent_ids: Set<string>
     neighbour_ids_of_highlighted_wcomponent: Set<string>

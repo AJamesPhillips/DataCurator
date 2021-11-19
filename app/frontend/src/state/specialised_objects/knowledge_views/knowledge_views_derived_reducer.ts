@@ -375,11 +375,11 @@ function get_wc_id_connections_map (link_ids: Set<string>, wcomponents_by_id: WC
 
     link_ids.forEach(id =>
     {
-        const wcomponent = wcomponents_by_id[id]
-        if (!wcomponent_is_plain_connection(wcomponent)) return // type guard
+        const connection_wc = wcomponents_by_id[id]
+        if (!wcomponent_is_plain_connection(connection_wc)) return // type guard
 
-        if (wcomponent.from_id) add_both_entries(wcomponent.from_id, wcomponent.id)
-        if (wcomponent.to_id) add_both_entries(wcomponent.to_id, wcomponent.id)
+        if (connection_wc.from_id) add_both_entries(connection_wc.from_id, connection_wc.id)
+        if (connection_wc.to_id) add_both_entries(connection_wc.to_id, connection_wc.id)
     })
 
     return map
@@ -550,7 +550,7 @@ function calc_if_wcomponent_should_exclude_because_label_or_type (wcomponent: WC
 
     const labels__should_exclude = !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
     // OR inclusion:
-    const labels__lacks_include = !(label_ids.find(label_id => include_by_label_ids.has(label_id)))
+    const labels__lacks_include = include_by_label_ids.size > 0 && !(label_ids.find(label_id => include_by_label_ids.has(label_id)))
     // AND inclusion:
     // const labels__lacks_include = !!(include_by_label_ids_list.find(label_id => !applied_ids.has(label_id)))
 

@@ -1,5 +1,4 @@
 import { ACTIONS } from "../../actions"
-import type { RootState } from "../../State"
 import type { StoreType } from "../../store"
 import { needs_save } from "./needs_save"
 import { save_state } from "./save_state"
@@ -12,34 +11,6 @@ export async function conditionally_save_state (store: StoreType)
     if (!should_save) return Promise.resolve()
 
     await save_state(store)
-}
-
-
-
-let allow_ctrl_s_to_flush_save = true
-export async function conditional_ctrl_s_save (store: StoreType)
-{
-    const should_save = calc_should_save(store, false)
-    if (!should_save) return
-
-    const ctrl_s_flush_save = is_ctrl_s_flush_save(store.getState())
-    if (ctrl_s_flush_save && allow_ctrl_s_to_flush_save)
-    {
-        allow_ctrl_s_to_flush_save = false
-
-        await save_state(store, true)
-    }
-
-    // Only reset it to true once `is_ctrl_s_flush_save` is no longer true
-    // which should occur as soon as the ctrl or s key are released
-    allow_ctrl_s_to_flush_save = !ctrl_s_flush_save
-}
-
-
-function is_ctrl_s_flush_save (state: RootState)
-{
-    // Ctrl+s to save
-    return state.global_keys.keys_down.has("s") && state.global_keys.keys_down.has("Control")
 }
 
 
