@@ -8,7 +8,6 @@ import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/dis
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
 import { EditableCheckbox } from "../form/EditableCheckbox"
-import { EditableNumber } from "../form/EditableNumber"
 
 
 
@@ -18,6 +17,7 @@ const map_state = (state: RootState) => ({
     display_by_simulated_time: state.display_options.display_by_simulated_time,
     display_time_marks: state.display_options.display_time_marks,
     animate_causal_links: state.display_options.animate_causal_links,
+    show_large_grid: state.display_options.show_large_grid,
     display_time_sliders: state.controls.display_time_sliders,
 })
 
@@ -28,6 +28,7 @@ const map_dispatch = {
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
     set_display_time_marks: ACTIONS.display.set_display_time_marks,
     set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
+    set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
 }
 
@@ -150,6 +151,15 @@ function _DisplayOptionsSidePanel (props: Props)
             </span>
         </p>
 
+
+        <p className="section">
+            <b>Show large grid (whilst editing)</b>
+
+            <EditableCheckbox
+                value={props.show_large_grid}
+                on_change={props.set_or_toggle_show_large_grid}
+            />
+        </p>
 
 
         <hr />

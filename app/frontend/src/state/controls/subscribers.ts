@@ -54,7 +54,5 @@ function should_display_side_panel (state: RootState)
         )
     )
 
-    if (is_change_route(state.last_action)) debugger
-
     return should_display
 }

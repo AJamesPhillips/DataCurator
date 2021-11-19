@@ -7,7 +7,7 @@ import type { Dispatch } from "redux"
 import { ACTIONS } from "../state/actions"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
-import { grid_small_step } from "./position_utils"
+import { grid_small_step, h_step, v_step } from "./position_utils"
 import { bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
 import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
@@ -26,6 +26,7 @@ interface OwnProps
     svg_upper_children?: preact.ComponentChildren[] | null
     overlay?: preact.ComponentChildren | preact.ComponentChildren[] | null
     plain_background?: boolean
+    show_large_grid?: boolean
 }
 
 
@@ -277,7 +278,10 @@ class _Canvas extends Component<Props, State>
         const background_style = {
             backgroundPosition: `${x}px ${y}px`,
             backgroundSize: `${backgroundSize}px ${backgroundSize}px`,
-            height: "100%",
+        }
+        const big_squared_background_style = {
+            backgroundPosition: `${x}px ${y}px`,
+            backgroundSize: `${h_step * scale}px ${v_step * scale}px`,
         }
         const html_translation_container_style = {
             transform: `translate(${x}px,${y}px)`
@@ -313,6 +317,11 @@ class _Canvas extends Component<Props, State>
                 }}
                 onContextMenu={this.on_context_menu}
             >
+                {!this.props.plain_background && this.props.show_large_grid && <div
+                    className="big_squared_background"
+                    style={big_squared_background_style}
+                ></div>}
+
                 <div id={GRAPH_VISUALS_CONTAINER_ID} style={html_translation_container_style}>
                     <div style={html_container_style}>
                         <div id="graph_lowest_elements_container">

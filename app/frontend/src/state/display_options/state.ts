@@ -27,6 +27,7 @@ export interface DisplayOptionsState
     display_time_marks: boolean
     animate_causal_links: boolean
     show_help_menu: boolean
+    show_large_grid: boolean
 
     // Validity
     validity_filter: ValidityFilterTypes

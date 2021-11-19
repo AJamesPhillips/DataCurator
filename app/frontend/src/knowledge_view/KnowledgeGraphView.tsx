@@ -32,6 +32,7 @@ const map_state = (state: RootState) =>
         wcomponent_connections,
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
+        show_large_grid: state.display_options.show_large_grid,
     }
 }
 
@@ -50,6 +51,7 @@ function _KnowledgeGraphView (props: Props)
             svg_upper_children={get_svg_upper_children(props)}
             overlay={get_overlay_children()}
             plain_background={props.presenting}
+            show_large_grid={props.show_large_grid}
         >
             {elements}
         </Canvas>}

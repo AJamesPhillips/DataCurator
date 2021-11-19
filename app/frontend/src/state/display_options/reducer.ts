@@ -12,6 +12,7 @@ import {
     is_set_show_help_menu,
     is_set_display_time_marks,
     is_set_or_toggle_animate_causal_links,
+    is_set_or_toggle_show_large_grid,
 } from "./actions"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
@@ -67,12 +68,7 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
 
     if (is_set_or_toggle_animate_causal_links(action))
     {
-        let { animate_causal_links } = action
-        if (animate_causal_links === undefined)
-        {
-            animate_causal_links = !state.display_options.animate_causal_links
-        }
-
+        const animate_causal_links = boolean_or_toggle(action.animate_causal_links, state.display_options.animate_causal_links)
         state = update_substate(state, "display_options", "animate_causal_links", animate_causal_links)
     }
 
@@ -83,5 +79,21 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
     }
 
 
+    if (is_set_or_toggle_show_large_grid(action))
+    {
+        const show_large_grid = boolean_or_toggle(action.show_large_grid, state.display_options.show_large_grid)
+        state = update_substate(state, "display_options", "show_large_grid", show_large_grid)
+    }
+
+
     return state
+}
+
+
+
+function boolean_or_toggle (new_value: boolean | undefined, current_value: boolean)
+{
+    if (new_value === undefined) new_value = !current_value
+
+    return new_value
 }
