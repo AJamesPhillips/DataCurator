@@ -6,7 +6,6 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowl
 import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
 import { derive_coords } from "./derive_coords"
-import type { Position } from "../interfaces"
 
 
 
@@ -30,10 +29,12 @@ interface OwnProps {
 }
 
 
+
 export function CanvasConnnection (props: OwnProps)
 {
     const [hovered, set_hovered] = useState(false)
-    const target_position = useRef<DArgs | undefined>(undefined)
+    const current_position = useRef<DArgsWithProgress | undefined>(undefined)
+    const animate_to_target_timeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
 
     const {
@@ -81,7 +82,7 @@ export function CanvasConnnection (props: OwnProps)
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
 
-    const new_target: DArgs = useMemo(() => ({
+    const target_position: DArgsWithProgress = useMemo(() => ({
         x1,
         y1,
         relative_control_point_x1: relative_control_point1.x,
@@ -90,8 +91,9 @@ export function CanvasConnnection (props: OwnProps)
         relative_control_point_y2: relative_control_point2.y,
         x2,
         y2,
+        progress: 0,
     }), [x1, y1, relative_control_point1.x, relative_control_point1.y, relative_control_point2.x, relative_control_point2.y, x2, y2])
-    const d_args = target_position.current || new_target
+    const d_args = current_position.current || target_position
 
 
     return <g
@@ -101,7 +103,7 @@ export function CanvasConnnection (props: OwnProps)
     >
         <path
             className={"connection_line_background " + extra_background_classes}
-            d={calc_d(new_target)}
+            d={calc_d(target_position)}
             onPointerOver={() =>
             {
                 set_hovered(true)
@@ -120,8 +122,9 @@ export function CanvasConnnection (props: OwnProps)
             ref={e =>
             {
                 if (!e) return
-                // todo capture setInterval so we can cancel it
-                move_to_target(e, target_position, new_target)
+
+                if (animate_to_target_timeout.current) clearTimeout(animate_to_target_timeout.current)
+                animate_to_target_timeout.current = animate_to_target(e, current_position, target_position)
             }}
             style={style_line}
         />
@@ -141,6 +144,11 @@ export function CanvasConnnection (props: OwnProps)
 }
 
 
+
+interface DArgsWithProgress extends DArgs
+{
+    progress: number
+}
 
 interface DArgs
 {
@@ -164,35 +172,33 @@ function calc_d ({ x1, y1, relative_control_point_x1, relative_control_point_y1,
 
 
 
-function move_to_target (e: SVGPathElement, target_position: Ref<DArgs | undefined>, new_target: DArgs)
+function animate_to_target (e: SVGPathElement, current_position: Ref<DArgs | undefined>, target_position: DArgsWithProgress)
 {
-    const _current = target_position.current
-    if (_current === undefined)
+    if (current_position.current === undefined || current_position.current === target_position)
     {
-        target_position.current = new_target
+        target_position.progress = 1
+        current_position.current = target_position
         return
     }
-    else if (target_position.current === new_target) return
-    const current = _current // type guard
+    const current = current_position.current
 
 
-    let progress = 0
     let timeout: NodeJS.Timeout | undefined = undefined
 
     function advance ()
     {
-        progress += 0.1
-        progress = Math.min(progress, 1) // defensive
+        const progress = Math.min(target_position.progress + 0.1, 1) // defensive
+        target_position.progress = progress
 
         const intermediate: DArgs = {
-            x1: tween(current.x1, new_target.x1, progress),
-            y1: tween(current.y1, new_target.y1, progress),
-            relative_control_point_x1: tween(current.relative_control_point_x1, new_target.relative_control_point_x1, progress),
-            relative_control_point_y1: tween(current.relative_control_point_y1, new_target.relative_control_point_y1, progress),
-            relative_control_point_x2: tween(current.relative_control_point_x2, new_target.relative_control_point_x2, progress),
-            relative_control_point_y2: tween(current.relative_control_point_y2, new_target.relative_control_point_y2, progress),
-            x2: tween(current.x2, new_target.x2, progress),
-            y2: tween(current.y2, new_target.y2, progress),
+            x1: tween(current.x1, target_position.x1, progress),
+            y1: tween(current.y1, target_position.y1, progress),
+            relative_control_point_x1: tween(current.relative_control_point_x1, target_position.relative_control_point_x1, progress),
+            relative_control_point_y1: tween(current.relative_control_point_y1, target_position.relative_control_point_y1, progress),
+            relative_control_point_x2: tween(current.relative_control_point_x2, target_position.relative_control_point_x2, progress),
+            relative_control_point_y2: tween(current.relative_control_point_y2, target_position.relative_control_point_y2, progress),
+            x2: tween(current.x2, target_position.x2, progress),
+            y2: tween(current.y2, target_position.y2, progress),
         }
         const d = calc_d(intermediate)
         e.setAttribute("d", d)
@@ -200,11 +206,12 @@ function move_to_target (e: SVGPathElement, target_position: Ref<DArgs | undefin
         if (progress >= 1)
         {
             if (timeout) clearTimeout(timeout)
-            target_position.current = new_target
+            current_position.current = target_position
         }
     }
 
     timeout = setInterval(advance, 20)
+    return timeout
 }
 
 
