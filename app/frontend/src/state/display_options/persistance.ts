@@ -14,6 +14,7 @@ export function display_options_persist (state: RootState)
         "display_by_simulated_time",
         "display_time_marks",
         "animate_causal_links",
+        "circular_links",
         "show_large_grid",
         "validity_filter",
         "certainty_formatting",
@@ -39,6 +40,7 @@ export function display_options_starting_state (): DisplayOptionsState
         display_by_simulated_time: false,
         display_time_marks: false,
         animate_causal_links: false,
+        circular_links: false,
         show_help_menu: false,
         show_large_grid: false,
 

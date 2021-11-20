@@ -117,6 +117,7 @@ const keyboard_shortcuts: KeyboardShortcutProps[] = [
     { keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders` },
     { keyboard_shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel` },
     { keyboard_shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating causal links` },
+    { keyboard_shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing feedback loop links as (more) circular` },
     { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes" },
     { keyboard_shortcut: ["Shift", "Ctrl", "click", "drag"], outcome: "Deselect multiple nodes" },
     { keyboard_shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view" },

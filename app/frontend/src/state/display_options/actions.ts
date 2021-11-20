@@ -149,6 +149,28 @@ export const is_set_or_toggle_animate_causal_links = (action: AnyAction): action
 
 
 
+// Probably need a better name than "circular links".  This is a display option to change the
+// destination of links from just being to the left and from the right to being the closest points
+// to each other
+interface SetOrToggleCircularLinksArgs
+{
+    circular_links: boolean | undefined
+}
+interface ActionSetOrToggleCircularLinks extends Action, SetOrToggleCircularLinksArgs {}
+
+const set_or_toggle_circular_links_type = "set_or_toggle_circular_links"
+
+const set_or_toggle_circular_links = (circular_links?: boolean): ActionSetOrToggleCircularLinks =>
+{
+    return { type: set_or_toggle_circular_links_type, circular_links }
+}
+
+export const is_set_or_toggle_circular_links = (action: AnyAction): action is ActionSetOrToggleCircularLinks => {
+    return action.type === set_or_toggle_circular_links_type
+}
+
+
+
 interface SetShowHelpMenuArgs
 {
     show: boolean
@@ -196,6 +218,7 @@ export const display_actions = {
     set_display_by_simulated_time,
     set_display_time_marks,
     set_or_toggle_animate_causal_links,
+    set_or_toggle_circular_links,
     set_show_help_menu,
     set_or_toggle_show_large_grid,
 }

@@ -114,6 +114,10 @@ function handle_display_key_combo (key: string, store: StoreType)
     {
         store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links())
     }
+    else if (key === "c")
+    {
+        store.dispatch(ACTIONS.display.set_or_toggle_circular_links())
+    }
     else
     {
         clear_key_combination = false
