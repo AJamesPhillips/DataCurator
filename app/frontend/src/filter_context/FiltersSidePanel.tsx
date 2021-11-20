@@ -39,12 +39,24 @@ type Props = ConnectedProps<typeof connector>
 
 function _FiltersSidePanel (props: Props)
 {
-    const { wc_label_ids, wc_types } = props
+    const { wc_label_ids, wc_types, filters } = props
 
-    const wcomponent_type_options = useMemo(() =>
+    const wcomponent_exclude_type_options = useMemo(() =>
     {
-        return (wc_types || []).map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
-    }, [wc_types])
+        const all_exclude_types = ([...wc_types || []])
+            .concat(filters.exclude_by_component_types)
+
+        return all_exclude_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
+    }, [wc_types, filters])
+
+
+    const wcomponent_include_type_options = useMemo(() =>
+    {
+        const all_include_types = ([...wc_types || []])
+            .concat(filters.include_by_component_types)
+
+        return all_include_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
+    }, [wc_types, filters])
 
 
     return <div>
@@ -94,7 +106,7 @@ function _FiltersSidePanel (props: Props)
             <MultiAutocompleteText
                 placeholder=""
                 selected_option_ids={props.filters.exclude_by_component_types}
-                options={wcomponent_type_options}
+                options={wcomponent_exclude_type_options}
                 allow_none={true}
                 on_change={exclude_by_component_types =>
                 {
@@ -111,7 +123,7 @@ function _FiltersSidePanel (props: Props)
             <MultiAutocompleteText
                 placeholder=""
                 selected_option_ids={props.filters.include_by_component_types}
-                options={wcomponent_type_options}
+                options={wcomponent_include_type_options}
                 allow_none={true}
                 on_change={include_by_component_types =>
                 {

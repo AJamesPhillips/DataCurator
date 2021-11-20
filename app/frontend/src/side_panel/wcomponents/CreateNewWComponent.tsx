@@ -3,12 +3,14 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./CreateNewWComponent.css"
-import { WComponentType, wcomponent_types } from "../../wcomponent/interfaces/wcomponent_base"
-import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
+import { Button as FrontendButton } from "../../sharedf/Button"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { create_wcomponent } from "../../state/specialised_objects/wcomponents/create_wcomponent_type"
 import { selector_chosen_base_id } from "../../state/user_info/selector"
+import { ACTIONS } from "../../state/actions"
+import { WComponentType, wcomponent_types } from "../../wcomponent/interfaces/wcomponent_base"
+import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
 
 
 
@@ -19,7 +21,11 @@ const map_state = (state: RootState) => ({
     base_id: selector_chosen_base_id(state),
 })
 
-const connector = connect(map_state)
+const map_dispatch = {
+    toggle_consumption_formatting: ACTIONS.display.toggle_consumption_formatting,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 function _CreateNewWComponent (props: Props)
@@ -31,7 +37,11 @@ function _CreateNewWComponent (props: Props)
         base_id,
     } = props
 
-    if (!editing) return <div class="create_new_wcomponent">Can not create in presentation mode</div>
+    if (!editing) return <div class="create_new_wcomponent">
+        <FrontendButton onClick={() => props.toggle_consumption_formatting({})}>
+            Swap to editing
+        </FrontendButton>
+    </div>
 
     if (base_id === undefined) return <div class="create_new_wcomponent">Select a base first.</div>
 

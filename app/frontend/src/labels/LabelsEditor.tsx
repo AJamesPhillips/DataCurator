@@ -50,7 +50,16 @@ function _LabelsEditor (props: Props)
     if (!ready) return <div>Loading labels...</div>
 
 
-    const allowed_wcomponent_ids = new Set(label_ids.concat(Array.from(props.allowed_label_ids || [])))
+    let allowed_wcomponent_ids: Set<string> | undefined = undefined
+    if (props.allowed_label_ids)
+    {
+        allowed_wcomponent_ids = new Set(props.allowed_label_ids)
+        // Ensure any existing labels are also included so that they can be rendered
+        // and the user can remove them manually.
+        label_ids.forEach(id => allowed_wcomponent_ids?.add(id))
+    }
+
+
     const wcomponent_id_options = get_wcomponent_search_options({
         allowed_wcomponent_ids,
         wcomponents_by_id: props.wcomponents_by_id,

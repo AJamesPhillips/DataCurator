@@ -20,7 +20,7 @@ export const conditionally_expand_selected_components = factory_conditionally_se
     const new_selected_ids = [...selected_ids]
     const new_selected_ids_set = new Set(new_selected_ids)
 
-    const { wc_id_connections_map } = composed_kv
+    const { wc_id_connections_map, composed_visible_wc_id_map } = composed_kv
 
     selected_ids.forEach(id =>
     {
@@ -30,6 +30,7 @@ export const conditionally_expand_selected_components = factory_conditionally_se
         connected_ids.forEach(connected_id =>
         {
             if (new_selected_ids_set.has(connected_id)) return
+            if (!composed_visible_wc_id_map[id]) return
 
             new_selected_ids.push(connected_id)
             new_selected_ids_set.add(connected_id)
@@ -47,7 +48,7 @@ export const conditionally_contract_selected_components = factory_conditionally_
     const selected_ids_set = new Set(selected_ids)
     const selected_ids_to_remove = new Set<string>()
 
-    const { wc_id_connections_map } = composed_kv
+    const { wc_id_connections_map, composed_visible_wc_id_map } = composed_kv
 
     selected_ids.forEach(id =>
     {
@@ -57,6 +58,7 @@ export const conditionally_contract_selected_components = factory_conditionally_
         else
         {
             const connected_and_selected_ids = Array.from(connected_ids)
+                .filter(id => composed_visible_wc_id_map[id])
                 .filter(id => selected_ids_set.has(id))
             if (connected_and_selected_ids.length <= 1) selected_ids_to_remove.add(id)
         }
@@ -90,7 +92,7 @@ function factory_conditionally_select_causal_components (direction: "forward" | 
         }
 
 
-        const { wc_id_connections_map } = composed_kv
+        const { wc_id_connections_map, composed_visible_wc_id_map } = composed_kv
 
         selected_ids.forEach(id =>
         {
@@ -98,6 +100,7 @@ function factory_conditionally_select_causal_components (direction: "forward" | 
             if (!connected_ids) return
 
             const causal_links = Array.from(connected_ids).concat([id])
+                .filter(id => composed_visible_wc_id_map[id])
                 .map(id => wcomponents_by_id[id])
                 .filter(wcomponent_is_causal_link)
                 .filter(wc => (forward ? wc.from_id : wc.to_id) === id || wc.id === id)

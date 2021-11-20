@@ -158,13 +158,14 @@ function _WComponentCanvasNode (props: Props)
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
-    const is_selected = selected_wcomponent_ids_set.has(id)
     const validity_value = (always_show || !wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
-        is_editing, is_selected, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter, wc_ids_excluded_by_filters,
+        is_editing, wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
+        selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
 
 
+    const is_selected = selected_wcomponent_ids_set.has(id)
     const validity_opacity = calc_display_opacity({
         is_editing,
         certainty: validity_value.display_certainty,

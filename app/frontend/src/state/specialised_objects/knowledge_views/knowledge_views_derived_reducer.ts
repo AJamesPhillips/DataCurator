@@ -474,12 +474,18 @@ function update_filters (state: RootState, current_composed_knowledge_view?: Com
             if (should_exclude || lacks_include) wc_ids_to_exclude.add(wcomponent.id)
         })
 
+        // This smells, should not be including this here as when it changes the filtered ids will be
+        // stale
+        const { selected_wcomponent_ids_set: selected_wc_ids } = state.meta_wcomponents
+
         wcomponents_links_on_kv.forEach(wcomponent =>
         {
             const { from_id, to_id } = wcomponent
             let should_exclude = !from_id || !to_id
 
-            should_exclude = should_exclude || wc_ids_to_exclude.has(from_id) || wc_ids_to_exclude.has(to_id)
+            should_exclude = should_exclude
+                || (!selected_wc_ids.has(from_id) && wc_ids_to_exclude.has(from_id))
+                || (!selected_wc_ids.has(to_id) && wc_ids_to_exclude.has(to_id))
 
             // For connections we're only using the `should_exclude` and ignoring the `lacks_include` for now
             // later we could put this under a flag so that connections also have to have a positive inclusion
