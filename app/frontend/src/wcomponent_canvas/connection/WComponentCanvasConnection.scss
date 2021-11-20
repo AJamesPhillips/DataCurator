@@ -48,11 +48,14 @@
 
 .animate_causal_links
 {
-    .connection_type_causal_link .connection_line
+    .connection_type_causal_link
     {
-        stroke-dasharray: 120 10;
-        stroke-dashoffset: 10;
-        animation: animate_dash 2s infinite linear;
+        .connection_line, .connection_line_background
+        {
+            stroke-dasharray: 120 10;
+            stroke-dashoffset: 10;
+            animation: animate_dash 2s infinite linear;
+        }
     }
 }
 
