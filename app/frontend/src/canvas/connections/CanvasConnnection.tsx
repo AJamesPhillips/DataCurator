@@ -17,11 +17,13 @@ interface OwnProps {
     to_connection_type: ConnectionTerminalType
     hidden?: boolean
     line_behaviour?: ConnectionLineBehaviour
+    circular_links?: boolean
     thickness?: number
     intensity?: number
     blur?: number
     connection_end_type?: ConnectionEndType
     is_highlighted?: boolean
+    focused_mode?: boolean
     on_click?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
     on_pointer_over_out?: (over: boolean) => void
     extra_css_classes?: string
@@ -36,19 +38,19 @@ export function CanvasConnnection (props: OwnProps)
 
     const {
         from_node_position, to_node_position, from_connection_type, to_connection_type,
-        line_behaviour,
+        line_behaviour, circular_links,
         on_pointer_over_out = () => {},
     } = props
     if (!from_node_position || !to_node_position) return null
 
     const { x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle } = derive_coords({
         from_node_position, to_node_position, from_connection_type, to_connection_type,
-        line_behaviour,
+        line_behaviour, circular_links,
     })
 
 
-    let opacity = props.intensity === undefined ? 1 : props.intensity
-    const thickness = hovered ? 2 : (props.thickness === undefined ? 2 : props.thickness)
+    let opacity = props.intensity ?? 1
+    const thickness = hovered ? 2 : (props.thickness ?? 2)
     // Disabled as not performant at the moment
     // if (opacity !== undefined)
     // {
@@ -73,7 +75,9 @@ export function CanvasConnnection (props: OwnProps)
         filter: blur ? `url(#blur_filter_${Math.round(blur)})` : "",
     }
 
-    const extra_line_classes = `${hovered ? "hovered" : (props.is_highlighted ? "highlighted" : "")}`
+    const extra_line_classes = hovered ? "hovered"
+        : (props.focused_mode ? "" // hide the background when in focused_mode
+        : (props.is_highlighted ? "highlighted" : ""))
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
 

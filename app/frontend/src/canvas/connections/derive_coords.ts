@@ -16,10 +16,21 @@ interface DeriveCoordsArgs
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
     line_behaviour?: ConnectionLineBehaviour
+    circular_links?: boolean
 }
 export function derive_coords (args: DeriveCoordsArgs )
 {
-    const { from_node_position, to_node_position, from_connection_type, to_connection_type, line_behaviour } = args
+    const {
+        from_node_position, to_node_position, from_connection_type,
+        line_behaviour, circular_links,
+    } = args
+    let { to_connection_type } = args
+
+    if (circular_links && from_node_position.left >= to_node_position.left)
+    {
+        // swap the "to" connection position to the right hand side, i.e. pretend it's "from"
+        to_connection_type = { ...to_connection_type, direction: "from" }
+    }
 
     const from_connector_position = get_connection_point(from_node_position, from_connection_type)
     const to_connector_position = get_connection_point(to_node_position, to_connection_type)

@@ -122,6 +122,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         shift_or_control_keys_are_down,
         focused_mode: state.display_options.focused_mode,
         connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
+        circular_links: state.display_options.circular_links,
     }
 }
 
@@ -181,6 +182,7 @@ function _WComponentCanvasConnection (props: Props)
         is_editing: props.is_editing,
         certainty: validity_value,
         is_current_item,
+        is_selected,
         connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
         certainty_formatting: props.certainty_formatting,
         focused_mode: props.focused_mode,
@@ -216,10 +218,12 @@ function _WComponentCanvasConnection (props: Props)
         on_click={on_click}
         on_pointer_over_out={over => props.set_highlighted_wcomponent({ id, highlighted: over })}
         line_behaviour={line_behaviour}
+        circular_links={props.circular_links}
         thickness={thickness}
         connection_end_type={connection_end_type}
         intensity={validity_opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
+        focused_mode={props.focused_mode}
         extra_css_classes={"connection_type_" + wcomponent.type + " " + effect}
     />
 }

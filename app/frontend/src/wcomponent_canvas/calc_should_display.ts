@@ -232,7 +232,7 @@ export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 
     if (args.connected_neighbour_is_highlighted) return 1
 
-    if (args.focused_mode) return 0.2
+    if (args.focused_mode) return 0.1
 
     const min50 = args.certainty_formatting.render_certainty_as_easier_opacity
 
