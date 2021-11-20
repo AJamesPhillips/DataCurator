@@ -97,7 +97,7 @@ export function CanvasConnnection (props: OwnProps)
     >
         <path
             className={"connection_line_background " + extra_background_classes}
-            d={calc_d(d_args)}
+            d={calc_d(new_target)}
             onPointerOver={() =>
             {
                 set_hovered(true)
@@ -113,12 +113,12 @@ export function CanvasConnnection (props: OwnProps)
         <path
             className={"connection_line " + extra_line_classes}
             d={calc_d(d_args)}
-            // ref={e =>
-            // {
-            //     if (!e) return
-            //     // todo capture setInterval so we can cancel it
-            //     move_to_target(e, target_position, new_target)
-            // }}
+            ref={e =>
+            {
+                if (!e) return
+                // todo capture setInterval so we can cancel it
+                move_to_target(e, target_position, new_target)
+            }}
             style={style_line}
         />
 
@@ -173,11 +173,12 @@ function move_to_target (e: SVGPathElement, target_position: Ref<DArgs | undefin
 
 
     let progress = 0
-
+    let timeout: NodeJS.Timeout | undefined = undefined
 
     function advance ()
     {
         progress += 0.1
+        progress = Math.min(progress, 1) // defensive
 
         const intermediate: DArgs = {
             x1: tween(current.x1, new_target.x1, progress),
@@ -192,10 +193,14 @@ function move_to_target (e: SVGPathElement, target_position: Ref<DArgs | undefin
         const d = calc_d(intermediate)
         e.setAttribute("d", d)
 
-        if (progress < 1) setTimeout(advance, 30)
+        if (progress >= 1)
+        {
+            if (timeout) clearTimeout(timeout)
+            target_position.current = new_target
+        }
     }
 
-    setTimeout(advance, 30)
+    timeout = setInterval(advance, 20)
 }
 
 
