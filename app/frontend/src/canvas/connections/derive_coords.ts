@@ -6,6 +6,7 @@ import { get_magnitude } from "../../utils/vector"
 import { get_angle_from_start_connector, get_angle_from_end_connector } from "./angles"
 import { get_connection_point } from "./terminal"
 import { to_vec, Vector } from "./utils"
+import { NODE_WIDTH } from "../position_utils"
 
 
 
@@ -20,26 +21,43 @@ interface DeriveCoordsArgs
 }
 export function derive_coords (args: DeriveCoordsArgs )
 {
-    const {
-        from_node_position, to_node_position, from_connection_type,
+    let {
+        from_node_position, to_node_position, from_connection_type, to_connection_type,
         line_behaviour, circular_links,
     } = args
-    let { to_connection_type } = args
 
-    if (circular_links && from_node_position.left >= to_node_position.left)
+    let y_offset = 0
+    // todo get a better name, this is true when the "from" node is over one full node width from the
+    // "to" node and the connection comes from it's left side and to the receiving node's right side.
+    let complete_invert_of_right_to_left = false
+    if (circular_links)
     {
-        // swap the "to" connection position to the right hand side, i.e. pretend it's "from"
-        to_connection_type = { ...to_connection_type, direction: "from" }
+        if (from_node_position.left >= to_node_position.left)
+        {
+            // swap the "to" connection position to the right hand side, i.e. pretend it's "from"
+            to_connection_type = { ...to_connection_type, direction: "from" }
+
+            if (from_node_position.left > (to_node_position.left + NODE_WIDTH))
+            {
+                complete_invert_of_right_to_left = true
+                // swap the "from" connection position to the left hand side, i.e. pretend it's "to"
+                from_connection_type = { ...from_connection_type, direction: "to" }
+            }
+        }
+        else
+        {
+            y_offset = 30
+        }
     }
 
     const from_connector_position = get_connection_point(from_node_position, from_connection_type)
     const to_connector_position = get_connection_point(to_node_position, to_connection_type)
 
     const x1 = from_connector_position.left
-    const y1 = -from_connector_position.top
+    const y1 = -from_connector_position.top + y_offset
 
     const x2 = to_connector_position.left
-    const y2 = -to_connector_position.top
+    const y2 = -to_connector_position.top + y_offset
 
     let relative_control_point1: Vector = { x: 0, y: 0 }
     let relative_control_point2 = relative_control_point1
@@ -49,13 +67,14 @@ export function derive_coords (args: DeriveCoordsArgs )
 
     if (line_behaviour === undefined || line_behaviour === "curve")
     {
-        if (x2 < x1 + 20)
+        const going_right_to_left = x2 <= x1
+        if (going_right_to_left && !complete_invert_of_right_to_left)
         {
             ({ end_angle, relative_control_point1, relative_control_point2 } = loop_curve(x1, y1, x2, y2, angle, from_connection_type, end_angle, to_connection_type, relative_control_point1, relative_control_point2))
         }
         else
         {
-            end_angle = rads._180
+            end_angle = complete_invert_of_right_to_left ? 0 : rads._180
             const xc = (x2 - x1) / 2
             relative_control_point1 = { x: xc, y: 0 }
             relative_control_point2 = { x: -xc, y: 0 }

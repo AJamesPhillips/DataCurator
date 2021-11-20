@@ -40,8 +40,8 @@ export function round_canvas_point (point: CanvasPoint, step: "small" | "large" 
 
 
 
-const node_width = 250 // keep in sync with .connectable_canvas_node style
-const half_node_width = node_width / 2
+export const NODE_WIDTH = 250 // keep in sync with .connectable_canvas_node style
+const half_node_width = NODE_WIDTH / 2
 const half_node_height = 60
 export function offset_by_half_node (point: CanvasPoint): CanvasPoint
 {
