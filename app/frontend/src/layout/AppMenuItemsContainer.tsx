@@ -22,6 +22,7 @@ const map_state = (state: RootState) => ({
 
 const map_dispatch = {
     set_show_help_menu: ACTIONS.display.set_show_help_menu,
+    change_route: ACTIONS.routing.change_route,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -61,10 +62,15 @@ function _AppMenuItemsContainer (props: Props)
     // @TODO: Come back to this. We should NOT need the inline styles on MenuItems below
     return (
         <Box mb={5} display="flex" flexDirection="column" alignItems="end">
-            <Button onClick={handleClick} aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
+            <Button aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
                 <Box component="span" width={1} display="flex" flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="start" alignContent="stretch">
-                    <Box component="strong">{route_to_text(props.route)}</Box>
-                    <MenuIcon />
+                    <Box component="strong" onClick={() =>
+                    {
+                        props.change_route({ route: props.route, item_id: null, sub_route: null })
+                    }}>
+                        {route_to_text(props.route)}
+                    </Box>
+                    <MenuIcon onClick={handleClick} />
                 </Box>
             </Button>
             <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
