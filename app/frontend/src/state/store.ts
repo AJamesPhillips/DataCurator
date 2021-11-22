@@ -1,5 +1,6 @@
 import { createStore, Action, Store } from "redux"
 import { register_window_focus_session_check } from "../sync/user_info/window_focus_session_check"
+import { register_window_title_updater_subscriber } from "../window_title"
 import { controls_subscribers } from "./controls/subscribers"
 
 import { display_options_subscribers } from "./display_options/subscribers"
@@ -82,6 +83,7 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
     sync_subscribers(store)
 
     register_window_focus_session_check(store)
+    register_window_title_updater_subscriber(store)
 
     return store
 }

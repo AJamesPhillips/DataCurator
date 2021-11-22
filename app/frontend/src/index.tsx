@@ -23,10 +23,10 @@ import { LandingPage } from "./home/LandingPage"
 import { DevLandingPage } from "./home/DevLandingPage"
 import { SimHome } from "./x_sim_app/SimHome"
 import { setup_console_api } from "./x_console_api_app/setup_console_api"
+import { set_window_title } from "./window_title"
 
 
 const root = document.getElementById("root")
-const title = document.getElementsByTagName("title")[0]
 
 
 if (root)
@@ -96,11 +96,6 @@ if (root)
 }
 
 
-if (title)
-{
-    title.innerHTML = APP_DETAILS.NAME
-}
-
-
+set_window_title()
 setup_window_on_focus_listener()
 setup_console_api()
