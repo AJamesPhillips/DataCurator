@@ -77,21 +77,22 @@ function render_content (state: RenderState, content: string, attributes: Object
     --depth
 
     const iter = content.matchAll(reg_content)
-    let match = iter.next()
-    while (!match.done)
-    {
-        rendered_content += match.value[1]
-        const attribute_index_lookup = match.value[2]!  // 0 or 0.0 etc
-        rendered_content += attribute_content(state, attribute_index_lookup, attributes, depth)
+    if (2 > 1) console.error(`render_content function is deprecated`)
+    // let match = iter.next()
+    // while (!match.done)
+    // {
+    //     rendered_content += match.value[1]
+    //     const attribute_index_lookup = match.value[2]!  // 0 or 0.0 etc
+    //     rendered_content += attribute_content(state, attribute_index_lookup, attributes, depth)
 
-        const new_match = iter.next()
-        if (new_match.done)
-        {
-            const num = match.value[0]!.length + match.value.index!
-            rendered_content += content.slice(num)
-        }
-        match = new_match
-    }
+    //     const new_match = iter.next()
+    //     if (new_match.done)
+    //     {
+    //         const num = match.value[0]!.length + match.value.index!
+    //         rendered_content += content.slice(num)
+    //     }
+    //     match = new_match
+    // }
 
     return rendered_content
 }

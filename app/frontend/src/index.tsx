@@ -31,6 +31,8 @@ const root = document.getElementById("root")
 
 if (root)
 {
+    root.innerText = ""
+
     const in_production = window.location.hostname === "datacurator.org"
     if (window.location.pathname === "" || window.location.pathname === "/")
     {

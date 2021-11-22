@@ -1,8 +1,9 @@
 {
   "include": ["src", "types"],
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
+    "module": "es6",
+    "target": "es6",
+    "lib": ["esnext"],
     "moduleResolution": "node",
     "jsx": "preserve",
     "jsxFactory": "h",

@@ -224,7 +224,7 @@ export function wcomponent_has_validity_predictions (wcomponent: WComponent): wc
     const { validity } = wcomponent as ValidityPredictions
     return validity !== undefined && validity.length > 0
 }
-const types_without_validity: Set<WComponentType> = new Set([
+const types_without_validity = new Set<WComponentType>([
     "prioritisation",
     "counterfactualv2",
     "sub_state",
