@@ -21,7 +21,7 @@ type Props = ConnectedProps<typeof connector>
 
 
 
-function _ActiveFilterWarning(props: Props)
+function _ActiveFilterWarning (props: Props)
 {
     const { apply_filter } = props
     const classes = use_styles()
@@ -29,7 +29,7 @@ function _ActiveFilterWarning(props: Props)
     if (!apply_filter) return null
 
 
-    return <Tooltip placement="top" title="WARNING: a filter is in place which could result in components being hidden.">
+    return <Tooltip placement="top" title="A filter is in place which could result in components being hidden">
         <IconButton
             className={classes.warning_button}
             component="span"

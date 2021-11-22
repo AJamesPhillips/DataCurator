@@ -59,6 +59,8 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
     prioritisations: WComponentPrioritisation[]
 
     wc_id_connections_map: {[wc_id: string]: Set<string>}
+    active_judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
+    active_judgement_or_objective_ids_by_goal_or_action_id: { [target_wcomponent_id: string]: string[] }
 
 
     composed_datetime_line_config: ComposedDatetimeLineConfig

@@ -26,7 +26,7 @@ function _ActiveCreatedAtFilterWarning (props: Props)
 
 
     return (
-        <Tooltip placement="top" title={`WARNING: ${component_number_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter!`}>
+        <Tooltip placement="top" title={`${component_number_excluded_by_created_at_datetime_filter} components are invisible due to created at datetime filter`}>
             <IconButton
                 className={classes.warning_button}
                 component="span"

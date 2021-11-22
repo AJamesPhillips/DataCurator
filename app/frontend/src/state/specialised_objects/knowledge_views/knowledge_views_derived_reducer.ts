@@ -149,12 +149,15 @@ function update_current_composed_knowledge_view_state (state: RootState, current
 {
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
 
-    return calculate_composed_knowledge_view({
+    const current_composed_knowledge_view = calculate_composed_knowledge_view({
         knowledge_view: current_kv,
         knowledge_views_by_id,
         wcomponents_by_id,
     })
+
+    return current_composed_knowledge_view
 }
+
 
 
 interface CalculateComposedKnowledgeViewArgs
@@ -203,6 +206,13 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
 
     const current_composed_knowledge_view: ComposedKnowledgeView = {
         composed_visible_wc_id_map: {},
+        active_judgement_or_objective_ids_by_target_id: {},
+        active_judgement_or_objective_ids_by_goal_or_action_id: {},
+        filters: {
+            wc_ids_excluded_by_any_filter: new Set(),
+            wc_ids_excluded_by_filters: new Set(),
+            wc_ids_excluded_by_created_at_datetime_filter: new Set(),
+        },
         ...knowledge_view,
         composed_wc_id_map,
         composed_blocked_wc_id_map,
@@ -216,11 +226,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         prioritisations,
         wc_id_connections_map,
         available_filter_options,
-        filters: {
-            wc_ids_excluded_by_any_filter: new Set(),
-            wc_ids_excluded_by_filters: new Set(),
-            wc_ids_excluded_by_created_at_datetime_filter: new Set(),
-        },
         composed_datetime_line_config: datetime_lines_config,
     }
     // do not need to do this but helps reduce confusion when debugging

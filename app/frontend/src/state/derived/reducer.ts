@@ -8,6 +8,9 @@ import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
+import type { WComponentIdsByType } from "./State"
+import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
+import { get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
 
 
 
@@ -47,9 +50,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         // }
 
 
-        const judgement_or_objectives = get_wcomponents_from_state(state, wcomponent_ids_by_type.judgement_or_objective)
-            .filter(is_defined)
-            .filter(wcomponent_is_judgement_or_objective)
+        const judgement_or_objectives = get_judgement_or_objectives(state, state.derived.wcomponent_ids_by_type.judgement_or_objective)
 
         const judgement_or_objective_ids_by_target_id = update_judgement_or_objective_ids_by_target_id(judgement_or_objectives)
         state = update_substate(state, "derived", "judgement_or_objective_ids_by_target_id", judgement_or_objective_ids_by_target_id)
@@ -64,10 +65,22 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 
     state = knowledge_views_derived_reducer(initial_state, state)
+    state = conditionally_update_active_judgement_or_objective_ids(initial_state, state)
     state = project_priorities_derived_reducer(initial_state, state)
 
 
     return state
+}
+
+
+
+function get_judgement_or_objectives (state: RootState, judgement_or_objective_ids: Set<string>)
+{
+    const judgement_or_objectives = get_wcomponents_from_state(state, judgement_or_objective_ids)
+        .filter(is_defined)
+        .filter(wcomponent_is_judgement_or_objective)
+
+    return judgement_or_objectives
 }
 
 
@@ -105,4 +118,87 @@ function update_judgement_or_objective_ids_by_goal_or_action_id (goals_and_actio
     })
 
     return judgement_or_objective_ids_by_goal_or_action_id
+}
+
+
+
+function conditionally_update_active_judgement_or_objective_ids (initial_state: RootState, state: RootState): RootState
+{
+    let { current_composed_knowledge_view } = state.derived
+
+    const judgement_or_objective_ids_by_target_id_changed = initial_state.derived.judgement_or_objective_ids_by_target_id !== state.derived.judgement_or_objective_ids_by_target_id
+
+    const { created_at_ms, sim_ms } = state.routing.args
+    const created_at_ms_changed = initial_state.routing.args.created_at_ms !== created_at_ms
+    const sim_ms_changed = initial_state.routing.args.sim_ms !== sim_ms
+
+
+    if (current_composed_knowledge_view && (judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
+    {
+        const active_judgement_or_objective_ids_by_target_id: { [id: string]: string[] } = {}
+        const active_judgement_or_objective_ids_by_goal_or_action_id: { [id: string]: string[] } = {}
+
+
+        const { wc_ids_by_type, composed_visible_wc_id_map } = current_composed_knowledge_view
+        const judgement_or_objectives = get_judgement_or_objectives(state, wc_ids_by_type.judgement_or_objective)
+
+        const active_judgement_or_objectives_by_id: { [id: string]: boolean } = {}
+        judgement_or_objectives.forEach(judgement =>
+        {
+            if (!composed_visible_wc_id_map[judgement.id]) return
+
+            const { is_valid } = get_wcomponent_validity_value({ wcomponent: judgement, created_at_ms, sim_ms })
+            if (!is_valid) return
+
+            active_judgement_or_objectives_by_id[judgement.id] = true
+        })
+
+
+        function judgement_or_objective_id_is_active (id: string)
+        {
+            return active_judgement_or_objectives_by_id[id]
+        }
+
+
+        const {
+            judgement_or_objective_ids_by_target_id,
+            judgement_or_objective_ids_by_goal_or_action_id,
+        } = state.derived
+
+        Object.keys(composed_visible_wc_id_map)
+        .forEach(id =>
+        {
+            const target_ids = judgement_or_objective_ids_by_target_id[id]
+            const ids_from_goal_or_action = judgement_or_objective_ids_by_goal_or_action_id[id]
+
+            if (target_ids)
+            {
+                const active_judgement_or_objective_ids = target_ids.filter(judgement_or_objective_id_is_active)
+                if (active_judgement_or_objective_ids.length)
+                {
+                    active_judgement_or_objective_ids_by_target_id[id] = active_judgement_or_objective_ids
+                }
+            }
+
+            if (ids_from_goal_or_action)
+            {
+                const active_judgement_or_objective_ids = ids_from_goal_or_action.filter(judgement_or_objective_id_is_active)
+                if (active_judgement_or_objective_ids.length)
+                {
+                    active_judgement_or_objective_ids_by_goal_or_action_id[id] = active_judgement_or_objective_ids
+                }
+            }
+        })
+
+
+        current_composed_knowledge_view = {
+            ...current_composed_knowledge_view,
+            active_judgement_or_objective_ids_by_target_id,
+            active_judgement_or_objective_ids_by_goal_or_action_id,
+        }
+        state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
+    }
+
+
+    return state
 }

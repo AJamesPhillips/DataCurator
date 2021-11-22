@@ -9,6 +9,7 @@ import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { JudgementBadgeSimple } from "../../sharedf/judgement_badge/JudgementBadgeSimple"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -26,19 +27,13 @@ type OwnProps =
 
 
 
-const map_state = (state: RootState, own_props: OwnProps) => {
+const map_state = (state: RootState) =>
+{
     const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
 
-    const wc_id_map = current_composed_kv?.composed_wc_id_map || {}
-
-    const judgement_or_objective_ids = [
-        ...(state.derived.judgement_or_objective_ids_by_target_id[own_props.wcomponent.id] || []),
-        ...(state.derived.judgement_or_objective_ids_by_goal_or_action_id[own_props.wcomponent.id] || []),
-    ]
-    .filter(id => !!wc_id_map[id])
-
     return {
-        judgement_or_objective_ids,
+        active_judgement_or_objective_ids_by_target_id: current_composed_kv?.active_judgement_or_objective_ids_by_target_id,
+        active_judgement_or_objective_ids_by_goal_or_action_id: current_composed_kv?.active_judgement_or_objective_ids_by_goal_or_action_id,
     }
 }
 
@@ -49,18 +44,36 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentJudgements (props: Props)
 {
-    const { judgement_or_objective_ids: ids, target_VAPs_represent, value } = props
-    const node_judgements_container_class_name = "node_judgements_container " + (ids.length ? "" : "empty")
+    const {
+        active_judgement_or_objective_ids_by_target_id,
+        active_judgement_or_objective_ids_by_goal_or_action_id,
+        target_VAPs_represent, value,
+    } = props
+
+
+    const judgement_or_objective_ids = useMemo(() =>
+    {
+        return [
+            ...((active_judgement_or_objective_ids_by_target_id || {})[props.wcomponent.id] || []),
+            ...((active_judgement_or_objective_ids_by_goal_or_action_id || {})[props.wcomponent.id] || []),
+        ]
+    }, [
+        active_judgement_or_objective_ids_by_target_id,
+        active_judgement_or_objective_ids_by_goal_or_action_id,
+    ])
+
+
+    const node_judgements_container_class_name = "node_judgements_container " + (judgement_or_objective_ids.length ? "" : "empty")
 
     if (value === undefined || target_VAPs_represent === undefined)
     {
         return <div className={node_judgements_container_class_name}>
-            {ids.map(id => <JudgementBadgeConnected judgement_or_objective_id={id} />)}
+            {judgement_or_objective_ids.map(id => <JudgementBadgeConnected judgement_or_objective_id={id} />)}
         </div>
     }
 
     return <div className={node_judgements_container_class_name}>
-        {ids.map(id => <JudgementBadgeSimple
+        {judgement_or_objective_ids.map(id => <JudgementBadgeSimple
             judgement_or_objective_id={id}
             target_VAPs_represent={target_VAPs_represent}
             value={value}
