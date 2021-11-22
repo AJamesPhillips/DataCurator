@@ -75,12 +75,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { current_composed_knowledge_view } = state.derived
 
 
-    const wc_id_map = current_composed_knowledge_view?.composed_wc_id_map || {}
-    const judgement_or_objective_ids = [
-        ...(state.derived.judgement_or_objective_ids_by_target_id[wcomponent_id] || []),
-        ...(state.derived.judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id] || []),
-    ]
-    .filter(id => !!wc_id_map[id])
+    let have_judgements = false
+    if (current_composed_knowledge_view)
+    {
+        have_judgements = !!(current_composed_knowledge_view.active_judgement_or_objective_ids_by_target_id[wcomponent_id] || current_composed_knowledge_view.active_judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id])
+    }
 
 
     return {
@@ -99,7 +98,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         validity_filter: state.display_options.derived_validity_filter,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         focused_mode: state.display_options.focused_mode,
-        have_judgements: judgement_or_objective_ids.length > 0,
+        have_judgements,
         wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
         display_time_marks: state.display_options.display_time_marks,
         connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
