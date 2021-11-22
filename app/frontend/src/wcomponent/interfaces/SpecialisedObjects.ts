@@ -5,6 +5,7 @@ import type { WComponentNodeGoal } from "./goal"
 import type { HasObjectives, WComponentJudgement } from "./judgement"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import type {
+    HasValuePossibilities,
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
     WComponentNodeStateV2,
@@ -244,10 +245,10 @@ export function wcomponent_has_VAP_sets (wcomponent: WComponent): wcomponent is 
 {
     return (wcomponent as WComponentNodeStateV2).values_and_prediction_sets !== undefined
 }
-// export function wcomponent_has_value_possibilities (wcomponent: WComponent): wcomponent is (WComponent & { value_possibilities: ValuePossibilitiesById })
-// {
-//     return (wcomponent as WComponentNodeStateV2).value_possibilities !== undefined
-// }
+export function wcomponent_has_value_possibilities (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasValuePossibilities)
+{
+    return (wcomponent as HasValuePossibilities | undefined)?.value_possibilities !== undefined
+}
 
 
 

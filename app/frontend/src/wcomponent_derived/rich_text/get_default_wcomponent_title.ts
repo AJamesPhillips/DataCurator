@@ -3,6 +3,7 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_sub_state,
+    wcomponent_has_value_possibilities,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -41,8 +42,30 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
     {
         title = `Sub state (no target set) <auto generated>`
 
-        const target_wc_id = args.wcomponent.target_wcomponent_id
-        if (target_wc_id) title = `@@${target_wc_id} <auto generated>`
+        const { target_wcomponent_id, selector } = args.wcomponent
+        if (target_wcomponent_id)
+        {
+            title = `@@${target_wcomponent_id} <auto generated>`
+
+            if (selector?.target_value && selector?.target_value_id_type)
+            {
+                const { target_value, target_value_id_type } = selector
+                let value_possibility_str = ""
+
+                if (target_value_id_type === "id")
+                {
+                    const target_wc = args.wcomponents_by_id[target_wcomponent_id]
+                    if (wcomponent_has_value_possibilities(target_wc))
+                    {
+                        const value_possibility = (target_wc?.value_possibilities || {})[target_value]
+                        if (value_possibility) value_possibility_str = value_possibility.value
+                    }
+                }
+                else value_possibility_str = target_value
+
+                title += (": " + value_possibility_str)
+            }
+        }
     }
 
     return title

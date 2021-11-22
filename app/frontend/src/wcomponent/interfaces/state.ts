@@ -10,8 +10,11 @@ export interface HasVAPSetsAndMaybeValuePossibilities
     value_possibilities?: ValuePossibilitiesById // optional as there will be older data that lacks this field
     values_and_prediction_sets: StateValueAndPredictionsSet[]
 }
-export interface HasValuePossibilitiesAndVAPSets extends HasVAPSetsAndMaybeValuePossibilities
+export interface HasValuePossibilities
 {
+    value_possibilities: ValuePossibilitiesById
+}
+export interface HasValuePossibilitiesAndVAPSets extends HasVAPSetsAndMaybeValuePossibilities, HasValuePossibilities {
     value_possibilities: ValuePossibilitiesById
 }
 

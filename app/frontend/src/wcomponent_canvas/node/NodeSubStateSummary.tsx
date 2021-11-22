@@ -74,6 +74,9 @@ function _NodeSubStateSummary (props: Props)
         else if (target_value_id_type === undefined || target_value === undefined) return null
         else
         {
+            return null
+
+            /*
             let value_text = target_value
             let value_id = ""
             if (target_value_id_type === "id")
@@ -102,6 +105,7 @@ function _NodeSubStateSummary (props: Props)
                 counterfactual_VAP_set={counterfactual_VAP_set_info}
                 VAP_id_to_counterfactuals_info_map={{}}
             />
+            */
         }
     }
 
@@ -137,8 +141,11 @@ function _NodeSubStateSummary (props: Props)
     if (!VAP_visual) return <div>Invalid configuration</div>
 
     let { value_text } = VAP_visual
-    // If not 100% certain then show probability
-    value_text += VAP_visual.certainty === 1 ? "" :` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
+    // // If not 100% certain then show probability
+    // value_text += VAP_visual.certainty === 1 ? "" : ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
+    // do not show the value text as if the title is not set then it will be show as the default title
+    value_text = ` ${ratio_to_percentage_string(VAP_visual.certainty)}%`
+
     VAP_visual = { ...VAP_visual, value_text, certainty: 1 }
 
     return <ValueAndPredictionEntryRow
