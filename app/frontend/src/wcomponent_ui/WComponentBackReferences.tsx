@@ -59,6 +59,11 @@ function _WComponentBackReferences (props: Props)
     </div>
 
 
+    if (other_wcomponents.length === 0) return <div>
+        No back references
+    </div>
+
+
     const created_at_ms = new Date().getTime()
     const sim_ms = created_at_ms
 
