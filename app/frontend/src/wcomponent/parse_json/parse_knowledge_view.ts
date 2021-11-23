@@ -6,12 +6,15 @@ import { parse_base_dates } from "./parse_dates"
 
 
 
-export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_ids?: Set<string>): KnowledgeView
+export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_ids?: Set<string>, remove_passthrough_entries = false): KnowledgeView
 {
     knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view) // defensive
 
     let wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids)
-    wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map)
+    if (remove_passthrough_entries)
+    {
+        wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map)
+    }
 
     knowledge_view = {
         ...knowledge_view,

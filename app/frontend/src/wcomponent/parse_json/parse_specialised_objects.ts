@@ -32,7 +32,7 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
         perceptions = data.perceptions.map(parse_perception)
         wcomponents = data.wcomponents.map(parse_wcomponent)
         const wcomponent_ids = new Set(wcomponents.map(({ id }) => id))
-        knowledge_views = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids))
+        knowledge_views = data.knowledge_views.map(kv => parse_knowledge_view(kv, wcomponent_ids, true))
     }
 
     const specialised_objects: SpecialisedObjectsFromToServer = {
