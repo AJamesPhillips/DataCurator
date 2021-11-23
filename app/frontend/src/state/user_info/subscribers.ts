@@ -15,7 +15,7 @@ export function user_info_subscribers (store: StoreType)
     const { user, users_by_id, bases_by_id: bases } = starting_state.user_info
     // We may start with a supabase user (from the synchronous restore from localstorage state)
     if (user && !users_by_id) get_users(store)
-    if (user && !bases) refresh_bases_for_current_user(store)
+    if (!bases) refresh_bases_for_current_user(store)
 
 
     pub_sub.user.sub("changed_user", () =>

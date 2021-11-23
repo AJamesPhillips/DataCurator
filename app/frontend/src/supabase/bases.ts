@@ -8,7 +8,7 @@ import type {
 
 
 
-export async function get_all_bases (user_id: string)
+export async function get_all_bases (user_id?: string)
 {
     const supabase = get_supabase()
     const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
@@ -60,7 +60,7 @@ function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
 
 
 
-function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls: JoinedAccessControlsPartial[] | undefined, user_id: string): SupabaseKnowledgeBaseWithAccess
+function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls: JoinedAccessControlsPartial[] | undefined, user_id?: string): SupabaseKnowledgeBaseWithAccess
 {
     let { inserted_at, updated_at, owner_user_id, public_read } = base
     inserted_at = new Date(inserted_at)

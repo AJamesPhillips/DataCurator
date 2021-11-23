@@ -69,7 +69,8 @@ function _UserInfo (props: Props)
         </Button>
 
         {form_state === "signin" && <UserSigninRegister
-            on_close={(!user) ? undefined : () => set_form_state("hidden")} />}
+            on_close={() => set_form_state("hidden")}
+        />}
 
         {form_state === "account_info" && <UserAccountInfo
             on_close={need_to_set_user_name ? undefined : () => set_form_state("hidden")}
