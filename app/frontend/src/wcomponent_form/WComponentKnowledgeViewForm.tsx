@@ -69,7 +69,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
         knowledge_view_entry, all_knowledge_views, editing } = props
 
-    if (!wcomponent) return <div>Component of ID: {wcomponent_id} does not exist</div>
+    if (!wcomponent) return null
 
 
     const other_knowledge_views = all_knowledge_views

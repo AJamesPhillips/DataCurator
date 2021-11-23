@@ -174,6 +174,7 @@ function _WComponentForm (props: Props)
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
         orig_value_possibilities = wcomponent.value_possibilities
     }
+    const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
     return <Box className={`editable-${wcomponent_id}`}>
@@ -214,7 +215,8 @@ function _WComponentForm (props: Props)
             <DisplayValue UI_value={UI_value} />
         </a>}
 
-        <FormControl component="fieldset" fullWidth={true} margin="normal">
+
+        {(editing || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
             <AutocompleteText
                 force_editable={force_editable}
                 placeholder="Type: "
@@ -231,9 +233,10 @@ function _WComponentForm (props: Props)
                     upsert_wcomponent(new_wcomponent)
                 }}
             />
-        </FormControl>
+        </FormControl>}
 
-        {wcomponent_is_statev2(wcomponent) && (editing || (orig_values_and_prediction_sets?.length || 0) > 0) &&
+
+        {wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) &&
         <p>
             <span className="description_label">Sub type</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>

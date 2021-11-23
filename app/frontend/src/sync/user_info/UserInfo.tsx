@@ -19,6 +19,8 @@ const map_state = (state: RootState) =>
     return {
         user: state.user_info.user,
         user_name: state.user_info.user_name,
+        bases_by_id: state.user_info.bases_by_id,
+        chosen_base_id: state.user_info.chosen_base_id,
         need_to_set_user_name: selector_need_to_set_user_name(state),
     }
 }
@@ -34,7 +36,7 @@ type FormState = "signin" | "hidden" | "account_info"
 
 function _UserInfo (props: Props)
 {
-    const { user, user_name, need_to_set_user_name } = props
+    const { user, bases_by_id, chosen_base_id, user_name, need_to_set_user_name } = props
     const [form_state, set_form_state] = useState<FormState>("hidden")
     const previous_user = useRef<SupabaseAuthUser | null>(user)
     const user_name_or_none = user_name || no_user_name
@@ -45,9 +47,17 @@ function _UserInfo (props: Props)
         const previous_signed_out = !previous_user.current && user
         previous_user.current = user
 
-        const new_form_state: FormState = !user ? "signin" : (need_to_set_user_name ? "account_info" : (previous_signed_out ? "hidden" : form_state))
+        const have_bases_but_base_id_not_present = (bases_by_id && chosen_base_id) ? !bases_by_id[chosen_base_id] : false
+
+        const should_sign_in = !user && have_bases_but_base_id_not_present
+
+        const new_form_state: FormState = should_sign_in ? "signin"
+            : (need_to_set_user_name ? "account_info"
+            : (previous_signed_out ? "hidden" : form_state))
+
         set_form_state(new_form_state)
-    }, [user, need_to_set_user_name])
+
+    }, [user, bases_by_id, chosen_base_id, need_to_set_user_name])
 
 
     return (<div>

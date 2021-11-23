@@ -59,9 +59,13 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         const bases_by_id = build_bases_by_id_map(bases)
         state = update_substate(state, "user_info", "bases_by_id", bases_by_id)
 
-        const initial_chosen_base_id = state.user_info.chosen_base_id
-        state = ensure_valid_chosen_base_id(state)
-        const changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id
+        let changed_chosen_base_id = false
+        if (state.user_info.user)
+        {
+            const initial_chosen_base_id = state.user_info.chosen_base_id
+            state = ensure_valid_chosen_base_id(state)
+            changed_chosen_base_id = initial_chosen_base_id !== state.user_info.chosen_base_id
+        }
 
         // New pattern, not sure this is a good idea yet but is simpler than making subscribers
         // which store state, and that run on every store change to compare to current state

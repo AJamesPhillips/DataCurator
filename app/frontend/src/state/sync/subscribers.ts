@@ -6,7 +6,12 @@ import { load_state } from "./utils/load_state"
 
 export function sync_subscribers (store: StoreType)
 {
-    pub_sub.user.sub("changed_bases", () => load_state(store))
+    pub_sub.user.sub("changed_bases", () =>
+    {
+        if (store.getState().user_info.user) return
+
+        load_state(store)
+    })
     pub_sub.user.sub("changed_user", () => load_state(store))
     pub_sub.user.sub("changed_chosen_base_id", () => load_state(store))
 
