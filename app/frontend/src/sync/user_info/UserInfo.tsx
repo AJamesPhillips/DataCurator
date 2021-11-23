@@ -68,7 +68,7 @@ function _UserInfo (props: Props)
             disableElevation={true}
             // disabled={form_state === "signin"} // do not mark as disabled as the modal will prevent user
             // interaction anyway and if disabled is used then modal and buttons on it become disabled too.
-            onClick={() => set_form_state("account_info")}
+            onClick={() => set_form_state(user ? "account_info" : "signin")}
             size="small"
             style={{textTransform: "none"}}
             variant="contained"
