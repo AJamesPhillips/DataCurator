@@ -125,6 +125,12 @@ function calculate_spatial_temporal_position_to_move_to (current_composed_knowle
         if (!view_entry && !disable_if_not_present && wc_ids_by_type)
         {
             const { any_node } = wc_ids_by_type
+
+            // Remove the initial_wcomponent_id as it may be selected but present in a different
+            // knowledge view
+            selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set)
+            selected_wcomponent_ids_set.delete(initial_wcomponent_id)
+
             const ids = selected_wcomponent_ids_set.size ? selected_wcomponent_ids_set : any_node
 
             let min_left = Number.POSITIVE_INFINITY
