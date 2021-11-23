@@ -24,7 +24,7 @@ export function controls_starting_state (): ControlsState
     const state: ControlsState = {
         linked_datetime_sliders: false,
         display_time_sliders: false,
-        display_side_panel: false,
+        display_side_panel: true,
         ...obj,
     }
 
