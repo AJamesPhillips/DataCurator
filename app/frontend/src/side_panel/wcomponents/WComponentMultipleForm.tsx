@@ -25,12 +25,12 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const kv = get_current_composed_knowledge_view_from_state(state)
-    const wcomponent_ids_set = state.meta_wcomponents.selected_wcomponent_ids_set
+    const { selected_wcomponent_ids_set } = state.meta_wcomponents
     const { wcomponents_by_id } = state.specialised_objects
 
     return {
         ready: state.sync.ready_for_reading,
-        wcomponent_ids_set,
+        selected_wcomponent_ids_set,
         wcomponents_by_id,
         knowledge_view_id: kv?.id,
         composed_wc_id_map: kv?.composed_wc_id_map,
@@ -58,7 +58,7 @@ function _WComponentMultipleForm (props: Props)
     if (!props.ready) return <div>Loading...</div>
 
     const {
-        wcomponent_ids_set,
+        selected_wcomponent_ids_set,
         composed_wc_id_map,
         knowledge_view_id,
         wcomponents_by_id,
@@ -69,16 +69,17 @@ function _WComponentMultipleForm (props: Props)
         snap_to_grid_knowledge_view_entries,
         bulk_edit_wcomponents,
     } = props
-    const wcomponents = get_wcomponents_from_ids(wcomponents_by_id, wcomponent_ids_set).filter(is_defined)
-    const wcomponent_ids = Array.from(wcomponent_ids_set)
-    const all_wcomponent_ids_present_in_current_kv = calc_all_wcomponent_ids_present_in_current_kv(wcomponent_ids, composed_wc_id_map)
+    const selected_wcomponents = get_wcomponents_from_ids(wcomponents_by_id, selected_wcomponent_ids_set)
+        .filter(is_defined)
+    const selected_wcomponent_ids = Array.from(selected_wcomponent_ids_set)
+    const all_wcomponent_ids_present_in_current_kv = calc_all_wcomponent_ids_present_in_current_kv(selected_wcomponent_ids, composed_wc_id_map)
 
 
     const label_ids_set = new Set<string>()
     const causal_link_wcomponent_ids: string[] = []
     let effect_when_true: number | undefined = undefined
     let effect_when_false: number | undefined = undefined
-    wcomponents.forEach(wc =>
+    selected_wcomponents.forEach(wc =>
     {
         (wc.label_ids || []).forEach(id => label_ids_set.add(id))
 
@@ -92,8 +93,16 @@ function _WComponentMultipleForm (props: Props)
     const label_ids: string[] = Array.from(label_ids_set).sort()
 
 
+    if (selected_wcomponent_ids.length === 0)
+    {
+        return <div>
+            <h2>No selected components</h2>
+        </div>
+    }
+
+
     return <div>
-        <h2>{editing ? "Bulk editing" : "Viewing"} {wcomponent_ids.length} components</h2>
+        <h2>{editing ? "Bulk editing" : "Viewing"} {selected_wcomponent_ids.length} components</h2>
 
         {editing && <p>
             <h3>Position</h3>
@@ -101,7 +110,7 @@ function _WComponentMultipleForm (props: Props)
                 point={{ left: 0, top: 0 }}
                 on_update={p => {
                     bulk_edit_knowledge_view_entries({
-                        wcomponent_ids,
+                        wcomponent_ids: selected_wcomponent_ids,
                         change_left: p.left,
                         change_top: p.top,
                     })
@@ -110,7 +119,7 @@ function _WComponentMultipleForm (props: Props)
         </p>}
 
         {editing && <p>
-            <AlignComponentForm wcomponent_ids={wcomponent_ids} />
+            <AlignComponentForm wcomponent_ids={selected_wcomponent_ids} />
         </p>}
 
         {(editing || label_ids.length > 0) && <p>
@@ -123,7 +132,10 @@ function _WComponentMultipleForm (props: Props)
                     const remove_label_ids = new Set(label_ids.filter(id => !new_label_ids_set.has(id)))
                     const add_label_ids = new Set(new_label_ids.filter(id => !label_ids_set.has(id)))
 
-                    bulk_edit_wcomponents({ wcomponent_ids, change: {}, remove_label_ids, add_label_ids })
+                    bulk_edit_wcomponents({
+                        wcomponent_ids: selected_wcomponent_ids,
+                        change: {}, remove_label_ids, add_label_ids,
+                    })
                 }}
             />
         </p>}
@@ -138,7 +150,10 @@ function _WComponentMultipleForm (props: Props)
                 effect_when_true={effect_when_true}
                 effect_when_false={effect_when_false}
                 editing={editing}
-                change_effect={arg => bulk_edit_wcomponents({ wcomponent_ids: causal_link_wcomponent_ids, change: arg })}
+                change_effect={arg => bulk_edit_wcomponents({
+                    wcomponent_ids: causal_link_wcomponent_ids,
+                    change: arg,
+                })}
             />
         </p>}
 
@@ -146,7 +161,10 @@ function _WComponentMultipleForm (props: Props)
             <h3>Created at</h3>
             <EditableCustomDateTime
                 value={undefined}
-                on_change={custom_created_at => bulk_edit_wcomponents({ wcomponent_ids, change: { custom_created_at } })}
+                on_change={custom_created_at => bulk_edit_wcomponents({
+                    wcomponent_ids: selected_wcomponent_ids,
+                    change: { custom_created_at },
+                })}
             />
         </p>}
 
@@ -160,7 +178,7 @@ function _WComponentMultipleForm (props: Props)
                     if (!knowledge_view_id) return
 
                     bulk_add_to_knowledge_view({
-                        wcomponent_ids: Array.from(wcomponent_ids),
+                        wcomponent_ids: selected_wcomponent_ids,
                         knowledge_view_id,
                     })
                 }}
@@ -176,7 +194,7 @@ function _WComponentMultipleForm (props: Props)
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({
-                        wcomponent_ids: Array.from(wcomponent_ids),
+                        wcomponent_ids: selected_wcomponent_ids,
                         remove_type: "passthrough",
                     })
                 }}
@@ -191,7 +209,7 @@ function _WComponentMultipleForm (props: Props)
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({
-                        wcomponent_ids: Array.from(wcomponent_ids),
+                        wcomponent_ids: selected_wcomponent_ids,
                         remove_type: "block",
                     })
                 }}
