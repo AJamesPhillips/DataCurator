@@ -113,13 +113,13 @@ function calculate_spatial_temporal_position_to_move_to (current_composed_knowle
     let wcomponent_created_at_ms: number | undefined = undefined
     let position: PositionAndZoom | undefined = undefined
 
-    const { composed_visible_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view || {}
+    const { composed_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view || {}
 
-    if (composed_visible_wc_id_map)
+    if (composed_wc_id_map)
     {
         const wcomponent = wcomponents_by_id[initial_wcomponent_id]
         wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
-        let view_entry = composed_visible_wc_id_map[initial_wcomponent_id]
+        let view_entry = composed_wc_id_map[initial_wcomponent_id]
         let zoom = SCALE_BY
 
         if (!view_entry && !disable_if_not_present && wc_ids_by_type)
@@ -135,7 +135,7 @@ function calculate_spatial_temporal_position_to_move_to (current_composed_knowle
             ids.forEach(wcomponent_id =>
             {
                 const wcomponent = wcomponents_by_id[wcomponent_id]
-                const an_entry = composed_visible_wc_id_map[wcomponent_id]
+                const an_entry = composed_wc_id_map[wcomponent_id]
                 if (!wcomponent || !an_entry) return
 
                 min_left = Math.min(min_left, an_entry.left)
