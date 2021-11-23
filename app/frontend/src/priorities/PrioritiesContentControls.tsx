@@ -34,7 +34,6 @@ function _PrioritiesContentControls (props: Props)
 
     return <div>
         <MoveToItemButton
-            position={position}
             move={() => props.change_route({ args: position })}
             draw_attention={draw_attention}
             have_finished_drawing_attention={() => set_allow_drawing_attention(false)}

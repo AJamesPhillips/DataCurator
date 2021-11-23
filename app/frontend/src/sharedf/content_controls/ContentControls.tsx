@@ -89,6 +89,7 @@ function _ContentControls (props: Props)
                 <MoveToWComponentButton
                     allow_drawing_attention={allow_drawing_attention}
                     have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
+                    disable_if_not_present={false}
                 />
                 <ActiveCreatedAtFilterWarning />
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
