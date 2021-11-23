@@ -1,13 +1,14 @@
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import { bounded } from "../../shared/utils/bounded"
 import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_angle, rads } from "../../utils/angles"
-import { get_magnitude } from "../../utils/vector"
-import { get_angle_from_start_connector, get_angle_from_end_connector } from "./angles"
 import { get_connection_point } from "./terminal"
-import { to_vec, Vector } from "./utils"
+import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
 
+
+
+const NODE_WIDTH_plus_fudge = NODE_WIDTH + 45
+const minimum_line_bow = 30
 
 
 interface DeriveCoordsArgs
@@ -28,27 +29,48 @@ export function derive_coords (args: DeriveCoordsArgs )
 
     let y1_offset = 0
     let y2_offset = 0
-    // todo get a better name, this is true when the "from" node is over one full node width from the
-    // "to" node and the connection comes from its left side and to the receiving node's right side.
-    let complete_invert_of_right_to_left = false
+    let x_control1_factor = 1
+    let x_control2_factor = 1
+
+    let invert_end_angle = false
     if (circular_links)
     {
-        y1_offset = 30
-        y2_offset = 30
-
-        if (from_node_position.left >= to_node_position.left)
+        if (from_node_position.left < (to_node_position.left - NODE_WIDTH_plus_fudge))
         {
-            y2_offset = 0
-
-            // swap the "to" connection position to the right hand side, i.e. pretend it's "from"
+            y1_offset = 30
+            y2_offset = 30
+        }
+        else if (to_node_position.left < (from_node_position.left - NODE_WIDTH_plus_fudge))
+        {
             to_connection_type = { ...to_connection_type, direction: "from" }
-
-            if (from_node_position.left > (to_node_position.left + NODE_WIDTH))
+            from_connection_type = { ...from_connection_type, direction: "to" }
+            invert_end_angle = true
+        }
+        else
+        {
+            const from_below_to = to_node_position.top < from_node_position.top
+            if (from_below_to)
             {
-                complete_invert_of_right_to_left = true
-                // swap the "from" connection position to the left hand side, i.e. pretend it's "to"
                 from_connection_type = { ...from_connection_type, direction: "to" }
-                y1_offset = 0
+                y2_offset = 30
+            }
+            else
+            {
+                to_connection_type = { ...to_connection_type, direction: "from" }
+                y1_offset = 30
+                invert_end_angle = true
+            }
+
+
+            if (from_node_position.left < to_node_position.left)
+            {
+                if (from_below_to) x_control1_factor = -1
+                else x_control2_factor = -1
+            }
+            else
+            {
+                if (from_below_to) x_control2_factor = -1
+                else x_control1_factor = -1
             }
         }
     }
@@ -70,39 +92,17 @@ export function derive_coords (args: DeriveCoordsArgs )
 
     if (line_behaviour === undefined || line_behaviour === "curve")
     {
-        const going_right_to_left = x2 <= x1
-        if (going_right_to_left && !complete_invert_of_right_to_left)
-        {
-            ({ end_angle, relative_control_point1, relative_control_point2 } = loop_curve(x1, y1, x2, y2, angle, from_connection_type, end_angle, to_connection_type, relative_control_point1, relative_control_point2))
-        }
-        else
-        {
-            end_angle = complete_invert_of_right_to_left ? 0 : rads._180
-            const xc = (x2 - x1) / 2
-            relative_control_point1 = { x: xc, y: 0 }
-            relative_control_point2 = { x: -xc, y: 0 }
-        }
+        end_angle = invert_end_angle ? 0 : rads._180
+        const xc = (x2 - x1) / 2
+        const min_xc = Math.max(Math.abs(xc), minimum_line_bow) * (Math.sign(xc) || -1)
+        relative_control_point1 = { x: min_xc * x_control1_factor, y: 0 }
+        relative_control_point2 = { x: -min_xc * x_control2_factor, y: 0 }
     }
 
 
     return {
         x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle
     }
-}
-
-
-
-function loop_curve (x1: number, y1: number, x2: number, y2: number, angle: number, from_connection_type: ConnectionTerminalType, end_angle: number, to_connection_type: ConnectionTerminalType, relative_control_point1: Vector, relative_control_point2: Vector)
-{
-    const magnitude = (get_magnitude(x1, y1, x2, y2) * 100) ** 0.5
-
-    const start_angle = get_angle_from_start_connector(angle, from_connection_type.direction)
-    end_angle = get_angle_from_end_connector(angle, to_connection_type.direction)
-
-    const control_point_magnitude = bounded(magnitude, 10, 200)
-    relative_control_point1 = to_vec(start_angle, control_point_magnitude)
-    relative_control_point2 = to_vec(end_angle, control_point_magnitude)
-    return { end_angle, relative_control_point1, relative_control_point2 }
 }
 
 

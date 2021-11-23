@@ -42,10 +42,10 @@ export function LandingPage() {
 
                     <h3>What is <strong>Data Curator</strong>?</h3>
                     <p>
-                        DataCurator is a tool to help you map complex systems, then navigate, communicate and plan successful interventions in them for the benefit all lives.
+                        DataCurator enables you to map complex systems, then plan, communicate and navigate successful interventions in them for the benefit all lives.
                     </p>
                     <p>
-                        It allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present.
+                        DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present.
                     </p>
                     <p>
                         This is a <a href="https://centerofci.org/projects/datacurator/">CCI project</a> supported by our generous funders.

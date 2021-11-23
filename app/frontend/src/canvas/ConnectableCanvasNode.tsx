@@ -3,7 +3,6 @@ import { Card, CardContent, CardMedia, makeStyles } from "@material-ui/core"
 
 import "./ConnectableCanvasNode.scss"
 import { CanvasNode } from "./CanvasNode"
-import { COLOURS } from "./display"
 import "./display_colors.scss"
 import type { CanvasPoint } from "./interfaces"
 import type {

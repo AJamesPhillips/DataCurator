@@ -7,6 +7,7 @@ export function DevLandingPage() {
     return (
         <Container maxWidth="md">
             <ul>
+                <li><a href="/landing_page/">Landing page</a></li>
                 <li><a href="/app/">app</a></li>
                 <li><a href="/project_dashboard">Project dashboard</a></li>
                 <li><a href="/prob_graph">Probability graph</a></li>
@@ -15,6 +16,7 @@ export function DevLandingPage() {
                 <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
                 <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
                 <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
+                <li><a href="/sandbox/circular_connections">Sandbox - Circular Connections</a></li>
                 <li><a href="/sandbox/supabase">Sandbox - Supabase</a></li>
                 <li><a href="/sandbox">Sandbox</a></li>
             </ul>

@@ -26,6 +26,7 @@ interface OwnProps {
     on_click?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
     on_pointer_over_out?: (over: boolean) => void
     extra_css_classes?: string
+    should_animate?: boolean
 }
 
 
@@ -41,6 +42,7 @@ export function CanvasConnnection (props: OwnProps)
         from_node_position, to_node_position, from_connection_type, to_connection_type,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
+        should_animate = true,
     } = props
     if (!from_node_position || !to_node_position) return null
 
@@ -64,7 +66,7 @@ export function CanvasConnnection (props: OwnProps)
     // }
 
 
-    const blur = props.blur || 0
+    const blur = props.blur ?? 0
 
     const style_line_background: h.JSX.CSSProperties = {
         strokeWidth: thickness + 10,
@@ -93,7 +95,7 @@ export function CanvasConnnection (props: OwnProps)
         y2,
         progress: 0,
     }), [x1, y1, relative_control_point1.x, relative_control_point1.y, relative_control_point2.x, relative_control_point2.y, x2, y2])
-    const d_args = current_position.current || target_position
+    const d_args = should_animate ? (current_position.current || target_position) : target_position
 
 
     return <g
@@ -121,7 +123,7 @@ export function CanvasConnnection (props: OwnProps)
             d={calc_d(d_args)}
             ref={e =>
             {
-                if (!e) return
+                if (!e || !should_animate) return
 
                 if (animate_to_target_timeout.current) clearTimeout(animate_to_target_timeout.current)
                 animate_to_target_timeout.current = animate_to_target(e, current_position, target_position)
