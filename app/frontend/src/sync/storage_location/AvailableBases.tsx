@@ -97,7 +97,7 @@ function _AvailableBases (props: Props)
         <tbody>
         {bases.map(base =>
             <StorageOption
-                user={user || undefined}
+                user={user}
                 users_by_id={users_by_id}
                 base={base}
                 selected={base.id === chosen_base_id}

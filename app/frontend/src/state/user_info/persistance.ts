@@ -34,8 +34,8 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
     const chosen_base_id = args.storage_location !== undefined ? args.storage_location : obj.chosen_base_id
 
 
-    const user: User | null = args.load_state_from_storage
-        ? get_supabase().auth.user()
+    const user: User | undefined = args.load_state_from_storage
+        ? (get_supabase().auth.user() || undefined)
         : local_user
 
 

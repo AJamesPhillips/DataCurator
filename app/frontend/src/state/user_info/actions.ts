@@ -7,7 +7,7 @@ import type { SupabaseKnowledgeBaseWithAccess, SupabaseUser } from "../../supaba
 
 interface SetUserArgs
 {
-    user: SupabaseAuthUser | null
+    user: SupabaseAuthUser | undefined
 }
 
 interface ActionSetUser extends Action, SetUserArgs {}

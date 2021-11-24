@@ -6,7 +6,7 @@ import type { SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../
 
 export interface UserInfoState
 {
-    user: SupabaseAuthUser | null
+    user: SupabaseAuthUser | undefined
     need_to_handle_password_recovery: boolean
     users_by_id: SupabaseUsersById | undefined
     user_name: string | undefined

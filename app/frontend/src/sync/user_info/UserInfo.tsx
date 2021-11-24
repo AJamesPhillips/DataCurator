@@ -38,7 +38,7 @@ function _UserInfo (props: Props)
 {
     const { user, bases_by_id, chosen_base_id, user_name, need_to_set_user_name } = props
     const [form_state, set_form_state] = useState<FormState>("hidden")
-    const previous_user = useRef<SupabaseAuthUser | null>(user)
+    const previous_user = useRef<SupabaseAuthUser | undefined>(user)
     const user_name_or_none = user_name || no_user_name
 
 
