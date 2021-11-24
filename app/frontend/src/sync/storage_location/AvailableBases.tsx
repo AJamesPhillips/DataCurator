@@ -86,12 +86,12 @@ function _AvailableBases (props: Props)
         <thead>
             <tr>
                 <th></th>
-                <th>Title</th>
-                <th>Public</th>
+                <th>Knowledge Base Title</th>
+                <th>{/* Public */}</th>
                 <th>Owner</th>
                 <th>Access</th>
-                <th>Id</th>
-                <th>Edit</th>
+                {/* <th>Id</th> */}
+                <th>{/* Edit */}</th>
             </tr>
         </thead>
         <tbody>

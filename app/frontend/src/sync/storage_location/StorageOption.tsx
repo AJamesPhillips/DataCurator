@@ -46,7 +46,7 @@ export function StorageOption (props: OwnProps)
         <td>{get_user_name_for_display({ users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id })}</td>
         <td>{access_description}</td>
 
-        <td className="narrow" style={{ color: "grey", fontSize: 12 }}>{id}</td>
+        {/* <td className="narrow" style={{ color: "grey", fontSize: 12 }}>{id}</td> */}
         <td className="narrow edit_title" onClick={!owner_or_editor ? undefined : e =>
             {
                 e.stopImmediatePropagation()

@@ -17,7 +17,11 @@ export function controls_persist (state: RootState)
 
 
 
-export function controls_starting_state (): ControlsState
+interface ControlsStartingStateArgs
+{
+    storage_location: number | undefined
+}
+export function controls_starting_state (args: ControlsStartingStateArgs): ControlsState
 {
     const obj = get_persisted_state_object<ControlsState>("controls")
 
@@ -25,7 +29,7 @@ export function controls_starting_state (): ControlsState
         linked_datetime_sliders: false,
         display_time_sliders: false,
         display_side_panel: true,
-        display_select_storage: false,
+        display_select_storage: args.storage_location === undefined,
         ...obj,
     }
 
