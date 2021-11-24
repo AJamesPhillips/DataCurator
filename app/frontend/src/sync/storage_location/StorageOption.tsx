@@ -10,7 +10,7 @@ import { get_user_name_for_display } from "../../supabase/users"
 
 interface OwnProps
 {
-    user: SupabaseAuthUser
+    user: SupabaseAuthUser | undefined
     users_by_id: SupabaseUsersById
     base: SupabaseKnowledgeBaseWithAccess
     selected: boolean
@@ -25,7 +25,7 @@ export function StorageOption (props: OwnProps)
 
     const { title, id, public_read, access_level } = base
 
-    const is_owner = base.owner_user_id === user.id
+    const is_owner = base.owner_user_id === user?.id
     const is_editor = access_level === "editor"
     const owner_or_editor = is_editor || is_owner
     const access_description = is_owner ? "Editor (Owner)"

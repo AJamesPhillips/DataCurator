@@ -21,17 +21,26 @@ interface OwnProps {}
 const map_state = (state: RootState) =>
 {
     const { ready_for_reading: ready } = state.sync
-    const { sub_route } = state.routing
-    const id = state.routing.item_id
-    const wcomponent = get_wcomponent_from_state(state, id)
+    const { bases_by_id, chosen_base_id } = state.user_info
+    const { sub_route, item_id } = state.routing
+    const wcomponent = get_wcomponent_from_state(state, item_id)
     const selected_ids = state.meta_wcomponents.selected_wcomponent_ids_list
 
-    return { ready, sub_route, id, wcomponent, selected_ids }
+    return {
+        bases_by_id,
+        chosen_base_id,
+        ready,
+        sub_route,
+        item_id,
+        wcomponent,
+        selected_ids,
+    }
 }
 
 
 const map_dispatch = {
     clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+    set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage,
 }
 
 
@@ -45,10 +54,11 @@ function _WComponentsSidePanel (props: Props)
     const [searching_for_unfound, set_searching_for_unfound] = useState<boolean | undefined>(undefined)
     const [searched_for_wcomponent, set_searched_for_wcomponent] = useState<WComponent | undefined>(undefined)
 
-    const { id } = props
+    const { item_id: id } = props
     const wcomponent = props.wcomponent || searched_for_wcomponent
 
-    const display_type: DisplayType = !props.ready ? DisplayType.loading
+    const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.choose_base_id
+        : !props.ready ? DisplayType.loading
         : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple
         : id === null ? DisplayType.no_id
         : wcomponent ? DisplayType.wcomponent_present : DisplayType.no_wcomponent_present
@@ -87,6 +97,14 @@ function _WComponentsSidePanel (props: Props)
 
     useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id])
     useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id])
+
+
+    if (display_type === DisplayType.choose_base_id) return <div>
+        <Button
+            value="Choose a base to view"
+            onClick={() => props.set_or_toggle_display_select_storage(true)}
+        />
+    </div>
 
 
     if (display_type === DisplayType.loading) return <div>Loading...</div>
@@ -152,6 +170,7 @@ export const WComponentsSidePanel = connector(_WComponentsSidePanel) as Function
 
 
 enum DisplayType {
+    choose_base_id,
     loading,
     edit_multiple,
     no_id,

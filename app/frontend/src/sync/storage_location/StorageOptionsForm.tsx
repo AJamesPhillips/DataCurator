@@ -49,15 +49,16 @@ function _StorageOptionsForm (props: Props)
     const [editing_base_id, set_editing_base_id] = useState<number | undefined>(undefined)
     const [newly_created_base, set_newly_created_base] = useState<SupabaseKnowledgeBase | undefined>(undefined)
 
-    if (!user) return "Please sign in"
-    if (!users_by_id) return "Fetching users..."
-    if (!bases_by_id) return "Fetching bases..."
 
-    const user_id = user.id
+    if (!users_by_id) return "Loading users..."
+    if (!bases_by_id) return "Loading bases..."
+
+
+    const user_id = user?.id
     const base_count = Object.keys(bases_by_id).length
 
 
-    async function create_base ()
+    const create_base = user_id === undefined ? undefined : async function ()
     {
         set_base_creation_state("in_progress")
         const res = await create_a_base({ owner_user_id: user_id, title: new_base_title.trim() })
@@ -79,35 +80,38 @@ function _StorageOptionsForm (props: Props)
     return <div style={{ margin: 10 }}>
         <AvailableBases on_choose={on_close} on_click_edit={base_id => set_editing_base_id(base_id)} />
 
-        {base_count > 0 && <hr />}
+        {base_count > 0 && create_base && <hr />}
 
-        <h4>
-            Create {base_count ? "a new" : "your first" } base
-        </h4>
+        {create_base && <div>
+            <h4>
+                Create {base_count ? "a new" : "your first" } base
+            </h4>
 
-        <input type="text" value={new_base_title}
-            onKeyUp={e => set_new_base_title(e.currentTarget.value)}
-            onChange={e => set_new_base_title(e.currentTarget.value)}
-            onBlur={e => set_new_base_title(e.currentTarget.value)}
-        /><br />
-        <input
-            type="button"
-            disabled={!(new_base_title.trim()) || base_creation_state === "in_progress"}
-            onClick={() => create_base()}
-            value="Create new base"
-        /> &nbsp;
+            <input type="text" value={new_base_title}
+                onKeyUp={e => set_new_base_title(e.currentTarget.value)}
+                onChange={e => set_new_base_title(e.currentTarget.value)}
+                onBlur={e => set_new_base_title(e.currentTarget.value)}
+            /><br />
+            <input
+                type="button"
+                disabled={!create_base || !(new_base_title.trim()) || base_creation_state === "in_progress"}
+                onClick={create_base}
+                value="Create new base"
+            /> &nbsp;
 
-        {async_status_to_text(base_creation_state)} &nbsp;
+            {async_status_to_text(base_creation_state)} &nbsp;
 
-        {newly_created_base && <input
-            type="button"
-            onClick={() =>
-            {
-                update_chosen_base_id({ base_id: newly_created_base.id })
-                on_close && on_close()
-            }}
-            value="Select new base"
-        />}
+            {newly_created_base && <input
+                type="button"
+                onClick={() =>
+                {
+                    update_chosen_base_id({ base_id: newly_created_base.id })
+                    on_close && on_close()
+                }}
+                value="Select new base"
+            />}
+        </div>}
+
     </div>
 }
 

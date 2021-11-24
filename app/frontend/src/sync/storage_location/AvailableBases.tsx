@@ -54,9 +54,9 @@ function _AvailableBases (props: Props)
     const [error, set_error] = useState<PostgrestError | undefined>(undefined)
 
 
-    if (!user) return "Please sign in"
-    if (!users_by_id) return "Fetching users..."
-    if (!bases_by_id) return "Fetching bases..."
+    if (!users_by_id) return "Loading users..."
+    if (!bases_by_id) return "Loading bases..."
+
 
     const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), "descending")
 
@@ -97,7 +97,7 @@ function _AvailableBases (props: Props)
         <tbody>
         {bases.map(base =>
             <StorageOption
-                user={user}
+                user={user || undefined}
                 users_by_id={users_by_id}
                 base={base}
                 selected={base.id === chosen_base_id}

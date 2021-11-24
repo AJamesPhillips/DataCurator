@@ -25,6 +25,7 @@ export function controls_starting_state (): ControlsState
         linked_datetime_sliders: false,
         display_time_sliders: false,
         display_side_panel: true,
+        display_select_storage: false,
         ...obj,
     }
 

@@ -12,10 +12,10 @@ export function user_info_subscribers (store: StoreType)
     const starting_state = store.getState()
     if (!store.load_state_from_storage) return
 
-    const { user, users_by_id, bases_by_id: bases } = starting_state.user_info
+    const { users_by_id, bases_by_id } = starting_state.user_info
     // We may start with a supabase user (from the synchronous restore from localstorage state)
-    if (user && !users_by_id) get_users(store)
-    if (!bases) refresh_bases_for_current_user(store)
+    if (!users_by_id) get_users(store)
+    if (!bases_by_id) refresh_bases_for_current_user(store)
 
 
     pub_sub.user.sub("changed_user", () =>
@@ -33,14 +33,6 @@ export function user_info_subscribers (store: StoreType)
 
 async function get_users (store: StoreType)
 {
-    const { user } = store.getState().user_info
-
-    if (!user)
-    {
-        store.dispatch(ACTIONS.user_info.set_users({ users: undefined }))
-        return
-    }
-
     const supabase = get_supabase()
     const { data, error } = await supabase.from<SupabaseUser>("users").select("*")
     // set_postgrest_error(error)

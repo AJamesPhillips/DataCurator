@@ -70,9 +70,32 @@ export const is_set_or_toggle_display_side_panel = (action: AnyAction): action i
 
 
 
+interface ActionSetOrToggleDisplaySelectStorage extends Action
+{
+    display_select_storage?: boolean
+}
+
+const set_or_toggle_display_select_storage_type = "set_or_toggle_display_select_storage"
+
+const set_or_toggle_display_select_storage = (display_select_storage?: boolean): ActionSetOrToggleDisplaySelectStorage =>
+{
+    // Protect against events being passed into this function from material-ui onClick handlers with
+    // incorrect typings
+    if (typeof display_select_storage !== "boolean") display_select_storage = undefined
+
+    return { type: set_or_toggle_display_select_storage_type, display_select_storage }
+}
+
+export const is_set_or_toggle_display_select_storage = (action: AnyAction): action is ActionSetOrToggleDisplaySelectStorage => {
+    return action.type === set_or_toggle_display_select_storage_type
+}
+
+
+
 export const controls_actions = {
     toggle_linked_datetime_sliders,
     set_display_time_sliders,
     toggle_display_time_sliders,
     set_or_toggle_display_side_panel,
+    set_or_toggle_display_select_storage,
 }
