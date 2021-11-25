@@ -42,7 +42,6 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         }
 
         state = update_substate(state, "user_info", "users_by_id", map)
-        state = update_users_name(state)
     }
 
 
@@ -83,31 +82,6 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
         // New pattern, not sure this is a good idea yet but is simpler than making subscribers
         // which store state, and that run on every store change to compare to current state
         if (changed_chosen_base_id) pub_sub.user.pub("changed_chosen_base_id", true)
-    }
-
-    return state
-}
-
-
-
-// Probably should be a public selector but perhaps we want to have the name to be easy to
-// persist and restore into the state on page reload
-function selector_users_name (state: RootState)
-{
-    const { user, users_by_id } = state.user_info
-
-    return (user && users_by_id) ? users_by_id[user.id]?.name : undefined
-}
-
-
-
-function update_users_name (state: RootState)
-{
-    const new_user_name = selector_users_name(state)
-
-    if (new_user_name !== state.user_info.user_name)
-    {
-        state = update_substate(state, "user_info", "user_name", new_user_name)
     }
 
     return state

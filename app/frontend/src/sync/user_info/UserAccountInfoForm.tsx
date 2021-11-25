@@ -7,9 +7,8 @@ import LogoutIcon from "@material-ui/icons/ExitToApp"
 import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import { selector_need_to_set_user_name } from "../../state/user_info/selector"
+import { selector_need_to_set_user_name, selector_user_name } from "../../state/user_info/selector"
 import { save_and_optionally_signout } from "../../state/user_info/signout"
-import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswordForm"
 import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
@@ -25,7 +24,7 @@ const map_state = (state: RootState) =>
 {
     return {
         user: state.user_info.user,
-        user_name: state.user_info.user_name,
+        user_name: selector_user_name(state),
         need_to_set_user_name: selector_need_to_set_user_name(state),
         need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery,
     }

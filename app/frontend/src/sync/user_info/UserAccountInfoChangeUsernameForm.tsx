@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
+import type { PostgrestError } from "@supabase/postgrest-js"
 
 import "../common.scss"
 import type { RootState } from "../../state/State"
@@ -9,8 +10,6 @@ import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabasePostgrestError } from "./DisplaySupabaseErrors"
 import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import type { SupabaseUser } from "../../supabase/interfaces"
-import type { PostgrestError } from "@supabase/postgrest-js"
-import { useEffect } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { AsyncState } from "../../utils/async_state"
 
@@ -25,7 +24,6 @@ const map_state = (state: RootState) =>
 {
     return {
         user: state.user_info.user,
-        user_name: state.user_info.user_name,
         need_to_set_user_name: selector_need_to_set_user_name(state),
     }
 }
@@ -40,15 +38,12 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _UserAccountInfoChangeUsernameForm (props: Props)
 {
-    const { on_close, user, user_name: stored_user_name, need_to_set_user_name } = props
+    const { on_close, user, need_to_set_user_name } = props
 
     const [username, set_username] = useState("")
     const [save_state, set_save_state] = useState<AsyncState>("initial")
     const is_saving = save_state === "in_progress"
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
-
-
-    useEffect(() => set_username(stored_user_name || ""), [stored_user_name])
 
 
     if (!user) return null

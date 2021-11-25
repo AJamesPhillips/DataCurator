@@ -56,7 +56,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
 
         if (!result.error)
         {
-            set_user({ user: result.user })
+            set_user({ user: result.user || undefined })
             set_need_to_handle_password_recovery(false)
             on_close()
         }

@@ -45,7 +45,6 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
         users_by_id: undefined,
         bases_by_id: undefined,
         ...obj,
-        user_name: undefined,
         chosen_base_id,
     }
 
@@ -54,5 +53,5 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
 
 
 
-const get_anonymous_user_name = () => "Anonymous " + random_animal()
-export const ensure_user_name = (user_name: string = "") => (user_name).trim() || get_anonymous_user_name()
+// const get_anonymous_user_name = () => "Anonymous " + random_animal()
+// export const ensure_user_name = (user_name: string = "") => (user_name).trim() || get_anonymous_user_name()

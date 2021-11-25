@@ -7,7 +7,7 @@ import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"
-import { selector_need_to_set_user_name } from "../../state/user_info/selector"
+import { selector_need_to_set_user_name, selector_user_name } from "../../state/user_info/selector"
 import { no_user_name } from "./constants"
 import { UserAccountInfo } from "./UserAccountInfo"
 import { UserSigninRegister } from "./UserSigninRegister"
@@ -18,9 +18,9 @@ const map_state = (state: RootState) =>
 {
     return {
         user: state.user_info.user,
-        user_name: state.user_info.user_name,
         bases_by_id: state.user_info.bases_by_id,
         chosen_base_id: state.user_info.chosen_base_id,
+        user_name: selector_user_name(state),
         need_to_set_user_name: selector_need_to_set_user_name(state),
     }
 }

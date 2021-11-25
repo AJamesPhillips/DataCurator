@@ -58,7 +58,7 @@ function _UserSigninRegisterForm (props: Props)
         const { user, error } = await supabase.auth.signIn({ email, password })
 
         set_supabase_session_error(error)
-        set_user({ user })
+        set_user({ user: user || undefined })
     }
 
 

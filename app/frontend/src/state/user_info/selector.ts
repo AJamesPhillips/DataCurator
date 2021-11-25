@@ -4,14 +4,16 @@ import type { RootState } from "../State"
 
 export function selector_user_name (state: RootState)
 {
-    return state.user_info.user_name
+    const { user, users_by_id } = state.user_info
+
+    return (user && users_by_id) ? users_by_id[user.id]?.name : undefined
 }
 
 
 export function selector_need_to_set_user_name (state: RootState)
 {
-    const { user, users_by_id, user_name } = state.user_info
-    return user && users_by_id && !user_name
+    const { user, users_by_id } = state.user_info
+    return user && users_by_id && !selector_user_name(state)
 }
 
 
