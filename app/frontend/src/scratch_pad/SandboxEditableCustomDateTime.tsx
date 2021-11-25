@@ -1,12 +1,37 @@
-import { h } from "preact"
-import { useState } from "preact/hooks"
+import { FunctionalComponent, h } from "preact"
+import { useEffect, useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { get_today_str } from "../shared/utils/date_helpers"
+import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
 
 
 
-export function SandboxEditableCustomDateTime ()
+const map_state = (state: RootState) =>
+({
+    editing: !state.display_options.consumption_formatting,
+})
+
+const map_dispatch = {
+    toggle_consumption_formatting: ACTIONS.display.toggle_consumption_formatting,
+}
+
+
+const connector = connect(map_state, map_dispatch)
+type Props = ConnectedProps<typeof connector>
+
+
+
+function _SandboxEditableCustomDateTime (props: Props)
 {
-    const [custom_date, set_custom_date] = useState<Date | undefined>(undefined)
+    const today_dt_str = get_today_str()
+    const [custom_date, set_custom_date] = useState<Date | undefined>(new Date(today_dt_str))
+
+    useEffect(() =>
+    {
+        if (!props.editing) props.toggle_consumption_formatting({})
+    }, [])
 
     return <div>
         EditableCustomDateTime
@@ -27,3 +52,6 @@ export function SandboxEditableCustomDateTime ()
         />
     </div>
 }
+
+
+export const SandboxEditableCustomDateTime = connector(_SandboxEditableCustomDateTime) as FunctionalComponent<{}>

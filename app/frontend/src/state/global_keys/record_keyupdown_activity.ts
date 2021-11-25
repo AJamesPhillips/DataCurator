@@ -31,7 +31,8 @@ export function record_keyupdown_activity (store: Store<RootState>)
 
 
     // Atempt to fix #172 but fully expect this to cause other problems
-    document.onkeypress = e => e.preventDefault()
+    // ...but no this breaks all input fields
+    // document.onkeypress = e => e.preventDefault()
 
 
     document.onkeyup = e =>
