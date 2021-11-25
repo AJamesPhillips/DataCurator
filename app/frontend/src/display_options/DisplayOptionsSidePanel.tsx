@@ -1,7 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./DisplayOptionsSidePanel.css"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { ACTIONS } from "../state/actions"
 import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/display_options/state"
@@ -16,6 +15,7 @@ const map_state = (state: RootState) => ({
     certainty_formatting: state.display_options.certainty_formatting,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
     focused_mode: state.display_options.focused_mode,
+    circular_links: state.display_options.circular_links,
     display_time_marks: state.display_options.display_time_marks,
     animate_causal_links: state.display_options.animate_causal_links,
     show_large_grid: state.display_options.show_large_grid,
@@ -28,6 +28,7 @@ const map_dispatch = {
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
     set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
+    set_or_toggle_circular_links: ACTIONS.display.set_or_toggle_circular_links,
     set_display_time_marks: ACTIONS.display.set_display_time_marks,
     set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
     set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
@@ -43,9 +44,8 @@ type Props = ConnectedProps<typeof connector>
 function _DisplayOptionsSidePanel (props: Props)
 {
 
-    return <div className="display_options_side_panel">
+    return <div className="side_panel">
         <h3>Display Options</h3>
-
 
 
         <p className="section">
@@ -119,10 +119,35 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Use "Focused" Mode</b>
+            <span className="description">ctrl + d + f</span>
 
             <EditableCheckbox
                 value={props.focused_mode}
                 on_change={props.set_or_toggle_focused_mode}
+            />
+        </p>
+
+
+
+        <p className="section">
+            <b>Show causal links as more circular</b>
+            <span className="description">ctrl + d + c</span>
+
+            <EditableCheckbox
+                value={props.circular_links}
+                on_change={props.set_or_toggle_circular_links}
+            />
+        </p>
+
+
+
+        <p className="section">
+            <b>Animate causal connections</b>
+            <span className="description">ctrl + d + a</span>
+
+            <EditableCheckbox
+                value={props.animate_causal_links}
+                on_change={props.set_or_toggle_animate_causal_links}
             />
         </p>
 
@@ -140,17 +165,6 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Animate causal connections</b>
-
-            <EditableCheckbox
-                value={props.animate_causal_links}
-                on_change={props.set_or_toggle_animate_causal_links}
-            />
-        </p>
-
-
-
-        <p className="section">
             <b>Display by simulated time</b>
 
             <EditableCheckbox
@@ -160,7 +174,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
             <br />
             <span style={{ backgroundColor: "pink" }}>
-                Experimental view not optimised for data sets over a large period of time
+                Experimental view not optimised for data sets over a large period of time.  Probably want to use "Show time markers" above.
             </span>
         </p>
 

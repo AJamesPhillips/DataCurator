@@ -2,6 +2,7 @@
 
 export type ROUTE_TYPES = (
     "filter"
+    | "select"
     | "display"
     | "statements"
     | "objects"
@@ -21,6 +22,7 @@ export const ALLOWED_SUB_ROUTES: {[k in ROUTE_TYPES]: SUB_ROUTE_TYPES[]} = {
     "wcomponents": ["wcomponents_edit_multiple"],
     "search": [],
     "filter": [],
+    "select": [],
     "display": [],
     "statements": [],
     "objects": ["objects_bulk_import", "objects_bulk_import/setup"],

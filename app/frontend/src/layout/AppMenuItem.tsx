@@ -20,6 +20,7 @@ interface OwnProps
 function get_title (id: ROUTE_TYPES)
 {
     if (id === "filter") return <FilterContextTabTitle />
+    else if (id === "select") return "Selection"
     else if (id === "display") return "Display options"
     else if (id === "statements") return "Statements"
     else if (id === "objects") return "Objects"
