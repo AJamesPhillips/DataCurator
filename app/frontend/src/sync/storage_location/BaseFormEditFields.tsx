@@ -8,6 +8,7 @@ import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
 import { modify_base } from "../../supabase/bases"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
+import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
 
 
 
@@ -67,6 +68,19 @@ export function BaseFormEditFields (props: OwnProps)
         />
         <br />
         <br />
+
+
+        Default view &nbsp; <SelectKnowledgeView
+            selected_option_id={modified_base.default_knowledge_view_id}
+            on_change={default_knowledge_view_id =>
+            {
+                set_modified_base({ ...modified_base, default_knowledge_view_id })
+            }}
+            force_editable={true}
+        />
+        <br />
+        <br />
+
 
         <div>
             {have_pending_edits && valid_edits && <input

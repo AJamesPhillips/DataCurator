@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
-import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 
 
@@ -13,6 +12,7 @@ interface OwnProps {
     selected_option_id?: string | undefined
     exclude_ids?: Set<string>
     on_change: (knowledge_view_id: string | undefined) => void
+    force_editable?: boolean
 }
 
 
@@ -21,11 +21,8 @@ const map_state = (state: RootState) => ({
     nested_knowledge_view_ids_map: state.derived.nested_knowledge_view_ids.map,
 })
 
-const map_dispatch = {
-    upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view,
-}
 
-const connector = connect(map_state, map_dispatch)
+const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -65,6 +62,7 @@ function _SelectKnowledgeView (props: Props)
         selected_option_id={selected_option_id}
         options={options}
         on_change={on_change}
+        force_editable={props.force_editable}
     />
 }
 

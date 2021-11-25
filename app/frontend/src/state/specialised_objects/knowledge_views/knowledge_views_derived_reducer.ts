@@ -85,14 +85,14 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
         if (composed_kv_needs_update)
         {
             let current_composed_knowledge_view: ComposedKnowledgeView | undefined = update_current_composed_knowledge_view_state(state, current_kv)
-            current_composed_knowledge_view = update_filters(state, current_composed_knowledge_view)
+            current_composed_knowledge_view = update_composed_knowledge_view_filters(state, current_composed_knowledge_view)
             current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view)
 
             state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
         }
         else if (filters_changed)
         {
-            const current_composed_knowledge_view = update_filters(state, state.derived.current_composed_knowledge_view)
+            const current_composed_knowledge_view = update_composed_knowledge_view_filters(state, state.derived.current_composed_knowledge_view)
             state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
         }
         else if (ephemeral_overrides_might_have_changed)
@@ -438,7 +438,7 @@ export function get_composed_datetime_lines_config (foundation_knowledge_views: 
 
 
 
-function update_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView)
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView)
 {
     if (!current_composed_knowledge_view) return undefined
 
@@ -637,6 +637,13 @@ function update_ephemeral_overrides_of_current_composed_kv (current_composed_kno
 
 
 
+// Changes the `left` position of nodes iff:
+//   * `display_time_marks` is true
+//   * the `time_origin_ms` is set
+//   * the node has temporal_uncertainty data the gives a left position
+//   * this `left` is different to the `left` in the `composed_wc_id_map`
+// TODO document why `composed_wc_id_map` is used and not `composed_visible_wc_id_map`, perhaps
+// this is just a bug?
 function add_ephemeral_overrides_to_wc_id_map (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
 {
     if (!current_composed_knowledge_view) return undefined

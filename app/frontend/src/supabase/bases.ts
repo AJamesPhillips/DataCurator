@@ -54,6 +54,7 @@ function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
         owner_user_id: base.owner_user_id,
         public_read: base.public_read,
         title: base.title,
+        default_knowledge_view_id: base.default_knowledge_view_id,
     }
     return santised_base
 }

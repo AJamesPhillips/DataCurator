@@ -3,7 +3,9 @@ import {
 } from "../../../canvas/calculate_spatial_temporal_position_to_move_to"
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../../actions"
+import type { ComposedKnowledgeView } from "../../derived/State"
 import {
+    update_composed_knowledge_view_filters,
     update_current_composed_knowledge_view_state,
 } from "../../specialised_objects/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../../State"
@@ -20,11 +22,11 @@ export function ensure_any_knowledge_view_displayed (store: StoreType)
     {
         const base = selector_chosen_base(state)
         const default_knowledge_view = state.specialised_objects.knowledge_views_by_id[base?.default_knowledge_view_id || ""]
-        const a_knowledge_view = state.derived.knowledge_views[0]
-        const a_knowledge_view_id = (default_knowledge_view || a_knowledge_view)?.id
+        const a_random_knowledge_view = state.derived.knowledge_views[0]
+        const a_knowledge_view = default_knowledge_view || a_random_knowledge_view
 
         const pos = optionally_calculate_spatial_temporal_position_to_move_to(state, a_knowledge_view)
-        const args = { subview_id: a_knowledge_view_id, ...pos }
+        const args = { subview_id: a_knowledge_view?.id, ...pos }
         store.dispatch(ACTIONS.routing.change_route({ args }))
     }
 }
@@ -43,7 +45,10 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
 {
     if (!current_kv) return {}
 
-    const current_composed_knowledge_view = update_current_composed_knowledge_view_state(state, current_kv)
+    let current_composed_knowledge_view: ComposedKnowledgeView | undefined = update_current_composed_knowledge_view_state(state, current_kv)
+    current_composed_knowledge_view = update_composed_knowledge_view_filters(state, current_composed_knowledge_view)
+    if (!current_composed_knowledge_view) return {}
+
     const { wcomponents_by_id } = state.specialised_objects
     const initial_wcomponent_id = state.routing.item_id || ""
     const { created_at_ms } = state.routing.args
