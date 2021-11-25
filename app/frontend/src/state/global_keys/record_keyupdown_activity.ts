@@ -29,6 +29,11 @@ export function record_keyupdown_activity (store: Store<RootState>)
         pub_sub.global_keys.pub("key_down", action_args)
     }
 
+
+    // Atempt to fix #172 but fully expect this to cause other problems
+    document.onkeypress = e => e.preventDefault()
+
+
     document.onkeyup = e =>
     {
         const action_args: ActionKeyEventArgs = {
