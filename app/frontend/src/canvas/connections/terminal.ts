@@ -23,7 +23,7 @@ const connection_diameter = 12
 export const connection_radius = connection_diameter / 2
 const connection_left = -6
 const connection_top = 27
-const connection_top_increment = 22
+const connection_top_increment = 19 // would prefer 22 for Mac but see issue #171
 
 
 const attribute_type_to_ordinal: { [k in ConnectionTerminalAttributeType]: number } = {
