@@ -13,9 +13,9 @@ import { get_middle_of_screen, lefttop_to_xy } from "../state/display_options/di
 import {
     get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
-    get_wcomponent_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ExploreButtonHandle } from "../wcomponent_canvas/node/ExploreButtonHandle"
 import { WComponentBackReferences } from "../wcomponent_ui/WComponentBackReferences"
 import { AlignComponentForm } from "./AlignComponentForm"
@@ -24,24 +24,23 @@ import { AlignComponentForm } from "./AlignComponentForm"
 
 interface OwnProps
 {
-    wcomponent_id: string
+    wcomponent: WComponent
 }
 
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const { wcomponent_id } = own_props
+    const { wcomponent } = own_props
 
     const current_knowledge_view = get_current_knowledge_view_from_state(state)
 
-    const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id]
+    const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent.id]
     const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
+    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent.id]
     const all_knowledge_views = state.derived.knowledge_views
     const middle_position = get_middle_of_screen(state)
 
     return {
-        wcomponent: get_wcomponent_from_state(state, wcomponent_id),
         knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
         knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
         composed_knowledge_view_entry,
@@ -66,10 +65,10 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeViewForm (props: Props)
 {
-    const { wcomponent_id, wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
+    const { wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
         knowledge_view_entry, all_knowledge_views, editing } = props
 
-    if (!wcomponent) return null
+    const wcomponent_id = wcomponent.id
 
 
     const other_knowledge_views = all_knowledge_views

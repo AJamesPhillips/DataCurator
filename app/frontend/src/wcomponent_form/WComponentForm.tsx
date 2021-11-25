@@ -496,7 +496,7 @@ function _WComponentForm (props: Props)
 
 
         <p>
-            <WComponentKnowledgeViewForm wcomponent_id={wcomponent_id} />
+            <WComponentKnowledgeViewForm wcomponent={wcomponent} />
         </p>
 
 

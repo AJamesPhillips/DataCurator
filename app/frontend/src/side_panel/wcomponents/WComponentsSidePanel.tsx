@@ -57,11 +57,11 @@ function _WComponentsSidePanel (props: Props)
     const { item_id: id } = props
     const wcomponent = props.wcomponent || searched_for_wcomponent
 
-    const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.choose_base_id
+    const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.need_to_choose_base_id
         : !props.ready ? DisplayType.loading
         : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple
         : id === null ? DisplayType.no_id
-        : wcomponent ? DisplayType.wcomponent_present : DisplayType.no_wcomponent_present
+        : DisplayType.render_wcomponent
 
 
     function clear_old_wcomponent_from_other_base ()
@@ -76,7 +76,7 @@ function _WComponentsSidePanel (props: Props)
 
     function look_for_wcomponent_in_any_base ()
     {
-        if (display_type === DisplayType.no_wcomponent_present && searching_for_unfound === undefined && id !== null)
+        if (!wcomponent && searching_for_unfound === undefined && id !== null)
         {
             (async () => {
                 let component_form_closed = false
@@ -99,7 +99,7 @@ function _WComponentsSidePanel (props: Props)
     useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id])
 
 
-    if (display_type === DisplayType.choose_base_id) return <div>
+    if (display_type === DisplayType.need_to_choose_base_id) return <div>
         <Button
             value="Choose a base to view"
             onClick={() => props.set_or_toggle_display_select_storage(true)}
@@ -146,10 +146,10 @@ function _WComponentsSidePanel (props: Props)
     </div>
 
 
-    if (display_type === DisplayType.wcomponent_present)
+    if (wcomponent)
     {
         const wcomponent_from_different_base = !props.wcomponent && !!searched_for_wcomponent
-        return <WComponentForm wcomponent={wcomponent!} wcomponent_from_different_base={wcomponent_from_different_base} />
+        return <WComponentForm wcomponent={wcomponent} wcomponent_from_different_base={wcomponent_from_different_base} />
     }
 
 
@@ -170,12 +170,11 @@ export const WComponentsSidePanel = connector(_WComponentsSidePanel) as Function
 
 
 enum DisplayType {
-    choose_base_id,
+    need_to_choose_base_id,
     loading,
     edit_multiple,
     no_id,
-    no_wcomponent_present,
-    wcomponent_present,
+    render_wcomponent,
 }
 
 

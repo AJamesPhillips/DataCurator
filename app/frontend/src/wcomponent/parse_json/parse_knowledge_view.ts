@@ -68,11 +68,16 @@ function optionally_remove_invalid_wc_ids (kv: KnowledgeView, remove_missing: bo
 function remove_wc_id_map_passthrough_entries (wc_id_map: KnowledgeViewWComponentIdEntryMap): KnowledgeViewWComponentIdEntryMap
 {
     const new_wc_id_map = { ...wc_id_map }
+    const deleted_ids: string[] = []
 
     Object.entries(new_wc_id_map).forEach(([id, entry]) =>
     {
-        if (entry.passthrough) delete new_wc_id_map[id]
+        if (!entry.passthrough) return
+        delete new_wc_id_map[id]
+        deleted_ids.push(id)
     })
+
+    if (deleted_ids.length) console .log(`Deleted ${deleted_ids.length} passthrough ids`)
 
     return new_wc_id_map
 }
