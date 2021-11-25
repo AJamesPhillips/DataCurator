@@ -7,7 +7,7 @@ import { Link } from "../sharedf/Link"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
 
@@ -45,7 +45,17 @@ function _WComponentBackReferences (props: Props)
         {
             relevant_wcomponents = Object.values(wcomponents_by_id)
                 .filter(wc => !wc.deleted_at)
-                .filter(wc => wc.title.includes(wcomponent_id) || wc.description.includes(wcomponent_id))
+                .filter(wc =>
+                {
+                    return wc.title.includes(wcomponent_id)
+                        || wc.description.includes(wcomponent_id)
+                        || (wcomponent_is_plain_connection(wc) &&
+                            (
+                                wc.from_id === wcomponent_id
+                                || wc.to_id === wcomponent_id
+                            )
+                        )
+                })
         }
 
         set_other_wcomponents(relevant_wcomponents)
