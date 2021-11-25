@@ -1,15 +1,13 @@
-import type { Store } from "redux"
-
 import { get_new_knowledge_view_object } from "../../../knowledge_view/create_new_knowledge_view"
 import { ACTIONS } from "../../actions"
 import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
-import type { RootState } from "../../State"
+import type { StoreType } from "../../store"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_base_knowledge_view } from "../accessors"
 
 
 
-export function ensure_base_knowledge_view_subscriber (store: Store<RootState>)
+export function ensure_base_knowledge_view_subscriber (store: StoreType)
 {
     return () =>
     {

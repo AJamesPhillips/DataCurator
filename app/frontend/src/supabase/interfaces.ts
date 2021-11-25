@@ -25,6 +25,7 @@ export interface SupabaseKnowledgeBase
     owner_user_id: string
     public_read: boolean
     title: string
+    default_knowledge_view_id?: string
 }
 export interface JoinedAccessControlsPartial
 {

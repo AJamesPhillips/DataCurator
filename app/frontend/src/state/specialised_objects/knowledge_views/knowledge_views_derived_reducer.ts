@@ -145,7 +145,7 @@ function get_knowledge_view (state: RootState, id: string)
 // this set changes... may save a bunch of views from updating (and also help them run faster)
 // as many just want to know what ids are present in the knowledge view not the positions of
 // the components
-function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
+export function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
 
