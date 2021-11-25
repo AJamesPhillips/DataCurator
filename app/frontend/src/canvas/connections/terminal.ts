@@ -25,7 +25,7 @@ const connection_left = -6
 const connection_top = 27
 let connection_top_increment = 22
 try { // defensive
-    if (navigator.platform.indexOf("Win")) connection_top_increment = 17 // see issue #171
+    if (navigator.platform.indexOf("Win") > -1) connection_top_increment = 17 // see issue #171
 } catch (e) {}
 
 
