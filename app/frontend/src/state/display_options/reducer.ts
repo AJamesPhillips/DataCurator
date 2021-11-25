@@ -8,7 +8,7 @@ import {
     is_set_certainty_formatting,
     is_toggle_consumption_formatting,
     is_set_display_by_simulated_time,
-    is_toggle_focused_mode,
+    is_set_or_toggle_focused_mode,
     is_set_show_help_menu,
     is_set_display_time_marks,
     is_set_or_toggle_animate_causal_links,
@@ -27,9 +27,10 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
     }
 
 
-    if (is_toggle_focused_mode(action))
+    if (is_set_or_toggle_focused_mode(action))
     {
-        state = update_substate(state, "display_options", "focused_mode", !state.display_options.focused_mode)
+        const focused_mode = boolean_or_toggle(action.focused_mode, state.display_options.focused_mode)
+        state = update_substate(state, "display_options", "focused_mode", focused_mode)
     }
 
 

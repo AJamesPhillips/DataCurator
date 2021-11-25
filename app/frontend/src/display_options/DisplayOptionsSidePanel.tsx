@@ -15,6 +15,7 @@ const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
     certainty_formatting: state.display_options.certainty_formatting,
     display_by_simulated_time: state.display_options.display_by_simulated_time,
+    focused_mode: state.display_options.focused_mode,
     display_time_marks: state.display_options.display_time_marks,
     animate_causal_links: state.display_options.animate_causal_links,
     show_large_grid: state.display_options.show_large_grid,
@@ -26,6 +27,7 @@ const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+    set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
     set_display_time_marks: ACTIONS.display.set_display_time_marks,
     set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
     set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
@@ -111,6 +113,17 @@ function _DisplayOptionsSidePanel (props: Props)
             <b>Time resolution</b>
 
             <TimeResolutionOptions />
+        </p>
+
+
+
+        <p className="section">
+            <b>Use "Focused" Mode</b>
+
+            <EditableCheckbox
+                value={props.focused_mode}
+                on_change={props.set_or_toggle_focused_mode}
+            />
         </p>
 
 

@@ -108,7 +108,7 @@ function handle_display_key_combo (key: string, store: StoreType)
 
     if (key === "f")
     {
-        store.dispatch(ACTIONS.display.toggle_focused_mode({}))
+        store.dispatch(ACTIONS.display.set_or_toggle_focused_mode())
     }
     else if (key === "t")
     {

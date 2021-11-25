@@ -20,17 +20,19 @@ export const is_toggle_consumption_formatting = (action: AnyAction): action is A
 
 
 
-interface ActionToggleFocusedMode extends Action {}
-
-const toggle_focused_mode_type = "toggle_focused_mode"
-
-const toggle_focused_mode = (args: {}): ActionToggleFocusedMode =>
-{
-    return { type: toggle_focused_mode_type, ...args }
+interface ActionSetOrToggleFocusedMode extends Action {
+    focused_mode: boolean | undefined
 }
 
-export const is_toggle_focused_mode = (action: AnyAction): action is ActionToggleFocusedMode => {
-    return action.type === toggle_focused_mode_type
+const set_or_toggle_focused_mode_type = "set_or_toggle_focused_mode"
+
+const set_or_toggle_focused_mode = (focused_mode?: boolean): ActionSetOrToggleFocusedMode =>
+{
+    return { type: set_or_toggle_focused_mode_type, focused_mode }
+}
+
+export const is_set_or_toggle_focused_mode = (action: AnyAction): action is ActionSetOrToggleFocusedMode => {
+    return action.type === set_or_toggle_focused_mode_type
 }
 
 
@@ -211,7 +213,7 @@ export const is_set_or_toggle_show_large_grid = (action: AnyAction): action is A
 
 export const display_actions = {
     toggle_consumption_formatting,
-    toggle_focused_mode,
+    set_or_toggle_focused_mode,
     set_time_resolution,
     set_validity_filter,
     set_certainty_formatting,
