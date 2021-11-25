@@ -4,6 +4,7 @@ import type { Action, AnyAction } from "redux"
 
 export interface ActionKeyEventArgs
 {
+    event: KeyboardEvent
     time_stamp: number
     alt_key: boolean
     code: string

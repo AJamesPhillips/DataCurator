@@ -13,6 +13,7 @@ export function record_keyupdown_activity (store: Store<RootState>)
     document.onkeydown = e =>
     {
         const action_args: ActionKeyEventArgs = {
+            event: e,
             time_stamp: e.timeStamp,
             alt_key: e.altKey,
             code: e.code,
@@ -31,6 +32,7 @@ export function record_keyupdown_activity (store: Store<RootState>)
     document.onkeyup = e =>
     {
         const action_args: ActionKeyEventArgs = {
+            event: e,
             time_stamp: e.timeStamp,
             alt_key: e.altKey,
             code: e.code,

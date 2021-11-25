@@ -29,21 +29,27 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
     {
         if (key_combination)
         {
-            handle_key_combo(key_combination, e)
+            handle_key_combo(key_combination, e, store)
             return
         }
 
         const start_key_combo = e.ctrl_key && root_key_combo.has(e.key)
         key_combination = start_key_combo ? key_combination = e.key : ""
-        if (start_key_combo) return
+        if (start_key_combo)
+        {
+            e.event.preventDefault()
+            return
+        }
 
         if (e.ctrl_key && e.key === "e")
         {
+            e.event.preventDefault()
             store.dispatch(ACTIONS.display.toggle_consumption_formatting({}))
         }
 
         else if (e.shift_key && e.key === "?")
         {
+            e.event.preventDefault()
             const state = store.getState()
             if (!state.display_options.show_help_menu && !state.user_activity.is_editing_text)
             {
@@ -64,39 +70,41 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         if (e.key === "Control") key_combination = ""
         // console .log("key up, key_combination now = ", key_combination)
     })
+}
 
 
-    function handle_key_combo (key_combination: string, e: ActionKeyEventArgs)
+function handle_key_combo (key_combination: string, e: ActionKeyEventArgs, store: StoreType)
+{
+    let handled_key = false
+    if (key_combination === "d")
     {
-        let clear_key_combination = true
-        if (key_combination === "d")
-        {
-            clear_key_combination = handle_display_key_combo(e.key, store)
-        }
-        else if (key_combination === "s")
-        {
-            clear_key_combination = handle_selection_key_combo(e.key, store)
-        }
-        else
-        {
-            clear_key_combination = false
-        }
-
-
-        if (clear_key_combination) key_combination = ""
+        handled_key = handle_display_key_combo(e.key, store)
+    }
+    else if (key_combination === "s")
+    {
+        handled_key = handle_selection_key_combo(e.key, store)
     }
 
+    if (handled_key)
+    {
+        // (Attempt to) Stop Brave on Windows from using `ctrl + d` to make a new book mark
+        // or `ctrl + s` to save the page
+        // See issue #172
+        e.event.preventDefault()
+    }
+
+    // return clear_key_combination
 }
 
 
 
-const root_key_combo = new Set(["d", "s"])
+export const root_key_combo = new Set(["d", "s"])
 
 
 
 function handle_display_key_combo (key: string, store: StoreType)
 {
-    let clear_key_combination = true
+    let handled_key = true
 
     if (key === "f")
     {
@@ -120,17 +128,17 @@ function handle_display_key_combo (key: string, store: StoreType)
     }
     else
     {
-        clear_key_combination = false
+        handled_key = false
     }
 
-    return clear_key_combination
+    return handled_key
 }
 
 
 
 function handle_selection_key_combo (key: string, store: StoreType)
 {
-    let clear_key_combination = true
+    let handled_key = true
 
     if (key === "a")
     {
@@ -154,8 +162,8 @@ function handle_selection_key_combo (key: string, store: StoreType)
     }
     else
     {
-        clear_key_combination = false
+        handled_key = false
     }
 
-    return clear_key_combination
+    return handled_key
 }
