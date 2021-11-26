@@ -95,6 +95,9 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
 
 
+    const not_present = !knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough
+
+
     return <div>
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
@@ -140,7 +143,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {knowledge_view_id && (!knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough) && <div>
+        {knowledge_view_id && not_present && <div>
             {(knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view"}
             {composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view"}
             <br />
@@ -197,7 +200,7 @@ function _WComponentKnowledgeViewForm (props: Props)
 
         {other_knowledge_views.length > 0 && <div>
             <br />
-            Also in:
+            {not_present ? "Present" : "Also"} in:
             {other_knowledge_views.map(kv =>
             {
                 const entry = kv.wc_id_map[wcomponent_id]
