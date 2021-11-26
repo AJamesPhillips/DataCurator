@@ -20,6 +20,7 @@
     border-radius: 3px;
     background-color: rgba(251, 251, 251, 0.7);
     backdrop-filter: blur(3px);
+    overflow-y: scroll;
 }
 
 .editable_field.autocomplete .options_inner .option
