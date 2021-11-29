@@ -22,6 +22,7 @@ interface OwnProps {
     blur?: number
     connection_end_type?: ConnectionEndType
     is_highlighted?: boolean
+    is_editing?: boolean
     focused_mode?: boolean
     on_click?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
     on_pointer_over_out?: (over: boolean) => void
@@ -78,9 +79,10 @@ export function CanvasConnnection (props: OwnProps)
         filter: blur ? `url(#blur_filter_${Math.round(blur)})` : "",
     }
 
-    const extra_line_classes = hovered ? "hovered"
-        : (props.focused_mode ? "" // hide the background when in focused_mode
-        : (props.is_highlighted ? "highlighted" : ""))
+    const extra_line_classes = hovered ? " hovered "
+        : ((!props.is_editing && props.focused_mode)
+            ? "" // hide the background when presenting and in focused_mode
+            : (props.is_highlighted ? " highlighted " : ""))
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
 

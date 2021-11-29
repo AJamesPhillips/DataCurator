@@ -223,6 +223,7 @@ function _WComponentCanvasConnection (props: Props)
         connection_end_type={connection_end_type}
         intensity={validity_opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
+        is_editing={props.is_editing}
         focused_mode={props.focused_mode}
         extra_css_classes={"connection_type_" + wcomponent.type + " " + effect}
     />
