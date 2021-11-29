@@ -17,6 +17,8 @@ import { Link } from "../sharedf/Link"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import { KnowledgeViewChangeBase } from "./change_base/KnowledgeViewChangeBase"
+import { SelectKnowledgeView } from "./SelectKnowledgeView"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -49,6 +51,10 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
 
 
     const is_current_kv = props.current_subview_id === knowledge_view.id
+
+    const allow_nest_under_knowledge_view_ids = useMemo(() =>
+        new Set(props.possible_parent_knowledge_view_ids)
+    , [props.possible_parent_knowledge_view_ids])
 
 
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
@@ -128,10 +134,9 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 Is circularly nested
             </div>}
 
-            <AutocompleteText
+            <SelectKnowledgeView
                 selected_option_id={knowledge_view.parent_knowledge_view_id}
-                allow_none={true}
-                options={props.possible_parent_knowledge_view_options.filter(({ id }) => id !== knowledge_view.id)}
+                allowed_ids={allow_nest_under_knowledge_view_ids}
                 on_change={parent_knowledge_view_id =>
                 {
                     crud.update_item({ ...knowledge_view, parent_knowledge_view_id })

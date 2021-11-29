@@ -12,7 +12,7 @@ import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObject
 
 export interface KnowledgeViewFormProps
 {
-    possible_parent_knowledge_view_options: { id: string, title: string }[]
+    possible_parent_knowledge_view_ids: string[]
     nested_knowledge_view_ids: NestedKnowledgeViewIds
     knowledge_views_by_id: KnowledgeViewsById
     creation_context: CreationContextState | undefined

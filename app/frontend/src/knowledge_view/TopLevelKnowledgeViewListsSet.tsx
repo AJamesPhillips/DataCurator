@@ -1,4 +1,5 @@
 import { FunctionComponent, h } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { is_defined } from "../shared/utils/is_defined"
@@ -44,7 +45,9 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
     }
 
 
-    const possible_parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
+    const possible_parent_knowledge_view_ids = useMemo(() =>
+        props.knowledge_views.map(kv => kv.id)
+    , [props.knowledge_views])
     const knowledge_views = props.nested_knowledge_view_ids.top_ids.map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
 
@@ -54,7 +57,7 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
         {...props}
         parent_knowledge_view_id={undefined}
         knowledge_views={knowledge_views}
-        possible_parent_knowledge_view_options={possible_parent_knowledge_view_options}
+        possible_parent_knowledge_view_ids={possible_parent_knowledge_view_ids}
         upsert_knowledge_view={props.upsert_knowledge_view}
         current_kv_parent_ids={current_kv_parent_ids}
     />

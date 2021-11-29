@@ -1,4 +1,5 @@
 import { h, FunctionalComponent } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
 
@@ -45,7 +46,10 @@ function _KnowledgeViewForm (props: Props)
     if (!props.ready_for_reading) return <div>Loading...</div>
     if (!knowledge_view) return <div>No knowledge view selected</div>
 
-    const possible_parent_knowledge_view_options = props.knowledge_views.map(kv => ({ id: kv.id, title: kv.title }))
+    const possible_parent_knowledge_view_ids = useMemo(() =>
+        props.knowledge_views.map(kv => kv.id)
+    , [props.knowledge_views])
+
     const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id)
 
     const update_item = (knowledge_view: KnowledgeView) => upsert_knowledge_view({ knowledge_view })
@@ -57,7 +61,7 @@ function _KnowledgeViewForm (props: Props)
 
     return factory_get_kv_details({
         ...props,
-        possible_parent_knowledge_view_options,
+        possible_parent_knowledge_view_ids,
         current_kv_parent_ids,
     })(knowledge_view, crud)
 }
