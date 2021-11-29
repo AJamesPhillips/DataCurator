@@ -39,7 +39,7 @@ export function ConnectionEnd (props: OwnProps)
     }
 
 
-    let size = props.size === undefined ? 10 : bounded(props.size * 10, 5, 25)
+    let size = props.size === undefined ? 10 : bounded(props.size * 5, 10, 35)
 
 
     let points: Position[]
