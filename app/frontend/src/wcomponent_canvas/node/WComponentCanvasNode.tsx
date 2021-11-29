@@ -241,7 +241,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
         + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "")
-        + (show_all_details ? " compact_title " : "") + classes.sizer
+        + (show_all_details ? " compact_title " : "")
         + color.font
         + color.background
     )
@@ -343,6 +343,7 @@ function _WComponentCanvasNode (props: Props)
             {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
         </div>}
         extra_css_class={extra_css_class}
+        extra_css_class_node_main_content={classes.sizer}
         opacity={opacity}
         unlimited_width={false}
         glow={glow}

@@ -23,7 +23,7 @@ interface OwnProps
     glow?: false | "blue" | "orange"
     color?: string
     extra_css_class?: string
-    extra_node_styles?: h.JSX.CSSProperties
+    extra_css_class_node_main_content?: string
     other_children?: h.JSX.Element[]
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_pointer_up?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
@@ -54,12 +54,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     // }
 
 
-    const extra_node_styles: h.JSX.CSSProperties =
-    {
-        display: props.hidden ? "none": "",
-        opacity,
-        ...props.extra_node_styles,
-    }
+    const extra_node_styles: h.JSX.CSSProperties = { display: props.hidden ? "none": "", opacity }
     if (props.unlimited_width) extra_node_styles.maxWidth = "initial"
 
     const main_content_styles: h.JSX.CSSProperties =
@@ -90,7 +85,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     >
     {/* <Box className="node_main_content" style={main_content_styles}> */}
         <Card
-            className="node_main_content"
+            className={"node_main_content " + (props.extra_css_class_node_main_content || "")}
             variant="outlined" style={main_content_styles}
         >
             {(props.cover_image) && <CardMedia component="img"
