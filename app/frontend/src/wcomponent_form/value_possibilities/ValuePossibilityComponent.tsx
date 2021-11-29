@@ -49,9 +49,16 @@ export function ValuePossibilityComponent (props: OwnProps)
                 />
             </Typography>
         </Box>
-        <Box style={{ width: 100, color: "#cb4", cursor: "pointer" }} title="Using interoperable ID">
+
+
+        {VALUE_POSSIBILITY_IDS_to_text[value_possibility.id] && <Box
+            style={{ width: 100, color: "#cb4", cursor: "pointer" }}
+            title="Using interoperable ID"
+        >
             {VALUE_POSSIBILITY_IDS_to_text[value_possibility.id]}
-        </Box>
+        </Box>}
+
+
         {editing && <IconButton onClick={() => update_value_possibility(undefined)}>
             <DeleteIcon />
         </IconButton>}

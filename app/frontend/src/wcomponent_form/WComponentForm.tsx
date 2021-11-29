@@ -410,21 +410,25 @@ function _WComponentForm (props: Props)
 
             <hr />
             <br />
-            {VAPs_represent !== VAPsType.undefined && <div>
-                <ValuePossibilitiesComponent
-                    editing={editing}
-                    VAPs_represent={VAPs_represent}
-                    value_possibilities={orig_value_possibilities}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_value_possibilities={value_possibilities =>
-                    {
-                        const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
-                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                    }}
-                />
-                <hr />
-                <br />
-            </div>}
+        </div>}
+
+        {VAPs_represent !== VAPsType.undefined
+            && orig_values_and_prediction_sets !== undefined
+            && (editing || (Object.keys(orig_value_possibilities || {}).length > 0))
+            && <div>
+            <ValuePossibilitiesComponent
+                editing={editing}
+                VAPs_represent={VAPs_represent}
+                value_possibilities={orig_value_possibilities}
+                values_and_prediction_sets={orig_values_and_prediction_sets}
+                update_value_possibilities={value_possibilities =>
+                {
+                    const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
+                    upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
+                }}
+            />
+            <hr />
+            <br />
         </div>}
 
 
