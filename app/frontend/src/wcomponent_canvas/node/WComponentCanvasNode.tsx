@@ -212,7 +212,7 @@ function _WComponentCanvasNode (props: Props)
     const title = !wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent, rich_text: true, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
 
-    const show_all_details = is_editing || is_current_item
+    const show_all_details = is_editing //|| is_current_item
 
     const use_styles = makeStyles(theme => ({
         sizer: {
