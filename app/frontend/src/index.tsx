@@ -6,7 +6,6 @@ import { h, render } from "preact"
 import "preact/devtools"
 import { Provider } from "react-redux"
 
-import { APP_DETAILS } from "./shared/constants"
 import { get_store } from "./state/store"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"
 import { DemoStatementProbability } from "./statements/StatementWithProbability"
