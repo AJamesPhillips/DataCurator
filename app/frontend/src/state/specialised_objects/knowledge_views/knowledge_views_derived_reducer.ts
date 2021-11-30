@@ -256,6 +256,8 @@ export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeVie
     {
         Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) =>
         {
+            if (entry.passthrough) return
+
             // ensure it is deleted first so that when (re)added it will placed last (on top)
             delete composed_wc_id_map[id]
             composed_wc_id_map[id] = entry
@@ -264,7 +266,7 @@ export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeVie
 
     remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
 
-    const result = partition_wc_id_map_on_blocked_and_remove_passthrough(composed_wc_id_map)
+    const result = partition_wc_id_map_on_blocked(composed_wc_id_map)
     composed_wc_id_map = result.composed_wc_id_map
     const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map
 
@@ -282,7 +284,7 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
     })
 }
 
-function partition_wc_id_map_on_blocked_and_remove_passthrough (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
 {
     const composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
 
@@ -291,10 +293,6 @@ function partition_wc_id_map_on_blocked_and_remove_passthrough (composed_wc_id_m
         if (entry.blocked)
         {
             composed_blocked_wc_id_map[wcomponent_id] = entry
-            delete composed_wc_id_map[wcomponent_id]
-        }
-        else if (entry.passthrough)
-        {
             delete composed_wc_id_map[wcomponent_id]
         }
     })
