@@ -118,7 +118,62 @@ function factory_conditionally_select_causal_components (direction: "forward" | 
 
 
 
-export function factory_conditionally_select_components (get_component_ids: (composed_kv: ComposedKnowledgeView, selected_ids: string[], wcomponents_by_id: WComponentsById) => string[])
+export const conditionally_select_interconnections = factory_conditionally_select_components(
+    (composed_kv, selected_ids) =>
+{
+    const initial_selected_ids_set = new Set(selected_ids)
+    const new_selected_ids = [...selected_ids]
+    const new_selected_ids_set = new Set(new_selected_ids)
+
+    const { wc_id_connections_map, composed_visible_wc_id_map } = composed_kv
+
+
+    function is_not_visible (id: string)
+    {
+        return !composed_visible_wc_id_map[id]
+            // These checks are not needed because they have already occured
+            // || composed_visible_wc_id_map[id]?.blocked
+            // || composed_visible_wc_id_map[id]?.passthrough
+    }
+
+
+    selected_ids.forEach(id =>
+    {
+        // Defensive: conditional maybe needed because although this is already a selected component
+        // it may not be visible, i.e. it might have been selected on a different knowledge view
+        if (is_not_visible(id)) return
+
+        const connected_ids_first_degree = wc_id_connections_map[id]
+        if (!connected_ids_first_degree) return
+
+        connected_ids_first_degree.forEach(connected_id_1st_degree =>
+        {
+            if (is_not_visible(connected_id_1st_degree)) return
+
+            const connected_ids_second_degree = wc_id_connections_map[connected_id_1st_degree]
+            if (!connected_ids_second_degree) return
+
+            connected_ids_second_degree.forEach(connected_id_second_degree =>
+            {
+                if (connected_id_second_degree === id) return
+                if (!initial_selected_ids_set.has(connected_id_second_degree)) return
+                // Conditional needed because although this is already a selected component
+                // it may not be visible, i.e. it might have been selected on a different knowledge view
+                if (is_not_visible(connected_id_second_degree)) return
+
+                if (new_selected_ids_set.has(connected_id_1st_degree)) return
+                new_selected_ids.push(connected_id_1st_degree)
+                new_selected_ids_set.add(connected_id_1st_degree)
+            })
+        })
+    })
+
+    return new_selected_ids
+})
+
+
+
+function factory_conditionally_select_components (get_component_ids: (composed_kv: ComposedKnowledgeView, selected_ids: string[], wcomponents_by_id: WComponentsById) => string[])
 {
     return (store: StoreType) =>
     {

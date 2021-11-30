@@ -7,6 +7,7 @@ import {
     conditionally_select_all_components,
     conditionally_select_forward_causal_components,
     conditionally_select_source_causal_components,
+    conditionally_select_interconnections,
 } from "../state/specialised_objects/meta_wcomponents/selecting/helpers"
 import { get_store } from "../state/store"
 
@@ -72,6 +73,17 @@ export function SelectionControlSidePanel (props: {})
             />
 
             <div className="description">ctrl + s + d</div>
+        </p>
+
+
+        <p className="section">
+            <Button
+                value="Select components inbetween"
+                fullWidth={true}
+                onClick={() => conditionally_select_interconnections(store)}
+            />
+
+            <div className="description">ctrl + s + i</div>
         </p>
     </div>
 }

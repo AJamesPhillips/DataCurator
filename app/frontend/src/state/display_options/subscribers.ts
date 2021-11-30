@@ -7,6 +7,7 @@ import {
     conditionally_expand_selected_components,
     conditionally_select_all_components,
     conditionally_select_forward_causal_components,
+    conditionally_select_interconnections,
     conditionally_select_source_causal_components,
 } from "../specialised_objects/meta_wcomponents/selecting/helpers"
 import { handle_ctrl_a } from "../specialised_objects/meta_wcomponents/selecting/subscribers"
@@ -159,6 +160,10 @@ function handle_selection_key_combo (key: string, store: StoreType)
     else if (key === "c")
     {
         conditionally_select_source_causal_components(store)
+    }
+    else if (key === "i")
+    {
+        conditionally_select_interconnections(store)
     }
     else
     {

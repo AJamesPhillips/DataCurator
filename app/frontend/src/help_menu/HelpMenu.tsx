@@ -120,11 +120,12 @@ const keyboard_shortcuts: KeyboardShortcutProps[] = [
     { keyboard_shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing feedback loop links as (more) circular` },
     { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes" },
     { keyboard_shortcut: ["Shift", "Ctrl", "click", "drag"], outcome: "Deselect multiple nodes" },
+    { keyboard_shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection forward along causal connections" },
+    { keyboard_shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection along source causal connections" },
     { keyboard_shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view" },
     { keyboard_shortcut: ["Ctrl", "s", "e"], outcome: "Expand selection along connections and nodes" },
     { keyboard_shortcut: ["Ctrl", "s", "d"], outcome: "Contract selection along single connections and nodes" },
-    { keyboard_shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection forward along causal connections" },
-    { keyboard_shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection along source causal connections" },
+    { keyboard_shortcut: ["Ctrl", "s", "i"], outcome: "Selection components inbetween (interconnections)" },
     { keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
 ]
 
