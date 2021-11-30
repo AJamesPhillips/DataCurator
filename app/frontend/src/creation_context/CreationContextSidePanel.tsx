@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { EditableText } from "../form/editable_text/EditableText"
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
@@ -12,11 +13,13 @@ import type { RootState } from "../state/State"
 
 const map_state = (state: RootState) =>
 {
-    const { creation_context: cc } = state.creation_context
+    const { creation_context } = state.creation_context
     return {
         use_creation_context: state.creation_context.use_creation_context,
-        custom_created_at: cc && cc.custom_created_at,
-        label_ids: cc && cc.label_ids,
+        custom_created_at: creation_context?.custom_created_at,
+        label_ids: creation_context?.label_ids,
+        replace_text_target: creation_context?.replace_text_target,
+        replace_text_replacement: creation_context?.replace_text_replacement,
     }
 }
 
@@ -24,6 +27,7 @@ const map_dispatch = {
     toggle_use_creation_context: ACTIONS.creation_context.toggle_use_creation_context,
     set_custom_created_at: ACTIONS.creation_context.set_custom_created_at,
     set_label_ids: ACTIONS.creation_context.set_label_ids,
+    set_replace_text: ACTIONS.creation_context.set_replace_text,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -58,6 +62,26 @@ function _CreationContextSidePanel (props: Props)
             Automatically label with: <LabelsEditor
                 label_ids={props.label_ids}
                 on_change={label_ids => props.set_label_ids({ label_ids })}
+            />
+        </p>
+
+        <p>
+            Automatically replace text:
+            <br /><EditableText
+                placeholder="Target text..."
+                value={props.replace_text_target || ""}
+                conditional_on_change={t => props.set_replace_text({
+                    value: t || undefined,
+                    value_type: "target",
+                })}
+            />
+            <br /><EditableText
+                placeholder="Replacement text..."
+                value={props.replace_text_replacement || ""}
+                conditional_on_change={t => props.set_replace_text({
+                    value: t || undefined,
+                    value_type: "replacement",
+                })}
             />
         </p>
     </div>

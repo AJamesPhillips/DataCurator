@@ -8,6 +8,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { ACTIONS } from "../../state/actions"
 import { ConditionalWComponentSearchWindow } from "../ConditionalWComponentSearchWindow"
+import type { CreationContext } from "../../creation_context/interfaces"
 
 
 
@@ -48,6 +49,8 @@ interface OwnProps extends EditableTextCommonOwnProps
 
 const map_state = (state: RootState) => ({
     presenting: state.display_options.consumption_formatting,
+    use_creation_context: state.creation_context.use_creation_context,
+    creation_context: state.creation_context.creation_context,
 })
 
 
@@ -97,6 +100,11 @@ function _EditableTextCommon (props: Props)
 
     const conditional_on_change = (new_value: string) =>
     {
+        if (props.use_creation_context)
+        {
+            new_value = custom_creation_context_replace_text(props.creation_context, new_value)
+        }
+
         if (new_value !== value) user_conditional_on_change && user_conditional_on_change(new_value)
         set_value(new_value)
     }
@@ -266,4 +274,16 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
     }
 
     return undefined
+}
+
+
+
+function custom_creation_context_replace_text (creation_context: CreationContext | undefined, new_value: string): string
+{
+    if (creation_context?.replace_text_target && creation_context?.replace_text_replacement)
+    {
+        new_value = new_value.replaceAll(creation_context.replace_text_target, creation_context.replace_text_replacement)
+    }
+
+    return new_value
 }
