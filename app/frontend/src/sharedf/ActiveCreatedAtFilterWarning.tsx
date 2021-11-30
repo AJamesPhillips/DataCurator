@@ -1,10 +1,11 @@
-import { IconButton, makeStyles, Tooltip } from "@material-ui/core"
+import { IconButton, Tooltip } from "@material-ui/core"
 import FilterIcon from "@material-ui/icons/Filter"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { active_warning_styles } from "./active_warning_common"
 
 
 
@@ -22,7 +23,7 @@ function _ActiveCreatedAtFilterWarning (props: Props)
     const { component_number_excluded_by_created_at_datetime_filter } = props
     if (!component_number_excluded_by_created_at_datetime_filter) return null
 
-    const classes = use_styles()
+    const classes = active_warning_styles()
 
 
     return (
@@ -40,10 +41,3 @@ function _ActiveCreatedAtFilterWarning (props: Props)
 }
 
 export const ActiveCreatedAtFilterWarning = connector(_ActiveCreatedAtFilterWarning) as FunctionalComponent<OwnProps>
-
-
-
-const use_styles = makeStyles(theme => ({
-    warning_button: { cursor: "help" },
-    warning_icon: { color: theme.palette.warning.main }
-}))

@@ -119,7 +119,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Use "Focused" Mode</b>
-            <span className="description">ctrl + d + f</span>
+            &nbsp; <span className="description">ctrl + d + f</span>
 
             <EditableCheckbox
                 value={props.focused_mode}
@@ -131,7 +131,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Show causal links as more circular</b>
-            <span className="description">ctrl + d + c</span>
+            &nbsp; <span className="description">ctrl + d + c</span>
 
             <EditableCheckbox
                 value={props.circular_links}
@@ -143,7 +143,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Animate causal connections</b>
-            <span className="description">ctrl + d + a</span>
+            &nbsp; <span className="description">ctrl + d + a</span>
 
             <EditableCheckbox
                 value={props.animate_causal_links}

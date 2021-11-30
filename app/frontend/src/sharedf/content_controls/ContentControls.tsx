@@ -14,6 +14,9 @@ import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import { ToggleDatetimeMarkers } from "./ToggleDatetimeMarkers"
 import { get_actually_display_time_sliders } from "../../state/controls/accessors"
+import { ActiveFilterWarning } from "../ActiveFilterWarning"
+import { ActiveCreationContextWarning } from "../ActiveCreationContextWarning"
+import { ActiveFocusedMode } from "../ActiveFocusedMode"
 
 
 
@@ -86,12 +89,18 @@ function _ContentControls (props: Props)
                 </Box>
             </Collapse>
             <Toolbar className={classes.toolbar} variant="dense">
-                <MoveToWComponentButton
-                    allow_drawing_attention={allow_drawing_attention}
-                    have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
-                    disable_if_not_present={false}
-                />
-                <ActiveCreatedAtFilterWarning />
+                <Box className={classes.move_to_button_and_warnings}>
+                    <MoveToWComponentButton
+                        allow_drawing_attention={allow_drawing_attention}
+                        have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
+                        disable_if_not_present={false}
+                    />
+                    <ActiveFocusedMode />
+                    <ActiveCreatedAtFilterWarning />
+                    <ActiveFilterWarning />
+                    <ActiveCreationContextWarning />
+                </Box>
+
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
                         variant="contained"
@@ -103,10 +112,10 @@ function _ContentControls (props: Props)
                     </Button>
                 </Box>
 
-                <Box component="label">
-                    {/* <Box component="span" pr={1}>Time Resolution: </Box> */}
+                {/* <Box component="label">
+                    {/ * <Box component="span" pr={1}>Time Resolution: </Box> * /}
                     <TimeResolutionOptions  />
-                </Box>
+                </Box> */}
 
                 <ToggleDatetimeMarkers />
 
@@ -146,6 +155,10 @@ export const ContentControls = connector(_ContentControls) as FunctionalComponen
 const use_styles = makeStyles(theme => ({
     toolbar: {
         justifyContent: "space-between",
+    },
+    move_to_button_and_warnings: {
+        display: "flex",
+        flexDirection: "row",
     },
     drawer_content: {
         display: "flex", flexDirection: "row",

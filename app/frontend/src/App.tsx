@@ -81,9 +81,11 @@ function App(props: Props)
                             </Box>
                         </Box>
                         <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
-                            <Box className={`${classes.toolbar_item}`}><ActiveCreatedAtFilterWarning /></Box>
-                            <Box className={`${classes.toolbar_item}`}><ActiveCreationContextWarning /></Box>
-                            <Box className={`${classes.toolbar_item}`}><ActiveFilterWarning /></Box>
+                            <Box className={`${classes.toolbar_item}`}>
+                                <ActiveCreatedAtFilterWarning />
+                                <ActiveFilterWarning />
+                                <ActiveCreationContextWarning />
+                            </Box>
                             <Box className={`${classes.toolbar_item}`}><ActiveUserWidget /></Box>
                             <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
                             <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>

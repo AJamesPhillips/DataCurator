@@ -1,9 +1,10 @@
 import { FunctionalComponent, h } from "preact"
-import { IconButton, makeStyles,Tooltip } from "@material-ui/core"
+import { IconButton, Tooltip } from "@material-ui/core"
 
 import PhotoFilterIcon from "@material-ui/icons/PhotoFilter"
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
+import { active_warning_styles } from "./active_warning_common"
 
 
 
@@ -19,11 +20,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ActiveCreationContextWarning (props: Props)
 {
     const { creation_context, editing } = props
-    const use_styles = makeStyles(theme => ({
-        warning_button: { cursor: "help" },
-        warning_icon: { color: theme.palette.warning.main }
-    }))
-    const classes = use_styles()
+
+    const classes = active_warning_styles()
+
 
     return (creation_context.use_creation_context && editing) && (
         <Tooltip placement="top" title="WARNING: Creation Context is active, which can result in components being created with incorrect information!">

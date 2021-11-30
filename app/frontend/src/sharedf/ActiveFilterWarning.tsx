@@ -1,10 +1,11 @@
 import { FunctionalComponent, h } from "preact"
-import { IconButton, makeStyles,Tooltip } from "@material-ui/core"
+import { IconButton, Tooltip } from "@material-ui/core"
 import { connect, ConnectedProps } from "react-redux"
 import FilterNoneIcon from "@material-ui/icons/FilterNone"
 
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
+import { active_warning_styles } from "./active_warning_common"
 
 
 
@@ -24,7 +25,7 @@ type Props = ConnectedProps<typeof connector>
 function _ActiveFilterWarning (props: Props)
 {
     const { apply_filter } = props
-    const classes = use_styles()
+    const classes = active_warning_styles()
 
     if (!apply_filter) return null
 
@@ -42,10 +43,3 @@ function _ActiveFilterWarning (props: Props)
 }
 
 export const ActiveFilterWarning = connector(_ActiveFilterWarning) as FunctionalComponent<{}>
-
-
-
-const use_styles = makeStyles(theme => ({
-    warning_button: { cursor: "help" },
-    warning_icon: { color: theme.palette.warning.main },
-}))
