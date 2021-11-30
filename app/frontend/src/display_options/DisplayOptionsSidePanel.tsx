@@ -164,7 +164,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
 
-        <p className="section">
+        {/* <p className="section">
             <b>Display by simulated time</b>
 
             <EditableCheckbox
@@ -176,7 +176,7 @@ function _DisplayOptionsSidePanel (props: Props)
             <span style={{ backgroundColor: "pink" }}>
                 Experimental view not optimised for data sets over a large period of time.  Probably want to use "Show time markers" above.
             </span>
-        </p>
+        </p> */}
 
 
         <p className="section">
