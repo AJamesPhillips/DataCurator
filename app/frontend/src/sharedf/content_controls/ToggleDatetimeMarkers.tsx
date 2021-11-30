@@ -27,6 +27,7 @@ const map_state = (state: RootState) =>
         sim_ms: state.routing.args.sim_ms,
         time_origin_ms_present,
         current_kv,
+        presenting: state.display_options.consumption_formatting,
     }
 }
 
@@ -42,7 +43,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ToggleDatetimeMarkers (props: Props)
 {
-    const { display_time_marks, time_origin_ms_present, current_kv } = props
+    const { display_time_marks, time_origin_ms_present, current_kv, presenting } = props
+
+    if (presenting && !time_origin_ms_present) return null
 
     return <Box component="label">
         <ButtonGroup

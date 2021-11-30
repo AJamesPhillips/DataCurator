@@ -26,7 +26,7 @@ function _ActiveFocusedMode (props: Props)
 {
     const { presenting, focused_mode } = props
     const title = focused_mode
-        ? "WARNING: Focused Mode is active, which can result in components appearing almost invisible"
+        ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
         : "Activate focused mode"
     const classes = focused_mode ? active_warning_styles() : inactive_warning_styles()
 

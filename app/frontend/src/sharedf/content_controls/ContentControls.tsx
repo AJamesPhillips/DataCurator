@@ -101,6 +101,8 @@ function _ContentControls (props: Props)
                     <ActiveCreationContextWarning />
                 </Box>
 
+                <ToggleDatetimeMarkers />
+
                 <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
                     <Button
                         variant="contained"
@@ -116,8 +118,6 @@ function _ContentControls (props: Props)
                     {/ * <Box component="span" pr={1}>Time Resolution: </Box> * /}
                     <TimeResolutionOptions  />
                 </Box> */}
-
-                <ToggleDatetimeMarkers />
 
                 {/* <Box component="label">
                     <ButtonGroup
