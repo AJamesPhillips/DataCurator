@@ -28,16 +28,22 @@
     padding: 3px;
     border: thin solid #777;
     border-radius: 3px;
-    margin: 4px 2px;
+    margin: 5px;
     width: fit-content;
     cursor: pointer;
     background-color: rgba(255, 255, 255);
 }
 
+.editable_field.autocomplete .options_inner .option_wrapper.highlighted .option
+{
+    background-color: rgba(235, 245, 255);
+    box-shadow: 0 0 5px rgb(93, 123, 241);
+}
+
 .editable_field.autocomplete .options_inner .option_wrapper.highlighted
 {
-    cursor: pointer;
-    background-color: rgba(205, 215, 255);
+    /* cursor: pointer; */
+    /* background-color: rgba(205, 215, 255); */
 }
 
 .editable_field.autocomplete .option_subtitle
