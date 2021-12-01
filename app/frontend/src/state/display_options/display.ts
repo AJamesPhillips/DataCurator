@@ -11,11 +11,13 @@ import type { RootState } from "../State"
 
 // todo improve how these are calculated
 export const TOP_HEADER_FUDGE = 48
-export const bottom_controls_fudge = (state: RootState) => get_actually_display_time_sliders(state) ? 215 : 57
+const bottom_controls_fudge = (display_time_sliders: boolean) => display_time_sliders ? 215 : 57
 const side_panel_fudge = (display_side_panel: boolean) => display_side_panel ? 440 : 0
 
 export const screen_width = (display_side_panel: boolean) => document.body.clientWidth - side_panel_fudge(display_side_panel)
-export const screen_height = () => document.body.clientHeight
+const screen_height = () => document.body.clientHeight
+export const visible_screen_height = (display_time_sliders: boolean) => screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(display_time_sliders)
+
 const half_screen_width = (display_side_panel: boolean) => screen_width(display_side_panel) / 2
 const half_screen_height = () => screen_height() / 2
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }, display_side_panel: boolean): { x: number, y: number }

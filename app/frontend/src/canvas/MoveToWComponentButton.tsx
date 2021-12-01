@@ -67,18 +67,31 @@ function _MoveToWComponentButton (props: Props)
     const {
         components_on_screen,
         have_finished_drawing_attention,
+        current_composed_knowledge_view,
+        wcomponents_by_id,
+        initial_wcomponent_id,
+        selected_wcomponent_ids_set,
+        created_at_ms,
+        disable_if_not_present,
     } = props
 
 
     const { position, go_to_datetime_ms } = useMemo(() =>
-        calculate_spatial_temporal_position_to_move_to({ ...props, disable_if_not_present: props.disable_if_not_present })
+        calculate_spatial_temporal_position_to_move_to({
+            current_composed_knowledge_view,
+            wcomponents_by_id,
+            initial_wcomponent_id,
+            selected_wcomponent_ids_set,
+            created_at_ms,
+            disable_if_not_present,
+        })
     , [
-        props.current_composed_knowledge_view,
-        props.wcomponents_by_id,
-        props.initial_wcomponent_id,
-        props.selected_wcomponent_ids_set,
-        props.created_at_ms,
-        props.disable_if_not_present,
+        current_composed_knowledge_view,
+        wcomponents_by_id,
+        initial_wcomponent_id,
+        selected_wcomponent_ids_set,
+        created_at_ms,
+        disable_if_not_present,
     ])
 
     const move = !position ? undefined : () => props.move(go_to_datetime_ms, position)

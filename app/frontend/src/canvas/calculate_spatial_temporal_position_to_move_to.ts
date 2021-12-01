@@ -1,9 +1,9 @@
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import type { ComposedKnowledgeView } from "../state/derived/State"
-import { screen_width, screen_height, lefttop_to_xy } from "../state/display_options/display"
+import { screen_width, lefttop_to_xy, visible_screen_height, TOP_HEADER_FUDGE } from "../state/display_options/display"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { PositionAndZoom } from "./interfaces"
-import { NODE_WIDTH, NODE_HEIGHT_APPROX } from "./position_utils"
+import { NODE_WIDTH, HALF_NODE_HEIGHT } from "./position_utils"
 import { SCALE_BY, bound_zoom } from "./zoom_utils"
 
 
@@ -72,8 +72,8 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
 
             min_left -= NODE_WIDTH
             max_left += NODE_WIDTH
-            min_top -= (NODE_HEIGHT_APPROX * 2) // hack as the center of screen seems off
-            max_top += NODE_HEIGHT_APPROX
+            min_top -= (HALF_NODE_HEIGHT + TOP_HEADER_FUDGE)
+            max_top += HALF_NODE_HEIGHT
 
 
             view_entry =
@@ -86,7 +86,7 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
             const total_width = max_left - min_left
             const total_height = max_top - min_top
             const zoom_width = (screen_width(false) / total_width) * SCALE_BY
-            const zoom_height = (screen_height() / total_height) * SCALE_BY
+            const zoom_height = (visible_screen_height(false) / total_height) * SCALE_BY
 
             zoom = Math.min(zoom_width, zoom_height)
             zoom = bound_zoom(Math.min(SCALE_BY, zoom))
