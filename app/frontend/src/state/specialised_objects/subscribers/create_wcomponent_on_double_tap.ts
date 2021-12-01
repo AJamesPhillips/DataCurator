@@ -36,8 +36,7 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
         if (state.display_options.consumption_formatting) return
 
 
-        const point = offset_by_half_node(position_to_point(double_tap))
-        const position = round_canvas_point(point, "large")
+        const position = position_from_canvas_pointer_event(double_tap)
         const add_to_knowledge_view: AddToKnowledgeViewArgs = { id: current_knowledge_view.id, position }
 
 
@@ -47,4 +46,13 @@ export function create_wcomponent_on_double_tap (store: Store<RootState>)
             store,
         })
     })
+}
+
+
+
+export function position_from_canvas_pointer_event (canvas_pointer_event: CanvasPointerEvent)
+{
+    const point = offset_by_half_node(position_to_point(canvas_pointer_event))
+    const position = round_canvas_point(point, "large")
+    return position
 }

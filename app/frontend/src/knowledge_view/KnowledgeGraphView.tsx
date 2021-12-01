@@ -11,6 +11,7 @@ import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
 import { TemporaryDraggedCanvasNodes } from "../canvas/TemporaryDraggedCanvasNodes"
+// import { WComponentCanvasNodeDebugCanvasPointerPosition } from "../debug/WComponentCanvasNodeDebugCanvasPointerPosition"
 
 
 
@@ -79,7 +80,11 @@ const get_children = (props: Props): ChildrenRawData =>
         ...wcomponent_unfound_ids.map(id => <WComponentCanvasNode
             key={id}
             id={id}
-        />)
+        />),
+
+        // <WComponentCanvasNodeDebugCanvasPointerPosition
+        //     key={"debug_canvas_pointer_position"}
+        // />
     ]
     elements.push(<TemporaryDraggedCanvasNodes />)
 

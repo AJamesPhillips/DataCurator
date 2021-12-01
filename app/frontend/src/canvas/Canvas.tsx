@@ -209,6 +209,11 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        // pub_sub.canvas.pub("debug_canvas_move", {
+        //     x: this.client_to_canvas_x(e.offsetX),
+        //     y: this.client_to_canvas_y(e.offsetY),
+        // })
+
         if (!this.state.pointer_state.down) return
 
         const client_x = e.offsetX

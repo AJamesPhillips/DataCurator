@@ -29,6 +29,7 @@ interface CanvasMsgMap
     canvas_area_select: CanvasAreaSelectEvent
     canvas_node_drag_relative_position: CanvasPoint | undefined
     throttled_canvas_node_drag_relative_position: CanvasPoint | undefined
+    debug_canvas_move: CanvasPointerEvent
 }
 
 

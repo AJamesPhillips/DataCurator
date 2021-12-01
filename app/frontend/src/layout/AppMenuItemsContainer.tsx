@@ -89,7 +89,7 @@ function _AppMenuItemsContainer (props: Props)
                     onClick={() => set_show_all_routes(!show_all_routes)}
                     style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
                 >
-                    {show_all_routes ? "Hide" : "Show"} all options
+                    {show_all_routes ? "Hide extra" : "Show all"} options
                 </MaterialMenuItem>
             </Menu>
         </Box>
