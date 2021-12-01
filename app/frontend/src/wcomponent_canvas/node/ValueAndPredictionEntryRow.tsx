@@ -13,6 +13,7 @@ import type {
 import { ExploreButtonHandle } from "./ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
 import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
+import { AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
 
 
 
@@ -117,7 +118,7 @@ function CounterfactualLink (props: CounterfactualLinkProps)
             args={undefined}
             extra_css_style={style}
         >
-            &#x2442;
+            <AltRouteIcon size="small" />
         </Link>
 
         {props.counterfactual.counterfactual_has_knowledge_view && <span style={{ fontSize: 14 }}>
