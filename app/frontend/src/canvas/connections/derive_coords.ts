@@ -4,6 +4,7 @@ import { get_angle, rads } from "../../utils/angles"
 import { get_connection_point } from "./terminal"
 import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
+import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
 
 
 
@@ -19,12 +20,14 @@ interface DeriveCoordsArgs
     to_connection_type: ConnectionTerminalType
     line_behaviour?: ConnectionLineBehaviour
     circular_links?: boolean
+    end_size: number
+    connection_end_type: ConnectionEndType
 }
 export function derive_coords (args: DeriveCoordsArgs )
 {
     let {
         from_node_position, to_node_position, from_connection_type, to_connection_type,
-        line_behaviour, circular_links,
+        line_behaviour, circular_links, end_size, connection_end_type,
     } = args
 
     let y1_offset = 0
@@ -81,26 +84,26 @@ export function derive_coords (args: DeriveCoordsArgs )
     const x1 = from_connector_position.left
     const y1 = -from_connector_position.top + y1_offset
 
-    const x2 = to_connector_position.left
-    const y2 = -to_connector_position.top + y2_offset
+    const xe2 = to_connector_position.left
+    const ye2 = -to_connector_position.top + y2_offset
 
     let relative_control_point1: Vector = { x: 0, y: 0 }
     let relative_control_point2 = relative_control_point1
 
-    const angle = get_angle(x1, y1, x2, y2)
+    const angle = get_angle(x1, y1, xe2, ye2)
     let end_angle = angle + rads._180
 
     if (line_behaviour === undefined || line_behaviour === "curve")
     {
-        const xc = (x2 - x1) / 2
+        const xc = (xe2 - x1) / 2
         const min_xc = Math.max(Math.abs(xc), minimum_line_bow) * (Math.sign(xc) || -1)
         let x_control1 = min_xc * x_control1_factor
         let x_control2 = -min_xc * x_control2_factor
         let y_control1 = 0
         let y_control2 = 0
 
-        const going_right_to_left = x2 <= x1
-        const y_diff = y2 - y1
+        const going_right_to_left = xe2 <= x1
+        const y_diff = ye2 - y1
         if (!circular_links && going_right_to_left)
         {
             x_control1 = Math.min(-x_control1, 300)
@@ -116,8 +119,16 @@ export function derive_coords (args: DeriveCoordsArgs )
     }
 
 
+    // Connect to start of arrow / block / diamond etc
+    const minimum_end_connector_shape_size = connection_end_type === ConnectionEndType.negative
+        ? (BAR_THICKNESS * end_size)
+        : connection_end_type === ConnectionEndType.noop ? NOOP_THICKNESS : (9 * end_size)
+    const xo2 = xe2 + Math.cos(end_angle) * minimum_end_connector_shape_size
+    const yo2 = ye2 + Math.sin(end_angle) * minimum_end_connector_shape_size
+
+
     return {
-        x1, y1, x2, y2, relative_control_point1, relative_control_point2, end_angle
+        x1, y1, xe2, ye2, xo2, yo2, relative_control_point1, relative_control_point2, end_angle
     }
 }
 

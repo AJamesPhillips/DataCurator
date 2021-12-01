@@ -22,14 +22,14 @@ interface OwnProps
     end_angle: number
     opacity: number
     blur: number
-    size?: number
+    size: number
     is_hovered: boolean
     is_highlighted: boolean | undefined
 }
 
 export function ConnectionEnd (props: OwnProps)
 {
-    const { type, x, y, end_angle, opacity, blur, is_hovered, is_highlighted } = props
+    const { type, x, y, end_angle, opacity, blur, size, is_hovered, is_highlighted } = props
     let extra_classes = `${is_highlighted ? "highlighted" : ""} ${is_hovered ? "hovered" : ""}`
 
     const style_opacity = opacity * (1 - (blur / 100))
@@ -37,9 +37,6 @@ export function ConnectionEnd (props: OwnProps)
         fillOpacity: style_opacity,
         // filter: `url(#blur_filter_${blur})`,
     }
-
-
-    let size = props.size === undefined ? 10 : bounded(props.size * 5, 10, 35)
 
 
     let points: Position[]
@@ -101,7 +98,7 @@ function get_arrow_end_points (angle: number, type: 1 | -1, size: number)
 
 const BAR_WIDTH = 12
 const BAR_HALF_WIDTH = BAR_WIDTH / 2
-const BAR_THICKNESS = 4
+export const BAR_THICKNESS = 4
 function get_connection_bar_end (end_angle: number, size: number)
 {
     size = size / 10
@@ -116,6 +113,7 @@ function get_connection_bar_end (end_angle: number, size: number)
 
 
 const NOOP_SIZE = 9
+export const NOOP_THICKNESS = Math.sin(rads._45) * NOOP_SIZE * 2
 function get_connection_noop_end (end_angle: number)
 {
     const p1 = to_vec(end_angle + rads._315, NOOP_SIZE)

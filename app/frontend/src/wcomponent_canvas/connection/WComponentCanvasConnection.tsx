@@ -22,6 +22,7 @@ import {
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
     ConnectionLineBehaviour,
+    ConnectionTerminalAttributeType,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
     apply_counterfactuals_v2_to_VAP_set,
@@ -38,6 +39,7 @@ import {
 } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -174,8 +176,17 @@ function _WComponentCanvasConnection (props: Props)
     const on_click = factory_on_click({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
 
 
-    const { from_node_position, to_node_position, from_connection_type, to_connection_type,
-    } = get_connection_terminal_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
+    const {
+        from_node_position, to_node_position, from_attribute, to_attribute
+    } = get_connection_terminal_node_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
+
+    const { from_connection_type, to_connection_type } = useMemo(() =>
+    {
+        const from_connection_type: ConnectionTerminalType = { direction: "from", attribute: from_attribute }
+        const to_connection_type: ConnectionTerminalType = { direction: "to", attribute: to_attribute }
+
+        return { from_connection_type, to_connection_type }
+    }, [from_attribute, to_attribute])
 
 
     const validity_opacity = calc_display_opacity({
@@ -233,34 +244,34 @@ export const WComponentCanvasConnection = connector(_WComponentCanvasConnection)
 
 
 
-interface GetConnectionTerminalPositionsArgs
+interface GetConnectionTerminalNodePositionsArgs
 {
     wcomponent: WComponentConnection | WComponentJudgement
     wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
-function get_connection_terminal_positions ({ wcomponent, wc_id_map }: GetConnectionTerminalPositionsArgs)
+function get_connection_terminal_node_positions ({ wcomponent, wc_id_map }: GetConnectionTerminalNodePositionsArgs)
 {
     let from_node_position: KnowledgeViewWComponentEntry | undefined = undefined
     let to_node_position: KnowledgeViewWComponentEntry | undefined = undefined
-    let from_connection_type: ConnectionTerminalType // = "top"
-    let to_connection_type: ConnectionTerminalType // = "bottom"
+    let from_attribute: ConnectionTerminalAttributeType | undefined = undefined
+    let to_attribute: ConnectionTerminalAttributeType | undefined = undefined
 
     if (wcomponent_is_plain_connection(wcomponent))
     {
         from_node_position = wc_id_map[wcomponent.from_id]
         to_node_position = wc_id_map[wcomponent.to_id]
-        from_connection_type = { direction: "from", attribute: wcomponent.from_type }
-        to_connection_type = { direction: "to", attribute: wcomponent.to_type }
+        from_attribute = wcomponent.from_type
+        to_attribute = wcomponent.to_type
     }
     else
     {
         from_node_position = wc_id_map[wcomponent.id]
         to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
-        from_connection_type = { direction: "from", attribute: "meta" }
-        to_connection_type = { direction: "to", attribute: "meta" }
+        from_attribute = "meta"
+        to_attribute = "meta"
     }
 
-    return { from_node_position, to_node_position, from_connection_type, to_connection_type }
+    return { from_node_position, to_node_position, from_attribute, to_attribute }
 }
 
 
