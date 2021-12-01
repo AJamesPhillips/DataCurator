@@ -5,6 +5,7 @@ import PhotoFilterIcon from "@material-ui/icons/PhotoFilter"
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { active_warning_styles } from "./active_warning_common"
+import { ACTIONS } from "../state/actions"
 
 
 
@@ -14,7 +15,11 @@ const map_state = (state: RootState) => ({
     editing: !state.display_options.consumption_formatting,
 })
 
-const connector = connect(map_state)
+const map_dispatch = {
+    change_route: ACTIONS.routing.change_route,
+}
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ActiveCreationContextWarning (props: Props)
@@ -29,8 +34,8 @@ function _ActiveCreationContextWarning (props: Props)
             <IconButton
                 className={classes.warning_button}
                 component="span"
-                disableRipple disableElevation
                 size="small"
+                onClick={() => props.change_route({ route: "creation_context" })}
             >
                 <PhotoFilterIcon className={classes.warning_icon} />
             </IconButton>
