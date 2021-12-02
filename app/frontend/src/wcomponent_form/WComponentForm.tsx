@@ -204,16 +204,10 @@ function _WComponentForm (props: Props)
         <WComponentLatestPrediction wcomponent={wcomponent} />
 
 
-        {UI_value && (editing || UI_value.is_defined) &&
-        <a // Temporarily provide link to open issue
-            style={{ color: "#bbb", textDecoration: "none" }}
-            title="This is broken for counterfactuals at the moment.  See issue 81"
-            href="https://github.com/centerofci/data-curator2/issues/81"
-            target="_blank"
-        >
+        {UI_value && (editing || UI_value.is_defined) && <span>
             <span className="description_label">Value</span>
             <DisplayValue UI_value={UI_value} />
-        </a>}
+        </span>}
 
 
         {(editing || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
