@@ -17,7 +17,7 @@ const map_state = (state: RootState) => ({
     focused_mode: state.display_options.focused_mode,
     circular_links: state.display_options.circular_links,
     display_time_marks: state.display_options.display_time_marks,
-    animate_causal_links: state.display_options.animate_causal_links,
+    animate_connections: state.display_options.animate_connections,
     show_large_grid: state.display_options.show_large_grid,
     display_time_sliders: state.controls.display_time_sliders,
 })
@@ -30,7 +30,7 @@ const map_dispatch = {
     set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
     set_or_toggle_circular_links: ACTIONS.display.set_or_toggle_circular_links,
     set_display_time_marks: ACTIONS.display.set_display_time_marks,
-    set_or_toggle_animate_causal_links: ACTIONS.display.set_or_toggle_animate_causal_links,
+    set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections,
     set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
 }
@@ -130,7 +130,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Show causal links as more circular</b>
+            <b>Show connections as more circular</b>
             &nbsp; <span className="description">ctrl + d + c</span>
 
             <EditableCheckbox
@@ -142,12 +142,12 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Animate causal connections</b>
+            <b>Animate connections</b>
             &nbsp; <span className="description">ctrl + d + a</span>
 
             <EditableCheckbox
-                value={props.animate_causal_links}
-                on_change={props.set_or_toggle_animate_causal_links}
+                value={props.animate_connections}
+                on_change={props.set_or_toggle_animate_connections}
             />
         </p>
 

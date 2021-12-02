@@ -25,7 +25,7 @@ export interface DisplayOptionsState
     time_resolution: TimeResolution
     display_by_simulated_time: boolean
     display_time_marks: boolean
-    animate_causal_links: boolean
+    animate_connections: boolean
     circular_links: boolean
     show_help_menu: boolean
     show_large_grid: boolean

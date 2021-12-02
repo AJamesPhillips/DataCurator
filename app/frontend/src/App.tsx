@@ -31,7 +31,7 @@ import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 const map_state = (state: RootState) =>
 ({
     display_side_panel: state.controls.display_side_panel,
-    animate_causal_links: state.display_options.animate_causal_links,
+    animate_connections: state.display_options.animate_connections,
     network_functional: state.sync.network_functional,
     network_function_last_checked: state.sync.network_function_last_checked,
 })
@@ -100,7 +100,7 @@ function App(props: Props)
                     component="main"
                     className={clsx(classes.content, {
                         [classes.content_with_open_side_panel]: props.display_side_panel,
-                        animate_causal_links: props.animate_causal_links,
+                        animate_connections: props.animate_connections,
                     })}
                 >
                     <MainAreaRouter />

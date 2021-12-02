@@ -46,7 +46,7 @@
 
 
 
-.animate_causal_links
+.animate_connections
 {
     .connection_type_causal_link
     {
@@ -55,6 +55,20 @@
             stroke-dasharray: 120 10;
             stroke-dashoffset: 10;
             animation: animate_dash 2s infinite linear;
+        }
+    }
+
+    .connection_type_relation_link
+    {
+        .connection_line
+        {
+            stroke-dasharray: 2 10;
+            stroke-dashoffset: 10;
+            animation: animate_dash 5s infinite linear;
+            &.hovered
+            {
+                stroke-dasharray: none;
+            }
         }
     }
 }

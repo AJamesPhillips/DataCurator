@@ -121,7 +121,7 @@ function handle_display_key_combo (key: string, store: StoreType)
     }
     else if (key === "a")
     {
-        store.dispatch(ACTIONS.display.set_or_toggle_animate_causal_links())
+        store.dispatch(ACTIONS.display.set_or_toggle_animate_connections())
     }
     else if (key === "c")
     {
