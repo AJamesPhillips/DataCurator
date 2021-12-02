@@ -104,18 +104,26 @@ export function ConnectableCanvasNode (props: OwnProps)
             >
                 {props.node_main_content}
             </CardContent>
+
+            {props.terminals.map(({ type, style, label }) =>
+            {
+                return <div
+                    className="connection_terminal"
+                    style={{ ...connection_style_common, ...style }}
+                    onPointerDown={e =>
+                    {
+                        e.stopPropagation()
+                        pointerupdown_on_connection_terminal(type, "down")
+                    }}
+                    onPointerUp={e =>
+                    {
+                        e.stopPropagation()
+                        pointerupdown_on_connection_terminal(type, "up")
+                    }}
+                >{label}</div>
+            })}
         </Card>
     {/* </Box> */}
-
-        {props.terminals.map(({ type, style, label }) =>
-        {
-            return <div
-                className="connection_terminal"
-                style={{ ...connection_style_common, ...style }}
-                onPointerDown={e => { e.stopPropagation(); pointerupdown_on_connection_terminal(type, "down") }}
-                onPointerUp={e => { e.stopPropagation(); pointerupdown_on_connection_terminal(type, "up") }}
-            >{label}</div>
-        })}
 
         {props.other_children}
     </CanvasNode>
