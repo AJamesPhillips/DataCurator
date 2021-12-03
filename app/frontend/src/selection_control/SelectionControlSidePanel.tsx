@@ -10,6 +10,7 @@ import {
     conditionally_select_interconnections,
 } from "../state/specialised_objects/meta_wcomponents/selecting/helpers"
 import { get_store } from "../state/store"
+import { FindAllCausalPaths } from "./FindAllCausalPaths"
 
 
 
@@ -83,7 +84,14 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_select_interconnections(store)}
             />
 
-            <div className="description">ctrl + s + i</div>
+            <div className="description">
+                ctrl + s + i &nbsp; &nbsp; Only selects the immediate components inbetween.  e.g. if A---B--&gt;C---D--&gt;E, the selecting selecting node A and node C followed by this command will also select connection B.  But if only node A and node E are selected, then this command will not do anything.
+            </div>
+        </p>
+
+
+        <p className="section">
+            <FindAllCausalPaths />
         </p>
     </div>
 }

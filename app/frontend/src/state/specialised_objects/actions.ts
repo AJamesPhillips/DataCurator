@@ -5,6 +5,7 @@ import { syncing_actions } from "./syncing/actions"
 import { wcomponent_actions } from "./wcomponents/actions"
 import { knowledge_view_actions } from "./knowledge_views/actions"
 import { perception_actions } from "./perceptions/actions"
+import { find_all_causal_paths_actions } from "./meta_wcomponents/find_all_causal_paths/actions"
 
 
 
@@ -15,4 +16,5 @@ export const specialised_object_actions = safe_merge(
     perception_actions,
     wcomponent_actions,
     knowledge_view_actions,
+    find_all_causal_paths_actions,
 )
