@@ -3,16 +3,12 @@ import { connect, ConnectedProps } from "react-redux"
 
 import "./ActionsListView.scss"
 import { MainArea } from "../layout/MainArea"
-import { wcomponent_has_objectives, wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type {
     PrioritisedGoalAttributes,
-    WComponentPrioritisation,
 } from "../wcomponent/interfaces/priorities"
-import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
-import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
-import { Prioritisation } from "./Prioritisation"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableAction } from "./PrioritisableAction"
 import { sort_list } from "../shared/utils/sort"
@@ -22,6 +18,7 @@ import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
+import type { Base } from "../shared/interfaces/base"
 
 
 
@@ -89,7 +86,7 @@ function _ActionsListViewContent (props: Props)
     const now = new Date().getTime()
     let actions = Array.from(action_ids).map(id => wcomponents_by_id[id])
         .filter(wcomponent_is_action)
-    actions = sort_list(actions, a => get_created_at_ms(a), "descending")
+    actions = sort_list(actions, get_modified_or_created_at, "descending")
 
     actions.forEach(action =>
     {
@@ -154,6 +151,15 @@ function _ActionsListViewContent (props: Props)
 }
 
 const ActionsListViewContent = connector(_ActionsListViewContent) as FunctionalComponent<{}>
+
+
+
+function get_modified_or_created_at (a: Base)
+{
+    if (a.modified_at) return a.modified_at.getTime()
+
+    return get_created_at_ms(a)
+}
 
 
 
