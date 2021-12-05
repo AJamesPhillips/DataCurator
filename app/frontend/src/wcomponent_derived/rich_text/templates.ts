@@ -4,7 +4,7 @@
 export const format_wcomponent_id_error = (root_url: string, id: string, error: string) => `\u2717${format_wcomponent_link(root_url, id, id)} (${error})`
 
 
-export const format_wcomponent_url = (root_url: string, id: string) => `${root_url}#wcomponents/${id}&view=knowledge`
+export const format_wcomponent_url = (root_url: string, id: string) => `${root_url}#wcomponents/${id}` //&view=knowledge`
 
 // export const format_wcomponent_url = (root_url: string, id: string, position?: CanvasPoint) => `${root_url}#wcomponents/${id}&view=knowledge${format_position(position)}`
 
