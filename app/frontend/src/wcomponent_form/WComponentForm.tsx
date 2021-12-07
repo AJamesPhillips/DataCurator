@@ -28,7 +28,7 @@ import {
     wcomponent_is_sub_state,
     wcomponent_has_objectives,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { StateValueAndPredictionsSet, wcomponent_statev2_subtypes } from "../wcomponent/interfaces/state"
+import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
@@ -62,6 +62,7 @@ import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
+import { wcomponent_statev2_subtype_options } from "./subtype_options"
 
 
 
@@ -204,7 +205,7 @@ function _WComponentForm (props: Props)
         <WComponentLatestPrediction wcomponent={wcomponent} />
 
 
-        {UI_value && (editing || UI_value.is_defined) && <span>
+        {UI_value?.is_defined && <span>
             <span className="description_label">Value</span>
             <DisplayValue UI_value={UI_value} />
         </span>}
@@ -527,4 +528,3 @@ export const WComponentForm = connector(_WComponentForm) as FunctionComponent<Ow
 
 
 const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
-const wcomponent_statev2_subtype_options = wcomponent_statev2_subtypes.map(type => ({ id: type, title: type }))
