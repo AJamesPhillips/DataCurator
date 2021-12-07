@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
+import { make_graph } from "../shared/utils/graph"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
@@ -56,13 +57,6 @@ function _FindAllCausalPaths (props: Props)
     if (!composed_kv) return <div>Loading...</div>
 
     return <div>
-        <Button
-            value="Find all causal paths inbetween"
-            fullWidth={true}
-            disabled={true}
-            onClick={() => {}}
-        />
-
         From...
         <MultiAutocompleteText
             placeholder="From..."
@@ -79,6 +73,7 @@ function _FindAllCausalPaths (props: Props)
             }}
         />}
         <br />
+        <hr />
 
         To...
         <MultiAutocompleteText
@@ -95,7 +90,36 @@ function _FindAllCausalPaths (props: Props)
                 props.set_ids({ direction: "to", ids: props.selected_wcomponent_ids_list })
             }}
         />}
+        <br />
+        <hr />
+
+        {/* <Button
+            value="Find all causal paths inbetween"
+            fullWidth={true}
+            disabled={props.from_ids.length === 0 || props.to_ids.length === 0}
+            onClick={() => {
+                const graph = build_graph(composed_kv.composed_visible_wc_id_map)
+                const all_paths = []
+                props.from_ids.forEach(from_id =>
+                {
+                    props.to_ids.forEach(to_id =>
+                    {
+                        const paths = graph.dall()
+                        paths.forEach(path => optionally_add_path(all_paths, path))
+                    })
+                })
+            }}
+        /> */}
     </div>
 }
 
 export const FindAllCausalPaths = connector(_FindAllCausalPaths) as FunctionComponent<{}>
+
+
+
+// function build_graph (composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+// {
+//     make_graph({
+//         items:
+//     })
+// }

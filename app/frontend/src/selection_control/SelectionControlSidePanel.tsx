@@ -90,8 +90,8 @@ export function SelectionControlSidePanel (props: {})
         </p>
 
 
-        <p className="section">
+        {/* <p className="section">
             <FindAllCausalPaths />
-        </p>
+        </p> */}
     </div>
 }
