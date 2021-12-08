@@ -134,6 +134,12 @@ function _WComponentForm (props: Props)
         editing, force_editable, created_at_ms, sim_ms } = props
 
 
+    if ((window as any).render_wcomponent_id_event)
+    {
+        console.timeLog((window as any).render_wcomponent_id_event, "rendering WComponentForm")
+    }
+
+
     const { ready, base_id } = props
     if (!ready) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>

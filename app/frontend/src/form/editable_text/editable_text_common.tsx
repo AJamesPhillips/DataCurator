@@ -186,6 +186,11 @@ function handle_text_field_render (args: HandleTextFieldRenderArgs)
         setTimeout(() => {
             args.el.focus()
             if (position) args.el.setSelectionRange(position[0], position[1])
+
+            if ((window as any).render_wcomponent_id_event)
+            {
+                console.timeLog((window as any).render_wcomponent_id_event, "focusing text entry")
+            }
         }, 0)
     }
 }
