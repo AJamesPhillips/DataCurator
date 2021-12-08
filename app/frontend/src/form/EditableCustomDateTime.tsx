@@ -51,6 +51,7 @@ function _EditableCustomDateTime (props: Props)
     const class_name = `editable_field ${valid ? "" : "invalid"} ${no_entry_class_name} ${not_editable ? "not_editable" : "" }`
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
 
+
     return <div className={class_name} title={title}>
         <TextField
             disabled={not_editable}
@@ -70,27 +71,33 @@ function _EditableCustomDateTime (props: Props)
 
                 r.setSelectionRange(0, r.value.length)
             }) as any}
+
+            // Can not use onKeyPress as `Escape` key is never captured & reported by this method
+            onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) =>
+            {
+                const is_enter = e.key === "Enter"
+                const is_escape = e.key === "Escape"
+
+                if (is_enter || is_escape) (e.target as any)?.blur()
+            }}
+
             onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) =>
             {
                 const valid = is_value_valid(e.currentTarget.value)
                 if (valid) e.currentTarget.classList.remove("invalid")
                 else e.currentTarget.classList.add("invalid")
             }}
+
             onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
                 const working_value = e.currentTarget.value
                 const new_value = handle_on_blur({ working_value, invariant_value })
                 on_change(new_value)
                 set_editing(false)
             }}
+
             size="small"
             variant="outlined"
             fullWidth={true}
-            // InputProps={{
-            //     endAdornment: <CalendarTodayIcon
-            //         // className={classes.open_popover_icon}
-            //         onClick={() => {}}
-            //     />
-            // }}
         />
         {editing && show_now_shortcut_button && <NowButton
             on_change={on_change}
