@@ -24,7 +24,7 @@ export function ConfirmatoryButton (props: OwnProps)
     const { tooltip_text = "" } = props
 
     return (
-        <Box display="flex" justifyContent="space-between" mb={3}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
             <ThemeProvider theme={WarningTheme}>
                 <Button
                     color="secondary"
@@ -65,6 +65,6 @@ export function ConfirmatoryButton (props: OwnProps)
                     </Tooltip>
                 </Button>
             </ThemeProvider>
-        </Box>
+        </div>
     )
 }
