@@ -259,24 +259,26 @@ function _WComponentForm (props: Props)
             />
         </FormControl>}
 
-        {/* {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) &&
-        <FormControl fullWidth={true} margin="normal">
-            <EditableTextSingleLine
-                placeholder="True..."
-                value={wcomponent.boolean_true_str || ""}
-                conditional_on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
-            />
+        {
+        // {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_true_str) &&
+        //<FormControl fullWidth={true} margin="normal">
+        //    <EditableTextSingleLine
+        //        placeholder="True..."
+        //        value={wcomponent.boolean_true_str || ""}
+        //        conditional_on_blur={boolean_true_str => upsert_wcomponent({ boolean_true_str })}
+        //    />
 
-        </FormControl>}
+        //</FormControl>}
 
-        {wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_false_str) &&
-        <FormControl fullWidth={true} margin="normal">
-           <EditableTextSingleLine
-                placeholder="False..."
-                value={wcomponent.boolean_false_str || ""}
-                conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
-            />
-        </FormControl>} */}
+        //{wcomponent_is_statev2(wcomponent) && wcomponent.subtype === "boolean" && (editing || wcomponent.boolean_false_str) &&
+        //<FormControl fullWidth={true} margin="normal">
+        //   <EditableTextSingleLine
+        //        placeholder="False..."
+        //        value={wcomponent.boolean_false_str || ""}
+        //        conditional_on_blur={boolean_false_str => upsert_wcomponent({ boolean_false_str })}
+        //    />
+        //</FormControl>}
+        }
 
         {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
             wcomponent={wcomponent}
@@ -450,19 +452,6 @@ function _WComponentForm (props: Props)
                     upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
             /><br/>
-
-            {/*
-            <MaterialDateTime
-                fullWidth={true}
-                on_change={new_custom_created_at => {
-                   upsert_wcomponent({ custom_created_at: new_custom_created_at })
-                }}
-                title="Created at"
-                type={(props.time_resolution === 'day') ? "date" : "datetime"}
-                invariant_value={wcomponent.created_at}
-                value={wcomponent.custom_created_at}
-            />
-            */}
         </FormControl>
 
         {editing && <p>
@@ -503,7 +492,6 @@ function _WComponentForm (props: Props)
 
 
         <br />
-        {/* <hr /> */}
         <br />
 
 
