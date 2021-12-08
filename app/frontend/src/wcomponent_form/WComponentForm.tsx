@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@material-ui/core"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
@@ -118,20 +118,13 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentForm (props: Props)
 {
-    const [previous_id, set_previous_id] = useState<undefined | string>(undefined)
-    const [focus_title, set_focus_title] = useState(true)
-
-    const wcomponent_id = props.wcomponent.id
-
-    useEffect(() =>
-    {
-        set_previous_id(wcomponent_id)
-        set_focus_title(true)
-    }, [wcomponent_id])
-
-
-    const { wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
+    const { wcomponent, ready, base_id,
+        wcomponents_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
         editing, force_editable, created_at_ms, sim_ms } = props
+
+    const wcomponent_id = wcomponent.id
+    // initialise as wcomponent_id to prevent a second render
+    const [previous_id, set_previous_id] = useState<string>(wcomponent_id)
 
 
     if ((window as any).render_wcomponent_id_event)
@@ -140,23 +133,29 @@ function _WComponentForm (props: Props)
     }
 
 
-    const { ready, base_id } = props
     if (!ready) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>
 
 
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets
 
-
-    if (previous_id !== wcomponent_id && previous_id !== undefined)
+    const _focus_title = useRef(true)
+    console.log(previous_id, _focus_title.current)
+    useEffect(() => set_previous_id(wcomponent_id), [wcomponent_id])
+    if (previous_id !== wcomponent_id)
     {
+        _focus_title.current = true
         // Force the form to unmount all the components and trigger any conditional_on_blur handlers to fire.
+        // The call to `set_previous_id` in the useEffect above will then trigger the form the render the
+        // new component.
+        //
         // TODO research if better way of clearing old forms.  We're using a controlled component but hooking
         // into the onBlur instead of onChange handler otherwise performance of the app is heavily degraded
         return null
     }
 
-    if (focus_title) set_focus_title(false) // we only want to focus the title once per new wcomponent form rendering
+    const focus_title = _focus_title.current
+    _focus_title.current = false
 
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
@@ -398,7 +397,7 @@ function _WComponentForm (props: Props)
                     }}
                 />}
                 {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
-                    wcomponent_id={wcomponent.id}
+                    wcomponent_id={wcomponent_id}
                     VAPs_represent={VAPs_represent}
                     existing_value_possibilities={orig_value_possibilities}
                     values_and_prediction_sets={orig_values_and_prediction_sets}

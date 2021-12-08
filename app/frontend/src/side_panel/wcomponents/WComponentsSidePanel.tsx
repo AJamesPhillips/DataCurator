@@ -76,7 +76,9 @@ function _WComponentsSidePanel (props: Props)
 
     function look_for_wcomponent_in_any_base ()
     {
-        if (!wcomponent && searching_for_unfound === undefined && id !== null)
+        if (display_type === DisplayType.render_wcomponent &&
+            id && // type guard (display_type will be no_id if id === null)
+            !wcomponent && searching_for_unfound === undefined)
         {
             (async () => {
                 let component_form_closed = false
@@ -96,7 +98,7 @@ function _WComponentsSidePanel (props: Props)
     }
 
     useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id])
-    useEffect(look_for_wcomponent_in_any_base, [display_type, searching_for_unfound, id])
+    useEffect(look_for_wcomponent_in_any_base, [display_type, wcomponent, searching_for_unfound, id])
 
 
     if (display_type === DisplayType.need_to_choose_base_id) return <div>
