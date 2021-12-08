@@ -55,10 +55,33 @@ $max_vap_height:$max_vap_fontsize * 1.75;
         }
 
         .value_and_prediction {
-            font-size:$max_vap_fontsize;
-            line-height:$max_vap_height;
-            max-height:100%;
-            min-height:0;
+            font-size: $max_vap_fontsize;
+            line-height: $max_vap_height;
+            max-height: 100%;
+            min-height: 0;
+            box-sizing: border-box;
+            position: relative;
+
+            display: flex;
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: auto;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+
+            .value_and_prediction_inner
+            {
+                background-color: initial;
+                font-size: inherit;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow-x: hidden;
+                overflow-y: visible;
+                text-overflow: ellipsis;
+                position: relative;
+                z-index: 10;
+            }
         }
     }
 }

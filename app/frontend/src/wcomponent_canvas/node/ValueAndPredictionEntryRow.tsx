@@ -45,28 +45,15 @@ export function ValueAndPredictionEntryRow (props: OwnProps)
 
     return <Box
         className={`value_and_prediction prob-${rounded_certainty_percent}`}
-        p={2} boxSizing="border-box"
-        position="relative"
+        p={2}
         bgcolor={counterfactual_VAP_set.has_any_counterfactual_applied ? "warning.main" : "primary.main"}
-        flexGrow={1} flexShrink={1} flexBasis="auto"
-        display="flex" flexDirection="row" justifyContent="center" alignItems="center"
         fontSize={`${font_size}%`}
-        lineHeight="1em"
         maxHeight={certainty_percent_str}
         minHeight={certainty_percent_str}
-        maxWidth="100%"
     >
-        <Box
-            fontSize="inherit"
-            maxWidth="100%" overflow="hidden"
-            whiteSpace="nowrap"
-            overflowX="hidden" overflowY="visible"
-            textOverflow="ellipsis"
-            position="relative"
-            zIndex={10}
-        >
+        <Box className="value_and_prediction_inner">
             {VAP_visual.value_text}
-            {show_judgements && <WComponentJudgements
+            {(true || show_judgements) && <WComponentJudgements
                 wcomponent={props.wcomponent}
                 target_VAPs_represent={VAPs_represent}
                 value={VAP_visual.parsed_value}
