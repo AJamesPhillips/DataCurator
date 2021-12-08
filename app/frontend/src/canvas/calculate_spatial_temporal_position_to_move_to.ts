@@ -39,17 +39,18 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
         let view_entry = composed_wc_id_map[initial_wcomponent_id]
         let zoom = SCALE_BY
 
-        if (!view_entry && !disable_if_not_present && wc_ids_by_type)
+
+        const { any_node } = wc_ids_by_type || {}
+        // Remove the initial_wcomponent_id as it may be selected but present in a different
+        // knowledge view
+        selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set)
+        selected_wcomponent_ids_set.delete(initial_wcomponent_id)
+
+        const ids = selected_wcomponent_ids_set.size ? selected_wcomponent_ids_set : any_node
+
+
+        if (!view_entry && !disable_if_not_present && ids?.size)
         {
-            const { any_node } = wc_ids_by_type
-
-            // Remove the initial_wcomponent_id as it may be selected but present in a different
-            // knowledge view
-            selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set)
-            selected_wcomponent_ids_set.delete(initial_wcomponent_id)
-
-            const ids = selected_wcomponent_ids_set.size ? selected_wcomponent_ids_set : any_node
-
             let min_left = Number.POSITIVE_INFINITY
             let max_left = Number.NEGATIVE_INFINITY
             let min_top = Number.POSITIVE_INFINITY
@@ -76,11 +77,9 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
             max_top += HALF_NODE_HEIGHT
 
 
-            view_entry =
-            {
-                left: (min_left + max_left) / 2,
-                top: (min_top + max_top) / 2,
-            }
+            const left = (min_left + max_left) / 2
+            const top = (min_top + max_top) / 2
+            view_entry = { left, top }
 
 
             const total_width = max_left - min_left
