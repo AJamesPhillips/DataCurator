@@ -9,6 +9,8 @@ export function DevLandingPage() {
             <ul>
                 <li><a href="/landing_page/">Landing page</a></li>
                 <li><a href="/app/">app</a></li>
+                <li><a href="/sim/">Sim</a></li>
+                <li><a href="/data/">Data</a></li>
                 <li><a href="/project_dashboard">Project dashboard</a></li>
                 <li><a href="/prob_graph">Probability graph</a></li>
                 <li><a href="/prob_badge">Probability badge</a></li>

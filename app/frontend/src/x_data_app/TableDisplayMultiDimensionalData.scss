@@ -1,0 +1,16 @@
+
+
+.multi_dimensional_data_table
+{
+    &table
+    {
+        border-collapse: collapse;
+    }
+
+    td
+    {
+        border: 1px solid #555;
+        padding: 3px 5px;
+    }
+}
+

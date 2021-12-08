@@ -43,8 +43,10 @@ interface OwnProps <E extends AutocompleteOption> extends AutocompleteProps <E> 
 
 
 
-const map_state = (state: RootState) => ({
-    presenting: state.display_options.consumption_formatting,
+// Use partial<RootState> for now as a quick hack to allow this component to be used
+// in other applications with a different interfacee for the store's state
+const map_state = (state: Partial<RootState>) => ({
+    presenting: state.display_options?.consumption_formatting,
 })
 
 

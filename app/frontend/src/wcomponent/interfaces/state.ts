@@ -18,6 +18,8 @@ export interface HasValuePossibilitiesAndVAPSets extends HasVAPSetsAndMaybeValue
     value_possibilities: ValuePossibilitiesById
 }
 
+
+export type WComponentStateV2SubType = "boolean" | "number" /*| "datetime"*/ | "other"
 export interface WComponentNodeStateV2 extends WComponentNodeBase
 {
     type: "statev2"
@@ -29,7 +31,6 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase
 }
 
 
-export type WComponentStateV2SubType = "boolean" | "number" /*| "datetime"*/ | "other"
 const _wcomponent_statev2_subtypes: {[P in WComponentStateV2SubType]: true} = {
     boolean: true,
     number: true,
@@ -37,6 +38,36 @@ const _wcomponent_statev2_subtypes: {[P in WComponentStateV2SubType]: true} = {
     other: true,
 }
 export const wcomponent_statev2_subtypes: WComponentStateV2SubType[] = Object.keys(_wcomponent_statev2_subtypes) as any
+
+
+
+export interface WComponentMultidimensionalState extends WComponentNodeBase
+{
+    type: "multidimensional_state"
+}
+export interface WComponentMultidimensionalStateData
+{
+    id: string
+    schema_version: number
+    author_id: string
+
+    data_type: WComponentStateV2SubType
+    schema_description: string
+    schema: Schema
+    dimension_data: {[dimension_name: string]: (string | number)[]}
+    data: (string | number)[]
+}
+interface Schema
+{
+    dimensions: SchemaDimension[]
+}
+interface SchemaDimension
+{
+    name: string
+    type: "string" | "number" | "boolean" | "date" | "datetime" | "space" //| "localised"
+    // title can be deprecated later and replace with a localized type object called `title_loc`
+    title: string
+}
 
 
 

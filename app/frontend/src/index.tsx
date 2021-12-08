@@ -24,6 +24,8 @@ import { SimHome } from "./x_sim_app/SimHome"
 import { setup_console_api } from "./x_console_api_app/setup_console_api"
 import { set_window_title } from "./window_title"
 import { SandboxCircularConnections } from "./scratch_pad/SandboxCircularConnections"
+import { DataApp } from "./x_data_app/DataApp"
+import { get_data_app_store } from "./x_data_app/state/get_data_app_store"
 
 
 const root = document.getElementById("root")
@@ -98,6 +100,11 @@ if (root)
     else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim")
     {
         render(<SimHome />, root)
+    }
+    else if (window.location.pathname === "/data/" || window.location.pathname === "/data")
+    {
+        const store = get_data_app_store({ load_state_from_storage: false })
+        render(<Provider store={store}><DataApp /></Provider>, root)
     }
     else
     {

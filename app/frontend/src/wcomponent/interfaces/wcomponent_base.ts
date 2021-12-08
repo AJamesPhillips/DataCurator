@@ -5,13 +5,14 @@ import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 
 
 
-export type WComponentNodeType = "event" | "statev2" | "sub_state" | "process" | "action" | "actor" | "counterfactualv2" | "goal"
+export type WComponentNodeType = "event" | "statev2" | "sub_state" | "multidimensional_state" | "process" | "action" | "actor" | "counterfactualv2" | "goal" | "judgement" | "objective" | "prioritisation"
 export type WComponentConnectionType = "causal_link" | "relation_link"
-export type WComponentType = WComponentNodeType | WComponentConnectionType | "judgement" | "objective" | "prioritisation"
+export type WComponentType = WComponentNodeType | WComponentConnectionType
 const _wcomponent_types: {[P in WComponentType]: true} = {
     event: true,
     statev2: true,
     sub_state: true,
+    multidimensional_state: true,
     process: true,
     action: true,
     actor: true,
@@ -24,6 +25,7 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     prioritisation: true,
 }
 export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()
+    .filter((type: WComponentType) => type !== "multidimensional_state")
 
 
 
