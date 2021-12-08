@@ -30,15 +30,6 @@ export function factory_on_click (args: FactoryOnPointerDownArgs)
         e.preventDefault()
 
 
-        if ((window as any).render_wcomponent_id_event)
-        {
-            console.timeEnd((window as any).render_wcomponent_id_event)
-        }
-        ;(window as any).render_wcomponent_id_event = `${id}-${new Date().getMilliseconds()}`
-        console.time((window as any).render_wcomponent_id_event)
-        console.log("Clicked ", (window as any).render_wcomponent_id_event)
-
-
         clicked_wcomponent({ id })
 
         if (shift_or_control_keys_are_down)

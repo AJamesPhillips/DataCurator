@@ -127,20 +127,14 @@ function _WComponentForm (props: Props)
     const [previous_id, set_previous_id] = useState<string>(wcomponent_id)
 
 
-    if ((window as any).render_wcomponent_id_event)
-    {
-        console.timeLog((window as any).render_wcomponent_id_event, "rendering WComponentForm")
-    }
-
-
     if (!ready) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>
 
 
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets
 
+
     const _focus_title = useRef(true)
-    console.log(previous_id, _focus_title.current)
     useEffect(() => set_previous_id(wcomponent_id), [wcomponent_id])
     if (previous_id !== wcomponent_id)
     {
@@ -153,9 +147,13 @@ function _WComponentForm (props: Props)
         // into the onBlur instead of onChange handler otherwise performance of the app is heavily degraded
         return null
     }
-
     const focus_title = _focus_title.current
     _focus_title.current = false
+
+
+    ;(window as any).render_wcomponent_id_event = `${wcomponent_id}-${new Date().getMilliseconds()}`
+    console.time((window as any).render_wcomponent_id_event)
+    console.log("rendering WComponentForm ", (window as any).render_wcomponent_id_event)
 
 
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>

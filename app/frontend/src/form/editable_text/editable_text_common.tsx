@@ -189,7 +189,8 @@ function handle_text_field_render (args: HandleTextFieldRenderArgs)
 
             if ((window as any).render_wcomponent_id_event)
             {
-                console.timeLog((window as any).render_wcomponent_id_event, "focusing text entry")
+                console.log("focused text entry")
+                console.timeEnd((window as any).render_wcomponent_id_event)
             }
         }, 0)
     }
