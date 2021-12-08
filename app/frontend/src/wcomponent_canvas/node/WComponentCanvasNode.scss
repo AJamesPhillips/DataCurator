@@ -35,19 +35,37 @@
 
 .node_validity_container, .node_state_container
 {
-    display: inline-flex;
-    border-top: thin solid #CCC;
+    display: flex;
+    overflow: hidden;
+    // border-top: thin solid #CCC;
     padding: 2px;
     width: 100%;
+    max-width: 100%;
     align-items: center;
 }
-.color_light
+.node_sub_state_container
 {
-    .node_validity_container, .node_state_container
+    display: flex;
+    max-width: 100%;
+    overflow: hidden;
+}
+.node_state_container, .node_sub_state_container
+{
+    .value_and_prediction_summary
     {
-        border-top: thin solid #555;
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow: hidden;
     }
 }
+
+// .color_light
+// {
+//     .node_validity_container, .node_state_container
+//     {
+//         border-top: thin solid #555;
+//     }
+// }
 
 
 .node_is_selected

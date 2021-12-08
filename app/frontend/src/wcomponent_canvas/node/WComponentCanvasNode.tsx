@@ -312,27 +312,29 @@ function _WComponentCanvasNode (props: Props)
                 <WComponentValidityValue wcomponent={wcomponent} />
             </div>}
 
-            {wcomponent && show_state_value && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_state_container">
+            {wcomponent && show_state_value && <div className="node_state_container">
                 {is_editing && <div className="description_label">state &nbsp;</div>}
                 <WComponentJudgements wcomponent={wcomponent} />
-                <Box flexGrow={1} flexShrink={1} overflow="hidden">
+                <div className="value_and_prediction_summary">
                     <NodeValueAndPredictionSetSummary
                         wcomponent={wcomponent}
                         created_at_ms={created_at_ms}
                         sim_ms={sim_ms}
                     />
-                </Box>
-            </Box>}
+                </div>
+            </div>}
 
-            {sub_state_wcomponent && <Box display="flex" maxWidth="100%" overflow="hidden" className="node_sub_state_container">
-                <Box flexGrow={1} flexShrink={1} overflow="hidden">
+            {sub_state_wcomponent && <div className="node_sub_state_container">
+                {// todo call this class something different from "value_and_prediction_summary"
+                }
+                <div className="value_and_prediction_summary">
                     <NodeSubStateSummary
                         wcomponent={sub_state_wcomponent}
                         created_at_ms={created_at_ms}
                         sim_ms={sim_ms}
                     />
-                </Box>
-            </Box>}
+                </div>
+            </div>}
 
             {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
 

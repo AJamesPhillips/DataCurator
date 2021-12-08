@@ -204,7 +204,7 @@ function prepare_new_item (base_id: number, creation_context: CreationContextSta
         id: get_new_prediction_id(),
         ...created_ats,
         base_id,
-        datetime: { min: custom_now },
+        datetime: { value: custom_now },
         explanation: "",
         probability: 1,
         conviction: 1,

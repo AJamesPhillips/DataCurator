@@ -78,15 +78,17 @@ function _ActionsListViewContent (props: Props)
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
     if (action_ids === undefined) return <div>No actions</div> // type guard
 
-    const actions_icebox: WComponentNodeAction[] = []
-    const actions_todo: WComponentNodeAction[] = []
-    const actions_in_progress: WComponentNodeAction[] = []
-    const actions_done_or_rejected: WComponentNodeAction[] = []
 
     const now = new Date().getTime()
     let actions = Array.from(action_ids).map(id => wcomponents_by_id[id])
         .filter(wcomponent_is_action)
     actions = sort_list(actions, get_modified_or_created_at, "descending")
+
+
+    const actions_icebox: WComponentNodeAction[] = []
+    const actions_todo: WComponentNodeAction[] = []
+    const actions_in_progress: WComponentNodeAction[] = []
+    const actions_done_or_rejected: WComponentNodeAction[] = []
 
     actions.forEach(action =>
     {

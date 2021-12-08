@@ -176,7 +176,7 @@ function _WComponentForm (props: Props)
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
-    return <Box className={`editable-${wcomponent_id}`}>
+    return <Box>
         {props.wcomponent_from_different_base && <div
             style={{ cursor: "pointer" }}
             onClick={() => props.update_chosen_base_id({ base_id: props.wcomponent.base_id })}
