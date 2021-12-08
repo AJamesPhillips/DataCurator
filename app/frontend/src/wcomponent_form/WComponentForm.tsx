@@ -151,11 +151,6 @@ function _WComponentForm (props: Props)
     _focus_title.current = false
 
 
-    ;(window as any).render_wcomponent_id_event = `${wcomponent_id}-${new Date().getMilliseconds()}`
-    console.time((window as any).render_wcomponent_id_event)
-    console.log("rendering WComponentForm ", (window as any).render_wcomponent_id_event)
-
-
     const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
         if (props.wcomponent_from_different_base) return
