@@ -1,3 +1,4 @@
+import { get_starting_state } from "./starting_state"
 import type { DataAppRootState } from "./State"
 
 
@@ -7,9 +8,8 @@ export function load_local_data (): DataAppRootState
     const data = localStorage.getItem("x_data_app") || "{}"
 
     return {
-        multidimensional_states: [],
-        multidimensional_state_datas: [],
-        ...JSON.parse(data)
+        ...get_starting_state(false),
+        ...JSON.parse(data),
     }
 }
 
