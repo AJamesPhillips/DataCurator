@@ -43,30 +43,31 @@ export function ValueAndPredictionEntryRow (props: OwnProps)
     }
     const cf_entries = VAP_id_to_counterfactuals_info_map[VAP_visual.VAP_id] || []
 
-    return <Box
-        className={`value_and_prediction prob-${rounded_certainty_percent}`}
-        p={2}
-        bgcolor={counterfactual_VAP_set.has_any_counterfactual_applied ? "warning.main" : "primary.main"}
-        fontSize={`${font_size}%`}
-        maxHeight={certainty_percent_str}
-        minHeight={certainty_percent_str}
+    const warning_color = counterfactual_VAP_set.has_any_counterfactual_applied ? "warning_color" : ""
+
+    return <div
+        className={`value_and_prediction prob-${rounded_certainty_percent} ${warning_color}`}
+        // p={2}
+        // bgcolor={counterfactual_VAP_set.has_any_counterfactual_applied ? "warning.main" : "primary.main"}
+        style={{
+            fontSize: `${font_size}%`,
+            maxHeight: certainty_percent_str,
+            minHeight: certainty_percent_str,
+        }}
     >
-        <Box className="value_and_prediction_inner">
-            {VAP_visual.value_text}
-            {(true || show_judgements) && <WComponentJudgements
-                wcomponent={props.wcomponent}
-                target_VAPs_represent={VAPs_represent}
-                value={VAP_visual.parsed_value}
-            />}
+        {VAP_visual.value_text}
+        {show_judgements && <WComponentJudgements
+            wcomponent={props.wcomponent}
+            target_VAPs_represent={VAPs_represent}
+            value={VAP_visual.parsed_value}
+        />}
 
-            {cf_entries.map(entry => <CounterfactualLink
-                any_active={counterfactual_VAP_set.has_any_counterfactual_applied}
-                counterfactual={entry}
-                active_counterfactual_v2_id={counterfactual_VAP_set.active_counterfactual_v2_id}
-            />)}
-
-        </Box>
-    </Box>
+        {cf_entries.map(entry => <CounterfactualLink
+            any_active={counterfactual_VAP_set.has_any_counterfactual_applied}
+            counterfactual={entry}
+            active_counterfactual_v2_id={counterfactual_VAP_set.active_counterfactual_v2_id}
+        />)}
+    </div>
 }
 
 

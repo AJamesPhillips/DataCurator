@@ -8,19 +8,37 @@
     transition-timing-function:linear;
 }
 
-$max_elements: 6;
 $max_vap_fontsize:1em;
 $max_vap_height:$max_vap_fontsize * 1.75;
 
+// todo merge with value_and_prediction_summary ?
 .value_and_prediction_set_summary {
     @include vap_transition();
-    min-height:100%;
     font-size:$max_vap_fontsize;
+    display: flex;
 
     .value_and_prediction {
         @include vap_transition();
-        max-height:$max_vap_height;
+        max-height: $max_vap_height;
+        min-height: 0;
+        font-size: $max_vap_fontsize;
+        line-height: $max_vap_height;
+        max-width: 100%;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 10;
+
+        white-space: nowrap;
         overflow: hidden;
+        text-overflow: ellipsis;
+
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
 
         &.prob-0
         {
@@ -34,54 +52,30 @@ $max_vap_height:$max_vap_fontsize * 1.75;
         }
     }
 
-    @for $i from 2 through $max_elements {
-        &.visible-#{$i} {
-            min-height:$max_vap_height * $i;
+    .value_and_prediction:nth-child(even)
+    {
+        background-color: rgb(230, 230, 230);
+        &.warning_color
+        {
+            background-color: rgb(253, 170, 119);
+        }
+    }
+    .value_and_prediction:nth-child(odd)
+    {
+        background-color: rgb(240, 240, 240);
+        &.warning_color
+        {
+            background-color: rgb(255, 181, 136);
         }
     }
 
-    @for $i from 1 through $max_elements {
-        .value_and_prediction:nth-child(#{$i}):before {
-            background-color: rgba(255, 255, 255, math.div($max-elements - $i - 1, $max-elements));
-        }
-    }
+
     &:hover {
-        display:flex;
-        @for $i from 1 through $max_elements {
-            &.items-#{$i} {
-
-                max-height:$max_vap_height * ($i);
-            }
-        }
-
         .value_and_prediction {
-            font-size: $max_vap_fontsize;
-            line-height: $max_vap_height;
-            max-height: 100%;
-            min-height: 0;
-            box-sizing: border-box;
-            position: relative;
-
-            display: flex;
-            flex-grow: 1;
-            flex-shrink: 1;
-            flex-basis: auto;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-
-            .value_and_prediction_inner
-            {
-                background-color: initial;
-                font-size: inherit;
-                max-width: 100%;
-                white-space: nowrap;
-                overflow-x: hidden;
-                overflow-y: visible;
-                text-overflow: ellipsis;
-                position: relative;
-                z-index: 10;
-            }
+            max-height: initial !important;
+            min-height: initial !important;
+            font-size: inherit !important;
+            overflow: visible;
         }
     }
 }
