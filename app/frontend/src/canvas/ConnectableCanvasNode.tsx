@@ -32,6 +32,10 @@ interface OwnProps
     on_pointer_leave?: () => void
     terminals: Terminal[]
     pointerupdown_on_connection_terminal?: (type: ConnectionTerminalType, up_down: "up" | "down") => void
+    draggable?: boolean
+    onDragStart?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
+    onDrag?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
+    onDragEnd?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
     extra_args?: h.JSX.HTMLAttributes<HTMLDivElement>
 }
 
@@ -79,6 +83,10 @@ export function ConnectableCanvasNode (props: OwnProps)
         on_click={props.on_click}
         on_pointer_enter={props.on_pointer_enter}
         on_pointer_leave={props.on_pointer_leave}
+        draggable={props.draggable}
+        onDragStart={props.onDragStart}
+        onDrag={props.onDrag}
+        onDragEnd={props.onDragEnd}
         extra_css_class={extra_css_class}
         extra_styles={extra_node_styles}
         extra_args={props.extra_args}

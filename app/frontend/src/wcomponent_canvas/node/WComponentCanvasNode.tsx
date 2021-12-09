@@ -356,29 +356,29 @@ function _WComponentCanvasNode (props: Props)
         on_pointer_down={on_pointer_down}
         on_pointer_up={on_pointer_up}
         pointerupdown_on_connection_terminal={pointerupdown_on_connection_terminal}
-        extra_args={{
-            draggable: node_is_draggable,
-            onDragStart: e =>
-            {
-                props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: selected_wcomponent_ids_set })
-                // pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", wcomponent_ids_to_move)
 
-                // Prevent green circle with white cross "copy / add" cursor icon
-                // https://stackoverflow.com/a/56699962/539490
-                e.dataTransfer!.dropEffect = "move"
-            },
+        draggable={node_is_draggable}
+        onDragStart={e =>
+        {
+            props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: selected_wcomponent_ids_set })
+            // pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", wcomponent_ids_to_move)
 
-            onDrag: e =>
-            {
-                const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
-                pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position)
-            },
-
-            onDragEnd: e => {
-                pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
-                set_node_is_draggable(false)
-            }
+            // Prevent green circle with white cross "copy / add" cursor icon
+            // https://stackoverflow.com/a/56699962/539490
+            e.dataTransfer!.dropEffect = "move"
         }}
+
+        onDrag={e =>
+        {
+            const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
+            pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position)
+        }}
+
+        onDragEnd={e => {
+            pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
+            set_node_is_draggable(false)
+        }}
+
         other_children={children}
     />
 }
@@ -488,8 +488,11 @@ function calculate_new_node_relative_position_from_drag (e: h.JSX.TargetedDragEv
     const node_size_fudge = kv_entry_size ?? 1
     // Note that e.offsetY and e.offsetX do NOT take into account the position the user's cursor was
     // relative to the move icon when it was clicked.  However the drag annimation provided by the browser
-    // does so that means the position will usually be wrong in one or both dimensions.
+    // does so that means the position will usually be wrong in one or likely both dimensions.
     // TODO find a value which does reflect where the user pressed down on the move icon
+
+    // In Firefox, e.offsetX and e.offsetY are very negative numbers and do not change despite dragging
+
     const top = (e.offsetY * node_size_fudge) + top_fudge
     const left = (e.offsetX * node_size_fudge) + left_fudge
     // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);

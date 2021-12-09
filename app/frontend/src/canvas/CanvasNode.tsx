@@ -16,6 +16,10 @@ interface CanvasNodeProps
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_pointer_up?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_click?: (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => void
+    draggable?: boolean
+    onDragStart?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
+    onDrag?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
+    onDragEnd?: h.JSX.DragEventHandler<HTMLDivElement> | undefined
     extra_args?: h.JSX.HTMLAttributes<HTMLDivElement>
 }
 
@@ -40,7 +44,7 @@ export class CanvasNode extends Component<CanvasNodeProps>
         const css_class_names = `node ${mouseable} ${extra_css_class || ""}`
 
         return <div
-            {...(this.props.extra_args || {})}
+            {...this.props.extra_args}
             className={css_class_names}
             style={style_outer}
             title={title}
@@ -56,6 +60,10 @@ export class CanvasNode extends Component<CanvasNodeProps>
                 // TODO make this conditional on trying to select multiple nodes
                 e.preventDefault()
             }}
+            draggable={this.props.draggable}
+            onDragStart={this.props.onDragStart}
+            onDrag={this.props.onDrag}
+            onDragEnd={this.props.onDragEnd}
         >
             {children}
         </div>
