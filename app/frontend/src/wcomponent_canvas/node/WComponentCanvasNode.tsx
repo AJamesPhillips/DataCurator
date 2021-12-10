@@ -202,7 +202,7 @@ function _WComponentCanvasNode (props: Props)
                 }
                 set_node_is_draggable(true)
             }}
-            wcomponent_id={wcomponent.id}
+            wcomponent_id={id}
             wcomponent_current_kv_entry={kv_entry}
             is_highlighted={is_highlighted}
         />

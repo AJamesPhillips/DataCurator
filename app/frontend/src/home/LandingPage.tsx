@@ -42,13 +42,26 @@ export function LandingPage() {
 
                     <h3>What is <strong>Data Curator</strong>?</h3>
                     <p>
-                        DataCurator enables you to map complex systems, then plan, communicate and navigate successful interventions in them for the benefit of all lives.
+                        DataCurator enables you to map and understand complex systems before helping you plan, communicate and navigate successful interventions in them.
                     </p>
                     <p>
                         DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present.
                     </p>
                     <p>
                         This is a <a href="https://centerofci.org/projects/datacurator/">CCI project</a> supported by our generous funders.
+                    </p>
+
+                    <a href="/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12">
+                        <img src="/image_1.png" style={{ maxWidth: "100%" }} />
+                    </a>
+                    <div>
+                        Example screenshot of the <a href="/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12">Foresight Obesity model in DataCurator</a>
+                    </div>
+
+                    <p style={{ textAlign: "center" }}>
+                        <a href="https://centerofci.org/about/">
+                            <img src="/cci_logo.svg" style={{ width: 120, marginTop: 40 }} />
+                        </a>
                     </p>
                 </Box>
                 <Box component="footer">
