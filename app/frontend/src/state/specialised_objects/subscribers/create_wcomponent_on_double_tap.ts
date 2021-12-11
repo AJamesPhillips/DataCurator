@@ -1,17 +1,15 @@
-import type { Store } from "redux"
+import type { CanvasPointerEvent } from "../../../canvas/interfaces"
 import { offset_by_half_node, position_to_point, round_canvas_point } from "../../../canvas/position_utils"
-
-import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
-import type { CanvasPointerEvent } from "../../canvas/pub_sub"
 import { pub_sub } from "../../pub_sub/pub_sub"
-import type { RootState } from "../../State"
+import type { StoreType } from "../../store"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_current_knowledge_view_from_state } from "../accessors"
 import type { AddToKnowledgeViewArgs } from "../wcomponents/actions"
+import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 
 
 
-export function create_wcomponent_on_double_tap (store: Store<RootState>)
+export function create_wcomponent_on_double_tap (store: StoreType)
 {
     pub_sub.canvas.sub("canvas_double_tap", (double_tap: CanvasPointerEvent) =>
     {

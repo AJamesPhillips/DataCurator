@@ -11,6 +11,7 @@ import { grid_small_step, h_step, v_step } from "./position_utils"
 import { bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
 import { SelectionBox } from "./SelectionBox"
 import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
+import { client_to_canvas, client_to_canvas_x, client_to_canvas_y } from "./canvas_utils"
 
 
 
@@ -31,10 +32,8 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => {
-    const zoom = state.routing.args.zoom
+    const { x, y, zoom } = state.routing.args
     const scale = zoom / SCALE_BY
-    const x = state.routing.args.x
-    const y = state.routing.args.y
     const shift_key_down = state.global_keys.keys_down.has("Shift")
     const control_key_down = state.global_keys.keys_down.has("Control")
 
@@ -122,15 +121,9 @@ class _Canvas extends Component<Props, State>
 
 
     // zoom aware values
-    client_to_canvas = (client_xy: number) => client_xy * (SCALE_BY / this.props.zoom)
-    client_to_canvas_x = (client_x: number) =>
-    {
-        return this.props.x + this.client_to_canvas(client_x)
-    }
-    client_to_canvas_y = (client_y: number) =>
-    {
-        return this.props.y - this.client_to_canvas(client_y)
-    }
+    client_to_canvas = (client_xy: number) => client_to_canvas(this.props.zoom, client_xy)
+    client_to_canvas_x = (client_x: number) => client_to_canvas_x(this.props.x, this.props.zoom, client_x)
+    client_to_canvas_y = (client_y: number) => client_to_canvas_y(this.props.y, this.props.zoom, client_y)
 
 
     on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
@@ -209,10 +202,10 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_move = (e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
-        // pub_sub.canvas.pub("debug_canvas_move", {
-        //     x: this.client_to_canvas_x(e.offsetX),
-        //     y: this.client_to_canvas_y(e.offsetY),
-        // })
+        pub_sub.canvas.pub("canvas_move", {
+            x: this.client_to_canvas_x(e.offsetX),
+            y: this.client_to_canvas_y(e.offsetY),
+        })
 
         if (!this.state.pointer_state.down) return
 

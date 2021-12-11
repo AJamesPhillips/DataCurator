@@ -1,8 +1,7 @@
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
-import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, makeStyles } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core"
 
 import "./WComponentCanvasNode.scss"
 import {
@@ -15,18 +14,13 @@ import {
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_has_objectives,
     wcomponent_has_validity_predictions,
-    wcomponent_is_action,
-    wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_statev2,
     wcomponent_is_sub_state,
     wcomponent_should_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
-import type { CanvasPoint } from "../../canvas/interfaces"
-import { round_canvas_point } from "../../canvas/position_utils"
-import { SCALE_BY } from "../../canvas/zoom_utils"
+import type { CanvasPoint, CanvasPointerEvent, Position } from "../../canvas/interfaces"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
@@ -40,7 +34,6 @@ import {
     get_current_temporal_value_certainty_from_wcomponent,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
-import { get_store } from "../../state/store"
 import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
 import { WComponentJudgements } from "./WComponentJudgements"
@@ -50,8 +43,12 @@ import { Handles } from "./Handles"
 import { NodeSubStateSummary } from "./NodeSubStateSummary"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
+import {
+    start_moving_wcomponents,
+} from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
+import { useEffect, useState } from "preact/hooks"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
 
 
 
@@ -60,7 +57,6 @@ interface OwnProps
     id: string
     is_movable?: boolean
     always_show?: boolean
-    drag_relative_position?: CanvasPoint | undefined
 }
 
 
@@ -99,7 +95,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         certainty_formatting: state.display_options.derived_certainty_formatting,
         focused_mode: state.display_options.focused_mode,
         have_judgements,
-        wcomponent_ids_to_move_set: state.meta_wcomponents.wcomponent_ids_to_move_set,
+        node_is_moving: state.meta_wcomponents.wcomponent_ids_to_move_set.has(wcomponent_id),
         display_time_marks: state.display_options.display_time_marks,
         connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
     }
@@ -124,7 +120,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentCanvasNode (props: Props)
 {
-    const [node_is_draggable, set_node_is_draggable] = useState(false)
+    // const [node_is_draggable, set_node_is_draggable] = useState(false)
 
     const {
         id,
@@ -147,13 +143,30 @@ function _WComponentCanvasNode (props: Props)
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
     const kv_entry = kv_entry_maybe || { left: 0, top: 0 }
-    let temporary_drag_kv_entry: KnowledgeViewWComponentEntry | undefined = undefined
-    if (props.drag_relative_position)
+
+
+    const [temporary_drag_kv_entry, set_temporary_drag_kv_entry] = useState<KnowledgeViewWComponentEntry | undefined>(undefined)
+    useEffect(() =>
     {
-        temporary_drag_kv_entry = { ...kv_entry }
-        temporary_drag_kv_entry.left += props.drag_relative_position.left
-        temporary_drag_kv_entry.top += props.drag_relative_position.top
-    }
+        if (!props.node_is_moving) return
+
+        const unsubscribe = pub_sub.canvas.sub("throttled_canvas_node_drag_relative_position", drag_relative_position =>
+        {
+            if (!drag_relative_position)
+            {
+                set_temporary_drag_kv_entry(undefined)
+                unsubscribe()
+                return
+            }
+
+            const temp_drag_kv_entry = { ...kv_entry }
+            temp_drag_kv_entry.left += drag_relative_position.left
+            temp_drag_kv_entry.top += drag_relative_position.top
+            set_temporary_drag_kv_entry(temp_drag_kv_entry)
+        })
+
+        return unsubscribe
+    }, [props.node_is_moving])
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
@@ -176,10 +189,7 @@ function _WComponentCanvasNode (props: Props)
         focused_mode: props.focused_mode,
     })
 
-    const node_is_moving = props.wcomponent_ids_to_move_set.has(id)
-    const opacity = props.drag_relative_position ? 0.3
-        : node_is_moving ? 0 : validity_opacity
-
+    const opacity = props.node_is_moving ? 0.3 : validity_opacity
 
     const on_click = factory_on_click({
         wcomponent_id: id,
@@ -191,16 +201,19 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const children: h.JSX.Element[] = !wcomponent ? [] : [
+    const children: h.JSX.Element[] = (!wcomponent || props.node_is_moving) ? [] : [
         <Handles
             show_move_handle={is_movable && is_editing && is_highlighted}
-            user_requested_node_move={() =>
+            user_requested_node_move={(position: Position) =>
             {
-                if (!selected_wcomponent_ids_set.has(id))
+                let wcomponent_ids_to_move = selected_wcomponent_ids_set
+                if (!wcomponent_ids_to_move.has(id))
                 {
+                    wcomponent_ids_to_move = new Set([id])
+                    // Deselects the other components and selects only this component
                     props.clicked_wcomponent({ id })
                 }
-                set_node_is_draggable(true)
+                start_moving_wcomponents(wcomponent_ids_to_move, position)
             }}
             wcomponent_id={id}
             wcomponent_current_kv_entry={kv_entry}
@@ -235,8 +248,7 @@ function _WComponentCanvasNode (props: Props)
     const extra_css_class = (
         ` wcomponent_canvas_node `
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
-        + (node_is_moving ? " node_is_moving " : "")
-        + (temporary_drag_kv_entry ? " node_is_temporary_dragged_representation " : "")
+        + (props.node_is_moving ? " node_is_moving " : "")
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
@@ -356,29 +368,6 @@ function _WComponentCanvasNode (props: Props)
         on_pointer_down={on_pointer_down}
         on_pointer_up={on_pointer_up}
         pointerupdown_on_connection_terminal={pointerupdown_on_connection_terminal}
-
-        draggable={node_is_draggable}
-        onDragStart={e =>
-        {
-            props.set_wcomponent_ids_to_move({ wcomponent_ids_to_move: selected_wcomponent_ids_set })
-            // pub_sub.canvas.pub("canvas_node_drag_wcomponent_ids", wcomponent_ids_to_move)
-
-            // Prevent green circle with white cross "copy / add" cursor icon
-            // https://stackoverflow.com/a/56699962/539490
-            e.dataTransfer!.dropEffect = "move"
-        }}
-
-        onDrag={e =>
-        {
-            const new_relative_position = calculate_new_node_relative_position_from_drag(e, kv_entry.s)
-            pub_sub.canvas.pub("canvas_node_drag_relative_position", new_relative_position)
-        }}
-
-        onDragEnd={e => {
-            pub_sub.canvas.pub("canvas_node_drag_relative_position", undefined)
-            set_node_is_draggable(false)
-        }}
-
         other_children={children}
     />
 }
@@ -475,48 +464,4 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     }
 
     return { background, font }
-}
-
-
-
-function calculate_new_node_relative_position_from_drag (e: h.JSX.TargetedDragEvent<HTMLDivElement>, kv_entry_size?: number)
-{
-    const scale = get_scale()
-    const top_fudge = -18 * (scale / 2)
-    const left_fudge = 8 / (scale / 2)
-    // maybe explore using e.currentTarget.offsetLeft?
-    const node_size_fudge = kv_entry_size ?? 1
-    // Note that e.offsetY and e.offsetX do NOT take into account the position the user's cursor was
-    // relative to the move icon when it was clicked.  However the drag annimation provided by the browser
-    // does so that means the position will usually be wrong in one or likely both dimensions.
-    // TODO find a value which does reflect where the user pressed down on the move icon
-
-    // In Firefox, e.offsetX and e.offsetY are very negative numbers and do not change despite dragging
-
-    const top = (e.offsetY * node_size_fudge) + top_fudge
-    const left = (e.offsetX * node_size_fudge) + left_fudge
-    // console .log(`${kv_entry.top} ${e.offsetY} ${e.y}  =  ${top}`);
-    // console .log(`${kv_entry.left} ${e.offsetX} ${e.x} =  ${left}`);
-    const new_relative_position = round_canvas_point({ top, left })
-    return new_relative_position
-}
-
-
-
-function get_scale ()
-{
-    const store = get_store()
-    const zoom = store.getState().routing.args.zoom
-    return zoom / SCALE_BY
-}
-
-
-
-function calculate_new_position (kv_entry: KnowledgeViewWComponentEntry, new_relative_position: CanvasPoint)
-{
-    return {
-        ...kv_entry,
-        left: kv_entry.left + new_relative_position.left,
-        top: kv_entry.top + new_relative_position.top,
-    }
 }

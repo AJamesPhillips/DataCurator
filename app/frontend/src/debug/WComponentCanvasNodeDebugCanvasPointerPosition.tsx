@@ -15,7 +15,7 @@ export function WComponentCanvasNodeDebugCanvasPointerPosition ()
 
     useEffect(() =>
     {
-        const unsubscribe = pub_sub.canvas.sub("debug_canvas_move", point =>
+        const unsubscribe = pub_sub.canvas.sub("canvas_move", point =>
         {
             const position = position_from_canvas_pointer_event(point)
             set_position(position)

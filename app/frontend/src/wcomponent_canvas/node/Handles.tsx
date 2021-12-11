@@ -3,6 +3,9 @@ import { h } from "preact"
 import "./Handles.scss"
 import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
 import { OverlappingNodesHandle } from "./OverlappingNodesHandle"
+import type { Position } from "../../canvas/interfaces"
+import { get_store } from "../../state/store"
+import { client_to_canvas_x, client_to_canvas_y } from "../../canvas/canvas_utils"
 
 
 
@@ -30,7 +33,7 @@ export function Handles (props: HandlesProps)
 interface HandleForMovingProps
 {
     show_move_handle: boolean
-    user_requested_node_move: () => void
+    user_requested_node_move: (position: Position) => void
 }
 function HandleForMoving (props: HandleForMovingProps)
 {
@@ -44,11 +47,26 @@ function HandleForMoving (props: HandleForMovingProps)
     const handle_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
         e.stopPropagation() // stop propagation otherwise ConnectionNode will become deselected / selected
-        user_requested_node_move()
+        const position: Position = canvas_pointer_event_to_position(e)
+
+        user_requested_node_move(position)
     }
 
     return <div
         className="node_handle movement"
         onPointerDown={handle_pointer_down}
     >&#10021;</div>
+}
+
+
+
+function canvas_pointer_event_to_position (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>): Position
+{
+    const state = get_store().getState()
+    const { x, y, zoom } = state.routing.args
+
+    return {
+        x: client_to_canvas_x(x, zoom, e.clientX),
+        y: client_to_canvas_y(y, zoom, e.clientY),
+    }
 }

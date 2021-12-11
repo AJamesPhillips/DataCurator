@@ -1,6 +1,5 @@
 import { h } from "preact"
 
-import { bounded } from "../../shared/utils/bounded"
 import { rads } from "../../utils/angles"
 import type { Position } from "../interfaces"
 import { add_vec, to_vec } from "./utils"

@@ -1,14 +1,7 @@
-import type { CanvasPoint } from "../../canvas/interfaces"
+import type { CanvasPoint, CanvasPointerEvent } from "../../canvas/interfaces"
 import { min_throttle } from "../../utils/throttle"
 import { pub_sub_factory } from "../pub_sub/pub_sub_factory"
 
-
-
-export interface CanvasPointerEvent
-{
-    x: number
-    y: number
-}
 
 
 export interface CanvasAreaSelectEvent
@@ -29,7 +22,7 @@ interface CanvasMsgMap
     canvas_area_select: CanvasAreaSelectEvent
     canvas_node_drag_relative_position: CanvasPoint | undefined
     throttled_canvas_node_drag_relative_position: CanvasPoint | undefined
-    debug_canvas_move: CanvasPointerEvent
+    canvas_move: CanvasPointerEvent
 }
 
 

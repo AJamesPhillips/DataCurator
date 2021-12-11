@@ -1,7 +1,6 @@
 import type { Store } from "redux"
 
 import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
-import type { CanvasPointerEvent } from "../../canvas/pub_sub"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"
 import { get_current_knowledge_view_from_state } from "../accessors"
@@ -11,7 +10,7 @@ import type { AddToKnowledgeViewArgs } from "../wcomponents/actions"
 
 export function create_wcomponent_on_keyboard (store: Store<RootState>)
 {
-    // pub_sub.global_keys.sub("nn", (double_tap: CanvasPointerEvent) =>
+    // pub_sub.global_keys.sub("nn", (double_tap: Pointer) =>
     // {
     //     const state = store.getState()
 

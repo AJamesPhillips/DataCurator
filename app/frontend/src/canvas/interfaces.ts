@@ -1,4 +1,9 @@
 
+export interface CanvasPointerEvent
+{
+    x: number
+    y: number
+}
 export interface CanvasPoint
 {
     left: number

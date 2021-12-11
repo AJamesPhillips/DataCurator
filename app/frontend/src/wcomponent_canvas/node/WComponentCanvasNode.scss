@@ -1,28 +1,27 @@
 .wcomponent_canvas_node.connectable_canvas_node.node
 {
     transition: left 0.5s linear, top 0.5s linear;
-}
-.wcomponent_canvas_node.connectable_canvas_node.node.node_is_moving
-{
-    transition: left 0s, top 0s;
-}
-.wcomponent_canvas_node.connectable_canvas_node.node.node_is_temporary_dragged_representation
-{
-    z-index: 100;
-    transition: left 0.01s, top 0.01s;
+
+    &.node_is_moving
+    {
+        z-index: 100;
+        transition: left 0.01s, top 0.01s;
+        pointer-events: none;
+    }
+
+    .node_main_content
+    {
+        height: initial;
+        min-height: 80px;
+        text-align: center;
+        text-overflow: initial;
+        white-space: initial;
+        overflow: initial;
+        /* Attempt to allow opacity to transition smoothly */
+        transition: background-color 0.5s, color 0.5s, box-shadow 0.2s, opacity 0.2s;
+    }
 }
 
-.wcomponent_canvas_node.connectable_canvas_node.node .node_main_content
-{
-    height: initial;
-    min-height: 80px;
-    text-align: center;
-    text-overflow: initial;
-    white-space: initial;
-    overflow: initial;
-    /* Attempt to allow opacity to transition smoothly */
-    transition: background-color 0.5s, color 0.5s, box-shadow 0.2s, opacity 0.2s;
-}
 
 
 .node_title

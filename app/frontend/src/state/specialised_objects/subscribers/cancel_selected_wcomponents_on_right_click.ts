@@ -1,7 +1,7 @@
 import type { Store } from "redux"
 
+import type { CanvasPointerEvent } from "../../../canvas/interfaces"
 import { ACTIONS } from "../../actions"
-import type { CanvasPointerEvent } from "../../canvas/pub_sub"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"
 
