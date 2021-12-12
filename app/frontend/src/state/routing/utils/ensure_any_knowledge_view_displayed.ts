@@ -63,5 +63,8 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
         disable_if_not_present: false,
     })
 
-    return { ...pos.position, created_at_ms: pos.go_to_datetime_ms }
+    return {
+        ...pos.positions[0], // may be undefined
+        created_at_ms: pos.go_to_datetime_ms,
+    }
 }

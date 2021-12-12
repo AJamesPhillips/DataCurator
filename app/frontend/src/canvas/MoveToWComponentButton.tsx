@@ -76,7 +76,7 @@ function _MoveToWComponentButton (props: Props)
     } = props
 
 
-    const { position, go_to_datetime_ms } = useMemo(() =>
+    const { positions, go_to_datetime_ms } = useMemo(() =>
         calculate_spatial_temporal_position_to_move_to({
             current_composed_knowledge_view,
             wcomponents_by_id,
@@ -94,9 +94,19 @@ function _MoveToWComponentButton (props: Props)
         disable_if_not_present,
     ])
 
-    const move = !position ? undefined : () => props.move(go_to_datetime_ms, position)
 
-    const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && position && !components_on_screen
+    let next_position_index = 0
+    const move = positions.length === 0
+        ? undefined
+        : () =>
+        {
+            let position = positions[next_position_index++]
+            if (next_position_index >= positions.length) next_position_index = 0
+            props.move(go_to_datetime_ms, position)
+        }
+
+
+    const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen
 
 
     return <MoveToItemButton

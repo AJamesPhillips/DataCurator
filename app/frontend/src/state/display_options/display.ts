@@ -14,12 +14,12 @@ export const TOP_HEADER_FUDGE = 48
 const bottom_controls_fudge = (display_time_sliders: boolean) => display_time_sliders ? 215 : 57
 const side_panel_fudge = (display_side_panel: boolean) => display_side_panel ? 440 : 0
 
-export const screen_width = (display_side_panel: boolean) => document.body.clientWidth - side_panel_fudge(display_side_panel)
-const screen_height = () => document.body.clientHeight
-export const visible_screen_height = (display_time_sliders: boolean) => screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(display_time_sliders)
+export const get_screen_width = (display_side_panel: boolean) => document.body.clientWidth - side_panel_fudge(display_side_panel)
+const get_screen_height = () => document.body.clientHeight
+export const get_visible_screen_height = (display_time_sliders: boolean) => get_screen_height() - TOP_HEADER_FUDGE - bottom_controls_fudge(display_time_sliders)
 
-const half_screen_width = (display_side_panel: boolean) => screen_width(display_side_panel) / 2
-const half_screen_height = () => screen_height() / 2
+const half_screen_width = (display_side_panel: boolean) => get_screen_width(display_side_panel) / 2
+const half_screen_height = () => get_screen_height() / 2
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }, display_side_panel: boolean): { x: number, y: number }
 {
     const x = round_number(args.x + (half_screen_width(display_side_panel) * (SCALE_BY / args.zoom)), h_step)
@@ -50,8 +50,8 @@ export function get_middle_of_screen (state: RootState)
 // the canvas to the component's position.  If `middle` is `false` then the component will be in the top
 // left of the screen.  If `middle` is `true` then when the canvas updates and moves, then the component
 // should be presented in the middle of the screen.
-export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined, middle?: boolean): PositionAndZoom | undefined
 export function lefttop_to_xy (position: ContentCoordinate, middle?: boolean): PositionAndZoom
+export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined, middle?: boolean): PositionAndZoom | undefined
 export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined, middle?: boolean): PositionAndZoom | undefined
 {
     if (!position) return undefined
