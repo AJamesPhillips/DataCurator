@@ -1,6 +1,6 @@
 import { h } from "preact"
+import { useState } from "preact/hooks"
 
-import type { CanvasPoint } from "../canvas/interfaces"
 import { grid_small_step, h_step, round_coordinate_small_step, v_step } from "../canvas/position_utils"
 import { EditableNumber } from "./EditableNumber"
 
@@ -8,73 +8,96 @@ import { EditableNumber } from "./EditableNumber"
 
 interface OwnProps
 {
-    point: CanvasPoint
-    on_update: (arg: CanvasPoint) => void
+    on_update: (arg: { change_left: number, change_top: number }) => void
 }
 
 export function EditablePosition (props: OwnProps)
 {
-    const { point, on_update } = props
-    const { left, top } = point
+    const [change_left, set_change_left] = useState(0)
+    const [change_top, set_change_top] = useState(0)
 
-    function update (arg: Partial<CanvasPoint>)
+
+    const on_update = (arg: Partial<{ change_left: number, change_top: number }>) =>
     {
-        on_update({ ...point, ...arg })
+        props.on_update({
+            change_left: arg.change_left ? round_coordinate_small_step(arg.change_left) : 0,
+            change_top: arg.change_top ? round_coordinate_small_step(arg.change_top) : 0,
+        })
     }
 
+
     return <div>
-        Move Left: <EditableNumber
-            placeholder="Left"
-            value={left}
+        <p style={{ fontSize: 10, color: "#888" }}>
+            Increments of {grid_small_step} pixels
+        </p>
+
+
+        Move right: <EditableNumber
+            placeholder="Right"
+            value={change_left}
             allow_undefined={false}
-            conditional_on_blur={new_left => update({ left: round_coordinate_small_step(new_left) }) }
+            conditional_on_blur={new_change_left => set_change_left(round_coordinate_small_step(new_change_left))}
         />
         <input
             type="button"
+            value="Move"
+            disabled={change_left === 0}
+            onClick={() => on_update({ change_left })}
+        /> &nbsp;
+        <input
+            type="button"
             value="&#8592;"
-            onClick={() => update({ left: round_coordinate_small_step(left - grid_small_step) })}
+            onClick={() => on_update({ change_left: -grid_small_step })}
         />
         <input
             type="button"
             value="&#8592;&#8592;"
-            onClick={() => update({ left: round_coordinate_small_step(left - h_step) })}
+            onClick={() => on_update({ change_left: -h_step })}
         />
         <input
             type="button"
             value="&#8594;&#8594;"
-            onClick={() => update({ left: round_coordinate_small_step(left + h_step) })}
+            onClick={() => on_update({ change_left: h_step })}
         />
         <input
             type="button"
             value="&#8594;"
-            onClick={() => update({ left: round_coordinate_small_step(left + grid_small_step) })}
+            onClick={() => on_update({ change_left: grid_small_step })}
         />
         <br /><br />
-        Move Top: <EditableNumber
-            placeholder="Top"
-            value={top}
+
+
+        Move up: <EditableNumber
+            placeholder="Up"
+            value={-change_top}
             allow_undefined={false}
-            conditional_on_blur={new_top => update({ top: round_coordinate_small_step(new_top) }) }
+            conditional_on_blur={new_change_top => set_change_top(round_coordinate_small_step(-new_change_top))}
         />
         <input
             type="button"
+            value="Move"
+            disabled={change_top === 0}
+            onClick={() => on_update({ change_top })}
+        /> &nbsp;
+        <input
+            type="button"
             value="&#8593;"
-            onClick={() => update({ top: round_coordinate_small_step(top - grid_small_step) })}
+            onClick={() => on_update({ change_top: -grid_small_step })}
         />
         <input
             type="button"
             value="&#8593;&#8593;"
-            onClick={() => update({ top: round_coordinate_small_step(top - v_step) })}
+            onClick={() => on_update({ change_top: -v_step })}
         />
         <input
             type="button"
             value="&#8595;&#8595;"
-            onClick={() => update({ top: round_coordinate_small_step(top + v_step) })}
+            onClick={() => on_update({ change_top: v_step })}
         />
         <input
             type="button"
             value="&#8595;"
-            onClick={() => update({ top: round_coordinate_small_step(top + grid_small_step) })}
+            onClick={() => on_update({ change_top: grid_small_step })}
         />
     </div>
 }

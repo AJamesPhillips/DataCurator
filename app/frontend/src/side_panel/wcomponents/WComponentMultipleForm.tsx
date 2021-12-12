@@ -107,12 +107,10 @@ function _WComponentMultipleForm (props: Props)
         {editing && <p>
             <h3>Position</h3>
             <EditablePosition
-                point={{ left: 0, top: 0 }}
                 on_update={p => {
                     bulk_edit_knowledge_view_entries({
                         wcomponent_ids: selected_wcomponent_ids,
-                        change_left: p.left,
-                        change_top: p.top,
+                        ...p,
                     })
                 }}
             />
