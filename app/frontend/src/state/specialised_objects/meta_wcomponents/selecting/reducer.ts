@@ -94,7 +94,6 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
 
     if (is_set_wcomponent_ids_to_move(action))
     {
-        state = update_substate(state, "meta_wcomponents", "wcomponent_ids_to_move_list", Array.from(action.wcomponent_ids_to_move))
         state = update_substate(state, "meta_wcomponents", "wcomponent_ids_to_move_set", action.wcomponent_ids_to_move)
     }
 

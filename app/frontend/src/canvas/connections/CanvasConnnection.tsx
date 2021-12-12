@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { Ref, useMemo, useRef, useState } from "preact/hooks"
 
-import "./CanvasConnnection.css"
+import "./CanvasConnnection.scss"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"

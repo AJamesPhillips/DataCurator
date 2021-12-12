@@ -206,7 +206,7 @@ function _WComponentCanvasNode (props: Props)
             show_move_handle={is_movable && is_editing && is_highlighted}
             user_requested_node_move={(position: Position) =>
             {
-                let wcomponent_ids_to_move = selected_wcomponent_ids_set
+                let wcomponent_ids_to_move = new Set(selected_wcomponent_ids_set)
                 if (!wcomponent_ids_to_move.has(id))
                 {
                     wcomponent_ids_to_move = new Set([id])

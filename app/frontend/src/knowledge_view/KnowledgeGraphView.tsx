@@ -33,6 +33,7 @@ const map_state = (state: RootState) =>
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
         show_large_grid: state.display_options.show_large_grid,
+        moving_wcomponents: state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0,
     }
 }
 
@@ -45,6 +46,8 @@ function _KnowledgeGraphView (props: Props)
 {
     const elements = get_children(props)
 
+    const extra_class_names = props.moving_wcomponents ? " disable_component_pointer_events " : ""
+
     return <MainArea
         main_content={<Canvas
             svg_children={[]}
@@ -52,6 +55,7 @@ function _KnowledgeGraphView (props: Props)
             overlay={get_overlay_children()}
             plain_background={props.presenting}
             show_large_grid={props.show_large_grid}
+            extra_class_names={extra_class_names}
         >
             {elements}
         </Canvas>}

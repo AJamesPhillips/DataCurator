@@ -28,6 +28,7 @@ interface OwnProps
     overlay?: preact.ComponentChildren | preact.ComponentChildren[] | null
     plain_background?: boolean
     show_large_grid?: boolean
+    extra_class_names?: string
 }
 
 
@@ -294,7 +295,7 @@ class _Canvas extends Component<Props, State>
 
 
         return (
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1 }} className={this.props.extra_class_names}>
             <div
                 id={GRAPH_CONTAINER_ID}
                 className={graph_class_name}

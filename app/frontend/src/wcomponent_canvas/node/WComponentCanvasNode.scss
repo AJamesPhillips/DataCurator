@@ -6,7 +6,6 @@
     {
         z-index: 100;
         transition: left 0.01s, top 0.01s;
-        pointer-events: none;
     }
 
     .node_main_content
@@ -147,4 +146,10 @@
 .wcomponent_canvas_node.node_is_type_actor .background_image
 {
     background-image: url(https://www.leafstudio.co.uk/wp-content/uploads/2019/11/person-icon-silhouette-png-0.png);
+}
+
+
+.disable_component_pointer_events .wcomponent_canvas_node
+{
+    pointer-events: none;
 }
