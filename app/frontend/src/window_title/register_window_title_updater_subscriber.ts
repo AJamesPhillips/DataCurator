@@ -1,19 +1,7 @@
-import { APP_DETAILS } from "./shared/constants"
-import { get_current_knowledge_view_from_state } from "./state/specialised_objects/accessors"
-import type { StoreType } from "./state/store"
-
-
-
-const title_el = document.getElementsByTagName("title")[0]
-
-
-
-export function set_window_title (title?: string)
-{
-    if (!title_el) return
-
-    title_el.innerHTML = title || APP_DETAILS.NAME
-}
+import { APP_DETAILS } from "../shared/constants"
+import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import type { StoreType } from "../state/store"
+import { set_window_title } from "./set_window_title"
 
 
 

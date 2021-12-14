@@ -33,8 +33,13 @@ module.exports = {
   routes: [
     {
       match: "routes",
+      src: "/production_landing_page/?",
+      dest: "/index_landing_page.html",
+    },
+    {
+      match: "routes",
       src: ".*",
-      dest: "/index.html",
+      dest: "/index_application.html",
     },
   ],
   alias: {
