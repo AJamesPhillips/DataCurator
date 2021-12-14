@@ -18,7 +18,6 @@ import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanv
 import { SandBoxConnected } from "./scratch_pad/SandBoxConnected"
 import { SandBoxSupabase } from "./scratch_pad/SandBoxSupabase"
 import { setup_window_on_focus_listener } from "./utils/window_on_focus_listener"
-import { LandingPage } from "./home/LandingPage"
 import { DevLandingPage } from "./home/DevLandingPage"
 import { SimHome } from "./x_sim_app/SimHome"
 import { setup_console_api } from "./x_console_api_app/setup_console_api"
@@ -35,18 +34,9 @@ if (root)
 {
     root.innerText = ""
 
-    const in_production = window.location.hostname === "datacurator.org"
     if (window.location.pathname === "" || window.location.pathname === "/")
     {
-        if (in_production) {
-            render(<LandingPage />, root)
-        } else {
-            render(<DevLandingPage />, root)
-        }
-    }
-    else if (window.location.pathname === "/landing_page/")
-    {
-        render(<LandingPage />, root)
+        render(<DevLandingPage />, root)
     }
     else if (window.location.pathname === "/project_dashboard")
     {

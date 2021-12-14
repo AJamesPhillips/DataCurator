@@ -7,7 +7,7 @@ export function DevLandingPage() {
     return (
         <Container maxWidth="md">
             <ul>
-                <li><a href="/landing_page/">Landing page</a></li>
+                <li><a href="/production_landing_page/">Landing page</a></li>
                 <li><a href="/app/">app</a></li>
                 <li><a href="/sim/">Sim</a></li>
                 <li><a href="/data/">Data</a></li>
