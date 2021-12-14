@@ -12,6 +12,7 @@ import { ACTIONS } from "../state/actions"
 import type { PositionAndZoom } from "./interfaces"
 import { calculate_if_components_on_screen } from "./calculate_if_components_on_screen"
 import { calculate_spatial_temporal_position_to_move_to } from "./calculate_spatial_temporal_position_to_move_to"
+import { get_actually_display_time_sliders } from "../state/controls/accessors"
 
 
 
@@ -44,6 +45,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
+        display_side_panel: state.controls.display_side_panel,
+        display_time_sliders: get_actually_display_time_sliders(state),
     }
 }
 
@@ -73,6 +76,8 @@ function _MoveToWComponentButton (props: Props)
         selected_wcomponent_ids_set,
         created_at_ms,
         disable_if_not_present,
+        display_side_panel,
+        display_time_sliders,
     } = props
 
 
@@ -84,6 +89,8 @@ function _MoveToWComponentButton (props: Props)
             selected_wcomponent_ids_set,
             created_at_ms,
             disable_if_not_present,
+            display_side_panel,
+            display_time_sliders,
         })
     , [
         current_composed_knowledge_view,
@@ -92,6 +99,14 @@ function _MoveToWComponentButton (props: Props)
         selected_wcomponent_ids_set,
         created_at_ms,
         disable_if_not_present,
+        // Ideallly these would be used lazily, i.e. after a request to move to components, then if these
+        // values had changed, only then would the positions be updated... otherwise every time the side
+        // panel is moved in and out, all the components are iterated through which might have bad performance
+        // for large maps
+        // //
+        // // Disabled for now as calculate_spatial_temporal_position_to_move_to doesn't use them properly anyway
+        // display_side_panel,
+        // display_time_sliders,
     ])
 
 

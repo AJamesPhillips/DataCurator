@@ -22,6 +22,8 @@ interface CalculateSpatialTemporalPositionToMoveToArgs
     selected_wcomponent_ids_set: Set<string>
     created_at_ms: number
     disable_if_not_present: boolean | undefined
+    display_side_panel: boolean
+    display_time_sliders: boolean
 }
 export function calculate_spatial_temporal_position_to_move_to (args: CalculateSpatialTemporalPositionToMoveToArgs)
 {
@@ -62,7 +64,10 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
         }
         else if (!disable_if_not_present && ids?.size)
         {
-            const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map)
+            const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
+                // Disabled for now as not using them properly
+                // args.display_side_panel, args.display_time_sliders)
+                false, false)
             wcomponent_created_at_ms = result.wcomponent_created_at_ms
 
             positions = result.position_groups.map(group =>
@@ -96,27 +101,13 @@ interface PositionGroup
 }
 
 
-function calculate_zoom_to_contain_group (group: PositionGroup)
-{
-    const total_width = group.max_left - group.min_left
-    const total_height = group.max_top - group.min_top
-    const zoom_width = (get_screen_width(false) / total_width) * SCALE_BY
-    const zoom_height = (get_visible_screen_height(false) / total_height) * SCALE_BY
-
-    const raw_zoom = Math.min(zoom_width, zoom_height)
-    const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom))
-    return { zoom: bounded_zoom, fits: raw_zoom >= bounded_zoom }
-}
-
-
-
 interface PositionGroupAndZoom extends PositionGroup
 {
     zoom: number
 }
 
 
-function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, display_side_panel: boolean, display_time_sliders: boolean)
 {
     const position_groups: PositionGroupAndZoom[] = []
 
@@ -149,7 +140,7 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
                 max_top: Math.max(group.max_top, component_max_top),
             }
 
-            const { zoom, fits } = calculate_zoom_to_contain_group(candidate_group)
+            const { zoom, fits } = calculate_zoom_to_contain_group(candidate_group, display_side_panel, display_time_sliders)
 
             if (!fits) return false
 
@@ -182,4 +173,18 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
     })
 
     return { position_groups, wcomponent_created_at_ms }
+}
+
+
+
+function calculate_zoom_to_contain_group (group: PositionGroup, display_side_panel: boolean, display_time_sliders: boolean)
+{
+    const total_width = group.max_left - group.min_left
+    const total_height = group.max_top - group.min_top
+    const zoom_width = (get_screen_width(display_side_panel) / total_width) * SCALE_BY
+    const zoom_height = (get_visible_screen_height(display_time_sliders) / total_height) * SCALE_BY
+
+    const raw_zoom = Math.min(zoom_width, zoom_height)
+    const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom))
+    return { zoom: bounded_zoom, fits: raw_zoom >= bounded_zoom }
 }

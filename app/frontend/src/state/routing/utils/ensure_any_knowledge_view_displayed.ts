@@ -3,6 +3,7 @@ import {
 } from "../../../canvas/calculate_spatial_temporal_position_to_move_to"
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../../actions"
+import { get_actually_display_time_sliders } from "../../controls/accessors"
 import type { ComposedKnowledgeView } from "../../derived/State"
 import {
     update_composed_knowledge_view_filters,
@@ -24,8 +25,10 @@ export function ensure_any_knowledge_view_displayed (store: StoreType)
         const default_knowledge_view = state.specialised_objects.knowledge_views_by_id[base?.default_knowledge_view_id || ""]
         const a_random_knowledge_view = state.derived.knowledge_views[0]
         const a_knowledge_view = default_knowledge_view || a_random_knowledge_view
+        const display_side_panel = state.controls.display_side_panel
+        const display_time_sliders = get_actually_display_time_sliders(state)
 
-        const pos = optionally_calculate_spatial_temporal_position_to_move_to(state, a_knowledge_view)
+        const pos = optionally_calculate_spatial_temporal_position_to_move_to(state, a_knowledge_view, display_side_panel, display_time_sliders)
         const args = { subview_id: a_knowledge_view?.id, ...pos }
         store.dispatch(ACTIONS.routing.change_route({ args }))
     }
@@ -41,7 +44,7 @@ function current_knowledge_view_is_valid (state: RootState)
 
 
 
-function optionally_calculate_spatial_temporal_position_to_move_to (state: RootState, current_kv: KnowledgeView | undefined): Partial<{ x: number, y: number, z: number, created_at_ms: number }>
+function optionally_calculate_spatial_temporal_position_to_move_to (state: RootState, current_kv: KnowledgeView | undefined, display_side_panel: boolean, display_time_sliders: boolean): Partial<{ x: number, y: number, z: number, created_at_ms: number }>
 {
     if (!current_kv) return {}
 
@@ -61,6 +64,8 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
         selected_wcomponent_ids_set,
         created_at_ms,
         disable_if_not_present: false,
+        display_side_panel,
+        display_time_sliders,
     })
 
     return {
