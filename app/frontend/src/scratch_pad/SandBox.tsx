@@ -1,6 +1,6 @@
 import { h } from "preact"
 
-import "./SandBox.css"
+import "./SandBox.scss"
 
 
 
