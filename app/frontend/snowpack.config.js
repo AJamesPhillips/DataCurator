@@ -15,7 +15,6 @@ module.exports = {
     // Where _s was coming from calling `$RefreshSig$` and
     // `$RefreshSig$` was being declared in ConnectionEng.js as the default `() => {}`
     // '@prefresh/snowpack',
-    ["@snowpack/plugin-webpack"],
   ],
   packageOptions: {
     installTypes: true,
