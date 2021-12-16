@@ -8,6 +8,7 @@ import { ACTIONS } from "../state/actions"
 import { ALLOWED_ROUTES, ROUTE_TYPES } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import { AppMenuItem, CustomisableAppMenuItem } from "./AppMenuItem"
+import { route_to_text } from "./route_to_text"
 
 
 
@@ -41,12 +42,13 @@ const base_allowed_routes = ALLOWED_ROUTES.filter(r => !hide_routes.has(r))
 function _AppMenuItemsContainer (props: Props)
 {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const handleClick = (event: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
+    const handle_menu_icon_click = (event: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
         setAnchorEl(event.currentTarget)
     }
-    const handleClose = () => {
+    const handle_menu_close = () => {
         setAnchorEl(null)
     }
+
     const [show_all_routes, set_show_all_routes] = useState(false)
 
     let routes = base_allowed_routes
@@ -59,26 +61,39 @@ function _AppMenuItemsContainer (props: Props)
         routes = routes.filter(r => !hide_routes.has(r) || (props.editing && r === "creation_context"))
     }
 
-    // @TODO: Come back to this. We should NOT need the inline styles on MenuItems below
+
     return (
-        <Box mb={5} display="flex" flexDirection="column" alignItems="end">
-            <Button aria-controls="select_tab" fullWidth={true} aria-haspopup="true">
-                <Box component="span" width={1} display="flex" flexDirection="row" flexWrap="nowrap" justifyContent="space-between" alignItems="start" alignContent="stretch">
-                    <Box component="strong" onClick={() =>
-                    {
-                        props.change_route({ route: props.route, item_id: null, sub_route: null })
-                    }}>
-                        {route_to_text(props.route)}
+        <div>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                <Button fullWidth={true}>
+                    <Box
+                        component="span"
+                        width={1}
+                        display="flex"
+                        flexDirection="row"
+                        flexWrap="nowrap"
+                        justifyContent="space-between"
+                        alignItems="start"
+                        alignContent="stretch"
+                        onClick={() =>
+                        {
+                            props.change_route({ route: props.route, item_id: null, sub_route: null })
+                        }}
+                    >
+                        <b>{route_to_text(props.route)}</b>
                     </Box>
-                    <MenuIcon onClick={handleClick} />
-                </Box>
-            </Button>
-            <Menu anchorEl={anchorEl} id="select_tab" onClose={handleClose} open={Boolean(anchorEl)} keepMounted>
-                {routes.map(route => <AppMenuItem id={route} on_pointer_down={handleClose} />)}
+                </Button>
+                <Button aria-controls="select_tab" aria-haspopup="true" onClick={handle_menu_icon_click}>
+                    <MenuIcon />
+                </Button>
+            </div>
+
+            <Menu anchorEl={anchorEl} id="select_tab" onClose={handle_menu_close} open={Boolean(anchorEl)} keepMounted>
+                {routes.map(route => <AppMenuItem id={route} on_pointer_down={handle_menu_close} />)}
                 <CustomisableAppMenuItem
                     on_pointer_down={() =>
                     {
-                        handleClose()
+                        handle_menu_close()
                         props.set_show_help_menu({ show: true })
                     }}
                 >
@@ -92,16 +107,8 @@ function _AppMenuItemsContainer (props: Props)
                     {show_all_routes ? "Hide extra" : "Show all"} options
                 </MaterialMenuItem>
             </Menu>
-        </Box>
+        </div>
     )
 }
 
 export const AppMenuItemsContainer = connector(_AppMenuItemsContainer) as FunctionalComponent<OwnProps>
-
-
-
-function route_to_text (route: ROUTE_TYPES)
-{
-    if (route === "wcomponents") return "Components"
-    else return route.replaceAll("_", " ")
-}

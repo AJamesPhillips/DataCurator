@@ -60,8 +60,6 @@ function _FiltersSidePanel (props: Props)
 
 
     return <div>
-        <h3>Filters</h3>
-
         <p>
             Enabled: <EditableCheckbox
                 value={props.apply_filter}

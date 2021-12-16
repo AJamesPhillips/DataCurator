@@ -19,7 +19,6 @@ export function SelectionControlSidePanel (props: {})
     const store = get_store()
 
     return <div className="side_panel">
-        <h3>Selection</h3>
 
 
         <p className="section">

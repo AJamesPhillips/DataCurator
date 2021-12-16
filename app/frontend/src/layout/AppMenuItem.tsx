@@ -8,6 +8,7 @@ import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 import { ACTIONS } from "../state/actions"
+import { route_to_text } from "./route_to_text"
 
 
 
@@ -19,19 +20,10 @@ interface OwnProps
 
 function get_title (id: ROUTE_TYPES)
 {
+
     if (id === "filter") return <FilterContextTabTitle />
-    else if (id === "select") return "Selection"
-    else if (id === "display") return "Display options"
-    else if (id === "statements") return "Statements"
-    else if (id === "objects") return "Objects"
-    else if (id === "patterns") return "Patterns"
     else if (id === "creation_context") return <CreationContextTabTitle />
-    else if (id === "views") return "Views"
-    else if (id === "perceptions") return "Perceptions"
-    else if (id === "wcomponents") return "Components"
-    else if (id === "about") return "About"
-    else if (id === "search") return "Search"
-    else return "?" + id
+    else return route_to_text(id)
 }
 
 const map_state = (state: RootState) => ({ current_route: state.routing.route })

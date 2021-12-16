@@ -45,9 +45,6 @@ function _DisplayOptionsSidePanel (props: Props)
 {
 
     return <div className="side_panel">
-        <h3>Display Options</h3>
-
-
         <p className="section">
             <b>Validity filter</b>
 
