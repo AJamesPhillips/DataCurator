@@ -1,6 +1,6 @@
 .wcomponent_canvas_node.connectable_canvas_node.node
 {
-    transition: left 0.5s linear, top 0.5s linear;
+    transition: left 0.5s linear, top 0.5s linear, opacity 0.5s linear;
 
     &.node_is_moving
     {

@@ -5,8 +5,7 @@
 {
     .connection_line, .connection_end
     {
-        // Attempt to allow opacity to transition smoothly
-        transition: opacity .25s ease-in-out;
+        transition: stroke-opacity 0.5s linear, fill-opacity 0.5s linear;
     }
 
     &.connection_type_relation_link .connection_line
