@@ -48,13 +48,11 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
         let zoom = SCALE_BY
 
 
-        const { any_node } = wc_ids_by_type || {}
+        const { any_node = new Set<string>() } = wc_ids_by_type || {}
         // Remove the initial_wcomponent_id as it may be selected but present in a different
         // knowledge view
         selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set)
         selected_wcomponent_ids_set.delete(initial_wcomponent_id)
-
-        const ids = selected_wcomponent_ids_set.size ? selected_wcomponent_ids_set : any_node
 
 
         if (view_entry)
@@ -62,12 +60,21 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
             const position_and_zoom = lefttop_to_xy({ ...view_entry, zoom }, true)
             positions.push(position_and_zoom)
         }
-        else if (!disable_if_not_present && ids?.size)
+        else if (!disable_if_not_present)
         {
-            const result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
+            let result = calculate_position_groups_with_zoom(selected_wcomponent_ids_set, wcomponents_by_id, composed_wc_id_map,
                 // Disabled for now as not using them properly
                 // args.display_side_panel, args.display_time_sliders)
                 false, false)
+
+            if (result.position_groups.length === 0)
+            {
+                result = calculate_position_groups_with_zoom(any_node, wcomponents_by_id, composed_wc_id_map,
+                    // Disabled for now as not using them properly
+                    // args.display_side_panel, args.display_time_sliders)
+                    false, false)
+            }
+
             wcomponent_created_at_ms = result.wcomponent_created_at_ms
 
             positions = result.position_groups.map(group =>
@@ -105,9 +112,13 @@ interface PositionGroupAndZoom extends PositionGroup
 {
     zoom: number
 }
+interface CalculatePositionGroupsWithZoomReturn
+{
+    position_groups: PositionGroupAndZoom[]
+    wcomponent_created_at_ms: number | undefined
+}
 
-
-function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, display_side_panel: boolean, display_time_sliders: boolean)
+function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, display_side_panel: boolean, display_time_sliders: boolean): CalculatePositionGroupsWithZoomReturn
 {
     const position_groups: PositionGroupAndZoom[] = []
 
