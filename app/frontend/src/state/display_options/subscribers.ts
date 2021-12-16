@@ -3,7 +3,7 @@ import type { ActionKeyEventArgs } from "../global_keys/actions"
 import { pub_sub } from "../pub_sub/pub_sub"
 import { conditional_ctrl_f_search } from "../search/conditional_ctrl_f_search"
 import {
-    conditionally_contract_selected_components,
+    conditionally_decrease_selected_components,
     conditionally_expand_selected_components,
     conditionally_select_all_components,
     conditionally_select_forward_causal_components,
@@ -151,7 +151,7 @@ function handle_selection_key_combo (key: string, store: StoreType)
     }
     else if (key === "d")
     {
-        conditionally_contract_selected_components(store)
+        conditionally_decrease_selected_components(store)
     }
     else if (key === "f")
     {

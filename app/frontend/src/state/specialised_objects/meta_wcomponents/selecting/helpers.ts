@@ -1,4 +1,4 @@
-import { WComponentsById, wcomponent_is_causal_link } from "../../../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponentsById, wcomponent_is_causal_link, wcomponent_is_plain_connection } from "../../../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../../../actions"
 import type { ComposedKnowledgeView } from "../../../derived/State"
 import type { StoreType } from "../../../store"
@@ -42,13 +42,13 @@ export const conditionally_expand_selected_components = factory_conditionally_se
 
 
 
-export const conditionally_contract_selected_components = factory_conditionally_select_components(
-    (composed_kv, selected_ids) =>
+export const conditionally_decrease_selected_components = factory_conditionally_select_components(
+    (composed_kv, selected_ids, wcomponents_by_id) =>
 {
     const selected_ids_set = new Set(selected_ids)
     const selected_ids_to_remove = new Set<string>()
 
-    const { wc_id_connections_map, composed_visible_wc_id_map } = composed_kv
+    const { wc_id_connections_map, composed_visible_wc_id_map, wc_ids_by_type } = composed_kv
 
     selected_ids.forEach(id =>
     {
@@ -61,6 +61,26 @@ export const conditionally_contract_selected_components = factory_conditionally_
                 .filter(id => composed_visible_wc_id_map[id])
                 .filter(id => selected_ids_set.has(id))
             if (connected_and_selected_ids.length <= 1) selected_ids_to_remove.add(id)
+            else if (wc_ids_by_type.any_node.has(id))
+            {
+                // Remove nodes which only have connections coming into them or going out of them
+
+                let connection_direction_is_from: boolean | undefined = undefined
+
+                const opposite_connection_directions = Array.from(connected_and_selected_ids)
+                    .map(id => wcomponents_by_id[id])
+                    .filter(wcomponent_is_plain_connection)
+                    .find(connection =>
+                    {
+                        const is_from = connection.from_id === id
+                        if (connection_direction_is_from === undefined) connection_direction_is_from = is_from
+                        else if (connection_direction_is_from !== is_from) return true
+
+                        return false
+                    })
+
+                if (!opposite_connection_directions) selected_ids_to_remove.add(id)
+            }
         }
     })
 

@@ -3,7 +3,7 @@ import { h } from "preact"
 import { Button } from "../sharedf/Button"
 import {
     conditionally_expand_selected_components,
-    conditionally_contract_selected_components,
+    conditionally_decrease_selected_components,
     conditionally_select_all_components,
     conditionally_select_forward_causal_components,
     conditionally_select_source_causal_components,
@@ -69,7 +69,7 @@ export function SelectionControlSidePanel (props: {})
             <Button
                 value="Contract selection (in all directions)"
                 fullWidth={true}
-                onClick={() => conditionally_contract_selected_components(store)}
+                onClick={() => conditionally_decrease_selected_components(store)}
             />
 
             <div className="description">ctrl + s + d</div>
