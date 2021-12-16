@@ -64,26 +64,24 @@ function _AppMenuItemsContainer (props: Props)
 
     return (
         <div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                <Button fullWidth={true}>
-                    <Box
-                        component="span"
-                        width={1}
-                        display="flex"
-                        flexDirection="row"
-                        flexWrap="nowrap"
-                        justifyContent="space-between"
-                        alignItems="start"
-                        alignContent="stretch"
+            <div style={{ display: "flex", flexDirection: "row" }}>
+                <Button style={{ display: "flex", flex: 1 }}>
+                    <b
+                        style={{ width: "100%", display: "flex" }}
                         onClick={() =>
                         {
                             props.change_route({ route: props.route, item_id: null, sub_route: null })
                         }}
                     >
-                        <b>{route_to_text(props.route)}</b>
-                    </Box>
+                        {route_to_text(props.route)}
+                    </b>
                 </Button>
-                <Button aria-controls="select_tab" aria-haspopup="true" onClick={handle_menu_icon_click}>
+                <Button
+                    aria-controls="select_tab"
+                    aria-haspopup="true"
+                    style={{ display: "flex", flex: 1, justifyContent: "end" }}
+                    onClick={handle_menu_icon_click}
+                >
                     <MenuIcon />
                 </Button>
             </div>

@@ -107,7 +107,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Time resolution</b>
+            <b>Time resolution</b> &nbsp;
 
             <TimeResolutionOptions />
         </p>
