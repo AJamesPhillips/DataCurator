@@ -12,6 +12,7 @@ import { throttle } from "../../utils/throttle"
 import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 import type { SearchFields, SearchType } from "../../state/search/state"
 import { TextField } from "@material-ui/core"
+import { ACTIONS } from "../../state/actions"
 
 
 
@@ -49,8 +50,12 @@ const map_state = (state: Partial<RootState>) => ({
     presenting: state.display_options?.consumption_formatting,
 })
 
+const map_dispatch = {
+    set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag,
+}
 
-const connector = connect(map_state)
+
+const connector = connect(map_state, map_dispatch)
 type Props <E extends AutocompleteOption = AutocompleteOption> = ConnectedProps<typeof connector> & OwnProps<E>
 
 
@@ -103,6 +108,10 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         set_editing_options(!!props.start_expanded)
     }, [props.start_expanded])
 
+    useEffect(() =>
+    {
+        props.set_editing_text_flag(editing_options)
+    }, [editing_options])
 
 
     const { threshold_minimum_score = false } = props
