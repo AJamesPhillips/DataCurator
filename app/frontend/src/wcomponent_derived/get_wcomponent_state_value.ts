@@ -38,7 +38,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
 
-    // Defensive
+    // Defensively set to empty array
     const { values_and_prediction_sets = [] } = wcomponent
     const counterfactual_VAP_sets = values_and_prediction_sets.map(VAP_set =>
     {
