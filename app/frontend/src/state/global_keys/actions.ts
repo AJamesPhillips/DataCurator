@@ -11,8 +11,8 @@ export interface ActionKeyEventArgs
     ctrl_key: boolean
     key: string
     meta_key: boolean
-    return_value: boolean
     shift_key: boolean
+    user_is_editing_text: boolean
 }
 
 

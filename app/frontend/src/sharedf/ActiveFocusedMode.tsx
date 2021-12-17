@@ -35,7 +35,7 @@ function _ActiveFocusedMode (props: Props)
             <IconButton
                 // className={classes.warning_button}
                 component="span"
-                size="small"
+                size="medium"
                 onClick={() => props.set_or_toggle_focused_mode()}
             >
                 <FilterTiltShift className={classes.warning_icon} />

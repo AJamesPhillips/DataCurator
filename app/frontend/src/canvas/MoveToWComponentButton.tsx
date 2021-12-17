@@ -1,8 +1,8 @@
 import { h, FunctionalComponent } from "preact"
-import { useMemo } from "preact/hooks"
+import { useEffect, useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
-import { Box, IconButton } from "@material-ui/core"
+import { Box, IconButton, Tooltip } from "@material-ui/core"
 
 import {
     get_current_composed_knowledge_view_from_state,
@@ -11,8 +11,11 @@ import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import type { PositionAndZoom } from "./interfaces"
 import { calculate_if_components_on_screen } from "./calculate_if_components_on_screen"
-import { calculate_spatial_temporal_position_to_move_to } from "./calculate_spatial_temporal_position_to_move_to"
+import {
+    calculate_spatial_temporal_position_to_move_to,
+} from "./calculate_spatial_temporal_position_to_move_to"
 import { get_actually_display_time_sliders } from "../state/controls/accessors"
+import { pub_sub } from "../state/pub_sub/pub_sub"
 
 
 
@@ -121,6 +124,16 @@ function _MoveToWComponentButton (props: Props)
         }
 
 
+    useEffect(() =>
+    {
+        return pub_sub.global_keys.sub("key_down", e =>
+        {
+            console.log(e.key)
+            if (move && e.key === " " && !e.user_is_editing_text) move()
+        })
+    })
+
+
     const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen
 
 
@@ -148,15 +161,18 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
     } = props
 
     return <Box>
-        <Box zIndex={10} m={2} title={move ? "Move to component(s)" : "No component(s) present"}>
+        <Tooltip
+            placement="top"
+            title={move ? "Move to component(s)" : "No component(s) present"}
+        >
             <IconButton
-                size="small"
+                size="medium"
                 onClick={move}
                 disabled={!move}
             >
                 <FilterCenterFocusIcon />
             </IconButton>
-        </Box>
+        </Tooltip>
         <div
             className={(move && draw_attention) ? "pulsating_circle" : ""}
             ref={e => setTimeout(() =>

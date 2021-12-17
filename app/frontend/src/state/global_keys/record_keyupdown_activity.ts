@@ -12,6 +12,8 @@ export function record_keyupdown_activity (store: Store<RootState>)
 
     document.onkeydown = e =>
     {
+        const user_is_editing_text = store.getState().user_activity.is_editing_text
+
         const action_args: ActionKeyEventArgs = {
             event: e,
             time_stamp: e.timeStamp,
@@ -20,8 +22,8 @@ export function record_keyupdown_activity (store: Store<RootState>)
             ctrl_key: e.ctrlKey,
             key: e.key,
             meta_key: e.metaKey,
-            return_value: e.returnValue,
             shift_key: e.shiftKey,
+            user_is_editing_text,
         }
 
         // TODO can we get rid of touching store entirely and only use pubsub?
@@ -31,12 +33,14 @@ export function record_keyupdown_activity (store: Store<RootState>)
 
 
     // Atempt to fix #172 but fully expect this to cause other problems
-    // ...but no this breaks all input fields
+    // ...no this breaks all input fields
     // document.onkeypress = e => e.preventDefault()
 
 
     document.onkeyup = e =>
     {
+        const user_is_editing_text = store.getState().user_activity.is_editing_text
+
         const action_args: ActionKeyEventArgs = {
             event: e,
             time_stamp: e.timeStamp,
@@ -45,8 +49,8 @@ export function record_keyupdown_activity (store: Store<RootState>)
             ctrl_key: e.ctrlKey,
             key: e.key,
             meta_key: e.metaKey,
-            return_value: e.returnValue,
             shift_key: e.shiftKey,
+            user_is_editing_text,
         }
 
         // TODO can we get rid of touching store entirely and only use pubsub?
