@@ -66,7 +66,8 @@ function _KnowledgeGraphTimeMarkers (props: Props)
 
 
     const other_datetime_lines = useMemo(() => get_other_datetime_lines({
-        time_line_number, time_line_spacing_days,
+        time_line_number: time_line_number ? time_line_number - 1 : time_line_number,
+        time_line_spacing_days,
     }), [time_line_number, time_line_spacing_days])
 
     const { x, zoom } = props
@@ -93,7 +94,8 @@ function _KnowledgeGraphTimeMarkers (props: Props)
             />
         })}
 
-        <DatetimeLine
+
+        {!!time_line_number && <DatetimeLine
             date_ms={now_ms}
             time_origin_ms={time_origin_ms}
             time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
@@ -101,8 +103,8 @@ function _KnowledgeGraphTimeMarkers (props: Props)
             xd={xd}
             color="red"
             left_label_when_off_screen={true}
-        />
-        {!props.show_by_now && <DatetimeLine
+        />}
+        {!!time_line_number && !props.show_by_now && <DatetimeLine
             date_ms={sim_ms}
             time_origin_ms={time_origin_ms}
             time_scale_ms_to_pixels_fudge={time_scale_ms_to_pixels_fudge}
