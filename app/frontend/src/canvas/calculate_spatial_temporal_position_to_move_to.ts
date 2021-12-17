@@ -123,7 +123,6 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
     const position_groups: PositionGroupAndZoom[] = []
 
 
-    const NODE_WIDTH2 = NODE_WIDTH * 2
     const top_min_fudge = HALF_NODE_HEIGHT + TOP_HEADER_FUDGE
     const top_max_add = HALF_NODE_HEIGHT * 3  // 1.5x node height
 
@@ -136,7 +135,7 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
         if (!wcomponent || !an_entry) return
 
         const component_min_left = an_entry.left - NODE_WIDTH
-        const component_max_left = an_entry.left + NODE_WIDTH2
+        const component_max_left = an_entry.left + NODE_WIDTH // * 2) does not seem to need x2
         const component_min_top = an_entry.top - top_min_fudge
         const component_max_top = an_entry.top + top_max_add
 
