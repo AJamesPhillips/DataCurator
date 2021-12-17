@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core"
-
 import FilterTiltShift from "@material-ui/icons/FilterTiltShift"
+
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { active_warning_styles } from "./active_warning_common"

@@ -1,11 +1,12 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, ButtonGroup, Button, Toolbar, makeStyles, Collapse } from "@material-ui/core"
+import { Box, Button, Toolbar, makeStyles, Collapse, IconButton, Tooltip } from "@material-ui/core"
+import TuneIcon from "@material-ui/icons/Tune"
+import DoubleArrowIcon from "@material-ui/icons/DoubleArrow"
 
 import "./ContentControls.scss"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
-import { TimeResolutionOptions } from "../../display_options/TimeResolutionOptions"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { TimeSlider } from "../../time_control/TimeSlider"
@@ -35,6 +36,7 @@ const map_state = (state: RootState) =>
         display_time_sliders: state.controls.display_time_sliders,
         actually_display_time_sliders: get_actually_display_time_sliders(state),
         editing: !state.display_options.consumption_formatting,
+        animate_connections: state.display_options.animate_connections,
         created_at_ms: state.routing.args.created_at_ms,
     }
 }
@@ -46,6 +48,7 @@ const map_dispatch = {
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
+    set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -103,16 +106,42 @@ function _ContentControls (props: Props)
 
                 <ToggleDatetimeMarkers />
 
-                <Box component="label" title={props.editing ? "Time sliders always shown whilst editing" : ""}>
-                    <Button
-                        variant="contained"
-                        disableElevation
-                        disabled={props.editing}
-                        onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
+
+                <div>
+                    <Tooltip
+                        placement="top"
+                        title={props.animate_connections ? "Stop animating connections" : "Animate connections"}
                     >
-                        {props.display_time_sliders ? "Hide" : "Show"} time sliders
-                    </Button>
-                </Box>
+                        <IconButton
+                            component="span"
+                            size="medium"
+                            onClick={() => props.set_or_toggle_animate_connections()}
+                        >
+                            <DoubleArrowIcon style={{ color: props.animate_connections ? "rgb(25, 118, 210)" : "" }} />
+                        </IconButton>
+                    </Tooltip>
+
+
+                    <Tooltip
+                        placement="top"
+                        title={props.editing
+                            ? "Time sliders always shown whilst editing"
+                            : (props.display_time_sliders
+                                ? "Hide time sliders"
+                                : "Show time sliders")
+                        }
+                    >
+                        <IconButton
+                            component="span"
+                            size="medium"
+                            disabled={props.editing}
+                            onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
+                        >
+                            <TuneIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+
 
                 {/* <Box component="label">
                     {/ * <Box component="span" pr={1}>Time Resolution: </Box> * /}
