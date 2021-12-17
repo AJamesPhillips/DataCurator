@@ -38,7 +38,7 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
     let wcomponent_created_at_ms: number | undefined = undefined
     let positions: PositionAndZoom[] = []
 
-    const { composed_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view || {}
+    const { composed_wc_id_map, composed_visible_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view || {}
 
     if (composed_wc_id_map)
     {
@@ -60,16 +60,18 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
             const position_and_zoom = lefttop_to_xy({ ...view_entry, zoom }, true)
             positions.push(position_and_zoom)
         }
-        else if (!disable_if_not_present)
+        else if (!disable_if_not_present && composed_visible_wc_id_map)
         {
-            let result = calculate_position_groups_with_zoom(selected_wcomponent_ids_set, wcomponents_by_id, composed_wc_id_map,
+            let ids = ids_on_map(selected_wcomponent_ids_set, composed_visible_wc_id_map)
+            let result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
                 // Disabled for now as not using them properly
                 // args.display_side_panel, args.display_time_sliders)
                 false, false)
 
             if (result.position_groups.length === 0)
             {
-                result = calculate_position_groups_with_zoom(any_node, wcomponents_by_id, composed_wc_id_map,
+                ids = ids_on_map(any_node, composed_visible_wc_id_map)
+                result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
                     // Disabled for now as not using them properly
                     // args.display_side_panel, args.display_time_sliders)
                     false, false)
@@ -197,4 +199,19 @@ function calculate_zoom_to_contain_group (group: PositionGroup, display_side_pan
     const raw_zoom = Math.min(zoom_width, zoom_height)
     const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom))
     return { zoom: bounded_zoom, fits: raw_zoom >= bounded_zoom }
+}
+
+
+
+function ids_on_map (ids: Set<string>, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+{
+    const filtered_ids = new Set(ids)
+
+    ids.forEach(id =>
+    {
+        if (composed_wc_id_map[id]) return
+        filtered_ids.delete(id)
+    })
+
+    return filtered_ids
 }
