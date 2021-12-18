@@ -128,7 +128,6 @@ function _MoveToWComponentButton (props: Props)
     {
         return pub_sub.global_keys.sub("key_down", e =>
         {
-            console.log(e.key)
             if (move && e.key === " " && !e.user_is_editing_text) move()
         })
     })

@@ -15,8 +15,11 @@ import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { AlignComponentForm } from "../../wcomponent_form/AlignComponentForm"
-import { wcomponent_is_causal_link } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_causal_link } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkForm"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { wcomponent_type_options } from "../../wcomponent_form/type_options"
+import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 
 
 
@@ -45,6 +48,7 @@ const map_dispatch = {
     bulk_remove_from_knowledge_view: ACTIONS.specialised_object.bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
     bulk_edit_wcomponents: ACTIONS.specialised_object.bulk_edit_wcomponents,
+    upsert_wcomponent: ACTIONS.specialised_object.upsert_wcomponent,
 }
 
 
@@ -68,6 +72,7 @@ function _WComponentMultipleForm (props: Props)
         bulk_remove_from_knowledge_view,
         snap_to_grid_knowledge_view_entries,
         bulk_edit_wcomponents,
+        upsert_wcomponent,
     } = props
     const selected_wcomponents = get_wcomponents_from_ids(wcomponents_by_id, selected_wcomponent_ids_set)
         .filter(is_defined)
@@ -154,6 +159,37 @@ function _WComponentMultipleForm (props: Props)
                 })}
             />
         </p>}
+
+
+        {editing && <p>
+            Component types
+            <AutocompleteText
+                placeholder="Type: "
+                selected_option_id={undefined}
+                allow_none={true}
+                options={wcomponent_type_options}
+                // Copied from WComponentForm
+                on_change={type =>
+                {
+                    if (!type) return
+
+                    selected_wcomponents.forEach(wcomponent =>
+                    {
+                        // This ensures it will always have the fields it is expected to have
+                        const vanilla = prepare_new_contextless_wcomponent_object({
+                            base_id: wcomponent.base_id,
+                            type,
+                        }) as WComponent
+
+                        const new_wcomponent = { ...vanilla, ...wcomponent }
+                        new_wcomponent.type = type
+
+                        upsert_wcomponent({ wcomponent: new_wcomponent })
+                    })
+                }}
+            />
+        </p>}
+
 
         {editing && <p>
             <h3>Created at</h3>

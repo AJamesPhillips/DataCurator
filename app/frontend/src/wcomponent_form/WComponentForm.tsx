@@ -9,9 +9,13 @@ import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { EditableText } from "../form/editable_text/EditableText"
 import { LabelsEditor } from "../labels/LabelsEditor"
-import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import {
+    prepare_new_contextless_wcomponent_object,
+} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
-import { get_wcomponent_state_UI_value } from "../wcomponent_derived/get_wcomponent_state_UI_value"
+import {
+    get_wcomponent_state_UI_value,
+} from "../wcomponent_derived/get_wcomponent_state_UI_value"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import {
     WComponent,
@@ -29,10 +33,8 @@ import {
     wcomponent_has_objectives,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { wcomponent_types } from "../wcomponent/interfaces/wcomponent_base"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
@@ -55,14 +57,18 @@ import { Button } from "../sharedf/Button"
 import { selector_chosen_base_id } from "../state/user_info/selector"
 import { ValuePossibilitiesComponent } from "./value_possibilities/ValuePossibilitiesComponent"
 import type { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
-import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
+import {
+    update_VAPSets_with_possibilities,
+} from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
-import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
+import {
+    EasyActionValueAndPredictionSets,
+} from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
-import { wcomponent_statev2_subtype_options } from "./subtype_options"
+import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 
 
 
@@ -209,7 +215,12 @@ function _WComponentForm (props: Props)
         </span>}
 
 
+        {// If it is a state component then hide the entry when not editing & no actual state
+         // values, i.e. simplify the entry to just pretend it's a typeless component
+        }
         {(editing || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+            {// Keep up to date in WComponentMultipleForm
+            }
             <AutocompleteText
                 force_editable={force_editable}
                 placeholder="Type: "
@@ -511,6 +522,3 @@ function _WComponentForm (props: Props)
 }
 
 export const WComponentForm = connector(_WComponentForm) as FunctionComponent<OwnProps>
-
-
-const wcomponent_type_options = wcomponent_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))

@@ -6,9 +6,9 @@ import { clean_base_object_of_sync_meta_fields } from "./clean_base_object_for_s
 
 export function app_item_to_supabase <U extends Base & { title: string }> (item: U, base_id?: number): SupabaseWriteItem<U>
 {
-    base_id = item.base_id || base_id
+    base_id = item.base_id ?? base_id
 
-    if (!base_id) throw new Error("Must provide base_id for app_item_to_supabase")
+    if (base_id === undefined) throw new Error("Must provide base_id for app_item_to_supabase")
 
     const json = clean_base_object_of_sync_meta_fields(item)
 

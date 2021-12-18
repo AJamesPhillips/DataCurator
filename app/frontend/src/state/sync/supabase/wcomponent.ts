@@ -115,7 +115,7 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): 
 
 
 
-export function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWriteWComponent
+function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWriteWComponent
 {
     return app_item_to_supabase(item, base_id)
 }

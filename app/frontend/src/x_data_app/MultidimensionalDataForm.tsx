@@ -7,7 +7,7 @@ import type {
     WComponentMultidimensionalStateData,
     WComponentStateV2SubType,
 } from "../wcomponent/interfaces/state"
-import { wcomponent_statev2_subtype_options } from "../wcomponent_form/subtype_options"
+import { wcomponent_statev2_subtype_options } from "../wcomponent_form/type_options"
 import { TableDisplayMultiDimensionalData } from "./TableDisplayMultiDimensionalData"
 
 
