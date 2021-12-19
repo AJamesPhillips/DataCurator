@@ -15,7 +15,6 @@ import {
 } from "./common"
 import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
 import { sentence_case } from "../../shared/utils/sentence_case"
-import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
 import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabilities"
 
 
@@ -40,25 +39,28 @@ export const new_value_and_prediction_set = (VAPs_represent: VAPsType, possible_
         const { update_item } = crud
 
         return <div>
-            {VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm
+            {!show_advanced && VAPs_represent === VAPsType.boolean && <SimplifiedBooleanForm
                 VAP_set={VAP_set}
                 on_change={update_item}
             />}
-            {VAPs_represent === VAPsType.action && <SimplifiedActionForm
+            {!show_advanced && VAPs_represent === VAPsType.action && <SimplifiedActionForm
                 possible_value_possibilities={possible_value_possibilities}
                 VAP_set={VAP_set}
                 on_change={update_item}
             />}
-            {hide_advanced_for_type_other && <SimplifiedOtherForm
+            {!show_advanced && hide_advanced_for_type_other && <SimplifiedOtherForm
                 possible_value_possibilities={possible_value_possibilities}
                 VAP_set={VAP_set}
                 on_change={update_item}
             />}
 
-            <SimplifiedUncertainDatetimeForm
-                VAP_set={VAP_set}
-                on_change={update_item}
-            />
+            {!show_advanced && <div>
+                <span className="description_label">Datetime</span>
+                <SimplifiedUncertainDatetimeForm
+                    VAP_set={VAP_set}
+                    on_change={update_item}
+                />
+            </div>}
 
             <Button
                 value={(show_advanced ? "Hide" : "Show") + " advanced options"}

@@ -29,7 +29,6 @@ import {
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
-import { update_value_possibilities_with_VAPSets } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
 
 
 
