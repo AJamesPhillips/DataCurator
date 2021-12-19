@@ -23,7 +23,7 @@ function _MainContentControls (props: Props)
     return <div className="main_content_controls">
         {view === "knowledge" && <KnowledgeContentControls />}
         {view === "objectives" && <ObjectivesContentControls />}
-        {view === "priorities" && <PrioritiesContentControls />}
+        {/* {view === "priorities" && <PrioritiesContentControls />} */}
     </div>
 }
 
