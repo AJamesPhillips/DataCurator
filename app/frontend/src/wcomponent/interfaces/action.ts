@@ -41,6 +41,7 @@ export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
     // then this likely inconsistent but not that important?
     // --- 2021-05-24
     goal_id?: string
+    todo_index?: number
 
     // status?: ActionStatus
     reason_for_status: string

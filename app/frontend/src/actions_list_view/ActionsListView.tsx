@@ -89,6 +89,7 @@ function _ActionsListViewContent (props: Props)
     const actions_todo: WComponentNodeAction[] = []
     const actions_in_progress: WComponentNodeAction[] = []
     const actions_done_or_rejected: WComponentNodeAction[] = []
+    let hidden_done = 0
 
     actions.forEach(action =>
     {
@@ -99,9 +100,17 @@ function _ActionsListViewContent (props: Props)
 
         const most_probable = attribute_values.most_probable_VAP_set_values[0]
         if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_in_progress) actions_in_progress.push(action)
-        else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed) actions_done_or_rejected.push(action)
+        else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed)
+        {
+            if (actions_done_or_rejected.length < 5) actions_done_or_rejected.push(action)
+            else hidden_done++
+        }
+        else if (action.todo_index) actions_todo.push(action)
         else actions_icebox.push(action)
     })
+
+
+    const sorted_actions_todo = sort_list(actions_todo, a => a.todo_index || 0, "descending")
 
 
     return <div className="action_list_view_content">
@@ -111,6 +120,7 @@ function _ActionsListViewContent (props: Props)
             {actions_icebox.map(action => <PrioritisableAction
                 key={action.id}
                 action={action}
+                show_icebox_actions={true}
             />)}
         </div>
 
@@ -120,9 +130,10 @@ function _ActionsListViewContent (props: Props)
                 <h1>Todo</h1>
             </div>
 
-            {actions_todo.map(action => <PrioritisableAction
+            {sorted_actions_todo.map(action => <PrioritisableAction
                 key={action.id}
                 action={action}
+                show_todo_actions={true}
             />)}
         </div>
 
@@ -148,6 +159,10 @@ function _ActionsListViewContent (props: Props)
                 key={action.id}
                 action={action}
             />)}
+
+            {hidden_done > 0 && <div style={{ textAlign: "center", margin: 40 }}>
+                ... {hidden_done} hidden ...
+            </div>}
         </div>
     </div>
 }

@@ -1,0 +1,23 @@
+
+
+.prioritisable_action
+{
+    display: flex;
+    margin: 10px;
+
+    .controls
+    {
+        overflow: hidden;
+        opacity: 0.1;
+        transition: opacity 0.25s linear;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+.prioritisable_action:hover .controls
+{
+    opacity: initial;
+}

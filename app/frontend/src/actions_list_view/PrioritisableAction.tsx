@@ -1,16 +1,24 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
+import ArrowBackIcon from "@material-ui/icons/ArrowBack"
 
+import "./PrioritisableAction.scss"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
+import { IconButton } from "@material-ui/core"
 
 
 
 interface OwnProps
 {
     action: WComponentNodeAction
+    show_icebox_actions?: boolean
+    show_todo_actions?: boolean
 }
 
 
@@ -33,10 +41,51 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _PrioritisableAction (props: Props)
 {
-    const { action } = props
+    const { action, upsert_wcomponent } = props
 
-    return <div style={{ display: "flex", margin: 10 }}>
+    return <div className="prioritisable_action">
         <WComponentCanvasNode id={action.id} is_movable={false} always_show={true} />
+
+
+        {props.show_icebox_actions && <div className="controls">
+            <IconButton
+                size="medium"
+                onClick={() => upsert_wcomponent({
+                    wcomponent: { ...action, todo_index: new Date().getTime() }
+                })}
+            >
+                <ArrowForwardIcon />
+            </IconButton>
+        </div>}
+
+        {props.show_todo_actions && <div className="controls">
+            <IconButton
+                size="medium"
+                onClick={() => upsert_wcomponent({
+                    wcomponent: { ...action, todo_index: new Date().getTime() }
+                })}
+            >
+                <ArrowUpwardIcon />
+            </IconButton>
+
+            <IconButton
+                size="medium"
+                onClick={() => upsert_wcomponent({
+                    wcomponent: { ...action, todo_index: undefined }
+                })}
+            >
+                <ArrowBackIcon />
+            </IconButton>
+
+            {/* <IconButton
+                size="medium"
+                onClick={() => upsert_wcomponent({
+                    wcomponent: { ...action, todo_index: new Date().getTime() }
+                })}
+            >
+                <ArrowDownwardIcon />
+            </IconButton> */}
+        </div>}
     </div>
 }
 
