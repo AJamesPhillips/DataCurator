@@ -42,6 +42,7 @@ export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
     // --- 2021-05-24
     goal_id?: string
     todo_index?: number
+    user_ids?: string[]
 
     // status?: ActionStatus
     reason_for_status: string

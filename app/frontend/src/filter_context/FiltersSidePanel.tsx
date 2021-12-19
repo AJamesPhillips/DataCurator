@@ -130,6 +130,15 @@ function _FiltersSidePanel (props: Props)
                 force_editable={true}
             />
         </p>
+
+        {/* <p>
+            Filter actions to yours:
+
+            <EditableCheckbox
+                value={true}
+                on_change={() => {}}
+            />
+        </p> */}
     </div>
 }
 
