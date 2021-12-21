@@ -24,7 +24,7 @@ const change_route = (routing_params: ActionChangeRouteArgs): ActionChangeRoute 
         args.zoom = round_position(args.zoom)
     }
 
-    return { type: change_route_type, ...routing_params, ...args }
+    return { type: change_route_type, ...routing_params }
 }
 
 function round_position (position: number | undefined): number | undefined
