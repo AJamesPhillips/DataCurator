@@ -112,6 +112,7 @@ export const HelpMenu = connector(_HelpMenu)
 
 const keyboard_shortcuts: KeyboardShortcutProps[] = [
     { keyboard_shortcut: ["?"], outcome: "Opens this help menu" },
+    { keyboard_shortcut: ["space"], outcome: "Fit view to components / cycle between groups of components" },
     { keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
     { keyboard_shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off` },
     { keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders` },
