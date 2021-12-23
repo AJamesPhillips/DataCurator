@@ -5,9 +5,9 @@
 
 ## Code specific
 
-[ ] Rename SpecialisedObjects, remove generic patterns / objects
-[ ] Make a component to support editing labels of multiple components (i.e. differentiate between labels applied to all vs only applied to some of the components)
-[ ] standardise names of all functions used as store state selectors.  e.g. some are `get_current_composed_knowledge_view_from_state` and others are `selector_chosen_base`
+- [ ] Rename SpecialisedObjects, remove generic patterns / objects
+- [ ] Make a component to support editing labels of multiple components (i.e. differentiate between labels applied to all vs only applied to some of the components)
+- [ ] standardise names of all functions used as store state selectors.  e.g. some are `get_current_composed_knowledge_view_from_state` and others are `selector_chosen_base`
 
 ## Equivocation of "base"
 
