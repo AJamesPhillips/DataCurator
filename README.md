@@ -1,17 +1,19 @@
 
 # DataCurator
 
-Sign up at [DataCurator.org](https://datacurator.org/app/)
-
 A collaborative real time planning application for complex projects.  Integrates a subset of features from:
 
 * whiteboard applications like Miro
-* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) (just not the simulation side yet)
+* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) (not the simulation side yet)
 * micro note taking, hierarchical and knowledge hyper graphs like [Obsidian](https://obsidian.md/), [Workflowy](https://workflowy.com/a/), [Roam Research](https://roamresearch.com/), [TheBrain](https://www.thebrain.com/)
 * theory of change maps like [TOCO](https://www.theoryofchange.org/toco-software/)
 * Gantt chart like Microsoft project
 
-The data is store in a Supabase account we operate.  In future we would like to allow you to host your own data in [Solid pods](https://solidproject.org/about) or something equivalent.
+Find out more at [DataCurator.org](https://datacurator.org/), view [an example map](https://datacurator.org/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12) or [sign up](https://datacurator.org/)
+
+### Data storage
+
+The data is store in a Supabase account we operate.  In future we would like you to be able to more easily host your own data in [Solid pods](https://solidproject.org/about) or something equivalent.
 
 ## Future improvements
 
@@ -29,6 +31,7 @@ The data is store in a Supabase account we operate.  In future we would like to 
   * allow people to build more complex (in terms of visuals & interactive) simulations like [TheWorldSim](https://theworldsim.org/sims/energy-explorer)
 * Improve multi user real time editing
   * add current user cursors'
+  * update 
   * show which knowledge view/map other users are looking at
   * conflict-free replicated data type (CRDT) for description text and other fields
 * Use [Solid pods](https://solidproject.org/about) or a different self-hostable backend like [Mathesar](https://github.com/centerofci/mathesar/)
