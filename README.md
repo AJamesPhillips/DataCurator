@@ -6,17 +6,39 @@ Sign up at [datacurator.org](https://datacurator.org/app/)
 A collaborative real time planning application for complex projects.  Integrates a subset of features from:
 
 * whiteboard applications like Miro
+* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) (just not the simulation side yet)
 * micro note taking, hierarchical and knowledge hyper graphs like [Obsidian](https://obsidian.md/), [Workflowy](https://workflowy.com/a/), [Roam Research](https://roamresearch.com/), [TheBrain](https://www.thebrain.com/)
+* theory of change maps like [TOCO](https://www.theoryofchange.org/toco-software/)
 * Gantt chart like Microsoft project
 
 The data is store in a Supabase account we operate.  In future we would like to allow you to host your own data in [Solid pods](https://solidproject.org/about) or something equivalent.
+
+## Future improvements
+
+* [Provide single pages for components, like a wikipedia page](https://github.com/centerofci/DataCurator/discussions/178)
+  * For each component allow many [different data sets](https://github.com/centerofci/DataCurator/discussions/180), versions of these sets, published by different authors, to be associated with each
+* Support simple calculations to derive data from other data sets
+* Use these data sets inside existing maps by providing a data field in the statev2 component
+* Support multiple attributes similar to Kumu, alternatively allow components within a parent view to be an addressable i.e. be like "public" class attributes in programming languages.
+  * Allow causal connections to specify these
+* Graph exploration features
+  * Show the shortest connections between two different groups of nodes
+* Support a [Modelica](https://modelica.org/modelicalanguage.html) compliant model of causal effects within a system
+  * allow these models to be exported
+  * have a generic simulation/interaction engine for these models with a UI like [Loopy](https://ncase.me/loopy/) or [InsightMaker](https://insightmaker.com) to help people build intuitions about how the complex systems might behave to various changes and interventions
+  * allow people to build more complex (in terms of visuals & interactive) simulations like [TheWorldSim](https://theworldsim.org/sims/energy-explorer)
+* Improve multi user real time editing
+  * add current user cursors'
+  * show which knowledge view/map other users are looking at
+  * conflict-free replicated data type (CRDT) for description text and other fields
+* Use [Solid pods](https://solidproject.org/about) or a different self-hostable backend like [Mathesar](https://github.com/centerofci/mathesar/)
 
 
 # Local app development
 
 ## Setup (on Mac)
 
-    $ git clone git@github.com:centerofci/data-curator2.git
+    $ git clone git@github.com:centerofci/DataCurator.git
 
 ### Install frontend dependencies
 
