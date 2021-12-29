@@ -1,5 +1,6 @@
 import { is_defined } from "../shared/utils/is_defined"
 import type { ComposedKnowledgeView } from "../state/derived/State"
+import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import type { RootState } from "../state/State"
 import {
     WComponent,
@@ -19,6 +20,8 @@ interface ConsoleApi
     matrix_to_csv: (matrix: ConnectionMatrixApiResult) => string
     get_current_kv: () => ComposedKnowledgeView | undefined
     get_wcomponents_by_id: () => WComponentsById
+
+    create_wcomponent: typeof create_wcomponent
 }
 
 interface KnowledgeGraphApi
@@ -298,6 +301,8 @@ export function setup_console_api ()
         matrix_to_csv,
         get_current_kv,
         get_wcomponents_by_id,
+
+        create_wcomponent,
     }
 
     ;(window as any).console_api = console_api
