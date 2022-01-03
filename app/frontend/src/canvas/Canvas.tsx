@@ -274,18 +274,24 @@ class _Canvas extends Component<Props, State>
         const y = this.props.y * scale
 
         const backgroundSize = grid_small_step * scale
+        // todo: include user using wheel to change zoom as a "manual move"
+        const manual_move = this.state.pointer_state.down
         const background_style = {
+            transition: manual_move ? "" : "background-position 0.5s, background-size 0.5s",
             backgroundPosition: `${x}px ${y}px`,
             backgroundSize: `${backgroundSize}px ${backgroundSize}px`,
         }
         const big_squared_background_style = {
+            transition: manual_move ? "" : "background-position 0.5s, background-size 0.5s",
             backgroundPosition: `${x}px ${y}px`,
             backgroundSize: `${h_step * scale}px ${v_step * scale}px`,
         }
         const html_translation_container_style = {
+            transition: manual_move ? "" : "transform 0.5s",
             transform: `translate(${x}px,${y}px)`
         }
         const html_container_style = {
+            transition: manual_move ? "" : "transform 0.5s",
             transformOrigin: "left top",
             transform: `scale(${scale})`
         }
