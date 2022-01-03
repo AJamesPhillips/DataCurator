@@ -20,8 +20,8 @@ interface CanvasMsgMap
     canvas_pointer_down: true
     canvas_pointer_up: true
     canvas_area_select: CanvasAreaSelectEvent
-    canvas_node_drag_relative_position: CanvasPoint | undefined
-    throttled_canvas_node_drag_relative_position: CanvasPoint | undefined
+    canvas_node_drag_relative_position: CanvasPoint
+    throttled_canvas_node_drag_relative_position: CanvasPoint
     canvas_move: CanvasPointerEvent
 }
 
@@ -33,11 +33,11 @@ export const canvas_pub_sub = pub_sub_factory<CanvasMsgMap>({
 
 
 let last_node_drag_position: CanvasPoint | undefined = undefined
-function canvas_node_drag_relative_position_middleware (message: CanvasPoint | undefined)
+function canvas_node_drag_relative_position_middleware (message: CanvasPoint)
 {
     const continue_ = (
-        last_node_drag_position?.left !== message?.left
-        || last_node_drag_position?.top !== message?.top
+        last_node_drag_position?.left !== message.left
+        || last_node_drag_position?.top !== message.top
     )
 
     last_node_drag_position = message
@@ -47,7 +47,7 @@ function canvas_node_drag_relative_position_middleware (message: CanvasPoint | u
 
 
 
-function handle_canvas_node_drag_relative_position (new_relative_position: CanvasPoint | undefined)
+function handle_canvas_node_drag_relative_position (new_relative_position: CanvasPoint)
 {
     canvas_pub_sub.pub("throttled_canvas_node_drag_relative_position", new_relative_position)
 }
