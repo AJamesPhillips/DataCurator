@@ -34,11 +34,10 @@ interface OwnProps
 
 const map_state = (state: RootState) => {
     const { x, y, zoom } = state.routing.args
-    const scale = zoom / SCALE_BY
     const shift_key_down = state.global_keys.keys_down.has("Shift")
     const control_key_down = state.global_keys.keys_down.has("Control")
 
-    return { zoom, scale, x, y, shift_key_down, control_key_down }
+    return { zoom, x, y, shift_key_down, control_key_down }
 }
 
 
@@ -98,6 +97,8 @@ interface State
 
 class _Canvas extends Component<Props, State>
 {
+    private manual_zoom_target: number | undefined = undefined
+
     constructor (props: Props)
     {
         super(props)
@@ -241,7 +242,8 @@ class _Canvas extends Component<Props, State>
         const new_zoom = calculate_new_zoom({ zoom: this.props.zoom, wheel_change })
         if (new_zoom === this.props.zoom) return
 
-        const { pointer_x, pointer_y } = get_pointer_position(e, this.props)
+        const scale = this.props.zoom / SCALE_BY
+        const { pointer_x, pointer_y } = get_pointer_position(e, this.props, scale)
         const { offsetHeight: client_height, offsetWidth: client_width } = e.currentTarget
 
         const result = calculate_new_zoom_xy({
@@ -249,6 +251,7 @@ class _Canvas extends Component<Props, State>
         })
 
         this.props.change_routing_args({ zoom: new_zoom, x: result.x, y: result.y })
+        this.manual_zoom_target = new_zoom
     }
 
 
@@ -268,30 +271,35 @@ class _Canvas extends Component<Props, State>
 
     render ()
     {
-        const { scale } = this.props
+        const { zoom } = this.props
 
+        const scale = zoom / SCALE_BY
         const x = -1 * this.props.x * scale
         const y = this.props.y * scale
 
         const backgroundSize = grid_small_step * scale
-        // todo: include user using wheel to change zoom as a "manual move"
+
         const manual_move = this.state.pointer_state.down
+        const manual_zoom = this.manual_zoom_target === zoom
+        this.manual_zoom_target = undefined
+        const transition_time = manual_move ? 0 : (manual_zoom ? 0.1 : 0.5)
+
         const background_style = {
-            transition: manual_move ? "" : "background-position 0.5s, background-size 0.5s",
+            transition: `background-position ${transition_time}s, background-size ${transition_time}s`,
             backgroundPosition: `${x}px ${y}px`,
             backgroundSize: `${backgroundSize}px ${backgroundSize}px`,
         }
         const big_squared_background_style = {
-            transition: manual_move ? "" : "background-position 0.5s, background-size 0.5s",
+            transition: `background-position ${transition_time}s, background-size ${transition_time}s`,
             backgroundPosition: `${x}px ${y}px`,
             backgroundSize: `${h_step * scale}px ${v_step * scale}px`,
         }
         const html_translation_container_style = {
-            transition: manual_move ? "" : "transform 0.5s",
+            transition: `transform ${transition_time}s`,
             transform: `translate(${x}px,${y}px)`
         }
         const html_container_style = {
-            transition: manual_move ? "" : "transform 0.5s",
+            transition: `transform ${transition_time}s`,
             transformOrigin: "left top",
             transform: `scale(${scale})`
         }
@@ -430,7 +438,7 @@ function area_selection_args (state: Readonly<State>)
 
 
 
-function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent>, pos: { x: number, y: number, scale: number })
+function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent>, pos: { x: number, y: number }, scale: number)
 {
     let pointer_x = e.offsetX
     let pointer_y = e.offsetY
@@ -450,8 +458,8 @@ function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent
         pointer_x -= pos.x
         pointer_y += pos.y
 
-        pointer_x *= pos.scale
-        pointer_y *= pos.scale
+        pointer_x *= scale
+        pointer_y *= scale
 
         pointer_x = Math.round(pointer_x)
         pointer_y = Math.round(pointer_y)
