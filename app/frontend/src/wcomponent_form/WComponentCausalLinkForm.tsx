@@ -80,32 +80,33 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
 
     const primary_effect_description = VAPs_represent_number ? "Effect" : "Effect when true"
 
-    return <p style={{ display: "flex", flex: "1" }} >
-        {show_primary_effect && <div>
+    return <p style={{ display: "flex" }} >
+        {show_primary_effect && <div style={{ flex: 1 }}>
             <span className="description_label">{primary_effect_description}</span> &nbsp; <EditableNumber
                 placeholder="..."
                 value={effect_when_true}
                 allow_undefined={true}
+                style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_false
                 conditional_on_blur={effect_when_true => change_effect({ effect_when_true, effect_when_false })}
             />
         </div>}
 
-        {show_effect_when_false && <div>
+        {show_effect_when_false && <div style={{ flex: 1 }}>
             <span className="description_label">Effect when false</span> &nbsp; <EditableNumber
                 placeholder="..."
                 value={effect_when_false}
                 allow_undefined={true}
+                style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_true
                 conditional_on_blur={effect_when_false => change_effect({ effect_when_false, effect_when_true })}
             />
         </div>}
 
         {/* flexGrow does not seem to work */}
-        {show_effect_when_false && <div style={{ flexGrow: 2, margin: "auto" }}>
+        {editing && show_effect_when_false && <div style={{ flex: 1, margin: "auto" }}>
             <Button
-                value="Invert"
-                disabled={!editing}
+                value="Invert Effect"
                 onClick={() =>
                 {
                     change_effect({

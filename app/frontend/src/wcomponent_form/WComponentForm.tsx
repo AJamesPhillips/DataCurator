@@ -297,7 +297,8 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {wcomponent_is_plain_connection(wcomponent) && <p>
+        {wcomponent_is_plain_connection(wcomponent) && <div>
+        <p>
             <WComponentFromTo
                 connection_terminal_description="From"
                 wcomponent_id={from_wcomponent && from_wcomponent.id}
@@ -305,9 +306,9 @@ function _WComponentForm (props: Props)
                 on_update_id={from_id => upsert_wcomponent({ from_id })}
                 on_update_type={from_type => upsert_wcomponent({ from_type })}
             />
-        </p>}
+        </p>
 
-        {wcomponent_is_plain_connection(wcomponent) && <p>
+        <p>
             <WComponentFromTo
                 connection_terminal_description="To"
                 wcomponent_id={to_wcomponent && to_wcomponent.id}
@@ -315,7 +316,18 @@ function _WComponentForm (props: Props)
                 on_update_id={to_id => upsert_wcomponent({ to_id })}
                 on_update_type={to_type => upsert_wcomponent({ to_type })}
             />
+        </p>
+
+        {editing && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+            <Button
+                value="Reverse Direction"
+                onClick={() =>
+                {
+                    upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
+                }}
+            />
         </p>}
+        </div>}
 
 
         {wcomponent_is_causal_link(wcomponent) && <WComponentCausalLinkForm
