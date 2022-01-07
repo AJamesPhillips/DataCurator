@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
 import type { PostgrestError } from "@supabase/postgrest-js"
@@ -22,8 +22,11 @@ interface OwnProps {
 
 const map_state = (state: RootState) =>
 {
+    const { user, users_by_id } = state.user_info
+
     return {
-        user: state.user_info.user,
+        user,
+        users_by_id,
         need_to_set_user_name: selector_need_to_set_user_name(state),
     }
 }
@@ -41,6 +44,10 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
     const { on_close, user, need_to_set_user_name } = props
 
     const [username, set_username] = useState("")
+    const current_user = (props.users_by_id || {})[user?.id || ""]
+    const current_username = current_user?.name || ""
+    useEffect(() => set_username(current_username), [current_username])
+
     const [save_state, set_save_state] = useState<AsyncState>("initial")
     const is_saving = save_state === "in_progress"
     const [postgrest_error, set_postgrest_error] = useState<PostgrestError | null>(null)
