@@ -19,6 +19,7 @@ const map_state = (state: RootState) =>
     return {
         user: state.user_info.user,
         bases_by_id: state.user_info.bases_by_id,
+        users_by_id: state.user_info.users_by_id,
         chosen_base_id: state.user_info.chosen_base_id,
         user_name: selector_user_name(state),
         need_to_set_user_name: selector_need_to_set_user_name(state),
@@ -31,12 +32,13 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector>
 
 
-type FormState = "signin" | "hidden" | "account_info"
+type FormState = "signin" | "loading" | "hidden" | "account_info"
 
 
 function _UserInfo (props: Props)
 {
-    const { user, bases_by_id, chosen_base_id, user_name, need_to_set_user_name } = props
+    const { user, bases_by_id, users_by_id, chosen_base_id, user_name, need_to_set_user_name } = props
+    const is_loading_users = !users_by_id
     const [form_state, set_form_state] = useState<FormState>("hidden")
     const previous_user = useRef<SupabaseAuthUser | undefined>(user)
     const user_name_or_none = user_name || no_user_name
@@ -52,12 +54,15 @@ function _UserInfo (props: Props)
         const should_sign_in = !user && have_bases_but_base_id_not_present
 
         const new_form_state: FormState = should_sign_in ? "signin"
+            : (is_loading_users ? "loading"
             : (need_to_set_user_name ? "account_info"
-            : (previous_signed_out ? "hidden" : form_state))
+            : (previous_signed_out ? "hidden" : form_state)))
+
+        // console.log ("new_form_state ", form_state, "->", new_form_state, "is_loading_users", is_loading_users, "need_to_set_user_name", need_to_set_user_name)
 
         set_form_state(new_form_state)
 
-    }, [user, bases_by_id, chosen_base_id, need_to_set_user_name])
+    }, [user, bases_by_id, chosen_base_id, is_loading_users, need_to_set_user_name])
 
 
     return (<div>
@@ -74,7 +79,7 @@ function _UserInfo (props: Props)
             variant="contained"
         >
             <Typography noWrap={true}>
-                {user ? user_name_or_none : "Sign in"}
+                {user ? user_name_or_none : (is_loading_users ? "Loading" : "Sign in")}
             </Typography>
         </Button>
 

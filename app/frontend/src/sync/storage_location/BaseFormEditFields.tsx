@@ -92,7 +92,7 @@ export function BaseFormEditFields (props: OwnProps)
                     if (res.error) return set_error_modifying_base(res.error)
 
                     set_error_modifying_base(undefined)
-                    pub_sub.user.pub("stale_bases", true)
+                    pub_sub.user.pub("stale_bases", false)
                 }}
                 value="Save changes"
             />} &nbsp;

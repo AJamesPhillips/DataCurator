@@ -65,7 +65,7 @@ function _BaseFormEditSharing (props: Props)
 
             if (res.error) return
 
-            pub_sub.user.pub("stale_users_by_id", true)
+            pub_sub.user.pub("stale_users_by_id", false)
         })
     }
 
