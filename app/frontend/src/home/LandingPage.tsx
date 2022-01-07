@@ -48,7 +48,10 @@ export function LandingPage() {
                         DataCurator allows you to build, and share your mental models of the world. It aims to facilitate and encourage more precise and systematic recording of all the key elements of these world models: the definitions, state, processes, assumptions, and imagined potential outcomes into the future, based on the past and present.
                     </p>
                     <p>
-                        This is a <a href="https://centerofci.org/projects/datacurator/">CCI project</a> supported by our generous funders.
+                        This is a <a href="https://centerofci.org/projects/datacurator/">CCI project</a> supported by <a href="https://centerofci.org/about/">our generous funders</a>.
+                    </p>
+                    <p>
+                        Please post any <a href="https://github.com/centerofci/DataCurator/discussions/categories/q-a">support or questions here</a>. For any bugs please <a href="https://github.com/centerofci/DataCurator/issues">post here</a>.
                     </p>
 
                     <a href="/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12">
