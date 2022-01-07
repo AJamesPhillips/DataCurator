@@ -56,7 +56,9 @@ as $$
   from access_controls
   left join bases
   on access_controls.base_id = bases.id
-  where bases.owner_user_id = auth.uid() and access_controls.access_level <> 'none'::AccessControlLevel;
+  where bases.owner_user_id = auth.uid();
+  -- Owner should still have access to details of user they have removed from their base
+  -- and access_controls.access_level <> 'none'::AccessControlLevel;
 $$;
 
 

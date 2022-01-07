@@ -13,6 +13,7 @@ import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabase
 import type { RootState } from "../state/State"
 import { AddAccessControlEntry } from "./AddAccessControl"
 import { SyncButton } from "../sharedf/SyncButton"
+import { pub_sub } from "../state/pub_sub/pub_sub"
 
 
 
@@ -61,6 +62,10 @@ function _BaseFormEditSharing (props: Props)
             set_async_state(res.error ? "error" : "success")
             set_access_controls(res.access_controls)
             set_error(res.error || undefined)
+
+            if (res.error) return
+
+            pub_sub.user.pub("stale_users_by_id", true)
         })
     }
 
