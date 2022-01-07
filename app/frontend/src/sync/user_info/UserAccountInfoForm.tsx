@@ -22,11 +22,13 @@ interface OwnProps {
 
 const map_state = (state: RootState) =>
 {
+    const { need_to_handle_password_recovery } = state.user_info
+
     return {
         user: state.user_info.user,
         user_name: selector_user_name(state),
         need_to_set_user_name: selector_need_to_set_user_name(state),
-        need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery,
+        need_to_handle_password_recovery,
     }
 }
 
@@ -66,6 +68,8 @@ function _UserAccountInfoForm (props: Props)
 
     const [form_state, set_form_state] = useState<"initial" | "updating_password" | "updating_username">("initial")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
+
+    console.log("user account info form need_to_set_user_name", need_to_set_user_name, "form_state", form_state)
 
     useEffect(() =>
     {

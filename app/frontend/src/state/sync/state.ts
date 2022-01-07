@@ -5,10 +5,6 @@ import type { WComponent, WComponentsById } from "../../wcomponent/interfaces/Sp
 
 export type SYNC_STATUS = "LOADING" | "LOADED" | "SAVING" | "SAVED" | "FAILED"
 
-export type StorageType = "supabase" //| "local_server" | "solid" | "hard_copy_export" | "hard_copy_import"
-    // TODO: remove "local_storage" as option
-    //| "local_storage"
-
 export type SyncDataType = "bases" | "specialised_objects"
 
 export interface SyncState extends SyncStateByType
@@ -22,9 +18,6 @@ export interface SyncState extends SyncStateByType
 
     network_functional: boolean
     network_function_last_checked: Date | undefined
-
-    // Only one type at the moment
-    storage_type: StorageType
 }
 
 

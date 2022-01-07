@@ -46,6 +46,18 @@ export function user_info_subscribers (store: StoreType)
         if (full_reload) store.dispatch(ACTIONS.user_info.update_bases({ bases: undefined }))
         refresh_bases_for_current_user(store)
     })
+
+
+    const supabase = get_supabase()
+    supabase.auth.onAuthStateChange(() =>
+    {
+        const current_user = store.getState().user_info.user
+        const user = supabase.auth.user() || undefined
+        const diff = current_user !== user
+        console .log("supabase auth state change", user, "diff", diff, "current_user", current_user)
+
+        if (diff) store.dispatch(ACTIONS.user_info.set_user({ user }))
+    })
 }
 
 

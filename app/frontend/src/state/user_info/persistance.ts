@@ -30,7 +30,10 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
     // const user_name = ensure_user_name("")
-    const need_to_handle_password_recovery = document.location.hash.includes("type=recovery")
+
+    const hash_has = (str: string) => document.location.hash.includes(str)
+    const need_to_handle_password_recovery = hash_has("type=recovery")
+
     const chosen_base_id = args.storage_location !== undefined ? args.storage_location : obj.chosen_base_id
 
 

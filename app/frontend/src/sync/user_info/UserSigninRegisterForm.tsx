@@ -46,7 +46,11 @@ function _UserSigninRegisterForm (props: Props)
 
     async function register ()
     {
-        const { user: new_user, error } = await supabase.auth.signUp({ email, password }, { redirectTo: "https://datacurator.org/app/" })
+        const { user: new_user, error } = await supabase.auth.signUp(
+            { email, password },
+            // { redirectTo: "https://datacurator.org/app/" }
+            { redirectTo: "http://localhost:8080/app/" }
+        )
 
         set_supabase_session_error(error)
         if (!error) set_form_state("registered")

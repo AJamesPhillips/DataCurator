@@ -26,7 +26,6 @@ export function sync_starting_state (): SyncState
     }
 
     const state: SyncState = {
-        storage_type: "supabase",
         last_source_of_truth_specialised_objects_by_id: {
             wcomponents: {},
             knowledge_views: {},

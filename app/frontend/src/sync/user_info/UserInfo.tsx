@@ -58,7 +58,7 @@ function _UserInfo (props: Props)
             : (need_to_set_user_name ? "account_info"
             : (previous_signed_out ? "hidden" : form_state)))
 
-        // console.log ("new_form_state ", form_state, "->", new_form_state, "is_loading_users", is_loading_users, "need_to_set_user_name", need_to_set_user_name)
+        console.log ("new_form_state ", form_state, "->", new_form_state, "is_loading_users", is_loading_users, "need_to_set_user_name", need_to_set_user_name)
 
         set_form_state(new_form_state)
 

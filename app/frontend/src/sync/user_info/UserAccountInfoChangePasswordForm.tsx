@@ -17,9 +17,13 @@ interface OwnProps {
 
 const map_state = (state: RootState) =>
 {
+    const {
+        need_to_handle_password_recovery,
+    } = state.user_info
+
     return {
         user: state.user_info.user,
-        need_to_handle_password_recovery: state.user_info.need_to_handle_password_recovery,
+        need_to_handle_password_recovery,
     }
 }
 
@@ -37,7 +41,10 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _UserAccountInfoChangePasswordForm (props: Props)
 {
-    const { on_close, user, need_to_handle_password_recovery, set_user, set_need_to_handle_password_recovery } = props
+    const {
+        on_close, user, set_user,
+        need_to_handle_password_recovery, set_need_to_handle_password_recovery,
+    } = props
 
     const [password, set_password] = useState("")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
@@ -61,7 +68,9 @@ function _UserAccountInfoChangePasswordForm (props: Props)
             on_close()
         }
     }
-    const classes = use_styles();
+
+    const classes = use_styles()
+
     return <FormGroup className="section">
         {need_to_handle_password_recovery && <p>Please set a new password.</p>}
 
