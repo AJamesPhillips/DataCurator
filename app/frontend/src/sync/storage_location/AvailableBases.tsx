@@ -78,7 +78,7 @@ function _AvailableBases (props: Props)
             style={{ float: "right" }}
         />
 
-        <h4>Select an existing base</h4>
+        <h4>Select a base</h4>
 
         <DisplaySupabasePostgrestError error={error} />
 

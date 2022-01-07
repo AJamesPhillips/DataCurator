@@ -4,9 +4,6 @@ import { get_datetime_or_ms } from "./datetime/routing_datetime"
 import type {
     RoutingState,
     RoutingStateArgKey,
-    ROUTE_TYPES,
-    SUB_ROUTE_TYPES,
-    ViewType,
 } from "./interfaces"
 
 
@@ -28,6 +25,10 @@ export function merge_routing_state (current_routing_state: RoutingState, new_ro
     new_args.sim_datetime = new_args.sim_ms ? new Date(new_args.sim_ms) : undefined
 
     Object.keys(new_args).forEach(key => {
+        // Special case storage_location to allow it to be set to undefined when it is invalid and a new
+        // value needs to be selected by the user
+        if (key === "storage_location") return
+
         const value = new_args[key as RoutingStateArgKey]
         const no_value = value === undefined || value === ""
         if (no_value) delete new_args[key as RoutingStateArgKey]
@@ -67,7 +68,7 @@ function run_tests ()
             zoom: 100,
             x: 0,
             y: 0,
-            storage_location: undefined,
+            storage_location: 1,
         }
     }
 
@@ -100,6 +101,11 @@ function run_tests ()
     test(merged_routing_state.args.sim_ms, dt3.getTime())
     test(msg_called, "do not set both new_ms and new_datetime")
     msg_called = ""
+
+    // Should remove chosen_base_id of undefined
+    new_routing_state = { args: { storage_location: undefined } }
+    merged_routing_state = merge_routing_state(current_routing_state, new_routing_state)
+    test(merged_routing_state.args.storage_location, undefined)
 }
 
 

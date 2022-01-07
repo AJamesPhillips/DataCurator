@@ -48,8 +48,8 @@ function _UserSigninRegisterForm (props: Props)
     {
         const { user: new_user, error } = await supabase.auth.signUp(
             { email, password },
-            // { redirectTo: "https://datacurator.org/app/" }
-            { redirectTo: "http://localhost:8080/app/" }
+            { redirectTo: "https://datacurator.org/app/" }
+            // { redirectTo: "http://localhost:8080/app/" }
         )
 
         set_supabase_session_error(error)
