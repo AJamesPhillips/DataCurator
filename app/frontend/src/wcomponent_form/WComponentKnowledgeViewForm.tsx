@@ -126,7 +126,14 @@ function _WComponentKnowledgeViewForm (props: Props)
         <div style={{ display: "inline-flex" }}>
             <MoveToWComponentButton
                 wcomponent_id={wcomponent_id}
-                disable_if_not_present={false} // maybe this should be true but I find it confusing behaviour
+                // Maybe this should be true but I find it confusing behaviour when ... <todo fill in scenario>
+                //
+                // Maybe this should be false but I find it confusing behaviour when the component is not in the
+                // current knowledge view, and you can press the button anyway and get taken to some random point with
+                // other components... but then you (obviously) can not find this component so a user will be
+                // left thinking: "Why did the button work?"  "What am I meant to see here?"  "Is this component
+                // present I am just missing it?"  "Is the component perhaps hidden by another component?"
+                disable_if_not_present={true}
             />
 
             <Box zIndex={10} m={4} class="node_handle">
