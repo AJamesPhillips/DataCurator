@@ -7,7 +7,7 @@ import { Link } from "../sharedf/Link"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { WComponent, wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
 
@@ -49,6 +49,9 @@ function _WComponentBackReferences (props: Props)
                 {
                     return wc.title.includes(wcomponent_id)
                         || wc.description.includes(wcomponent_id)
+                        || (wcomponent_is_judgement_or_objective(wc) &&
+                            (wc.judgement_target_wcomponent_id === wcomponent_id)
+                        )
                         || (wcomponent_is_plain_connection(wc) &&
                             (
                                 wc.from_id === wcomponent_id
