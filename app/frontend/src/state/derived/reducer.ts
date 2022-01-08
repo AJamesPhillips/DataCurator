@@ -126,6 +126,8 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
 {
     let { current_composed_knowledge_view } = state.derived
 
+    const kv_id_changed = initial_state.derived.current_composed_knowledge_view?.id !== current_composed_knowledge_view?.id
+
     const judgement_or_objective_ids_by_target_id_changed = initial_state.derived.judgement_or_objective_ids_by_target_id !== state.derived.judgement_or_objective_ids_by_target_id
 
     const { created_at_ms, sim_ms } = state.routing.args
@@ -133,7 +135,7 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
     const sim_ms_changed = initial_state.routing.args.sim_ms !== sim_ms
 
 
-    if (current_composed_knowledge_view && (judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
+    if (current_composed_knowledge_view && (kv_id_changed || judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
     {
         const active_judgement_or_objective_ids_by_target_id: { [id: string]: string[] } = {}
         const active_judgement_or_objective_ids_by_goal_or_action_id: { [id: string]: string[] } = {}
