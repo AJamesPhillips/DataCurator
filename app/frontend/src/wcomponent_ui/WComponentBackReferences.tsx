@@ -7,7 +7,13 @@ import { Link } from "../sharedf/Link"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { WComponent, wcomponent_is_judgement_or_objective, wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_has_validity_predictions,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_plain_connection,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
 
@@ -51,6 +57,18 @@ function _WComponentBackReferences (props: Props)
                         || wc.description.includes(wcomponent_id)
                         || (wcomponent_is_judgement_or_objective(wc) &&
                             (wc.judgement_target_wcomponent_id === wcomponent_id)
+                        )
+                        || (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) &&
+                            (wc.values_and_prediction_sets.find(vap_set =>
+                            {
+                                return vap_set.entries.find(vap => (vap.explanation || "").includes(wcomponent_id))
+                            }))
+                        )
+                        || (wcomponent_has_validity_predictions(wc) &&
+                            (wc.validity.find(prediction =>
+                            {
+                                return (prediction.explanation || "").includes(wcomponent_id)
+                            }))
                         )
                         || (wcomponent_is_plain_connection(wc) &&
                             (
