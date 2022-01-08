@@ -2,10 +2,10 @@ import { h } from "preact"
 
 import "./JudgementBadge.css"
 import type { JudgementValue } from "./calculate_judgement_value"
-import type { CanvasPoint } from "../../canvas/interfaces"
 import { Link } from "../Link"
-import type { RoutingStateArgs } from "../../state/routing/interfaces"
+import type { CanvasPoint } from "../../canvas/interfaces"
 import { lefttop_to_xy } from "../../state/display_options/display"
+import type { RoutingStateArgs } from "../../state/routing/interfaces"
 
 
 
@@ -16,7 +16,7 @@ interface OwnProps
     position?: CanvasPoint
 }
 
-// Refactor this to be hidden inside JudgementBadgeC
+// Refactor this to be hidden inside JudgementBadgeConnected?
 export function JudgementBadge (props: OwnProps)
 {
     const judgement_type = props.judgement ? "positive" : props.judgement === undefined ? "inactive" : "negative"
@@ -26,8 +26,7 @@ export function JudgementBadge (props: OwnProps)
 
 
     let args: Partial<RoutingStateArgs> | undefined = undefined
-    // Commmenting out for the moment as judgements are hidden from the canvas
-    // if (props.position) args = lefttop_to_xy({ ...props.position, zoom: 100 }, true)
+    if (props.position) args = lefttop_to_xy({ ...props.position, zoom: 100 }, true)
 
 
     return <Link
