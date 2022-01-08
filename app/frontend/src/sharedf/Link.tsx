@@ -95,6 +95,9 @@ class _Link extends Component<Props, State>
         const partial_routing_args: Partial<RoutingStateArgs> = this.props.args || {}
 
         const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
+            e.stopImmediatePropagation()
+            e.preventDefault()
+
             if (this.props.selected) return // no-op
             this.setState({ clicked: true })
 
@@ -123,6 +126,7 @@ class _Link extends Component<Props, State>
         // an anchor tag at all as we're surpressing all of it's default behaviours
         return <a
             onPointerDown={on_pointer_down}
+            onClick={e => { e.stopImmediatePropagation(); e.preventDefault() }}
             href={routing_state_to_string({ ...full_routing_state })}
             className={class_name}
             style={this.props.extra_css_style}
