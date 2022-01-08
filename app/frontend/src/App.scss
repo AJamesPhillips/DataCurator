@@ -10,3 +10,28 @@ blockquote p {
     border-left: thin solid #aaa;
     padding-left: 4px;
 }
+
+
+
+// // https://www.digitalocean.com/community/tutorials/css-scrollbars
+// /* Works on Firefox */
+// * {
+//     scrollbar-width: medium;
+//     // scrollbar-color: blue orange;
+// }
+
+// /* Works on Chrome, Edge, and Safari */
+// *::-webkit-scrollbar {
+//     width: 10px;
+//     height: 12px;
+// }
+
+// *::-webkit-scrollbar-track {
+//     // background: #555;
+// }
+
+// *::-webkit-scrollbar-thumb {
+//     background-color: #ccc;
+//     border-radius: 10px;
+//     // border: 3px solid #555;
+// }
