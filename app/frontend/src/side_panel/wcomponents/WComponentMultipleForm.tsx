@@ -206,7 +206,6 @@ function _WComponentMultipleForm (props: Props)
             <h3>Add to knowledge view</h3>
             {all_wcomponent_ids_present_in_current_kv ?
             <SelectKnowledgeView
-                exclude_ids={new Set(knowledge_view_id ? [knowledge_view_id]: [])}
                 on_change={knowledge_view_id =>
                 {
                     if (!knowledge_view_id) return

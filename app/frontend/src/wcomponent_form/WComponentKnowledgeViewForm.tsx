@@ -162,7 +162,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <div>
+        {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
             <ConfirmatoryDeleteButton
                 button_text="Delete from knowledge view (allow passthrough from foundations)"
                 tooltip_text={"Delete from current knowledge view (" + knowledge_view_title + ") and allow passthrough from foundations"}
@@ -174,7 +174,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                     })
                 }}
             />
-        </div>}
+        </p>}
 
 
         {(editing && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough) && <div>
