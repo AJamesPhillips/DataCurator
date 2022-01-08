@@ -17,6 +17,7 @@ const map_state = (state: RootState) => ({
 
 const map_dispatch = {
     change_route: ACTIONS.routing.change_route,
+    set_or_toggle_display_side_panel: ACTIONS.controls.set_or_toggle_display_side_panel,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -35,7 +36,11 @@ function _ActiveCreationContextWarning (props: Props)
                 className={classes.warning_button}
                 component="span"
                 size="small"
-                onClick={() => props.change_route({ route: "creation_context" })}
+                onClick={() =>
+                {
+                    props.set_or_toggle_display_side_panel(true)
+                    props.change_route({ route: "creation_context" })
+                }}
             >
                 <PhotoFilterIcon className={classes.warning_icon} />
             </IconButton>
