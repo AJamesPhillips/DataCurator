@@ -8,8 +8,6 @@ import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
-import type { WComponentIdsByType } from "./State"
-import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
 
 

@@ -142,21 +142,20 @@ function get_knowledge_view (state: RootState, id: string)
 
 
 
-// Possible optimisation: store a set of wcomponent_ids and only run the following code when
-// this set changes... may save a bunch of views from updating (and also help them run faster)
-// as many just want to know what ids are present in the knowledge view not the positions of
-// the components
+// possible place for optimisation which may save a bunch of views from updating (and also help them run faster)
 export function update_current_composed_knowledge_view_state (state: RootState, current_kv: KnowledgeView)
 {
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
+    const { current_composed_knowledge_view } = state.derived
 
-    const current_composed_knowledge_view = calculate_composed_knowledge_view({
+    const updated_current_composed_knowledge_view = calculate_composed_knowledge_view({
         knowledge_view: current_kv,
+        current_composed_knowledge_view,
         knowledge_views_by_id,
         wcomponents_by_id,
     })
 
-    return current_composed_knowledge_view
+    return updated_current_composed_knowledge_view
 }
 
 

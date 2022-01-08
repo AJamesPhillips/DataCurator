@@ -48,6 +48,12 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
 {
     if (!current_kv) return {}
 
+    // We call `update_current_composed_knowledge_view_state` but then do not use this to update
+    // `state.derived.current_composed_knowledge_view` and we do not use
+    // `state.derived.current_composed_knowledge_view` in the first place because this code is called when the current
+    // knowledge view is invalid (does not exist).  And so we navigate to a random knowledge view, and whilst we do that
+    // we might as well understand where the components are positioned and send the user straight there.
+
     let current_composed_knowledge_view: ComposedKnowledgeView | undefined = update_current_composed_knowledge_view_state(state, current_kv)
     current_composed_knowledge_view = update_composed_knowledge_view_filters(state, current_composed_knowledge_view)
     if (!current_composed_knowledge_view) return {}
