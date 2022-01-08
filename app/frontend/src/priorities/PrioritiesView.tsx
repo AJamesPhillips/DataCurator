@@ -7,7 +7,7 @@ import { round_coordinate_small_step } from "../canvas/position_utils"
 import { calculate_canvas_x_for_datetime, default_time_origin_parameters } from "../knowledge_view/datetime_line"
 import { KnowledgeGraphTimeMarkers } from "../knowledge_view/KnowledgeGraphTimeMarkers"
 import { MainArea } from "../layout/MainArea"
-import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
+import { get_uncertain_datetime, HasCalcdUncertainDatetime, has_calcd_datetime } from "../shared/uncertainty/datetime"
 import { sort_list } from "../shared/utils/sort"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
@@ -43,15 +43,6 @@ const get_svg_children = (props: Props) =>
 }
 
 
-interface HasCalcdUncertainDatetime
-{
-    calcd_uncertain_datetime: Date
-}
-function has_calcd_datetime <U> (p: U & Partial<HasCalcdUncertainDatetime>): p is U & HasCalcdUncertainDatetime
-{
-    return !!p.calcd_uncertain_datetime
-}
-
 interface WComponentPrioritisationWithCalcdDatetime extends WComponentPrioritisation, HasCalcdUncertainDatetime {}
 
 
@@ -70,7 +61,7 @@ const get_children = (props: Props) =>
             .filter(has_calcd_datetime)
 
         prioritisations_with_datetime = sort_list(prioritisations_with_datetime, p => p.calcd_uncertain_datetime.getTime(), "ascending")
-            .filter(p => !!get_uncertain_datetime(p.datetime))
+            // .filter(p => !!get_uncertain_datetime(p.datetime))
 
 
         let offset = 0

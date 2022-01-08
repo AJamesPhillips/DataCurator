@@ -189,7 +189,7 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
 
 
 
-function calculate_zoom_to_contain_group (group: PositionGroup, display_side_panel: boolean, display_time_sliders: boolean)
+export function calculate_zoom_to_contain_group (group: PositionGroup, display_side_panel: boolean, display_time_sliders: boolean)
 {
     const total_width = group.max_left - group.min_left
     const total_height = group.max_top - group.min_top
