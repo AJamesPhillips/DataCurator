@@ -7,29 +7,41 @@
     width: 100%;
     overflow-y: scroll;
     /* margin-bottom: 100px; -- does not work as it overlaps the content */
+
+
+    .priorities_list
+    {
+        width: 400px;
+    }
+
+
+    h1
+    {
+        padding: 10px;
+    }
+
+
+    .goals, .prioritisations
+    {
+        flex: 1;
+        padding: 40px;
+    }
+
+    .goals
+    {
+        border-right: thin solid #aaa;
+    }
 }
 
-.priorities_list_view_content .goals
-{
-    flex: 1;
-    padding: 40px;
-    border-right: thin solid #aaa;
-}
-
-.priorities_list_view_content .prioritisations
-{
-    flex: 1;
-    padding: 20px;
-}
-
-.prioritisations_header
-{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
 
 .priorities_list_view_content .goals > div, .prioritisations_list > div
 {
     margin-bottom: 20px;
+}
+
+
+.priorities_list_view_content .side_panel_padding
+{
+    // Keep 0.25s in sync with App.tsx -> use_styles -> content_with_open_side_panel -> transition -> duration
+    transition: min-width 0.25s linear;
 }

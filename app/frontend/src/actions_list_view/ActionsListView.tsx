@@ -19,6 +19,7 @@ import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 import type { Base } from "../shared/interfaces/base"
+import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 
 
 
@@ -57,6 +58,7 @@ const map_state = (state: RootState) =>
         wcomponents_by_id,
         editing: !state.display_options.consumption_formatting,
         base_id: selector_chosen_base_id(state),
+        display_side_panel: state.controls.display_side_panel,
     }
 }
 
@@ -114,7 +116,7 @@ function _ActionsListViewContent (props: Props)
 
 
     return <div className="action_list_view_content">
-        <div className="icebox">
+        <div className="action_list icebox">
             <h1>Icebox</h1>
 
             {actions_icebox.map(action => <PrioritisableAction
@@ -125,10 +127,8 @@ function _ActionsListViewContent (props: Props)
         </div>
 
 
-        <div className="todo">
-            <div className="prioritisations_header">
-                <h1>Todo</h1>
-            </div>
+        <div className="action_list todo">
+            <h1>Todo</h1>
 
             {sorted_actions_todo.map(action => <PrioritisableAction
                 key={action.id}
@@ -138,10 +138,8 @@ function _ActionsListViewContent (props: Props)
         </div>
 
 
-        <div className="in_progress">
-            <div className="prioritisations_header">
-                <h1>In progress</h1>
-            </div>
+        <div className="action_list in_progress">
+            <h1>In progress</h1>
 
             {actions_in_progress.map(action => <PrioritisableAction
                 key={action.id}
@@ -150,10 +148,8 @@ function _ActionsListViewContent (props: Props)
         </div>
 
 
-        <div className="done_or_rejected">
-            <div className="prioritisations_header">
-                <h1>Done</h1>
-            </div>
+        <div className="action_list done_or_rejected">
+            <h1>Done</h1>
 
             {actions_done_or_rejected.map(action => <PrioritisableAction
                 key={action.id}
@@ -164,6 +160,12 @@ function _ActionsListViewContent (props: Props)
                 ... {hidden_done} hidden ...
             </div>}
         </div>
+
+
+        <div
+            className="side_panel_padding"
+            style={{ minWidth: props.display_side_panel ? SIDE_PANEL_WIDTH : 0 }}
+        />
     </div>
 }
 

@@ -166,7 +166,7 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
 
     if (potential_children.length === lack_parent.length)
     {
-        console.error(`Circular knowledge view tree`)
+        console.error(`Circular knowledge view tree.  Look in "Views" at the top level knowledge views for those with an error.`)
         lack_parent.forEach(({ id, title, sort_type }) =>
         {
             map.top_ids.push(id)

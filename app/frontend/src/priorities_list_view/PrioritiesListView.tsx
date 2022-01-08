@@ -19,6 +19,8 @@ import { sort_list } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
+import { SIDE_PANEL_WIDTH } from "../side_panel/width"
+import { Button } from "../sharedf/Button"
 
 
 
@@ -76,6 +78,7 @@ const map_state = (state: RootState) =>
         editing: !state.display_options.consumption_formatting,
         selected_prioritisation,
         base_id: selector_chosen_base_id(state),
+        display_side_panel: state.controls.display_side_panel,
     }
 }
 
@@ -102,7 +105,7 @@ function _PrioritiesListViewContent (props: Props)
 
 
     return <div className="priorities_list_view_content">
-        <div className="goals">
+        <div className="priorities_list goals">
             <h1>Potential</h1>
 
             {potential_goals.map(goal => <PrioritisableGoal
@@ -121,7 +124,7 @@ function _PrioritiesListViewContent (props: Props)
         </div>
 
 
-        <div className="goals">
+        <div className="priorities_list goals">
             <h1>Prioritised</h1>
 
             {prioritised_goals.map(goal => <PrioritisableGoal
@@ -133,33 +136,46 @@ function _PrioritiesListViewContent (props: Props)
 
 
 
-        <div className="prioritisations">
-            <div className="prioritisations_header">
-                <h1>Prioritisations</h1>
+        <div className="priorities_list prioritisations">
+            <h1>
+                Prioritisations
 
-                {editing && knowledge_view_id && <ListHeaderAddButton
-                    new_item_descriptor="Prioritisation"
-                    on_pointer_down_new_list_entry={() =>
-                    {
-                        create_wcomponent({
-                            wcomponent: {
-                                base_id,
-                                type: "prioritisation",
-                                goals: goal_prioritisation_attributes || {}
-                            },
-                            add_to_knowledge_view: {
-                                id: knowledge_view_id,
-                                position: { left: 0, top: 0 },
-                            }
-                        })
-                    }}
-                />}
-            </div>
+                {editing && knowledge_view_id && <span>
+                    &nbsp;
+                    <Button
+                        fullWidth={false}
+                        onClick={e =>
+                        {
+                            e.stopImmediatePropagation() // otherwise the list of items will change its expanded state
+                            create_wcomponent({
+                                wcomponent: {
+                                    base_id,
+                                    type: "prioritisation",
+                                    goals: goal_prioritisation_attributes || {}
+                                },
+                                add_to_knowledge_view: {
+                                    id: knowledge_view_id,
+                                    position: { left: 0, top: 0 },
+                                }
+                            })
+                        }}
+                    >
+                        Add
+                    </Button>
+                </span>}
+            </h1>
 
             <div className="prioritisations_list">
                 {prioritisations.map(p => <Prioritisation prioritisation={p}/>)}
             </div>
         </div>
+
+
+
+        <div
+            className="side_panel_padding"
+            style={{ minWidth: props.display_side_panel ? SIDE_PANEL_WIDTH : 0 }}
+        />
     </div>
 }
 

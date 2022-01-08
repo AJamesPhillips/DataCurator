@@ -25,6 +25,7 @@ import { get_store } from "./state/store"
 import { check_and_handle_connection_and_session } from "./sync/user_info/window_focus_session_check"
 import { date_to_string } from "./form/datetime_utils"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
+import { SIDE_PANEL_WIDTH } from "./side_panel/width"
 
 
 
@@ -132,7 +133,6 @@ export default connector(App) as FunctionalComponent<{}>
 
 
 
-const drawerWidth = 440
 const use_styles = makeStyles(theme => ({
     root: {
         width: "100%", height: "100%",
@@ -151,8 +151,8 @@ const use_styles = makeStyles(theme => ({
     },
 
     app_bar_with_open_side_panel: {
-        // width: `calc(100% - ${drawerWidth}px)`, maxWidth: `calc(100% - ${drawerWidth}px)`,
-        // marginRight: drawerWidth,
+        // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`, maxWidth: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
+        // marginRight: SIDE_PANEL_WIDTH,
         // transition: theme.transitions.create(["all"], {
         //     easing: theme.transitions.easing.easeOut,
         //     duration: theme.transitions.duration.enteringScreen,
@@ -166,7 +166,7 @@ const use_styles = makeStyles(theme => ({
         // flexShrink: 1,
         display: "flex",
         // flexDirection: "column", flexWrap: "nowrap",
-        marginRight: -drawerWidth,
+        marginRight: -SIDE_PANEL_WIDTH,
         transition: theme.transitions.create(["margin"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -182,13 +182,13 @@ const use_styles = makeStyles(theme => ({
     },
 
     drawer: {
-        width: drawerWidth,
+        width: SIDE_PANEL_WIDTH,
         flexShrink: 0,
     },
 
     side_panel: {
         backgroundColor: theme.palette.background.paper,
-        width: drawerWidth,
+        width: SIDE_PANEL_WIDTH,
         position: "relative",
         paddingTop:50,
     },
