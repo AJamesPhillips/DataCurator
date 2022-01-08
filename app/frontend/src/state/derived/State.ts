@@ -72,6 +72,7 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 
         wc_ids_excluded_by_filters: Set<string>
         wc_ids_excluded_by_created_at_datetime_filter: Set<string>
+        vap_set_number_excluded_by_created_at_datetime_filter: number
     }
 }
 

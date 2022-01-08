@@ -124,17 +124,11 @@ function _ContentControls (props: Props)
 
                     <Tooltip
                         placement="top"
-                        title={props.editing
-                            ? "Time sliders always shown whilst editing"
-                            : (props.display_time_sliders
-                                ? "Hide time sliders"
-                                : "Show time sliders")
-                        }
+                        title={props.display_time_sliders ? "Hide time sliders" : "Show time sliders"}
                     >
                         <IconButton
                             component="span"
                             size="medium"
-                            disabled={props.editing}
                             onClick={() => props.set_display_time_sliders(!props.display_time_sliders)}
                         >
                             <TuneIcon />

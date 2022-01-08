@@ -26,6 +26,7 @@ import {
     wcomponent_is_counterfactual_v2,
     wcomponent_is_prioritisation,
     wcomponent_is_plain_connection,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
@@ -163,12 +164,24 @@ export function update_current_composed_knowledge_view_state (state: RootState, 
 interface CalculateComposedKnowledgeViewArgs
 {
     knowledge_view: KnowledgeView
+    current_composed_knowledge_view?: ComposedKnowledgeView
     knowledge_views_by_id: KnowledgeViewsById
     wcomponents_by_id: WComponentsById
 }
 export function calculate_composed_knowledge_view (args: CalculateComposedKnowledgeViewArgs)
 {
     const { knowledge_view, knowledge_views_by_id, wcomponents_by_id } = args
+    const current_composed_knowledge_view = args.current_composed_knowledge_view || {
+        composed_visible_wc_id_map: {},
+        active_judgement_or_objective_ids_by_target_id: {},
+        active_judgement_or_objective_ids_by_goal_or_action_id: {},
+        filters: {
+            wc_ids_excluded_by_any_filter: new Set(),
+            wc_ids_excluded_by_filters: new Set(),
+            wc_ids_excluded_by_created_at_datetime_filter: new Set(),
+            vap_set_number_excluded_by_created_at_datetime_filter: 0,
+        },
+    }
 
     const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
     const {
@@ -204,16 +217,9 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     const available_filter_options = get_available_filter_options(wcomponents)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
 
-    const current_composed_knowledge_view: ComposedKnowledgeView = {
-        composed_visible_wc_id_map: {},
-        active_judgement_or_objective_ids_by_target_id: {},
-        active_judgement_or_objective_ids_by_goal_or_action_id: {},
-        filters: {
-            wc_ids_excluded_by_any_filter: new Set(),
-            wc_ids_excluded_by_filters: new Set(),
-            wc_ids_excluded_by_created_at_datetime_filter: new Set(),
-        },
+    const updated_composed_knowledge_view: ComposedKnowledgeView = {
         ...knowledge_view,
+        ...current_composed_knowledge_view,
         composed_wc_id_map,
         composed_blocked_wc_id_map,
         overlapping_wc_ids,
@@ -229,9 +235,9 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         composed_datetime_line_config: datetime_lines_config,
     }
     // do not need to do this but helps reduce confusion when debugging
-    delete (current_composed_knowledge_view as any).wc_id_map
+    delete (updated_composed_knowledge_view as any).wc_id_map
 
-    return current_composed_knowledge_view
+    return updated_composed_knowledge_view
 }
 
 
@@ -436,7 +442,7 @@ export function get_composed_datetime_lines_config (foundation_knowledge_views: 
 
 
 
-export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView)
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
 {
     if (!current_composed_knowledge_view) return undefined
 
@@ -503,8 +509,24 @@ export function update_composed_knowledge_view_filters (state: RootState, curren
 
 
     const { created_at_ms } = state.routing.args
+    let vap_set_number_excluded_by_created_at_datetime_filter = 0
     const component_ids_excluded_by_created_at = wcomponents_on_kv
-        .filter(kv => get_created_at_ms(kv) > created_at_ms)
+        .filter(wc =>
+        {
+            if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc))
+            {
+                wc.values_and_prediction_sets
+                .forEach(vap_set =>
+                {
+                    if (get_created_at_ms(vap_set) > created_at_ms)
+                    {
+                        ++vap_set_number_excluded_by_created_at_datetime_filter
+                    }
+                })
+            }
+
+            return get_created_at_ms(wc) > created_at_ms
+        })
         .map(({ id }) => id)
     const wc_ids_excluded_by_created_at_datetime_filter = new Set(component_ids_excluded_by_created_at)
 
@@ -529,6 +551,7 @@ export function update_composed_knowledge_view_filters (state: RootState, curren
             wc_ids_excluded_by_any_filter,
             wc_ids_excluded_by_filters,
             wc_ids_excluded_by_created_at_datetime_filter,
+            vap_set_number_excluded_by_created_at_datetime_filter,
         }
     }
 }

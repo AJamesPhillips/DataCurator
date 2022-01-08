@@ -1,7 +1,6 @@
 import type { ContentCoordinate, PositionAndZoom } from "../../canvas/interfaces"
 import { h_step, position_to_point, round_number, v_step } from "../../canvas/position_utils"
 import { SCALE_BY } from "../../canvas/zoom_utils"
-import { get_actually_display_time_sliders } from "../controls/accessors"
 import { STARTING_ZOOM } from "../routing/starting_state"
 // import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"

@@ -29,6 +29,7 @@ import {
 import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
+import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 
 
 
@@ -159,7 +160,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
         />
 
         {invalid_future_items.length > 0 && <div>
-            Hidden ({invalid_future_items.length})
+            Hidden ({invalid_future_items.length}) <ActiveCreatedAtFilterWarning />
         </div>}
 
         {show_futures && <ExpandableList
