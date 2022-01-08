@@ -53,10 +53,11 @@ export function user_info_subscribers (store: StoreType)
     {
         const current_user = store.getState().user_info.user
         const user = supabase.auth.user() || undefined
-        const diff = current_user !== user
-        console .log("supabase auth state change", user, "diff", diff, "current_user", current_user)
+        // Have to compare user by id as the object is changed on each call to `supabase.auth.user()`
+        const diff_user = current_user?.id !== user?.id
+        console .log("supabase auth state change.  Diff user? ", diff_user, "current_user", current_user, "new user", user)
 
-        if (diff) store.dispatch(ACTIONS.user_info.set_user({ user }))
+        if (diff_user) store.dispatch(ACTIONS.user_info.set_user({ user }))
     })
 }
 
