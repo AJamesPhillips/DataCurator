@@ -7,7 +7,7 @@ import { Link } from "../sharedf/Link"
 
 interface OwnProps {
     statement: Statement
-    on_click?: () => void
+    // on_click?: () => void
 }
 
 
@@ -20,7 +20,7 @@ export function StatementListEntry (props: OwnProps)
                 sub_route={null}
                 item_id={props.statement.id}
                 args={undefined}
-                on_pointer_down={props.on_click}
+                // on_pointer_down={props.on_click}
             >
                 {props.statement.content}
             </Link>

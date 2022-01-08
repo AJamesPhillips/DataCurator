@@ -101,14 +101,8 @@ class _Link extends Component<Props, State>
             if (this.props.selected) return // no-op
             this.setState({ clicked: true })
 
-            if (this.props.on_pointer_down)
-            {
-                this.props.on_pointer_down()
-            }
-            else
-            {
-                this.props.link_clicked(partial_routing_args)
-            }
+            if (this.props.on_pointer_down) this.props.on_pointer_down()
+            this.props.link_clicked(partial_routing_args)
         }
 
         const full_routing_state = merge_routing_state(this.props.current_routing_state, this.props)
@@ -151,15 +145,11 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     const partial_routing_args: Partial<RoutingStateArgs> = props.args || {}
 
     const on_click = (e: h.JSX.TargetedEvent<HTMLInputElement, MouseEvent>) => {
-        if (props.on_pointer_down)
-        {
-            e.preventDefault()
-            props.on_pointer_down()
-        }
-        else
-        {
-            props.link_clicked(partial_routing_args)
-        }
+        e.stopImmediatePropagation()
+        e.preventDefault()
+
+        if (props.on_pointer_down) props.on_pointer_down()
+        props.link_clicked(partial_routing_args)
     }
 
     const full_routing_state = merge_routing_state(props.current_routing_state, props)

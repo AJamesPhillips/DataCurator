@@ -203,17 +203,17 @@ class _ListOfTypes extends Component<Props, State>
 
                     { is_statement_id(item.id) && StatementListEntry({
                         statement: item as Statement,
-                        on_click: () => this.props.on_click(item)
+                        // on_click: () => this.props.on_click(item)
                     }) }
 
                     { is_pattern_id(item.id) && PatternListEntry({
                         pattern: item as Pattern,
-                        on_click: () => this.props.on_click(item)
+                        // on_click: () => this.props.on_click(item)
                     }) }
 
                     { is_object_id(item.id) && ObjectListEntry({
                         object: item as ObjectWithCache,
-                        on_click: () => this.props.on_click(item)
+                        // on_click: () => this.props.on_click(item)
                     }) }
 
                 </tr>)}

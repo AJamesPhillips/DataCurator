@@ -6,7 +6,7 @@ import { Link } from "../sharedf/Link"
 
 interface OwnProps {
     pattern: Pattern
-    on_click?: () => void
+    // on_click?: () => void
 }
 
 
@@ -19,7 +19,7 @@ export function PatternListEntry (props: OwnProps)
             sub_route={null}
             item_id={props.pattern.id}
             args={undefined}
-            on_pointer_down={props.on_click}
+            // on_pointer_down={props.on_click}
         >
             {props.pattern.name}
         </Link>

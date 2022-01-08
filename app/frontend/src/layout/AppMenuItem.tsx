@@ -34,22 +34,24 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _AppMenuItem (props: Props)
 {
+    const handle_pointer_down = () =>
+    {
+        props.change_route({ route: props.id, sub_route: null, item_id: null })
+        props.on_pointer_down()
+    }
+
     const title = get_title(props.id)
     return <CustomisableAppMenuItem
-        on_pointer_down={() =>
-        {
-            // TODO remove this call of `change_route` once the <Button /> in <Link /> takes
-            // up all the horizontal space
-            props.change_route({ route: props.id, sub_route: null, item_id: null })
-            props.on_pointer_down()
-        }}
+        // TODO remove this call of `change_route` once the <Button /> in <Link /> takes
+        // up all the horizontal space
+        on_pointer_down={handle_pointer_down}
     >
         <Link
             route={props.id}
             sub_route={null}
             item_id={null}
             args={undefined}
-            on_pointer_down={props.on_pointer_down}
+            on_pointer_down={handle_pointer_down}
         >
             {title}
         </Link>
