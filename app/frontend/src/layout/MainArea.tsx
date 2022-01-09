@@ -8,6 +8,7 @@ import { Box } from "@material-ui/core"
 
 interface OwnProps {
     main_content: h.JSX.Element
+    extra_content?: h.JSX.Element
 }
 
 export function MainArea (props: OwnProps)
@@ -20,6 +21,7 @@ export function MainArea (props: OwnProps)
             <Box id="main_content_controls" bgcolor="#fafafa" flexGrow={0} flexShrink={1} position="relative" zIndex={10}>
                 <MainContentControls />
             </Box>
+            {props.extra_content}
         </Box>
     )
 }

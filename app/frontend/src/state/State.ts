@@ -13,6 +13,7 @@ import type { SpecialisedObjectsState } from "./specialised_objects/State"
 import type { SyncState } from "./sync/state"
 import type { UserActivityState } from "./user_activity/state"
 import type { UserInfoState } from "./user_info/state"
+import type { ViewPrioritiesState } from "./priorities/state"
 
 
 
@@ -122,4 +123,5 @@ export interface RootState extends RootStateCore
     sync: SyncState
     user_activity: UserActivityState
     user_info: UserInfoState
+    view_priorities: ViewPrioritiesState
 }

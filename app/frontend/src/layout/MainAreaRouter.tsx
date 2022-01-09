@@ -7,7 +7,6 @@ import { PrioritiesListView } from "../priorities_list_view/PrioritiesListView"
 import type { RootState } from "../state/State"
 import { PrioritiesView } from "../priorities/PrioritiesView"
 import { KnowledgeTimeView } from "../knowledge_view/KnowledgeTimeView"
-import { OldPrioritiesView } from "../priorities/OldPrioritiesView"
 import { ActionsListView } from "../actions_list_view/ActionsListView"
 
 

@@ -2,16 +2,16 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown from "markdown-to-jsx"
 
-import "./ProjectPriorityNode.scss"
-import { ACTIONS } from "../../state/actions"
-import { CanvasNode } from "../../canvas/CanvasNode"
-import type { RootState } from "../../state/State"
-import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
-import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
+import "./PrioritisationEntryNode.scss"
+import { ACTIONS } from "../state/actions"
+import { CanvasNode } from "../canvas/CanvasNode"
+import type { RootState } from "../state/State"
+import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
+import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
 
 
 
-interface ProjectPriorityNodeProps
+interface PrioritisationEntryNodeProps
 {
     wcomponent_id: string
     effort: number
@@ -23,7 +23,7 @@ interface ProjectPriorityNodeProps
     display: boolean
 }
 
-type OwnProps = ProjectPriorityNodeProps
+type OwnProps = PrioritisationEntryNodeProps
 
 
 
@@ -41,7 +41,7 @@ const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-function _ProjectPriorityNode (props: Props)
+function _PrioritisationEntryNode (props: Props)
 {
     const { wcomponents_by_id, created_at_ms, x, y, width, height, effort, display } = props
     const wcomponent = wcomponents_by_id[props.wcomponent_id]
@@ -74,7 +74,7 @@ function _ProjectPriorityNode (props: Props)
             e.preventDefault()
             props.change_route({ item_id: props.wcomponent_id })
         }}
-        extra_css_class=" unlimited_width_on_hover "
+        extra_css_class=" prioritisation_entry "
     >
         <div className="node_main_content" style={style_inner}>
             &nbsp;<span title={title}>
@@ -92,4 +92,4 @@ function _ProjectPriorityNode (props: Props)
 }
 
 
-export const ProjectPriorityNode = connector(_ProjectPriorityNode) as FunctionalComponent<OwnProps>
+export const PrioritisationEntryNode = connector(_PrioritisationEntryNode) as FunctionalComponent<OwnProps>

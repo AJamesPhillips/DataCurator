@@ -224,6 +224,23 @@ export function distance_of_time_in_hms (from_date: Date, to_date: Date) {
 }
 
 
+
+const month_to_3text: {[month: number]: string} = {
+    0: "Jan",
+    1: "Feb",
+    2: "Mar",
+    3: "Apr",
+    4: "May",
+    5: "Jun",
+    6: "Jul",
+    7: "Aug",
+    8: "Sep",
+    9: "Oct",
+    10: "Nov",
+    11: "Dec",
+}
+
+
 // https://stackoverflow.com/a/23593278/539490
 export function date2str (date: Date, format: string)
 {
@@ -234,6 +251,11 @@ export function date2str (date: Date, format: string)
         m: date.getMinutes(),
         s: date.getSeconds()
     }
+
+    format = format.replace(/MMM/g, function (v) {
+        return month_to_3text[date.getMonth()] || ""
+    })
+
     format = format.replace(/(M+|d+|h+|m+|s+)/g, function (v) {
         return ((v.length > 1 ? "0" : "") + z[v.slice(-1)]).slice(-2)
     })

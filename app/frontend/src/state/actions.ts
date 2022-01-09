@@ -15,6 +15,7 @@ import { statement_actions } from "./statements"
 import { sync_actions } from "./sync/actions"
 import { user_activity_actions } from "./user_activity/actions"
 import { user_info_actions } from "./user_info/actions"
+import { view_priorities_actions } from "./priorities/actions"
 
 
 
@@ -36,4 +37,5 @@ export const ACTIONS = {
     specialised_object: specialised_object_actions,
     user_activity: user_activity_actions,
     user_info: user_info_actions,
+    view_priorities: view_priorities_actions,
 }

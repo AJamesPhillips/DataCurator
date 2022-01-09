@@ -8,8 +8,6 @@ import type { RootState } from "../state/State"
 import { CurrentDatetimeLine } from "./CurrentDatetimeLine"
 import { DailyActionNode } from "./DailyActionNode"
 import { convert_daily_actions_to_nodes } from "./old_daily_actions/daily_actions_to_nodes"
-import { get_daily_actions_meta_c } from "./old_daily_actions/get_daily_actions"
-import { ProjectPriorityNode } from "./old_project_priorities/ProjectPriorityNode"
 import { convert_project_priorities_to_nodes } from "./old_project_priorities/project_priorities_to_nodes"
 
 

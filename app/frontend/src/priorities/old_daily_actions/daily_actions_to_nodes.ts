@@ -1,6 +1,7 @@
-import type { DailyActionNodeProps } from "../../canvas/interfaces"
 import { x, calc_width, action_y, action_height, MSECONDS_PER_DAY } from "../../canvas/display"
+import type { DailyActionNodeProps } from "../DailyActionNode"
 import type { DailyActionsMeta, ProjectIdToVerticalPosition } from "../interfaces"
+
 
 
 interface ConvertActionsToNodesArgs
@@ -41,6 +42,7 @@ export function convert_daily_actions_to_nodes (args: ConvertActionsToNodesArgs)
                 height: action_height,
                 display,
                 action_ids: a.action_ids,
+                date_shown: date,
             }
 
             nodes.push(node)

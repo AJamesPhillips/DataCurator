@@ -55,6 +55,9 @@ function optionally_remove_invalid_wc_ids (kv: KnowledgeView, remove_missing: bo
 
     if (missing_ids.length > 0)
     {
+        // We don't want to remove them yet as some views are a hybrid of components from multiple bases
+        // and we should implement the functionality to load other bases, instead of (before we) drop
+        // "invalid" wcomponent ids from knowledge views
         console.warn(`${remove_missing ? "Dropped " : ""}${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`)
         console.warn(missing_ids)
     }

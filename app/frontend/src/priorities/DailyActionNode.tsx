@@ -1,17 +1,31 @@
-import { h } from "preact"
-import { useState } from "preact/hooks"
+import { FunctionalComponent, h } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import { CanvasNode } from "../canvas/CanvasNode"
-import type { DailyActionNodeProps } from "../canvas/interfaces"
-import { WComponentListModal } from "../wcomponent_ui/WComponentListModal"
+import type { NodeProps } from "../canvas/interfaces"
+import { ACTIONS } from "../state/actions"
 
 
 
-export function DailyActionNode (props: DailyActionNodeProps)
+export interface DailyActionNodeProps extends NodeProps
 {
-    const [action_ids_to_show, set_action_ids_to_show] = useState<string[]>([])
+    action_ids: string[]
+    date_shown: Date
+}
 
-    const { x, y, width, height, display, action_ids } = props
+
+const map_dispatch = {
+    set_action_ids_to_show: ACTIONS.view_priorities.set_action_ids_to_show,
+}
+
+const connector = connect(null, map_dispatch)
+type Props = ConnectedProps<typeof connector> & DailyActionNodeProps
+
+
+
+function _DailyActionNode (props: Props)
+{
+    const { x, y, width, height, display, action_ids, date_shown } = props
 
     const extra_styles: h.JSX.CSSProperties = {
         backgroundColor: "orange",
@@ -24,16 +38,10 @@ export function DailyActionNode (props: DailyActionNodeProps)
         display={display}
         extra_styles={extra_styles}
         title={`${action_ids.length} actions`}
-        on_click={() => set_action_ids_to_show(action_ids)}
+        on_click={() => props.set_action_ids_to_show({ action_ids, date_shown }) }
     />
 
-    if (action_ids_to_show.length === 0) return canvas_node
-    else return <div>
-        {canvas_node}
-        <WComponentListModal
-            object_ids={action_ids_to_show}
-            on_close={() => set_action_ids_to_show([])}
-            title="Actions"
-        />
-    </div>
+    return canvas_node
 }
+
+export const DailyActionNode = connector(_DailyActionNode) as FunctionalComponent<DailyActionNodeProps>

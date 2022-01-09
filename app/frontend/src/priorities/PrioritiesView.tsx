@@ -12,7 +12,9 @@ import { sort_list } from "../shared/utils/sort"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type { WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
-import { ProjectPriorityNode } from "./old_project_priorities/ProjectPriorityNode"
+import { WComponentActionsListModal } from "./WComponentActionsListModal"
+import { DailyActionNode } from "./DailyActionNode"
+import { PrioritisationEntryNode } from "./PrioritisationEntryNode"
 
 
 
@@ -53,7 +55,8 @@ function has_start_date <U> (p: U & Partial<HasStartDate>): p is U & HasStartDat
     return !!p.start_date
 }
 
-interface DenormalisedPrioritisation extends WComponentPrioritisation {
+interface DenormalisedPrioritisation extends WComponentPrioritisation
+{
     total_effort: number
     start_date: Date
     end_date: Date
@@ -72,93 +75,27 @@ const get_children = (props: Props) =>
     const { prioritisations = [] } = props
     const { denormalised_prioritisation_by_id, prioritised_goals_and_actions } = useMemo(() =>
     {
-        const date_now = new Date()
-        let denormalised_prioritisations: DenormalisedPrioritisation[] = prioritisations
-            .map(prioritisation => ({
-                ...prioritisation,
-                total_effort: 0,
-                start_date: get_uncertain_datetime(prioritisation.datetime),
-                end_date: date_now,
-            }))
-            .filter(has_start_date)
-
-        denormalised_prioritisations = sort_list(denormalised_prioritisations, p => p.start_date.getTime(), "ascending")
-
-
-        let offset = 0
-        const goal_or_action_id_to_offset: {[goal_or_action_id: string]: number} = {}
-        const prioritised_goals_and_actions: PrioritisedGoalOrAction[] = []
-
-        denormalised_prioritisations.forEach((prioritisation, prioritisation_index) =>
-        {
-            Object.entries(prioritisation.goals).forEach(([goal_or_action_id, prioritisation_entry]) =>
-            {
-                prioritisation.total_effort += prioritisation_entry.effort
-
-                let offset_index = goal_or_action_id_to_offset[goal_or_action_id]
-                if (offset_index === undefined)
-                {
-                    offset_index = offset++
-                    goal_or_action_id_to_offset[goal_or_action_id] = offset_index
-                }
-
-                prioritised_goals_and_actions.push({
-                    prioritisation_id: prioritisation.id,
-                    goal_or_action_id,
-                    effort: prioritisation_entry.effort,
-                    offset_index,
-                })
-            })
-
-
-            const next_prioritisation = denormalised_prioritisations[prioritisation_index + 1]
-            prioritisation.end_date = get_uncertain_datetime(next_prioritisation?.datetime) || date_now
-        })
-
-
-        const denormalised_prioritisation_by_id: {[id: string]: DenormalisedPrioritisation} = {}
-        denormalised_prioritisations.forEach(p => denormalised_prioritisation_by_id[p.id] = p)
-
-
-        return { denormalised_prioritisation_by_id, prioritised_goals_and_actions }
+        return process_prioritisations(prioritisations)
     }, [prioritisations])
-
-
 
     const { time_origin_ms, time_origin_x, time_scale } = default_time_origin_parameters(props)
 
-    const elements: h.JSX.Element[] = useMemo(() => prioritised_goals_and_actions.map(({ prioritisation_id, goal_or_action_id, effort, offset_index }) =>
-        {
-            const { total_effort, start_date, end_date } = denormalised_prioritisation_by_id[prioritisation_id]!
 
-            const x = round_coordinate_small_step(calculate_canvas_x_for_datetime({
-                datetime: start_date, time_origin_ms, time_origin_x, time_scale,
-            }))
-            const x2 = round_coordinate_small_step(calculate_canvas_x_for_datetime({
-                datetime: end_date, time_origin_ms, time_origin_x, time_scale,
-            }))
-
-            return <ProjectPriorityNode
-                effort={effort / total_effort}
-                wcomponent_id={goal_or_action_id}
-                x={x}
-                y={100 * offset_index}
-                width={x2 - x}
-                height={100}
-                display={true}
-            />
-        })
+    const elements: h.JSX.Element[] = useMemo(() => convert_prioritised_goals_and_actions_to_nodes({
+        denormalised_prioritisation_by_id,
+        prioritised_goals_and_actions,
+        time_origin_ms, time_origin_x, time_scale,
+    })
     , [
         denormalised_prioritisation_by_id, prioritised_goals_and_actions,
         time_origin_ms, time_origin_x, time_scale,
     ])
 
-    // elements.push(<DailyActionNode
-    //     action_ids={[]} width={10} height={10} display={true} x={x1} y={0}
-    // />)
+
+    const action_elements: h.JSX.Element[] = useMemo(() => convert_actions_to_nodes(), [])
 
 
-    return elements
+    return [...elements, ...action_elements]
 }
 
 
@@ -175,7 +112,8 @@ function _PrioritiesView (props: Props)
     const elements = get_children(props)
 
     return <MainArea
-        main_content={<Canvas
+        main_content={
+        <Canvas
             svg_children={get_svg_children(props)}
             svg_upper_children={[]}
             overlay={get_overlay_children()}
@@ -183,7 +121,118 @@ function _PrioritiesView (props: Props)
         >
             {elements}
         </Canvas>}
+
+        extra_content={<WComponentActionsListModal />}
     />
 }
 
 export const PrioritiesView = connector(_PrioritiesView) as FunctionalComponent<{}>
+
+
+
+
+function process_prioritisations (prioritisations: WComponentPrioritisation[])
+{
+    const date_now = new Date()
+    let denormalised_prioritisations: DenormalisedPrioritisation[] = prioritisations
+        .map(prioritisation => ({
+            ...prioritisation,
+            total_effort: 0,
+            start_date: get_uncertain_datetime(prioritisation.datetime),
+            end_date: date_now,
+        }))
+        .filter(has_start_date)
+
+    denormalised_prioritisations = sort_list(denormalised_prioritisations, p => p.start_date.getTime(), "ascending")
+
+
+    let offset = 0
+    const goal_or_action_id_to_offset: {[goal_or_action_id: string]: number} = {}
+    const prioritised_goals_and_actions: PrioritisedGoalOrAction[] = []
+
+    denormalised_prioritisations.forEach((prioritisation, prioritisation_index) =>
+    {
+        Object.entries(prioritisation.goals).forEach(([goal_or_action_id, prioritisation_entry]) =>
+        {
+            prioritisation.total_effort += prioritisation_entry.effort
+
+            let offset_index = goal_or_action_id_to_offset[goal_or_action_id]
+            if (offset_index === undefined)
+            {
+                offset_index = offset++
+                goal_or_action_id_to_offset[goal_or_action_id] = offset_index
+            }
+
+            prioritised_goals_and_actions.push({
+                prioritisation_id: prioritisation.id,
+                goal_or_action_id,
+                effort: prioritisation_entry.effort,
+                offset_index,
+            })
+        })
+
+
+        const next_prioritisation = denormalised_prioritisations[prioritisation_index + 1]
+        prioritisation.end_date = get_uncertain_datetime(next_prioritisation?.datetime) || date_now
+    })
+
+
+    const denormalised_prioritisation_by_id: {[id: string]: DenormalisedPrioritisation} = {}
+    denormalised_prioritisations.forEach(p => denormalised_prioritisation_by_id[p.id] = p)
+
+
+    return { denormalised_prioritisation_by_id, prioritised_goals_and_actions }
+}
+
+
+
+interface ConvertPrioritisedGoalsAndActionsToNodesArgs {
+    denormalised_prioritisation_by_id: {[id: string]: DenormalisedPrioritisation}
+    prioritised_goals_and_actions: PrioritisedGoalOrAction[]
+    time_origin_ms: number
+    time_origin_x: number
+    time_scale: number
+}
+function convert_prioritised_goals_and_actions_to_nodes (args: ConvertPrioritisedGoalsAndActionsToNodesArgs)
+{
+    const {
+        denormalised_prioritisation_by_id,
+        prioritised_goals_and_actions,
+        time_origin_ms,
+        time_origin_x,
+        time_scale,
+    } = args
+
+
+    return prioritised_goals_and_actions.map(({ prioritisation_id, goal_or_action_id, effort, offset_index }) =>
+    {
+        const { total_effort, start_date, end_date } = denormalised_prioritisation_by_id[prioritisation_id]!
+
+        const x = round_coordinate_small_step(calculate_canvas_x_for_datetime({
+            datetime: start_date, time_origin_ms, time_origin_x, time_scale,
+        }))
+        const x2 = round_coordinate_small_step(calculate_canvas_x_for_datetime({
+            datetime: end_date, time_origin_ms, time_origin_x, time_scale,
+        }))
+
+        return <PrioritisationEntryNode
+            effort={effort / total_effort}
+            wcomponent_id={goal_or_action_id}
+            x={x}
+            y={100 * offset_index}
+            width={x2 - x}
+            height={100}
+            display={true}
+        />
+    })
+}
+
+
+
+function convert_actions_to_nodes ()
+{
+    return [<DailyActionNode
+        width={10} height={10} display={true} x={0} y={0}
+        action_ids={[]} date_shown={new Date()}
+    />]
+}

@@ -10,6 +10,7 @@ import { global_keys_reducer } from "./global_keys/reducer"
 import { objectives_reducer } from "./objectives"
 import { objects_reducer } from "./objects/reducer"
 import { patterns_reducer } from "./patterns"
+import { view_priorities_reducer } from "./priorities/reducer"
 import { display_at_created_datetime_reducer } from "./routing/datetime/display_at_created"
 import { display_at_sim_datetime_reducer } from "./routing/datetime/display_at_sim_datetime"
 import { routing_reducer } from "./routing/reducer"
@@ -44,6 +45,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = filter_context_reducer(state, action)
     state = user_activity_reducer(state, action)
     state = user_info_reducer(state, action)
+    state = view_priorities_reducer(state, action)
     state = search_reducer(state, action)
 
     state = { ...state, last_action: action }

@@ -44,7 +44,9 @@ export class CanvasNode extends Component<CanvasNodeProps>
             className={css_class_names}
             style={style_outer}
             title={title}
-            onPointerDown={on_pointer_down}
+            // Provide a default on_pointer_down function otherwise the canvas will (may) steal the event which
+            // prevents any on_click or on_pointer_up handlers from firing
+            onPointerDown={on_pointer_down || (e => { e.stopImmediatePropagation(); e.preventDefault() })}
             onPointerUp={on_pointer_up}
             onClick={on_click}
             onPointerEnter={on_pointer_enter}

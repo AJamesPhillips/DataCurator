@@ -5,6 +5,7 @@ import { get_derived_starting_state } from "./derived/starting_state"
 import { display_options_starting_state } from "./display_options/persistance"
 import { filter_context_starting_state } from "./filter_context/persistance"
 import { get_global_keys_starting_state } from "./global_keys/state"
+import { view_priorities_starting_state } from "./priorities/persistance"
 import { get_routing_starting_state } from "./routing/starting_state"
 import { search_starting_state } from "./search/persistance"
 import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_wcomponents/starting_state"
@@ -162,6 +163,7 @@ export function get_starting_state (load_state_from_storage: boolean): RootState
         search: search_starting_state(),
         user_activity: user_activity_starting_state(),
         user_info,
+        view_priorities: view_priorities_starting_state(),
 
         derived: get_derived_starting_state(),
     }

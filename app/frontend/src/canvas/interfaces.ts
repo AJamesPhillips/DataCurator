@@ -42,7 +42,7 @@ export interface NodeField
     value: string
 }
 
-interface NodeProps extends Position
+export interface NodeProps extends Position
 {
     width: number
     height: number
@@ -62,8 +62,3 @@ export interface ProjectPriorityNodeProps extends TextNodeProps
     effort: number
     id: string
 }
-
-export interface DailyActionNodeProps extends NodeProps {
-    action_ids: string[]
-}
-
