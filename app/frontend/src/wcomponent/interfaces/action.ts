@@ -40,13 +40,17 @@ export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
     // If the action has a status !== potential and the goal has a status of potential
     // then this likely inconsistent but not that important?
     // --- 2021-05-24
-    goal_id?: string
+    //
+    // +++ 2022-01-09
+    // Allow an action to be contributing to (encompassed by) one or more actions or goals
+    // --- 2022-01-09
+    parent_goal_or_action_ids?: string[]
+
     todo_index?: number
     user_ids?: string[]
 
     // status?: ActionStatus
     reason_for_status: string
 
-    encompassing_action_id?: string
     depends_on_action_ids: string[]
 }

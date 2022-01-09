@@ -7,7 +7,7 @@ import { round_coordinate_small_step } from "../canvas/position_utils"
 import { calculate_canvas_x_for_datetime, default_time_origin_parameters } from "../knowledge_view/datetime_line"
 import { KnowledgeGraphTimeMarkers } from "../knowledge_view/KnowledgeGraphTimeMarkers"
 import { MainArea } from "../layout/MainArea"
-import { get_uncertain_datetime, HasCalcdUncertainDatetime, has_calcd_datetime } from "../shared/uncertainty/datetime"
+import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 import { sort_list } from "../shared/utils/sort"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
@@ -43,75 +43,93 @@ const get_svg_children = (props: Props) =>
 }
 
 
-interface WComponentPrioritisationWithCalcdDatetime extends WComponentPrioritisation, HasCalcdUncertainDatetime {}
+
+interface HasStartDate
+{
+    start_date: Date
+}
+function has_start_date <U> (p: U & Partial<HasStartDate>): p is U & HasStartDate
+{
+    return !!p.start_date
+}
+
+interface DenormalisedPrioritisation extends WComponentPrioritisation {
+    total_effort: number
+    start_date: Date
+    end_date: Date
+}
+interface PrioritisedGoalOrAction
+{
+    prioritisation_id: string
+    goal_or_action_id: string
+    effort: number
+    offset_index: number
+}
 
 
 const get_children = (props: Props) =>
 {
     const { prioritisations = [] } = props
-    const { prioritised_goal_or_action_data, goal_or_action_id_to_offset, prioritisation_data_by_id } = useMemo(() =>
+    const { denormalised_prioritisation_by_id, prioritised_goals_and_actions } = useMemo(() =>
     {
-        let prioritisations_with_datetime: WComponentPrioritisationWithCalcdDatetime[] = []
-
-        prioritisations_with_datetime = prioritisations
+        const date_now = new Date()
+        let denormalised_prioritisations: DenormalisedPrioritisation[] = prioritisations
             .map(prioritisation => ({
                 ...prioritisation,
-                calcd_uncertain_datetime: get_uncertain_datetime(prioritisation.datetime),
+                total_effort: 0,
+                start_date: get_uncertain_datetime(prioritisation.datetime),
+                end_date: date_now,
             }))
-            .filter(has_calcd_datetime)
+            .filter(has_start_date)
 
-        prioritisations_with_datetime = sort_list(prioritisations_with_datetime, p => p.calcd_uncertain_datetime.getTime(), "ascending")
-            // .filter(p => !!get_uncertain_datetime(p.datetime))
+        denormalised_prioritisations = sort_list(denormalised_prioritisations, p => p.start_date.getTime(), "ascending")
 
 
         let offset = 0
         const goal_or_action_id_to_offset: {[goal_or_action_id: string]: number} = {}
-        const prioritised_goal_or_action_data: {
-            prioritisation_id: string, goal_or_action_id: string, effort: number
-        }[] = []
-        const prioritisation_data_by_id: {[prioritisation_id: string]: {
-            total_effort: number, start_date: Date, end_date: Date
-        }} = {}
+        const prioritised_goals_and_actions: PrioritisedGoalOrAction[] = []
 
-        prioritisations_with_datetime.forEach((prioritisation, prioritisation_index) =>
+        denormalised_prioritisations.forEach((prioritisation, prioritisation_index) =>
         {
-            let total_effort = 0
             Object.entries(prioritisation.goals).forEach(([goal_or_action_id, prioritisation_entry]) =>
             {
-                total_effort += prioritisation_entry.effort
+                prioritisation.total_effort += prioritisation_entry.effort
 
-                prioritised_goal_or_action_data.push({
+                let offset_index = goal_or_action_id_to_offset[goal_or_action_id]
+                if (offset_index === undefined)
+                {
+                    offset_index = offset++
+                    goal_or_action_id_to_offset[goal_or_action_id] = offset_index
+                }
+
+                prioritised_goals_and_actions.push({
                     prioritisation_id: prioritisation.id,
                     goal_or_action_id,
                     effort: prioritisation_entry.effort,
+                    offset_index,
                 })
-
-                if (goal_or_action_id_to_offset[goal_or_action_id] !== undefined) return
-                goal_or_action_id_to_offset[goal_or_action_id] = offset++
             })
 
 
-            const next_prioritisation = prioritisations_with_datetime[prioritisation_index + 1]
-            const end_date = get_uncertain_datetime(next_prioritisation?.datetime) || new Date()
-
-            prioritisation_data_by_id[prioritisation.id] = {
-                total_effort,
-                start_date: prioritisation.calcd_uncertain_datetime,
-                end_date,
-            }
+            const next_prioritisation = denormalised_prioritisations[prioritisation_index + 1]
+            prioritisation.end_date = get_uncertain_datetime(next_prioritisation?.datetime) || date_now
         })
 
-        return { prioritised_goal_or_action_data, goal_or_action_id_to_offset, prioritisation_data_by_id }
+
+        const denormalised_prioritisation_by_id: {[id: string]: DenormalisedPrioritisation} = {}
+        denormalised_prioritisations.forEach(p => denormalised_prioritisation_by_id[p.id] = p)
+
+
+        return { denormalised_prioritisation_by_id, prioritised_goals_and_actions }
     }, [prioritisations])
 
 
 
     const { time_origin_ms, time_origin_x, time_scale } = default_time_origin_parameters(props)
 
-    const elements: h.JSX.Element[] = useMemo(() => prioritised_goal_or_action_data.map(({ prioritisation_id, goal_or_action_id, effort }) =>
+    const elements: h.JSX.Element[] = useMemo(() => prioritised_goals_and_actions.map(({ prioritisation_id, goal_or_action_id, effort, offset_index }) =>
         {
-            const offset = goal_or_action_id_to_offset[goal_or_action_id] || 0
-            const { total_effort, start_date, end_date } = prioritisation_data_by_id[prioritisation_id]!
+            const { total_effort, start_date, end_date } = denormalised_prioritisation_by_id[prioritisation_id]!
 
             const x = round_coordinate_small_step(calculate_canvas_x_for_datetime({
                 datetime: start_date, time_origin_ms, time_origin_x, time_scale,
@@ -124,14 +142,14 @@ const get_children = (props: Props) =>
                 effort={effort / total_effort}
                 wcomponent_id={goal_or_action_id}
                 x={x}
-                y={100 * offset}
+                y={100 * offset_index}
                 width={x2 - x}
                 height={100}
                 display={true}
             />
         })
     , [
-        prioritised_goal_or_action_data, goal_or_action_id_to_offset, prioritisation_data_by_id,
+        denormalised_prioritisation_by_id, prioritised_goals_and_actions,
         time_origin_ms, time_origin_x, time_scale,
     ])
 

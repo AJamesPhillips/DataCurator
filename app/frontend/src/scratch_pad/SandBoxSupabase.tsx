@@ -4,12 +4,6 @@ import type { PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from
 import { v4 as uuid_v4 } from "uuid"
 import SyncIcon from "@material-ui/icons/Sync"
 
-
-// import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"
-// import { get_contextless_new_wcomponent_object } from "../shared/wcomponent/get_new_wcomponent_object"
-// import type { KnowledgeView } from "../shared/wcomponent/interfaces/knowledge_view"
-// import type { WComponent } from "../shared/wcomponent/interfaces/SpecialisedObjects"
-
 import "./SandBox.css"
 import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"

@@ -20,4 +20,8 @@ import type { WComponentNodeBase } from "./wcomponent_base"
 export interface WComponentNodeGoal extends WComponentNodeBase, HasObjectives
 {
     type: "goal"
+    // +++ 2022-01-09
+    // Allow a goal to be contributing to (encompassed by) one or more actions or goals
+    // --- 2022-01-09
+    parent_goal_or_action_ids?: string[]
 }
