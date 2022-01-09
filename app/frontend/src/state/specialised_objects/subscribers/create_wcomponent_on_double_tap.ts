@@ -34,6 +34,9 @@ export function create_wcomponent_on_double_tap (store: StoreType)
         if (state.display_options.consumption_formatting) return
 
 
+        if (state.routing.args.view !== "knowledge") return
+
+
         const position = position_from_canvas_pointer_event(double_tap)
         const add_to_knowledge_view: AddToKnowledgeViewArgs = { id: current_knowledge_view.id, position }
 
