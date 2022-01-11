@@ -7,15 +7,14 @@ import { wcomponent_has_objectives } from "../wcomponent/interfaces/SpecialisedO
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type {
-    PrioritisedGoalAttributes,
+    PrioritisedGoalOrActionAttributes,
     WComponentPrioritisation,
 } from "../wcomponent/interfaces/priorities"
-import { ListHeaderAddButton } from "../form/editable_list/ListHeaderAddButton"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import { Prioritisation } from "./Prioritisation"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableGoal } from "./PrioritisableGoal"
-import { sort_list } from "../shared/utils/sort"
+import { SortDirection, sort_list } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
@@ -189,7 +188,7 @@ interface PartitionAndSortGoalsReturn
     prioritised_goals: WComponentHasObjectives[]
     deprioritised_goals: WComponentHasObjectives[]
 }
-function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined): PartitionAndSortGoalsReturn
+function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_prioritisation_attributes: PrioritisedGoalOrActionAttributes | undefined): PartitionAndSortGoalsReturn
 {
     let potential_goals: WComponentHasObjectives[] = []
     let prioritised_goals: WComponentHasObjectives[] = []
@@ -213,9 +212,9 @@ function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_priori
     }
 
 
-    potential_goals = sort_list(potential_goals, get_created_at_ms, "descending")
-    prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), "descending")
-    deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, "descending")
+    potential_goals = sort_list(potential_goals, get_created_at_ms, SortDirection.descending)
+    prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), SortDirection.descending)
+    deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, SortDirection.descending)
 
 
     return { potential_goals, prioritised_goals, deprioritised_goals }
@@ -223,7 +222,7 @@ function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_priori
 
 
 
-function factory_get_effort (goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined)
+function factory_get_effort (goal_prioritisation_attributes: PrioritisedGoalOrActionAttributes | undefined)
 {
     return (goal: WComponentHasObjectives) => ((goal_prioritisation_attributes || {})[goal.id]?.effort) || 0
 }

@@ -9,7 +9,7 @@ import { get_new_knowledge_view_object } from "../knowledge_view/create_new_know
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { sort_list } from "../shared/utils/sort"
+import { SortDirection, sort_list } from "../shared/utils/sort"
 import { replace_element } from "../utils/list"
 import { get_supabase } from "../supabase/get_supabase"
 import {
@@ -82,7 +82,7 @@ export function SandBoxSupabase ()
     const [access_controls, _set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
     const set_access_controls = (acs: SupabaseAccessControl[] | undefined) =>
     {
-        _set_access_controls(acs && sort_list(acs, ac => ac.inserted_at.getTime(), "ascending"))
+        _set_access_controls(acs && sort_list(acs, ac => ac.inserted_at.getTime(), SortDirection.ascending))
     }
     useEffect(() =>
     {

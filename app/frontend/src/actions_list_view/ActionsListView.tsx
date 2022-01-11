@@ -6,15 +6,11 @@ import { MainArea } from "../layout/MainArea"
 import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import type {
-    PrioritisedGoalAttributes,
-} from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableAction } from "./PrioritisableAction"
-import { sort_list } from "../shared/utils/sort"
+import { SortDirection, sort_list } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { selector_chosen_base_id } from "../state/user_info/selector"
-import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
@@ -56,7 +52,6 @@ const map_state = (state: RootState) =>
         filtered_by_knowledge_view_id,
         action_ids,
         wcomponents_by_id,
-        editing: !state.display_options.consumption_formatting,
         base_id: selector_chosen_base_id(state),
         display_side_panel: state.controls.display_side_panel,
     }
@@ -75,7 +70,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ActionsListViewContent (props: Props)
 {
-    const { action_ids, wcomponents_by_id, editing, base_id } = props
+    const { action_ids, wcomponents_by_id, base_id } = props
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
     if (action_ids === undefined) return <div>No actions</div> // type guard
@@ -84,7 +79,7 @@ function _ActionsListViewContent (props: Props)
     const now = new Date().getTime()
     let actions = Array.from(action_ids).map(id => wcomponents_by_id[id])
         .filter(wcomponent_is_action)
-    actions = sort_list(actions, get_modified_or_created_at, "descending")
+    actions = sort_list(actions, get_modified_or_created_at, SortDirection.descending)
 
 
     const actions_icebox: WComponentNodeAction[] = []
@@ -112,7 +107,7 @@ function _ActionsListViewContent (props: Props)
     })
 
 
-    const sorted_actions_todo = sort_list(actions_todo, a => a.todo_index || 0, "descending")
+    const sorted_actions_todo = sort_list(actions_todo, a => a.todo_index || 0, SortDirection.descending)
 
 
     return <div className="action_list_view_content">
@@ -178,51 +173,4 @@ function get_modified_or_created_at (a: Base)
     if (a.modified_at) return a.modified_at.getTime()
 
     return get_created_at_ms(a)
-}
-
-
-
-interface PartitionAndSortGoalsReturn
-{
-    potential_goals: WComponentHasObjectives[]
-    prioritised_goals: WComponentHasObjectives[]
-    deprioritised_goals: WComponentHasObjectives[]
-}
-function partition_and_sort_goals (goals: WComponentHasObjectives[], goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined): PartitionAndSortGoalsReturn
-{
-    let potential_goals: WComponentHasObjectives[] = []
-    let prioritised_goals: WComponentHasObjectives[] = []
-    let deprioritised_goals: WComponentHasObjectives[] = []
-
-
-    if (!goal_prioritisation_attributes)
-    {
-        potential_goals = goals
-    }
-    else
-    {
-        goals.forEach(goal =>
-        {
-            const goal_prioritisation_attribute = goal_prioritisation_attributes[goal.id]
-
-            if (!goal_prioritisation_attribute) potential_goals.push(goal)
-            else if (goal_prioritisation_attribute.effort > 0) prioritised_goals.push(goal)
-            else deprioritised_goals.push(goal)
-        })
-    }
-
-
-    potential_goals = sort_list(potential_goals, get_created_at_ms, "descending")
-    prioritised_goals = sort_list(prioritised_goals, factory_get_effort(goal_prioritisation_attributes), "descending")
-    deprioritised_goals = sort_list(deprioritised_goals, get_created_at_ms, "descending")
-
-
-    return { potential_goals, prioritised_goals, deprioritised_goals }
-}
-
-
-
-function factory_get_effort (goal_prioritisation_attributes: PrioritisedGoalAttributes | undefined)
-{
-    return (goal: WComponentHasObjectives) => ((goal_prioritisation_attributes || {})[goal.id]?.effort) || 0
 }

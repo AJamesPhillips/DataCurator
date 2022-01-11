@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { EditableNumber } from "../form/EditableNumber"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import type { PrioritisedGoalAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
+import type { PrioritisedGoalOrActionAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
@@ -52,7 +52,7 @@ function _PrioritisableGoal (props: Props)
                 value={effort}
                 conditional_on_blur={new_effort =>
                 {
-                    const goals_attributes: PrioritisedGoalAttributes = { ...goal_prioritisation_attributes }
+                    const goals_attributes: PrioritisedGoalOrActionAttributes = { ...goal_prioritisation_attributes }
                     if (new_effort === undefined) delete goals_attributes[goal.id]
                     else goals_attributes[goal.id] = { effort: new_effort }
 

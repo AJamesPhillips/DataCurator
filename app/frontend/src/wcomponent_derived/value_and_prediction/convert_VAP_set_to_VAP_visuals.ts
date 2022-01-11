@@ -1,4 +1,4 @@
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
@@ -47,7 +47,7 @@ export function convert_VAP_set_to_VAP_visuals (args: ConvertVAPSetToVAPVisualsD
 
     // TODO protect against unstable sort when percentage_height is the same
     const should_sort = args.sort === undefined || args.sort
-    const sorted_data = should_sort ? sort_list(data, i => i.certainty, "descending") : data
+    const sorted_data = should_sort ? sort_list(data, i => i.certainty, SortDirection.descending) : data
 
     // Will add entry for uncertain value last
     return add_uncertain_VAP_visual(total_certainties, sorted_data)

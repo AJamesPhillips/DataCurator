@@ -6,7 +6,7 @@ import "./KnowledgeTimeView.scss"
 import type { RootState } from "../state/State"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
-import { sort_list } from "../shared/utils/sort"
+import { SortDirection, sort_list } from "../shared/utils/sort"
 import { WComponent, wcomponent_has_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
 import { ConnectedValueAndPredictionSetSummary } from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary"
@@ -324,7 +324,7 @@ function _KnowledgeTimeView (props: Props)
         if (entry !== undefined) return entry
         else return get_created_at_ms(wc)
     }
-    wcomponent_nodes = sort_list(wcomponent_nodes, get_key, "ascending")
+    wcomponent_nodes = sort_list(wcomponent_nodes, get_key, SortDirection.ascending)
     wcomponent_nodes.forEach(wc => {
         const VAP_sets = wcomponent_has_VAP_sets(wc) ? wc.values_and_prediction_sets : []
         VAP_sets.forEach(VAP_set =>

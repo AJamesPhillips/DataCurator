@@ -14,7 +14,7 @@ import type {
 } from "../../shared/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
@@ -205,7 +205,7 @@ function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: Nest
     {
         const entry = map[id]!
         return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
-    }, "ascending")
+    }, SortDirection.ascending)
 }
 
 
@@ -234,7 +234,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
         let { event_at = [] } = wcomponent
         // For now there is only one or 0 event_at predictions
         // event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
-        // event_at = sort_list(event_at, get_created_at_ms, "descending")
+        // event_at = sort_list(event_at, get_created_at_ms, SortDirection.descending)
         const prediction = event_at[0]
         if (!prediction) return undefined
 
@@ -261,7 +261,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
 
         target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
         target_VAP_sets = partition_items_by_created_at_datetime({ items: target_VAP_sets, created_at_ms }).current_items
-        target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, "descending")
+        target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, SortDirection.descending)
         const target_VAP_set = target_VAP_sets[0]
         return convert_VAP_set_to_temporal_certainty(target_VAP_set)
     }

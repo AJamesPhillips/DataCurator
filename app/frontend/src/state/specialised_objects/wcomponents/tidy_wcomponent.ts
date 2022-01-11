@@ -1,5 +1,5 @@
 import { set_VAP_probabilities } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
-import { sort_list } from "../../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../../shared/utils/sort"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import {
     WComponent,
@@ -14,14 +14,14 @@ export function tidy_wcomponent (wcomponent: WComponent): WComponent
 {
     if (wcomponent_has_validity_predictions(wcomponent))
     {
-        const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, "ascending")
+        const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, SortDirection.ascending)
         wcomponent.validity = sorted_predictions
     }
 
 
     if (wcomponent_has_VAP_sets(wcomponent))
     {
-        const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, "ascending")
+        const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, SortDirection.ascending)
 
         const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
 

@@ -7,8 +7,8 @@ import type {
     StateValueAndPrediction,
 } from "../../wcomponent/interfaces/state"
 import {
-    get_probable_VAP_set_values,
-    get_VAP_set_prob,
+    get_probable_VAP_set_values_for_display,
+    get_VAP_set_probable_percentages_for_display,
     get_VAP_set_conviction,
 } from "../../wcomponent_derived/value_and_prediction/get_UI_value_of_VAP_set_attributes"
 import { PredictionSummary } from "./to_deprecate/PredictionSummary"
@@ -29,8 +29,8 @@ export const get_summary_for_single_VAP_set = (VAPs_represent: VAPsType, show_cr
 
     VAP_set = { ...VAP_set, entries: VAPs }
 
-    const values = get_probable_VAP_set_values(VAP_set, VAPs_represent)
-    const prob = get_VAP_set_prob(VAP_set, VAPs_represent) + "%"
+    const values = get_probable_VAP_set_values_for_display(VAP_set, VAPs_represent)
+    const prob = get_VAP_set_probable_percentages_for_display(VAP_set, VAPs_represent) + "%"
     const conv = get_VAP_set_conviction(VAP_set, VAPs_represent) + "%"
 
     return <PredictionSummary

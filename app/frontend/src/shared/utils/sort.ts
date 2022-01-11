@@ -7,10 +7,14 @@ interface KeyedItem <E>
 }
 
 
-type Direction = "ascending" | "descending"
+export enum SortDirection
+{
+    ascending = 0,
+    descending = 1,
+}
 
 
-export function sort_list <E> (items: E[], key: (item: E, index: number) => KeyValue, direction: Direction): E[]
+export function sort_list <E> (items: E[], key: (item: E, index: number) => KeyValue, direction: SortDirection): E[]
 {
     const sort_function = get_sort_function<E>(direction)
 
@@ -20,10 +24,11 @@ export function sort_list <E> (items: E[], key: (item: E, index: number) => KeyV
 }
 
 
-function get_sort_function <E> (direction: Direction)
+function get_sort_function <E> (direction: SortDirection)
 {
-    const change1 = direction === "ascending" ? -1 : 1
-    const change2 = direction === "ascending" ? 1 : -1
+    const ascending = direction === SortDirection.ascending
+    const change1 = ascending ? -1 : 1
+    const change2 = ascending ? 1 : -1
 
     return (i1: KeyedItem<E>, i2: KeyedItem<E>) => i1.key_value < i2.key_value
         ? change1

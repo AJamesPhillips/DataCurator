@@ -1,7 +1,7 @@
 import { project_priorities_derived_reducer } from "../../priorities/old_project_priorities/project_priorities_derived_reducer"
 import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
 import { knowledge_views_derived_reducer } from "../specialised_objects/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../State"
@@ -20,7 +20,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         const perceptions = sort_list(
             Object.values(state.specialised_objects.perceptions_by_id),
             ({ created_at }) => created_at.getTime(),
-            "ascending"
+            SortDirection.ascending
         )
         state = update_substate(state, "derived", "perceptions", perceptions)
     }
@@ -31,7 +31,7 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
         const wcomponents = sort_list(
             Object.values(state.specialised_objects.wcomponents_by_id),
             ({ created_at }) => created_at.getTime(),
-            "ascending"
+            SortDirection.ascending
         )
         state = update_substate(state, "derived", "wcomponents", wcomponents)
 

@@ -8,7 +8,7 @@ import {
 } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 import { WComponent, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { get_VAPs_ordered_by_prob } from "./value_and_prediction/get_VAPs_ordered_by_prob"
+import { get_VAPs_ordered_by_prob } from "./value_and_prediction/probable_VAPs"
 import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
 import type { CurrentValueAndProbability } from "./interfaces/value"
 import { parse_VAP_value } from "../wcomponent/value/parse_value"

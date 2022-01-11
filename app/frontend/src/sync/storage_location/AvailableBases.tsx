@@ -6,7 +6,7 @@ import type { PostgrestError } from "@supabase/postgrest-js"
 import { StorageOption } from "./StorageOption"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { refresh_bases_for_current_user } from "../../state/user_info/utils"
 import { SyncButton } from "../../sharedf/SyncButton"
 import type { AsyncState } from "../../utils/async_state"
@@ -58,7 +58,7 @@ function _AvailableBases (props: Props)
     if (!bases_by_id) return "Loading bases..."
 
 
-    const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), "descending")
+    const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), SortDirection.descending)
 
 
     if (bases.length === 0) return null

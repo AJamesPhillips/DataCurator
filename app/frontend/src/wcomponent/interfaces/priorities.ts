@@ -3,16 +3,16 @@ import type { WComponentBase } from "./wcomponent_base"
 
 
 
-export interface GoalPrioritisationEntry
+export interface GoalOrActionPrioritisationEntry
 {
     effort: number
 }
 
 
 
-export interface PrioritisedGoalAttributes
+export interface PrioritisedGoalOrActionAttributes
 {
-    [id: string]: GoalPrioritisationEntry
+    [goal_or_action_id: string]: GoalOrActionPrioritisationEntry
 }
 
 
@@ -20,5 +20,5 @@ export interface PrioritisedGoalAttributes
 export interface WComponentPrioritisation extends WComponentBase, HasUncertainDatetime
 {
     type: "prioritisation"
-    goals: PrioritisedGoalAttributes
+    goals: PrioritisedGoalOrActionAttributes
 }

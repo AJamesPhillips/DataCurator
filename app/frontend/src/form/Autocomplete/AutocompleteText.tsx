@@ -3,7 +3,7 @@ import FlexSearch, { Index } from "flexsearch"
 import fuzzysort from "fuzzysort"
 
 import "./AutocompleteText.css"
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { connect, ConnectedProps } from "react-redux"
 import type { RootState } from "../../state/State"
 import { Options } from "./Options"
@@ -427,7 +427,7 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
         : options.filter(o => option_to_score(o) > threshold_minimum_score)
 
     let options_to_display = filterd_options
-    if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, "descending")
+    if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending)
 
     return { options: options_to_display, search_type_used }
 }

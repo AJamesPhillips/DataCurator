@@ -301,3 +301,32 @@ export function get_today_date ()
 {
     return new Date(get_today_str())
 }
+
+
+
+const MSECONDS_IN_DAY = 24 * 3600 * 1000
+const TIME_ZONE_IN_MS = (new Date().getTimezoneOffset()) * 60000
+function* get_inclusive_dates (start_date: Date, end_date: Date)
+{
+    // If start_date.getTime() === 0 then time would be Jan 1st 1970 00:00:00 GMT+0
+    // If the user's local timezone was -8, e.g. Pacific Standard Time, then this would correspond
+    // to Dec 31 1969 16:00:00 and without any correction, getTime's 0 would be left as 0 and the
+    // user's start_date would begin a day later than expected.
+    // Instead if we take the -8 GMT user's getTime's 0 and subtract `new Date().getTimezoneOffset()` of
+    // 480 we get the correct start date of day -1
+    const start_day = Math.floor((start_date.getTime() - TIME_ZONE_IN_MS) / MSECONDS_IN_DAY)
+    const end_day = Math.ceil((end_date.getTime() - TIME_ZONE_IN_MS) / MSECONDS_IN_DAY)
+
+    let day = start_day
+    while (day < end_day)
+    {
+        yield new Date(day * MSECONDS_IN_DAY)
+        ++day
+    }
+}
+
+export function get_inclusive_date_strs (start_date: Date, end_date: Date)
+{
+    const format = "yyyy-MM-dd"
+    return [...get_inclusive_dates(start_date, end_date)].map(d => date2str(d, format))
+}

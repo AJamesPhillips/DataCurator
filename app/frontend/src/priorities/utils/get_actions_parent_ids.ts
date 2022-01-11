@@ -12,18 +12,15 @@ import {
 
 
 
-interface ActionsParentIdsArgs
+interface PrepareArgsForActionsParentIdsArgs
 {
-    action: WComponentNodeAction
     all_action_ids: Set<string>
     all_goal_ids: Set<string>
     wcomponents_by_id: WComponentsById
 }
-// Will return the action's own id as the first id. This is done because
-// the action might itself be a prioritised action/goal, i.e. it might be its own parent.
-export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<string, string | undefined, boolean>
+export function prepare_args_for_actions_parent_ids (args: PrepareArgsForActionsParentIdsArgs)
 {
-    const { action, all_action_ids, all_goal_ids, wcomponents_by_id } = args
+    const { all_action_ids, all_goal_ids, wcomponents_by_id } = args
 
 
     const actions = Array.from(all_action_ids)
@@ -38,6 +35,24 @@ export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<
         .filter(wcomponent_is_goal)
     const goals_by_id: {[id: string]: WComponentNodeGoal} = {}
     goals.forEach(goal => goals_by_id[goal.id] = goal)
+
+
+    return { actions_by_id, goals_by_id }
+}
+
+
+
+interface ActionsParentIdsArgs {
+    action: WComponentNodeAction
+    actions_by_id: {[id: string]: WComponentNodeAction}
+    goals_by_id: {[id: string]: WComponentNodeGoal}
+}
+// Will return the action's own id as the first id. This is done because
+// the action might itself be a prioritised action/goal, i.e. it might be its own parent.
+export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<string, string | undefined, boolean | undefined>
+{
+    const { action, actions_by_id, goals_by_id } = args
+
 
     let parent: WComponentNodeAction | WComponentNodeGoal = action
     let parent_goal_or_action_ids: string[] = []
@@ -122,7 +137,7 @@ export function run_tests ()
             else all_goal_ids.add(wc.id)
         })
 
-        return { all_action_ids, all_goal_ids, wcomponents_by_id }
+        return prepare_args_for_actions_parent_ids({ all_action_ids, all_goal_ids, wcomponents_by_id })
     }
 
 

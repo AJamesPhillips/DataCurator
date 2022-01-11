@@ -1,11 +1,11 @@
 import { ratio_to_percentage_string } from "../../sharedf/percentages"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { get_VAPs_ordered_by_prob } from "./get_VAPs_ordered_by_prob"
+import { get_VAPs_ordered_by_prob } from "./probable_VAPs"
 
 
 
-export function get_probable_VAP_set_values (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+export function get_probable_VAP_set_values_for_display (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
 {
     const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent)
     const first_VAP = VAPs[0]
@@ -17,7 +17,8 @@ export function get_probable_VAP_set_values (VAP_set: StateValueAndPredictionsSe
 }
 
 
-export function get_VAP_set_prob (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
+
+export function get_VAP_set_probable_percentages_for_display (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
 {
     const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent)
     const first_VAP = VAPs[0]
@@ -27,6 +28,7 @@ export function get_VAP_set_prob (VAP_set: StateValueAndPredictionsSet, VAPs_rep
 
     return probable_VAPS.map(e => ratio_to_percentage_string(e.probability)).join(", ")
 }
+
 
 
 export function get_VAP_set_conviction (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)

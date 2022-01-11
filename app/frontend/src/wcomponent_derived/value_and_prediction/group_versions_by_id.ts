@@ -1,4 +1,4 @@
-import { sort_list } from "../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
 import type { Base } from "../../shared/interfaces/base"
 import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
 
@@ -22,7 +22,7 @@ export function group_versions_by_id <U extends Base> (items: U[]): GroupVersion
     const previous_versions_by_id: {[id: string]: U[]} = {}
     const latest: U[] = Object.values(by_id).map(sub_items =>
     {
-        const sorted = sort_list(sub_items, get_created_at_ms, "descending")
+        const sorted = sort_list(sub_items, get_created_at_ms, SortDirection.descending)
 
         const latest = sorted[0]!
         previous_versions_by_id[latest.id] = sorted.slice(1)

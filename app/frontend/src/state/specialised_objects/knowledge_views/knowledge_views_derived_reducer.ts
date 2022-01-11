@@ -14,7 +14,7 @@ import type {
 } from "../../../shared/interfaces/knowledge_view"
 import { is_uuid_v4 } from "../../../shared/utils/ids"
 import { is_defined } from "../../../shared/utils/is_defined"
-import { sort_list } from "../../../shared/utils/sort"
+import { SortDirection, sort_list } from "../../../shared/utils/sort"
 import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { set_union } from "../../../utils/set"
 import { update_substate } from "../../../utils/update_state"
@@ -115,7 +115,7 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
-    const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, "ascending")
+    const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, SortDirection.ascending)
     const base_knowledge_view = get_base_knowledge_view(knowledge_views)
     const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views)
     sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
@@ -359,7 +359,7 @@ function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id
     const prioritisations = Array.from(prioritisation_ids).map(id => wcomponents_by_id[id])
         .filter(wcomponent_is_prioritisation)
 
-    return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), "descending")
+    return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || Number.POSITIVE_INFINITY), SortDirection.descending)
 }
 
 

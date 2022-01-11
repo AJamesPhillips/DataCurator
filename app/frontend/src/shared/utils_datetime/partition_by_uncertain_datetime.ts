@@ -1,6 +1,6 @@
 import { uncertain_datetime_is_eternal } from "../uncertainty/datetime"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
-import { sort_list } from "../utils/sort"
+import { SortDirection, sort_list } from "../utils/sort"
 import { test } from "../utils/test"
 import { Tense } from "../../wcomponent/interfaces/datetime"
 import { get_tense_of_uncertain_datetime } from "./get_tense_of_uncertain_datetime"
@@ -28,7 +28,7 @@ export function partition_and_sort_by_uncertain_event_datetimes <U extends HasUn
 
 
 
-export function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[]): U[]
+export function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetime> (items: U[], direction = SortDirection.descending): U[]
 {
 
     const sorted_items = sort_list(items, ({ datetime }) =>
@@ -41,7 +41,7 @@ export function sort_by_uncertain_event_datetimes <U extends HasUncertainDatetim
         if (max) return max.getTime() * 10
 
         return 1
-    }, "descending")
+    }, direction)
 
     return sorted_items
 }
