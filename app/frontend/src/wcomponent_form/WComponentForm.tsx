@@ -31,6 +31,7 @@ import {
     wcomponent_has_existence_predictions,
     wcomponent_is_sub_state,
     wcomponent_has_objectives,
+    wcomponent_is_action,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
@@ -69,6 +70,7 @@ import {
 } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
+import { WComponentActionFormFields } from "./WComponentActionFormFields"
 
 
 
@@ -345,7 +347,14 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields { ...{ wcomponent, upsert_wcomponent }} /> }
+        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields
+            {...{ wcomponent, upsert_wcomponent }}
+        />}
+
+
+        {wcomponent_is_action(wcomponent) && <WComponentActionFormFields
+            {...{ wcomponent, upsert_wcomponent }}
+        />}
 
 
         {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl component="fieldset" fullWidth={true} margin="normal">

@@ -25,6 +25,7 @@ export function get_empty_wcomponent_ids_by_type (): WComponentIdsByType
         prioritisation: new Set(),
 
         judgement_or_objective: new Set(),
+        goal_or_action: new Set(),
         has_objectives: new Set(),
         any_link: new Set(),
         any_node: new Set(),
@@ -57,6 +58,7 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
     })
 
     wc_ids_by_type.judgement_or_objective = set_union(wc_ids_by_type.judgement, wc_ids_by_type.objective)
+    wc_ids_by_type.goal_or_action = set_union(wc_ids_by_type.goal, wc_ids_by_type.action)
     // Need to keep in sync with wcomponent_has_objectives
     wc_ids_by_type.has_objectives = set_union(wc_ids_by_type.action, wc_ids_by_type.goal)
     wc_ids_by_type.any_link = set_union(wc_ids_by_type.causal_link, wc_ids_by_type.relation_link)

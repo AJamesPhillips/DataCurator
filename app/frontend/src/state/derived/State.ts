@@ -78,7 +78,7 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "goal_or_action" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 
