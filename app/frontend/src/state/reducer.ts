@@ -7,8 +7,6 @@ import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display_options/reducer"
 import { filter_context_reducer } from "./filter_context/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
-import { objects_reducer } from "./objects/reducer"
-import { patterns_reducer } from "./patterns"
 import { view_priorities_reducer } from "./priorities/reducer"
 import { display_at_created_datetime_reducer } from "./routing/datetime/display_at_created"
 import { display_at_sim_datetime_reducer } from "./routing/datetime/display_at_sim_datetime"
@@ -17,7 +15,6 @@ import { search_reducer } from "./search/actions_reducer"
 import { derived_meta_wcomponents_state_reducer } from "./specialised_objects/meta_wcomponents/selecting/derived"
 import { specialised_objects_reducer } from "./specialised_objects/reducer"
 import type { RootState } from "./State"
-import { statements_reducer } from "./statements"
 import { sync_reducer } from "./sync/reducer"
 import { user_activity_reducer } from "./user_activity/reducer"
 import { user_info_reducer } from "./user_info/reducer"
@@ -28,9 +25,6 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
 {
     const initial_state = state
 
-    state = statements_reducer(state, action)
-    state = patterns_reducer(state, action)
-    state = objects_reducer(state, action)
     state = display_reducer(state, action)
     state = sync_reducer(state, action)
     state = routing_reducer(state, action)

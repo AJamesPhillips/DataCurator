@@ -10,10 +10,7 @@ import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
 import { SearchSidePanel } from "../search/SearchSidePanel"
 import { SelectionControlSidePanel } from "../selection_control/SelectionControlSidePanel"
 import type { RootState } from "../state/State"
-import { Objects } from "./Objects"
-import { Patterns } from "./Patterns"
 import "./SidePanel.scss"
-import { Statements } from "./Statements"
 import { WComponentsSidePanel } from "./wcomponents/WComponentsSidePanel"
 
 
@@ -39,12 +36,6 @@ function _SidePanel (props: Props)
         {props.route === "select" && <SelectionControlSidePanel />}
 
         {props.route === "display" && <DisplayOptionsSidePanel />}
-
-        {props.route === "statements" && <Statements />}
-
-        {props.route === "objects" && <Objects />}
-
-        {props.route === "patterns" && <Patterns />}
 
         {props.route === "creation_context" && <CreationContextSidePanel />}
 

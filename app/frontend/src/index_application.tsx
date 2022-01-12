@@ -8,8 +8,6 @@ import { Provider } from "react-redux"
 
 import { get_store } from "./state/store"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"
-import { DemoStatementProbability } from "./statements/StatementWithProbability"
-import { DemoStatementProbabilityExplorer } from "./statements/StatementProbabilityExplorer"
 import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { SandBox } from "./scratch_pad/SandBox"
 import { SandboxEditableCustomDateTime } from "./scratch_pad/SandboxEditableCustomDateTime"
@@ -49,14 +47,6 @@ if (root)
     else if (window.location.pathname === "/prob_badge")
     {
         render(<DemoPredictionsBadge />, root)
-    }
-    else if (window.location.pathname === "/statement_probability")
-    {
-        render(<Provider store={get_store({ load_state_from_storage: true })}><DemoStatementProbability /></Provider>, root)
-    }
-    else if (window.location.pathname === "/statement_probability_explorer")
-    {
-        render(<Provider store={get_store({ load_state_from_storage: true })}><DemoStatementProbabilityExplorer /></Provider>, root)
     }
     else if (window.location.pathname === "/sandbox/editable_custom_datetime")
     {

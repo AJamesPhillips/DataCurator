@@ -14,8 +14,6 @@ export function DevLandingPage() {
                 <li><a href="/project_dashboard">Project dashboard</a></li>
                 <li><a href="/prob_graph">Probability graph</a></li>
                 <li><a href="/prob_badge">Probability badge</a></li>
-                <li><a href="/statement_probability">Statement probability</a></li>
-                <li><a href="/statement_probability_explorer">Statement probability explorer</a></li>
                 <li><a href="/sandbox/editable_custom_datetime">Sandbox - EditableCustomDateTime</a></li>
                 <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
                 <li><a href="/sandbox/circular_connections">Sandbox - Circular Connections</a></li>
