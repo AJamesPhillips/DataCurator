@@ -79,13 +79,10 @@ export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<
             parent_goal_or_action_ids.push(id)
         })
 
-
-        let has_valid_parents = parent_goal_or_action_ids.length > 0
-        if (!has_valid_parents) return parent.id
-
+        const has_valid_parents = parent_goal_or_action_ids.length > 0
 
         const consumed_last_id = yield parent.id
-        if (consumed_last_id) return undefined
+        if (consumed_last_id || !has_valid_parents) return undefined
 
         const next_parent_id = parent_goal_or_action_ids.shift()
         if (!next_parent_id) return undefined
@@ -160,7 +157,7 @@ export function run_tests ()
 
         const result = actions_parent_ids.next()
         test(result.value, action0.id, "Should return own id")
-        test(result.done, true, "Should have no more ids")
+        test(result.done, false, "Should have no more ids")
     }
 
     no_parents_only_self()
@@ -319,10 +316,30 @@ export function run_tests ()
 
         result = actions_parent_ids.next()
         test(result.value, action1.id, "Should return next id")
-        test(result.done, true, "Should have no more ids ready")
+        test(result.done, false, "Should have not finished")
+        result = actions_parent_ids.next()
+        test(result.done, true, "Should have finished")
     }
 
     circular_parents()
+
+
+
+    function spread_iterator_containing_one_parent ()
+    {
+        const goal1 = make_goal("goal1")
+        const action1 = make_action("action1", [goal1.id])
+
+        const actions_parent_ids = get_cloneable_actions_parent_ids(action1, [
+            action1,
+            goal1,
+        ])
+
+        const result = [...actions_parent_ids]
+        test(result, [action1.id, goal1.id], "Should return both ids")
+    }
+
+    spread_iterator_containing_one_parent()
 }
 
 

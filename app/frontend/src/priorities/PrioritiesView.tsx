@@ -87,13 +87,12 @@ const get_children = (props: Props) =>
 
     const {
         denormalised_prioritisation_by_id, prioritised_goals_and_actions,
-        date_str_to_prioritised_goal_or_action_ids_map,
     } = result
 
 
     const date_str_to_daily_actions_map = useMemo(() => process_actions({
-        all_action_ids, all_goal_ids, wcomponents_by_id, date_str_to_prioritised_goal_or_action_ids_map
-    }), [all_action_ids, all_goal_ids, wcomponents_by_id, date_str_to_prioritised_goal_or_action_ids_map])
+        all_action_ids, all_goal_ids, wcomponents_by_id, prioritised_goals_and_actions
+    }), [all_action_ids, all_goal_ids, wcomponents_by_id, prioritised_goals_and_actions])
 
 
     const { time_origin_ms, time_origin_x, time_scale } = default_time_origin_parameters(props)
@@ -174,18 +173,18 @@ function process_prioritisations (prioritisations: WComponentPrioritisation[])
     })
 
 
-    const date_str_to_prioritised_goal_or_action_ids_map: {[date_str: string]: Set<string>} = {}
-    denormalised_prioritisations.forEach(prioritisation =>
-    {
-        const goal_or_action_ids = new Set(Object.keys(prioritisation.goals))
-        const dates_covered = get_inclusive_date_strs(prioritisation.start_date, prioritisation.end_date)
-        dates_covered.forEach(date_str =>
-        {
-            const existing_set = date_str_to_prioritised_goal_or_action_ids_map[date_str]
-            const new_set = existing_set ? set_union(existing_set, goal_or_action_ids) : goal_or_action_ids
-            date_str_to_prioritised_goal_or_action_ids_map[date_str] = new_set
-        })
-    })
+    // const date_str_to_prioritised_goal_or_action_ids_map: {[date_str: string]: Set<string>} = {}
+    // denormalised_prioritisations.forEach(prioritisation =>
+    // {
+    //     const goal_or_action_ids = new Set(Object.keys(prioritisation.goals))
+    //     const dates_covered = get_inclusive_date_strs(prioritisation.start_date, prioritisation.end_date)
+    //     dates_covered.forEach(date_str =>
+    //     {
+    //         const existing_set = date_str_to_prioritised_goal_or_action_ids_map[date_str]
+    //         const new_set = existing_set ? set_union(existing_set, goal_or_action_ids) : goal_or_action_ids
+    //         date_str_to_prioritised_goal_or_action_ids_map[date_str] = new_set
+    //     })
+    // })
 
 
 
@@ -222,7 +221,11 @@ function process_prioritisations (prioritisations: WComponentPrioritisation[])
     denormalised_prioritisations.forEach(p => denormalised_prioritisation_by_id[p.id] = p)
 
 
-    return { denormalised_prioritisation_by_id, prioritised_goals_and_actions, date_str_to_prioritised_goal_or_action_ids_map }
+    return {
+        denormalised_prioritisation_by_id,
+        prioritised_goals_and_actions,
+        // date_str_to_prioritised_goal_or_action_ids_map,
+    }
 }
 
 
@@ -238,12 +241,13 @@ interface ProcessActionsArgs
     all_action_ids: Set<string>
     all_goal_ids: Set<string>
     wcomponents_by_id: WComponentsById
-    date_str_to_prioritised_goal_or_action_ids_map: {[date_str: string]: Set<string>}
+    prioritised_goals_and_actions: {goal_or_action_id: string}[]
 }
 function process_actions (args: ProcessActionsArgs)
 {
-    const { date_str_to_prioritised_goal_or_action_ids_map } = args
-    // This is different from the prioritised_goal_or_action_ids_map
+    const { prioritised_goals_and_actions } = args
+
+    const prioritised_goal_or_action_ids = new Set(prioritised_goals_and_actions.map(a => a.goal_or_action_id))
     const date_str_to_daily_actions_map: DateStrToDailyActionsMap = {}
 
     const actions_parent_ids_args = prepare_args_for_actions_parent_ids(args)
@@ -261,16 +265,15 @@ function process_actions (args: ProcessActionsArgs)
             })
 
             // Check at least one of the action's parent ids is in the prioritised goal or
-            // actions for that date, otherwise add to UNCATEGORISED_PRIORITY_ID
+            // actions, otherwise add to UNCATEGORISED_PRIORITY_ID
             // And add the action's id to all those prioritised_goal_or_action_ids
             // (or UNCATEGORISED_PRIORITY_ID)
-            let prioritised_entry_ids = date_str_to_prioritised_goal_or_action_ids_map[date_str] || new Set()
             let has_at_least_one_prioritised_parent_goal_or_action = false
 
             for (let i = 0; i < actions_parent_ids.length; ++i)
             {
                 const prioritised_entry_id = actions_parent_ids[i]!
-                if (prioritised_entry_ids.has(prioritised_entry_id))
+                if (prioritised_goal_or_action_ids.has(prioritised_entry_id))
                 {
                     has_at_least_one_prioritised_parent_goal_or_action = true
 
@@ -352,15 +355,14 @@ function convert_daily_actions_to_nodes (args: ConvertDailyActionsToNodesArgs)
 {
     const { time_origin_ms, time_origin_x, time_scale, prioritised_goals_and_actions } = args
 
-    const prioritised_goals_and_actions_by_goal_or_action_id: {[id: string]: PrioritisedGoalOrAction } = {}
+    const prioritised_goals_and_actions_by_id: {[id: string]: PrioritisedGoalOrAction } = {}
     prioritised_goals_and_actions.forEach(prioritised_goal_or_action =>
     {
-        prioritised_goals_and_actions_by_goal_or_action_id[prioritised_goal_or_action.goal_or_action_id] = prioritised_goal_or_action
+        prioritised_goals_and_actions_by_id[prioritised_goal_or_action.goal_or_action_id] = prioritised_goal_or_action
     })
 
-    const nodes: h.JSX.Element[] = []
 
-    console.log(Object.keys(args.date_str_to_daily_actions_map))
+    const nodes: h.JSX.Element[] = []
 
     Object.entries(args.date_str_to_daily_actions_map).forEach(([date_str, daily_action]) =>
     {
@@ -371,11 +373,11 @@ function convert_daily_actions_to_nodes (args: ConvertDailyActionsToNodesArgs)
 
         Object.entries(daily_action.prioritised_goal_or_action_ids_to_action_ids_map).forEach(([goal_or_action_id, action_ids]) =>
         {
-            const prioritised_goal_or_action = prioritised_goals_and_actions_by_goal_or_action_id[goal_or_action_id]
+            const prioritised_goal_or_action = prioritised_goals_and_actions_by_id[goal_or_action_id]
 
             let y = -40
 
-            if (prioritised_goal_or_action) y = 100 * prioritised_goal_or_action.offset_index
+            if (prioritised_goal_or_action) y = (100 * prioritised_goal_or_action.offset_index) + 70
             else if (goal_or_action_id !== UNCATEGORISED_PRIORITY_ID) return
 
             nodes.push(<DailyActionNode

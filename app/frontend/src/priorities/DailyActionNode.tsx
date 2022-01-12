@@ -31,15 +31,21 @@ function _DailyActionNode (props: Props)
         backgroundColor: "orange",
         borderRadius: "2px",
         border: "thin solid #777",
+        overflow: "hidden",
+        fontSize: "7px",
+        textAlign: "center",
     }
 
     const canvas_node = <CanvasNode
         position={{ width, height, left: x, top: y }}
         display={display}
         extra_styles={extra_styles}
-        title={`${action_ids.length} actions`}
+        // title={`${action_ids.length} actions`} // title takes too long to appear, don't use it.  Could
+        // use on_pointer_enter instead
         on_click={() => props.set_action_ids_to_show({ action_ids, date_shown }) }
-    />
+    >
+        {action_ids.length}
+    </CanvasNode>
 
     return canvas_node
 }
