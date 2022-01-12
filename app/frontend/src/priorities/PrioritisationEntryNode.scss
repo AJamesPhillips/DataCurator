@@ -1,8 +1,11 @@
 
 
+.prioritisation_entry
+{
+    transition: width ease 0.2s;
+}
 
 .prioritisation_entry:hover
 {
-    min-width: 150px;
     z-index: 100;
 }

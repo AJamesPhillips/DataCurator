@@ -8,6 +8,7 @@ import { CanvasNode } from "../canvas/CanvasNode"
 import type { RootState } from "../state/State"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
+import { useState } from "preact/hooks"
 
 
 
@@ -56,7 +57,9 @@ function _PrioritisationEntryNode (props: Props)
         sim_ms: new Date().getTime(),
     })
 
-    const w = effort > 0 ? Math.max(width, 150) : 150
+    const initial_w = effort > 0 ? width : Math.min(width, 250)
+    const hover_w = effort > 0 ? Math.max(width, 250) : 250
+    const [w, set_w] = useState(initial_w)
 
     const percent = `${Math.round(effort * 100)}%`
     const backgroundImage = `linear-gradient(to top, #a6eaff ${percent}, rgba(0,0,0,0) ${percent})`
@@ -74,6 +77,8 @@ function _PrioritisationEntryNode (props: Props)
             e.preventDefault()
             props.change_route({ item_id: props.wcomponent_id })
         }}
+        on_pointer_enter={() => set_w(hover_w)}
+        on_pointer_leave={() => set_w(initial_w)}
         extra_css_class=" prioritisation_entry "
     >
         <div className="node_main_content" style={style_inner}>
