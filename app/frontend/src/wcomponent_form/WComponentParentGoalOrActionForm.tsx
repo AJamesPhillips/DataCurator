@@ -7,12 +7,13 @@ import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { FormControl, FormLabel } from "@material-ui/core"
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
+import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 
 
 
 interface OwnProps
 {
-    wcomponent: WComponentNodeAction
+    wcomponent: WComponentNodeGoal | WComponentNodeAction
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
@@ -34,7 +35,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _WComponentActionFormFields (props: Props)
+function _WComponentParentGoalOrActionForm (props: Props)
 {
     const { wcomponent, upsert_wcomponent } = props
 
@@ -69,4 +70,4 @@ function _WComponentActionFormFields (props: Props)
     </FormControl>
 }
 
-export const WComponentActionFormFields = connector(_WComponentActionFormFields) as FunctionalComponent<OwnProps>
+export const WComponentParentGoalOrActionForm = connector(_WComponentParentGoalOrActionForm) as FunctionalComponent<OwnProps>

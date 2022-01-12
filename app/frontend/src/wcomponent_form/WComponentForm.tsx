@@ -32,6 +32,7 @@ import {
     wcomponent_is_sub_state,
     wcomponent_has_objectives,
     wcomponent_is_action,
+    wcomponent_is_goal,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
@@ -70,7 +71,7 @@ import {
 } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
-import { WComponentActionFormFields } from "./WComponentActionFormFields"
+import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 
 
 
@@ -352,7 +353,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {wcomponent_is_action(wcomponent) && <WComponentActionFormFields
+        {(wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && <WComponentParentGoalOrActionForm
             {...{ wcomponent, upsert_wcomponent }}
         />}
 
