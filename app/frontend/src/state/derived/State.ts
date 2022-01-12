@@ -41,9 +41,10 @@ export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_m
 {
     // Should contain all kv entries where:
     //   .blocked === (false or undefined) and
-    //   .passthrough === (false or undefined)
-    // Maybe excluded by a filter
+    //   .passthrough === (false or undefined) and
+    //   .deleted === undefined
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    // Is the composed_wc_id_map with filters applied for label, component type and created_at
     composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap
     // Should contain all kv entries where .blocked === true
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap

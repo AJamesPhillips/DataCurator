@@ -20,6 +20,7 @@ import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 import { Button } from "../sharedf/Button"
+import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
 
 
 
@@ -36,14 +37,14 @@ const map_state = (state: RootState) =>
 {
     const wcomponents_by_id = state.specialised_objects.wcomponents_by_id
 
-    const knowledge_view = get_current_composed_knowledge_view_from_state(state)
+    const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
     const goals_and_actions: WComponentHasObjectives[] = []
-    let prioritisations: WComponentPrioritisation[] = []
+    let prioritisations: WComponentPrioritisation[] | undefined = undefined
     let selected_prioritisation: WComponentPrioritisation | undefined = undefined
 
-    if (knowledge_view)
+    if (composed_knowledge_view)
     {
-        knowledge_view.wc_ids_by_type.has_objectives.forEach(id =>
+        composed_knowledge_view.wc_ids_by_type.has_objectives.forEach(id =>
         {
             const goal_or_action = wcomponents_by_id[id]
 
@@ -53,13 +54,13 @@ const map_state = (state: RootState) =>
         })
 
 
-        prioritisations = knowledge_view.prioritisations
+        prioritisations = composed_knowledge_view.prioritisations
 
         const { item_id } = state.routing
         selected_prioritisation = prioritisations.find(({ id }) => id === item_id)
         Object.keys(selected_prioritisation?.goals || {}).forEach(id =>
         {
-            if (knowledge_view.wc_ids_by_type.has_objectives.has(id)) return
+            if (composed_knowledge_view.wc_ids_by_type.has_objectives.has(id)) return
 
             const goal_or_action = wcomponents_by_id[id]
 
@@ -71,12 +72,12 @@ const map_state = (state: RootState) =>
 
 
     return {
-        knowledge_view_id: knowledge_view && knowledge_view.id,
+        composed_knowledge_view,
         goals_and_actions,
         prioritisations,
-        editing: !state.display_options.consumption_formatting,
         selected_prioritisation,
         base_id: selector_chosen_base_id(state),
+        wcomponents_by_id,
         display_side_panel: state.controls.display_side_panel,
     }
 }
@@ -94,11 +95,17 @@ type Props = ConnectedProps<typeof connector>
 
 function _PrioritiesListViewContent (props: Props)
 {
-    const { goals_and_actions, prioritisations, editing, knowledge_view_id, selected_prioritisation, base_id } = props
+    const {
+        goals_and_actions, prioritisations,
+        composed_knowledge_view, selected_prioritisation, base_id, wcomponents_by_id,
+    } = props
+    const knowledge_view_id = composed_knowledge_view?.id
+    const composed_wc_id_map = composed_knowledge_view?.composed_wc_id_map || {}
 
 
-    const goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals
-    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals_and_actions, goal_prioritisation_attributes)
+    const selected_goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals
+    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals_and_actions, selected_goal_prioritisation_attributes)
+
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
 
@@ -139,33 +146,35 @@ function _PrioritiesListViewContent (props: Props)
             <h1>
                 Prioritisations
 
-                {editing && knowledge_view_id && <span>
+                {knowledge_view_id && <span className="button_add_new">
                     &nbsp;
                     <Button
                         fullWidth={false}
                         onClick={e =>
                         {
-                            e.stopImmediatePropagation() // otherwise the list of items will change its expanded state
+                            const most_recent_prioritisation_id = (prioritisations || [])[0]?.id || ""
+                            const next_prioritisation_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_prioritisation_id, wcomponents_by_id) || { left: 0, top: 0 }
+
                             create_wcomponent({
                                 wcomponent: {
                                     base_id,
                                     type: "prioritisation",
-                                    goals: goal_prioritisation_attributes || {}
+                                    goals: selected_goal_prioritisation_attributes || {}
                                 },
                                 add_to_knowledge_view: {
                                     id: knowledge_view_id,
-                                    position: { left: 0, top: 0 },
+                                    position: next_prioritisation_position,
                                 }
                             })
                         }}
                     >
-                        Add
+                        {selected_goal_prioritisation_attributes ? "Copy" : "Add"}
                     </Button>
                 </span>}
             </h1>
 
             <div className="prioritisations_list">
-                {prioritisations.map(p => <Prioritisation prioritisation={p}/>)}
+                {(prioritisations || []).map(p => <Prioritisation prioritisation={p}/>)}
             </div>
         </div>
 

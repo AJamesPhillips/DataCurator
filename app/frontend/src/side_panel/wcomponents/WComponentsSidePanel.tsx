@@ -54,11 +54,11 @@ function _WComponentsSidePanel (props: Props)
     const [searching_for_unfound, set_searching_for_unfound] = useState<boolean | undefined>(undefined)
     const [searched_for_wcomponent, set_searched_for_wcomponent] = useState<WComponent | undefined>(undefined)
 
-    const { item_id: id } = props
+    const { ready, item_id: id } = props
     const wcomponent = props.wcomponent || searched_for_wcomponent
 
     const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.need_to_choose_base_id
-        : !props.ready ? DisplayType.loading
+        : !ready ? DisplayType.loading
         : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple
         : id === null ? DisplayType.no_id
         : DisplayType.render_wcomponent
@@ -76,6 +76,8 @@ function _WComponentsSidePanel (props: Props)
 
     function look_for_wcomponent_in_any_base ()
     {
+        if (!ready) return
+
         if (display_type === DisplayType.render_wcomponent &&
             id && // type guard (display_type will be no_id if id === null)
             !wcomponent && searching_for_unfound === undefined)
@@ -98,7 +100,7 @@ function _WComponentsSidePanel (props: Props)
     }
 
     useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id])
-    useEffect(look_for_wcomponent_in_any_base, [display_type, wcomponent, searching_for_unfound, id])
+    useEffect(look_for_wcomponent_in_any_base, [ready, display_type, wcomponent, searching_for_unfound, id])
 
 
     if (display_type === DisplayType.need_to_choose_base_id) return <div>

@@ -48,7 +48,7 @@ function _PrioritiesContentControls (props: Props)
         datetime: new Date(), time_origin_ms, time_origin_x, time_scale,
     })
     let x_max = x_min
-    const y = 100
+    const y = 140
 
     prioritisations.forEach(prioritisation =>
     {
@@ -74,11 +74,13 @@ function _PrioritiesContentControls (props: Props)
     const draw_attention = allow_drawing_attention && position && !components_on_screen
 
 
-    return <div>
+    // todo, use same styling for knowledge ContentControls
+    return <div style={{ borderTop: "thin solid rgb(206, 206, 206)" }}>
         <MoveToItemButton
             move={() => props.change_route({ args: position })}
             draw_attention={draw_attention}
             have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
+            enable_spacebar_move_to_shortcut={true}
         />
         {/* <TimeSlider
             title="Created at datetimes"

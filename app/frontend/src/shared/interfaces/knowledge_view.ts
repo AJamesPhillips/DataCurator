@@ -9,6 +9,12 @@ export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "
 
 
 
+export interface KnowledgeViewWComponentIdEntryMap {
+    [world_component_id: string]: KnowledgeViewWComponentEntry
+}
+
+
+
 export interface KnowledgeView extends Base, Project {
     // Explainable
     title: string
@@ -39,9 +45,4 @@ export interface KnowledgeViewWComponentEntry {
     s?: number
     blocked?: true
     passthrough?: true
-}
-
-
-export interface KnowledgeViewWComponentIdEntryMap {
-    [world_component_id: string]: KnowledgeViewWComponentEntry
 }
