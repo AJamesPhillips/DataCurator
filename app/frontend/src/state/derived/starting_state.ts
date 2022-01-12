@@ -18,14 +18,5 @@ export function get_derived_starting_state (): DerivedState
         judgement_or_objective_ids_by_goal_or_action_id: {},
 
         current_composed_knowledge_view: undefined,
-
-        project_priorities_meta: {
-            project_priorities: [],
-            priorities_by_project: {},
-            project_id_to_vertical_position: {},
-            project_priority_events: [],
-            earliest_ms: 0,
-            latest_ms: 0,
-        },
     }
 }

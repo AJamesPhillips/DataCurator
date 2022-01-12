@@ -104,6 +104,4 @@ export interface DerivedState
     judgement_or_objective_ids_by_goal_or_action_id: { [goal_wcomponent_id: string]: string[] }
 
     current_composed_knowledge_view: ComposedKnowledgeView | undefined
-
-    project_priorities_meta: ProjectPrioritiesMeta
 }
