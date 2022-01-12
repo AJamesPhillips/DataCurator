@@ -11,6 +11,8 @@ import {
     WComponent,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_has_validity_predictions,
+    wcomponent_is_action,
+    wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
@@ -55,6 +57,10 @@ function _WComponentBackReferences (props: Props)
                 {
                     return wc.title.includes(wcomponent_id)
                         || wc.description.includes(wcomponent_id)
+                        || (wc.label_ids || []).includes(wcomponent_id)
+                        || ((wcomponent_is_goal(wc) || wcomponent_is_action(wc)) &&
+                            (wc.parent_goal_or_action_ids || []).includes(wcomponent_id)
+                        )
                         || (wcomponent_is_judgement_or_objective(wc) &&
                             (wc.judgement_target_wcomponent_id === wcomponent_id)
                         )
