@@ -82,13 +82,6 @@ function _PrioritiesContentControls (props: Props)
             have_finished_drawing_attention={() => set_allow_drawing_attention(false)}
             enable_spacebar_move_to_shortcut={true}
         />
-        {/* <TimeSlider
-            title="Created at datetimes"
-            get_handle_ms={state => state.routing.args.created_at_ms}
-            change_handle_ms={ms => props.change_display_at_created_datetime({ ms })}
-            events={props.events}
-            data_set_name="priorities"
-        /> */}
     </div>
 }
 
