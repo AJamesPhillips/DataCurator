@@ -124,15 +124,6 @@ function _MoveToWComponentButton (props: Props)
         }
 
 
-    useEffect(() =>
-    {
-        return pub_sub.global_keys.sub("key_down", e =>
-        {
-            if (move && e.key === " " && !e.user_is_editing_text) move()
-        })
-    })
-
-
     const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen
 
 
@@ -140,6 +131,8 @@ function _MoveToWComponentButton (props: Props)
         move={move}
         draw_attention={draw_attention_to_move_to_wcomponent_button}
         have_finished_drawing_attention={have_finished_drawing_attention}
+        // Only enable this when the button is used on the main knowledge ContentControls, not the WComponentForm
+        enable_spacebar_move_to_shortcut={!props.wcomponent_id}
     />
 }
 export const MoveToWComponentButton = connector(_MoveToWComponentButton) as FunctionalComponent<OwnProps>
@@ -151,6 +144,7 @@ interface MoveToItemButtonProps
     move?: () => void
     draw_attention?: boolean
     have_finished_drawing_attention?: () => void
+    enable_spacebar_move_to_shortcut?: boolean
 }
 export function MoveToItemButton (props: MoveToItemButtonProps)
 {
@@ -158,6 +152,18 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
         move, draw_attention,
         have_finished_drawing_attention = () => {},
     } = props
+
+
+    useEffect(() =>
+    {
+        if (!props.enable_spacebar_move_to_shortcut) return
+
+        return pub_sub.global_keys.sub("key_down", e =>
+        {
+            if (move && e.key === " " && !e.user_is_editing_text) move()
+        })
+    })
+
 
     return <Box>
         <Tooltip
