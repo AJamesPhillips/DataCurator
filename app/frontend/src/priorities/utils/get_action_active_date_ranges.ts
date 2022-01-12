@@ -4,13 +4,13 @@ import { SortDirection } from "../../shared/utils/sort"
 import { sort_by_uncertain_event_datetimes } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
 import type { WComponentNodeAction } from "../../wcomponent/interfaces/action"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import { ACTION_VALUE_POSSIBILITY_IDS, VALUE_POSSIBILITY_IDS } from "../../wcomponent/value/parse_value"
+import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
 import { get_most_probable_VAPs } from "../../wcomponent_derived/value_and_prediction/probable_VAPs"
 
 
 
-const VALID_ACTION_VALUE_POSSIBILITY_IDS = new Set(ACTION_VALUE_POSSIBILITY_IDS)
+const VALID_ACTION_VALUE_POSSIBILITY_ID = new Set<string>(Object.values(ACTION_VALUE_POSSIBILITY_ID))
 export function get_action_active_date_ranges (action: WComponentNodeAction)
 {
     let VAP_sets = action.values_and_prediction_sets || []
@@ -27,7 +27,7 @@ export function get_action_active_date_ranges (action: WComponentNodeAction)
 
         const most_probables = get_most_probable_VAPs(entries, VAPsType.action)
         const most_probables_valid = most_probables
-            .filter(entry => entry.probability > 0 && entry.value_id && VALID_ACTION_VALUE_POSSIBILITY_IDS.has(entry.value_id))
+            .filter(entry => entry.probability > 0 && entry.value_id && VALID_ACTION_VALUE_POSSIBILITY_ID.has(entry.value_id))
         const most_probable_valid = most_probables_valid[0]
 
         if (most_probables_valid.length !== 1 || !most_probable_valid)
@@ -37,7 +37,7 @@ export function get_action_active_date_ranges (action: WComponentNodeAction)
         }
 
 
-        const changed_to_active = most_probable_valid.value_id === VALUE_POSSIBILITY_IDS.action_in_progress
+        const changed_to_active = most_probable_valid.value_id === ACTION_VALUE_POSSIBILITY_ID.action_in_progress
         if (changed_to_active)
         {
             if (active_start) "" // no-op, todo: log error?

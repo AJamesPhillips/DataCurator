@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import "./ActionsListView.scss"
 import { MainArea } from "../layout/MainArea"
 import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_ids } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableAction } from "./PrioritisableAction"
@@ -13,9 +13,12 @@ import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
-import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
+import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
 import type { Base } from "../shared/interfaces/base"
 import { SIDE_PANEL_WIDTH } from "../side_panel/width"
+import { useMemo, useState } from "preact/hooks"
+import { get_default_parent_goal_or_action_ids } from "./get_default_parent_goal_or_action_ids"
+import { AddNewActionButton } from "./AddNewActionButton"
 
 
 
@@ -30,28 +33,30 @@ export function ActionsListView (props: {})
 
 const map_state = (state: RootState) =>
 {
-    const wcomponents_by_id = state.specialised_objects.wcomponents_by_id
+    const { wcomponents_by_id, knowledge_views_by_id } = state.specialised_objects
 
     let filtered_by_knowledge_view_id = ""
     const filter_by_knowledge_view = false
     let action_ids: Set<string> | undefined = undefined
 
+    const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
     if (filter_by_knowledge_view)
     {
-        const knowledge_view = get_current_composed_knowledge_view_from_state(state)
-        if (knowledge_view)
+        if (composed_knowledge_view)
         {
-            filtered_by_knowledge_view_id = knowledge_view.id
-            action_ids = knowledge_view.wc_ids_by_type.action
+            filtered_by_knowledge_view_id = composed_knowledge_view.id
+            action_ids = composed_knowledge_view.wc_ids_by_type.action
         }
     }
     else action_ids = state.derived.wcomponent_ids_by_type.action
 
 
     return {
+        composed_knowledge_view,
         filtered_by_knowledge_view_id,
         action_ids,
         wcomponents_by_id,
+        knowledge_views_by_id,
         base_id: selector_chosen_base_id(state),
         display_side_panel: state.controls.display_side_panel,
     }
@@ -70,7 +75,10 @@ type Props = ConnectedProps<typeof connector>
 
 function _ActionsListViewContent (props: Props)
 {
-    const { action_ids, wcomponents_by_id, base_id } = props
+    const { composed_knowledge_view, action_ids, wcomponents_by_id, knowledge_views_by_id, base_id } = props
+
+    const [max_done_visible, set_max_done_visible] = useState(5)
+
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
     if (action_ids === undefined) return <div>No actions</div> // type guard
@@ -86,7 +94,6 @@ function _ActionsListViewContent (props: Props)
     const actions_todo: WComponentNodeAction[] = []
     const actions_in_progress: WComponentNodeAction[] = []
     const actions_done_or_rejected: WComponentNodeAction[] = []
-    let hidden_done = 0
 
     actions.forEach(action =>
     {
@@ -96,23 +103,50 @@ function _ActionsListViewContent (props: Props)
         })
 
         const most_probable = attribute_values.most_probable_VAP_set_values[0]
-        if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_in_progress) actions_in_progress.push(action)
-        else if (most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_completed || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_rejected || most_probable?.value_id === VALUE_POSSIBILITY_IDS.action_failed)
+        if (most_probable?.value_id === ACTION_VALUE_POSSIBILITY_ID.action_in_progress) actions_in_progress.push(action)
+        else if (most_probable?.value_id === ACTION_VALUE_POSSIBILITY_ID.action_completed || most_probable?.value_id === ACTION_VALUE_POSSIBILITY_ID.action_rejected || most_probable?.value_id === ACTION_VALUE_POSSIBILITY_ID.action_failed)
         {
-            if (actions_done_or_rejected.length < 5) actions_done_or_rejected.push(action)
-            else hidden_done++
+            actions_done_or_rejected.push(action)
         }
         else if (action.todo_index) actions_todo.push(action)
         else actions_icebox.push(action)
     })
 
+    const hidden_done = actions_done_or_rejected.length - max_done_visible
+
 
     const sorted_actions_todo = sort_list(actions_todo, a => a.todo_index || 0, SortDirection.descending)
 
 
+    const action_ids_for_current_kv = composed_knowledge_view?.wc_ids_by_type?.action
+    const most_recent_action_id = useMemo(() =>
+    {
+        let actions_on_current_kv = get_wcomponents_from_ids(wcomponents_by_id, action_ids_for_current_kv)
+            .filter(wcomponent_is_action)
+
+        actions_on_current_kv = sort_list(actions_on_current_kv, get_created_at_ms, SortDirection.descending)
+        const most_recent_action_id = (actions_on_current_kv || [])[0]?.id || ""
+
+        return most_recent_action_id
+    }, [action_ids_for_current_kv])
+
+
+    const knowledge_view_id = composed_knowledge_view?.id
+    const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
+
+
     return <div className="action_list_view_content">
         <div className="action_list icebox">
-            <h1>Icebox</h1>
+            <h1>Icebox
+                <AddNewActionButton
+                    list_type="icebox"
+                    most_recent_action_id={most_recent_action_id}
+                    composed_knowledge_view={composed_knowledge_view}
+                    wcomponents_by_id={wcomponents_by_id}
+                    parent_goal_or_action_ids={parent_goal_or_action_ids}
+                    base_id={base_id}
+                />
+            </h1>
 
             {actions_icebox.map(action => <PrioritisableAction
                 key={action.id}
@@ -123,7 +157,16 @@ function _ActionsListViewContent (props: Props)
 
 
         <div className="action_list todo">
-            <h1>Todo</h1>
+            <h1>Todo
+                <AddNewActionButton
+                    list_type="todo"
+                    most_recent_action_id={most_recent_action_id}
+                    composed_knowledge_view={composed_knowledge_view}
+                    wcomponents_by_id={wcomponents_by_id}
+                    parent_goal_or_action_ids={parent_goal_or_action_ids}
+                    base_id={base_id}
+                />
+            </h1>
 
             {sorted_actions_todo.map(action => <PrioritisableAction
                 key={action.id}
@@ -134,7 +177,16 @@ function _ActionsListViewContent (props: Props)
 
 
         <div className="action_list in_progress">
-            <h1>In progress</h1>
+            <h1>In progress
+                <AddNewActionButton
+                    list_type="in_progress"
+                    most_recent_action_id={most_recent_action_id}
+                    composed_knowledge_view={composed_knowledge_view}
+                    wcomponents_by_id={wcomponents_by_id}
+                    parent_goal_or_action_ids={parent_goal_or_action_ids}
+                    base_id={base_id}
+                />
+            </h1>
 
             {actions_in_progress.map(action => <PrioritisableAction
                 key={action.id}
@@ -144,14 +196,26 @@ function _ActionsListViewContent (props: Props)
 
 
         <div className="action_list done_or_rejected">
-            <h1>Done</h1>
+            <h1>Done
+                <AddNewActionButton
+                    list_type="done"
+                    most_recent_action_id={most_recent_action_id}
+                    composed_knowledge_view={composed_knowledge_view}
+                    wcomponents_by_id={wcomponents_by_id}
+                    parent_goal_or_action_ids={parent_goal_or_action_ids}
+                    base_id={base_id}
+                />
+            </h1>
 
-            {actions_done_or_rejected.map(action => <PrioritisableAction
+            {actions_done_or_rejected.slice(0, max_done_visible).map(action => <PrioritisableAction
                 key={action.id}
                 action={action}
             />)}
 
-            {hidden_done > 0 && <div style={{ textAlign: "center", margin: 40 }}>
+            {hidden_done > 0 && <div
+                style={{ textAlign: "center", margin: 40, cursor: "pointer" }}
+                onClick={() => set_max_done_visible(max_done_visible + 50)}
+            >
                 ... {hidden_done} hidden ...
             </div>}
         </div>

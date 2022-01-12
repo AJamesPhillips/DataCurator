@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
-import { Box, ButtonGroup, IconButton, Typography } from "@material-ui/core"
+import { Box, IconButton, Typography } from "@material-ui/core"
 import DeleteIcon from "@material-ui/icons/Delete"
 
 import "../../form/editable_list/EditableListEntry.css"

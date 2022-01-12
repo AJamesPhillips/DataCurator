@@ -9,7 +9,7 @@ export type ActionStatusType = "potential"
     | "completed"
     | "failed"
     | "rejected"
-// TODO deprecate this in favour of ACTION_VALUE_POSSIBILITY_IDS?
+// TODO deprecate this in favour of ACTION_VALUE_POSSIBILITY_ID?
 export const action_statuses: ActionStatusType[] = [
     "potential",
     "in progress",

@@ -1,0 +1,14 @@
+
+
+.add_new_action_button button
+{
+    min-width: 0px;
+    width: 35px;
+    background-color: #eee;
+    float: right;
+
+    &:hover
+    {
+        background-color: #aaa;
+    }
+}
