@@ -3,7 +3,6 @@ import { creation_context_actions } from "./creation_context/actions"
 import { display_actions } from "./display_options/actions"
 import { filter_context_actions } from "./filter_context/actions"
 import { global_keys_actions } from "./global_keys/actions"
-import { objectives_actions } from "./objectives"
 import { object_actions } from "./objects/actions"
 import { pattern_actions } from "./pattern_actions"
 import { routing_actions } from "./routing/actions"
@@ -32,7 +31,6 @@ export const ACTIONS = {
     global_keys: global_keys_actions,
     display_at_created_datetime: display_at_created_datetime_actions,
     display_at_sim_datetime: display_at_sim_datetime_actions,
-    objectives: objectives_actions,
     search: search_actions,
     specialised_object: specialised_object_actions,
     user_activity: user_activity_actions,

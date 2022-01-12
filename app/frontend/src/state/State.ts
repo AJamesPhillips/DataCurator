@@ -87,14 +87,6 @@ export type Item = Statement | Pattern | ObjectWithCache
 
 
 
-export interface ObjectivesState
-{
-    selected_objective_ids: Set<string>
-    priority_selected_objective_ids: Set<string>
-}
-
-
-
 export type StatementState = Statement[]
 export type PatternState = Pattern[]
 export type ObjectsState = ObjectWithCache[]
@@ -117,7 +109,6 @@ export interface RootState extends RootStateCore
     global_keys: GlobalKeysState
     last_action: AnyAction | undefined
     meta_wcomponents: MetaWComponentsState
-    objectives: ObjectivesState
     routing: RoutingState
     search: SearchState
     sync: SyncState

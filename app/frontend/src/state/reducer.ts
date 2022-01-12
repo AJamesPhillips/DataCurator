@@ -7,7 +7,6 @@ import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display_options/reducer"
 import { filter_context_reducer } from "./filter_context/reducer"
 import { global_keys_reducer } from "./global_keys/reducer"
-import { objectives_reducer } from "./objectives"
 import { objects_reducer } from "./objects/reducer"
 import { patterns_reducer } from "./patterns"
 import { view_priorities_reducer } from "./priorities/reducer"
@@ -38,7 +37,6 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = global_keys_reducer(state, action)
     state = display_at_created_datetime_reducer(state, action)
     state = display_at_sim_datetime_reducer(state, action)
-    state = objectives_reducer(state, action)
     state = specialised_objects_reducer(state, action)
     state = controls_reducer(state, action)
     state = creation_context_reducer(state, action)
