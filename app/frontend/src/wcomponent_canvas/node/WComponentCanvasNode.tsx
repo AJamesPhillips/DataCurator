@@ -323,7 +323,7 @@ function _WComponentCanvasNode (props: Props)
 
             {wcomponent && show_state_value && <div className="node_state_container">
                 {is_editing && <div className="description_label">state &nbsp;</div>}
-                <WComponentJudgements wcomponent={wcomponent} />
+                <WComponentJudgements wcomponent={wcomponent} hide_judgement_trend={false} />
                 <div className="value_and_prediction_summary">
                     <NodeValueAndPredictionSetSummary
                         wcomponent={wcomponent}

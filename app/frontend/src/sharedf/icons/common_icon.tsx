@@ -6,7 +6,7 @@ export interface CommonIconOwnProps
 {
     style?: h.JSX.CSSProperties
     className?: string
-    size?: "small"
+    fontSize?: "small" // name of "fontSize" instead of "size" is copying material-ui interface
     title?: string
 }
 
@@ -23,7 +23,7 @@ export function CommonIcon (props: Props)
 
     // Manually copied classes and viewBox from material UI icons
     className = "MuiSvgIcon-root " + className
-    if (props.size === "small") className += " MuiSvgIcon-fontSizeSmall "
+    if (props.fontSize === "small") className += " MuiSvgIcon-fontSizeSmall "
 
     return <span title={props.title}>
         <svg className={className} viewBox="0 0 24 24" style={props.style}>

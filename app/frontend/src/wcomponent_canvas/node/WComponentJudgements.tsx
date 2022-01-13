@@ -18,11 +18,13 @@ type OwnProps =
     wcomponent: WComponent
     target_VAPs_represent?: undefined
     value?: undefined
+    hide_judgement_trend: boolean
 }
 | {
     wcomponent: WComponent
     target_VAPs_represent: VAPsType
     value: ParsedValue
+    hide_judgement_trend: boolean
 }
 
 
@@ -68,13 +70,17 @@ function _WComponentJudgements (props: Props)
     if (value === undefined || target_VAPs_represent === undefined)
     {
         return <div className={node_judgements_container_class_name}>
-            {judgement_or_objective_ids.map(id => <JudgementBadgeConnected judgement_or_objective_id={id} />)}
+            {judgement_or_objective_ids.map(id => <JudgementBadgeConnected
+                judgement_or_objective_id={id}
+                hide_judgement_trend={props.hide_judgement_trend}
+            />)}
         </div>
     }
 
     return <div className={node_judgements_container_class_name}>
         {judgement_or_objective_ids.map(id => <JudgementBadgeSimple
             judgement_or_objective_id={id}
+            hide_judgement_trend={props.hide_judgement_trend}
             target_VAPs_represent={target_VAPs_represent}
             value={value}
         />)}

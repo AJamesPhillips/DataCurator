@@ -60,6 +60,7 @@ export function ValueAndPredictionEntryRow (props: OwnProps)
             wcomponent={props.wcomponent}
             target_VAPs_represent={VAPs_represent}
             value={VAP_visual.parsed_value}
+            hide_judgement_trend={true}
         />}
 
         {cf_entries.map(entry => <CounterfactualLink
@@ -106,7 +107,7 @@ function CounterfactualLink (props: CounterfactualLinkProps)
             args={undefined}
             extra_css_style={style}
         >
-            <AltRouteIcon size="small" />
+            <AltRouteIcon fontSize="small" />
         </Link>
 
         {props.counterfactual.counterfactual_has_knowledge_view && <span style={{ fontSize: 14 }}>

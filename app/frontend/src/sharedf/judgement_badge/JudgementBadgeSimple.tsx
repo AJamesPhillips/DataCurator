@@ -17,6 +17,7 @@ import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 interface OwnProps
 {
     judgement_or_objective_id: string
+    hide_judgement_trend: boolean
     target_VAPs_represent: VAPsType
     value: ParsedValue
 }
@@ -47,7 +48,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementBadgeSimple (props: Props)
 {
-    const { judgement_or_objective_id: judgement_id, judgement_wcomponent, position, target_VAPs_represent, value } = props
+    const { judgement_or_objective_id, judgement_wcomponent, position, target_VAPs_represent, value } = props
 
     if (!judgement_wcomponent) return null
 
@@ -56,8 +57,10 @@ function _JudgementBadgeSimple (props: Props)
 
     return <JudgementBadge
         judgement={judgement_value}
-        judgement_or_objective_id={judgement_id}
+        judgement_trend_manual={props.hide_judgement_trend ? undefined : judgement_wcomponent.judgement_trend_manual}
+        judgement_or_objective_id={judgement_or_objective_id}
         position={position}
+        size={props.hide_judgement_trend ? "small" : "medium"}
     />
 }
 

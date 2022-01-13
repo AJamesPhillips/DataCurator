@@ -55,7 +55,7 @@ function _OverlappingNodesHandle (props: Props)
     }, [change_route, overlapping_wcomponent_ids])
 
     return <div className={class_name} title={title} onClick={select_next_node}>
-        <AutoAwesomeMotionIcon size="small" />
+        <AutoAwesomeMotionIcon fontSize="small" />
     </div>
 }
 

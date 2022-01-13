@@ -20,6 +20,7 @@ import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent_derived/int
 interface OwnProps
 {
     judgement_or_objective_id: string
+    hide_judgement_trend: boolean
 }
 
 
@@ -60,13 +61,19 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _JudgementBadgeConnected (props: Props)
 {
-    const { judgement_or_objective_id: judgement_id, judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms, position } = props
+    const { judgement_or_objective_id, judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms, position } = props
 
     if (!judgement_wcomponent || !target_wcomponent) return null
 
-    const judgement_value = calculate_judgement_value({ judgement_wcomponent: judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
+    const judgement_value = calculate_judgement_value({ judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
 
-    return <JudgementBadge judgement={judgement_value} judgement_or_objective_id={judgement_id} position={position} />
+    return <JudgementBadge
+        judgement={judgement_value}
+        judgement_trend_manual={props.hide_judgement_trend ? undefined : judgement_wcomponent.judgement_trend_manual}
+        judgement_or_objective_id={judgement_or_objective_id}
+        position={position}
+        size={props.hide_judgement_trend ? "small" : "medium"}
+    />
 }
 
 export const JudgementBadgeConnected = connector(_JudgementBadgeConnected) as FunctionalComponent<OwnProps>

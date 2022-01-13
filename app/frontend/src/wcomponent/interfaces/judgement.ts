@@ -23,6 +23,7 @@ export interface WComponentJudgement extends WComponentBase
     judgement_operator: JudgementOperator
     judgement_comparator_value: string
     judgement_manual?: boolean
+    judgement_trend_manual?: JudgementTrend | undefined
     // judgements: Judgement[]
     // degree: "borderline" | "minor" | "moderate" | "significant" | "extreme"
 }
@@ -36,6 +37,19 @@ const _judgement_operators: {[P in JudgementOperator]: true} = {
     ">=": true,
 }
 export const judgement_operators: JudgementOperator[] = Object.keys(_judgement_operators) as any
+
+
+
+// "Not assessed" is equivalent to `undefined`
+export type JudgementTrend = "improving" | "worsening" | "stable" | "unknown" | "not_assessed"
+const _judgement_trends: {[P in JudgementTrend]: true} = {
+    "improving": true,
+    "worsening": true,
+    "stable": true,
+    "unknown": true,
+    "not_assessed": true,
+}
+export const judgement_trends: JudgementTrend[] = Object.keys(_judgement_trends) as any
 
 
 

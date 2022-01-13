@@ -58,7 +58,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
             if (wcomponent_is_judgement_or_objective(wcomponent))
             {
                 jsx = <div>
-                    <JudgementBadgeConnected judgement_or_objective_id={wcomponent.id} />
+                    <JudgementBadgeConnected judgement_or_objective_id={wcomponent.id} hide_judgement_trend={false} />
                     {title}
                 </div>
             }

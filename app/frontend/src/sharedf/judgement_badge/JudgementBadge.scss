@@ -6,6 +6,12 @@
     border-radius: 3px;
     margin: 0px 2px;
     display: inline-block;
+
+    &.medium
+    {
+        width: 25px;
+        height: 25px;
+    }
 }
 
 .judgement_badge.positive
@@ -22,4 +28,30 @@
 .judgement_badge.inactive
 {
     background-color: rgb(175, 175, 175);
+}
+
+
+
+.judgement_badge.improving svg
+{
+    stroke: #40dd21;
+    fill: #40dd21;
+}
+
+.judgement_badge.stable svg
+{
+    stroke: #ffff00;
+    fill: #ffff00;
+}
+
+.judgement_badge.worsening svg
+{
+    stroke: #ff0000;
+    fill: #ff0000;
+}
+
+.judgement_badge.unknown svg
+{
+    stroke: #ddd;
+    fill: #ddd;
 }

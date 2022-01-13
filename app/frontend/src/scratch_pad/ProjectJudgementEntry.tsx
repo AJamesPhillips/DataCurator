@@ -79,6 +79,8 @@ const _ProjectJudgementEntry = (props: Props) =>
         >
             <JudgementBadge
                 judgement={calculate_judgement_value({ judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })}
+                judgement_trend_manual={judgement.judgement_trend_manual}
+                size="medium"
             />
 
             <RichMarkDown
