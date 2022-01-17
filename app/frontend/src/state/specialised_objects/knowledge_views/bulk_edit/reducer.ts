@@ -93,11 +93,14 @@ function handle_bulk_add_to_knowledge_view (state: RootState, action: ActionBulk
                 return
             }
 
-            if (entry.blocked || entry.passthrough)
-            {
-                console.warn(`we should not be adding an entry for wcomponent "${id}" in composed_kv composed_wc_id_map for "${knowledge_view_id}" as it is blocked or passed through`)
-                return
-            }
+            entry.blocked = undefined
+            entry.passthrough = undefined
+
+            // if (entry.blocked || entry.passthrough)
+            // {
+            //     console.warn(`we should not be adding an entry for wcomponent "${id}" in composed_kv composed_wc_id_map for "${knowledge_view_id}" as it is blocked or passed through`)
+            //     return
+            // }
 
             new_wc_id_map[id] = entry
         })
