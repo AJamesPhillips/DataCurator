@@ -2,42 +2,39 @@ import { Box, FormControl, FormLabel, Slider } from "@material-ui/core"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { MoveToWComponentButton } from "../canvas/MoveToWComponentButton"
-import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
-import { SelectKnowledgeView } from "../knowledge_view/SelectKnowledgeView"
-import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
-import { Button } from "../sharedf/Button"
-import { Link } from "../sharedf/Link"
-import { ACTIONS } from "../state/actions"
-import { get_middle_of_screen, lefttop_to_xy } from "../state/display_options/display"
+import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
+import { Button } from "../../sharedf/Button"
+import { ACTIONS } from "../../state/actions"
+import { get_middle_of_screen } from "../../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
-} from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { ExploreButtonHandle } from "../wcomponent_canvas/node/ExploreButtonHandle"
-import { WComponentBackReferences } from "../wcomponent_ui/WComponentBackReferences"
-import { AlignComponentForm } from "./AlignComponentForm"
+} from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { ExploreButtonHandle } from "../../wcomponent_canvas/node/ExploreButtonHandle"
+import { WComponentBackReferences } from "../../wcomponent_ui/WComponentBackReferences"
+import { AlignComponentForm } from "../AlignComponentForm"
+import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
 
 
 
 interface OwnProps
 {
-    wcomponent: WComponent
+    wcomponent_id: string
 }
 
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const { wcomponent } = own_props
-
+    const { wcomponent_id } = own_props
     const current_knowledge_view = get_current_knowledge_view_from_state(state)
 
-    const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent.id]
+    const knowledge_view_entry = current_knowledge_view && current_knowledge_view.wc_id_map[wcomponent_id]
     const current_composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent.id]
-    const all_knowledge_views = state.derived.knowledge_views
+    const composed_knowledge_view_entry = current_composed_knowledge_view && current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
     const middle_position = get_middle_of_screen(state)
 
     return {
@@ -45,7 +42,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
         composed_knowledge_view_entry,
         knowledge_view_entry,
-        all_knowledge_views,
         editing: !state.display_options.consumption_formatting,
         middle_position_left: middle_position.left,
         middle_position_top: middle_position.top,
@@ -65,19 +61,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeViewForm (props: Props)
 {
-    const { wcomponent, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
-        knowledge_view_entry, all_knowledge_views, editing } = props
-
-    const wcomponent_id = wcomponent.id
-
-
-    const other_knowledge_views = all_knowledge_views
-        .filter(({ id }) => id !== knowledge_view_id)
-        .filter(({ wc_id_map }) =>
-        {
-            const entry = wc_id_map[wcomponent_id]
-            return entry && !entry.blocked && !entry.passthrough
-        })
+    const { wcomponent_id, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
+        knowledge_view_entry, editing } = props
 
 
     function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
@@ -199,32 +184,16 @@ function _WComponentKnowledgeViewForm (props: Props)
                 {
                     if (!knowledge_view_id) return
 
-                    upsert_entry(knowledge_view_id)
+                    upsert_entry(knowledge_view_id, { blocked: undefined, passthrough: undefined })
                 }}
             />
         </p>}
 
 
-        {other_knowledge_views.length > 0 && <div>
-            <br />
-            {not_present ? "Present" : "Also"} in:
-            {other_knowledge_views.map(kv =>
-            {
-                const entry = kv.wc_id_map[wcomponent_id]
-                const pos = lefttop_to_xy(entry, true)
+        <p>
+            <WComponentPresenceInOtherKVs wcomponent_id={wcomponent_id} />
+        </p>
 
-                return <div>
-                    <Link
-                        route={undefined}
-                        sub_route={undefined}
-                        item_id={undefined}
-                        args={{ subview_id: kv.id, ...pos }}
-                    >
-                        {kv.title}
-                    </Link>
-                </div>
-            })}
-        </div>}
 
         <p>
             <WComponentBackReferences wcomponent_id={wcomponent_id} />

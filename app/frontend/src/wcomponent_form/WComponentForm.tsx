@@ -53,7 +53,7 @@ import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
-import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
+import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../sharedf/Button"
 import { selector_chosen_base_id } from "../state/user_info/selector"
@@ -514,9 +514,7 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        <p>
-            <WComponentKnowledgeViewForm wcomponent={wcomponent} />
-        </p>
+        <WComponentKnowledgeViewForm wcomponent_id={wcomponent.id} />
 
 
         <br />

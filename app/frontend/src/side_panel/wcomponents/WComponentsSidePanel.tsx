@@ -13,6 +13,8 @@ import { ACTIONS } from "../../state/actions"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_supabase } from "../../supabase/get_supabase"
 import { supabase_get_wcomponent_from_any_base } from "../../state/sync/supabase/wcomponent"
+import { WComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
+import { NotFoundWComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm"
 
 
 
@@ -34,6 +36,7 @@ const map_state = (state: RootState) =>
         item_id,
         wcomponent,
         selected_ids,
+        editing: !state.display_options.consumption_formatting,
     }
 }
 
@@ -164,7 +167,11 @@ function _WComponentsSidePanel (props: Props)
         <br />
 
         {searching_for_unfound && <div>Searching in other bases...</div>}
-        {!searching_for_unfound && <div>Not found in other bases (that you have access to).</div>}
+        {!searching_for_unfound && <div>
+            Not found in other bases (that you have access to).
+
+            {props.editing && id && <NotFoundWComponentKnowledgeViewForm wcomponent_id={id} />}
+        </div>}
     </div>
 }
 
