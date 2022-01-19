@@ -45,6 +45,13 @@ function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, pr
 }
 */
 
+interface Level
+{
+    options: KnowledgeViewOption[]
+    selected_id: string
+    parent_id: string | undefined
+}
+
 
 function _ViewsBreadcrumb (props: Props)
 {
@@ -53,8 +60,7 @@ function _ViewsBreadcrumb (props: Props)
     const { kv_id, nested_kv_ids_map } = props
     let nested_kv = nested_kv_ids_map.map[kv_id]
 
-    const levels: { options: KnowledgeViewOption[], selected_id: string, allow_none: boolean }[] = []
-    let deepest_level = true
+    const levels: Level[] = []
     let last_parent_id = ""
 
     while (nested_kv)
@@ -70,10 +76,9 @@ function _ViewsBreadcrumb (props: Props)
             levels.unshift({
                 options,
                 selected_id: last_parent_id,
-                allow_none: deepest_level,
+                parent_id: nested_kv.id,
             })
         }
-        deepest_level = false
         last_parent_id = nested_kv.id
 
         nested_kv = nested_kv.parent_id !== undefined ? nested_kv_ids_map.map[nested_kv.parent_id] : undefined
@@ -82,7 +87,8 @@ function _ViewsBreadcrumb (props: Props)
     const top_level_options = nested_kv_ids_map.top_ids.map(id => nested_kv_ids_map.map[id])
         .filter(is_defined)
         .map(calc_if_is_hidden)
-    levels.unshift({ options: top_level_options, selected_id: last_parent_id, allow_none: false  })
+    levels.unshift({ options: top_level_options, selected_id: last_parent_id, parent_id: undefined })
+
     return <Breadcrumbs>
         <Box>
             <Select
@@ -106,11 +112,15 @@ function _ViewsBreadcrumb (props: Props)
         </Box>
         {levels.map(level => <Box>
             <AutocompleteText
-                allow_none={level.allow_none}
+                allow_none={level.parent_id !== undefined}
                 selected_option_id={level.selected_id}
                 options={level.options}
-                on_change={subview_id => props.change_route({ args: { subview_id } })}
-                on_choose_same={subview_id => props.change_route({ args: { subview_id } })}
+                on_change={subview_id =>
+                    props.change_route({ args: { subview_id: subview_id || level.parent_id } })
+                }
+                on_choose_same={subview_id =>
+                    props.change_route({ args: { subview_id: subview_id || level.parent_id } })
+                }
                 force_editable={true}
                 threshold_minimum_score={false}
             />
