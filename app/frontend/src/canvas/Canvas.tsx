@@ -237,6 +237,7 @@ class _Canvas extends Component<Props, State>
     on_wheel = (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent>) =>
     {
         e.stopPropagation()
+        e.preventDefault()
 
         const wheel_change = e.deltaY
         const new_zoom = calculate_new_zoom({ zoom: this.props.zoom, wheel_change })
