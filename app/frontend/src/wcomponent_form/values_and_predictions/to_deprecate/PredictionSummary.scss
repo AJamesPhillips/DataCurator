@@ -7,7 +7,7 @@
 
 .summary_row
 {
-    display: inline-flex;
+    display: flex; // Allows date time and value to be on separate line from confidence and probability
     flex-direction: row;
 }
 
