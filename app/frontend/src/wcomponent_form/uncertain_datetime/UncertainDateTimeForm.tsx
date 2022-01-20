@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./UncertainDateTimeForm.css"
+import "./UncertainDateTimeForm.scss"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import type { RootState } from "../../state/State"

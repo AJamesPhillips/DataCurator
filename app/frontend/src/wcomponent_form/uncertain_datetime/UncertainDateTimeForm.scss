@@ -4,6 +4,7 @@
     display: flex;
     /* width: 70%; */
     flex-direction: column;
+    white-space: nowrap;  // stops date & time breaking into two parts when VAP set value is too long
 }
 .datetimes .datetime_section
 {
