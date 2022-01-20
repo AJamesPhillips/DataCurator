@@ -34,16 +34,16 @@ export function user_info_subscribers (store: StoreType)
     })
 
 
-    pub_sub.user.sub("stale_users_by_id", full_reload =>
+    pub_sub.user.sub("stale_users_by_id", full_reload_required =>
     {
-        if (full_reload) store.dispatch(ACTIONS.user_info.set_users({ users: undefined }))
+        if (full_reload_required) store.dispatch(ACTIONS.user_info.set_users({ users: undefined }))
         get_users(store)
     })
 
 
-    pub_sub.user.sub("stale_bases", full_reload =>
+    pub_sub.user.sub("stale_bases", full_reload_required =>
     {
-        if (full_reload) store.dispatch(ACTIONS.user_info.update_bases({ bases: undefined }))
+        if (full_reload_required) store.dispatch(ACTIONS.user_info.update_bases({ bases: undefined }))
         refresh_bases_for_current_user(store)
     })
 

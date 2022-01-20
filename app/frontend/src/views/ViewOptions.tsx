@@ -1,19 +1,26 @@
 import { FunctionalComponent, h } from "preact"
+import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ButtonGroup, IconButton } from "@material-ui/core"
+import { ButtonGroup, IconButton, Tooltip } from "@material-ui/core"
 import EditIcon from "@material-ui/icons/Edit"
 import PresentToAllIcon from "@material-ui/icons/PresentToAll"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
+import { selector_current_user_access_level } from "../state/user_info/selector"
+import { Modal } from "../modal/Modal"
+import { Button } from "../sharedf/Button"
 
 
 
 const map_state = (state: RootState) =>
 {
+    const access_level = selector_current_user_access_level(state)
+
     return {
         presenting: state.display_options.consumption_formatting,
+        access_level,
     }
 }
 
@@ -28,28 +35,74 @@ type Props = ConnectedProps<typeof connector>
 
 function _ViewOptions (props: Props)
 {
-    const classes = invert_disabled_appearance();
+    const { access_level } = props
+    const can_not_edit = access_level === "viewer" || access_level === "none"
+
+    const [present_warning, set_present_warning] = useState<boolean | undefined>(undefined)
+    const presented_warning_once = useRef(false)
+
+
+    useEffect(() =>
+    {
+        if (access_level === undefined) return
+        if (presented_warning_once.current) return
+        presented_warning_once.current = true
+
+        set_present_warning(can_not_edit)
+    }, [access_level])
+
+    const button_edit_title = can_not_edit ? "No editing rights" : ""
+    const button_edit_color = can_not_edit ? (props.presenting ? "rgba(183, 28, 26, 0.5)" : "rgba(183, 28, 26)") : ""
+
+    const classes = invert_disabled_appearance()
+
+
     return (
         <ButtonGroup
             size="small"
             value={props.presenting ? "presenting" : "editing"}
         >
+            <Tooltip title={button_edit_title} aria-label={button_edit_title}>
+                <span> {/* hacky fix - https://stackoverflow.com/a/66713470/539490 */}
+                    <IconButton
+                        className={classes.inverse_disabled}
+                        disabled={!props.presenting}
+                        onClick={props.toggle_consumption_formatting}
+                        value="editing"
+                    >
+                        <EditIcon style={{ color: button_edit_color }} />
+                    </IconButton>
+                </span>
+            </Tooltip>
             <IconButton
                 className={classes.inverse_disabled}
-                disabled={(!props.presenting) ? true : false }
-                onClick={props.toggle_consumption_formatting}
-                value="editing"
-            >
-                <EditIcon color="inherit" />
-            </IconButton>
-            <IconButton
-                className={`${classes.inverse_disabled} HI`}
-                disabled={(props.presenting) ? true : false }
+                disabled={props.presenting}
                 onClick={props.toggle_consumption_formatting}
                 value="presenting"
             >
                 <PresentToAllIcon />
             </IconButton>
+
+            {!props.presenting && present_warning && <Modal
+                title=""
+                size="small"
+                scrollable={false}
+                on_close={() => set_present_warning(false)}
+                child={<div style={{ margin: "30px" }}>
+                    <h1>Warning: Your edits will not be saved</h1>
+
+                    <p>
+                        You can make changes to this knowledge base but they will not be saved.
+                        The owner of this knowledge base may give you editing rights if you ask them.
+                    </p>
+
+                    <br />
+
+                    <p style={{ textAlign: "center" }}>
+                        <Button onClick={() => set_present_warning(false)}>Ok</Button>
+                    </p>
+                </div>}
+            />}
         </ButtonGroup>
     )
 }

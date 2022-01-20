@@ -12,6 +12,7 @@ interface OwnProps
     on_close?: (e?: h.JSX.TargetedMouseEvent<HTMLDivElement>) => void
     child: h.JSX.Element
     size?: "small" | "medium" | "large"
+    scrollable?: boolean
 }
 interface ModalCoreOwnProps extends OwnProps
 {
@@ -48,7 +49,11 @@ function _ModalCore (props: Props)
             on_close && on_close(e)
         }}
     >
-        <div id="modal_container" onClick={e => e.stopPropagation()}>
+        <div
+            id="modal_container"
+            style={{ overflowY: props.scrollable === false ? "hidden" : "inherit" }}
+            onClick={e => e.stopPropagation()}
+        >
             <div id="modal_title">{props.title}</div>
             {on_close && <div id="modal_close" onClick={e => on_close(e)}><span>X</span></div>}
 
