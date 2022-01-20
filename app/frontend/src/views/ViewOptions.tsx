@@ -37,6 +37,7 @@ function _ViewOptions (props: Props)
 {
     const { access_level } = props
     const can_not_edit = access_level === "viewer" || access_level === "none"
+    const are_in_edit_mode = !props.presenting
 
     const [present_warning, set_present_warning] = useState<boolean | undefined>(undefined)
     const presented_warning_once = useRef(false)
@@ -63,16 +64,17 @@ function _ViewOptions (props: Props)
             value={props.presenting ? "presenting" : "editing"}
         >
             <Tooltip title={button_edit_title} aria-label={button_edit_title}>
-                <span> {/* hacky fix - https://stackoverflow.com/a/66713470/539490 */}
-                    <IconButton
-                        className={classes.inverse_disabled}
-                        disabled={!props.presenting}
-                        onClick={props.toggle_consumption_formatting}
-                        value="editing"
-                    >
-                        <EditIcon style={{ color: button_edit_color }} />
-                    </IconButton>
-                </span>
+                <IconButton
+                    className={classes.inverse_disabled}
+                    disabled={are_in_edit_mode}
+                    // `component` is a workaround to get tooltip to work when button is disabled
+                    // https://stackoverflow.com/a/63276424/539490
+                    component={are_in_edit_mode ? "div" : undefined}
+                    onClick={are_in_edit_mode ? undefined : props.toggle_consumption_formatting}
+                    value="editing"
+                >
+                    <EditIcon style={{ color: button_edit_color }} />
+                </IconButton>
             </Tooltip>
             <IconButton
                 className={classes.inverse_disabled}
@@ -83,7 +85,7 @@ function _ViewOptions (props: Props)
                 <PresentToAllIcon />
             </IconButton>
 
-            {!props.presenting && present_warning && <Modal
+            {are_in_edit_mode && present_warning && <Modal
                 title=""
                 size="small"
                 scrollable={false}

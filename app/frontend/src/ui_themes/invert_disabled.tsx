@@ -7,6 +7,7 @@ export const invert_disabled_appearance = makeStyles(theme => ({
         color: theme.palette.text.disabled,
         "&.Mui-disabled": {
             color: theme.palette.text.primary,
+            pointerEvents: "auto",
         }
     }
 }))
