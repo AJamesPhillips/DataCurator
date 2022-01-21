@@ -2,6 +2,7 @@ import {
     Perception,
     WComponent,
     WComponentsById,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_event,
     wcomponent_is_statev2,
     wcomponent_is_sub_state,
@@ -19,7 +20,7 @@ import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/i
 import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
-import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
+import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 
 
 
@@ -266,7 +267,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
         return convert_VAP_set_to_temporal_certainty(target_VAP_set)
     }
 
-    else if (wcomponent_is_statev2(wcomponent))
+    else if (wcomponent && wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent))
     {
         const VAP_set = wcomponent_has_single_statev2_datetime(wcomponent)
         if (VAP_set)
@@ -280,7 +281,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
 
 
 
-export function wcomponent_has_single_statev2_datetime (wcomponent: WComponentNodeStateV2)
+export function wcomponent_has_single_statev2_datetime (wcomponent: HasVAPSetsAndMaybeValuePossibilities)
 {
 
     let VAP_sets = wcomponent.values_and_prediction_sets || []

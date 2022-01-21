@@ -11,7 +11,7 @@ import {
     get_current_knowledge_view_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { get_store } from "../state/store"
+import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -32,6 +32,8 @@ const map_state = (state: RootState) =>
 
     return {
         kv,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        created_at_ms: state.routing.args.created_at_ms,
         time_origin_ms: composed_datetime_line_config?.time_origin_ms,
         time_origin_x: composed_datetime_line_config?.time_origin_x,
         time_scale: composed_datetime_line_config?.time_scale,
@@ -54,8 +56,8 @@ function _ButtonSnapXToDatetime (props: Props)
     const [number_changed, set_number_changed] = useState<number | undefined>(undefined)
 
     const {
-        kv, wcomponent_id,
-        time_origin_ms, time_origin_x, time_scale,
+        kv, wcomponent_id, wcomponents_by_id,
+        created_at_ms, time_origin_ms, time_origin_x, time_scale,
         upsert_knowledge_view,
     } = props
     const wcomponent_ids: string[] = (wcomponent_id ? [wcomponent_id] : props.wcomponent_ids) || []
@@ -67,9 +69,20 @@ function _ButtonSnapXToDatetime (props: Props)
         || time_origin_ms === undefined
         || time_origin_x === undefined
         || time_scale === undefined
+        || (!!wcomponent_id && calculate_canvas_x_for_wcomponent_temporal_uncertainty({
+            wcomponent_id, wcomponents_by_id, created_at_ms, time_origin_ms, time_origin_x, time_scale,
+        }) === undefined)
     const title = !disabled ? "" :
         time_origin_ms === undefined ? "Disabled as time origin not set" :
         time_origin_x === undefined ? "Disabled as time origin X position is not set" : "Diabled"
+
+
+    let number_changed_text = ""
+    if (number_changed !== undefined)
+    {
+        if (!number_changed) number_changed_text = "No changes"
+        else if (wcomponent_ids.length > 1) number_changed_text = `Changed ${number_changed}`
+    }
 
 
     return <div style={{ display: "inline-block" }}>
@@ -82,7 +95,8 @@ function _ButtonSnapXToDatetime (props: Props)
                 if (disabled) return
 
                 const { number_changed, knowledge_view } = calulate_new_positions({
-                    wcomponent_ids, kv, wc_id_map,
+                    wcomponent_ids, wcomponents_by_id, kv, wc_id_map,
+                    created_at_ms,
                     time_origin_ms, time_origin_x, time_scale,
                 })
 
@@ -92,7 +106,7 @@ function _ButtonSnapXToDatetime (props: Props)
             }}
             is_left={true}
         />
-        {number_changed !== undefined && (number_changed ? `Changed ${number_changed}` : "No changes")}
+        {number_changed_text}
     </div>
 }
 
@@ -103,15 +117,17 @@ export const ButtonSnapXToDatetime = connector(_ButtonSnapXToDatetime) as Functi
 interface CalulateNewPositionsArgs
 {
     wcomponent_ids: string[]
+    wcomponents_by_id: WComponentsById
     kv: KnowledgeView | undefined
     wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined
+    created_at_ms: number
     time_origin_ms: number | undefined
     time_origin_x: number | undefined
     time_scale: number | undefined
 }
 function calulate_new_positions (args: CalulateNewPositionsArgs)
 {
-    const { wcomponent_ids, kv, wc_id_map, time_origin_ms, time_origin_x, time_scale } = args
+    const { wcomponent_ids, wcomponents_by_id, kv, wc_id_map, created_at_ms, time_origin_ms, time_origin_x, time_scale } = args
 
     let number_changed = 0
 
@@ -123,10 +139,6 @@ function calulate_new_positions (args: CalulateNewPositionsArgs)
 
 
     const new_wc_id_map = {...wc_id_map}
-    const store = get_store()
-    const state = store.getState()
-    const { wcomponents_by_id } = state.specialised_objects
-    const { created_at_ms } = state.routing.args
 
     wcomponent_ids.forEach(wcomponent_id =>
     {
