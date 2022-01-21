@@ -43,21 +43,22 @@ export const is_snap_to_grid_knowledge_view_entries = (action: AnyAction): actio
 
 
 
-interface MoveCurrentKnowledgeViewEntriesToTopProps
+interface ChangeCurrentKnowledgeViewEntriesOrderProps
 {
     wcomponent_ids: string[]
+    order: "front" | "back"
 }
-export interface ActionMoveCurrentKnowledgeViewEntriesToTop extends Action, MoveCurrentKnowledgeViewEntriesToTopProps {}
+export interface ActionChangeCurrentKnowledgeViewEntriesOrder extends Action, ChangeCurrentKnowledgeViewEntriesOrderProps {}
 
-const move_current_knowledge_view_entries_to_top_type = "move_current_knowledge_view_entries_to_top"
+const change_current_knowledge_view_entries_order_type = "change_current_knowledge_view_entries_order"
 
-const move_current_knowledge_view_entries_to_top = (args: MoveCurrentKnowledgeViewEntriesToTopProps): ActionMoveCurrentKnowledgeViewEntriesToTop =>
+const change_current_knowledge_view_entries_order = (args: ChangeCurrentKnowledgeViewEntriesOrderProps): ActionChangeCurrentKnowledgeViewEntriesOrder =>
 {
-    return { type: move_current_knowledge_view_entries_to_top_type, ...args }
+    return { type: change_current_knowledge_view_entries_order_type, ...args }
 }
 
-export const is_move_current_knowledge_view_entries_to_top = (action: AnyAction): action is ActionMoveCurrentKnowledgeViewEntriesToTop => {
-    return action.type === move_current_knowledge_view_entries_to_top_type
+export const is_change_current_knowledge_view_entries_order = (action: AnyAction): action is ActionChangeCurrentKnowledgeViewEntriesOrder => {
+    return action.type === change_current_knowledge_view_entries_order_type
 }
 
 
@@ -107,5 +108,5 @@ export const bulk_editing_knowledge_view_entries_actions = {
     bulk_add_to_knowledge_view,
     bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries,
-    move_current_knowledge_view_entries_to_top,
+    change_current_knowledge_view_entries_order,
 }

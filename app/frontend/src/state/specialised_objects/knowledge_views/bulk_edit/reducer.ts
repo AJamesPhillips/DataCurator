@@ -16,12 +16,12 @@ import {
     ActionBulkAddToKnowledgeView,
     ActionBulkEditKnowledgeViewEntries,
     ActionBulkRemoveFromKnowledgeView,
-    ActionMoveCurrentKnowledgeViewEntriesToTop,
+    ActionChangeCurrentKnowledgeViewEntriesOrder,
     ActionSnapToGridKnowledgeViewEntries,
     is_bulk_add_to_knowledge_view,
     is_bulk_edit_knowledge_view_entries,
     is_bulk_remove_from_knowledge_view,
-    is_move_current_knowledge_view_entries_to_top,
+    is_change_current_knowledge_view_entries_order,
     is_snap_to_grid_knowledge_view_entries,
 } from "./actions"
 
@@ -42,9 +42,9 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
     }
 
 
-    if (is_move_current_knowledge_view_entries_to_top(action))
+    if (is_change_current_knowledge_view_entries_order(action))
     {
-        state = handle_move_current_knowledge_view_entries_to_top(state, action)
+        state = handle_change_current_knowledge_view_entries_order(state, action)
     }
 
 
@@ -181,19 +181,25 @@ function handle_snap_to_grid_knowledge_view_entries (state: RootState, action: A
 
 
 
-function handle_move_current_knowledge_view_entries_to_top (state: RootState, action: ActionMoveCurrentKnowledgeViewEntriesToTop)
+function handle_change_current_knowledge_view_entries_order (state: RootState, action: ActionChangeCurrentKnowledgeViewEntriesOrder)
 {
-    const { wcomponent_ids } = action
+    const { wcomponent_ids, order } = action
 
     const kv = get_current_knowledge_view_from_state(state)
     const composed_kv = get_current_composed_knowledge_view_from_state(state)
     if (!kv || !composed_kv)
     {
-        console.error("There should always be a current and current composed knowledge view if bulk editing (moving to top) world components")
+        console.error("There should always be a current knowledge view and current composed knowledge view if bulk editing (moving to top) world components")
+
+        return state
     }
-    else
+
+
+    let new_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+
+    if (order === "front")
     {
-        const new_wc_id_map = { ...kv.wc_id_map }
+        new_wc_id_map = { ...kv.wc_id_map }
 
         wcomponent_ids.forEach(wcomponent_id =>
         {
@@ -203,10 +209,23 @@ function handle_move_current_knowledge_view_entries_to_top (state: RootState, ac
             delete new_wc_id_map[wcomponent_id]
             new_wc_id_map[wcomponent_id] = existing_entry
         })
-
-        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
-        state = handle_upsert_knowledge_view(state, new_kv)
     }
+    else if (order === "back")
+    {
+        wcomponent_ids.forEach(wcomponent_id =>
+        {
+            const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id]
+            if (!existing_entry) return // error
+
+            new_wc_id_map[wcomponent_id] = existing_entry
+        })
+
+        new_wc_id_map = { ...new_wc_id_map, ...kv.wc_id_map }
+    }
+
+
+    const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
+    state = handle_upsert_knowledge_view(state, new_kv)
 
     return state
 }
