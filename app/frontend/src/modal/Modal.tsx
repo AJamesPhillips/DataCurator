@@ -51,7 +51,7 @@ function _ModalCore (props: Props)
     >
         <div
             id="modal_container"
-            style={{ overflowY: props.scrollable === false ? "hidden" : "inherit" }}
+            style={props.scrollable === false ? { overflowY: "hidden" } : undefined}
             onClick={e => e.stopPropagation()}
         >
             <div id="modal_title">{props.title}</div>

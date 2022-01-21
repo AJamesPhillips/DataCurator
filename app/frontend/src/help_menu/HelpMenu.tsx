@@ -35,7 +35,7 @@ function _HelpMenu (props: Props)
 
     return <Modal
         size="medium"
-        title="Help Menu"
+        title=""
         on_close={() => props.set_show_help_menu({ show: false })}
         child={(
             <Box p={10}>
