@@ -640,7 +640,7 @@ function update_ephemeral_overrides_of_current_composed_kv (current_composed_kno
             ...composed_wc_id_maps,
         }
     }
-    else
+    else // if (display_time_marks_changed) // todo: should there be a conditional check on display_time_marks_changed?
     {
         current_composed_knowledge_view = add_ephemeral_overrides_to_wc_id_map(state, current_composed_knowledge_view)
     }

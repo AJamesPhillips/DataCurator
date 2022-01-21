@@ -1,7 +1,9 @@
 import { set_difference, set_union } from "../../utils/set"
-import { WComponentsById, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponentsById,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_has_single_statev2_datetime } from "../specialised_objects/accessors"
-import type { RootState } from "../State"
 import type { WComponentIdsByType } from "./State"
 
 
@@ -51,7 +53,7 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
         }
 
         wc_ids_by_type[wc.type].add(id)
-        if (wcomponent_is_statev2(wc) && wcomponent_has_single_statev2_datetime(wc))
+        if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wcomponent_has_single_statev2_datetime(wc))
         {
             wc_statev2_ids_with_single_datetime.add(wc.id)
         }

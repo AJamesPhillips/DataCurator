@@ -153,11 +153,44 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                     })
                 }}
             />
-            <br />
-            <br />
+        </p>}
+
+        {editing && <p style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            alignItems: "center",
+        }}>
+            <div>Defaults:</div> &nbsp;
             <Button
-                value="Set to Year"
-                fullWidth={true}
+                value="Week"
+                fullWidth={false}
+                onClick={() =>
+                {
+                    update_item({
+                        time_scale: 3,
+                        time_line_number: 8,
+                        time_line_spacing_days: 7,
+                    })
+                }}
+            />
+            &nbsp;
+            <Button
+                value="Month"
+                fullWidth={false}
+                onClick={() =>
+                {
+                    update_item({
+                        time_scale: DEFAULT_DATETIME_LINE_CONFIG.time_scale,
+                        time_line_number: DEFAULT_DATETIME_LINE_CONFIG.time_line_number,
+                        time_line_spacing_days: DEFAULT_DATETIME_LINE_CONFIG.time_line_spacing_days,
+                    })
+                }}
+            />
+            &nbsp;
+            <Button
+                value="Year"
+                fullWidth={false}
                 onClick={() =>
                 {
                     update_item({
