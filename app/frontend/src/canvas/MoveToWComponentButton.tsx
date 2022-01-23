@@ -170,13 +170,15 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
             placement="top"
             title={move ? "Move to component(s)" : "No component(s) present"}
         >
-            <IconButton
-                size="medium"
-                onClick={move}
-                disabled={!move}
-            >
-                <FilterCenterFocusIcon />
-            </IconButton>
+            <span>
+                <IconButton
+                    size="medium"
+                    onClick={move}
+                    disabled={!move}
+                >
+                    <FilterCenterFocusIcon />
+                </IconButton>
+            </span>
         </Tooltip>
         <div
             className={(move && draw_attention) ? "pulsating_circle" : ""}
