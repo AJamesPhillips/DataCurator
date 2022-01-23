@@ -13,6 +13,7 @@ export function user_info_persist (state: RootState)
 {
     const to_persist = pick([
         // "bases",
+        "has_signed_in_at_least_once",
         "chosen_base_id",
     ], state.user_info)
 
@@ -43,6 +44,7 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
 
 
     const state: UserInfoState = {
+        has_signed_in_at_least_once: false,
         user,
         need_to_handle_password_recovery,
         users_by_id: undefined,

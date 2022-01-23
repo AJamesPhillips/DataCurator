@@ -4,11 +4,21 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight"
 import "./LandingPage.scss"
 import { Box, Button, Container, makeStyles, ThemeProvider, Typography } from "@material-ui/core"
 import { DefaultTheme } from "../ui_themes/material_default"
+import { get_supabase } from "../supabase/get_supabase"
+import { get_persisted_state_object } from "../state/persistence/persistence_utils"
+import type { UserInfoState } from "../state/user_info/state"
 
 
 
-export function LandingPage() {
-    const classes = use_styles();
+export function LandingPage()
+{
+    const supabase = get_supabase()
+    const { has_signed_in_at_least_once } = get_persisted_state_object<UserInfoState>("user_info")
+    const session = supabase.auth.session()
+    const action_text = (session || has_signed_in_at_least_once) ? "Go to app" : "Get Started"
+
+    const classes = use_styles()
+
     return (
         <ThemeProvider theme={DefaultTheme}>
             <Container maxWidth="md" className={classes.root}>
@@ -24,10 +34,12 @@ export function LandingPage() {
                 </Box>
                 <Box component="main">
                     <h2>Welcome!</h2>
-                    <Box className={`${classes.animated_icon_container} animated_icon_container`}>
-                        <Button component="span" variant="text" size="small" endIcon={<ChevronRightIcon className={classes.animated_icon} />}>
-                            Click here!
-                        </Button>
+
+                    <div className={classes.get_started_button_container}>
+                        <div className={classes.animated_icon_container}>
+                            <span className={classes.click_here_text}>Click here!</span>
+                            <ChevronRightIcon className={classes.animated_icon} />
+                        </div>
                         <Button
                             component="a"
                             href="/app/"
@@ -36,9 +48,9 @@ export function LandingPage() {
                             disableElevation
                             size="large"
                         >
-                            <strong>Get Started</strong>
+                            <strong>{action_text}</strong>
                         </Button>
-                    </Box>
+                    </div>
 
                     <h3>What is <strong>Data Curator</strong>?</h3>
                     <p>
@@ -105,9 +117,21 @@ const use_styles = makeStyles(theme => ({
         flexGrow: 1, flexShrink:1,
         minHeight:"100%"
     },
-    animated_icon_container: {
-        flexGrow:1,
-        display: "flex", justifyContent:"flex-end"
+    get_started_button_container:
+    {
+        display: "flex",
+    },
+    animated_icon_container:
+    {
+        flexGrow: 1,
+        display: "flex",
+        justifyContent: "flex-end",
+        margin: "auto 0",
+    },
+    click_here_text:
+    {
+        margin: "auto 0",
+        cursor: "default",
     },
     animated_icon: {
         animationName: "bounce_pointer",

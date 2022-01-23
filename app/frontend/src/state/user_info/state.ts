@@ -6,6 +6,7 @@ import type { SupabaseKnowledgeBaseWithAccessById, SupabaseUsersById } from "../
 
 export interface UserInfoState
 {
+    has_signed_in_at_least_once: boolean  // Currently this gets cleared on signout
     user: SupabaseAuthUser | undefined
     need_to_handle_password_recovery: boolean
     users_by_id: SupabaseUsersById | undefined

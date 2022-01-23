@@ -25,6 +25,9 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
     if (is_set_user(action))
     {
         state = update_substate(state, "user_info", "user", action.user)
+
+        const has_signed_in_at_least_once = state.user_info.has_signed_in_at_least_once || !!action.user
+        state = update_substate(state, "user_info", "has_signed_in_at_least_once", has_signed_in_at_least_once)
         // New pattern, not sure this is a good idea yet but is simpler than making subscribers
         // which store state, and that run on every store change to compare to current state
         pub_sub.user.pub("changed_user", true)
