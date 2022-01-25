@@ -1,4 +1,5 @@
 import type { Action, AnyAction } from "redux"
+import type { KnowledgeViewWComponentEntry } from "../../../../shared/interfaces/knowledge_view"
 
 
 
@@ -67,6 +68,7 @@ interface BulkAddToKnowledgeViewProps
 {
     wcomponent_ids: string[]
     knowledge_view_id: string
+    bulk_entry?: KnowledgeViewWComponentEntry
 }
 export interface ActionBulkAddToKnowledgeView extends Action, BulkAddToKnowledgeViewProps {}
 

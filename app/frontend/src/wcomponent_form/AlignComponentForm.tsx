@@ -1,12 +1,15 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { offset_by_half_node, round_canvas_point } from "../canvas/position_utils"
 
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
+import { get_middle_of_screen } from "../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { get_store } from "../state/store"
 import { ButtonSnapXToDatetime } from "./ButtonSnapXToDatetime"
 
 
@@ -32,6 +35,7 @@ const map_state = (state: RootState) =>
 
 const map_dispatch = {
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
+    bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
     change_current_knowledge_view_entries_order: ACTIONS.specialised_object.change_current_knowledge_view_entries_order,
 }
 
@@ -60,6 +64,21 @@ function _AlignComponentForm (props: Props)
         />
         &nbsp;
         <ButtonSnapXToDatetime {...props} />
+        &nbsp;
+        <Button
+            disabled={!knowledge_view_id}
+            value="Bring here"
+            onClick={() =>
+            {
+                if (!knowledge_view_id) return
+
+                const state = get_store().getState()
+                const point = offset_by_half_node(get_middle_of_screen(state))
+                const bulk_entry = round_canvas_point(point, "large")
+                props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, bulk_entry })
+            }}
+            is_left={true}
+        />
 
         <br />
 
