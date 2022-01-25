@@ -44,7 +44,7 @@ function _PrioritisableAction (props: Props)
     const { action, upsert_wcomponent } = props
 
     return <div className="prioritisable_action">
-        <WComponentCanvasNode id={action.id} is_movable={false} always_show={true} />
+        <WComponentCanvasNode id={action.id} is_on_canvas={false} always_show={true} />
 
 
         {props.show_icebox_actions && <div className="controls">

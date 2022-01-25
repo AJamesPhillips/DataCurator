@@ -55,7 +55,7 @@ import { pub_sub } from "../../state/pub_sub/pub_sub"
 interface OwnProps
 {
     id: string
-    is_movable?: boolean
+    is_on_canvas?: boolean
     always_show?: boolean
 }
 
@@ -124,7 +124,7 @@ function _WComponentCanvasNode (props: Props)
 
     const {
         id,
-        is_movable = true, always_show = false,
+        is_on_canvas = true, always_show = false,
         is_editing,
         current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map, wcomponents_by_id,
         is_current_item, selected_wcomponent_ids_set, is_highlighted,
@@ -200,7 +200,7 @@ function _WComponentCanvasNode (props: Props)
 
     const children: h.JSX.Element[] = (!wcomponent || props.node_is_moving) ? [] : [
         <Handles
-            show_move_handle={is_movable && is_editing && is_highlighted}
+            show_move_handle={is_on_canvas && is_editing && is_highlighted}
             user_requested_node_move={(position: Position) =>
             {
                 let wcomponent_ids_to_move = new Set(selected_wcomponent_ids_set)
@@ -276,7 +276,7 @@ function _WComponentCanvasNode (props: Props)
 
     const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
 
-    const terminals = get_terminals({ is_movable, is_editing, is_highlighted })
+    const terminals = get_terminals({ is_on_canvas, is_editing, is_highlighted })
 
     // const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
 
@@ -302,71 +302,73 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    return <ConnectableCanvasNode
-        position={is_movable ? (temporary_drag_kv_entry || kv_entry) : undefined}
-        cover_image={wcomponent?.summary_image}
-        node_main_content={<div>
-            {!wcomponent?.summary_image && <div className="background_image" />}
+    return <div>
+        <ConnectableCanvasNode
+            position={is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined}
+            cover_image={wcomponent?.summary_image}
+            node_main_content={<div>
+                {!wcomponent?.summary_image && <div className="background_image" />}
 
-            <div className="node_title">
-                {kv_entry_maybe === undefined && is_editing && <span>
-                    <WarningTriangle message="Missing from this knowledge view" />
-                    &nbsp;
-                </span>}
-                {(is_editing || !wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
-            </div>
-
-            {wcomponent && show_validity_value && <div className="node_validity_container">
-                {is_editing && <div className="description_label">validity</div>}
-                <WComponentValidityValue wcomponent={wcomponent} />
-            </div>}
-
-            {wcomponent && show_state_value && <div className="node_state_container">
-                {is_editing && <div className="description_label">state &nbsp;</div>}
-                <WComponentJudgements wcomponent={wcomponent} hide_judgement_trend={false} />
-                <div className="value_and_prediction_summary">
-                    <NodeValueAndPredictionSetSummary
-                        wcomponent={wcomponent}
-                        created_at_ms={created_at_ms}
-                        sim_ms={sim_ms}
-                    />
+                <div className="node_title">
+                    {kv_entry_maybe === undefined && is_editing && <span>
+                        <WarningTriangle message="Missing from this knowledge view" />
+                        &nbsp;
+                    </span>}
+                    {(is_editing || !wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
                 </div>
+
+                {wcomponent && show_validity_value && <div className="node_validity_container">
+                    {is_editing && <div className="description_label">validity</div>}
+                    <WComponentValidityValue wcomponent={wcomponent} />
+                </div>}
+
+                {wcomponent && show_state_value && <div className="node_state_container">
+                    {is_editing && <div className="description_label">state &nbsp;</div>}
+                    <WComponentJudgements wcomponent={wcomponent} hide_judgement_trend={false} />
+                    <div className="value_and_prediction_summary">
+                        <NodeValueAndPredictionSetSummary
+                            wcomponent={wcomponent}
+                            created_at_ms={created_at_ms}
+                            sim_ms={sim_ms}
+                        />
+                    </div>
+                </div>}
+
+                {sub_state_wcomponent && <div className="node_sub_state_container">
+                    {// todo call this class something different from "value_and_prediction_summary"
+                    }
+                    <div className="value_and_prediction_summary">
+                        <NodeSubStateSummary
+                            wcomponent={sub_state_wcomponent}
+                            created_at_ms={created_at_ms}
+                            sim_ms={sim_ms}
+                        />
+                    </div>
+                </div>}
+
+                {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
+
+                {wcomponent && is_editing && <div className="description_label">
+                    {wcomponent_type_to_text(wcomponent.type)}
+                </div>}
+
+                {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
             </div>}
-
-            {sub_state_wcomponent && <div className="node_sub_state_container">
-                {// todo call this class something different from "value_and_prediction_summary"
-                }
-                <div className="value_and_prediction_summary">
-                    <NodeSubStateSummary
-                        wcomponent={sub_state_wcomponent}
-                        created_at_ms={created_at_ms}
-                        sim_ms={sim_ms}
-                    />
-                </div>
-            </div>}
-
-            {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
-
-            {wcomponent && is_editing && <div className="description_label">
-                {wcomponent_type_to_text(wcomponent.type)}
-            </div>}
-
-            {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
-        </div>}
-        extra_css_class={extra_css_class}
-        extra_css_class_node_main_content={classes.sizer}
-        opacity={opacity}
-        unlimited_width={false}
-        glow={glow}
-        on_click={on_click}
-        on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
-        on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
-        terminals={terminals}
-        on_pointer_down={on_pointer_down}
-        on_pointer_up={on_pointer_up}
-        pointerupdown_on_connection_terminal={pointerupdown_on_connection_terminal}
-        other_children={children}
-    />
+            extra_css_class={extra_css_class}
+            extra_css_class_node_main_content={classes.sizer}
+            opacity={opacity}
+            unlimited_width={false}
+            glow={glow}
+            on_click={on_click}
+            on_pointer_enter={() => set_highlighted_wcomponent({ id, highlighted: true })}
+            on_pointer_leave={() => set_highlighted_wcomponent({ id, highlighted: false })}
+            terminals={terminals}
+            on_pointer_down={on_pointer_down}
+            on_pointer_up={on_pointer_up}
+            pointerupdown_on_connection_terminal={pointerupdown_on_connection_terminal}
+            other_children={children}
+        />
+    </div>
 }
 
 export const WComponentCanvasNode = connector(_WComponentCanvasNode) as FunctionalComponent<OwnProps>
@@ -390,9 +392,9 @@ connection_terminal_attributes.forEach(attribute =>
 
 
 
-function get_terminals (args: { is_movable: boolean; is_editing: boolean; is_highlighted: boolean })
+function get_terminals (args: { is_on_canvas: boolean; is_editing: boolean; is_highlighted: boolean })
 {
-    if (!args.is_movable) return no_terminals
+    if (!args.is_on_canvas) return no_terminals
     if (!args.is_editing) return no_terminals
     if (!args.is_highlighted) return no_terminals
 

@@ -42,7 +42,7 @@ function _PrioritisableGoal (props: Props)
     const effort = goal_prioritisation_attributes[goal.id]?.effort
 
     return <div style={{ display: "flex" }}>
-        <WComponentCanvasNode id={goal.id} is_movable={false} always_show={true} />
+        <WComponentCanvasNode id={goal.id} is_on_canvas={false} always_show={true} />
 
         {selected_prioritisation && (editing || !!effort) && <div>
             <br />
