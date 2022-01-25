@@ -49,6 +49,9 @@ import {
 } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
 import { useEffect, useState } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
+import { color_to_string, darker_color } from "../../sharedf/color"
+import { default_frame_color } from "../../wcomponent_form/wcomponent_knowledge_view_form/default_frame_color"
+import { grid_small_step } from "../../canvas/position_utils"
 
 
 
@@ -302,9 +305,24 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
+    const position = is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined
+
+
     return <div>
+        {position && position.frame_width !== undefined && position.frame_height !== undefined && <div
+            className="wcomponent_background_frame"
+            style={{
+                top: position.top - grid_small_step,
+                left: position.left - grid_small_step,
+                width: position.frame_width,
+                height: position.frame_height,
+                backgroundColor: color_to_string(position.frame_color || default_frame_color),
+                borderColor: color_to_string(darker_color(position.frame_color || default_frame_color)),
+            }}
+        />}
+
         <ConnectableCanvasNode
-            position={is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined}
+            position={position}
             cover_image={wcomponent?.summary_image}
             node_main_content={<div>
                 {!wcomponent?.summary_image && <div className="background_image" />}

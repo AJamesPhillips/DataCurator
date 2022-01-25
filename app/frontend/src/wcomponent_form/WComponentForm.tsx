@@ -486,6 +486,7 @@ function _WComponentForm (props: Props)
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
+                allow_undefined={false}
                 conditional_on_blur={color => upsert_wcomponent({ label_color: color })}
             />
         </p>}

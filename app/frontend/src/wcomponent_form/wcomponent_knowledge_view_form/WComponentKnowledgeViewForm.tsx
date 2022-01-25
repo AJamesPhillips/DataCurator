@@ -4,9 +4,12 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { EditableNumber } from "../../form/EditableNumber"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
+import { color_is_empty } from "../../shared/interfaces/color"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
+import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
 import { get_middle_of_screen } from "../../state/display_options/display"
 import {
@@ -17,6 +20,7 @@ import type { RootState } from "../../state/State"
 import { ExploreButtonHandle } from "../../wcomponent_canvas/node/ExploreButtonHandle"
 import { WComponentBackReferences } from "../../wcomponent_ui/WComponentBackReferences"
 import { AlignComponentForm } from "../AlignComponentForm"
+import { default_frame_color } from "./default_frame_color"
 import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
 
 
@@ -99,6 +103,45 @@ function _WComponentKnowledgeViewForm (props: Props)
                     step={0.25}
                     value={knowledge_view_entry.s ? knowledge_view_entry.s : 1}
                     valueLabelDisplay="on"
+                />
+            </FormControl>
+        }
+
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+                <FormLabel component="legend">Frame</FormLabel>
+                <p style={{ display: "inline-flex" }}>
+                    <EditableNumber
+                        placeholder="Frame Width"
+                        value={knowledge_view_entry.frame_width}
+                        allow_undefined={true}
+                        conditional_on_change={frame_width =>
+                        {
+                            const args: Partial<KnowledgeViewWComponentEntry> = { frame_width }
+                            if (frame_width !== undefined) args.frame_color = default_frame_color
+                            upsert_entry(knowledge_view_id, args)
+                        }}
+                    /> &nbsp;
+                    <EditableNumber
+                        placeholder="Frame Height"
+                        value={knowledge_view_entry.frame_height}
+                        allow_undefined={true}
+                        conditional_on_change={frame_height =>
+                        {
+                            const args: Partial<KnowledgeViewWComponentEntry> = { frame_height }
+                            if (frame_height !== undefined) args.frame_color = default_frame_color
+                            upsert_entry(knowledge_view_id, args)
+                        }}
+                    />
+                </p>
+                <span className="description_label">Frame Color</span>
+                <ColorPicker
+                    color={knowledge_view_entry.frame_color}
+                    allow_undefined={true}
+                    conditional_on_blur={frame_color =>
+                    {
+                        frame_color = color_is_empty(frame_color) ? undefined : frame_color
+                        upsert_entry(knowledge_view_id, { frame_color })
+                    }}
                 />
             </FormControl>
         }

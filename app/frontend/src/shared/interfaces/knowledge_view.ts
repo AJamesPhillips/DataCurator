@@ -1,5 +1,6 @@
 import type { Project } from "../../wcomponent/interfaces/project"
 import type { Base } from "./base"
+import type { Color } from "./color"
 import type { DatetimeLineConfig } from "./datetime_lines"
 
 
@@ -45,4 +46,7 @@ export interface KnowledgeViewWComponentEntry {
     s?: number
     blocked?: true
     passthrough?: true
+    frame_width?: number
+    frame_height?: number
+    frame_color?: Partial<Color>
 }
