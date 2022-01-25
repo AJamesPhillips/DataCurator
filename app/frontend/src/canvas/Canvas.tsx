@@ -306,7 +306,10 @@ class _Canvas extends Component<Props, State>
         }
 
 
-        const graph_class_name = `${this.props.plain_background ? "" : "squared_background"} ${this.state.pointer_state.down ? "graph_background_pointer_down" : ""}`
+        const graph_class_name = (
+            (this.props.plain_background ? "" : "squared_background ")
+            + (this.state.pointer_state.down ? "graph_background_pointer_down " : "")
+        )
 
 
         return (

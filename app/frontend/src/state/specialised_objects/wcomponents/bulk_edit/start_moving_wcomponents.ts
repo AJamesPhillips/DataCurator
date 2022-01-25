@@ -10,7 +10,7 @@ export function start_moving_wcomponents (wcomponent_ids_to_move: Set<string>, s
 {
     const store = get_store()
 
-    const set_wcomponent_ids_to_move_action = ACTIONS.specialised_object.set_wcomponent_ids_to_move({ wcomponent_ids_to_move })
+    const set_wcomponent_ids_to_move_action = ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move({ wcomponent_ids_to_move })
     store.dispatch(set_wcomponent_ids_to_move_action)
 
 
@@ -37,7 +37,7 @@ export function start_moving_wcomponents (wcomponent_ids_to_move: Set<string>, s
             store.dispatch(bulk_edit_knowledge_view_entries_action)
         }
 
-        const set_wcomponent_ids_to_move_action = ACTIONS.specialised_object.set_wcomponent_ids_to_move({
+        const set_wcomponent_ids_to_move_action = ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move({
             wcomponent_ids_to_move: new Set()
         })
         store.dispatch(set_wcomponent_ids_to_move_action)

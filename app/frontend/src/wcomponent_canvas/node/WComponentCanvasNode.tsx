@@ -52,6 +52,7 @@ import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { color_to_string, darker_color } from "../../sharedf/color"
 import { default_frame_color } from "../../wcomponent_form/wcomponent_knowledge_view_form/default_frame_color"
 import { grid_small_step } from "../../canvas/position_utils"
+import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
 
 
 
@@ -107,13 +108,13 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
 const map_dispatch = {
-    clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
-    clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+    clicked_wcomponent: ACTIONS.meta_wcomponents.clicked_wcomponent,
+    clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
     change_route: ACTIONS.routing.change_route,
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
-    pointerupdown_on_component: ACTIONS.specialised_object.pointerupdown_on_component,
-    pointerupdown_on_connection_terminal: ACTIONS.specialised_object.pointerupdown_on_connection_terminal,
-    set_wcomponent_ids_to_move: ACTIONS.specialised_object.set_wcomponent_ids_to_move,
+    pointerupdown_on_component: ACTIONS.meta_wcomponents.pointerupdown_on_component,
+    pointerupdown_on_connection_terminal: ACTIONS.meta_wcomponents.pointerupdown_on_connection_terminal,
+    set_wcomponent_ids_to_move: ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move,
 }
 
 
@@ -305,24 +306,16 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const position = is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined
+    const _kv_entry = is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined
 
 
     return <div>
-        {position && position.frame_width !== undefined && position.frame_height !== undefined && <div
-            className="wcomponent_background_frame"
-            style={{
-                top: position.top - grid_small_step,
-                left: position.left - grid_small_step,
-                width: position.frame_width,
-                height: position.frame_height,
-                backgroundColor: color_to_string(position.frame_color || default_frame_color),
-                borderColor: color_to_string(darker_color(position.frame_color || default_frame_color)),
-            }}
-        />}
+        <WComponentCanvasNodeBackgroundFrame
+            wcomponent_id={id} kv_entry={_kv_entry}
+        />
 
         <ConnectableCanvasNode
-            position={position}
+            position={_kv_entry}
             cover_image={wcomponent?.summary_image}
             node_main_content={<div>
                 {!wcomponent?.summary_image && <div className="background_image" />}

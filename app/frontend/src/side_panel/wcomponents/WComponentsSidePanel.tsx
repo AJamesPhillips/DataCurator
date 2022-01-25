@@ -42,7 +42,7 @@ const map_state = (state: RootState) =>
 
 
 const map_dispatch = {
-    clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+    clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
     set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage,
 }
 

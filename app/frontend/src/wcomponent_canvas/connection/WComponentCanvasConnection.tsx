@@ -131,8 +131,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
 const map_dispatch = {
-    clicked_wcomponent: ACTIONS.specialised_object.clicked_wcomponent,
-    clear_selected_wcomponents: ACTIONS.specialised_object.clear_selected_wcomponents,
+    clicked_wcomponent: ACTIONS.meta_wcomponents.clicked_wcomponent,
+    clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
     set_highlighted_wcomponent: ACTIONS.specialised_object.set_highlighted_wcomponent,
     change_route: ACTIONS.routing.change_route,
 }

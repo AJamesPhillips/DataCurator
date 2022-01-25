@@ -208,7 +208,7 @@ function factory_conditionally_select_components (get_component_ids: (composed_k
         const { wcomponents_by_id } = state.specialised_objects
         const ids = get_component_ids(composed_kv, selected_ids, wcomponents_by_id)
 
-        store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids }))
+        store.dispatch(ACTIONS.meta_wcomponents.set_selected_wcomponents({ ids }))
         store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple", item_id: null }))
     }
 }

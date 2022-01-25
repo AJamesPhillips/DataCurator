@@ -26,7 +26,7 @@ const map_state = (state: RootState) =>
 
 
 const map_dispatch = {
-    set_ids: ACTIONS.specialised_object.set_find_all_causal_paths_wcomponent_ids,
+    set_ids: ACTIONS.meta_wcomponents.set_find_all_causal_paths_wcomponent_ids,
 }
 
 

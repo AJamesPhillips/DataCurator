@@ -149,17 +149,7 @@
 }
 
 
-.disable_component_pointer_events .wcomponent_canvas_node
+.any_drag_event .wcomponent_canvas_node
 {
     pointer-events: none;
-}
-
-
-.wcomponent_background_frame
-{
-    position: absolute;
-    z-index: -100;
-    border-radius: 4px;
-    border-width: 2px;
-    border-style: solid;
 }

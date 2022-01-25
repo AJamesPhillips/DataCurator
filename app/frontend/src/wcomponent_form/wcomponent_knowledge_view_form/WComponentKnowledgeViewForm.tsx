@@ -3,6 +3,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
+import { grid_small_step, h_step, v_step } from "../../canvas/position_utils"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { EditableNumber } from "../../form/EditableNumber"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
@@ -86,6 +87,7 @@ function _WComponentKnowledgeViewForm (props: Props)
 
     const not_present = !knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough
 
+    const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry?.frame_height !== undefined)
 
     return <div>
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
@@ -109,7 +111,32 @@ function _WComponentKnowledgeViewForm (props: Props)
 
         {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Frame</FormLabel>
-                <p style={{ display: "inline-flex" }}>
+                <p>
+                    <Button
+                        value={can_delete_frame ? "Remove" : "Add"}
+                        onClick={() =>
+                        {
+                            const args: Partial<KnowledgeViewWComponentEntry> = {}
+
+                            if (can_delete_frame)
+                            {
+                                args.frame_color = undefined
+                                args.frame_width = undefined
+                                args.frame_height = undefined
+                            }
+                            else
+                            {
+                                args.frame_color = args.frame_color ?? default_frame_color
+                                args.frame_width = args.frame_width ?? (h_step + grid_small_step) * 2
+                                args.frame_height = args.frame_height ?? (v_step + grid_small_step) * 2
+                            }
+
+                            upsert_entry(knowledge_view_id, args)
+                        }}
+                    />
+                </p>
+
+                {/* <p style={{ display: "inline-flex" }}>
                     <EditableNumber
                         placeholder="Frame Width"
                         value={knowledge_view_entry.frame_width}
@@ -132,7 +159,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                             upsert_entry(knowledge_view_id, args)
                         }}
                     />
-                </p>
+                </p> */}
                 <span className="description_label">Frame Color</span>
                 <ColorPicker
                     color={knowledge_view_entry.frame_color}

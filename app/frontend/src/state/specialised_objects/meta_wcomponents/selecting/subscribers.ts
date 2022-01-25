@@ -58,7 +58,7 @@ function handle_canvas_area_select (store: Store<RootState>)
         const new_selected_ids = calculate_new_selected_ids(remove_ids, state, ids)
 
 
-        store.dispatch(ACTIONS.specialised_object.set_selected_wcomponents({ ids: new_selected_ids }))
+        store.dispatch(ACTIONS.meta_wcomponents.set_selected_wcomponents({ ids: new_selected_ids }))
         store.dispatch(ACTIONS.routing.change_route({ sub_route: "wcomponents_edit_multiple", item_id: null }))
     })
 }

@@ -126,7 +126,7 @@ function record_location_hash_change (store: Store<RootState>)
             }
             if (window.DEBUG_ROUTING) console .log("on hash change difference.  new url is: ", route_from_hash, "   state is:   ", route_from_state)
 
-            store.dispatch(ACTIONS.specialised_object.clear_selected_wcomponents({}))
+            store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents({}))
             const routing_params: ActionChangeRouteArgs = merge_route_params_prioritising_url_over_state(e.newURL, state.routing)
 
             if (routing_params?.args?.created_at_ms !== undefined) delete routing_params?.args?.created_at_datetime
