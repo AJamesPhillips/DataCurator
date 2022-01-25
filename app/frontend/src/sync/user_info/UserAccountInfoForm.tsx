@@ -69,7 +69,7 @@ function _UserAccountInfoForm (props: Props)
     const [form_state, set_form_state] = useState<"initial" | "updating_password" | "updating_username">("initial")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
 
-    console.log("user account info form need_to_set_user_name", need_to_set_user_name, "form_state", form_state)
+    console .log("user account info form need_to_set_user_name", need_to_set_user_name, "form_state", form_state)
 
     useEffect(() =>
     {

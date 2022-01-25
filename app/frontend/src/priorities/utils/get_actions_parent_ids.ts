@@ -72,7 +72,7 @@ export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<
             const exists = actions_by_id[id] || goals_by_id[id]
             if (!exists)
             {
-                console.log(`Parent goal or action for id "${id}" not found.  Might be from another base?`)
+                console .log(`Parent goal or action for id "${id}" not found.  Might be from another base?`)
                 // TODO support goals and actions from other bases
                 return
             }

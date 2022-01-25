@@ -32,7 +32,7 @@ export function get_action_active_date_ranges (action: WComponentNodeAction)
 
         if (most_probables_valid.length !== 1 || !most_probable_valid)
         {
-            console.log(`Skipping calculating action_active_date_ranges for VAP_set "${VAP_set.id}" of action "${action.id}"`)
+            console .log(`Skipping calculating action_active_date_ranges for VAP_set "${VAP_set.id}" of action "${action.id}"`)
             return
         }
 
