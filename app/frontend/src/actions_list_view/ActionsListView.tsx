@@ -16,7 +16,7 @@ import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_deri
 import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
 import type { Base } from "../shared/interfaces/base"
 import { SIDE_PANEL_WIDTH } from "../side_panel/width"
-import { useMemo, useState } from "preact/hooks"
+import { useMemo, useRef, useState } from "preact/hooks"
 import { get_default_parent_goal_or_action_ids } from "./get_default_parent_goal_or_action_ids"
 import { AddNewActionButton } from "./AddNewActionButton"
 
@@ -78,6 +78,10 @@ function _ActionsListViewContent (props: Props)
     const { composed_knowledge_view, action_ids, wcomponents_by_id, knowledge_views_by_id, base_id } = props
 
     const [max_done_visible, set_max_done_visible] = useState(5)
+    // pointer_down is the position on the user's physical screen
+    const [pointer_down_at, set_pointer_down_at] = useState<undefined | number>(undefined)
+    const initial_scroll_left = useRef<undefined | number>(undefined)
+    const action_list_view_content_el = useRef<undefined | HTMLElement>(undefined)
 
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
@@ -135,7 +139,27 @@ function _ActionsListViewContent (props: Props)
     const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
 
 
-    return <div className="action_list_view_content">
+    return <div
+        className={`action_list_view_content ${pointer_down_at === undefined ? "" : "moving"}`}
+        ref={e => action_list_view_content_el.current = (e || undefined)}
+        onPointerDown={e => {
+            e.preventDefault()
+            set_pointer_down_at(e.clientX)
+            initial_scroll_left.current = action_list_view_content_el.current?.scrollLeft
+        }}
+        onPointerMove={e =>
+        {
+            if (pointer_down_at === undefined) return
+            if (initial_scroll_left.current === undefined) return
+            if (!action_list_view_content_el.current) return
+
+            const left = initial_scroll_left.current - (e.clientX - pointer_down_at)
+            action_list_view_content_el.current.scroll({ left })
+        }}
+        onPointerUp={e => set_pointer_down_at(undefined)}
+        onPointerLeave={e => set_pointer_down_at(undefined)}
+        onPointerOut={e => set_pointer_down_at(undefined)}
+    >
         <div className="action_list icebox">
             <h1>Icebox
                 <AddNewActionButton
