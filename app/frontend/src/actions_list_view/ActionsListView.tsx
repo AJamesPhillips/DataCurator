@@ -19,6 +19,7 @@ import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 import { useMemo, useRef, useState } from "preact/hooks"
 import { get_default_parent_goal_or_action_ids } from "./get_default_parent_goal_or_action_ids"
 import { AddNewActionButton } from "./AddNewActionButton"
+import type { CanvasPoint, CanvasPointerEvent } from "../canvas/interfaces"
 
 
 
@@ -79,8 +80,8 @@ function _ActionsListViewContent (props: Props)
 
     const [max_done_visible, set_max_done_visible] = useState(5)
     // pointer_down is the position on the user's physical screen
-    const [pointer_down_at, set_pointer_down_at] = useState<undefined | number>(undefined)
-    const initial_scroll_left = useRef<undefined | number>(undefined)
+    const [pointer_down_at, set_pointer_down_at] = useState<undefined | CanvasPointerEvent>(undefined)
+    const initial_scroll = useRef<undefined | CanvasPoint>(undefined)
     const action_list_view_content_el = useRef<undefined | HTMLElement>(undefined)
 
 
@@ -144,17 +145,21 @@ function _ActionsListViewContent (props: Props)
         ref={e => action_list_view_content_el.current = (e || undefined)}
         onPointerDown={e => {
             e.preventDefault()
-            set_pointer_down_at(e.clientX)
-            initial_scroll_left.current = action_list_view_content_el.current?.scrollLeft
+            const el = action_list_view_content_el.current
+            if (!el) return
+
+            set_pointer_down_at({ x: e.clientX, y: e.clientY })
+            initial_scroll.current = { left: el.scrollLeft, top: el.scrollTop }
         }}
         onPointerMove={e =>
         {
             if (pointer_down_at === undefined) return
-            if (initial_scroll_left.current === undefined) return
+            if (initial_scroll.current === undefined) return
             if (!action_list_view_content_el.current) return
 
-            const left = initial_scroll_left.current - (e.clientX - pointer_down_at)
-            action_list_view_content_el.current.scroll({ left })
+            const left = initial_scroll.current.left - (e.clientX - pointer_down_at.x)
+            const top = initial_scroll.current.top - (e.clientY - pointer_down_at.y)
+            action_list_view_content_el.current.scroll(left, top)
         }}
         onPointerUp={e => set_pointer_down_at(undefined)}
         onPointerLeave={e => set_pointer_down_at(undefined)}
