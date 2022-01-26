@@ -6,6 +6,7 @@
     flex-direction: row;
     width: 100%;
     min-height: 100%;
+    height: fit-content; // does not work
     overflow-y: scroll;
     /* margin-bottom: 100px; -- does not work as it overlaps the content */
 
@@ -20,6 +21,8 @@
     .action_list
     {
         min-width: 400px;
+        min-height: 100%;
+        height: fit-content;
     }
 
 
