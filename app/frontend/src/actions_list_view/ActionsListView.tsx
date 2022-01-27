@@ -164,7 +164,20 @@ function _ActionsListViewContent (props: Props)
         }}
         onPointerUp={e => set_pointer_down_at(undefined)}
         onPointerLeave={e => set_pointer_down_at(undefined)}
-        onPointerOut={e => set_pointer_down_at(undefined)}
+        onPointerOut={e =>
+        {
+            let target: HTMLElement | null = e.relatedTarget as HTMLElement
+            while (target)
+            {
+                const { classList } = target
+                if (classList && (classList.contains("action_list") || classList.contains("action_list_view_content")))
+                {
+                    return
+                }
+                target = target.parentElement
+            }
+            set_pointer_down_at(undefined)
+        }}
     >
         <div className="action_list icebox">
             <h1>Icebox
