@@ -29,6 +29,7 @@
     min-height: 18px;
     display: block;
     font-weight: 500;
+    overflow-wrap: break-word;
 }
 
 .node_validity_container, .node_state_container
@@ -88,6 +89,12 @@
     background-color: #fafafa;
 }
 
+.node_is_type_action > .node_main_content
+{
+    box-shadow: inset orange 0px 0px 4px 2px;
+    background-color: rgb(255, 238, 198);
+}
+
 .past_certain > .node_main_content
 {
     background-color: rgb(62, 55, 90);
@@ -98,11 +105,6 @@
     background-color: pink;
 }
 
-.node_is_type_action > .node_main_content
-{
-    box-shadow: inset orange 0px 0px 4px 2px;
-    background-color: rgb(255, 238, 198);
-}
 .node_is_type_goal > .node_main_content
 , .node_is_type_judgement > .node_main_content
 , .node_is_type_objective > .node_main_content

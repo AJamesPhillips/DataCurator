@@ -11,7 +11,7 @@ interface GetCurrentCounterfactualVAPSetsArgs
     created_at_ms: number
     sim_ms: number
 }
-// CARNAGE
+// todo perhaps move to partition_and_prune_items_by_datetimes_and_versions.ts
 export function get_current_VAP_set (args: GetCurrentCounterfactualVAPSetsArgs): StateValueAndPredictionsSet | undefined
 {
     const {

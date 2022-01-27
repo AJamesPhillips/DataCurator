@@ -14,6 +14,7 @@ import {
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_has_objectives,
     wcomponent_has_validity_predictions,
+    wcomponent_is_action,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_sub_state,
     wcomponent_should_have_state_VAP_sets,
@@ -53,6 +54,9 @@ import { color_to_string, darker_color } from "../../sharedf/color"
 import { default_frame_color } from "../../wcomponent_form/wcomponent_knowledge_view_form/default_frame_color"
 import { grid_small_step } from "../../canvas/position_utils"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
+import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
+import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value"
+import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
 
 
 
@@ -427,16 +431,47 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     let background = ""
     let font = ""
 
-    if (args.wcomponent)
+    const { wcomponent, created_at_ms, sim_ms } = args
+
+    if (!wcomponent) return { background: " node_missing ", font }
+
+
+    if (wcomponent_is_action(wcomponent))
     {
-        if (args.display_time_marks)
+        const attribute_values = get_wcomponent_state_value_and_probabilities({
+            wcomponent,
+            VAP_set_id_to_counterfactual_v2_map: {}, created_at_ms, sim_ms,
+        })
+        const most_probable = attribute_values.most_probable_VAP_set_values[0]
+
+        if (attribute_values.any_uncertainty)
         {
-            const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(args.wcomponent.id, args.wcomponents_by_id, args.created_at_ms)
+            // Warning that either you need to update your data or this is warning that this is uncertain
+            background = " past_uncertain "
+        }
+        else if (most_probable)
+        {
+            const completed = most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_completed
+                || most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_failed
+                || most_probable.value_id === ACTION_VALUE_POSSIBILITY_ID.action_rejected
+
+            if (completed)
+            {
+                background = " past_certain "
+                font = " color_light "
+            }
+        }
+    }
+    else
+    {
+        // if (args.display_time_marks)
+        // {
+            const temporal_value_certainty = get_current_temporal_value_certainty_from_wcomponent(wcomponent.id, args.wcomponents_by_id, created_at_ms)
             if (temporal_value_certainty)
             {
                 const { temporal_uncertainty, certainty } = temporal_value_certainty
                 const datetime = get_uncertain_datetime(temporal_uncertainty)
-                if (datetime && datetime.getTime() < args.sim_ms)
+                if (datetime && datetime.getTime() < sim_ms)
                 {
                     if (certainty === 1 || certainty === undefined)
                     {
@@ -459,18 +494,14 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
                 }
 
             }
-        }
-        else
-        {
-            // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
-            //     : ((wcomponent_is_goal(args.wcomponent)
-            //     // || wcomponent_is_judgement_or_objective(wcomponent)
-            //     ) ? "rgb(207, 255, 198)" : "")
-        }
-    }
-    else
-    {
-        background = " node_missing "
+        // }
+        // else
+        // {
+        //     // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
+        //     //     : ((wcomponent_is_goal(args.wcomponent)
+        //     //     // || wcomponent_is_judgement_or_objective(wcomponent)
+        //     //     ) ? "rgb(207, 255, 198)" : "")
+        // }
     }
 
     return { background, font }
