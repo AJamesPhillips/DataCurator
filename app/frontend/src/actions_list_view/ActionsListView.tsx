@@ -144,7 +144,8 @@ function _ActionsListViewContent (props: Props)
         className={`action_list_view_content ${pointer_down_at === undefined ? "" : "moving"}`}
         ref={e => action_list_view_content_el.current = (e || undefined)}
         onPointerDown={e => {
-            e.preventDefault()
+            // e.preventDefault() // was to prevent selecting text but it also stops the click from
+            // triggering the close event on the drop down menus used for the knowledge view breadcrumb
             const el = action_list_view_content_el.current
             if (!el) return
 

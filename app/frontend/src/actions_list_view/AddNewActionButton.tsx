@@ -111,12 +111,9 @@ function _AddNewActionButton (props: Props)
     }
 
 
-    return <span className="add_new_action_button">
-        &nbsp;
-        <Button fullWidth={false} onClick={e => handle_click()}>
-            <AddIcon />
-        </Button>
-    </span>
+    return <Button className="add_new_action_button" fullWidth={false} onClick={e => handle_click()}>
+        <AddIcon />
+    </Button>
 }
 
 export const AddNewActionButton = connector(_AddNewActionButton) as FunctionalComponent<OwnProps>

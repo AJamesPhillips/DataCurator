@@ -14,6 +14,7 @@ interface SpecificProps
     is_hidden?: boolean
     onPointerDown?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
     onClick?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) => void
+    className?: string
 }
 
 export function Button (props: ButtonProps & SpecificProps)
@@ -22,6 +23,7 @@ export function Button (props: ButtonProps & SpecificProps)
     return (
         <Hidden xsUp={props.is_hidden} title={props.title}>
             <MaterialButton
+                className={props.className}
                 title={props.title}
                 color={props.color || "primary"}
                 style={props.style}

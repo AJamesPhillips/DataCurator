@@ -29,6 +29,11 @@
     h1
     {
         padding: 10px;
+
+        &::selection
+        {
+            background: rgba(0,0,0,0);
+        }
     }
 
 
