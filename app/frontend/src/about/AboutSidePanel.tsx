@@ -25,7 +25,7 @@ function _AboutSidePanel (props: Props)
     return <div>
         {!props.ready && <div>Loading...</div>}
 
-        <span className="description_label">Version</span> <b>2022-01-26</b>
+        <span className="description_label">Version</span> <b>2022-01-27</b>
     </div>
 }
 
