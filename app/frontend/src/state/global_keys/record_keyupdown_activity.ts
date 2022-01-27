@@ -26,6 +26,12 @@ export function record_keyupdown_activity (store: Store<RootState>)
             user_is_editing_text,
         }
 
+        // There seem to be a range of behaviours in Brave on Mac that occur for
+        // ctrl + <some key>.  Specifically preventing default for ctrl + k to allow
+        // link insertion in text fields when they are being edited.
+        // See editable_text_common.tsx
+        if (user_is_editing_text && e.ctrlKey && e.key === "k") e.preventDefault()
+
         // TODO can we get rid of touching store entirely and only use pubsub?
         store.dispatch(ACTIONS.global_keys.key_down(action_args))
         pub_sub.global_keys.pub("key_down", action_args)
