@@ -3,6 +3,7 @@ import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import "../common.scss"
+import "./UserSigninRegisterForm.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
@@ -38,14 +39,35 @@ function _UserSigninRegisterForm (props: Props)
     const supabase = get_supabase()
 
     const [form_state, set_form_state] = useState<SigninRegisterFormState>("initial")
-    const [email, set_email] = useState("")
-    const [password, set_password] = useState("")
+    const [email, _set_email] = useState("")
+    const [password, _set_password] = useState("")
     const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
 
+    const [user_needs_to_provide_email, set_user_needs_to_provide_email] = useState(false)
+    const [user_needs_to_provide_password, set_user_needs_to_provide_password] = useState(false)
+
+    function set_email (new_email: string)
+    {
+        _set_email(new_email)
+        set_user_needs_to_provide_email(false)
+    }
+
+    function set_password (new_password: string)
+    {
+        _set_password(new_password)
+        set_user_needs_to_provide_password(false)
+    }
 
 
     async function register ()
     {
+        if (!email || !password)
+        {
+            if (!email) set_user_needs_to_provide_email(true)
+            if (!password) set_user_needs_to_provide_password(true)
+            return
+        }
+
         const { user: new_user, error } = await supabase.auth.signUp(
             { email, password },
             { redirectTo: "https://datacurator.org/app/" }
@@ -59,6 +81,13 @@ function _UserSigninRegisterForm (props: Props)
 
     async function sign_in ()
     {
+        if (!email || !password)
+        {
+            if (!email) set_user_needs_to_provide_email(true)
+            if (!password) set_user_needs_to_provide_password(true)
+            return
+        }
+
         const { user, error } = await supabase.auth.signIn({ email, password })
 
         set_supabase_session_error(error)
@@ -68,6 +97,13 @@ function _UserSigninRegisterForm (props: Props)
 
     async function forgot_password ()
     {
+        if (!email)
+        {
+            set_user_needs_to_provide_email(true)
+            set_user_needs_to_provide_password(false)
+            return
+        }
+
         const { data, error } = await supabase.auth.api.resetPasswordForEmail(email)
 
         set_supabase_session_error(error)
@@ -82,21 +118,31 @@ function _UserSigninRegisterForm (props: Props)
                 onKeyUp={e => set_email(e.currentTarget.value)}
                 onChange={e => set_email(e.currentTarget.value)}
                 onBlur={e => set_email(e.currentTarget.value)}
-            /><br/>
+            />
+            <div className={"error_form_input_empty " + (user_needs_to_provide_email ? "" : "inactive")}>
+                Email required
+            </div>
+
+            <br/>
             <br/>
             <input type="password" placeholder="password" value={password}
                 onKeyUp={e => set_password(e.currentTarget.value)}
                 onChange={e => set_password(e.currentTarget.value)}
                 onBlur={e => set_password(e.currentTarget.value)}
-            /><br/>
+            />
+            <div className={"error_form_input_empty " + (user_needs_to_provide_password ? "" : "inactive")}>
+                Password required
+            </div>
+
+            <br/>
         </form>
 
         <div>
             <br/>
-            <input type="button" disabled={!email || !password} onClick={sign_in} value="Signin" /> &nbsp;
-            <input type="button" disabled={!email || !password} onClick={register} value="Register" /><br/>
+            <input type="button" onClick={sign_in} value="Signin" /> &nbsp;
+            <input type="button" onClick={register} value="Register" /><br/>
             <br/>
-            <input type="button" disabled={!email} onClick={forgot_password} value="Forgot password?" /><br/>
+            <input type="button" onClick={forgot_password} value="Forgot password?" /><br/>
             <br/>
         </div>
 

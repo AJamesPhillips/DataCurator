@@ -1,0 +1,13 @@
+
+.error_form_input_empty
+{
+    font-size: 11px;
+    color: rgb(172, 0, 0);
+    transition: font-size 0.1s linear;
+}
+
+.error_form_input_empty.inactive
+{
+    font-size: 0px;
+    user-select: none;
+}
