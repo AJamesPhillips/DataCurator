@@ -124,7 +124,7 @@ function _UserSigninRegisterForm (props: Props)
             </div>
 
             <br/>
-            <br/>
+
             <input type="password" placeholder="password" value={password}
                 onKeyUp={e => set_password(e.currentTarget.value)}
                 onChange={e => set_password(e.currentTarget.value)}
@@ -133,8 +133,6 @@ function _UserSigninRegisterForm (props: Props)
             <div className={"error_form_input_empty " + (user_needs_to_provide_password ? "" : "inactive")}>
                 Password required
             </div>
-
-            <br/>
         </form>
 
         <div>
