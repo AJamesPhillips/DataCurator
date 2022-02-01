@@ -4,7 +4,6 @@ import { offset_by_half_node, round_canvas_point } from "../../../canvas/positio
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
-    wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_judgement_or_objective,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
@@ -19,8 +18,11 @@ import type { RootState } from "../../State"
 import { get_store } from "../../store"
 import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
-import { get_uncertain_datetime } from "../../../shared/uncertainty/datetime"
+import { get_latest_sim_ms_for_routing } from "../../routing/utils/get_latest_sim_ms_for_routing"
 
+
+
+const ONE_MINUTE = 60 * 1000
 
 
 interface CreateWComponentArgs
@@ -44,21 +46,11 @@ export function create_wcomponent (args: CreateWComponentArgs)
     const add_to_top = !wcomponent_is_judgement_or_objective(wcomponent)
 
 
-    const one_minute = 60 * 1000
     let created_at_ms = get_created_at_ms(wcomponent)
-    created_at_ms = Math.max(created_at_ms + one_minute, state.routing.args.created_at_ms)
+    created_at_ms = Math.max(created_at_ms + ONE_MINUTE, state.routing.args.created_at_ms)
 
 
-    let sim_ms = Number.NEGATIVE_INFINITY
-    if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent) && wcomponent.type === "action")
-    {
-        wcomponent.values_and_prediction_sets.forEach(vap_set =>
-        {
-            const vap_set_sim_ms = get_uncertain_datetime(vap_set.datetime)?.getDate() || Number.NEGATIVE_INFINITY
-            sim_ms = Math.max(sim_ms, vap_set_sim_ms)
-        })
-    }
-    sim_ms = Math.max(sim_ms + one_minute, state.routing.args.sim_ms)
+    const sim_ms = get_latest_sim_ms_for_routing(wcomponent, state)
 
 
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view, add_to_top }))
