@@ -11,7 +11,7 @@ interface OwnProps
 export function WarningTriangle (props: OwnProps)
 {
     return <span
-        style={{ backgroundColor: props.backgroundColor || "yellow" }}
+        style={{ backgroundColor: props.backgroundColor || "yellow", color: "black" }}
         title={props.message}
     >{"\u26A0"}</span>
 }
