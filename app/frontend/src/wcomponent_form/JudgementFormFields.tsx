@@ -93,7 +93,25 @@ function _JudgementFormFields (props: Props)
         />
 
 
-        <p>
+        {(props.is_editing || selected_option_id_for_manual !== undefined) && <p>
+            <div style={{ display: "inline-flex" }}>
+                Manual: &nbsp; <AutocompleteText
+                    placeholder={"Manual override..."}
+                    allow_none={true}
+                    selected_option_id={selected_option_id_for_manual}
+                    options={manual_options}
+                    on_change={option_id =>
+                    {
+                        const judgement_manual = option_id === undefined ? undefined
+                            : (option_id === "true" ? true : false)
+                        upsert_wcomponent({ judgement_manual })
+                    }}
+                />
+            </div>
+        </p>}
+
+
+        {selected_option_id_for_manual === undefined && <p>
             <div style={{ display: "inline-flex" }}>
                 Comparator: &nbsp; <AutocompleteText
                     extra_styles={{ width: 30 }}
@@ -128,24 +146,6 @@ function _JudgementFormFields (props: Props)
                         upsert_wcomponent({ judgement_comparator_value })
                     }}
                 />}
-            </div>
-        </p>
-
-
-        {(props.is_editing || selected_option_id_for_manual !== undefined) && <p>
-            <div style={{ display: "inline-flex" }}>
-                Manual: &nbsp; <AutocompleteText
-                    placeholder={"Manual override..."}
-                    allow_none={true}
-                    selected_option_id={selected_option_id_for_manual}
-                    options={manual_options}
-                    on_change={option_id =>
-                    {
-                        const judgement_manual = option_id === undefined ? undefined
-                            : (option_id === "true" ? true : false)
-                        upsert_wcomponent({ judgement_manual })
-                    }}
-                />
             </div>
         </p>}
 
