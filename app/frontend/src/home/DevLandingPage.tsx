@@ -18,6 +18,7 @@ export function DevLandingPage() {
                 <li><a href="/sandbox/canvas_nodes">Sandbox - WComponentNode</a></li>
                 <li><a href="/sandbox/circular_connections">Sandbox - Circular Connections</a></li>
                 <li><a href="/sandbox/supabase">Sandbox - Supabase</a></li>
+                <li><a href="/sandbox/connected">Sandbox - Connected</a></li>
                 <li><a href="/sandbox">Sandbox</a></li>
             </ul>
         </Container>

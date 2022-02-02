@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact"
-import { Ref, useEffect, useRef, useState } from "preact/hooks"
+import { Ref, useEffect, useMemo, useRef, useState } from "preact/hooks"
 
 import "../Editable.css"
 import type { RootState } from "../../state/State"
@@ -7,7 +7,7 @@ import { get_store } from "../../state/store"
 import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { ACTIONS } from "../../state/actions"
-import { ConditionalWComponentSearchWindow } from "../ConditionalWComponentSearchWindow"
+import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
 import type { CreationContext } from "../../creation_context/interfaces"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { ActionKeyEventArgs } from "../../state/global_keys/actions"
@@ -67,22 +67,6 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _EditableTextCommon (props: Props)
 {
-    const [value, set_value] = useState<string>(props.value)
-    useEffect(() => set_value(props.value), [props.value])
-
-
-    const el_ref = useRef<HTMLTextAreaElement | HTMLInputElement | undefined>(undefined)
-    const [id_insertion_point, set_id_insertion_point] = useState<number | undefined>(undefined)
-    const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
-
-    const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false)
-    function set_is_editing (is_editing: boolean)
-    {
-        set_editing_text_flag(is_editing)
-        set_is_editing_this_specific_text(is_editing)
-    }
-
-
     const {
         placeholder,
         conditional_on_change: user_conditional_on_change,
@@ -96,6 +80,23 @@ function _EditableTextCommon (props: Props)
         set_editing_text_flag,
     } = props
 
+
+    const [value, set_value] = useState<string>(props.value)
+    useEffect(() => set_value(props.value), [props.value])
+
+
+    const el_ref = useRef<HTMLTextAreaElement | HTMLInputElement | undefined>(undefined)
+    const id_insertion_point = useRef<number | undefined>(undefined)
+    const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
+
+    const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false)
+    const set_is_editing = useMemo(() => (is_editing: boolean) =>
+    {
+        set_editing_text_flag(is_editing)
+        set_is_editing_this_specific_text(is_editing)
+    }, [set_editing_text_flag, set_is_editing_this_specific_text])
+
+
     if (force_editable === false || (!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || (presenting && force_editable !== true))
     {
         const class_name = (disabled ? "disabled" : "")
@@ -108,7 +109,7 @@ function _EditableTextCommon (props: Props)
     }
 
 
-    const conditional_on_change = (new_value: string) =>
+    const conditional_on_change = useMemo(() => (new_value: string) =>
     {
         if (props.use_creation_context)
         {
@@ -117,7 +118,7 @@ function _EditableTextCommon (props: Props)
 
         if (new_value !== value) user_conditional_on_change && user_conditional_on_change(new_value)
         set_value(new_value)
-    }
+    }, [])
 
 
     useEffect(() =>
@@ -129,49 +130,59 @@ function _EditableTextCommon (props: Props)
     const class_name = `editable_field ${value ? "" : "placeholder"}`
 
 
-    const on_render = (el: HTMLTextAreaElement | HTMLInputElement) =>
+    const on_render = useMemo(() => (el: HTMLTextAreaElement | HTMLInputElement) =>
     {
+        if (el_ref.current === el) return // quick hack to prevent multiple erroneous calls to following render code
         el_ref.current = el
         handle_text_field_render({ id_insertion_point, on_focus_set_selection, el, force_focus })
-    }
+    }, [on_focus_set_selection, force_focus])
 
 
-    const on_focus = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+    const on_focus = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
         handle_text_field_focus({ e, set_is_editing, select_all_on_focus })
-    }
+    }, [set_is_editing, select_all_on_focus])
 
 
-    const wrapped_conditional_on_change = (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
+    const wrapped_conditional_on_change = useMemo(() => (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
     {
-        if (id_insertion_point !== undefined) return
-        handle_text_field_change({ e, set_id_insertion_point, conditional_on_change })
-    }
+        if (id_insertion_point.current !== undefined) return
+        handle_text_field_change({ e, id_insertion_point, conditional_on_change })
+    }, [conditional_on_change])
 
 
-    const wrapped_on_blur = (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+    const wrapped_on_blur = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        if (id_insertion_point !== undefined) return
+        if (id_insertion_point.current !== undefined) return
         handle_text_field_blur({ e, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
-    }
+    }, [props.value, conditional_on_blur, always_on_blur, set_is_editing])
 
 
-    return <div className={class_name} style={props.style}>
-        {props.component({
+    const input_component = useMemo(() =>
+    {
+        return props.component({
             value,
             on_render,
             on_focus,
             on_change: wrapped_conditional_on_change,
             on_blur: wrapped_on_blur,
-        })}
+        })
+    }, [value, on_render, on_focus, wrapped_conditional_on_change, wrapped_on_blur])
 
-        {id_insertion_point !== undefined && <div style={{ fontSize: "initial", fontWeight: "initial" }}>
+
+    return <div className={class_name} style={props.style}>
+        {input_component}
+
+        {id_insertion_point.current !== undefined && <div style={{ fontSize: "initial", fontWeight: "initial" }}>
             <ConditionalWComponentSearchWindow
                 value={value}
-                id_insertion_point={id_insertion_point}
-                set_id_insertion_point={set_id_insertion_point}
+                id_insertion_point={id_insertion_point.current}
                 on_focus_set_selection={on_focus_set_selection}
-                conditional_on_change={conditional_on_change}
+                conditional_on_change={new_value =>
+                {
+                    id_insertion_point.current = undefined
+                    conditional_on_change(new_value)
+                }}
             />
         </div>}
     </div>
@@ -183,16 +194,16 @@ export const EditableTextCommon = connector(_EditableTextCommon) as FunctionalCo
 
 interface HandleTextFieldRenderArgs
 {
-    id_insertion_point: number | undefined
+    id_insertion_point: Ref<number | undefined>
     on_focus_set_selection: Ref<[number, number] | undefined>
     el: HTMLInputElement | HTMLTextAreaElement
     force_focus: boolean | undefined
 }
 function handle_text_field_render (args: HandleTextFieldRenderArgs)
 {
-    // We have initiated a searchWindow to populate an id insertiong so we do not want to
+    // We have initiated a searchWindow to populate an id insertion so we do not want to
     // focus this input box now
-    if (args.id_insertion_point !== undefined) return
+    if (args.id_insertion_point.current !== undefined) return
 
     const position = args.on_focus_set_selection.current
     args.on_focus_set_selection.current = undefined
@@ -201,6 +212,7 @@ function handle_text_field_render (args: HandleTextFieldRenderArgs)
     if (should_gain_focus)
     {
         setTimeout(() => {
+            console.log("gaining focus for ", args.el, position, args.force_focus)
             args.el.focus()
             if (position) args.el.setSelectionRange(position[0], position[1])
         }, 0)
@@ -235,19 +247,16 @@ interface HandleTextFieldChangeArgs
 {
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
     conditional_on_change: (value: string) => void
-    set_id_insertion_point: (insertion_point: number) => void
+    id_insertion_point: Ref<number | undefined>
 }
 function handle_text_field_change (args: HandleTextFieldChangeArgs)
 {
-    const id_insertion_point = get_id_insertion_point(args.e.currentTarget)
+    const new_id_insertion_point = get_id_insertion_point(args.e.currentTarget)
+    if (new_id_insertion_point !== undefined) args.id_insertion_point.current = new_id_insertion_point
 
+    // note: if id_insertion_point is changed to not be undefined, e.g. the user has typed "@@", then
+    // that change plus this change of value (because the user entered @@) will cause search modal to open.
     args.conditional_on_change(args.e.currentTarget.value)
-
-    if (id_insertion_point !== undefined)
-    {
-        // note: will cause search modal to open
-        args.set_id_insertion_point(id_insertion_point)
-    }
 }
 
 

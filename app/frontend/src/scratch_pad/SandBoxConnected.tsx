@@ -4,6 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { EditableText } from "../form/editable_text/EditableText"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import type { RootState } from "../state/State"
 import "./SandBox.css"
 
@@ -23,20 +24,27 @@ type Props = ConnectedProps<typeof connector>
 
 function _SandBoxConnected (props: Props)
 {
-    const [some_string, set_some_string] = useState("")
+    const [some_string, set_some_string] = useState("testing 123")
 
     return <div>
-        <EditableText
-            placeholder="..."
+        <EditableTextSingleLine
+            placeholder="1"
+            force_focus={true}
             value={some_string}
             conditional_on_blur={set_some_string}
+        />
+        {/* <EditableText
+            placeholder="2"
+            force_focus={false}
+            value=""
+            conditional_on_blur={() => {}}
         />
         <AutocompleteText
             selected_option_id={undefined}
             options={[]}
             allow_none={true}
             on_change={() => {}}
-        />
+        /> */}
     </div>
 }
 

@@ -39,7 +39,7 @@ function _WComponentSearchWindow (props: Props)
         initial_search_term={props.initial_search_term}
         allow_none={true}
         options={options}
-        on_change={option_id => props.on_change(option_id)}
+        on_change={props.on_change}
         on_blur={props.on_blur}
     />
 }
