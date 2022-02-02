@@ -17,7 +17,7 @@ export function get_latest_sim_ms_for_routing (wcomponent: WComponent, state: Ro
     {
         wcomponent.values_and_prediction_sets.forEach(vap_set =>
         {
-            const vap_set_sim_ms = get_uncertain_datetime(vap_set.datetime)?.getDate() || Number.NEGATIVE_INFINITY
+            const vap_set_sim_ms = get_uncertain_datetime(vap_set.datetime)?.getTime() || Number.NEGATIVE_INFINITY
             sim_ms = Math.max(sim_ms, vap_set_sim_ms)
         })
     }
