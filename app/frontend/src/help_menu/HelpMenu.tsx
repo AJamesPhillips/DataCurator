@@ -183,7 +183,7 @@ const use_styles = makeStyles(theme => ({
 
 const tips_on_linking: (string | h.JSX.Element)[] = [
     `Type "@@" in any text field to access a menu to link to any other component.
-    This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab or @@wc123 (short ids).`
+    This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab.`
     ,
     `Follow "@@some-id" with .url, .title and .description to get the attributes
     of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title"`
@@ -195,8 +195,6 @@ const tips_on_linking: (string | h.JSX.Element)[] = [
         See the full <a href="https: //www.markdownguide.org/basic-syntax/">Markdown guide here</a>
     </span>
     ,
-    `Type "@@" in any text field to access a menu to link to any other component.  This will insert the id of that component, e.g. @@wc123.`
-    ,
 ]
 
 
@@ -205,10 +203,10 @@ const general_tips: (string | h.JSX.Element)[] = [
     <div>
         <Typography component="h3" variant="h6">"Should" word usage</Typography>
 
-        If you yourself writing states with "should", e.g. "People <b>should</b> listen more and be less reductionist" then you might consider seperating this out into its 4 seperate parts and phrasing as the positive or desired state.  Specifically:
+        If you find yourself writing states with "should", e.g. "People <b>should</b> listen more and be less reductionist" then you might consider separating this out into its 4 separate parts and phrasing as the positive or desired state.  Specifically:
         <ol>
             <li>
-                the attribute, e.g.: "People listen more and be less reductionist".  Note it's usually easier to express this as the desired state instead of the pure attribute of "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".
+                the attribute, e.g.: "People listen more and be less reductionist".  Note it is usually easier to express this as the desired state of the attribute instead of the pure attribute itself which is usually longer and less easy to work with: "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".
             </li>
             <li>
                 the current value, e.g.: "False"
@@ -225,7 +223,7 @@ const general_tips: (string | h.JSX.Element)[] = [
     <div>
         <Typography component="h3" variant="h6">"Action" node type versus "State"</Typography>
 
-        The action and state node types are very similar.  The former can be used to draw attention to the areas were you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.
+        The action and state node types are very similar.  The former can be used to draw attention to the areas where you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.
     </div>
 ]
 
