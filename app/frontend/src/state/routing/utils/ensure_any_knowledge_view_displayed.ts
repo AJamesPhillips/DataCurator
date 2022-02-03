@@ -63,7 +63,7 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
     const { created_at_ms } = state.routing.args
     const { selected_wcomponent_ids_set } = state.meta_wcomponents
 
-    const pos = calculate_spatial_temporal_position_to_move_to({
+    const result = calculate_spatial_temporal_position_to_move_to({
         current_composed_knowledge_view,
         wcomponents_by_id,
         initial_wcomponent_id,
@@ -75,7 +75,7 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
     })
 
     return {
-        ...pos.positions[0], // may be undefined
-        created_at_ms: pos.go_to_datetime_ms,
+        ...result.positions[0], // may be undefined
+        created_at_ms: result.go_to_datetime_ms,
     }
 }

@@ -66,7 +66,7 @@ function _PrioritiesContentControls (props: Props)
     x_min -= 100
     x_max += 200
 
-    const zoom = calculate_zoom_to_contain_group({ min_left: x_min, max_left: x_max, min_top: y, max_top: y }, false, false).zoom
+    const zoom = calculate_zoom_to_contain_group({ min_left: x_min, max_left: x_max, min_top: y, max_top: y }, { display_side_panel: false, display_time_sliders: false }).zoom
 
 
     const position: PositionAndZoom = { x: x_min, y, zoom }

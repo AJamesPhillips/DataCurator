@@ -5,11 +5,10 @@ import {
     get_screen_width,
     lefttop_to_xy,
     get_visible_screen_height,
-    TOP_HEADER_FUDGE,
 } from "../state/display_options/display"
-import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent, WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { PositionAndZoom } from "./interfaces"
-import { NODE_WIDTH, HALF_NODE_HEIGHT } from "./position_utils"
+import { NODE_WIDTH, node_height_approx } from "./position_utils"
 import { SCALE_BY, bound_zoom } from "./zoom_utils"
 
 
@@ -32,63 +31,46 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
         wcomponents_by_id,
         initial_wcomponent_id,
         disable_if_not_present,
+        display_side_panel,
+        display_time_sliders,
     } = args
     let { created_at_ms, selected_wcomponent_ids_set } = args
 
     let wcomponent_created_at_ms: number | undefined = undefined
     let positions: PositionAndZoom[] = []
 
-    const { composed_wc_id_map, composed_visible_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view || {}
 
-    if (composed_wc_id_map)
+    if (current_composed_knowledge_view)
     {
-        const wcomponent = wcomponents_by_id[initial_wcomponent_id]
-        wcomponent_created_at_ms = wcomponent && get_created_at_ms(wcomponent)
-        let view_entry = composed_wc_id_map[initial_wcomponent_id]
-        let zoom = SCALE_BY
+        const { composed_wc_id_map, composed_visible_wc_id_map, wc_ids_by_type } = current_composed_knowledge_view
 
+        const initial_wcomponent = wcomponents_by_id[initial_wcomponent_id]
+        wcomponent_created_at_ms = initial_wcomponent && get_created_at_ms(initial_wcomponent)
 
-        const { any_node = new Set<string>() } = wc_ids_by_type || {}
+        const { any_node } = wc_ids_by_type
         // Remove the initial_wcomponent_id as it may be selected but present in a different
         // knowledge view
         selected_wcomponent_ids_set = new Set(selected_wcomponent_ids_set)
         selected_wcomponent_ids_set.delete(initial_wcomponent_id)
 
 
-        if (view_entry)
+        const result = get_wcomponent_group_positions_and_last_created_at({
+            initial_wcomponent,
+            disable_if_not_present,
+            composed_visible_wc_id_map,
+            selected_wcomponent_ids_set,
+            wcomponents_by_id,
+            composed_wc_id_map,
+            display_side_panel,
+            display_time_sliders,
+            any_node,
+        })
+        positions = result.positions
+
+        if (result.wcomponent_created_at_ms)
         {
-            const position_and_zoom = lefttop_to_xy({ ...view_entry, zoom }, true)
-            positions.push(position_and_zoom)
+            wcomponent_created_at_ms = Math.max(result.wcomponent_created_at_ms, wcomponent_created_at_ms || 0)
         }
-        else if (!disable_if_not_present && composed_visible_wc_id_map)
-        {
-            let ids = ids_on_map(selected_wcomponent_ids_set, composed_visible_wc_id_map)
-            let result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
-                // Disabled for now as not using them properly
-                // args.display_side_panel, args.display_time_sliders)
-                false, false)
-
-            if (result.position_groups.length === 0)
-            {
-                ids = ids_on_map(any_node, composed_visible_wc_id_map)
-                result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map,
-                    // Disabled for now as not using them properly
-                    // args.display_side_panel, args.display_time_sliders)
-                    false, false)
-            }
-
-            wcomponent_created_at_ms = result.wcomponent_created_at_ms
-
-            positions = result.position_groups.map(group =>
-            {
-                return lefttop_to_xy({
-                    left: (group.min_left + group.max_left) / 2,
-                    top: (group.min_top + group.max_top) / 2,
-                    zoom: group.zoom,
-                }, true)
-            })
-        }
-
 
         if (wcomponent_created_at_ms)
         {
@@ -96,7 +78,86 @@ export function calculate_spatial_temporal_position_to_move_to (args: CalculateS
         }
     }
 
-    return { positions, go_to_datetime_ms: created_at_ms }
+    return {
+        positions,
+        go_to_datetime_ms: created_at_ms,
+    }
+}
+
+
+
+interface CalculateAllDisplayCombinationsOfSpatialTemporalPositionToMoveToArgs
+{
+    current_composed_knowledge_view: ComposedKnowledgeView | undefined
+    wcomponents_by_id: WComponentsById
+    initial_wcomponent_id: string
+    selected_wcomponent_ids_set: Set<string>
+    created_at_ms: number
+    disable_if_not_present: boolean | undefined
+}
+export function calculate_all_display_combinations_of_spatial_temporal_position_to_move_to (args: CalculateAllDisplayCombinationsOfSpatialTemporalPositionToMoveToArgs)
+{
+    const {
+        current_composed_knowledge_view,
+        wcomponents_by_id,
+        initial_wcomponent_id,
+        selected_wcomponent_ids_set,
+        created_at_ms,
+        disable_if_not_present,
+    } = args
+
+    const calc_position_args = {
+        current_composed_knowledge_view,
+        wcomponents_by_id,
+        initial_wcomponent_id,
+        selected_wcomponent_ids_set,
+        created_at_ms,
+        disable_if_not_present,
+    }
+
+
+    // const positions_no_sidepanel_or_timesliders: PositionAndZoom[] = []
+    // const go_to_datetime_ms = undefined
+
+    const {
+        positions: positions_no_sidepanel_or_timesliders,
+        go_to_datetime_ms,
+    } = calculate_spatial_temporal_position_to_move_to({
+        ...calc_position_args,
+        display_side_panel: false,
+        display_time_sliders: false,
+    })
+
+    // const positions_sidepanel_no_timesliders: PositionAndZoom[] = []
+    // // const positions_timesliders_no_sidepanel: PositionAndZoom[] = []
+    // const positions_with_sidepanel_or_timesliders: PositionAndZoom[] = []
+
+    const positions_sidepanel_no_timesliders: PositionAndZoom[] = calculate_spatial_temporal_position_to_move_to({
+        ...calc_position_args,
+        display_side_panel: true,
+        display_time_sliders: false,
+    }).positions
+
+    const positions_timesliders_no_sidepanel: PositionAndZoom[] = calculate_spatial_temporal_position_to_move_to({
+        ...calc_position_args,
+        display_side_panel: false,
+        display_time_sliders: true,
+    }).positions
+
+    const positions_with_sidepanel_or_timesliders: PositionAndZoom[] = calculate_spatial_temporal_position_to_move_to({
+        ...calc_position_args,
+        display_side_panel: true,
+        display_time_sliders: true,
+    }).positions
+
+
+    return {
+        positions_no_sidepanel_or_timesliders,
+        positions_sidepanel_no_timesliders,
+        positions_timesliders_no_sidepanel,
+        positions_with_sidepanel_or_timesliders,
+        go_to_datetime_ms,
+    }
 }
 
 
@@ -120,27 +181,109 @@ interface CalculatePositionGroupsWithZoomReturn
     wcomponent_created_at_ms: number | undefined
 }
 
-function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, display_side_panel: boolean, display_time_sliders: boolean): CalculatePositionGroupsWithZoomReturn
+
+
+interface GetWcomponentGroupPositionsAndLastCreatedAtArgs
+{
+    initial_wcomponent: WComponent | undefined
+    disable_if_not_present: boolean | undefined
+    composed_visible_wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined
+    selected_wcomponent_ids_set: Set<string>
+    wcomponents_by_id: WComponentsById
+    composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    display_side_panel: boolean
+    display_time_sliders: boolean
+    any_node: Set<string>
+}
+function get_wcomponent_group_positions_and_last_created_at (args: GetWcomponentGroupPositionsAndLastCreatedAtArgs)
+{
+    const {
+        initial_wcomponent,
+        disable_if_not_present,
+        composed_visible_wc_id_map,
+        selected_wcomponent_ids_set,
+        wcomponents_by_id,
+        composed_wc_id_map,
+        display_side_panel,
+        display_time_sliders,
+        any_node,
+    } = args
+
+    let positions: PositionAndZoom[] = []
+    let wcomponent_created_at_ms: number | undefined = undefined
+    const display_args = { display_side_panel, display_time_sliders }
+
+    const view_entry = composed_wc_id_map[initial_wcomponent?.id || ""]
+    if (initial_wcomponent && view_entry)
+    {
+        let { left, top, s } = view_entry
+        const size = s ?? 1
+        left += (NODE_WIDTH * size * 0.5)
+        top += (node_height_approx(!!initial_wcomponent.summary_image) * size * 0.5)
+
+        const position_and_zoom = lefttop_to_xy({ left, top, zoom: SCALE_BY }, true, display_args)
+        positions.push(position_and_zoom)
+    }
+    else if (!disable_if_not_present && composed_visible_wc_id_map)
+    {
+        let ids = ids_on_map(selected_wcomponent_ids_set, composed_visible_wc_id_map)
+        let result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, display_args)
+
+        if (result.position_groups.length === 0)
+        {
+            ids = ids_on_map(any_node, composed_visible_wc_id_map)
+            result = calculate_position_groups_with_zoom(ids, wcomponents_by_id, composed_wc_id_map, display_args)
+        }
+
+        wcomponent_created_at_ms = result.wcomponent_created_at_ms
+
+        positions = result.position_groups.map(group =>
+        {
+            debugger
+            return lefttop_to_xy({
+                left: (group.min_left + group.max_left) / 2,
+                top: (group.min_top + group.max_top) / 2,
+                zoom: group.zoom,
+            }, true, display_args)
+        })
+    }
+
+    return { positions, wcomponent_created_at_ms }
+}
+
+
+
+interface DisplayArgs
+{
+    display_side_panel: boolean
+    display_time_sliders: boolean
+}
+
+function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_id: WComponentsById, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, display_args: DisplayArgs): CalculatePositionGroupsWithZoomReturn
 {
     const position_groups: PositionGroupAndZoom[] = []
 
-
-    const top_min_fudge = HALF_NODE_HEIGHT + TOP_HEADER_FUDGE
-    const top_max_add = HALF_NODE_HEIGHT * 3  // 1.5x node height
+    const single_node_height = node_height_approx(false)
 
     let wcomponent_created_at_ms: number | undefined
 
+    const ids_list = Array.from(ids)
+    for (let i = 0; i < ids_list.length; ++i)
+    {
+        const wcomponent_id = ids_list[i]
+        if (!wcomponent_id) continue
 
-    ids.forEach(wcomponent_id => {
         const wcomponent = wcomponents_by_id[wcomponent_id]
         const an_entry = composed_wc_id_map[wcomponent_id]
-        if (!wcomponent || !an_entry) return
+        if (!wcomponent || !an_entry) continue
+
+        const size = an_entry.s ?? 1
+        const node_height = node_height_approx(!!wcomponent.summary_image)
 
         const component_min_left = an_entry.left - NODE_WIDTH
-        const component_max_left = an_entry.left + NODE_WIDTH // * 2) does not seem to need x2
-        const component_min_top = an_entry.top - top_min_fudge
-        const component_max_top = an_entry.top + top_max_add
-
+        const component_max_left = an_entry.left + (NODE_WIDTH * size) + NODE_WIDTH
+        const component_min_top = an_entry.top - node_height
+        const component_max_top = an_entry.top + (node_height * size) //+ single_node_height
 
         const fit = position_groups.find(group =>
         {
@@ -152,10 +295,11 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
                 max_top: Math.max(group.max_top, component_max_top),
             }
 
-            const { zoom, fits } = calculate_zoom_to_contain_group(candidate_group, display_side_panel, display_time_sliders)
+            const { zoom, fits } = calculate_zoom_to_contain_group(candidate_group, display_args)
 
             if (!fits) return false
 
+            // Mutate the existing group to expand its size
             group.min_left = candidate_group.min_left
             group.max_left = candidate_group.max_left
             group.min_top = candidate_group.min_top
@@ -165,9 +309,11 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
         })
 
 
-        // The `< 10 check` is a quick hack to prevent this for locking up with very large maps
-        if (!fit && position_groups.length < 10)
+        if (!fit)
         {
+            // The `< 10 check` is a quick hack to prevent this for locking up with very large maps
+            if (position_groups.length > 10) break
+
             const new_group: PositionGroupAndZoom =
             {
                 min_left: component_min_left,
@@ -182,19 +328,19 @@ function calculate_position_groups_with_zoom (ids: Set<string>, wcomponents_by_i
 
 
         wcomponent_created_at_ms = get_created_at_ms(wcomponent)
-    })
+    }
 
     return { position_groups, wcomponent_created_at_ms }
 }
 
 
 
-export function calculate_zoom_to_contain_group (group: PositionGroup, display_side_panel: boolean, display_time_sliders: boolean)
+export function calculate_zoom_to_contain_group (group: PositionGroup, display_args: DisplayArgs)
 {
     const total_width = group.max_left - group.min_left
     const total_height = group.max_top - group.min_top
-    const zoom_width = (get_screen_width(display_side_panel) / total_width) * SCALE_BY
-    const zoom_height = (get_visible_screen_height(display_time_sliders) / total_height) * SCALE_BY
+    const zoom_width = (get_screen_width(display_args.display_side_panel) / total_width) * SCALE_BY
+    const zoom_height = (get_visible_screen_height(display_args.display_time_sliders) / total_height) * SCALE_BY
 
     const raw_zoom = Math.min(zoom_width, zoom_height)
     const bounded_zoom = bound_zoom(Math.min(SCALE_BY, raw_zoom))
@@ -203,13 +349,13 @@ export function calculate_zoom_to_contain_group (group: PositionGroup, display_s
 
 
 
-function ids_on_map (ids: Set<string>, composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
+function ids_on_map (ids: Set<string>, map: {[id: string]: {}})
 {
     const filtered_ids = new Set(ids)
 
     ids.forEach(id =>
     {
-        if (composed_wc_id_map[id]) return
+        if (map[id]) return
         filtered_ids.delete(id)
     })
 

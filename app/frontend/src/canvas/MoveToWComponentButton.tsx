@@ -12,7 +12,7 @@ import { ACTIONS } from "../state/actions"
 import type { PositionAndZoom } from "./interfaces"
 import { calculate_if_components_on_screen } from "./calculate_if_components_on_screen"
 import {
-    calculate_spatial_temporal_position_to_move_to,
+    calculate_all_display_combinations_of_spatial_temporal_position_to_move_to,
 } from "./calculate_spatial_temporal_position_to_move_to"
 import { get_actually_display_time_sliders } from "../state/controls/accessors"
 import { pub_sub } from "../state/pub_sub/pub_sub"
@@ -84,16 +84,20 @@ function _MoveToWComponentButton (props: Props)
     } = props
 
 
-    const { positions, go_to_datetime_ms } = useMemo(() =>
-        calculate_spatial_temporal_position_to_move_to({
+    const {
+        positions_no_sidepanel_or_timesliders,
+        positions_sidepanel_no_timesliders,
+        positions_timesliders_no_sidepanel,
+        positions_with_sidepanel_or_timesliders,
+        go_to_datetime_ms,
+    } = useMemo(() =>
+        calculate_all_display_combinations_of_spatial_temporal_position_to_move_to({
             current_composed_knowledge_view,
             wcomponents_by_id,
             initial_wcomponent_id,
             selected_wcomponent_ids_set,
             created_at_ms,
             disable_if_not_present,
-            display_side_panel,
-            display_time_sliders,
         })
     , [
         current_composed_knowledge_view,
@@ -102,16 +106,20 @@ function _MoveToWComponentButton (props: Props)
         selected_wcomponent_ids_set,
         created_at_ms,
         disable_if_not_present,
-        // Ideallly these would be used lazily, i.e. after a request to move to components, then if these
-        // values had changed, only then would the positions be updated... otherwise every time the side
-        // panel is moved in and out, all the components are iterated through which might have bad performance
-        // for large maps
-        // //
-        // // Disabled for now as calculate_spatial_temporal_position_to_move_to doesn't use them properly anyway
-        // display_side_panel,
-        // display_time_sliders,
     ])
 
+
+    const positions = (display_side_panel || display_time_sliders)
+        ? (
+            (display_side_panel && display_time_sliders)
+            ? positions_with_sidepanel_or_timesliders
+            : (
+                display_side_panel
+                ? positions_sidepanel_no_timesliders
+                : positions_timesliders_no_sidepanel
+            )
+        )
+        : positions_no_sidepanel_or_timesliders
 
     let next_position_index = 0
     const move = positions.length === 0
@@ -119,12 +127,16 @@ function _MoveToWComponentButton (props: Props)
         : () =>
         {
             let position = positions[next_position_index++]
-            if (next_position_index >= positions.length) next_position_index = 0
+            if (!position)
+            {
+                next_position_index = 0
+                position = positions[next_position_index++]
+            }
             props.move(go_to_datetime_ms, position)
         }
 
 
-    const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions && !components_on_screen
+    const draw_attention_to_move_to_wcomponent_button = props.allow_drawing_attention && positions.length > 0 && !components_on_screen
 
 
     return <MoveToItemButton
@@ -160,7 +172,17 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
 
         return pub_sub.global_keys.sub("key_down", e =>
         {
-            if (move && e.key === " " && !e.user_is_editing_text) move()
+            // "space" bar is pressed
+            if (move && e.key === " " && !e.user_is_editing_text)
+            {
+                // This does not work
+                // // If the user just clicked on a button, this will prevent the space bar from firing that
+                // // button again and instead only run the "move to wcomponents" functionality
+                // // However we might want to re-evaluate this as using spacebar to generically trigger the
+                // // previous action is a very useful system behaviour
+                // e.event.preventDefault()
+                move()
+            }
         })
     })
 

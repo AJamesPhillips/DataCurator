@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { CanvasNode } from "../canvas/CanvasNode"
 import type { CanvasPoint } from "../canvas/interfaces"
-import { NODE_HEIGHT_APPROX, NODE_WIDTH } from "../canvas/position_utils"
+import { node_height_approx, NODE_WIDTH } from "../canvas/position_utils"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import { position_from_canvas_pointer_event } from "../state/specialised_objects/subscribers/create_wcomponent_on_double_tap"
 // import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
@@ -30,7 +30,7 @@ export function WComponentCanvasNodeDebugCanvasPointerPosition ()
     >
         <div style={{
             width: NODE_WIDTH,
-            height: NODE_HEIGHT_APPROX,
+            height: node_height_approx,
             backgroundColor: "white",
         }}>
             Some text
