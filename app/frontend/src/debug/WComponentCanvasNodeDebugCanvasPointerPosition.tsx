@@ -30,7 +30,7 @@ export function WComponentCanvasNodeDebugCanvasPointerPosition ()
     >
         <div style={{
             width: NODE_WIDTH,
-            height: node_height_approx,
+            height: node_height_approx(),
             backgroundColor: "white",
         }}>
             Some text
