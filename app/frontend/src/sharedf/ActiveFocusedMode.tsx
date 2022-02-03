@@ -25,23 +25,27 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _ActiveFocusedMode (props: Props)
 {
     const { presenting, focused_mode } = props
-    const title = focused_mode
-        ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
-        : "Activate focused mode"
+    const title = presenting
+        ? (
+            focused_mode
+            ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
+            : "Activate focused mode"
+        ) : "Focused mode only available when presenting"
     const classes = focused_mode ? active_warning_styles() : inactive_warning_styles()
 
-    return presenting && (
-        <Tooltip placement="top" title={title}>
+    return <Tooltip placement="top" title={title}>
+        <span>
             <IconButton
                 // className={classes.warning_button}
                 component="span"
                 size="medium"
+                disabled={!presenting}
                 onClick={() => props.set_or_toggle_focused_mode()}
             >
                 <FilterTiltShift className={classes.warning_icon} />
             </IconButton>
-        </Tooltip>
-    )
+        </span>
+    </Tooltip>
 }
 
 export const ActiveFocusedMode = connector(_ActiveFocusedMode) as FunctionalComponent<OwnProps>
