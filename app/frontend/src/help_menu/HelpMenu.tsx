@@ -4,6 +4,7 @@ import { useState } from "preact/hooks"
 import { Accordion, AccordionDetails, AccordionSummary, Box, makeStyles, Typography } from "@material-ui/core"
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore"
 
+import "./HelpMenu.scss"
 import { Modal } from "../modal/Modal"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
@@ -52,7 +53,7 @@ function _HelpMenu (props: Props)
                     <AccordionDetails>
                         <Box>
                             These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.
-                            {keyboard_shortcuts.map(args => <KeyboardShortcutCommand {...args} />)}
+                            {shortcuts.map(args => <ShortcutCommand {...args} />)}
                         </Box>
                     </AccordionDetails>
                 </Accordion>
@@ -110,50 +111,60 @@ export const HelpMenu = connector(_HelpMenu)
 
 
 
-const keyboard_shortcuts: KeyboardShortcutProps[] = [
-    { keyboard_shortcut: ["?"], outcome: "Opens this help menu" },
-    { keyboard_shortcut: ["space"], outcome: "Fit view to components / cycle between groups of components" },
-    { keyboard_shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
-    { keyboard_shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off` },
-    { keyboard_shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders` },
-    { keyboard_shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel` },
-    { keyboard_shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating connections` },
-    { keyboard_shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing connections as (more) circular` },
-    { keyboard_shortcut: ["Shift", "click", "drag"], outcome: "Select multiple nodes" },
-    { keyboard_shortcut: ["Shift", "Ctrl", "click", "drag"], outcome: "Deselect multiple nodes" },
-    { keyboard_shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection forward along causal connections" },
-    { keyboard_shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection along source causal connections" },
-    { keyboard_shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view" },
-    { keyboard_shortcut: ["Ctrl", "s", "e"], outcome: "Expand selection along connections and nodes" },
-    { keyboard_shortcut: ["Ctrl", "s", "d"], outcome: "Decrease selection along non circular connections and nodes" },
-    { keyboard_shortcut: ["Ctrl", "s", "i"], outcome: "Selection components inbetween (interconnections)" },
-    { keyboard_shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
+
+enum ActionCommands
+{
+    click = "click",
+    drag = "drag",
+}
+
+
+const shortcuts: ShortcutProps[] = [
+    { shortcut: ["?"], outcome: "Opens this help menu" },
+    { shortcut: ["space"], outcome: "Fit view to components / cycle between groups of components." },
+    { shortcut: ["Ctrl", "e"], outcome: "Toggle between presenation and editing modes" },
+    { shortcut: ["Ctrl", "d", "s"], outcome: `Toggle showing side panel` },
+    { shortcut: ["Ctrl", "d", "t"], outcome: `Toggle showing time sliders` },
+    { shortcut: ["Ctrl", "d", "f"], outcome: `Toggle "focused" mode on and off` },
+    { shortcut: ["Ctrl", "d", "a"], outcome: `Toggle animating connections` },
+    { shortcut: ["Ctrl", "d", "c"], outcome: `Toggle showing connections as (more) circular` },
+    { shortcut: ["Shift", ActionCommands.click, ActionCommands.drag], outcome: "Select multiple nodes" },
+    { shortcut: ["Shift", "Ctrl", ActionCommands.click, ActionCommands.drag], outcome: "Deselect multiple nodes" },
+    { shortcut: ["Ctrl", "a"], outcome: "Select all nodes on knowledge view" },
+    { shortcut: ["Ctrl", "s", "f"], outcome: "Expand selection towards effects (forwards)" },
+    { shortcut: ["Ctrl", "s", "c"], outcome: "Expand selection towards causes (backwards)" },
+    { shortcut: ["Ctrl", "s", "e"], outcome: "Expand selection" },
+    { shortcut: ["Ctrl", "s", "d"], outcome: "Decrease selection (along non circular connections and nodes)" },
+    { shortcut: ["Ctrl", "s", "i"], outcome: "Selection components inbetween (interconnections)" },
+    { shortcut: ["Ctrl", "f"], outcome: "Open the search menu" },
 ]
 
-interface KeyboardShortcutProps
+interface ShortcutProps
 {
-    keyboard_shortcut: string[]
+    shortcut: string[]
     outcome: string
 }
 
-function KeyboardShortcutCommand (props: KeyboardShortcutProps)
+
+function ShortcutCommand (props: ShortcutProps)
 {
-
     const classes = use_styles()
-
 
     return <Box component="dl">
         <Typography component="dt" className={classes.command}>
-            {props.keyboard_shortcut.map((command, index) => {
+            {props.shortcut.map((command, index) => {
+                const class_name = (command === ActionCommands.click || command === ActionCommands.drag)
+                    ? "physical_action" : "physical_button"
+
                 return (
-                    <Typography component="kbd" variant="body1">
-                        {command}
-                        {(index < (props.keyboard_shortcut.length - 1)) && <Typography component="span"> + </Typography>}
-                    </Typography>
+                    <div style={{ display: "inline" }}>
+                        <div className={class_name}>{command}</div>
+                        {(index < (props.shortcut.length - 1)) && <span className="shortcut_plus"> + </span>}
+                    </div>
                 )
             })}
         </Typography>
-        <Typography component="dd" className={classes.command}> -&gt; {props.outcome} </Typography>
+        <div className={classes.command}> &nbsp; {props.outcome} </div>
     </Box>
 }
 
