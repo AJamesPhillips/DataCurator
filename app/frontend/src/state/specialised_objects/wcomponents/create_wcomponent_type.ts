@@ -1,6 +1,5 @@
 import type { Store } from "redux"
 
-import { offset_by_half_node, round_canvas_point } from "../../../canvas/position_utils"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
@@ -105,8 +104,7 @@ function get_knowledge_view_entry (add_to_knowledge_view: AddToKnowledgeViewArgs
 
         if (!position)
         {
-            const point = offset_by_half_node(get_middle_of_screen(state))
-            position = round_canvas_point(point, "large")
+            position = get_middle_of_screen(state)
         }
 
         add_to_knowledge_view = { id: current_knowledge_view.id, position }

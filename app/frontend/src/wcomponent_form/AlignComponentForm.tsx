@@ -1,6 +1,5 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { offset_by_half_node, round_canvas_point } from "../canvas/position_utils"
 
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
@@ -73,8 +72,7 @@ function _AlignComponentForm (props: Props)
                 if (!knowledge_view_id) return
 
                 const state = get_store().getState()
-                const point = offset_by_half_node(get_middle_of_screen(state))
-                const bulk_entry = round_canvas_point(point, "large")
+                const bulk_entry = get_middle_of_screen(state)
                 props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, bulk_entry })
             }}
             is_left={true}
