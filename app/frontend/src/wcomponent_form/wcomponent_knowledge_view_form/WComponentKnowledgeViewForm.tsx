@@ -113,7 +113,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                 <FormLabel component="legend">Frame</FormLabel>
                 <p>
                     <Button
-                        value={can_delete_frame ? "Remove" : "Add"}
+                        value={can_delete_frame ? "Remove Frame" : "Add Frame"}
                         onClick={() =>
                         {
                             const args: Partial<KnowledgeViewWComponentEntry> = {}
