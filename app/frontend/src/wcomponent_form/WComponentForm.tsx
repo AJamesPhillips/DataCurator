@@ -203,7 +203,7 @@ function _WComponentForm (props: Props)
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
                 conditional_on_blur={title => upsert_wcomponent({ title })}
-                force_focus={focus_title}
+                force_focus_on_first_render={focus_title}
                 hide_label={true}
             />
         </FormControl>

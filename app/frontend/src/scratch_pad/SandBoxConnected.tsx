@@ -29,7 +29,7 @@ function _SandBoxConnected (props: Props)
     return <div>
         <EditableTextSingleLine
             placeholder="1"
-            force_focus={true}
+            force_focus_on_first_render={true}
             value={some_string}
             conditional_on_blur={set_some_string}
         />

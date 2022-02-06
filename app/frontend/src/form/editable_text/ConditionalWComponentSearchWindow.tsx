@@ -1,8 +1,16 @@
 import { h } from "preact"
-import type { Ref } from "preact/hooks"
+import { useRef } from "preact/hooks"
 
 import "../Editable.css"
 import { WComponentSearchWindow } from "../../search/WComponentSearchWindow"
+
+
+
+export interface OnFocusSetSelection
+{
+    start: number
+    end: number
+}
 
 
 
@@ -10,8 +18,8 @@ interface OwnProps
 {
     value: string
     id_insertion_point: number
-    on_focus_set_selection: Ref<[number, number] | undefined>
-    conditional_on_change: (new_value: string) => void
+    conditional_on_change: (args: { new_value: string, on_focus_set_selection: OnFocusSetSelection }) => void
+    on_close: (on_focus_set_selection: OnFocusSetSelection) => void
 }
 // TODO rename this component.  It is not so much a conditional change wcomponent search window as a
 // search window that modifies the text field it is connected to, and also selects parts of the text
@@ -19,12 +27,13 @@ interface OwnProps
 export function ConditionalWComponentSearchWindow (props: OwnProps)
 {
     const {
-        value, id_insertion_point, on_focus_set_selection,
-        conditional_on_change,
+        value, id_insertion_point,
+        conditional_on_change, on_close
     } = props
 
 
     const initial_search_term = get_initial_search_term({ value, id_insertion_point })
+    const has_inserted_id = useRef(false)
 
 
     return <WComponentSearchWindow
@@ -40,10 +49,18 @@ export function ConditionalWComponentSearchWindow (props: OwnProps)
             const end_of_inserted_id = id_insertion_point + (id_to_insert?.length || 0)
             const end_of_search_term = end_of_inserted_id + (initial_search_term?.length || 0)
 
-            on_focus_set_selection.current = [end_of_inserted_id, end_of_search_term]
-            conditional_on_change(new_value)
+            const on_focus_set_selection: OnFocusSetSelection = { start: end_of_inserted_id, end: end_of_search_term }
+            has_inserted_id.current = true
+            conditional_on_change({ new_value, on_focus_set_selection })
         }}
-        on_blur={() => {}}
+        on_blur={() =>
+        {
+            if (has_inserted_id.current) return
+
+            const end_of_search_term = id_insertion_point + (initial_search_term?.length || 0)
+            const on_focus_set_selection: OnFocusSetSelection = { start: id_insertion_point, end: end_of_search_term }
+            on_close(on_focus_set_selection)
+        }}
     />
 }
 
@@ -60,7 +77,7 @@ function get_initial_search_term (args: GetInitialSearchTermArgs)
 
     const search_term_match = text_after_insertion_point.match(/^(\w+)/)
 
-    return search_term_match ? search_term_match[1] : ""
+    return search_term_match ? (search_term_match[1] || "") : ""
 }
 
 

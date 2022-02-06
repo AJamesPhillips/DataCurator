@@ -7,7 +7,7 @@ import { get_store } from "../../state/store"
 import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { ACTIONS } from "../../state/actions"
-import { ConditionalWComponentSearchWindow } from "./ConditionalWComponentSearchWindow"
+import { ConditionalWComponentSearchWindow, OnFocusSetSelection } from "./ConditionalWComponentSearchWindow"
 import type { CreationContext } from "../../creation_context/interfaces"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { ActionKeyEventArgs } from "../../state/global_keys/actions"
@@ -22,7 +22,7 @@ export interface EditableTextCommonOwnProps
     conditional_on_change?: (new_value: string) => void
     conditional_on_blur?: (value: string) => void
     always_on_blur?: (value: string) => void
-    force_focus?: boolean
+    force_focus_on_first_render?: boolean
     force_editable?: boolean
     select_all_on_focus?: boolean
     size?: "small" | "medium"
@@ -76,7 +76,7 @@ function _EditableTextCommon (props: Props)
         presenting,
         force_editable,
         select_all_on_focus,
-        force_focus,
+        force_focus_on_first_render,
         set_editing_text_flag,
     } = props
 
@@ -87,7 +87,6 @@ function _EditableTextCommon (props: Props)
 
     const el_ref = useRef<HTMLTextAreaElement | HTMLInputElement | undefined>(undefined)
     const id_insertion_point = useRef<number | undefined>(undefined)
-    const on_focus_set_selection = useRef<[number, number] | undefined>(undefined)
 
     const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false)
     const set_is_editing = useMemo(() => (is_editing: boolean) =>
@@ -134,8 +133,8 @@ function _EditableTextCommon (props: Props)
     {
         if (el_ref.current === el) return // quick hack to prevent multiple erroneous calls to following render code
         el_ref.current = el
-        handle_text_field_render({ id_insertion_point, on_focus_set_selection, el, force_focus })
-    }, [on_focus_set_selection, force_focus])
+        handle_text_field_render({ el, force_focus_on_first_render })
+    }, [])
 
 
     const on_focus = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
@@ -158,6 +157,16 @@ function _EditableTextCommon (props: Props)
     }, [props.value, conditional_on_blur, always_on_blur, set_is_editing])
 
 
+    const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack
+    const refocus_after_search_window = useMemo(() => (on_focus_set_selection: OnFocusSetSelection) =>
+    {
+        el_ref.current?.focus()
+        id_insertion_point.current = undefined
+        force_refreshing_render({})
+        el_ref.current?.setSelectionRange(on_focus_set_selection.start, on_focus_set_selection.end)
+    }, [])
+
+
     const input_component = useMemo(() =>
     {
         return props.component({
@@ -177,11 +186,16 @@ function _EditableTextCommon (props: Props)
             <ConditionalWComponentSearchWindow
                 value={value}
                 id_insertion_point={id_insertion_point.current}
-                on_focus_set_selection={on_focus_set_selection}
-                conditional_on_change={new_value =>
+                conditional_on_change={({ new_value, on_focus_set_selection }) =>
                 {
-                    id_insertion_point.current = undefined
                     conditional_on_change(new_value)
+                    // wait for change from new_value, before selecting text
+                    setTimeout(() => refocus_after_search_window(on_focus_set_selection), 0)
+                }}
+                // On close is called when no value is selected from the list of possible components
+                on_close={on_focus_set_selection =>
+                {
+                    refocus_after_search_window(on_focus_set_selection)
                 }}
             />
         </div>}
@@ -194,28 +208,14 @@ export const EditableTextCommon = connector(_EditableTextCommon) as FunctionalCo
 
 interface HandleTextFieldRenderArgs
 {
-    id_insertion_point: Ref<number | undefined>
-    on_focus_set_selection: Ref<[number, number] | undefined>
     el: HTMLInputElement | HTMLTextAreaElement
-    force_focus: boolean | undefined
+    force_focus_on_first_render: boolean | undefined
 }
 function handle_text_field_render (args: HandleTextFieldRenderArgs)
 {
-    // We have initiated a searchWindow to populate an id insertion so we do not want to
-    // focus this input box now
-    if (args.id_insertion_point.current !== undefined) return
-
-    const position = args.on_focus_set_selection.current
-    args.on_focus_set_selection.current = undefined
-
-    const should_gain_focus = position || args.force_focus
-    if (should_gain_focus)
+    if (args.force_focus_on_first_render)
     {
-        setTimeout(() => {
-            console.log("gaining focus for ", args.el, position, args.force_focus)
-            args.el.focus()
-            if (position) args.el.setSelectionRange(position[0], position[1])
-        }, 0)
+        setTimeout(() => args.el.focus(), 0)
     }
 }
 
