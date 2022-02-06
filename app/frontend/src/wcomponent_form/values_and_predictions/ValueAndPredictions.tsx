@@ -181,14 +181,6 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
         </div>
 
         <div className="predictions">
-            {is_boolean && <div>
-                <EditablePercentage
-                    placeholder="Confidence"
-                    value={orig_conviction}
-                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
-                />
-            </div>}
-
             {is_boolean && <div className={disabled_prob ? "disabled" : ""}>
                 <EditablePercentage
                     disabled={disabled_prob}
@@ -198,6 +190,14 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     {
                         crud.update_item({ ...VAP, probability: new_probability })
                     }}
+                />
+            </div>}
+
+            {is_boolean && <div>
+                <EditablePercentage
+                    placeholder="Confidence"
+                    value={orig_conviction}
+                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
                 />
             </div>}
 

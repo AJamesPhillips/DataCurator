@@ -49,8 +49,9 @@ function _PredictionSummary (props: Props)
             </div>
 
             <div className="summary_row">
+                <div><span className="description_label">Prob</span>&nbsp;{probability}</div>
+                &nbsp; &nbsp;
                 <div><span className="description_label">Confidence</span>&nbsp;{conviction}</div>
-                <div>&nbsp; <span className="description_label">Prob</span>&nbsp;{probability}</div>
             </div>
 
         </div>

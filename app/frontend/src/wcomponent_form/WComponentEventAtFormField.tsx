@@ -67,14 +67,14 @@ function _WComponentEventAtFormField (props: Props)
         <br />
         <div style={{ display: "inline-flex" }}>
             <EditablePercentage
-                placeholder="Confidence"
-                value={event_at?.conviction}
-                conditional_on_blur={new_conviction => upsert_event_at({ conviction: new_conviction })}
-            />
-            <EditablePercentage
                 placeholder="Probability"
                 value={event_at?.probability}
                 conditional_on_blur={new_probability => upsert_event_at({ probability: new_probability })}
+            />
+            <EditablePercentage
+                placeholder="Confidence"
+                value={event_at?.conviction}
+                conditional_on_blur={new_conviction => upsert_event_at({ conviction: new_conviction })}
             />
             &nbsp; {event_at && <PredictionBadge
                 disabled={true}
