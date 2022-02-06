@@ -22,7 +22,7 @@ const half_screen_height = (display_time_sliders: boolean) => get_visible_screen
 function calculate_xy_for_middle (args: { x: number, y: number, zoom: number }, display_side_panel: boolean, display_time_sliders: boolean): { x: number, y: number }
 {
     const x = round_number(args.x + (half_screen_width(display_side_panel) * (SCALE_BY / args.zoom)), h_step)
-    const y = round_number(args.y - (half_screen_height(display_time_sliders) * (SCALE_BY / args.zoom)), v_step) + TOP_HEADER_FUDGE
+    const y = round_number(args.y - (half_screen_height(display_time_sliders) * (SCALE_BY / args.zoom)) + TOP_HEADER_FUDGE, v_step)
 
     return { x, y }
 }
