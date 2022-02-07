@@ -72,7 +72,8 @@ export interface RoutingStateArgs
 export type RoutingStateArgKey = keyof RoutingStateArgs
 
 
-interface RoutingStringArgs {
+interface RoutingStringArgs
+{
     view: string
     subview_id: string
     zoom: string
@@ -80,8 +81,8 @@ interface RoutingStringArgs {
     y: string
     storage_location: string
 
-    order: string
-    rotation: string
+    // order: string
+    // rotation: string
 
     cdate: string
     ctime: string
@@ -89,19 +90,16 @@ interface RoutingStringArgs {
     stime?: string
 }
 export type RoutingStringArgKey = keyof RoutingStringArgs
-const ALLOWED_ROUTE_ARG_KEYS: RoutingStringArgKey[] = [
-    "view",
-    "subview_id",
-    "zoom",
-    "x",
-    "y",
-    "storage_location",
-
-    "order",
-    "rotation",
-
-    "cdate",
-    "ctime",
-    "sdate",
-    "stime",
-]
+export const ALLOWED_ROUTE_ARGS: {[k in RoutingStringArgKey]: true} = {
+    view: true,
+    subview_id: true,
+    zoom: true,
+    x: true,
+    y: true,
+    storage_location: true,
+    cdate: true,
+    ctime: true,
+    sdate: true,
+    stime: true,
+}
+export const ALLOWED_ROUTE_ARGS_COUNT = Object.keys(ALLOWED_ROUTE_ARGS).length

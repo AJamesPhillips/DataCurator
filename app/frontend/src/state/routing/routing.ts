@@ -8,6 +8,8 @@ import {
     RoutingStateArgs,
     is_routing_view_types,
     RoutingStringArgKey,
+    ALLOWED_ROUTE_ARGS,
+    ALLOWED_ROUTE_ARGS_COUNT,
 } from "./interfaces"
 import { routing_arg_datetime_strings_to_datetime } from "./datetime/routing_datetime"
 import { test } from "../../shared/utils/test"
@@ -54,7 +56,15 @@ export function routing_args_to_string (routing_args: RoutingStateArgs)
 
 
 
-export function merge_route_params_prioritising_url_over_state (url: string, routing_state: RoutingState): RoutingState
+export function url_is_incomplete (url: string)
+{
+    const result = parse_url(url)
+
+    return !result.route || result.args_from_url.length !== ALLOWED_ROUTE_ARGS_COUNT
+}
+
+
+function parse_url (url: string)
 {
     const hash = url.split("#")[1] || ""
 
@@ -65,6 +75,17 @@ export function merge_route_params_prioritising_url_over_state (url: string, rou
     const { route, sub_route, item_id } = get_route_subroute_and_item_id(path_parts)
 
     const args_from_url = main_parts.slice(1)
+        .map(part => part.split("=") as [RoutingStringArgKey, string])
+        .filter(p => ALLOWED_ROUTE_ARGS[p[0]])
+
+    return { route, sub_route, item_id, args_from_url }
+}
+
+
+
+export function merge_route_params_prioritising_url_over_state (url: string, routing_state: RoutingState): RoutingState
+{
+    const { route, sub_route, item_id, args_from_url } = parse_url(url)
     const args = update_args_from_url(routing_state.args, args_from_url)
 
     return { route, sub_route, item_id, args }
@@ -95,7 +116,7 @@ function get_route_subroute_and_item_id (path_parts: string[])
 
 
 
-function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]): RoutingStateArgs
+function update_args_from_url (args: RoutingStateArgs, args_from_url: [RoutingStringArgKey, string][]): RoutingStateArgs
 {
     args = { ...args }
 
@@ -105,7 +126,7 @@ function update_args_from_url (args: RoutingStateArgs, args_from_url: string[]):
     let stime: string | null = null
 
     args_from_url.forEach(part => {
-        const [key, value] = part.split("=") as [RoutingStringArgKey, string]
+        const [key, value] = part
 
         if (key === "cdate") cdate = value
         else if (key === "ctime") ctime = value

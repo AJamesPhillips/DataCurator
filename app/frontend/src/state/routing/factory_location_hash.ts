@@ -5,7 +5,7 @@ import { ACTIONS } from "../actions"
 import type { RootState } from "../State"
 import type { ActionChangeRouteArgs } from "./actions"
 import type { RoutingState } from "./interfaces"
-import { merge_route_params_prioritising_url_over_state, routing_state_to_string } from "./routing"
+import { merge_route_params_prioritising_url_over_state, routing_state_to_string, url_is_incomplete } from "./routing"
 
 
 
@@ -50,8 +50,12 @@ function factory_throttled_update_location_hash ()
 
     const debounced_update_location_hash = throttle((routing_state: RoutingState) => {
         const route = routing_state_to_string(routing_state)
-        if (window.DEBUG_ROUTING) console .log("Debounced changing route from ", window.location.hash.toString(), "   to:   ", route)
-        window.location.hash = route
+        const incomplete_current_url = url_is_incomplete(window.location.toString())
+        if (window.DEBUG_ROUTING) console .log(`Debounced changing route from "${incomplete_current_url ? "incomplete" : "complete"}"`, window.location.hash.toString(), "   to:   ", route)
+
+        if (incomplete_current_url) history.replaceState(null, "", route)
+        else window.location.hash = route
+
         hash_pending_update = false
     }, 0)
 
