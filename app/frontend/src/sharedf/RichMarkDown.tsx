@@ -7,6 +7,7 @@ import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
 import { replace_ids_in_text } from "../wcomponent_derived/rich_text/get_rich_text"
 import { AnchorTag } from "./AnchorTag"
+import type { CSSProperties } from "@material-ui/styles"
 
 
 
@@ -56,22 +57,28 @@ export const MARKDOWN_OPTIONS: MarkdownToJSX.Options =
     overrides:
     {
         a: AnchorTag,
-        // // If there is any text inside the script tag then render this, otherwise render nothing.
-        // script: (props: { children: string }) => props.children,
+        // If there is any text inside the script tag then render this, otherwise render nothing.
+        script: (props: { children: string }) => props.children,
         // This allows us to render `<auto generated>` as an empty string
         auto: (props: { children: string }) => "",
-        iframe: (props: { src: string }) =>
+        iframe: (props: { children: string }) => props.children,
+        tweet: (props: { id: string }) =>
         {
-            try
-            {
-                const url = new URL(props.src)
-                if (url.origin !== "https://platform.twitter.com") return props.src ? props.src + " Unsupported" : ""
-                return <iframe {...props} />
-            }
-            catch (e)
-            {
-                return ""
-            }
+            const src = `https://platform.twitter.com/embed/Tweet.html?dnt=false&frame=false&hideCard=false&hideThread=false&id=${props.id}&lang=en-gb&theme=light&widgetsVersion=0a8eea3%3A1643743420422&width=400px"`
+
+            return <iframe
+                src={src}
+                scrolling="no"
+                frameBorder={0}
+                allowTransparency={true}
+                allowFullScreen={true}
+                style={{ width: 401, height: 624 }}
+            />
         },
+        img: (props: { src: string, style: h.JSX.CSSProperties, alt: string }) =>
+        {
+            delete props.style?.position
+            return <img src={props.src} style={props.style} alt={props.alt} />
+        }
     },
 }
