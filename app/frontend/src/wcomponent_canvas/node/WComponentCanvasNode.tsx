@@ -2,6 +2,7 @@ import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { makeStyles } from "@material-ui/core"
+import DescriptionIcon from "@material-ui/icons/Description"
 
 import "./WComponentCanvasNode.scss"
 import {
@@ -367,7 +368,14 @@ function _WComponentCanvasNode (props: Props)
                     {wcomponent_type_to_text(wcomponent.type)}
                 </div>}
 
-                {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
+                <div style={{ display: "flex" }}>
+                    {wcomponent?.description.trim() && <DescriptionIcon
+                        fontSize="small"
+                        color="disabled"
+                    />}
+
+                    {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
+                </div>
             </div>}
             extra_css_class={extra_css_class}
             extra_css_class_node_main_content={classes.sizer}
