@@ -35,7 +35,7 @@
     "graphlib": "2.1.8",
     "localforage": "1.9.0",
     "luxon": "1.26.0",
-    "markdown-to-jsx": "7.1.1",
+    "markdown-to-jsx": "7.1.6",
     "preact": "10.5.7",
     "react-redux": "7.2.2",
     "uuid": "^8.3.2"
@@ -51,7 +51,7 @@
     "@types/chai": "4.2.14",
     "@types/graphlib": "2.1.7",
     "@types/luxon": "1.26.3",
-    "@types/markdown-to-jsx": "6.11.3",
+    "@types/markdown-to-jsx": "7.0.1",
     "@types/react-redux": "7.1.12",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",

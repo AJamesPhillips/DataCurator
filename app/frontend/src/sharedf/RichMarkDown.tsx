@@ -55,9 +55,23 @@ export const MARKDOWN_OPTIONS: MarkdownToJSX.Options =
 {
     overrides:
     {
-        a: { component: AnchorTag },
-        script: (props: { children: string }) => props.children,
+        a: AnchorTag,
+        // // If there is any text inside the script tag then render this, otherwise render nothing.
+        // script: (props: { children: string }) => props.children,
         // This allows us to render `<auto generated>` as an empty string
         auto: (props: { children: string }) => "",
+        iframe: (props: { src: string }) =>
+        {
+            try
+            {
+                const url = new URL(props.src)
+                if (url.origin !== "https://platform.twitter.com") return props.src ? props.src + " Unsupported" : ""
+                return <iframe {...props} />
+            }
+            catch (e)
+            {
+                return ""
+            }
+        },
     },
 }
