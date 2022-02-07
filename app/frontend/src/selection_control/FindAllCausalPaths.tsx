@@ -16,6 +16,7 @@ const map_state = (state: RootState) =>
 ({
     composed_kv: state.derived.current_composed_knowledge_view,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
@@ -47,6 +48,7 @@ function _FindAllCausalPaths (props: Props)
         return get_wcomponent_search_options({
             allowed_wcomponent_ids: wc_ids_by_type.any_node,
             wcomponents_by_id: props.wcomponents_by_id,
+            knowledge_views_by_id: props.knowledge_views_by_id,
             wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
             created_at_ms: props.created_at_ms,
             sim_ms: props.sim_ms,

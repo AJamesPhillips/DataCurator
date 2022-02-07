@@ -1,19 +1,20 @@
 import { test } from "../../shared/utils/test"
-import type { WComponent, WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { old_ids_regex, uuids_regex } from "./id_regexs"
+import { uuids_regex } from "./id_regexs"
+import type { ReplaceNormalIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_id_error, format_wcomponent_link } from "./templates"
 
 
 
-export function replace_normal_ids (text: string, wcomponents_by_id: WComponentsById, depth_limit: number, current_depth: number, render_links: boolean, root_url: string, get_title: (wcomponent: WComponent) => string)
+export function replace_normal_ids (text: string, current_depth: number, args: ReplaceNormalIdsInTextArgs)
 {
+    const { root_url, depth_limit, get_title, render_links } = args
 
     const ids = get_ids_from_text(text)
     ids.forEach(id =>
     {
         const replacer = new RegExp(`@@${id}`, "g")
 
-        const referenced_wcomponent = wcomponents_by_id[id]
+        const referenced_wcomponent = args.wcomponents_by_id[id]
         if (!referenced_wcomponent)
         {
             text = text.replace(replacer, format_wcomponent_id_error(root_url, id, "not found"))

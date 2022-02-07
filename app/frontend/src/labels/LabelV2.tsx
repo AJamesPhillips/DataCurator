@@ -20,13 +20,14 @@ interface OwnProps
 
 function map_state (state: RootState, { wcomponent_id }: OwnProps)
 {
-    const { wcomponents_by_id } = state.specialised_objects
+    const { wcomponents_by_id, knowledge_views_by_id } = state.specialised_objects
     const wcomponent = wcomponents_by_id[wcomponent_id]
 
     return {
         wcomponent,
         rich_text: state.display_options.consumption_formatting,
         wcomponents_by_id,
+        knowledge_views_by_id,
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
@@ -50,6 +51,7 @@ function _LabelV2 (props: Props)
         wcomponent,
         rich_text: props.rich_text,
         wcomponents_by_id: props.wcomponents_by_id,
+        knowledge_views_by_id: props.knowledge_views_by_id,
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,

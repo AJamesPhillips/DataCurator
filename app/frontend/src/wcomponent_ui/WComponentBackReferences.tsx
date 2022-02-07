@@ -27,7 +27,10 @@ interface OwnProps
 
 const map_state = (state: RootState) =>
 {
-    return { wcomponents_by_id: state.specialised_objects.wcomponents_by_id }
+    return {
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+    }
 }
 
 const map_dispatch = {
@@ -41,7 +44,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentBackReferences (props: Props)
 {
-    const { wcomponent_id, wcomponents_by_id } = props
+    const { wcomponent_id, wcomponents_by_id, knowledge_views_by_id } = props
     const [show_back_references, set_show_back_references] = useState(false)
     const [other_wcomponents, set_other_wcomponents] = useState<WComponent[]>([])
 
@@ -118,7 +121,7 @@ function _WComponentBackReferences (props: Props)
                     args={undefined}
                 >
                     <Markdown>
-                        {get_title({ rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
+                        {get_title({ rich_text: true, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
                     </Markdown>
                 </Link>
             </div>

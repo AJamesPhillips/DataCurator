@@ -1,6 +1,7 @@
 import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
+import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
 import { JudgementBadgeConnected } from "../sharedf/judgement_badge/JudgementBadgeConnected"
 import {
     WComponent,
@@ -18,6 +19,7 @@ interface GetWcomponentSearchOptionsArgs
     wcomponents?: WComponent[]
     allowed_wcomponent_ids?: Set<string>
     wcomponents_by_id: WComponentsById
+    knowledge_views_by_id: KnowledgeViewsById
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
@@ -27,7 +29,11 @@ interface GetWcomponentSearchOptionsArgs
 
 export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsArgs): AutocompleteOption[]
 {
-    const { wcomponents: wcs, allowed_wcomponent_ids, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms } = args
+    const {
+        wcomponents: wcs, allowed_wcomponent_ids,
+        wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
+        created_at_ms, sim_ms,
+    } = args
 
     let wcomponents = wcs || Object.values(wcomponents_by_id)
     if (allowed_wcomponent_ids) wcomponents = wcomponents.filter(({ id }) => allowed_wcomponent_ids.has(id))
@@ -40,6 +46,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 rich_text: true,
                 render_links: false,
                 wcomponents_by_id,
+                knowledge_views_by_id,
                 wc_id_to_counterfactuals_map,
                 created_at_ms,
                 sim_ms,

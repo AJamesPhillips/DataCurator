@@ -186,7 +186,8 @@ const tips_on_linking: (string | h.JSX.Element)[] = [
     This will insert the id of that component, e.g.  @@12345678-abcd-4123-abcd-1234567890ab.`
     ,
     `Follow "@@some-id" with .url, .title and .description to get the attributes
-    of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title"`
+    of that component e.g. "@@12345678-abcd-4123-abcd-1234567890ab.title".  Or if it has an
+    associated knowledge view then add .map to go to that knowledge view.`
     ,
     <span>
         Markdown is available so you can use things like <b>**some text**</b>

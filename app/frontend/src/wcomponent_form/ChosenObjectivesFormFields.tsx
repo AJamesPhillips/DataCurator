@@ -52,6 +52,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         consumption_formatting: state.display_options.consumption_formatting,
         filtered_wcomponents,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         wc_id_to_counterfactuals_map,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
@@ -80,6 +81,7 @@ function _ChosenObjectivesFormFields (props: Props)
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: props.filtered_wcomponents,
         wcomponents_by_id: props.wcomponents_by_id,
+        knowledge_views_by_id: props.knowledge_views_by_id,
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,

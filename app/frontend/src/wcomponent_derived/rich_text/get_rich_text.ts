@@ -1,3 +1,4 @@
+import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 import { test } from "../../shared/utils/test"
 import type { CreationContextState } from "../../state/creation_context/state"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -10,6 +11,7 @@ import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import type { WcIdToCounterfactualsV2Map } from "../interfaces/counterfactual"
 import { VAP_visual_false_id } from "../value_and_prediction/utils_to_convert_VAP_set_to_visuals"
 import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
+import type { ReplaceNormalIdsInTextArgs, ReplaceFunctionIdsInTextArgs } from "./interfaces"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -23,6 +25,7 @@ interface ReplaceIdsArgs
     rich_text: boolean
     render_links?: boolean
     wcomponents_by_id: WComponentsById
+    knowledge_views_by_id: KnowledgeViewsById
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
@@ -96,7 +99,7 @@ interface ReplaceIdsInTextArgs extends ReplaceIdsArgs
 export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
 {
     const {
-        text, rich_text, render_links, wcomponents_by_id,
+        text, rich_text, render_links, wcomponents_by_id, knowledge_views_by_id,
         depth_limit = DEFAULT_MAX_DEPTH_LIMIT,
         current_depth = 0,
         root_url = "",
@@ -107,14 +110,14 @@ export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
 
     if (!rich_text) return text
 
-    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms)
+    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, knowledge_views_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms)
 
     return replaced_text
 }
 
 
 
-function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
+function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, knowledge_views_by_id: KnowledgeViewsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
 {
     // TODO: document why we do not render links at top level i.e. when current_depth === 0 ?
     render_links = render_links === false ? false : current_depth === 0
@@ -125,6 +128,7 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
             rich_text: true,
             render_links,
             wcomponents_by_id,
+            knowledge_views_by_id,
             wc_id_to_counterfactuals_map,
             created_at_ms,
             sim_ms,
@@ -135,8 +139,17 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
         })
     }
 
-    text = replace_function_ids_in_text(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title)
-    text = replace_normal_ids(text, wcomponents_by_id, depth_limit, current_depth, render_links, root_url, _get_title)
+    const args: ReplaceNormalIdsInTextArgs & ReplaceFunctionIdsInTextArgs = {
+        wcomponents_by_id,
+        knowledge_views_by_id,
+        depth_limit,
+        render_links,
+        root_url,
+        get_title: _get_title,
+    }
+
+    text = replace_function_ids_in_text(text, current_depth, args)
+    text = replace_normal_ids(text, current_depth, args)
 
     return text
 }
@@ -160,12 +173,14 @@ function test_replace_ids_in_text ()
         "456": prepare_new_wcomponent_object({ base_id: -1, id: "456", title: "Person A" }, creation_context),
         "789": prepare_new_wcomponent_object({ base_id: -1, id: "789", title: "Person B" }, creation_context),
     }
+    const knowledge_views_by_id = {}
 
     let result: string
 
     const args: ReplaceIdsArgs = {
         rich_text: true,
         wcomponents_by_id,
+        knowledge_views_by_id,
         wc_id_to_counterfactuals_map: undefined,
         created_at_ms: ms,
         sim_ms: ms,
@@ -250,6 +265,7 @@ function test_rendering_title ()
         [wcomponent6.id]: wcomponent6,
         [wcomponent7.id]: wcomponent7,
     }
+    const knowledge_views_by_id = {}
 
 
     const expected_non_rich_text = {
@@ -296,6 +312,7 @@ function test_rendering_title ()
             rich_text,
             render_links,
             wcomponents_by_id,
+            knowledge_views_by_id,
             wcomponent: wcomponents_by_id[id]!,
             wc_id_to_counterfactuals_map,
             created_at_ms: ms,

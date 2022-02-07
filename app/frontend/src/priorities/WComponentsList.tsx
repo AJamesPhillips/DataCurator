@@ -15,7 +15,10 @@ interface OwnProps
 
 const map_state = (state: RootState) =>
 {
-    return { wcomponents_by_id: state.specialised_objects.wcomponents_by_id }
+    return {
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+    }
 }
 
 const map_dispatch = {
@@ -29,7 +32,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentsList (props: Props)
 {
-    const { wcomponent_ids = [], wcomponents_by_id } = props
+    const { wcomponent_ids = [], wcomponents_by_id, knowledge_views_by_id } = props
 
     const wcomponents = wcomponent_ids.map(id => wcomponents_by_id[id]).filter(is_defined)
 
@@ -47,7 +50,9 @@ function _WComponentsList (props: Props)
                 onClick={() => props.change_route({ item_id: wcomponent.id })}
             >
                 {get_title({
-                    rich_text: true, wcomponent, wcomponents_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
+                    rich_text: true, wcomponent,
+                    wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
+                    created_at_ms, sim_ms,
                 })}
             </tr>)}
         </tbody>

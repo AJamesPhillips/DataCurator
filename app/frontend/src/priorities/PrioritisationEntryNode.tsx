@@ -31,6 +31,7 @@ type OwnProps = PrioritisationEntryNodeProps
 const map_state = (state: RootState) =>
 ({
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     created_at_ms: state.routing.args.created_at_ms,
 })
 
@@ -44,7 +45,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _PrioritisationEntryNode (props: Props)
 {
-    const { wcomponents_by_id, created_at_ms, x, y, width, height, effort, display } = props
+    const { wcomponents_by_id, knowledge_views_by_id, created_at_ms, x, y, width, height, effort, display } = props
     const wcomponent = wcomponents_by_id[props.wcomponent_id]
     if (!wcomponent) return null
 
@@ -52,6 +53,7 @@ function _PrioritisationEntryNode (props: Props)
         rich_text: true,
         wcomponent,
         wcomponents_by_id,
+        knowledge_views_by_id,
         wc_id_to_counterfactuals_map: undefined,
         created_at_ms,
         sim_ms: new Date().getTime(),

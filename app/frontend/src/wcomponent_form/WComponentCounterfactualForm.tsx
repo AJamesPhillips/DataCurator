@@ -45,6 +45,7 @@ const map_state = (state: RootState) =>
         editing: !state.display_options.consumption_formatting,
         composed_wc_id_map: composed_kv && composed_kv.composed_wc_id_map,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
     }
@@ -67,6 +68,7 @@ function _WComponentCounterfactualForm (props: Props)
         wcomponent,
         upsert_wcomponent,
         wcomponents_by_id,
+        knowledge_views_by_id,
         composed_wc_id_map,
         knowledge_view,
     } = props
@@ -84,6 +86,7 @@ function _WComponentCounterfactualForm (props: Props)
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: wcomponent_statev2s_in_current_kv,
         wcomponents_by_id,
+        knowledge_views_by_id,
         wc_id_to_counterfactuals_map: undefined,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,

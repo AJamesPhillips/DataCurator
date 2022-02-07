@@ -4,7 +4,7 @@
 export const format_wcomponent_id_error = (root_url: string, id: string, error: string) => `\u2717${format_wcomponent_link(root_url, id, id)} (${error})`
 
 
-export const format_wcomponent_url = (root_url: string, id: string) => `${root_url}#wcomponents/${id}` //&view=knowledge`
+export const format_wcomponent_url = (root_url: string, id: string, knowledge_view_id = "") => `${root_url}#wcomponents/${id}` + (knowledge_view_id ? `&subview_id=${knowledge_view_id}` : "") //&view=knowledge`
 
 // export const format_wcomponent_url = (root_url: string, id: string, position?: CanvasPoint) => `${root_url}#wcomponents/${id}&view=knowledge${format_position(position)}`
 
@@ -17,4 +17,4 @@ export const format_wcomponent_url = (root_url: string, id: string) => `${root_u
 
 // \uD83D\uDD17 --> 🔗 aka the very ugly link (chain) character
 // \u25A1 --> □
-export const format_wcomponent_link = (root_url: string, id: string, content: string = "\u25A1") => `[${content}](${format_wcomponent_url(root_url, id)})`
+export const format_wcomponent_link = (root_url: string, id: string, content: string = "\u25A1", knowledge_view_id = "") => `[${content}](${format_wcomponent_url(root_url, id, knowledge_view_id)})`
