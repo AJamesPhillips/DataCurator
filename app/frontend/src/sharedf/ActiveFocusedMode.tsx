@@ -31,7 +31,7 @@ function _ActiveFocusedMode (props: Props)
             ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
             : "Activate focused mode"
         ) : "Focused mode only available when presenting"
-    const classes = focused_mode ? active_warning_styles() : inactive_warning_styles()
+    const classes = (presenting && focused_mode) ? active_warning_styles() : inactive_warning_styles()
 
     return <Tooltip placement="top" title={title}>
         <span>
