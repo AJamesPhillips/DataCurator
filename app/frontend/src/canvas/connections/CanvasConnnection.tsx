@@ -37,6 +37,7 @@ export function CanvasConnnection (props: OwnProps)
 {
     const [hovered, set_hovered] = useState(false)
     const current_position = useRef<DArgsWithProgress | undefined>(undefined)
+    const path_background = useRef<SVGPathElement | undefined>(undefined)
     const animate_to_target_timeout = useRef<NodeJS.Timeout | undefined>(undefined)
 
 
@@ -142,16 +143,18 @@ export function CanvasConnnection (props: OwnProps)
                 on_pointer_over_out(false)
             }}
             style={style_line_background}
+            ref={e => path_background.current = e || undefined}
         />
         <path
             className={"connection_line " + extra_line_classes}
             d={calc_d(d_args)}
-            ref={e =>
+            ref={path =>
             {
-                if (!e || !should_animate) return
+                if (!path || !should_animate) return
 
                 if (animate_to_target_timeout.current) clearTimeout(animate_to_target_timeout.current)
-                animate_to_target_timeout.current = animate_to_target(e, current_position, target_position)
+                const path_background_el = (hovered || props.is_highlighted) ? path_background.current : undefined
+                animate_to_target_timeout.current = animate_to_target(path, path_background_el, current_position, target_position)
             }}
             style={style_line}
         />
@@ -199,7 +202,7 @@ function calc_d ({ x1, y1, relative_control_point_x1, relative_control_point_y1,
 
 
 
-function animate_to_target (e: SVGPathElement, current_position: Ref<DArgs | undefined>, target_position: DArgsWithProgress)
+function animate_to_target (path: SVGPathElement, path_background: SVGPathElement | undefined, current_position: Ref<DArgs | undefined>, target_position: DArgsWithProgress)
 {
     if (current_position.current === undefined || current_position.current === target_position)
     {
@@ -228,7 +231,8 @@ function animate_to_target (e: SVGPathElement, current_position: Ref<DArgs | und
             y2: tween(current.y2, target_position.y2, progress),
         }
         const d = calc_d(intermediate)
-        e.setAttribute("d", d)
+        path.setAttribute("d", d)
+        path_background?.setAttribute("d", d)
 
         if (progress >= 1)
         {
