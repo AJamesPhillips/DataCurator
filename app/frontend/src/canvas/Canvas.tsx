@@ -283,7 +283,7 @@ class _Canvas extends Component<Props, State>
         const manual_move = this.state.pointer_state.down
         const manual_zoom = this.manual_zoom_target === zoom
         this.manual_zoom_target = undefined
-        const transition_time = manual_move ? 0 : (manual_zoom ? 0.1 : 0.5)
+        const transition_time = manual_move ? 0 : (manual_zoom ? 0.1 : 1.0)
 
         const background_style = {
             transition: `background-position ${transition_time}s, background-size ${transition_time}s`,
