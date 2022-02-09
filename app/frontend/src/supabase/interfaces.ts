@@ -30,6 +30,7 @@ export interface SupabaseKnowledgeBase
 export interface JoinedAccessControlsPartial
 {
     access_level: ACCESS_CONTROL_LEVEL
+    user_id: string
 }
 export interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 {

@@ -12,9 +12,8 @@ export async function get_all_bases (user_id?: string)
 {
     const supabase = get_supabase()
     const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
-        .select("*, access_controls(access_level)")
+        .select("*, access_controls(access_level,user_id)")
         .order("inserted_at", { ascending: true })
-
 
     const data: SupabaseKnowledgeBaseWithAccess[] | undefined = !res.data ? undefined : res.data.map(r =>
     {
@@ -67,7 +66,7 @@ function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls: Joi
     inserted_at = new Date(inserted_at)
     updated_at = new Date(updated_at)
 
-    const access_control = access_controls && access_controls[0]
+    const access_control = access_controls?.find(ac => ac.user_id === user_id)
     const access_level = access_control?.access_level || (user_id === owner_user_id ? "owner" : (public_read ? "viewer" : "none"))
 
     return { ...santise_base(base), inserted_at, updated_at, access_level }
