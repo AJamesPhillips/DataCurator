@@ -98,6 +98,11 @@ function _KnowledgeViewChangeBase (props: Props)
         </p>}
 
 
+        {wcomponent_conflict_number === 0 && <p>
+            <i><b>Safe to move!</b></i> &nbsp; All of the knowledge views and components in and nested under this knowledge view are contained in this knowledge view.  None of them are present in any other knowledge views that are not nested under this knowledge view.
+        </p>}
+
+
         <p>
             <i><b>Select base to move to</b></i>
 
