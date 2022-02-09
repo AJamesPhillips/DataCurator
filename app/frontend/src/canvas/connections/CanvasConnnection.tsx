@@ -202,6 +202,9 @@ function calc_d ({ x1, y1, relative_control_point_x1, relative_control_point_y1,
 
 
 
+const step_ms = 30
+const animation_total_ms = 0.5 * 1000
+const progress_step = step_ms / animation_total_ms
 function animate_to_target (path: SVGPathElement, path_background: SVGPathElement | undefined, current_position: Ref<DArgs | undefined>, target_position: DArgsWithProgress)
 {
     if (current_position.current === undefined || current_position.current === target_position)
@@ -217,7 +220,8 @@ function animate_to_target (path: SVGPathElement, path_background: SVGPathElemen
 
     function advance ()
     {
-        const progress = Math.min(target_position.progress + 0.1, 1) // defensive
+        let progress = target_position.progress + progress_step
+        progress = Math.min(progress, 1) // defensive
         target_position.progress = progress
 
         const intermediate: DArgs = {
@@ -241,7 +245,7 @@ function animate_to_target (path: SVGPathElement, path_background: SVGPathElemen
         }
     }
 
-    timeout = setInterval(advance, 20)
+    timeout = setInterval(advance, step_ms)
     return timeout
 }
 
