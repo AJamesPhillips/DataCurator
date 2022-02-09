@@ -48,5 +48,5 @@ export interface KnowledgeViewWComponentEntry {
     passthrough?: true
     frame_width?: number
     frame_height?: number
-    frame_color?: Partial<Color>
+    frame_color?: Color
 }

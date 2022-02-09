@@ -1,10 +1,10 @@
-import { Color, color_is_whole } from "../shared/interfaces/color"
+import type { Color } from "../shared/interfaces/color"
 
 
 
-export function color_to_string (color: Partial<Color> | undefined)
+export function color_to_string (color: Color | undefined)
 {
-    if (!color || !color_is_whole(color)) return ""
+    if (!color) return ""
 
     return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
 }
@@ -23,9 +23,9 @@ export function color_to_opposite (color: Color | undefined): Color
 
 
 
-export function darker_color (color: Partial<Color> | undefined): Color | undefined
+export function darker_color (color: Color | undefined): Color | undefined
 {
-    if (!color || !color_is_whole(color)) return undefined
+    if (!color) return undefined
 
     return { r: color.r / 2, g: color.g / 2, b: color.b / 2, a: color.a }
 }

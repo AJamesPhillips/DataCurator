@@ -5,9 +5,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { grid_small_step, h_step, v_step } from "../../canvas/position_utils"
 import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
-import { EditableNumber } from "../../form/EditableNumber"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
-import { color_is_empty } from "../../shared/interfaces/color"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
 import { ColorPicker } from "../../sharedf/ColorPicker"
@@ -163,10 +161,8 @@ function _WComponentKnowledgeViewForm (props: Props)
                 <span className="description_label">Frame Color</span>
                 <ColorPicker
                     color={knowledge_view_entry.frame_color}
-                    allow_undefined={true}
                     conditional_on_blur={frame_color =>
                     {
-                        frame_color = color_is_empty(frame_color) ? undefined : frame_color
                         upsert_entry(knowledge_view_id, { frame_color })
                     }}
                 />
