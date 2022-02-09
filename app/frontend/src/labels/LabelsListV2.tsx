@@ -12,7 +12,7 @@ interface OwnProps
 
 export function LabelsListV2 (props: OwnProps)
 {
-    return <div style={{ display: "flex" }}>
+    return <div style={{ display: "flex", flexWrap: "wrap" }}>
         {(props.label_ids || []).map(id => <LabelV2 wcomponent_id={id} />)}
     </div>
 }
