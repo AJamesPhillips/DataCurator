@@ -42,14 +42,18 @@ blockquote p {
     width: 100%;
     max-width: 100%;
     min-width: 0px;
+    // background-color: rgb(206,206,206);
+    position: fixed;
 
-    // Quick hack to allow the create "+" buttons to be visible on the acitons list page on a mobile screen.
-    max-height: 80px;
-    overflow-y: auto;
-    // // Hide scroll bar
-    // &::-webkit-scrollbar
-    // {
-    //     width: 0px;
-    //     background: transparent; /* make scrollbar transparent */
-    // }
+
+}
+
+@media screen and (max-width: 600px) {
+    .app_header
+    {
+        // Quick hack to allow the create "+" buttons to be visible on the acitons list page on a mobile screen.
+        // Not perfect as the drop down menus for the knowledge views are cropped
+        max-height: 70px;
+        overflow-y: auto;
+    }
 }

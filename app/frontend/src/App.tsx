@@ -188,7 +188,7 @@ const use_styles = makeStyles(theme => ({
         backgroundColor: theme.palette.background.paper,
         width: SIDE_PANEL_WIDTH,
         position: "relative",
-        paddingTop:50,
+        paddingTop: 50,
     },
 
     side_panel_content: {
@@ -223,7 +223,6 @@ const use_styles = makeStyles(theme => ({
     help_popup: {
         position: "relative",
         zIndex: theme.zIndex.drawer + 1,
-
     },
 
     small_full_width: {
