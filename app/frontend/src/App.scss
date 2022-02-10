@@ -35,3 +35,21 @@ blockquote p {
 //     border-radius: 10px;
 //     // border: 3px solid #555;
 // }
+
+.app_header
+{
+    margin-right: 0px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0px;
+
+    // Quick hack to allow the create "+" buttons to be visible on the acitons list page on a mobile screen.
+    max-height: 80px;
+    overflow-y: auto;
+    // // Hide scroll bar
+    // &::-webkit-scrollbar
+    // {
+    //     width: 0px;
+    //     background: transparent; /* make scrollbar transparent */
+    // }
+}
