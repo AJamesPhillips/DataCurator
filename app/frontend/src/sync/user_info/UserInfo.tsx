@@ -1,5 +1,5 @@
 import { Button, Typography } from "@material-ui/core"
-import ExitToAppIcon from "@material-ui/icons/ExitToApp"
+import AccountCircleIcon from "@material-ui/icons/AccountCircle"
 import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { FunctionalComponent, h } from "preact"
 import { useRef } from "preact/hooks"
@@ -68,7 +68,7 @@ function _UserInfo (props: Props)
     return (<div>
         <Button
             color="primary"
-            endIcon={<ExitToAppIcon />}
+            endIcon={<AccountCircleIcon />}
             fullWidth={true}
             disableElevation={true}
             // disabled={form_state === "signin"} // do not mark as disabled as the modal will prevent user
