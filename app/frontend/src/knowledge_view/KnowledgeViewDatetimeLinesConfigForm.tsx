@@ -7,7 +7,7 @@ import { DEFAULT_DATETIME_LINE_CONFIG } from "./datetime_line"
 import {
     get_composed_datetime_lines_config,
     get_foundational_knowledge_views,
-} from "../state/specialised_objects/knowledge_views/knowledge_views_derived_reducer"
+} from "../state/specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer"
 import { Button } from "../sharedf/Button"
 import type { DatetimeLineConfig } from "../shared/interfaces/datetime_lines"
 

@@ -8,7 +8,7 @@ import type { ComposedKnowledgeView } from "../../derived/State"
 import {
     update_composed_knowledge_view_filters,
     update_current_composed_knowledge_view_state,
-} from "../../specialised_objects/knowledge_views/knowledge_views_derived_reducer"
+} from "../../specialised_objects/knowledge_views/derived_reducer/knowledge_views_derived_reducer"
 import type { RootState } from "../../State"
 import type { StoreType } from "../../store"
 import { selector_chosen_base } from "../../user_info/selector"

@@ -1,25 +1,25 @@
 import {
     calculate_canvas_x_for_wcomponent_temporal_uncertainty,
     DEFAULT_DATETIME_LINE_CONFIG,
-} from "../../../knowledge_view/datetime_line"
-import { get_wc_position_to_id_map } from "../../../knowledge_view/utils/get_wc_position_to_id_map"
+} from "../../../../knowledge_view/datetime_line"
+import { get_wc_position_to_id_map } from "../../../../knowledge_view/utils/get_wc_position_to_id_map"
 import type {
     DatetimeLineConfig,
     DefaultDatetimeLineConfig,
-} from "../../../shared/interfaces/datetime_lines"
+} from "../../../../shared/interfaces/datetime_lines"
 import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
     // PartialKnowledgeViewWComponentIdEntryMap,
-} from "../../../shared/interfaces/knowledge_view"
-import { is_uuid_v4 } from "../../../shared/utils/ids"
-import { is_defined } from "../../../shared/utils/is_defined"
-import { SortDirection, sort_list } from "../../../shared/utils/sort"
-import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
-import { set_union } from "../../../utils/set"
-import { update_substate } from "../../../utils/update_state"
-import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
+} from "../../../../shared/interfaces/knowledge_view"
+import { is_uuid_v4 } from "../../../../shared/utils/ids"
+import { is_defined } from "../../../../shared/utils/is_defined"
+import { SortDirection, sort_list } from "../../../../shared/utils/sort"
+import { get_created_at_ms, get_sim_datetime_ms } from "../../../../shared/utils_datetime/utils_datetime"
+import { set_union } from "../../../../utils/set"
+import { update_substate } from "../../../../utils/update_state"
+import type { WComponentPrioritisation } from "../../../../wcomponent/interfaces/priorities"
 import {
     wcomponent_can_render_connection,
     WComponentsById,
@@ -28,19 +28,19 @@ import {
     wcomponent_is_prioritisation,
     wcomponent_is_plain_connection,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-} from "../../../wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
-import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
-import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
-import { get_wcomponent_ids_by_type } from "../../derived/get_wcomponent_ids_by_type"
-import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../../derived/State"
-import type { RootState } from "../../State"
+} from "../../../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentType } from "../../../../wcomponent/interfaces/wcomponent_base"
+import type { OverlappingWcIdMap } from "../../../../wcomponent_derived/interfaces/canvas"
+import type { WcIdToCounterfactualsV2Map } from "../../../../wcomponent_derived/interfaces/counterfactual"
+import { get_wcomponent_ids_by_type } from "../../../derived/get_wcomponent_ids_by_type"
+import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../../../derived/State"
+import type { RootState } from "../../../State"
 import {
     get_base_knowledge_view,
     get_nested_knowledge_view_ids,
     sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
-} from "../accessors"
+} from "../../accessors"
 
 
 
