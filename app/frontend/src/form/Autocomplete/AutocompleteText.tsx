@@ -1,18 +1,18 @@
 import { h } from "preact"
+import { TextField } from "@material-ui/core"
 import FlexSearch, { Index } from "flexsearch"
 import fuzzysort from "fuzzysort"
+import { useRef, useEffect, useState, useMemo } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
 import "./AutocompleteText.css"
-import { SortDirection, sort_list } from "../../shared/utils/sort"
-import { connect, ConnectedProps } from "react-redux"
-import type { RootState } from "../../state/State"
-import { Options } from "./Options"
-import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
-import { throttle } from "../../utils/throttle"
-import { useEffect, useMemo, useRef, useState } from "preact/hooks"
-import type { SearchFields, SearchType } from "../../state/search/state"
-import { TextField } from "@material-ui/core"
+import { sort_list, SortDirection } from "../../shared/utils/sort"
 import { ACTIONS } from "../../state/actions"
+import type { SearchFields, SearchType } from "../../state/search/state"
+import type { RootState } from "../../state/State"
+import { throttle } from "../../utils/throttle"
+import type { AutocompleteOption, InternalAutocompleteOption } from "./interfaces"
+import { Options } from "./Options"
 
 
 
@@ -23,6 +23,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     initial_search_term?: string
     options: E[]
     allow_none?: boolean
+    show_none_when_none?: boolean
     on_change: (id: E["id"] | undefined) => void
     on_choose_same?: (id: E["id"] | undefined) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
@@ -121,11 +122,21 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
-        const result = get_options_to_display(temp_value_str, !!props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type || "best", threshold_minimum_score, props.retain_options_order || false)
+        const result = get_options_to_display({
+            temp_value_str,
+            allow_none: !!props.allow_none,
+            show_none_when_none: !!props.show_none_when_none,
+            options: internal_options.current,
+            prepared_targets: prepared_targets.current,
+            flexsearch_index: flexsearch_index.current,
+            search_type: props.search_type || "best",
+            threshold_minimum_score: threshold_minimum_score,
+            retain_options_order: props.retain_options_order || false
+        })
         set_options_to_display(result.options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
-    }, [temp_value_str, props.allow_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score])
+    }, [temp_value_str, props.allow_none, props.show_none_when_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score])
 
 
 
@@ -234,7 +245,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
 
     const final_value = get_valid_value(options_to_display, temp_value_str)
-    const valid = !final_value || temp_value_str.toLowerCase() === final_value.title.toLowerCase()
+    const valid = (!final_value && props.allow_none) || temp_value_str.toLowerCase() === final_value?.title.toLowerCase()
 
 
     return <div
@@ -363,21 +374,51 @@ function prepare_targets (new_internal_options: InternalAutocompleteOption[])
 const OPTION_NONE: InternalAutocompleteOption = {
     id: undefined,
     id_num: 0,
-    title: "-",
-    limited_total_text: "",
+    title: "(clear)",
+    limited_total_text: "clear",
     unlimited_total_text: "",
 }
 
-function get_options_to_display (temp_value_str: string, allow_none: boolean, options: InternalAutocompleteOption[], prepared_targets: (Fuzzysort.Prepared | undefined)[], flexsearch_index: Index<{}>, search_type: SearchType, threshold_minimum_score: false | number, retain_options_order: boolean): { options: InternalAutocompleteOption[], search_type_used: SearchType | undefined }
+
+interface GetOptionsToDisplayArgs
 {
+    temp_value_str: string
+    allow_none: boolean
+    show_none_when_none: boolean
+    options: InternalAutocompleteOption[]
+    prepared_targets: (Fuzzysort.Prepared | undefined)[]
+    flexsearch_index: Index<{}>
+    search_type: SearchType
+    threshold_minimum_score: false | number
+    retain_options_order: boolean
+}
+interface GetOptionsToDisplayReturn
+{
+    options: InternalAutocompleteOption[]
+    search_type_used: SearchType | undefined
+}
+function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDisplayReturn
+{
+    const {
+        temp_value_str,
+        allow_none,
+        show_none_when_none,
+        options,
+        prepared_targets,
+        flexsearch_index,
+        search_type,
+        threshold_minimum_score,
+        retain_options_order,
+    } = args
 
     let search_type_used: SearchType | undefined = undefined
 
     if (!temp_value_str)
     {
         // allow user to clear the current value / select none
-        if (allow_none) return { options: [OPTION_NONE, ...options], search_type_used }
-        else return { options, search_type_used }
+        // if (allow_none && show_none_when_none) return { options: [OPTION_NONE, ...options], search_type_used }
+        // else return { options, search_type_used }
+        return { options, search_type_used }
     }
 
 
@@ -428,6 +469,7 @@ function get_options_to_display (temp_value_str: string, allow_none: boolean, op
 
     let options_to_display = filterd_options
     if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending)
+    if (allow_none && show_none_when_none) options_to_display = [OPTION_NONE, ...options_to_display]
 
     return { options: options_to_display, search_type_used }
 }
