@@ -29,15 +29,15 @@ export function calc_if_wcomponent_should_exclude_because_label_or_type (wcompon
     } = label_filter_args
 
     const labels__should_exclude = (
-        // exclude_by_label_ids.has(id)
-        // ||
+        exclude_by_label_ids.has(id)
+        ||
         !!(label_ids.find(label_id => exclude_by_label_ids.has(label_id)))
     )
     // OR inclusion:
     // The check of size > 0 is not an optimisation it ensures that lacks_include is false when no labels for inclusion by
     const labels__lacks_include = include_by_label_ids.size > 0 && (
-        // !include_by_label_ids.has(id)
-        // &&
+        !include_by_label_ids.has(id)
+        &&
         !(label_ids.find(label_id => include_by_label_ids.has(label_id)))
     )
     // AND inclusion:
@@ -104,6 +104,7 @@ function run_tests ()
     test(should_exclude, false)
     test(lacks_include, false)
 
+    // Should lack include when not labelled
     ;({ should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent3, label_filter_args__include_1))
     test(should_exclude, false)
     test(lacks_include, true)
@@ -112,6 +113,15 @@ function run_tests ()
     test(should_exclude, true)
     test(lacks_include, false)
 
+    // Should exclude self
+    ;({ should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent1, label_filter_args__exclude_1))
+    test(should_exclude, true)
+    test(lacks_include, false)
+
+    // Should include self
+    ;({ should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent1, label_filter_args__include_1))
+    test(should_exclude, false)
+    test(lacks_include, false)
 }
 
 run_tests()
