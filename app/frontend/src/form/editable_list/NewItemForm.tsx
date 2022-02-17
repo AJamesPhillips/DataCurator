@@ -31,7 +31,14 @@ export function NewItemForm <T, Crud extends ListItemCRUDRequiredC<T>> (props: N
 
     return (
         <Box>
-            <Dialog aria-labelledby="new_item_title" open={true} onClose={() => set_new_item(undefined)}>
+            <Dialog
+                aria-labelledby="new_item_title"
+                open={true}
+                onClose={() => set_new_item(undefined)}
+                // Confusing material-ui props: you have to set size to max width but not as you limit
+                // it to the size you want.
+                fullWidth={true} maxWidth="sm"
+            >
                 <DialogTitle id="new_item_title">New {item_descriptor}</DialogTitle>
                 <DialogContent>
                     <EditableListEntry
