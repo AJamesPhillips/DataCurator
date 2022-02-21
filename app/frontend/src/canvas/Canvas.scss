@@ -4,7 +4,7 @@
     height: 100%;
     flex-grow:1;
     flex-shrink:1;
-    cursor: move;
+    cursor: grab;
     overflow: hidden;
 
     &.squared_background
@@ -25,9 +25,14 @@
         }
     }
 
-    &.graph_background_pointer_down #graph_lowest_elements_container
+    &.graph_background_pointer_down
     {
-        pointer-events: none;
+        cursor: grabbing;
+
+        #graph_lowest_elements_container
+        {
+            pointer-events: none;
+        }
     }
 }
 
