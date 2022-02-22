@@ -119,21 +119,21 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const { threshold_minimum_score = false } = props
 
-    const [options_to_display, set_options_to_display] = useState<InternalAutocompleteOption[]>([])
+    const [internal_options_to_display, set_internal_options_to_display] = useState<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
         const result = get_options_to_display({
             temp_value_str,
             allow_none: !!props.allow_none,
             show_none_when_none: !!props.show_none_when_none,
-            options: internal_options.current,
+            internal_options: internal_options.current,
             prepared_targets: prepared_targets.current,
             flexsearch_index: flexsearch_index.current,
             search_type: props.search_type || "best",
             threshold_minimum_score: threshold_minimum_score,
             retain_options_order: props.retain_options_order || false
         })
-        set_options_to_display(result.options)
+        set_internal_options_to_display(result.internal_options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
     }, [temp_value_str, props.allow_none, props.show_none_when_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score])
@@ -164,9 +164,9 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     function get_selected_option_title_str (): string
     {
-        const selected_option = get_selected_option(props, props.options)
+        const selected_option = get_selected_option(props)
 
-        return selected_option ? selected_option.title : ""
+        return selected_option?.title || ""
     }
 
 
@@ -244,7 +244,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     }
 
 
-    const final_value = get_valid_value(options_to_display, temp_value_str)
+    const final_value = get_valid_value(internal_options_to_display, temp_value_str)
     const valid = (final_value?.id === OPTION_NONE.id && props.allow_none)
         || temp_value_str.toLowerCase() === final_value?.title.toLowerCase()
 
@@ -272,13 +272,13 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                 e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
             }}
             onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => handle_on_change(e.currentTarget.value)}
-            onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => handle_key_down(e, options_to_display)}
+            onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => handle_key_down(e, internal_options_to_display)}
             onBlur={() => handle_on_blur()}
         />
 
         <Options
             editing_options={editing_options}
-            options_to_display={options_to_display}
+            internal_options_to_display={internal_options_to_display}
             is_option_wrapper_highlighted={(_, index) => index === highlighted_option_index}
             conditional_on_change={conditional_on_change}
             set_highlighted_option_index={set_highlighted_option_index}
@@ -297,28 +297,29 @@ export function AutocompleteText <E extends AutocompleteOption> (props: OwnProps
 
 
 
-// We use the initial `AutocompleteOption` options to allow for display the text
-// of a selected but normally hidden option
-function get_selected_option (props: Props, options: AutocompleteOption[]): AutocompleteOption | undefined
+// Some options have the property `hidden`.  We use the `AutocompleteOption[]` props.options value
+// to allow for displaying the text of a selected option regardless of whether it is normally hidden
+// from the list of options
+function get_selected_option (props: Props): AutocompleteOption | undefined
 {
     if (props.selected_option_id === undefined)
     {
-        return props.allow_none ? undefined : options[0]
+        return props.allow_none ? undefined : props.options[0]
     }
 
-    return options.find(({ id }) => id === props.selected_option_id)
+    return props.options.find(({ id }) => id === props.selected_option_id)
 }
 
 
 
-function get_valid_value (options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined
+function get_valid_value (internal_options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined
 {
     const lower_value_str = value_str.toLowerCase()
 
-    const match = options.find(option => option.title.toLowerCase() === lower_value_str)
+    const match = internal_options.find(option => option.title.toLowerCase() === lower_value_str)
     if (match) return match
 
-    return options[0]
+    return internal_options[0]
 }
 
 
@@ -386,7 +387,7 @@ interface GetOptionsToDisplayArgs
     temp_value_str: string
     allow_none: boolean
     show_none_when_none: boolean
-    options: InternalAutocompleteOption[]
+    internal_options: InternalAutocompleteOption[]
     prepared_targets: (Fuzzysort.Prepared | undefined)[]
     flexsearch_index: Index<{}>
     search_type: SearchType
@@ -395,7 +396,7 @@ interface GetOptionsToDisplayArgs
 }
 interface GetOptionsToDisplayReturn
 {
-    options: InternalAutocompleteOption[]
+    internal_options: InternalAutocompleteOption[]
     search_type_used: SearchType | undefined
 }
 function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDisplayReturn
@@ -410,7 +411,7 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
         threshold_minimum_score,
         retain_options_order,
     } = args
-    let { options } = args
+    let { internal_options: options } = args
 
     let search_type_used: SearchType | undefined = undefined
 
@@ -424,12 +425,12 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
         // never added to the list of options.
         options = allow_none ? [OPTION_NONE, ...options] : options
 
-        return { options, search_type_used }
+        return { internal_options: options, search_type_used }
     }
 
 
-    let option_to_exact_score = (option: InternalAutocompleteOption) => 0
-    let option_to_score = (option: InternalAutocompleteOption) => 0
+    let option_to_exact_score = (internal_option: InternalAutocompleteOption) => 0
+    let option_to_score = (internal_option: InternalAutocompleteOption) => 0
     let exact_results = 0
 
 
@@ -477,5 +478,5 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
     if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending)
     if (allow_none && show_none_when_none) options_to_display = [OPTION_NONE, ...options_to_display]
 
-    return { options: options_to_display, search_type_used }
+    return { internal_options: options_to_display, search_type_used }
 }
