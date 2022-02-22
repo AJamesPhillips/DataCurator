@@ -403,21 +403,26 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
         temp_value_str,
         allow_none,
         show_none_when_none,
-        options,
         prepared_targets,
         flexsearch_index,
         search_type,
         threshold_minimum_score,
         retain_options_order,
     } = args
+    let { options } = args
 
     let search_type_used: SearchType | undefined = undefined
 
     if (!temp_value_str)
     {
-        // allow user to clear the current value / select none
-        // if (allow_none && show_none_when_none) return { options: [OPTION_NONE, ...options], search_type_used }
-        // else return { options, search_type_used }
+        // Allow user to clear the current value & select none.  This works by allowing them to delete all
+        // the text in the autocomplete field, at which point the `OPTION_NONE` is added.
+        //
+        // We may want to disable this conditional on `allow_none` and always return `options`.  However without
+        // this conditional it is not possible to clear an option once it is set as the `OPTION_NONE` is
+        // never added to the list of options.
+        options = allow_none ? [OPTION_NONE, ...options] : options
+
         return { options, search_type_used }
     }
 
