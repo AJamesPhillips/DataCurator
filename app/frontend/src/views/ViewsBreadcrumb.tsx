@@ -2,7 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@material-ui/core"
 
-import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
+import { AutocompleteText, OPTION_NONE_ID } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
@@ -48,7 +48,7 @@ function navigate_view (event: h.JSX.TargetedEvent<HTMLSelectElement, Event>, pr
 interface Level
 {
     options: KnowledgeViewOption[]
-    selected_id: string
+    selected_id: string | undefined
     parent_id: string | undefined
 }
 
@@ -61,7 +61,7 @@ function _ViewsBreadcrumb (props: Props)
     let nested_kv = nested_kv_ids_map.map[kv_id]
 
     const levels: Level[] = []
-    let last_parent_id = ""
+    let last_parent_id: string | undefined = OPTION_NONE_ID
 
     while (nested_kv)
     {

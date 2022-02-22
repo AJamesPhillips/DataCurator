@@ -124,6 +124,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         const result = get_options_to_display({
             temp_value_str,
+            selected_any_option: props.selected_option_id !== OPTION_NONE_ID,
             allow_none: !!props.allow_none,
             show_none_when_none: !!props.show_none_when_none,
             internal_options: internal_options.current,
@@ -133,10 +134,22 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             threshold_minimum_score: threshold_minimum_score,
             retain_options_order: props.retain_options_order || false
         })
+
         set_internal_options_to_display(result.internal_options)
         props.set_search_type_used && props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
-    }, [temp_value_str, props.allow_none, props.show_none_when_none, internal_options.current, prepared_targets.current, flexsearch_index.current, props.search_type, threshold_minimum_score])
+
+    }, [
+        temp_value_str,
+        props.selected_option_id,
+        props.allow_none,
+        props.show_none_when_none,
+        internal_options.current,
+        prepared_targets.current,
+        flexsearch_index.current,
+        props.search_type,
+        threshold_minimum_score,
+    ])
 
 
 
@@ -244,7 +257,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     }
 
 
-    const final_value = get_valid_value(internal_options_to_display, temp_value_str)
+    const final_value = get_selected_internal_option(internal_options_to_display, temp_value_str)
     const valid = (final_value?.id === OPTION_NONE.id && props.allow_none)
         || temp_value_str.toLowerCase() === final_value?.title.toLowerCase()
 
@@ -312,15 +325,13 @@ function get_selected_option (props: Props): AutocompleteOption | undefined
 
 
 
-function get_valid_value (internal_options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined
+function get_selected_internal_option (internal_options: InternalAutocompleteOption[], value_str: string): InternalAutocompleteOption | undefined
 {
     const lower_value_str = value_str.toLowerCase()
 
-    const match = internal_options.find(option => option.title.toLowerCase() === lower_value_str)
-    if (match) return match
-
-    return internal_options[0]
+    return internal_options.find(option => option.title.toLowerCase() === lower_value_str)
 }
+
 
 
 const OPTION_ID_NUM_START = 1
@@ -373,8 +384,9 @@ function prepare_targets (new_internal_options: InternalAutocompleteOption[])
 
 
 
+export const OPTION_NONE_ID = undefined
 const OPTION_NONE: InternalAutocompleteOption = {
-    id: undefined,
+    id: OPTION_NONE_ID,
     id_num: (OPTION_ID_NUM_START - 1),
     title: "(clear)",
     limited_total_text: "clear",
@@ -385,6 +397,7 @@ const OPTION_NONE: InternalAutocompleteOption = {
 interface GetOptionsToDisplayArgs
 {
     temp_value_str: string
+    selected_any_option: boolean
     allow_none: boolean
     show_none_when_none: boolean
     internal_options: InternalAutocompleteOption[]
@@ -403,6 +416,7 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
 {
     const {
         temp_value_str,
+        selected_any_option,
         allow_none,
         show_none_when_none,
         prepared_targets,
@@ -420,10 +434,12 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
         // Allow user to clear the current value & select none.  This works by allowing them to delete all
         // the text in the autocomplete field, at which point the `OPTION_NONE` is added.
         //
-        // We may want to disable this conditional on `allow_none` and always return `options`.  However without
-        // this conditional it is not possible to clear an option once it is set as the `OPTION_NONE` is
-        // never added to the list of options.
-        options = allow_none ? [OPTION_NONE, ...options] : options
+        // If when allow_none is true, the user had:
+        //   1. started without any option selected
+        //   2. typed something
+        //   3. cleared the text field
+        // The just return the list of `options`
+        options = (allow_none && selected_any_option) ? [OPTION_NONE, ...options] : options
 
         return { internal_options: options, search_type_used }
     }
