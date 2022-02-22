@@ -245,7 +245,8 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
 
     const final_value = get_valid_value(options_to_display, temp_value_str)
-    const valid = (!final_value && props.allow_none) || temp_value_str.toLowerCase() === final_value?.title.toLowerCase()
+    const valid = (final_value?.id === OPTION_NONE.id && props.allow_none)
+        || temp_value_str.toLowerCase() === final_value?.title.toLowerCase()
 
 
     return <div
@@ -321,10 +322,10 @@ function get_valid_value (options: InternalAutocompleteOption[], value_str: stri
 }
 
 
-
+const OPTION_ID_NUM_START = 1
 function prepare_options (options: AutocompleteOption[], limit: number, search_fields: SearchFields = "all")
 {
-    let id_num = 1
+    let id_num = OPTION_ID_NUM_START
     const all = search_fields === "all"
 
     const new_internal_options: InternalAutocompleteOption[] = options
@@ -373,7 +374,7 @@ function prepare_targets (new_internal_options: InternalAutocompleteOption[])
 
 const OPTION_NONE: InternalAutocompleteOption = {
     id: undefined,
-    id_num: 0,
+    id_num: (OPTION_ID_NUM_START - 1),
     title: "(clear)",
     limited_total_text: "clear",
     unlimited_total_text: "",
