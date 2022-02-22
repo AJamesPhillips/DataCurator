@@ -113,7 +113,6 @@ function _ViewsBreadcrumb (props: Props)
         {levels.map(level => <Box>
             <AutocompleteText
                 allow_none={level.parent_id !== undefined}
-                show_none_when_none={true}
                 selected_option_id={level.selected_id}
                 options={level.options}
                 on_change={subview_id =>

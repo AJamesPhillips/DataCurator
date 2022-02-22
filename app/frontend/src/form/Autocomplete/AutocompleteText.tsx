@@ -23,7 +23,6 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
     initial_search_term?: string
     options: E[]
     allow_none?: boolean
-    show_none_when_none?: boolean
     on_change: (id: E["id"] | undefined) => void
     on_choose_same?: (id: E["id"] | undefined) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
@@ -126,7 +125,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
             temp_value_str,
             selected_any_option: props.selected_option_id !== OPTION_NONE_ID,
             allow_none: !!props.allow_none,
-            show_none_when_none: !!props.show_none_when_none,
             internal_options: internal_options.current,
             prepared_targets: prepared_targets.current,
             flexsearch_index: flexsearch_index.current,
@@ -143,7 +141,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         temp_value_str,
         props.selected_option_id,
         props.allow_none,
-        props.show_none_when_none,
         internal_options.current,
         prepared_targets.current,
         flexsearch_index.current,
@@ -399,7 +396,6 @@ interface GetOptionsToDisplayArgs
     temp_value_str: string
     selected_any_option: boolean
     allow_none: boolean
-    show_none_when_none: boolean
     internal_options: InternalAutocompleteOption[]
     prepared_targets: (Fuzzysort.Prepared | undefined)[]
     flexsearch_index: Index<{}>
@@ -418,7 +414,6 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
         temp_value_str,
         selected_any_option,
         allow_none,
-        show_none_when_none,
         prepared_targets,
         flexsearch_index,
         search_type,
@@ -492,7 +487,7 @@ function get_options_to_display (args: GetOptionsToDisplayArgs): GetOptionsToDis
 
     let options_to_display = filterd_options
     if (!retain_options_order) options_to_display = sort_list(filterd_options, option_to_score, SortDirection.descending)
-    if (allow_none && show_none_when_none) options_to_display = [OPTION_NONE, ...options_to_display]
+    if (allow_none) options_to_display = [OPTION_NONE, ...options_to_display]
 
     return { internal_options: options_to_display, search_type_used }
 }

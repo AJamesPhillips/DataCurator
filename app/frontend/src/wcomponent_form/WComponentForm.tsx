@@ -254,7 +254,6 @@ function _WComponentForm (props: Props)
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
                     allow_none={true}
-                    show_none_when_none={true}
                     on_change={option_id => upsert_wcomponent({ subtype: option_id })}
                 />
             </div>
