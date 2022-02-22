@@ -23,7 +23,7 @@ export type WComponentStateV2SubType = "boolean" | "number" /*| "datetime"*/ | "
 export interface WComponentNodeStateV2 extends WComponentNodeBase
 {
     type: "statev2"
-    subtype: WComponentStateV2SubType
+    subtype: WComponentStateV2SubType | undefined
 
     // boolean subtype specific explainable fields
     // boolean_true_str?: string

@@ -33,7 +33,7 @@ export function get_wcomponent_VAPs_represent (wcomponent: WComponent | undefine
     return VAPs_represent
 }
 
-function subtype_to_VAPsType (subtype: WComponentStateV2SubType): VAPsType
+function subtype_to_VAPsType (subtype: WComponentStateV2SubType | undefined): VAPsType
 {
     return subtype === "boolean" ? VAPsType.boolean
     : (subtype === "number" ? VAPsType.number

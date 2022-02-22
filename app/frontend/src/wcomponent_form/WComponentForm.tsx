@@ -246,11 +246,11 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) &&
         <p>
-            <span className="description_label">Sub type</span>&nbsp;
+            <span className="description_label">Subtype</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
                     force_editable={force_editable}
-                    placeholder="Sub type..."
+                    placeholder="Subtype..."
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
                     allow_none={true}
@@ -415,7 +415,7 @@ function _WComponentForm (props: Props)
         {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
                 {VAPs_represent === VAPsType.undefined && <div>
-                    Values: Set subtype to view
+                    Set subtype to show Value Predictions
                 </div>}
                 {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
                     VAPs_represent={VAPs_represent}

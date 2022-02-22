@@ -72,7 +72,7 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
     {
         const statev2: WComponentNodeStateV2 = {
             ...base,
-            subtype: "boolean",
+            subtype: undefined, // "boolean", -- most things are not boolean
             values_and_prediction_sets: [],
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
