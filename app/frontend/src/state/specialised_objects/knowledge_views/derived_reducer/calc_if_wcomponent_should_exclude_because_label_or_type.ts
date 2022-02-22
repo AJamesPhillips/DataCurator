@@ -124,4 +124,4 @@ function run_tests ()
     test(lacks_include, false)
 }
 
-run_tests()
+// run_tests()
