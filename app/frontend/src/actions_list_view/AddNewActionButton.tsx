@@ -21,7 +21,6 @@ interface OwnProps
     most_recent_action_id: string
     composed_knowledge_view: ComposedKnowledgeView | undefined
     wcomponents_by_id: WComponentsById
-    parent_goal_or_action_ids: string[],
     base_id: number
     list_type: "icebox" | "todo" | "in_progress" | "done"
 }
@@ -39,7 +38,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _AddNewActionButton (props: Props)
 {
     const {
-        most_recent_action_id, composed_knowledge_view, wcomponents_by_id, parent_goal_or_action_ids,
+        most_recent_action_id, composed_knowledge_view, wcomponents_by_id,
         base_id, list_type, creation_context
     } = props
 
@@ -98,7 +97,6 @@ function _AddNewActionButton (props: Props)
             wcomponent: {
                 base_id,
                 type: "action",
-                parent_goal_or_action_ids,
                 values_and_prediction_sets,
                 value_possibilities,
                 todo_index: is_todo ? new Date().getTime() : undefined,

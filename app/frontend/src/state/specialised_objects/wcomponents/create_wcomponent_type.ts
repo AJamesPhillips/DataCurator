@@ -3,6 +3,7 @@ import type { Store } from "redux"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
+    wcomponent_is_action,
     wcomponent_is_judgement_or_objective,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
@@ -18,6 +19,7 @@ import { get_store } from "../../store"
 import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { get_latest_sim_ms_for_routing } from "../../routing/utils/get_latest_sim_ms_for_routing"
+import { get_default_parent_goal_or_action_ids } from "../get_default_parent_goal_or_action_ids"
 
 
 
@@ -39,6 +41,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
 
     let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
+    wcomponent = set_parent_goal_or_action_ids(wcomponent, state)
 
 
     const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state)
@@ -85,6 +88,27 @@ function set_judgement_or_objective_target (wcomponent: WComponent, state: RootS
     }
 
     return wcomponent
+}
+
+
+
+function set_parent_goal_or_action_ids (wcomponent: WComponent, state: RootState): WComponent
+{
+    if (!wcomponent_is_action(wcomponent)) return wcomponent
+
+    if (wcomponent.parent_goal_or_action_ids) return wcomponent
+
+
+    const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
+    const { wcomponents_by_id, knowledge_views_by_id } = state.specialised_objects
+
+    const knowledge_view_id = composed_knowledge_view?.id
+    const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
+
+    return {
+        ...wcomponent,
+        parent_goal_or_action_ids,
+    }
 }
 
 

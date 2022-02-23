@@ -17,7 +17,6 @@ import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
 import type { Base } from "../shared/interfaces/base"
 import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 import { useMemo, useRef, useState } from "preact/hooks"
-import { get_default_parent_goal_or_action_ids } from "./get_default_parent_goal_or_action_ids"
 import { AddNewActionButton } from "./AddNewActionButton"
 import type { CanvasPoint, CanvasPointerEvent } from "../canvas/interfaces"
 
@@ -34,18 +33,16 @@ export function ActionsListView (props: {})
 
 const map_state = (state: RootState) =>
 {
-    const { wcomponents_by_id, knowledge_views_by_id } = state.specialised_objects
+    const { wcomponents_by_id } = state.specialised_objects
 
-    let filtered_by_knowledge_view_id = ""
-    const filter_by_knowledge_view = false
     let action_ids: Set<string> | undefined = undefined
 
     const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
+    const filter_by_knowledge_view = false
     if (filter_by_knowledge_view)
     {
         if (composed_knowledge_view)
         {
-            filtered_by_knowledge_view_id = composed_knowledge_view.id
             action_ids = composed_knowledge_view.wc_ids_by_type.action
         }
     }
@@ -54,10 +51,8 @@ const map_state = (state: RootState) =>
 
     return {
         composed_knowledge_view,
-        filtered_by_knowledge_view_id,
         action_ids,
         wcomponents_by_id,
-        knowledge_views_by_id,
         base_id: selector_chosen_base_id(state),
         display_side_panel: state.controls.display_side_panel,
     }
@@ -76,7 +71,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ActionsListViewContent (props: Props)
 {
-    const { composed_knowledge_view, action_ids, wcomponents_by_id, knowledge_views_by_id, base_id } = props
+    const { composed_knowledge_view, action_ids, wcomponents_by_id, base_id } = props
 
     const [max_done_visible, set_max_done_visible] = useState(5)
     // pointer_down is the position on the user's physical screen
@@ -136,10 +131,6 @@ function _ActionsListViewContent (props: Props)
     }, [action_ids_for_current_kv])
 
 
-    const knowledge_view_id = composed_knowledge_view?.id
-    const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
-
-
     return <div
         className={`action_list_view_content ${pointer_down_at === undefined ? "" : "moving"}`}
         ref={e => action_list_view_content_el.current = (e || undefined)}
@@ -186,7 +177,6 @@ function _ActionsListViewContent (props: Props)
                     most_recent_action_id={most_recent_action_id}
                     composed_knowledge_view={composed_knowledge_view}
                     wcomponents_by_id={wcomponents_by_id}
-                    parent_goal_or_action_ids={parent_goal_or_action_ids}
                     base_id={base_id}
                 />
             </h1>
@@ -206,7 +196,6 @@ function _ActionsListViewContent (props: Props)
                     most_recent_action_id={most_recent_action_id}
                     composed_knowledge_view={composed_knowledge_view}
                     wcomponents_by_id={wcomponents_by_id}
-                    parent_goal_or_action_ids={parent_goal_or_action_ids}
                     base_id={base_id}
                 />
             </h1>
@@ -226,7 +215,6 @@ function _ActionsListViewContent (props: Props)
                     most_recent_action_id={most_recent_action_id}
                     composed_knowledge_view={composed_knowledge_view}
                     wcomponents_by_id={wcomponents_by_id}
-                    parent_goal_or_action_ids={parent_goal_or_action_ids}
                     base_id={base_id}
                 />
             </h1>
@@ -245,7 +233,6 @@ function _ActionsListViewContent (props: Props)
                     most_recent_action_id={most_recent_action_id}
                     composed_knowledge_view={composed_knowledge_view}
                     wcomponents_by_id={wcomponents_by_id}
-                    parent_goal_or_action_ids={parent_goal_or_action_ids}
                     base_id={base_id}
                 />
             </h1>
