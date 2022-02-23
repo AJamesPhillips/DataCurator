@@ -19,12 +19,12 @@ interface OwnProps
 export function ColorPicker (props: OwnProps)
 {
     const [color, _set_color] = useState<Color>(props.color || { r: 255, g: 255, b: 255, a: 1 })
+
     const set_color = (partial_color: Partial<Color>) =>
     {
         const valid_new_color = get_valid_new_color(color, partial_color)
         _set_color(valid_new_color)
     }
-
 
     const on_blur = (partial_color: Partial<Color>) =>
     {

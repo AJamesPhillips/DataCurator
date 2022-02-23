@@ -117,7 +117,7 @@ function _EditableTextCommon (props: Props)
 
         if (new_value !== value) user_conditional_on_change && user_conditional_on_change(new_value)
         set_value(new_value)
-    }, [])
+    }, [props.creation_context, user_conditional_on_change])
 
 
     useEffect(() =>
