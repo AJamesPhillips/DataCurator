@@ -52,6 +52,13 @@ function _EditableCustomDateTime (props: Props)
     const title = (props.title || "DateTime") + ((props.invariant_value && props.value) ? " (custom)" : "")
 
 
+    function conditional_on_change (new_value: Date | undefined)
+    {
+        if (!on_change) return // type guard
+        if (diff_value(props.value, new_value)) on_change(new_value)
+    }
+
+
     return <div className={class_name} title={title}>
         <TextField
             disabled={not_editable}
@@ -91,7 +98,7 @@ function _EditableCustomDateTime (props: Props)
             onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
                 const working_value = e.currentTarget.value
                 const new_value = handle_on_blur({ working_value, invariant_value })
-                on_change(new_value)
+                conditional_on_change(new_value)
                 set_editing(false)
             }}
 
@@ -100,7 +107,7 @@ function _EditableCustomDateTime (props: Props)
             fullWidth={true}
         />
         {editing && show_now_shortcut_button && <NowButton
-            on_change={on_change}
+            on_change={conditional_on_change}
         />}
         {editing && show_today_shortcut_button && <Button
             value="Today"
@@ -108,7 +115,7 @@ function _EditableCustomDateTime (props: Props)
             // fires first but unexpectedly this onClick does not fire
             onPointerDown={() => {
                 const today_dt_str = get_today_str()
-                on_change(new Date(today_dt_str))
+                conditional_on_change(new Date(today_dt_str))
             }}
         />}
     </div>
@@ -149,6 +156,16 @@ function props_value (args: { invariant_value?: Date | undefined, value: Date | 
 {
     const value = args.value || args.invariant_value
     return value
+}
+
+
+
+function diff_value (value1: Date | undefined, value2: Date | undefined)
+{
+    const value1_ms = value1?.getTime()
+    const value2_ms = value2?.getTime()
+
+    return value1_ms === value2_ms
 }
 
 
