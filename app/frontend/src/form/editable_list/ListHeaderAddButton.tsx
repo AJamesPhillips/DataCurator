@@ -1,5 +1,5 @@
-import { Box } from "@material-ui/core"
 import { h } from "preact"
+
 import { Button } from "../../sharedf/Button"
 
 
@@ -17,7 +17,7 @@ export function ListHeaderAddButton (props: OwnProps)
     } = props
 
     return (
-        <Box mb={2}>
+        <div>
             <Button
                 fullWidth={true}
                 onClick={e =>
@@ -28,6 +28,6 @@ export function ListHeaderAddButton (props: OwnProps)
             >
                 {`New ${new_item_descriptor}`}
             </Button>
-        </Box>
+        </div>
     )
 }
