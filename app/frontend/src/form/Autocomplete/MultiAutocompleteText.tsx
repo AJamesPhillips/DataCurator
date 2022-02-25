@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { useMemo } from "preact/hooks"
 
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
@@ -7,7 +8,7 @@ import { AutocompleteText } from "./AutocompleteText"
 import type { AutocompleteOption } from "./interfaces"
 import { SelectedOption } from "./SelectedOption"
 import { Box } from "@material-ui/core"
-import { useMemo } from "preact/hooks"
+
 
 
 
@@ -46,15 +47,41 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
     const { editable, options, selected_option_ids } = props
 
-    const filtered_options = useMemo(() => options.filter(({ id }) => !selected_option_ids.includes(id))
+    const { filtered_options, missing_options_by_id } = useMemo(() =>
+    {
+        const filtered_options = options.filter(({ id }) => !selected_option_ids.includes(id))
+
+        const missing_options_by_id: { [id: string]: E } = {}
+
+        if (filtered_options.length !== selected_option_ids.length)
+        {
+            const filtered_ids = new Set(filtered_options.map(({ id }) => id))
+            const missing = selected_option_ids.filter(id => !filtered_ids.has(id))
+
+            missing.forEach(missing_id =>
+            {
+                const missing_option: E = {
+                    id: missing_id,
+                    title: "<Label Not found>"
+                } as any
+
+                missing_options_by_id[missing_id] = missing_option
+                filtered_options.push(missing_option)
+            })
+        }
+
+        return { filtered_options, missing_options_by_id }
+    }
     , [options, selected_option_ids])
 
-    const option_by_id = useMemo(() =>
+    const options_by_id = useMemo(() =>
     {
-        const inner_option_by_id: { [id: string]: E } = {}
+        const inner_option_by_id: { [id: string]: E } = {
+            ...missing_options_by_id,
+        }
         options.forEach(option => inner_option_by_id[option.id] = option)
         return inner_option_by_id
-    }, [options])
+    }, [options, missing_options_by_id])
 
 
     return (
@@ -71,11 +98,15 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                 force_editable={editable}
             />}
 
-            <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
-                {selected_option_ids.map(id => <Box p={1} flexGrow={1} flexShrink={1} flexBasis="30%" maxWidth="100%">
+            <div
+                style={{ display: "flex", flexDirection: "row", flexWrap: "wrap", overflow: "hidden" }}
+            >
+                {selected_option_ids.map(id => <div
+                    style={{ flexGrow: 1, flexShrink: 1, flexBasis: "30%", maxWidth: "100%" }}
+                >
                     <SelectedOption
                         editing={editable}
-                        option={option_by_id[id]}
+                        option={options_by_id[id]}
                         on_remove_option={removed_id =>
                         {
                             props.on_change(selected_option_ids.filter(id => id !== removed_id))
@@ -87,8 +118,8 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                             props.change_route({ item_id: id })
                         }}
                     />
-                </Box>)}
-            </Box>
+                </div>)}
+            </div>
         </Box>
     )
 }

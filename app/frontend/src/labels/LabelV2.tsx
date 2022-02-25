@@ -53,7 +53,7 @@ function _LabelV2 (props: Props)
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
-    }) : "Not found"
+    }) : "&lt;Label not found&gt;"
 
 
     return <div
