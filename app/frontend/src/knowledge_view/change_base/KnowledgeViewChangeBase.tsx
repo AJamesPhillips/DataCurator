@@ -81,8 +81,7 @@ function _KnowledgeViewChangeBase (props: Props)
         {wcomponent_conflict_number > 0 && <p>
             There are other knowledge views which are not nested under this knowledge view and that
             contain <span style={{ color: "darkred" }}>{wcomponent_conflict_number} non-deleted,
-            and therefore conflicting, component</span> entries.  These entries
-            will not be moved to the new base because the knowledge view that contain them will not be moved.
+            and therefore conflicting, component</span> entries.  These entries can be moved to the new base or left assigned to this base.  All the knowledge views will be moved regardless, even if their corresponding component remains in a different base.
             {/* If these components are moved to the new base then their entries in the other knowledge views
             will be <span style={{ fontSize: 11, color: "darkred" }}>PERMANENTLY</span> removed.
             In the future it will be possible to blend components from multiple bases so this warning will not apply
@@ -104,7 +103,7 @@ function _KnowledgeViewChangeBase (props: Props)
 
 
         <p>
-            <i><b>Select base to move to</b></i>
+            <i><b>Step 2 of 3: Select base to move to</b></i>
 
             <SelectBaseToMoveTo
                 base_id_to_move_to={base_id_to_move_to}
