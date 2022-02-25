@@ -44,10 +44,8 @@ function _LabelV2 (props: Props)
 {
     const { wcomponent } = props
 
-    if (!wcomponent) return null
 
-
-    const title = get_title({
+    const title = wcomponent ? get_title({
         wcomponent,
         rich_text: props.rich_text,
         wcomponents_by_id: props.wcomponents_by_id,
@@ -55,14 +53,14 @@ function _LabelV2 (props: Props)
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
-    })
+    }) : "Not found"
 
 
     return <div
         className="label_v2"
         style={{
-            backgroundColor: color_to_string(wcomponent.label_color),
-            color: color_to_string(color_to_opposite(wcomponent.label_color)),
+            backgroundColor: color_to_string(wcomponent?.label_color),
+            color: color_to_string(color_to_opposite(wcomponent?.label_color)),
         }}
         // onPointerOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}
         // onPointerLeave={() => on_mouse_leave_option && on_mouse_leave_option(option.id)}

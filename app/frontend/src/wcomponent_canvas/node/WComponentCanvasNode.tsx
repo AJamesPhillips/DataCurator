@@ -251,6 +251,7 @@ function _WComponentCanvasNode (props: Props)
 
     const extra_css_class = (
         ` wcomponent_canvas_node `
+        + ` wcomponent_${id} ` // useful for debugging and finding the elements in the html
         + (is_editing ? (props.on_current_knowledge_view ? " node_on_kv " : " node_on_foundational_kv ") : "")
         + (props.node_is_moving ? " node_is_moving " : "")
         + (is_highlighted ? " node_is_highlighted " : "")
