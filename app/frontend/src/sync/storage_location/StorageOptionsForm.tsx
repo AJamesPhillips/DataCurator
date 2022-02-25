@@ -65,7 +65,11 @@ function _StorageOptionsForm (props: Props)
 
         set_base_creation_state(res.error ? "error" : "success")
         set_newly_created_base(res.base)
-        if (!res.error) pub_sub.user.pub("stale_bases", false)
+        if (!res.error)
+        {
+            pub_sub.user.pub("stale_bases", false)
+            set_new_base_title("")
+        }
     }
 
 
