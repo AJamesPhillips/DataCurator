@@ -80,7 +80,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const to_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.to_id]
 
             validity_value_result = calc_connection_wcomponent_should_display({
-                is_editing,
                 wcomponent, kv_entry,
                 validity_filter,
                 from_wc, to_wc, from_wc__kv_entry, to_wc__kv_entry,
@@ -98,7 +97,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id]
 
             validity_value_result = calc_judgement_connection_wcomponent_should_display({
-                is_editing, wcomponent, kv_entry, validity_filter,
+                wcomponent, kv_entry,
+                validity_filter,
                 target_wc, target_wc__kv_entry,
                 created_at_ms, sim_ms,
                 selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
@@ -234,7 +234,6 @@ function _WComponentCanvasConnection (props: Props)
         connection_end_type={connection_end_type}
         intensity={validity_opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
-        is_editing={props.is_editing}
         focused_mode={props.focused_mode}
         extra_css_classes={"connection_type_" + wcomponent.type + " " + effect}
     />

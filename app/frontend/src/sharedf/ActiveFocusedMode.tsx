@@ -11,7 +11,6 @@ import { ACTIONS } from "../state/actions"
 
 interface OwnProps {}
 const map_state = (state: RootState) => ({
-    presenting: state.display_options.consumption_formatting,
     focused_mode: state.display_options.focused_mode,
 })
 
@@ -24,14 +23,11 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _ActiveFocusedMode (props: Props)
 {
-    const { presenting, focused_mode } = props
-    const title = presenting
-        ? (
-            focused_mode
-            ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
-            : "Activate focused mode"
-        ) : "Focused mode only available when presenting"
-    const classes = (presenting && focused_mode) ? active_warning_styles() : inactive_warning_styles()
+    const { focused_mode } = props
+    const title = focused_mode
+        ? "WARNING: Focused Mode is active, unselected components will be almost invisible"
+        : "Activate focused mode"
+    const classes = focused_mode ? active_warning_styles() : inactive_warning_styles()
 
     return <Tooltip placement="top" title={title}>
         <span>
@@ -39,7 +35,6 @@ function _ActiveFocusedMode (props: Props)
                 // className={classes.warning_button}
                 component="span"
                 size="medium"
-                disabled={!presenting}
                 onClick={() => props.set_or_toggle_focused_mode()}
             >
                 <FilterTiltShift className={classes.warning_icon} />

@@ -15,7 +15,6 @@ import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledg
 
 interface CalcWcomponentShouldDisplayArgs
 {
-    is_editing: boolean
     wcomponent: WComponent
     kv_entry: KnowledgeViewWComponentEntry | undefined
     created_at_ms: number
@@ -26,7 +25,7 @@ interface CalcWcomponentShouldDisplayArgs
 }
 export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
 {
-    const { is_editing, wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters } = args
+    const { wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters } = args
 
 
     if (!kv_entry || kv_entry.blocked) return false
@@ -120,7 +119,6 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
 
 interface CalculateConnectionCertaintyArgs
 {
-    is_editing: boolean
     wcomponent: WComponentConnection
     kv_entry: KnowledgeViewWComponentEntry | undefined
     validity_filter: ValidityFilterOption
@@ -175,7 +173,6 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 
 interface CalculateJudgementCertaintyArgs
 {
-    is_editing: boolean
     wcomponent: WComponentJudgement
     kv_entry: KnowledgeViewWComponentEntry | undefined
     validity_filter: ValidityFilterOption
@@ -226,13 +223,15 @@ interface CalcDisplayOpacityArgs
 }
 export function calc_display_opacity (args: CalcDisplayOpacityArgs)
 {
-    if (args.is_editing || args.is_highlighted || args.is_selected || args.is_current_item) return 1
+    if (args.is_highlighted || args.is_selected || args.is_current_item) return 1
 
     if (args.certainty_formatting.render_100_opacity && !args.focused_mode) return 1
 
     if (args.connected_neighbour_is_highlighted) return 1
 
     if (args.focused_mode) return 0.1
+
+    if (args.is_editing) return 1
 
     const min50 = args.certainty_formatting.render_certainty_as_easier_opacity
 
