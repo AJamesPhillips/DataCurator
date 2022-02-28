@@ -131,6 +131,8 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
     const sim_ms_changed = initial_state.routing.args.sim_ms !== sim_ms
 
 
+    // todo: we should update when the order of elements in current_composed_knowledge_view
+    // changes
     if (current_composed_knowledge_view && (kv_id_changed || judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
     {
         const active_judgement_or_objective_ids_by_target_id: { [id: string]: string[] } = {}
@@ -150,6 +152,18 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
 
             active_judgement_or_objectives_by_id[judgement.id] = true
         })
+
+
+
+        // Get sort key for (judgement or objective) ids based on insertion order in
+        // composed_visible_wc_id_map
+        const wcomponent_ids_sort_key: {[id: string]: number} = {}
+        Object.keys(composed_visible_wc_id_map).forEach((id, index) =>
+        {
+            wcomponent_ids_sort_key[id] = index
+        })
+        const get_wcomponent_ids_sort_key = (id: string) => wcomponent_ids_sort_key[id] || -1
+
 
 
         function judgement_or_objective_id_is_active (id: string)
@@ -174,7 +188,9 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
                 const active_judgement_or_objective_ids = target_ids.filter(judgement_or_objective_id_is_active)
                 if (active_judgement_or_objective_ids.length)
                 {
-                    active_judgement_or_objective_ids_by_target_id[id] = active_judgement_or_objective_ids
+                    const sorted = sort_list(active_judgement_or_objective_ids, get_wcomponent_ids_sort_key, SortDirection.descending)
+
+                    active_judgement_or_objective_ids_by_target_id[id] = sorted
                 }
             }
 
@@ -183,7 +199,9 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
                 const active_judgement_or_objective_ids = ids_from_goal_or_action.filter(judgement_or_objective_id_is_active)
                 if (active_judgement_or_objective_ids.length)
                 {
-                    active_judgement_or_objective_ids_by_goal_or_action_id[id] = active_judgement_or_objective_ids
+                    const sorted = sort_list(active_judgement_or_objective_ids, get_wcomponent_ids_sort_key, SortDirection.descending)
+
+                    active_judgement_or_objective_ids_by_goal_or_action_id[id] = sorted
                 }
             }
         })
