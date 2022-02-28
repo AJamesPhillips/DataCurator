@@ -54,6 +54,14 @@ $max_vap_height:$max_vap_fontsize * 1.75;
             // Added to allow user to click on the AltRoute Icon representing an applied counterfactual
             pointer-events: none;
         }
+
+        // When there are many judgement badges, allow them to wrap
+        .node_judgements_container
+        {
+            flex-wrap: wrap;
+            display: flex;
+            justify-content: center;
+        }
     }
 
     .value_and_prediction:nth-child(even)

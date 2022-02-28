@@ -34,6 +34,10 @@
 
 .node_validity_container, .node_state_container
 {
+    // This allows the value_and_prediction_summary to wrap onto a different line from the
+    // node_judgements_container
+    flex-wrap: wrap;
+
     display: flex;
     overflow: hidden;
     // border-top: thin solid #CCC;
@@ -52,6 +56,13 @@
 {
     .value_and_prediction_summary
     {
+        // This is a complete hack to ensure that when there are one or two judgement badges, that
+        // they get displayed to the left of this exapandable VAP set list but more than two and
+        // this expandable VAP set list is moved underneath so it can be max width... even though it
+        // appears from this hack that we're limiting it's width.
+        // TODO: check this works accross browsers, and preferably, replace it with something more sane
+        width: 70%;
+
         flex-grow: 1;
         flex-shrink: 1;
         overflow: hidden;

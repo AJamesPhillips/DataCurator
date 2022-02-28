@@ -65,7 +65,7 @@ function _WComponentJudgements (props: Props)
     ])
 
 
-    const node_judgements_container_class_name = "node_judgements_container " + (judgement_or_objective_ids.length ? "" : "empty")
+    const node_judgements_container_class_name = "node_judgements_container "
 
     if (value === undefined || target_VAPs_represent === undefined)
     {

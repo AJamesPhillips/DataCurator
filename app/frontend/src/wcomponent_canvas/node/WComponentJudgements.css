@@ -3,7 +3,8 @@
 {
     /*
     Some change in last 12 hours means this is the only
-    way I have found to display the JudgementBages
+    way I have found to display the JudgementBagdes
     */
-    display: contents;
+    /* As of 2022-02-28 this is no longer needed and without it, it allows the judgements to wrap if there are many judgements associated with a node */
+    /* display: contents; */
 }
