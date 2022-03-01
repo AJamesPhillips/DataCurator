@@ -9,6 +9,7 @@ import { Button } from "../sharedf/Button"
 import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import type { RootState } from "../state/State"
 import type { TimeResolution } from "../shared/utils/datetime"
+import { find_parent_element_by_class } from "../utils/html"
 
 
 
@@ -91,8 +92,11 @@ function _EditableCustomDateTime (props: Props)
             onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) =>
             {
                 const valid = is_value_valid(e.currentTarget.value)
-                if (valid) e.currentTarget.classList.remove("invalid")
-                else e.currentTarget.classList.add("invalid")
+                const el = find_parent_element_by_class(e.currentTarget, "editable_field")
+                if (!el) return
+
+                if (valid) el.classList.remove("invalid")
+                else el.classList.add("invalid")
             }}
 
             onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => {
@@ -127,6 +131,8 @@ export const EditableCustomDateTime = connector(_EditableCustomDateTime) as Func
 
 function is_value_valid (str: string)
 {
+    if (!str.trim()) return true // is an eternal datetime so is valid
+
     const working_value_date = correct_datetime_for_local_time_zone(str)
     return !!working_value_date && valid_date(working_value_date)
 }

@@ -19,6 +19,7 @@ import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 import { useMemo, useRef, useState } from "preact/hooks"
 import { AddNewActionButton } from "./AddNewActionButton"
 import type { CanvasPoint, CanvasPointerEvent } from "../canvas/interfaces"
+import { find_parent_element_by_classes } from "../utils/html"
 
 
 
@@ -158,15 +159,9 @@ function _ActionsListViewContent (props: Props)
         onPointerOut={e =>
         {
             let target: HTMLElement | null = e.relatedTarget as HTMLElement
-            while (target)
-            {
-                const { classList } = target
-                if (classList && (classList.contains("action_list") || classList.contains("action_list_view_content")))
-                {
-                    return
-                }
-                target = target.parentElement
-            }
+            target = find_parent_element_by_classes(target, ["action_list", "action_list_view_content"])
+            if (target) return
+
             set_pointer_down_at(undefined)
         }}
     >
