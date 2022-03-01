@@ -209,6 +209,8 @@ function handle_change_current_knowledge_view_entries_order (state: RootState, a
             const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id]
             if (!existing_entry) return // error
 
+            // todo: probably need to use a list to hold the order instead of this hacky fix
+            // which works but has no guarentees to keep working
             delete new_wc_id_map[wcomponent_id]
             new_wc_id_map[wcomponent_id] = existing_entry
         })
@@ -220,6 +222,8 @@ function handle_change_current_knowledge_view_entries_order (state: RootState, a
             const existing_entry = composed_kv.composed_wc_id_map[wcomponent_id]
             if (!existing_entry) return // error
 
+            // todo: probably need to use a list to hold the order instead of this hacky fix
+            // which works but has no guarentees to keep working
             new_wc_id_map[wcomponent_id] = existing_entry
         })
 
