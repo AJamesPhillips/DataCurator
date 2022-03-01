@@ -17,7 +17,7 @@ interface OwnProps {
     sub_route: SUB_ROUTE_TYPES | undefined
     item_id: string | null | undefined
     args: Partial<RoutingStateArgs> | undefined
-    on_pointer_down?: () => void
+    on_pointer_down?: () => boolean
     selected_on?: Set<"route" | "args.view" | "args.subview_id">
     extra_class_name?: string
     extra_css_style?: h.JSX.CSSProperties
@@ -51,7 +51,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
 
 const map_dispatch = (dispatch: Dispatch, own_props: OwnProps) => ({
-    link_clicked: (routing_args: Partial<RoutingStateArgs>) => dispatch(ACTIONS.routing.change_route({
+    change_route: (routing_args: Partial<RoutingStateArgs>) => dispatch(ACTIONS.routing.change_route({
         route:     own_props.route,
         sub_route: own_props.sub_route,
         item_id:   own_props.item_id,
@@ -101,8 +101,11 @@ class _Link extends Component<Props, State>
             if (this.props.selected) return // no-op
             this.setState({ clicked: true })
 
-            if (this.props.on_pointer_down) this.props.on_pointer_down()
-            this.props.link_clicked(partial_routing_args)
+            // If `on_pointer_down` returns true then do not change route as the handler
+            // has done this already or does not want a ChangeRoute Action to fire
+            if (this.props.on_pointer_down && this.props.on_pointer_down()) return
+
+            this.props.change_route(partial_routing_args)
         }
 
         const full_routing_state = merge_routing_state(this.props.current_routing_state, this.props)
@@ -149,7 +152,7 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
         e.preventDefault()
 
         if (props.on_pointer_down) props.on_pointer_down()
-        props.link_clicked(partial_routing_args)
+        props.change_route(partial_routing_args)
     }
 
     const full_routing_state = merge_routing_state(props.current_routing_state, props)

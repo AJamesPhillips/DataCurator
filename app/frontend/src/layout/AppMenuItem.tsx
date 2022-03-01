@@ -2,12 +2,10 @@ import { ComponentChildren, FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { MenuItem as MaterialMenuItem } from "@material-ui/core"
 
-import type { RootState } from "../state/State"
 import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
-import { ACTIONS } from "../state/actions"
 import { route_to_text } from "./route_to_text"
 
 
@@ -26,18 +24,17 @@ function get_title (id: ROUTE_TYPES)
     else return route_to_text(id)
 }
 
-const map_state = (state: RootState) => ({ current_route: state.routing.route })
-const map_dispatch = { change_route: ACTIONS.routing.change_route }
 
-const connector = connect(map_state, map_dispatch)
+const connector = connect()
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _AppMenuItem (props: Props)
 {
     const handle_pointer_down = () =>
     {
-        props.change_route({ route: props.id, sub_route: null, item_id: null })
         props.on_pointer_down()
+        return false // false === We have not handled this click changing the route, tell
+        // Link this still needs to happen
     }
 
     const title = get_title(props.id)

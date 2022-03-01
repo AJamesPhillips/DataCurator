@@ -11,6 +11,8 @@ import type { CanvasPoint } from "../../canvas/interfaces"
 import { lefttop_to_xy } from "../../state/display_options/display"
 import type { RoutingStateArgs } from "../../state/routing/interfaces"
 import type { JudgementTrend } from "../../wcomponent/interfaces/judgement"
+import { get_store } from "../../state/store"
+import { ACTIONS } from "../../state/actions"
 
 
 
@@ -49,6 +51,25 @@ export function JudgementBadge (props: OwnProps)
         item_id={props.judgement_or_objective_id}
         args={args}
         extra_class_name={class_name}
+        on_pointer_down={() =>
+        {
+            const store = get_store()
+            const state = store.getState()
+
+            const { display_side_panel, display_time_sliders } = state.controls
+            if (props.position) args = lefttop_to_xy(
+                { ...props.position, zoom: 100 },
+                true,
+                { display_side_panel, display_time_sliders }
+            )
+
+            store.dispatch(ACTIONS.routing.change_route({
+                item_id: props.judgement_or_objective_id,
+                args,
+            }))
+
+            return true // true === We have handled changing the route
+        }}
     >
         {trend_icon}
     </Link>

@@ -1,5 +1,5 @@
 import type { CanvasPointerEvent } from "../../../canvas/interfaces"
-import { offset_by_half_node, position_to_point, round_canvas_point } from "../../../canvas/position_utils"
+import { offset_input_by_half_node, position_to_point, round_canvas_point } from "../../../canvas/position_utils"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import type { StoreType } from "../../store"
 import { selector_chosen_base_id } from "../../user_info/selector"
@@ -53,7 +53,7 @@ export function create_wcomponent_on_double_tap (store: StoreType)
 
 export function position_from_canvas_pointer_event (canvas_pointer_event: CanvasPointerEvent)
 {
-    const point = offset_by_half_node(position_to_point(canvas_pointer_event))
+    const point = offset_input_by_half_node(position_to_point(canvas_pointer_event))
     const position = round_canvas_point(point, "large")
     return position
 }

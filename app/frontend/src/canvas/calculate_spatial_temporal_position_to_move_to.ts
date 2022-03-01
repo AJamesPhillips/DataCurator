@@ -8,7 +8,7 @@ import {
 } from "../state/display_options/display"
 import type { WComponent, WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { PositionAndZoom } from "./interfaces"
-import { NODE_WIDTH, node_height_approx } from "./position_utils"
+import { NODE_WIDTH, node_height_approx, offset_entry_by_half_node } from "./position_utils"
 import { SCALE_BY, bound_zoom } from "./zoom_utils"
 
 
@@ -216,10 +216,7 @@ function get_wcomponent_group_positions_and_last_created_at (args: GetWcomponent
     const view_entry = composed_wc_id_map[initial_wcomponent?.id || ""]
     if (initial_wcomponent && view_entry)
     {
-        let { left, top, s } = view_entry
-        const size = s ?? 1
-        left += (NODE_WIDTH * size * 0.5)
-        top += (node_height_approx(!!initial_wcomponent.summary_image) * size * 0.5)
+        const { left, top } = offset_entry_by_half_node(view_entry, !!initial_wcomponent.summary_image)
 
         const position_and_zoom = lefttop_to_xy({ left, top, zoom: SCALE_BY }, true, display_args)
         positions.push(position_and_zoom)
