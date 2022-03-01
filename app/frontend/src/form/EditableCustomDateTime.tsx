@@ -165,7 +165,7 @@ function diff_value (value1: Date | undefined, value2: Date | undefined)
     const value1_ms = value1?.getTime()
     const value2_ms = value2?.getTime()
 
-    return value1_ms === value2_ms
+    return value1_ms !== value2_ms
 }
 
 
