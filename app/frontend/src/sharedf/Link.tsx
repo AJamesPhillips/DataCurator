@@ -151,7 +151,9 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
         e.stopImmediatePropagation()
         e.preventDefault()
 
-        if (props.on_pointer_down) props.on_pointer_down()
+        // If `on_pointer_down` returns true then do not change route as the handler
+        // has done this already or does not want a ChangeRoute Action to fire
+        if (props.on_pointer_down && props.on_pointer_down()) return
         props.change_route(partial_routing_args)
     }
 

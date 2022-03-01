@@ -7,6 +7,8 @@ import type { ROUTE_TYPES } from "../state/routing/interfaces"
 import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 import { route_to_text } from "./route_to_text"
+import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
 
 
 
@@ -25,30 +27,41 @@ function get_title (id: ROUTE_TYPES)
 }
 
 
-const connector = connect()
+const map_state = (state: RootState) => ({ current_route: state.routing.route })
+const map_dispatch = { change_route: ACTIONS.routing.change_route }
+
+const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _AppMenuItem (props: Props)
 {
-    const handle_pointer_down = () =>
+    const handle_pointer_down_on_menu_item = () =>
+    {
+        props.on_pointer_down()
+        props.change_route({ route: props.id, sub_route: null, item_id: null })
+    }
+
+
+    const handle_pointer_down_on_link = () =>
     {
         props.on_pointer_down()
         return false // false === We have not handled this click changing the route, tell
         // Link this still needs to happen
     }
 
+
     const title = get_title(props.id)
     return <CustomisableAppMenuItem
         // TODO remove this call of `change_route` once the <Button /> in <Link /> takes
         // up all the horizontal space
-        on_pointer_down={handle_pointer_down}
+        on_pointer_down={handle_pointer_down_on_menu_item}
     >
         <Link
             route={props.id}
             sub_route={null}
             item_id={null}
             args={undefined}
-            on_pointer_down={handle_pointer_down}
+            on_pointer_down={handle_pointer_down_on_link}
         >
             {title}
         </Link>
