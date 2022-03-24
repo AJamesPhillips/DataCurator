@@ -90,10 +90,12 @@ function _PrioritisationEntryNode (props: Props)
                 </Markdown>
             </span>
 
-            {effort > 0 && <div>
+            <div>
                 <br />
-                <span style={{ color: "grey", fontSize: 10 }}>&nbsp; Effort {percent}</span>
-            </div>}
+                <span style={{ color: "grey", fontSize: 10 }}>
+                    &nbsp; {effort > 0 && `Effort ${percent}`}
+                </span>
+            </div>
         </div>
     </CanvasNode>
 }
