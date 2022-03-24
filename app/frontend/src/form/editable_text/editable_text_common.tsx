@@ -35,7 +35,8 @@ export interface EditableTextCommonOwnProps
 export interface EditableTextComponentArgs
 {
     value: string
-    on_render: (el: HTMLTextAreaElement | HTMLInputElement) => void
+    // This type seems wrong but it works.  I do not understand it yet
+    on_render: Ref<HTMLTextAreaElement | HTMLInputElement>
     on_focus: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     on_change: (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) => void
     on_blur: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
@@ -128,9 +129,9 @@ function _EditableTextCommon (props: Props)
 
     const class_name = `editable_field ${value ? "" : "placeholder"}`
 
-
-    const on_render = useMemo(() => (el: HTMLTextAreaElement | HTMLInputElement) =>
+    const on_render = useMemo(() => (el: HTMLTextAreaElement | HTMLInputElement | null) =>
     {
+        if (!el) return
         if (el_ref.current === el) return // quick hack to prevent multiple erroneous calls to following render code
         el_ref.current = el
         handle_text_field_render({ el, force_focus_on_first_render })
@@ -152,9 +153,30 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_on_blur = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
+        // todo: improve this explanation (make it more concise)
+        // Do not call on_blur if there is an id_insertion_point because this means the user just triggered
+        // the search window by typing `@@` into this input element, which triggered this input to blur
+        // but we do not want to save these results yet until the user has returned from selecting the
+        // component from the search box.
         if (id_insertion_point.current !== undefined) return
-        handle_text_field_blur({ e, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
+
+        const { value } = e.currentTarget
+        handle_text_field_blur({ value, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
     }, [props.value, conditional_on_blur, always_on_blur, set_is_editing])
+
+    useEffect(() =>
+    {
+        // When component unmounts, check if it is still being edited.  If so then the `wrapped_on_blur` above has
+        // not yet fired and we need to call the conditional_on_blur and always_on_blur
+        return () =>
+        {
+            if (!is_editing_this_specific_text) return
+            if (!el_ref.current) return
+
+            const { value } = el_ref.current
+            handle_text_field_blur({ value, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
+        }
+    }, [is_editing_this_specific_text])
 
 
     const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack
@@ -171,7 +193,7 @@ function _EditableTextCommon (props: Props)
     {
         return props.component({
             value,
-            on_render,
+            on_render: on_render as any,
             on_focus,
             on_change: wrapped_conditional_on_change,
             on_blur: wrapped_on_blur,
@@ -263,7 +285,7 @@ function handle_text_field_change (args: HandleTextFieldChangeArgs)
 
 interface HandleTextFieldBlurArgs
 {
-    e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
+    value: string
     initial_value: string
     set_is_editing: (value: boolean) => void
     conditional_on_blur?: (value: string) => void
@@ -271,8 +293,7 @@ interface HandleTextFieldBlurArgs
 }
 function handle_text_field_blur (args: HandleTextFieldBlurArgs)
 {
-    const { value } = args.e.currentTarget
-    const { set_is_editing, initial_value, conditional_on_blur, always_on_blur } = args
+    const { set_is_editing, value, initial_value, conditional_on_blur, always_on_blur } = args
     set_is_editing(false)
 
     if (initial_value !== value) conditional_on_blur && conditional_on_blur(value)

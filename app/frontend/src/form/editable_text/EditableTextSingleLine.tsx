@@ -24,11 +24,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 onChange={on_change}
                 onBlur={on_blur}
                 size={props.size}
-                inputRef={((el: HTMLInputElement) =>
-                {
-                    if (!el) return
-                    on_render(el)
-                }) as any}
+                inputRef={on_render}
             />
     }, [props.placeholder, props.size])
 

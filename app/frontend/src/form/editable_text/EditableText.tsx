@@ -25,11 +25,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
-                inputRef={((el: HTMLTextAreaElement) =>
-                {
-                    if (!el) return
-                    on_render(el)
-                }) as any}
+                inputRef={on_render}
             />
             // @TODO: Check if ref is still needed and convert to Material syntax if so.
             // <textarea
