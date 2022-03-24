@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { useState } from "preact/hooks"
 import Markdown from "markdown-to-jsx"
 
 import "./PrioritisationEntryNode.scss"
@@ -8,7 +9,6 @@ import { CanvasNode } from "../canvas/CanvasNode"
 import type { RootState } from "../state/State"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
-import { useState } from "preact/hooks"
 
 
 
@@ -59,7 +59,7 @@ function _PrioritisationEntryNode (props: Props)
         sim_ms: new Date().getTime(),
     })
 
-    const initial_w = effort > 0 ? width : Math.min(width, 250)
+    const initial_w = effort > 0 ? Math.max(width, 60) : Math.min(width, 250)
     const hover_w = effort > 0 ? Math.max(width, 250) : 250
     const [w, set_w] = useState(initial_w)
 
