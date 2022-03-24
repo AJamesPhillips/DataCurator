@@ -59,8 +59,8 @@ function _PrioritisationEntryNode (props: Props)
         sim_ms: new Date().getTime(),
     })
 
-    const initial_w = effort > 0 ? Math.max(width, 60) : Math.min(width, 250)
-    const hover_w = effort > 0 ? Math.max(width, 250) : 250
+    const initial_w = Math.max(width, 60)
+    const hover_w = Math.max(width, 250)
     const [w, set_w] = useState(initial_w)
 
     const percent = `${Math.round(effort * 100)}%`
