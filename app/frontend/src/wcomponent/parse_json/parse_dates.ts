@@ -10,7 +10,7 @@ export function parse_base_dates <T extends Base & Partial<HasUncertainDatetime>
         created_at: new Date(o.created_at),
         custom_created_at: optional_date(o.custom_created_at),
         modified_at: optional_date(o.modified_at),
-        datetime: optional_datetime_temporal_uncertainty(o.datetime || {})
+        datetime: optional_datetime_temporal_uncertainty(o.datetime)
     }
 }
 
