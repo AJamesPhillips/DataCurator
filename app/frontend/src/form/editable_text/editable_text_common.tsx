@@ -70,15 +70,11 @@ function _EditableTextCommon (props: Props)
 {
     const {
         placeholder,
-        conditional_on_change: user_conditional_on_change,
-        conditional_on_blur,
-        always_on_blur,
         disabled,
         presenting,
         force_editable,
         select_all_on_focus,
         force_focus_on_first_render,
-        set_editing_text_flag,
     } = props
 
 
@@ -92,12 +88,12 @@ function _EditableTextCommon (props: Props)
     const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false)
     const set_is_editing = useMemo(() => (is_editing: boolean) =>
     {
-        set_editing_text_flag(is_editing)
+        props.set_editing_text_flag(is_editing)
         set_is_editing_this_specific_text(is_editing)
-    }, [set_editing_text_flag, set_is_editing_this_specific_text])
+    }, [props.set_editing_text_flag, set_is_editing_this_specific_text])
 
 
-    if (force_editable === false || (!user_conditional_on_change && !conditional_on_blur && !always_on_blur) || disabled || (presenting && force_editable !== true))
+    if (force_editable === false || (!props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur) || disabled || (presenting && force_editable !== true))
     {
         const class_name = (disabled ? "disabled" : "")
         const have_value = props.value !== undefined
@@ -116,9 +112,9 @@ function _EditableTextCommon (props: Props)
             new_value = custom_creation_context_replace_text(props.creation_context, new_value)
         }
 
-        if (new_value !== value) user_conditional_on_change && user_conditional_on_change(new_value)
+        if (new_value !== value) props.conditional_on_change && props.conditional_on_change(new_value)
         set_value(new_value)
-    }, [props.creation_context, user_conditional_on_change])
+    }, [props.creation_context, props.conditional_on_change])
 
 
     useEffect(() =>
@@ -153,7 +149,6 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_on_blur = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        // todo: improve this explanation (make it more concise)
         // Do not call on_blur if there is an id_insertion_point because this means the user just triggered
         // the search window by typing `@@` into this input element, which triggered this input to blur
         // but we do not want to save these results yet until the user has returned from selecting the
@@ -161,22 +156,32 @@ function _EditableTextCommon (props: Props)
         if (id_insertion_point.current !== undefined) return
 
         const { value } = e.currentTarget
-        handle_text_field_blur({ value, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
-    }, [props.value, conditional_on_blur, always_on_blur, set_is_editing])
+        handle_text_field_blur({
+            value,
+            initial_value: props.value,
+            conditional_on_blur: props.conditional_on_blur,
+            always_on_blur: props.always_on_blur,
+            set_is_editing,
+        })
+    }, [props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing])
 
-    useEffect(() =>
+
+    // When component unmounts, check if it is still being edited.  If so then the `wrapped_on_blur` above has
+    // not yet fired and we need to call the conditional_on_blur and always_on_blur
+    useEffect(() => () =>
     {
-        // When component unmounts, check if it is still being edited.  If so then the `wrapped_on_blur` above has
-        // not yet fired and we need to call the conditional_on_blur and always_on_blur
-        return () =>
-        {
-            if (!is_editing_this_specific_text) return
-            if (!el_ref.current) return
+        if (!is_editing_this_specific_text) return
+        if (!el_ref.current) return
 
-            const { value } = el_ref.current
-            handle_text_field_blur({ value, initial_value: props.value, conditional_on_blur, always_on_blur, set_is_editing })
-        }
-    }, [is_editing_this_specific_text])
+        const { value } = el_ref.current
+        handle_text_field_blur({
+            value,
+            initial_value: props.value,
+            conditional_on_blur: props.conditional_on_blur,
+            always_on_blur: props.always_on_blur,
+            set_is_editing,
+        })
+    }, [is_editing_this_specific_text, props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing])
 
 
     const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack
@@ -184,6 +189,9 @@ function _EditableTextCommon (props: Props)
     {
         el_ref.current?.focus()
         id_insertion_point.current = undefined
+        // This force refresh causes the new value in id_insertion_point.current to be taken into account
+        // We do not want to use a setState for id_insertion_point otherwise it continually re-renders
+        // this element everytime the user types anything
         force_refreshing_render({})
         el_ref.current?.setSelectionRange(on_focus_set_selection.start, on_focus_set_selection.end)
     }, [])
