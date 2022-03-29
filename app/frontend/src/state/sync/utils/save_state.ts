@@ -109,20 +109,20 @@ async function save_knowledge_view (id: string, store: StoreType)
 
     const post_upsert_check_result = post_upsert_check(id, store, object_type, response)
     if (post_upsert_check_result.error) return post_upsert_check_result.error
-    const { create_successful, update_successful, latest_source_of_truth } = post_upsert_check_result
+    const { create_successful, update_successful, latest_source_of_truth_value } = post_upsert_check_result
 
 
-    const last_source_of_truth = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id)
+    const last_source_of_truth_value = get_last_source_of_truth_knowledge_view_from_state(store.getState(), id)
     const current_value = get_knowledge_view_from_state(store.getState(), id)
     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({
-        knowledge_view: latest_source_of_truth, source_of_truth: true,
+        knowledge_view: latest_source_of_truth_value, is_source_of_truth: true,
     }))
 
 
     const check_merge_args_result = check_merge_args({
         object_type,
         initial_item,
-        last_source_of_truth,
+        last_source_of_truth_value,
         current_value,
     })
     if (check_merge_args_result.error) return check_merge_args_result.error
@@ -130,7 +130,7 @@ async function save_knowledge_view (id: string, store: StoreType)
     {
         const merge = merge_knowledge_view({
             ...check_merge_args_result.merge_args,
-            source_of_truth: latest_source_of_truth,
+            source_of_truth_value: latest_source_of_truth_value,
             update_successful,
         })
 
@@ -141,7 +141,7 @@ async function save_knowledge_view (id: string, store: StoreType)
                     ...merge.value,
                     // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
                 },
-                source_of_truth: false,
+                is_source_of_truth: false,
             }))
         }
 
@@ -171,20 +171,20 @@ async function save_wcomponent (id: string, store: StoreType)
 
     const post_upsert_check_result = post_upsert_check(id, store, object_type, response)
     if (post_upsert_check_result.error) return post_upsert_check_result.error
-    const { create_successful, update_successful, latest_source_of_truth } = post_upsert_check_result
+    const { create_successful, update_successful, latest_source_of_truth_value } = post_upsert_check_result
 
 
-    const last_source_of_truth = get_last_source_of_truth_wcomponent_from_state(store.getState(), id)
+    const last_source_of_truth_value = get_last_source_of_truth_wcomponent_from_state(store.getState(), id)
     const current_value = get_wcomponent_from_state(store.getState(), id)
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({
-        wcomponent: latest_source_of_truth, source_of_truth: true,
+        wcomponent: latest_source_of_truth_value, is_source_of_truth: true,
     }))
 
 
     const check_merge_args_result = check_merge_args({
         object_type,
         initial_item,
-        last_source_of_truth,
+        last_source_of_truth_value,
         current_value,
     })
     if (check_merge_args_result.error) return check_merge_args_result.error
@@ -192,7 +192,7 @@ async function save_wcomponent (id: string, store: StoreType)
     {
         const merge = merge_wcomponent({
             ...check_merge_args_result.merge_args,
-            source_of_truth: latest_source_of_truth,
+            source_of_truth_value: latest_source_of_truth_value,
             update_successful,
         })
 
@@ -203,7 +203,7 @@ async function save_wcomponent (id: string, store: StoreType)
                     ...merge.value,
                     // needs_save: true, -- No need to set here as this will be set in reducer due to `source_of_truth: false`
                 },
-                source_of_truth: false,
+                is_source_of_truth: false,
             }))
         }
 
@@ -245,19 +245,19 @@ function post_upsert_check <U extends Base> (id: string, store: StoreType, objec
         const error_string = error_to_string(response.error)
         const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${error_string}"`)
 
-        return { error, create_successful, update_successful, latest_source_of_truth: undefined }
+        return { error, create_successful, update_successful, latest_source_of_truth_value: undefined }
     }
 
 
-    const latest_source_of_truth = response.item
-    if (!latest_source_of_truth)
+    const latest_source_of_truth_value = response.item
+    if (!latest_source_of_truth_value)
     {
-        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth item.  Error: "${response.error}".`)
+        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth_value item.  Error: "${JSON.stringify(response.error)}".`)
 
-        return { error, create_successful, update_successful, latest_source_of_truth }
+        return { error, create_successful, update_successful, latest_source_of_truth_value }
     }
 
-    return { error: undefined, create_successful, update_successful, latest_source_of_truth }
+    return { error: undefined, create_successful, update_successful, latest_source_of_truth_value }
 }
 
 
@@ -266,7 +266,7 @@ interface CheckMergeArgsArgs<U>
 {
     object_type: SPECIALISED_OBJECT_TYPE
     initial_item: U
-    last_source_of_truth: U | undefined
+    last_source_of_truth_value: U | undefined
     current_value: U | undefined
 }
 
@@ -274,19 +274,19 @@ interface CheckMergeArgsReturn <U>
 {
     error: Promise<string> | undefined
     merge_args: undefined | {
-        last_source_of_truth: U
+        last_source_of_truth_value: U
         current_value: U
     }
 }
 function check_merge_args <U extends Base> (args: CheckMergeArgsArgs<U>): CheckMergeArgsReturn<U>
 {
-    const { object_type, initial_item, last_source_of_truth, current_value } = args
+    const { object_type, initial_item, last_source_of_truth_value, current_value } = args
 
-    if (!last_source_of_truth)
+    if (!last_source_of_truth_value)
     {
         if (initial_item.modified_at)
         {
-            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`)
+            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth_value "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`)
             return { error, merge_args: undefined }
         }
         else
@@ -298,11 +298,11 @@ function check_merge_args <U extends Base> (args: CheckMergeArgsArgs<U>): CheckM
     {
         if (!current_value)
         {
-            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth but no current_value for id "${initial_item.id}".`)
+            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth_value but no current_value for id "${initial_item.id}".`)
             return { error, merge_args: undefined }
         }
 
-        return { error: undefined, merge_args: { last_source_of_truth, current_value } }
+        return { error: undefined, merge_args: { last_source_of_truth_value, current_value } }
     }
 
     return { error: undefined, merge_args: undefined }

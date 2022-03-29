@@ -26,9 +26,9 @@ function get_custom_field_merger <U extends KnowledgeView, T extends keyof Knowl
 
     return (args: MergeDataCoreArgs<U>): FieldMergerReturn<KnowledgeView, T> =>
     {
-        const source_of_truth = args.source_of_truth.wc_id_map
+        const source_of_truth_value = args.source_of_truth_value.wc_id_map
         const current_value = args.current_value.wc_id_map
-        const last_source_of_truth = args.last_source_of_truth.wc_id_map
+        const last_source_of_truth_value = args.last_source_of_truth_value.wc_id_map
 
 
         let needs_save = false
@@ -36,31 +36,31 @@ function get_custom_field_merger <U extends KnowledgeView, T extends keyof Knowl
         let value: KnowledgeViewWComponentIdEntryMap
 
 
-        if (args.update_successful || are_equal(source_of_truth, last_source_of_truth))
+        if (args.update_successful || are_equal(source_of_truth_value, last_source_of_truth_value))
         {
             value = current_value
-            needs_save = !are_equal(current_value, source_of_truth)
+            needs_save = !are_equal(current_value, source_of_truth_value)
         }
         else
         {
-            value = source_of_truth
-            if (!are_equal(current_value, last_source_of_truth))
+            value = source_of_truth_value
+            if (!are_equal(current_value, last_source_of_truth_value))
             {
-                const wc_ids = Array.from(new Set(Object.keys(current_value).concat(Object.keys(source_of_truth))))
+                const wc_ids = Array.from(new Set(Object.keys(current_value).concat(Object.keys(source_of_truth_value))))
 
                 wc_ids.forEach(wc_id =>
                 {
                     const merge = get_default_field_merger<KnowledgeViewWComponentIdEntryMap, string>(wc_id)({
-                        source_of_truth,
-                        current_value,
-                        last_source_of_truth,
+                        source_of_truth_value,
+                        current_value: current_value,
+                        last_source_of_truth_value,
                         update_successful: args.update_successful,
                     })
                     value[wc_id] = merge.value
 
                     if (merge.unresolvable_conflict)
                     {
-                        console .log("unresolvable_conflict in wc_id_map with wc_id: ", wc_id, "last_source_of_truth", last_source_of_truth[wc_id], "source_of_truth", source_of_truth[wc_id], "current_value", current_value[wc_id])
+                        console .log("unresolvable_conflict in wc_id_map with wc_id: ", wc_id, "last_source_of_truth_value", last_source_of_truth_value[wc_id], "source_of_truth_value", source_of_truth_value[wc_id], "current_value", current_value[wc_id])
                     }
 
                     needs_save = needs_save || merge.needs_save
@@ -108,17 +108,17 @@ function run_tests ()
 
     function test_should_handle_adding_entry_on_client ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, modified_at: latest_modified_at }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: true, // 200
         })
 
@@ -132,17 +132,17 @@ function run_tests ()
 
     function test_should_handle_adding_entries_on_client_and_remote ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 2: e(3) }, modified_at: latest_modified_at }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 2: e(3) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: false, // 409
         })
 
@@ -156,17 +156,17 @@ function run_tests ()
 
     function test_should_handle_nonconflicting_changing_different_entries_on_client_and_remote ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1), 2: e(3) }, modified_at: dt1, base_id: 0,
         })
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 2: e(3) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 2: e(3) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(1), 2: e(5) }, modified_at: latest_modified_at }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 2: e(3) }, needs_save: true, saving: true }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 2: e(3) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1), 2: e(5) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: false, // 409
         })
 
@@ -180,17 +180,17 @@ function run_tests ()
 
     function test_should_handle_conflict_changing_same_entries_on_client_and_remote ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3) }, needs_save: true, saving: true }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: false, // 409
         })
 
@@ -204,17 +204,17 @@ function run_tests ()
 
     function test_should_handle_resolveable_conflict_changing_same_entries_on_client_and_remote ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, needs_save: true, saving: true }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: false, // 409
         })
 
@@ -228,19 +228,19 @@ function run_tests ()
 
     function test_should_handle_non_and_conflict_changes_and_second_client_change ()
     {
-        const last_source_of_truth: KnowledgeView = get_new_knowledge_view_object({
+        const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         // The user changes the position a second time
-        const current_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(4), 1: e(10) }, needs_save: true, saving: true }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 1: e(10) }, needs_save: true, saving: true }
         // The user changes the position the first time
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(3), 1: e(10) } }
-        const source_of_truth: KnowledgeView = { ...last_source_of_truth, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
+        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3), 1: e(10) } }
+        const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
-            last_source_of_truth,
+            last_source_of_truth_value,
             current_value,
-            source_of_truth,
+            source_of_truth_value,
             update_successful: false, // 409
         })
 

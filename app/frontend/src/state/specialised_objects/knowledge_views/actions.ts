@@ -30,7 +30,7 @@ export const is_upsert_knowledge_view_entry = (action: AnyAction): action is Act
 interface UpsertKnowledgeViewArgs
 {
     knowledge_view: KnowledgeView
-    source_of_truth?: boolean
+    is_source_of_truth?: boolean
 }
 interface ActionUpsertKnowledgeView extends Action, UpsertKnowledgeViewArgs {}
 

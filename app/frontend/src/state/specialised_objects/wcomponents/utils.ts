@@ -6,10 +6,10 @@ import { update_modified_or_deleted_by } from "../update_modified_by"
 
 
 
-export function handle_upsert_wcomponent (state: RootState, wcomponent: WComponent, source_of_truth?: boolean, mark_as_deleted: boolean = false): RootState
+export function handle_upsert_wcomponent (state: RootState, wcomponent: WComponent, is_source_of_truth?: boolean, mark_as_deleted: boolean = false): RootState
 {
     const map = { ...state.specialised_objects.wcomponents_by_id }
-    wcomponent = source_of_truth ? wcomponent : update_modified_or_deleted_by(wcomponent, state, mark_as_deleted)
+    wcomponent = is_source_of_truth ? wcomponent : update_modified_or_deleted_by(wcomponent, state, mark_as_deleted)
     map[wcomponent.id] = wcomponent
 
     state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
@@ -17,7 +17,7 @@ export function handle_upsert_wcomponent (state: RootState, wcomponent: WCompone
     // Set derived data
     state = update_specialised_object_ids_pending_save(
         state, "wcomponent", wcomponent.id,
-        // Can replace `!!wcomponent.needs_save` with `!source_of_truth`?
+        // Can replace `!!wcomponent.needs_save` with `!is_source_of_truth`?
         !!wcomponent.needs_save)
 
     return state

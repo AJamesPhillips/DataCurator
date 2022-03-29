@@ -75,13 +75,13 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
     }
 
 
-    if (is_upsert_wcomponent(action) && action.source_of_truth)
+    if (is_upsert_wcomponent(action) && action.is_source_of_truth)
     {
         state = update_wcomponent_last_source_of_truth(state, action.wcomponent)
     }
 
 
-    if (is_upsert_knowledge_view(action) && action.source_of_truth)
+    if (is_upsert_knowledge_view(action) && action.is_source_of_truth)
     {
         state = update_knowledge_view_last_source_of_truth(state, action.knowledge_view)
     }

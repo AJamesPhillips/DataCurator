@@ -24,7 +24,7 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
     if (is_upsert_wcomponent(action))
     {
         const tidied = tidy_wcomponent(action.wcomponent)
-        state = handle_upsert_wcomponent(state, tidied, action.source_of_truth)
+        state = handle_upsert_wcomponent(state, tidied, action.is_source_of_truth)
     }
 
 

@@ -20,7 +20,7 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
     if (is_upsert_knowledge_view(action))
     {
-        state = handle_upsert_knowledge_view(state, action.knowledge_view, action.source_of_truth)
+        state = handle_upsert_knowledge_view(state, action.knowledge_view, action.is_source_of_truth)
     }
 
 
@@ -41,7 +41,7 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
         if (associated_kv && associated_kv.title !== wcomponent.title)
         {
             const updated_knowledge_view = { ...associated_kv, title: wcomponent.title }
-            state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.source_of_truth)
+            state = handle_upsert_knowledge_view(state, updated_knowledge_view, action.is_source_of_truth)
         }
     }
 

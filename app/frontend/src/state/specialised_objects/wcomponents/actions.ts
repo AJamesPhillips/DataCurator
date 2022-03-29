@@ -15,7 +15,7 @@ export interface AddToKnowledgeViewArgs
 interface UpsertWComponentArgs
 {
     wcomponent: WComponent
-    source_of_truth?: boolean
+    is_source_of_truth?: boolean
     add_to_knowledge_view?: AddToKnowledgeViewArgs
     add_to_top?: boolean
 }

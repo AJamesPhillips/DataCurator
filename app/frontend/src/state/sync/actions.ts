@@ -48,7 +48,7 @@ interface UpdateSpecialisedObjectSyncInfoArgs
     id: string
     object_type: SPECIALISED_OBJECT_TYPE
     // needs_save: boolean -- Updated to false/true through upsert_wcomponent or upsert_knowledge_view
-    //                        and setting `source_of_truth` to true/false
+    //                        and setting `is_source_of_truth` to true/false
     saving: boolean
 }
 
