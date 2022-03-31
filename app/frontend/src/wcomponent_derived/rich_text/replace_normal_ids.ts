@@ -1,4 +1,5 @@
 import { test } from "../../shared/utils/test"
+import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { uuids_regex } from "./id_regexs"
 import type { ReplaceNormalIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_id_error, format_wcomponent_link } from "./templates"
@@ -50,7 +51,12 @@ function test_get_ids_from_text ()
     console. log("running tests of get_ids_from_text")
 
     let ids = get_ids_from_text("asd @@wc123 asd name@example.com #label dfg @@345 sf")
-    test(ids, ["wc123", "345"])
+    test(ids, [], `Should not find old ids of "wc123", "345"`)
+
+    const id1 = uuid_v4_for_tests(1)
+    const id2 = uuid_v4_for_tests(2)
+    ids = get_ids_from_text(`asd @@${id1} asd name@example.com #label dfg @@${id2} sf`)
+    test(ids, [id1, id2], `Should find uuid ids`)
 
     ids = get_ids_from_text("")
     test(ids, [])
