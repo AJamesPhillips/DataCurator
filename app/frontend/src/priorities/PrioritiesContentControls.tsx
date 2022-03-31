@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { calculate_zoom_to_contain_group } from "../canvas/calculate_spatial_temporal_position_to_move_to"
 import type { PositionAndZoom } from "../canvas/interfaces"
-import { MoveToItemButton } from "../canvas/MoveToWComponentButton"
+import { MoveToItemButton } from "../canvas/MoveToItemButton"
 import { calculate_canvas_x_for_datetime, default_time_origin_parameters } from "../knowledge_view/datetime_line"
 import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 import { ACTIONS } from "../state/actions"
