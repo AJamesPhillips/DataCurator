@@ -1,6 +1,7 @@
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 import { test } from "../../shared/utils/test"
 import type { CreationContextState } from "../../state/creation_context/state"
+import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type {
     WComponentsById,
@@ -161,6 +162,11 @@ function test_replace_ids_in_text ()
 {
     console. log("running tests of replace_ids_in_text")
 
+    const id1 = uuid_v4_for_tests(1)
+    const id2 = uuid_v4_for_tests(2)
+    const id3 = uuid_v4_for_tests(3)
+
+
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
@@ -169,9 +175,9 @@ function test_replace_ids_in_text ()
     } }
 
     const wcomponents_by_id = {
-        "123": prepare_new_wcomponent_object({ base_id: -1, id: "123", title: "@@789 was told @@456 is here" }, creation_context),
-        "456": prepare_new_wcomponent_object({ base_id: -1, id: "456", title: "Person A" }, creation_context),
-        "789": prepare_new_wcomponent_object({ base_id: -1, id: "789", title: "Person B" }, creation_context),
+        [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `@@${id3} was told @@${id2} is here` }, creation_context),
+        [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }, creation_context),
+        [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }, creation_context),
     }
     const knowledge_views_by_id = {}
 
@@ -189,22 +195,22 @@ function test_replace_ids_in_text ()
     result = replace_ids_in_text({
         ...args,
         rich_text: false,
-        text: "Yesterday @@123 today"
+        text: `Yesterday @@${id1} today`
     })
-    test(result, "Yesterday @@123 today")
+    test(result, `Yesterday @@${id1} today`)
 
     result = replace_ids_in_text({
         ...args,
         rich_text: true,
-        text: "Yesterday @@123 today"
+        text: `Yesterday @@${id1} today`
     })
-    test(result, "Yesterday [Person B was told Person A is here](#wcomponents/123&view=knowledge) today")
+    test(result, `Yesterday [Person B was told Person A is here](#wcomponents/${id1}) today`)
 
     result = replace_ids_in_text({
         ...args,
         rich_text: true,
         render_links: false,
-        text: "Yesterday @@123 today"
+        text: `Yesterday @@${id1} today`
     })
     test(result, "Yesterday Person B was told Person A is here today")
 }
@@ -248,13 +254,21 @@ function test_rendering_title ()
         }, creation_context) as WComponentNodeStateV2
     }
 
-    const wcomponent1 = get_statev2({ id: "111", title: "aaa" })
-    const wcomponent2 = get_statev2({ id: "222", title: "bbb @@111" })
-    const wcomponent3 = get_statev2({ id: "333", title: "ccc ${value}" })
-    const wcomponent4 = get_statev2({ id: "444", title: "ddd @@333" })
-    const wcomponent5 = get_statev2({ id: "555", title: "eee ${value} @@444" })
-    const wcomponent6 = get_statev2({ id: "666", title: "fff @@555" })
-    const wcomponent7 = get_statev2({ id: "777", title: "ggg @@666" })
+    const id1 = uuid_v4_for_tests(1)
+    const id2 = uuid_v4_for_tests(2)
+    const id3 = uuid_v4_for_tests(3)
+    const id4 = uuid_v4_for_tests(4)
+    const id5 = uuid_v4_for_tests(5)
+    const id6 = uuid_v4_for_tests(6)
+    const id7 = uuid_v4_for_tests(7)
+
+    const wcomponent1 = get_statev2({ id: id1, title: "aaa" })
+    const wcomponent2 = get_statev2({ id: id2, title: `bbb @@${id1}` })
+    const wcomponent3 = get_statev2({ id: id3, title: "ccc ${value}" })
+    const wcomponent4 = get_statev2({ id: id4, title: `ddd @@${id3}` })
+    const wcomponent5 = get_statev2({ id: id5, title: `eee \${value} @@${id4}` })
+    const wcomponent6 = get_statev2({ id: id6, title: `fff @@${id5}` })
+    const wcomponent7 = get_statev2({ id: id7, title: `ggg @@${id6}` })
 
     const wcomponents_by_id = {
         [wcomponent1.id]: wcomponent1,
@@ -270,17 +284,17 @@ function test_rendering_title ()
 
     const expected_non_rich_text = {
         [wcomponent1.id]: "aaa",
-        [wcomponent2.id]: "bbb @@111",
+        [wcomponent2.id]: `bbb @@${id1}`,
         [wcomponent3.id]: "ccc ${value}",
-        [wcomponent4.id]: "ddd @@333",
-        [wcomponent5.id]: "eee ${value} @@444",
+        [wcomponent4.id]: `ddd @@${id3}`,
+        [wcomponent5.id]: `eee \${value} @@${id4}`,
     }
     const expected_rich_text = {
         [wcomponent1.id]: "aaa",
-        [wcomponent2.id]: "bbb [aaa](#wcomponents/111&view=knowledge)",
+        [wcomponent2.id]: `bbb [aaa](#wcomponents/${id1})`,
         [wcomponent3.id]: "ccc True",
-        [wcomponent4.id]: "ddd [ccc True](#wcomponents/333&view=knowledge)",
-        [wcomponent5.id]: "eee True [ddd ccc True](#wcomponents/444&view=knowledge)",
+        [wcomponent4.id]: `ddd [ccc True](#wcomponents/${id3})`,
+        [wcomponent5.id]: `eee True [ddd ccc True](#wcomponents/${id4})`,
     }
     const expected_rich_text_no_links = {
         [wcomponent1.id]: "aaa",
@@ -291,8 +305,8 @@ function test_rendering_title ()
     }
     const expected_rich_text_counterfactual = {
         [wcomponent3.id]: "ccc False",
-        [wcomponent4.id]: "ddd [ccc False](#wcomponents/333&view=knowledge)",
-        [wcomponent5.id]: "eee True [ddd ccc False](#wcomponents/444&view=knowledge)",
+        [wcomponent4.id]: `ddd [ccc False](#wcomponents/${id3})`,
+        [wcomponent5.id]: `eee True [ddd ccc False](#wcomponents/${id4})`,
     }
 
 
@@ -321,55 +335,69 @@ function test_rendering_title ()
     }
 
 
-    Object.entries(expected_non_rich_text).forEach(([id, expected_title]) =>
+    function test_get_title ()
     {
-        const result = get_title_for_id({ id, rich_text: false })
-        test(result, expected_title)
-    })
+        Object.entries(expected_non_rich_text).forEach(([id, expected_title]) =>
+        {
+            const result = get_title_for_id({ id, rich_text: false })
+            test(result, expected_title)
+        })
 
-    Object.entries(expected_rich_text).forEach(([id, expected_title]) =>
-    {
-        const result = get_title_for_id({ id, rich_text: true })
-        test(result, expected_title)
-    })
+        Object.entries(expected_rich_text).forEach(([id, expected_title]) =>
+        {
+            const result = get_title_for_id({ id, rich_text: true })
+            test(result, expected_title)
+        })
 
-    Object.entries(expected_rich_text_no_links).forEach(([id, expected_title]) =>
-    {
-        const result = get_title_for_id({ id, rich_text: true, render_links: false })
-        test(result, expected_title)
-    })
+        Object.entries(expected_rich_text_no_links).forEach(([id, expected_title]) =>
+        {
+            const result = get_title_for_id({ id, rich_text: true, render_links: false })
+            test(result, expected_title)
+        })
 
-    // Test depth limit
-    const result = get_title_for_id({ id: wcomponent7.id, rich_text: true })
-    test(result, "ggg [fff eee True ddd @@333](#wcomponents/666&view=knowledge)")
-
-
-    const wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map = {
-        [wcomponent3.id]: {
-            VAP_sets: {
-                "vps333": [
-                    {
-                        id: "wc999000",
-                        type: "counterfactualv2",
-                        created_at: dt,
-                        base_id: -1,
-                        title: "",
-                        description: "",
-                        target_wcomponent_id: wcomponent3.id,
-                        target_VAP_set_id: "vps333",
-                        target_VAP_id: VAP_visual_false_id,
-                    }
-                ]
-            }
-        }
     }
 
-    Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
-    {
-        const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })
-        test(result, expected_title)
-    })
 
+    function test_depth_limit ()
+    {
+        const result = get_title_for_id({ id: wcomponent7.id, rich_text: true })
+        test(result, `ggg [fff eee True ddd @@${id3}](#wcomponents/${id6})`)
+    }
+
+
+    function test_counterfactuals ()
+    {
+        const wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map = {
+            [wcomponent3.id]: {
+                VAP_sets: {
+                    [`vps${id3}`]: [
+                        {
+                            id: "wc999000",
+                            type: "counterfactualv2",
+                            created_at: dt,
+                            base_id: -1,
+                            title: "",
+                            description: "",
+                            target_wcomponent_id: wcomponent3.id,
+                            target_VAP_set_id: `vps${id3}`,
+                            target_VAP_id: VAP_visual_false_id,
+                        }
+                    ]
+                }
+            }
+        }
+
+        Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
+        {
+            const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })
+            test(result, expected_title)
+        })
+    }
+
+
+    test_get_title()
+    test_depth_limit()
+    test_counterfactuals()
 }
 
 
@@ -380,4 +408,4 @@ function run_tests ()
     test_rendering_title()
 }
 
-// run_tests()
+run_tests()
