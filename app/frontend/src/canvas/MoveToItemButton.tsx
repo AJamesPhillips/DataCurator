@@ -41,7 +41,7 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
                 move()
             }
         })
-    }, [props.enable_spacebar_move_to_shortcut])
+    }, [props.enable_spacebar_move_to_shortcut, move])
 
 
     return <Box>
