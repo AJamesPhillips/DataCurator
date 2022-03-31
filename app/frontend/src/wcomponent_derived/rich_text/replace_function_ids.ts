@@ -10,6 +10,10 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
 {
     const { get_title, root_url, render_links, depth_limit } = kwargs
 
+    // Protect against recursive functional ids
+    if (current_depth >= depth_limit) return text
+
+
     const functional_ids = get_functional_ids_from_text(text)
     if (functional_ids.length === 0) return text
 

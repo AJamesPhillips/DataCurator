@@ -261,6 +261,8 @@ function test_rendering_title ()
     const id5 = uuid_v4_for_tests(5)
     const id6 = uuid_v4_for_tests(6)
     const id7 = uuid_v4_for_tests(7)
+    const id8 = uuid_v4_for_tests(8)
+    const id9 = uuid_v4_for_tests(9)
 
     const wcomponent1 = get_statev2({ id: id1, title: "aaa" })
     const wcomponent2 = get_statev2({ id: id2, title: `bbb @@${id1}` })
@@ -269,6 +271,8 @@ function test_rendering_title ()
     const wcomponent5 = get_statev2({ id: id5, title: `eee \${value} @@${id4}` })
     const wcomponent6 = get_statev2({ id: id6, title: `fff @@${id5}` })
     const wcomponent7 = get_statev2({ id: id7, title: `ggg @@${id6}` })
+    const wcomponent8 = get_statev2({ id: id8, title: `Recursive @@${id8}` })
+    const wcomponent9 = get_statev2({ id: id9, title: `Recursive @@${id9}.title` })
 
     const wcomponents_by_id = {
         [wcomponent1.id]: wcomponent1,
@@ -278,6 +282,8 @@ function test_rendering_title ()
         [wcomponent5.id]: wcomponent5,
         [wcomponent6.id]: wcomponent6,
         [wcomponent7.id]: wcomponent7,
+        [wcomponent8.id]: wcomponent8,
+        [wcomponent9.id]: wcomponent9,
     }
     const knowledge_views_by_id = {}
 
@@ -308,7 +314,6 @@ function test_rendering_title ()
         [wcomponent4.id]: `ddd [ccc False](#wcomponents/${id3})`,
         [wcomponent5.id]: `eee True [ddd ccc False](#wcomponents/${id4})`,
     }
-
 
 
     interface GetTitleForIdArgs
@@ -395,9 +400,19 @@ function test_rendering_title ()
     }
 
 
+    function test_rendering_recursive_title ()
+    {
+        // We do not really care about the result, just the fact that it doesn't crash with a
+        // "Too much recursion" or "Stack overflow"
+        const result = get_title_for_id({ id: id8, rich_text: true })
+        const result2 = get_title_for_id({ id: id9, rich_text: true })
+    }
+
+
     test_get_title()
     test_depth_limit()
     test_counterfactuals()
+    test_rendering_recursive_title()
 }
 
 
@@ -408,4 +423,4 @@ function run_tests ()
     test_rendering_title()
 }
 
-run_tests()
+// run_tests()
