@@ -50,12 +50,9 @@ const map_state = (state: Partial<RootState>) => ({
     presenting: state.display_options?.consumption_formatting,
 })
 
-const map_dispatch = {
-    set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag,
-}
 
 
-const connector = connect(map_state, map_dispatch)
+const connector = connect(map_state)
 type Props <E extends AutocompleteOption = AutocompleteOption> = ConnectedProps<typeof connector> & OwnProps<E>
 
 
@@ -107,7 +104,6 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         if (new_editing_options === editing_options) return
         _set_editing_options(new_editing_options)
-        props.set_editing_text_flag(new_editing_options)
     }
 
     useEffect(() =>
@@ -182,6 +178,8 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const handle_key_down = async (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[]) =>
     {
+        e.stopImmediatePropagation() // stops things like `?` and `ctrl+e` from firing
+
         const key = e.key
 
         const is_arrow_down = key === "ArrowDown"

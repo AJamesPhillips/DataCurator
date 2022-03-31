@@ -14,8 +14,9 @@ export function EditableText (props: EditableTextCommonOwnProps)
     return <EditableTextCommon
         {...props}
 
-        component={({ value, on_render, on_focus, on_change, on_blur }: EditableTextComponentArgs) =>
-            <TextField
+        component={({ value, on_render, on_focus, on_change, on_blur, on_key_down }: EditableTextComponentArgs) =>
+        {
+            return <TextField
                 fullWidth={true}
                 size="small"
                 variant="standard"
@@ -25,23 +26,18 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                onKeyDown={on_key_down}
                 inputRef={on_render}
             />
-            // @TODO: Check if ref is still needed and convert to Material syntax if so.
             // <textarea
             //     style={{ height: "auto" }}
             //     placeholder={props.placeholder}
             //     value={value}
-            //     ref={el =>
-            //     {
-            //         if (!el) return
-            //         adjust_height(el)
-            //         on_render(el)
-            //     }}
             //     onFocus={on_focus}
             //     onChange={on_change}
             //     onBlur={on_blur}
+            //     onKeyDown={on_key_down}
             // />
-        }
+        }}
     />
 }

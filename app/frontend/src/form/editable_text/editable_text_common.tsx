@@ -6,11 +6,8 @@ import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import { connect, ConnectedProps } from "react-redux"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
-import { ACTIONS } from "../../state/actions"
 import { ConditionalWComponentSearchWindow, OnFocusSetSelection } from "./ConditionalWComponentSearchWindow"
 import type { CreationContext } from "../../creation_context/interfaces"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
-import type { ActionKeyEventArgs } from "../../state/global_keys/actions"
 
 
 
@@ -40,6 +37,7 @@ export interface EditableTextComponentArgs
     on_focus: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     on_change: (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) => void
     on_blur: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
+    on_key_down: (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => void
 }
 
 
@@ -57,11 +55,8 @@ const map_state = (state: RootState) => ({
 })
 
 
-const map_dispatch = {
-    set_editing_text_flag: ACTIONS.user_activity.set_editing_text_flag,
-}
 
-const connector = connect(map_state, map_dispatch)
+const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
@@ -84,13 +79,6 @@ function _EditableTextCommon (props: Props)
 
     const el_ref = useRef<HTMLTextAreaElement | HTMLInputElement | undefined>(undefined)
     const id_insertion_point = useRef<number | undefined>(undefined)
-
-    const [is_editing_this_specific_text, set_is_editing_this_specific_text] = useState(false)
-    const set_is_editing = useMemo(() => (is_editing: boolean) =>
-    {
-        props.set_editing_text_flag(is_editing)
-        set_is_editing_this_specific_text(is_editing)
-    }, [props.set_editing_text_flag, set_is_editing_this_specific_text])
 
 
     if (force_editable === false || (!props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur) || disabled || (presenting && force_editable !== true))
@@ -117,13 +105,8 @@ function _EditableTextCommon (props: Props)
     }, [props.creation_context, props.conditional_on_change])
 
 
-    useEffect(() =>
-    {
-        return pub_sub.global_keys.sub("key_down", handle_general_key_down(is_editing_this_specific_text, el_ref.current, conditional_on_change))
-    })
-
-
     const class_name = `editable_field ${value ? "" : "placeholder"}`
+
 
     const on_render = useMemo(() => (el: HTMLTextAreaElement | HTMLInputElement | null) =>
     {
@@ -136,8 +119,8 @@ function _EditableTextCommon (props: Props)
 
     const on_focus = useMemo(() => (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        handle_text_field_focus({ e, set_is_editing, select_all_on_focus })
-    }, [set_is_editing, select_all_on_focus])
+        handle_text_field_focus({ e, select_all_on_focus })
+    }, [select_all_on_focus])
 
 
     const wrapped_conditional_on_change = useMemo(() => (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) =>
@@ -161,27 +144,37 @@ function _EditableTextCommon (props: Props)
             initial_value: props.value,
             conditional_on_blur: props.conditional_on_blur,
             always_on_blur: props.always_on_blur,
-            set_is_editing,
         })
-    }, [props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing])
+    }, [props.value, props.conditional_on_blur, props.always_on_blur])
+
+
+    const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+    {
+        handle_general_key_down(e, el_ref.current, conditional_on_change)
+    }, [conditional_on_change])
 
 
     // When component unmounts, check if it is still being edited.  If so then the `wrapped_on_blur` above has
     // not yet fired and we need to call the conditional_on_blur and always_on_blur
-    useEffect(() => () =>
+    useEffect(() =>
     {
-        if (!is_editing_this_specific_text) return
-        if (!el_ref.current) return
+        return () =>
+        {
+            if (!el_ref.current) return
 
-        const { value } = el_ref.current
-        handle_text_field_blur({
-            value,
-            initial_value: props.value,
-            conditional_on_blur: props.conditional_on_blur,
-            always_on_blur: props.always_on_blur,
-            set_is_editing,
-        })
-    }, [is_editing_this_specific_text, props.value, props.conditional_on_blur, props.always_on_blur, set_is_editing])
+            const is_editing_this_specific_text = document.activeElement === el_ref.current
+            if (!is_editing_this_specific_text) return
+
+
+            const { value } = el_ref.current
+            handle_text_field_blur({
+                value,
+                initial_value: props.value,
+                conditional_on_blur: props.conditional_on_blur,
+                always_on_blur: props.always_on_blur,
+            })
+        }
+    }, [props.value, props.conditional_on_blur, props.always_on_blur])
 
 
     const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack
@@ -205,6 +198,7 @@ function _EditableTextCommon (props: Props)
             on_focus,
             on_change: wrapped_conditional_on_change,
             on_blur: wrapped_on_blur,
+            on_key_down,
         })
     }, [value, on_render, on_focus, wrapped_conditional_on_change, wrapped_on_blur])
 
@@ -254,12 +248,10 @@ function handle_text_field_render (args: HandleTextFieldRenderArgs)
 interface HandleTextFieldFocusArgs
 {
     e: h.JSX.TargetedEvent<HTMLInputElement | HTMLTextAreaElement, Event>
-    set_is_editing: (value: boolean) => void
     select_all_on_focus?: boolean
 }
 function handle_text_field_focus (args: HandleTextFieldFocusArgs)
 {
-    args.set_is_editing(true)
     if (args.select_all_on_focus)
     {
         const el: HTMLInputElement | HTMLTextAreaElement = args.e.currentTarget
@@ -295,14 +287,12 @@ interface HandleTextFieldBlurArgs
 {
     value: string
     initial_value: string
-    set_is_editing: (value: boolean) => void
     conditional_on_blur?: (value: string) => void
     always_on_blur?: (value: string) => void
 }
 function handle_text_field_blur (args: HandleTextFieldBlurArgs)
 {
-    const { set_is_editing, value, initial_value, conditional_on_blur, always_on_blur } = args
-    set_is_editing(false)
+    const { value, initial_value, conditional_on_blur, always_on_blur } = args
 
     if (initial_value !== value) conditional_on_blur && conditional_on_blur(value)
     always_on_blur && always_on_blur(value)
@@ -314,43 +304,68 @@ enum ReplacingTextType
 {
     url, title, nothing
 }
-function handle_general_key_down (is_editing_this_specific_text: boolean, el: HTMLInputElement | HTMLTextAreaElement | undefined, conditional_on_change: (value: string) => void)
+function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement | undefined, conditional_on_change: (value: string) => void)
 {
-    return (k: ActionKeyEventArgs) =>
+    const is_editing_this_specific_text = document.activeElement === el
+
+    if (!is_editing_this_specific_text) return
+    if (!el) return // type guard
+
+
+    handle_ctrl_k_link_insert(e, el, conditional_on_change)
+
+    handle_ctrl_e(e)
+}
+
+
+
+function handle_ctrl_k_link_insert (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement, conditional_on_change: (value: string) => void)
+{
+    if (!e.ctrlKey) return
+    if (e.key !== "k") return
+
+    // There seem to be a range of behaviours in Brave on Mac that occur for
+    // ctrl + <some key>.  Specifically calling `preventDefault` for ctrl + k to allow
+    // link insertion in text fields when they are being edited.
+    e.preventDefault()
+
+
+    const { value, selectionStart } = el
+    let { selectionEnd } = el
+
+    if (typeof selectionStart !== "number") return
+    if (typeof selectionEnd !== "number") selectionEnd = selectionStart
+
+    const selected_text = value.slice(selectionStart, selectionEnd)
+    const replacing_text = selected_text ? (selected_text.startsWith("http") ? ReplacingTextType.url : ReplacingTextType.title) : ReplacingTextType.nothing
+
+    const title_text = replacing_text === ReplacingTextType.title ? selected_text : "title"
+    const url_text = replacing_text === ReplacingTextType.url ? selected_text : "url"
+
+    const new_value = (value.slice(0, selectionStart)
+        + "[" + title_text + "](" + url_text + ")"
+        + value.slice(selectionEnd)
+    )
+
+    conditional_on_change(new_value)
+
+    let start = selectionStart + 1 // 1 is the "["
+    let end = start + title_text.length
+    if (replacing_text === ReplacingTextType.title)
     {
-        if (!is_editing_this_specific_text) return
-        if (!el) return // type guard
-
-        if (!k.ctrl_key || k.key !== "k") return
-        const { value, selectionStart } = el
-        let { selectionEnd } = el
-
-        if (typeof selectionStart !== "number") return
-        if (typeof selectionEnd !== "number") selectionEnd = selectionStart
-
-        const selected_text = value.slice(selectionStart, selectionEnd)
-        const replacing_text = selected_text ? (selected_text.startsWith("http") ? ReplacingTextType.url : ReplacingTextType.title) : ReplacingTextType.nothing
-
-        const title_text = replacing_text === ReplacingTextType.title ? selected_text : "title"
-        const url_text = replacing_text === ReplacingTextType.url ? selected_text : "url"
-
-        const new_value = (value.slice(0, selectionStart)
-            + "[" + title_text + "](" + url_text + ")"
-            + value.slice(selectionEnd)
-        )
-
-        conditional_on_change(new_value)
-
-        let start = selectionStart + 1 // 1 is the "["
-        let end = start + title_text.length
-        if (replacing_text === ReplacingTextType.title)
-        {
-            start = selectionEnd + 3 // 1 each from "[" "]" and "("
-            end = start + url_text.length
-        }
-
-        setTimeout(() => el.setSelectionRange(start, end), 0)
+        start = selectionEnd + 3 // 1 each from "[" "]" and "("
+        end = start + url_text.length
     }
+
+    setTimeout(() => el.setSelectionRange(start, end), 0)
+}
+
+
+function handle_ctrl_e (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>)
+{
+    if (e.ctrlKey && e.key === "e") return
+    // console .log("silencing keydown event as not ctrl + e")
+    e.stopImmediatePropagation()
 }
 
 

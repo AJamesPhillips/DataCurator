@@ -11,7 +11,6 @@ import { get_meta_wcomponents_starting_state } from "./specialised_objects/meta_
 import { get_specialised_objects_starting_state } from "./specialised_objects/starting_state"
 import type { RootState } from "./State"
 import { sync_starting_state } from "./sync/persistance"
-import { user_activity_starting_state } from "./user_activity/starting_state"
 import { user_info_starting_state } from "./user_info/persistance"
 
 
@@ -34,7 +33,6 @@ export function get_starting_state (load_state_from_storage: boolean): RootState
         global_keys: get_global_keys_starting_state(),
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         search: search_starting_state(),
-        user_activity: user_activity_starting_state(),
         user_info,
         view_priorities: view_priorities_starting_state(),
 

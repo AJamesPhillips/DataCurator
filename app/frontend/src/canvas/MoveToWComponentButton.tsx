@@ -173,7 +173,7 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
         return pub_sub.global_keys.sub("key_down", e =>
         {
             // "space" bar is pressed
-            if (move && e.key === " " && !e.user_is_editing_text)
+            if (move && e.key === " ")
             {
                 // This does not work
                 // // If the user just clicked on a button, this will prevent the space bar from firing that
@@ -181,6 +181,7 @@ export function MoveToItemButton (props: MoveToItemButtonProps)
                 // // However we might want to re-evaluate this as using spacebar to generically trigger the
                 // // previous action is a very useful system behaviour
                 // e.event.preventDefault()
+
                 move()
             }
         })

@@ -14,7 +14,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
 {
     const component = useMemo(() =>
     {
-        return ({ value, on_render, on_focus, on_change, on_blur }: EditableTextComponentArgs) =>
+        return ({ value, on_render, on_focus, on_change, on_blur, on_key_down }: EditableTextComponentArgs) =>
             <TextField
                 fullWidth={true}
                 label={props.placeholder}
@@ -23,9 +23,18 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                onKeyDown={on_key_down}
                 size={props.size}
                 inputRef={on_render}
             />
+            // <input type="text"
+            //     label={props.placeholder}
+            //     value={value}
+            //     onFocus={on_focus}
+            //     onChange={on_change}
+            //     onBlur={on_blur}
+            //     onKeyDown={on_key_down}
+            // />
     }, [props.placeholder, props.size])
 
 

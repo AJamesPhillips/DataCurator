@@ -12,7 +12,6 @@ export interface ActionKeyEventArgs
     key: string
     meta_key: boolean
     shift_key: boolean
-    user_is_editing_text: boolean
 }
 
 

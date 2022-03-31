@@ -52,7 +52,7 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         {
             e.event.preventDefault()
             const state = store.getState()
-            if (!state.display_options.show_help_menu && !state.user_activity.is_editing_text)
+            if (!state.display_options.show_help_menu)
             {
                 store.dispatch(ACTIONS.display.set_show_help_menu({ show: true }))
             }

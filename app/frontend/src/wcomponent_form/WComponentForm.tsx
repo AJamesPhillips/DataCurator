@@ -133,7 +133,6 @@ function _WComponentForm (props: Props)
         editing, force_editable, created_at_ms, sim_ms } = props
 
     const wcomponent_id = wcomponent.id
-    // initialise as wcomponent_id to prevent a second render
     const [previous_id, set_previous_id] = useState<string>(wcomponent_id)
 
 
@@ -148,13 +147,18 @@ function _WComponentForm (props: Props)
     useEffect(() => set_previous_id(wcomponent_id), [wcomponent_id])
     if (previous_id !== wcomponent_id)
     {
-        _focus_title.current = true
         // Force the form to unmount all the components and trigger any conditional_on_blur handlers to fire.
         // The call to `set_previous_id` in the useEffect above will then trigger the form the render the
         // new component.
         //
         // TODO research if better way of clearing old forms.  We're using a controlled component but hooking
         // into the onBlur instead of onChange handler otherwise performance of the app is heavily degraded
+        // because every tiny change to the wcomponent, e.g. typing the title, causes it to save back to the
+        // server.
+        // TODO: replace this `set_previous_id` hack with a throttled save?
+
+        _focus_title.current = true
+
         return null
     }
     const focus_title = _focus_title.current
@@ -186,7 +190,7 @@ function _WComponentForm (props: Props)
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
-    const conditional_on_blur = (title: string) => upsert_wcomponent({ title })
+    const conditional_on_blur_title = (title: string) => upsert_wcomponent({ title })
 
 
     return <Box>
@@ -206,7 +210,7 @@ function _WComponentForm (props: Props)
                 force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
-                conditional_on_blur={conditional_on_blur}
+                conditional_on_blur={conditional_on_blur_title}
                 force_focus_on_first_render={focus_title}
                 hide_label={true}
             />
@@ -537,7 +541,7 @@ function _WComponentForm (props: Props)
         {editing && wcomponent.deleted_at && <div>
             <Button
                 title="Undo delete"
-                onClick={() => props.upsert_wcomponent({ wcomponent: { ...wcomponent, deleted_at: undefined } })}
+                onClick={() => upsert_wcomponent({ deleted_at: undefined })}
             >Restore</Button>
         </div>}
 

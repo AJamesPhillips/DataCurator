@@ -12,7 +12,7 @@ export function record_keyupdown_activity (store: Store<RootState>)
 
     document.onkeydown = e =>
     {
-        const user_is_editing_text = store.getState().user_activity.is_editing_text
+        // console .log("document.onkeydown....", e)
 
         const action_args: ActionKeyEventArgs = {
             event: e,
@@ -23,14 +23,7 @@ export function record_keyupdown_activity (store: Store<RootState>)
             key: e.key,
             meta_key: e.metaKey,
             shift_key: e.shiftKey,
-            user_is_editing_text,
         }
-
-        // There seem to be a range of behaviours in Brave on Mac that occur for
-        // ctrl + <some key>.  Specifically preventing default for ctrl + k to allow
-        // link insertion in text fields when they are being edited.
-        // See editable_text_common.tsx
-        if (user_is_editing_text && e.ctrlKey && e.key === "k") e.preventDefault()
 
         // TODO can we get rid of touching store entirely and only use pubsub?
         store.dispatch(ACTIONS.global_keys.key_down(action_args))
@@ -45,8 +38,6 @@ export function record_keyupdown_activity (store: Store<RootState>)
 
     document.onkeyup = e =>
     {
-        const user_is_editing_text = store.getState().user_activity.is_editing_text
-
         const action_args: ActionKeyEventArgs = {
             event: e,
             time_stamp: e.timeStamp,
@@ -56,7 +47,6 @@ export function record_keyupdown_activity (store: Store<RootState>)
             key: e.key,
             meta_key: e.metaKey,
             shift_key: e.shiftKey,
-            user_is_editing_text,
         }
 
         // TODO can we get rid of touching store entirely and only use pubsub?

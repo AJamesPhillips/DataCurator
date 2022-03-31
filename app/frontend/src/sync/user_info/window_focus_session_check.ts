@@ -75,7 +75,7 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
         }
         else
         {
-            console. log("On window focus event, successfully accessed user info.")
+            // console. log("On window focus event, successfully accessed user info.")
             return CheckConnectionAndSessionResult.success
         }
     }
