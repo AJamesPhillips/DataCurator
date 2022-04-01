@@ -33,6 +33,7 @@ import {
 } from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import { prune_items_by_created_at_and_versions_and_sort_by_datetimes } from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 
 
 
@@ -226,6 +227,23 @@ function _WComponentSubStateForm (props: Props)
                     <label for={id}>{value}</label>
                 </div>
             })}
+
+            {selector.target_value_id_type !== "id" && (props.editing || selector.target_value) && <div>
+                <EditableTextSingleLine
+                    value={selector.target_value || ""}
+                    placeholder="Other value"
+                    conditional_on_change={new_value =>
+                    {
+                        const new_selector = make_valid_selector({
+                            ...selector,
+                            target_value: new_value,
+                            target_value_id_type: "value_string",
+                        })
+
+                        upsert_wcomponent({ selector: new_selector })
+                    }}
+                />
+            </div>}
         </p>}
 
 
