@@ -314,7 +314,7 @@ function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaEle
 
     handle_ctrl_k_link_insert(e, el, conditional_on_change)
 
-    handle_ctrl_e(e)
+    handle_stop_propagation(e)
 }
 
 
@@ -361,10 +361,12 @@ function handle_ctrl_k_link_insert (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaE
 }
 
 
-function handle_ctrl_e (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>)
+function handle_stop_propagation (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>)
 {
     if (e.ctrlKey && e.key === "e") return
-    // console .log("silencing keydown event as not ctrl + e")
+    if (e.key === "Shift") return // allows for selecting multiple components
+    if (e.key === "Control") return // allows for unselecting multiple components
+    // console .log("silencing keydown event as not one of allow key presses to propagate")
     e.stopImmediatePropagation()
 }
 
