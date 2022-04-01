@@ -21,7 +21,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _AboutSidePanel (props: Props)
 {
     return <div>
-        <span className="description_label">Version</span> <b>2022-03-31</b>
+        <span className="description_label">Version</span> <b>2022-04-01</b>
     </div>
 }
 
