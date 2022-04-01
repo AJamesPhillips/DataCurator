@@ -167,6 +167,10 @@ class _Canvas extends Component<Props, State>
 
     on_pointer_up = (e?: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
     {
+        // On Firefox this `e?.preventDefault()` prevents the context menu from opening when
+        // shift and ctrl are depressed and allows the deselection of multiple components
+        e?.preventDefault()
+
         // const right_button = e?.button === 2
         // if (right_button) return
 
