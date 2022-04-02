@@ -27,9 +27,9 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onChange={on_change}
                 onBlur={on_blur}
                 onKeyDown={on_key_down}
-                inputRef={on_render}
+                inputRef={on_render as any}
             />
-            // <textarea
+            // return <textarea
             //     style={{ height: "auto" }}
             //     placeholder={props.placeholder}
             //     value={value}
@@ -37,6 +37,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
             //     onChange={on_change}
             //     onBlur={on_blur}
             //     onKeyDown={on_key_down}
+            //     ref={on_render}
             // />
         }}
     />

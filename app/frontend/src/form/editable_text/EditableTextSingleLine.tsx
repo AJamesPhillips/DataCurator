@@ -25,7 +25,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 onBlur={on_blur}
                 onKeyDown={on_key_down}
                 size={props.size}
-                inputRef={on_render}
+                inputRef={on_render as any}
             />
             // <input type="text"
             //     label={props.placeholder}
@@ -34,6 +34,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
             //     onChange={on_change}
             //     onBlur={on_blur}
             //     onKeyDown={on_key_down}
+            //     ref={on_render}
             // />
     }, [props.placeholder, props.size])
 

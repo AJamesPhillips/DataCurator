@@ -32,8 +32,7 @@ export interface EditableTextCommonOwnProps
 export interface EditableTextComponentArgs
 {
     value: string
-    // This type seems wrong but it works.  I do not understand it yet
-    on_render: Ref<HTMLTextAreaElement | HTMLInputElement>
+    on_render: (el: HTMLTextAreaElement | HTMLInputElement | null) => void
     on_focus: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     on_change: (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) => void
     on_blur: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
@@ -111,9 +110,18 @@ function _EditableTextCommon (props: Props)
     const on_render = useMemo(() => (el: HTMLTextAreaElement | HTMLInputElement | null) =>
     {
         if (!el) return
-        if (el_ref.current === el) return // quick hack to prevent multiple erroneous calls to following render code
+
+        // This is a hack to prevent multiple calls to `handle_text_field_render`.  You can not
+        // use a conditional of `el_ref.current !== el` because the virtual DOM element object
+        // changes even if the final DOM element does not change.
+        //
+        // If you do not do this then every time you shift from presenting mode to editing mode,
+        // the `.focus()` fires inside the `handle_text_field_render` and blurs the "previous"
+        // input element which causes the `wrapped_on_blur` to fire.
+        const rendering_first_time = !el_ref.current
+
         el_ref.current = el
-        handle_text_field_render({ el, force_focus_on_first_render })
+        if (rendering_first_time) handle_text_field_render({ el, force_focus_on_first_render })
     }, [])
 
 
@@ -194,7 +202,7 @@ function _EditableTextCommon (props: Props)
     {
         return props.component({
             value,
-            on_render: on_render as any,
+            on_render,
             on_focus,
             on_change: wrapped_conditional_on_change,
             on_blur: wrapped_on_blur,
