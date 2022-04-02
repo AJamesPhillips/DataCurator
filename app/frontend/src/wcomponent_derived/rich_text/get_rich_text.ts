@@ -46,10 +46,10 @@ export function get_title (args: GetFieldTextArgs): string
         wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms,
     } = args
 
-    if (!args.rich_text) return wcomponent.title
-
     let title = wcomponent.title
     if (!title) title = get_default_wcomponent_title(args)
+
+    if (!args.rich_text) return title
 
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
