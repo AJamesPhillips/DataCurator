@@ -65,11 +65,11 @@ function _NodeSubStateTypeIndicators (props: Props)
     return <div className="sub_state_type_indicators">
         <LockClockIcon
             className={time_substate_color}
-            title={"Specific Time" + sub_state_type_status_to_title(time_substate)}
+            title={"Specific Time " + sub_state_type_status_to_title(time_substate)}
         />
         <ReducedPossibilitiesIcon
             className={possibility_substate_color}
-            title={"Specific Possibility" + sub_state_type_status_to_title(possibility_substate)}
+            title={"Specific Possibility " + sub_state_type_status_to_title(possibility_substate)}
         />
     </div>
 }
