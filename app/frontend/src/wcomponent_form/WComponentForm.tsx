@@ -190,6 +190,7 @@ function _WComponentForm (props: Props)
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
+    const title = get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
     const conditional_on_blur_title = (title: string) => upsert_wcomponent({ title })
 
 
@@ -209,7 +210,7 @@ function _WComponentForm (props: Props)
             <EditableText
                 force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
-                value={get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
+                value={title}
                 conditional_on_blur={conditional_on_blur_title}
                 force_focus_on_first_render={focus_title}
                 hide_label={true}
