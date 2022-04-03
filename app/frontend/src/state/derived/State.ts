@@ -90,7 +90,6 @@ export interface DerivedAvailableFilterOptions
 
 export interface DerivedState
 {
-    wcomponents: WComponent[]
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 

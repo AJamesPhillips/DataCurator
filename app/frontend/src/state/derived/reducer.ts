@@ -16,13 +16,6 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
     if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id)
     {
-        const wcomponents = sort_list(
-            Object.values(state.specialised_objects.wcomponents_by_id),
-            ({ created_at }) => created_at.getTime(),
-            SortDirection.ascending
-        )
-        state = update_substate(state, "derived", "wcomponents", wcomponents)
-
 
         // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
         // if (Object.keys(initial_state.specialised_objects.wcomponents_by_id).length === 0)
@@ -121,7 +114,8 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
 
 
     // todo: we should update when the order of elements in current_composed_knowledge_view
-    // changes
+    // changes so that ... <todo insert reason.  Perhaps it's so that the list of judgements / objectives
+    // are in the correct order when they are rendered on/for their targets and for their goals or actions?>
     if (current_composed_knowledge_view && (kv_id_changed || judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
     {
         const active_judgement_or_objective_ids_by_target_id: { [id: string]: string[] } = {}

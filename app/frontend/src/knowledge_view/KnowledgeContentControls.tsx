@@ -6,11 +6,12 @@ import { get_current_composed_knowledge_view_from_state } from "../state/special
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
 import { ContentControls } from "../sharedf/content_controls/ContentControls"
+import { is_defined } from "../shared/utils/is_defined"
 
 
 
 const map_state = (state: RootState) => ({
-    wcomponents: state.derived.wcomponents,
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     current_composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
 })
 
@@ -21,19 +22,21 @@ type Props = ConnectedProps<typeof connector>
 
 function _KnowledgeContentControls (props: Props)
 {
-    const { wcomponents, current_composed_knowledge_view } = props
+    const { wcomponents_by_id, current_composed_knowledge_view } = props
 
     if (!current_composed_knowledge_view) return <div/>
     const { composed_wc_id_map } = current_composed_knowledge_view
 
-    const wcomponents_on_kv = useMemo(() =>
-        wcomponents.filter(wc => !!composed_wc_id_map[wc.id])
-    , [wcomponents, composed_wc_id_map])
-
 
     const { created_events, sim_events } = useMemo(() =>
-        get_wcomponent_time_slider_data(wcomponents_on_kv)
-    , [wcomponents_on_kv])
+    {
+        const wcomponents_on_kv = Object.keys(composed_wc_id_map)
+            .map(id => wcomponents_by_id[id])
+            .filter(is_defined)
+
+        return get_wcomponent_time_slider_data(wcomponents_on_kv)
+    }, [composed_wc_id_map, wcomponents_by_id])
+
 
     return <ContentControls
         created_events={created_events}

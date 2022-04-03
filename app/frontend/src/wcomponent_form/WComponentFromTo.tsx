@@ -8,9 +8,8 @@ import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
-import {
+import type {
     ConnectionTerminalAttributeType,
-    wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import "./WComponentFromTo.css"
 
@@ -28,7 +27,7 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    wcomponents: state.derived.wcomponents,
+    any_link: state.derived.wcomponent_ids_by_type.any_link,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
@@ -52,7 +51,7 @@ function _WComponentFromTo (props: Props)
         connection_terminal_description,
         wcomponent_id,
         connection_terminal_type,
-        wcomponents,
+        any_link,
         wcomponents_by_id,
         knowledge_views_by_id,
         wc_id_to_counterfactuals_map,
@@ -63,10 +62,9 @@ function _WComponentFromTo (props: Props)
 
     const wcomponent = wcomponent_id ? wcomponents_by_id[wcomponent_id] : undefined
 
-    const filtered_wcomponents = wcomponents.filter(wc => !wcomponent_is_plain_connection(wc))
     const wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: filtered_wcomponents,
         wcomponents_by_id,
+        allowed_wcomponent_ids: any_link,
         knowledge_views_by_id,
         wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
