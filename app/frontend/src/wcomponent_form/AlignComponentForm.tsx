@@ -24,10 +24,12 @@ type OwnProps = {
 
 const map_state = (state: RootState) =>
 {
-    const knowledge_view_id = get_current_knowledge_view_from_state(state)?.id
+    const kv = get_current_knowledge_view_from_state(state)
+    const knowledge_view_id = kv?.id
 
     return {
         knowledge_view_id,
+        kv,
     }
 }
 
@@ -46,8 +48,15 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _AlignComponentForm (props: Props)
 {
-    const { wcomponent_id, wcomponent_ids, knowledge_view_id } = props
+    const { wcomponent_id, wcomponent_ids, knowledge_view_id, kv } = props
     const ids: string[] = (wcomponent_id ? [wcomponent_id] : wcomponent_ids) || []
+
+
+    const wcomponent_kv_wc_map_entry_index = (kv && wcomponent_id)
+        ? Object.keys(kv.wc_id_map).findIndex(id => id === wcomponent_id)
+        : undefined
+    const total_kv_wc_map_entries = kv ? Object.keys(kv.wc_id_map).length : undefined
+
 
     return <div>
         <h3>Align</h3>
@@ -82,6 +91,7 @@ function _AlignComponentForm (props: Props)
 
         <Button
             value="Move to front"
+            disabled={wcomponent_kv_wc_map_entry_index !== undefined && (wcomponent_kv_wc_map_entry_index + 1) === total_kv_wc_map_entries}
             onClick={() =>
             {
                 props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "front" })
@@ -91,6 +101,7 @@ function _AlignComponentForm (props: Props)
         &nbsp;
         <Button
             value="Move to back"
+            disabled={wcomponent_kv_wc_map_entry_index === 0}
             onClick={() =>
             {
                 props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "back" })
