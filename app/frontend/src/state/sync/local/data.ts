@@ -17,7 +17,6 @@ const knowledge_views = Object.values(knowledge_views_by_id).map((item: any) => 
 
 
 export const local_data: SpecialisedObjectsFromToServer = {
-    perceptions: [],
     wcomponents,
     knowledge_views,
 }

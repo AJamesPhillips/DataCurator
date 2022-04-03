@@ -717,7 +717,6 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     // await save_solid_data(state.user_info, {
     //     knowledge_views,
     //     wcomponents,
-    //     perceptions: [],
     // })
     // const items = await load_solid_data(state)
     // console .log("got items", items)

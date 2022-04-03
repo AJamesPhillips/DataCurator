@@ -26,6 +26,5 @@ export async function supabase_load_data (load_state_from_storage: boolean, base
     return Promise.resolve<SpecialisedObjectsFromToServer>({
         knowledge_views: knowledge_views_response.items,
         wcomponents: wcomponents_response.items,
-        perceptions: [],
     })
 }

@@ -14,17 +14,6 @@ import { get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcom
 export function derived_state_reducer (initial_state: RootState, state: RootState)
 {
 
-    if (initial_state.specialised_objects.perceptions_by_id !== state.specialised_objects.perceptions_by_id)
-    {
-        const perceptions = sort_list(
-            Object.values(state.specialised_objects.perceptions_by_id),
-            ({ created_at }) => created_at.getTime(),
-            SortDirection.ascending
-        )
-        state = update_substate(state, "derived", "perceptions", perceptions)
-    }
-
-
     if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id)
     {
         const wcomponents = sort_list(

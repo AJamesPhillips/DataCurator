@@ -6,7 +6,6 @@ import { CreationContextSidePanel } from "../creation_context/CreationContextSid
 import { DisplayOptionsSidePanel } from "../display_options/DisplayOptionsSidePanel"
 import { FiltersSidePanel } from "../filter_context/FiltersSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
-import { PerceptionsSidePanel } from "../perceptions/PerceptionsSidePanel"
 import { SearchSidePanel } from "../search/SearchSidePanel"
 import { SelectionControlSidePanel } from "../selection_control/SelectionControlSidePanel"
 import type { RootState } from "../state/State"
@@ -40,8 +39,6 @@ function _SidePanel (props: Props)
         {props.route === "creation_context" && <CreationContextSidePanel />}
 
         {props.route === "views" && <ViewsSidePanel />}
-
-        {props.route === "perceptions" && <PerceptionsSidePanel />}
 
         {props.route === "wcomponents" && <WComponentsSidePanel />}
 

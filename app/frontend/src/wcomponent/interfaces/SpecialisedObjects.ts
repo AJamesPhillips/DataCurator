@@ -25,14 +25,6 @@ import type { WComponentSubState } from "./substate"
 
 
 
-export interface Perception extends Base
-{
-    title: string
-    description: string
-    encompassed_by: string
-}
-
-
 // World Component
 export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement | WComponentPrioritisation
 type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection & keyof WComponentJudgement & keyof WComponentPrioritisation, "type">
@@ -348,7 +340,6 @@ type ActionID = string
 
 export interface SpecialisedObjectsFromToServer
 {
-    perceptions: Perception[]
     wcomponents: WComponent[]
     knowledge_views: KnowledgeView[]
 }
@@ -356,7 +347,6 @@ export interface SpecialisedObjectsFromToServer
 // Used on the server
 export type SpecialisedObjectsFromToServerKeys = keyof SpecialisedObjectsFromToServer
 const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjectsFromToServerKeys]: true} = {
-    perceptions: true,
     wcomponents: true,
     knowledge_views: true,
 }

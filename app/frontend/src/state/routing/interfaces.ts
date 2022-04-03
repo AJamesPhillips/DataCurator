@@ -10,7 +10,6 @@ export type ROUTE_TYPES = (
     | "creation_context"
     | "views"
     //+ specialised objects
-    | "perceptions"
     | "wcomponents"
     //- specialised objects
     | "about"
@@ -28,7 +27,6 @@ export const ALLOWED_SUB_ROUTES: {[k in ROUTE_TYPES]: SUB_ROUTE_TYPES[]} = {
     "objects": ["objects_bulk_import", "objects_bulk_import/setup"],
     "patterns": [],
     "creation_context": [],
-    "perceptions": [],
     "about": [],
 }
 export const ALLOWED_ROUTES: ROUTE_TYPES[] = Object.keys(ALLOWED_SUB_ROUTES) as ROUTE_TYPES[]

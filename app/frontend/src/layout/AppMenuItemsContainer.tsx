@@ -33,7 +33,6 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 const hide_routes = new Set<ROUTE_TYPES>([
     "objects",
     "patterns",
-    "perceptions",
     "statements",
 ])
 const base_allowed_routes = ALLOWED_ROUTES.filter(r => !hide_routes.has(r))

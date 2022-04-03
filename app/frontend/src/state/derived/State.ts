@@ -1,11 +1,9 @@
-import type { ProjectPrioritiesMeta } from "../../priorities/interfaces"
 import type {
     KnowledgeView,
     KnowledgeViewSortType,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
 import type {
-    Perception,
     WComponent,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
@@ -92,7 +90,6 @@ export interface DerivedAvailableFilterOptions
 
 export interface DerivedState
 {
-    perceptions: Perception[]
     wcomponents: WComponent[]
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
