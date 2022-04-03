@@ -1,38 +1,25 @@
-import Warning from "@material-ui/icons/Warning"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../form/datetime_utils"
-import { EditableCheckbox } from "../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import {
-    convert_VAP_set_to_VAP_visuals,
-} from "../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { is_defined } from "../shared/utils/is_defined"
-import type {
-    StateValueAndPredictionsSet as VAPSet,
-} from "../wcomponent/interfaces/state"
-import { wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../wcomponent/interfaces/substate"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
-import {
-    get_current_composed_knowledge_view_from_state,
-    get_current_knowledge_view_from_state,
-} from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { toggle_item_in_list } from "../utils/list"
-import type { SimpleValuePossibility } from "../wcomponent/interfaces/possibility"
 import {
     convert_VAP_sets_to_visual_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,
 } from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import { prune_items_by_created_at_and_versions_and_sort_by_datetimes } from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import {
+    prune_items_by_created_at_and_versions_and_sort_by_datetimes,
+} from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
 
 

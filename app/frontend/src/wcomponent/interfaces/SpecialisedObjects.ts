@@ -9,6 +9,7 @@ import type {
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
     WComponentNodeStateV2,
+    WComponentStateValue,
 } from "./state"
 import type { ExistencePredictions } from "../../shared/uncertainty/existence"
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
@@ -107,6 +108,12 @@ export function wcomponent_is_statev2 (wcomponent: WComponent | undefined): wcom
 {
     return wcomponent_is_a("statev2", wcomponent)
 }
+
+export function wcomponent_is_state_value (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentStateValue
+{
+    return wcomponent_is_a("state_value", wcomponent, log_error_id)
+}
+
 
 export function wcomponent_is_process (wcomponent: WComponent | undefined): wcomponent is WComponentNodeProcess
 {
@@ -256,6 +263,7 @@ export function wcomponent_has_value_possibilities (wcomponent: WComponent | und
 export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
     return wcomponent_is_statev2(wcomponent)
+        || wcomponent_is_state_value(wcomponent)
         // Removing ability to edit causal link state as:
         // 1. I do not remember editing the VAP sets of a causal link -- if it is used we should put a description
         //    here of the scenario that needs it

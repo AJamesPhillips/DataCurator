@@ -33,6 +33,7 @@ import {
     wcomponent_has_objectives,
     wcomponent_is_action,
     wcomponent_is_goal,
+    wcomponent_is_state_value,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
@@ -72,6 +73,7 @@ import {
 import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
+import { WComponentStateValueForm } from "./WComponentStateValueForm"
 
 
 
@@ -298,6 +300,11 @@ function _WComponentForm (props: Props)
         //    />
         //</FormControl>}
         }
+
+        {wcomponent_is_state_value(wcomponent) && <WComponentStateValueForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+        />}
 
         {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
             wcomponent={wcomponent}

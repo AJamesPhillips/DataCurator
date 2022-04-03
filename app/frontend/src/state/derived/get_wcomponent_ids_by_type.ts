@@ -13,6 +13,7 @@ export function get_empty_wcomponent_ids_by_type (): WComponentIdsByType
     return {
         event: new Set(),
         statev2: new Set(),
+        state_value: new Set(),
         sub_state: new Set(),
         multidimensional_state: new Set(),
         process: new Set(),

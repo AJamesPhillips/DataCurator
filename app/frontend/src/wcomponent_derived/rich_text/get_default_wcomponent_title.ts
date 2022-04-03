@@ -1,9 +1,9 @@
 import type { GetFieldTextArgs } from "./get_rich_text"
 import {
+    wcomponent_has_value_possibilities,
     wcomponent_is_plain_connection,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_sub_state,
-    wcomponent_has_value_possibilities,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
