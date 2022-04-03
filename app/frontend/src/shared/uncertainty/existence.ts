@@ -27,7 +27,7 @@ import type { Prediction } from "./interfaces"
 // cause change in organisation B, i.e. that causality exists 100%" ... person A is alive, as such
 // any person who is alive has some ability to cause a change in organisation B.  If the person
 // was dead then that causality would not exist, but then it might be more straightforward and
-// sensible to say it is invalid, as use the validity prediction.
+// sensible to say it is invalid, and use the validity prediction.
 // --- 2021-05-19
 export interface ExistencePredictions
 {
