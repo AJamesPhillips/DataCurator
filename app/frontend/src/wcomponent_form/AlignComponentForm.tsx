@@ -58,6 +58,10 @@ function _AlignComponentForm (props: Props)
     const total_kv_wc_map_entries = kv ? Object.keys(kv.wc_id_map).length : undefined
 
 
+    const move_to_front_disabled = wcomponent_kv_wc_map_entry_index !== undefined && (wcomponent_kv_wc_map_entry_index + 1) === total_kv_wc_map_entries
+    const move_to_back_disabled = wcomponent_kv_wc_map_entry_index === 0
+
+
     return <div>
         <h3>Align</h3>
         <Button
@@ -89,25 +93,29 @@ function _AlignComponentForm (props: Props)
 
         <br />
 
-        <Button
-            value="Move to front"
-            disabled={wcomponent_kv_wc_map_entry_index !== undefined && (wcomponent_kv_wc_map_entry_index + 1) === total_kv_wc_map_entries}
-            onClick={() =>
-            {
-                props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "front" })
-            }}
-            is_left={true}
-        />
+        <span title={move_to_front_disabled ? "Already at front" : "Move to front"}>
+            <Button
+                value="Move to front"
+                disabled={move_to_front_disabled}
+                onClick={() =>
+                {
+                    props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "front" })
+                }}
+                is_left={true}
+            />
+        </span>
         &nbsp;
-        <Button
-            value="Move to back"
-            disabled={wcomponent_kv_wc_map_entry_index === 0}
-            onClick={() =>
-            {
-                props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "back" })
-            }}
-            is_left={true}
-        />
+        <span title={move_to_back_disabled ? "Already at back" : "Move to back"}>
+            <Button
+                value="Move to back"
+                disabled={move_to_back_disabled}
+                onClick={() =>
+                {
+                    props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "back" })
+                }}
+                is_left={true}
+            />
+        </span>
     </div>
 }
 
