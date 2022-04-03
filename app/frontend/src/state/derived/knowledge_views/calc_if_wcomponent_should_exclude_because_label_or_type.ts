@@ -1,9 +1,9 @@
-import { test } from "../../../../shared/utils/test"
+import { test } from "../../../shared/utils/test"
 import {
     prepare_new_contextless_wcomponent_object,
-} from "../../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
-import type { WComponent } from "../../../../wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentType } from "../../../../wcomponent/interfaces/wcomponent_base"
+} from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 
 
 
