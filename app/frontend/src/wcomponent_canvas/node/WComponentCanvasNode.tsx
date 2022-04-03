@@ -369,6 +369,7 @@ function _WComponentCanvasNode (props: Props)
 
                 <div style={{ display: "flex" }}>
                     {wcomponent?.description.trim() && <DescriptionIcon
+                        className="description_icon"
                         fontSize="small"
                         color="disabled"
                     />}
