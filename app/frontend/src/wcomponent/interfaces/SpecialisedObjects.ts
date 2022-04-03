@@ -255,7 +255,16 @@ export function wcomponent_has_value_possibilities (wcomponent: WComponent | und
 // Need to keep in sync with wc_ids_by_type.any_state_VAPs
 export function wcomponent_should_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
 {
-    return wcomponent_is_statev2(wcomponent) || wcomponent_is_causal_link(wcomponent) || wcomponent_is_action(wcomponent)
+    return wcomponent_is_statev2(wcomponent)
+        // Removing ability to edit causal link state as:
+        // 1. I do not remember editing the VAP sets of a causal link -- if it is used we should put a description
+        //    here of the scenario that needs it
+        // 2. There is already the "Effect when true/false" data
+        // 3. We already know we need to support some kind of equation like InsightMaker / OpenModelica and not a
+        //    static value which does not tell the receiving node how to handle and combine multiple values
+        //    together
+        // || wcomponent_is_causal_link(wcomponent)
+        || wcomponent_is_action(wcomponent)
 }
 
 
