@@ -222,8 +222,8 @@ function _WComponentMultipleForm (props: Props)
 
         {editing && <p>
             <ConfirmatoryDeleteButton
-                button_text="Delete from knowledge view (allow passthrough from foundations)"
-                tooltip_text="Delete from knowledge view (allow passthrough from foundations)"
+                button_text="Delete from knowledge view"
+                tooltip_text="Delete from knowledge view"
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({
@@ -237,8 +237,8 @@ function _WComponentMultipleForm (props: Props)
 
         {editing && <p>
             <ConfirmatoryDeleteButton
-                button_text="Block from knowledge view"
-                tooltip_text="Block from showing in current knowledge view"
+                button_text="Delete and Block from knowledge view"
+                tooltip_text="Delete and Block from showing in current knowledge view"
                 on_delete={() =>
                 {
                     bulk_remove_from_knowledge_view({
