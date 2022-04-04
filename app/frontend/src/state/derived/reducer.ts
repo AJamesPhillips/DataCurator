@@ -16,17 +16,9 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
     if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id)
     {
-
-        // Commenting out because this is an (as yet) UNJUSTIFIED OPTIMISATION
-        // if (Object.keys(initial_state.specialised_objects.wcomponents_by_id).length === 0)
-        // {
-        //     // This will only run the first time 1 or more wcomponents is added, usually this means on the
-        //     // first loading of the application data when the `replace_all_specialised_objects` action
-        //     // is fired.
         const ids = Object.keys(state.specialised_objects.wcomponents_by_id)
         const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state.specialised_objects.wcomponents_by_id, ids)
         state = update_substate(state, "derived", "wcomponent_ids_by_type", wcomponent_ids_by_type)
-        // }
 
 
         const judgement_or_objectives = get_judgement_or_objectives(state, state.derived.wcomponent_ids_by_type.judgement_or_objective)
