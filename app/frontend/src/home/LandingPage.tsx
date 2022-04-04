@@ -29,7 +29,7 @@ export function LandingPage()
                     <Typography component="h1" variant="h3" className={ classes.title }>
 
                         Data Curator
-                        <Typography component="sup" className={ classes.version }> Alpha </Typography>
+                        <Typography component="sup" className={ classes.version }> Beta </Typography>
                     </Typography>
                 </Box>
                 <Box component="main">
