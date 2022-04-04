@@ -9,6 +9,10 @@ export interface HasVAPSetsAndMaybeValuePossibilities
 {
     value_possibilities?: ValuePossibilitiesById // optional as there will be older data that lacks this field
     values_and_prediction_sets: StateValueAndPredictionsSet[]
+
+    // These are only used in the derived.composed_wcomponents_by_id
+    _derived__using_value_from_wcomponent_id?: string | undefined
+    _derived__applied_counterfactual_from_wcomponent_id?: string | undefined
 }
 export interface HasValuePossibilities
 {
@@ -43,6 +47,17 @@ export interface WComponentStateValue extends WComponentNodeBase
     type: "state_value"
     target_wcomponent_id: string | undefined
 }
+
+
+
+export function get_value_attributes (wcomponent: Partial<HasVAPSetsAndMaybeValuePossibilities>)
+{
+    return {
+        value_possibilities: wcomponent.value_possibilities,
+        values_and_prediction_sets: wcomponent.values_and_prediction_sets,
+    }
+}
+
 
 
 export interface WComponentMultidimensionalState extends WComponentNodeBase

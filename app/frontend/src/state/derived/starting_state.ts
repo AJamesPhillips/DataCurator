@@ -6,6 +6,7 @@ import type { DerivedState } from "./State"
 export function get_derived_starting_state (): DerivedState
 {
     return {
+        composed_wcomponents_by_id: {},
         wcomponent_ids_by_type: get_empty_wcomponent_ids_by_type(),
         knowledge_views: [],
 

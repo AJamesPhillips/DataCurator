@@ -40,8 +40,10 @@ import {
     get_nested_knowledge_view_ids,
     sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
+    get_knowledge_view_from_state,
 } from "../../specialised_objects/accessors"
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
+import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 
 
 
@@ -55,20 +57,15 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
     }
 
 
-
-    let initial_kv_id = initial_state.routing.args.subview_id
-    initial_kv_id = is_uuid_v4(initial_kv_id) ? initial_kv_id : ""
-    let current_kv_id = state.routing.args.subview_id
-    current_kv_id = is_uuid_v4(current_kv_id) ? current_kv_id : ""
-    const kv_object_id_changed = initial_kv_id !== current_kv_id
+    const initial_kv = get_knowledge_view_given_routing(initial_state)
+    const current_kv = get_knowledge_view_given_routing(state)
+    const kv_object_id_changed = initial_kv?.id !== current_kv?.id
     if (kv_object_id_changed)
     {
         state = update_substate(state, "derived", "current_composed_knowledge_view", undefined)
     }
 
 
-    const initial_kv = get_knowledge_view(initial_state, initial_kv_id)
-    const current_kv = get_knowledge_view(state, current_kv_id)
     const kv_object_changed = initial_kv !== current_kv
 
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
@@ -133,13 +130,6 @@ function update_derived_knowledge_view_state (state: RootState): RootState
     }
 
     return state
-}
-
-
-
-function get_knowledge_view (state: RootState, id: string)
-{
-    return state.specialised_objects.knowledge_views_by_id[id]
 }
 
 

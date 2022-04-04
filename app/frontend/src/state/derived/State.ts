@@ -4,7 +4,7 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
 import type {
-    WComponent,
+    WComponent, WComponentsById,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
@@ -90,6 +90,10 @@ export interface DerivedAvailableFilterOptions
 
 export interface DerivedState
 {
+    // MUST NOT save these to the server as the `State` type wcomponents may contain VAP sets from
+    // other `State value` type wcomponents
+    composed_wcomponents_by_id: WComponentsById
+
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 

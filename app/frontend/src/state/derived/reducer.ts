@@ -8,6 +8,7 @@ import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import { get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
+import { derived_composed_wcomponents_by_id_reducer } from "./composed_wcomponents_by_id"
 
 
 
@@ -36,6 +37,9 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
 
 
     state = knowledge_views_derived_reducer(initial_state, state)
+    // IMPORTANT: derived_composed_wcomponents_by_id_reducer MUST go after knowledge_views_derived_reducer as it
+    // uses the `state.derived.current_composed_knowledge_view.composed_wc_id_map` value
+    state = derived_composed_wcomponents_by_id_reducer(initial_state, state)
     state = conditionally_update_active_judgement_or_objective_ids(initial_state, state)
 
 
