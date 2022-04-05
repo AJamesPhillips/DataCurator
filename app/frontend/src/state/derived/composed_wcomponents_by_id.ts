@@ -43,7 +43,7 @@ function get_composed_wcomponents_by_id (state: RootState)
 
         if (wcomponent_is_state_value(wcomponent))
         {
-            const target_wcomponent = composed_wcomponents_by_id[wcomponent.target_wcomponent_id || ""]
+            const target_wcomponent = composed_wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
             if (!wcomponent_is_statev2(target_wcomponent)) return
 
             composed_wcomponent = {

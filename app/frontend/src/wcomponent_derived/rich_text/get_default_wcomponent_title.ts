@@ -4,6 +4,7 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_sub_state,
+    wcomponent_is_state_value,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -45,7 +46,7 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
         const { target_wcomponent_id, selector } = args.wcomponent
         if (target_wcomponent_id)
         {
-            title = `@@${target_wcomponent_id} <auto generated>`
+            title = `@@${target_wcomponent_id}`
 
             if (selector?.target_value && selector?.target_value_id_type)
             {
@@ -65,6 +66,20 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
 
                 title += (": " + value_possibility_str)
             }
+
+            title += ` <auto generated>`
+        }
+    }
+    else if (wcomponent_is_state_value(args.wcomponent))
+    {
+        title = `State value (no target set) <auto generated>`
+
+        const { attribute_wcomponent_id: target_wcomponent_id } = args.wcomponent
+        if (target_wcomponent_id)
+        {
+            title = `@@${target_wcomponent_id}`
+
+            title += ` <auto generated>`
         }
     }
 
