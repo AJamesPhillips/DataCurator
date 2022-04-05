@@ -94,6 +94,7 @@ export interface DerivedState
     // other `State value` type wcomponents
     composed_wcomponents_by_id: WComponentsById
 
+    // Does not include deleted components
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 

@@ -53,6 +53,8 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
             return
         }
 
+        if (wc.deleted_at) return
+
         wc_ids_by_type[wc.type].add(id)
         if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wcomponent_has_single_statev2_datetime(wc))
         {
