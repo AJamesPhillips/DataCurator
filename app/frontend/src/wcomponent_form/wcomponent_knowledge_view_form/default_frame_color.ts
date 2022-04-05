@@ -1,4 +1,4 @@
 import type { Color } from "../../shared/interfaces/color";
 
 
-export const default_frame_color: Color = { r: 225, g: 225, b: 225, a: 0.3 }
+export const default_frame_color: Color = { r: 175, g: 175, b: 175, a: 0.18 }

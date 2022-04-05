@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { useState } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 
 import "./ColorPicker.css"
 import { EditableNumber } from "../form/EditableNumber"
@@ -16,9 +16,15 @@ interface OwnProps
 }
 
 
+const default_color = () => ({ r: 255, g: 255, b: 255, a: 1 })
+
 export function ColorPicker (props: OwnProps)
 {
-    const [color, _set_color] = useState<Color>(props.color || { r: 255, g: 255, b: 255, a: 1 })
+    const [color, _set_color] = useState<Color>(props.color || default_color())
+    useEffect(() =>
+    {
+        _set_color(props.color || default_color())
+    }, [color_to_string(props.color)])
 
     const set_color = (partial_color: Partial<Color>) =>
     {
@@ -110,5 +116,5 @@ function colours_different (color1: Color | undefined, color2: Color)
 {
     if (!color1) return true
 
-    return color1.r !== color2.r || color1.g !== color2.g || color1.b !== color2.b || color1.a !== color2.a
+    return color_to_string(color1) !== color_to_string(color2)
 }
