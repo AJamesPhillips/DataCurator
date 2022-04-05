@@ -301,7 +301,11 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
                 const counterfactual_VAP_set = apply_counterfactuals_v2_to_VAP_set({
                     VAP_set, VAP_set_id_to_counterfactual_v2_map,
                 })
-                const VAPs_represent = get_wcomponent_VAPs_represent(from_wc)
+
+                // Using an empty wcomponents_by_id for now as making causal connections from state_value should not be
+                // supported (for now) and I want to think more about this use case before implementing it
+                const wcomponents_by_id = {}
+                const VAPs_represent = get_wcomponent_VAPs_represent(from_wc, wcomponents_by_id)
                 const visual_VAPs = convert_VAP_set_to_VAP_visuals({
                     wcomponent: from_wc, VAP_set: counterfactual_VAP_set, VAPs_represent
                 })

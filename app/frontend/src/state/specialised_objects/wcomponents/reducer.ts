@@ -15,6 +15,7 @@ import { is_upsert_wcomponent, is_delete_wcomponent } from "./actions"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
 import { tidy_wcomponent } from "./tidy_wcomponent"
 import { handle_upsert_wcomponent } from "./utils"
+import type { WComponentsById } from "../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -23,7 +24,7 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
     if (is_upsert_wcomponent(action))
     {
-        const tidied = tidy_wcomponent(action.wcomponent)
+        const tidied = tidy_wcomponent(action.wcomponent, state.specialised_objects.wcomponents_by_id)
         state = handle_upsert_wcomponent(state, tidied, action.is_source_of_truth)
     }
 
@@ -81,6 +82,7 @@ function run_tests ()
     let VAPs: StateValueAndPrediction[]
     let tidied: WComponentNodeStateV2
     let tidied_VAPs: StateValueAndPrediction[]
+    let wcomponents_by_id: WComponentsById = {}
 
     const base_id = -1
 
@@ -90,7 +92,7 @@ function run_tests ()
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
     ]
-    tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
+    tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
 
     test(tidied.values_and_prediction_sets!.map(({ id }) => id), ["vps1", "vps2"], "", sort_list)
 
@@ -104,7 +106,7 @@ function run_tests ()
     wcomponent.values_and_prediction_sets = [
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), entries: VAPs },
     ]
-    tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
+    tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
 
     test(tidied.values_and_prediction_sets![0]!.entries.map(({ probability }) => probability), [1, 0], "", sort_list)
 
@@ -113,7 +115,7 @@ function run_tests ()
     // Changing wcomponent to type boolean should not result in relative_probability being removed
     // Changing wcomponent to type boolean should allow probabilites to be different from relative_probability
     wcomponent = { ...wcomponent, subtype: "boolean" }
-    tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
+    tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
     tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
     test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], "", sort_list)
     test(tidied_VAPs.map(({ probability }) => probability), [1, 0], "", sort_list)
@@ -128,7 +130,7 @@ function run_tests ()
     ]
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 
-    tidied = tidy_wcomponent(wcomponent) as WComponentNodeStateV2
+    tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
     tidied_VAPs = tidied.values_and_prediction_sets![0]!.entries
 
     test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], "", sort_list)

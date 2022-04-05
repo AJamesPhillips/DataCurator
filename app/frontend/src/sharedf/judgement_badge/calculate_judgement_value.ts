@@ -48,7 +48,10 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     const value = current_value.parsed_value
 
 
-    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
+    // Using an empty wcomponents_by_id for now as judgements on state_value should not be supported (for now)
+    // and I want to think more about this use case before implementing it
+    const wcomponents_by_id = {}
+    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id)
 
     return core_calculate_judgement_value({ judgement_wcomponent, target_VAPs_represent, value })
 }

@@ -26,7 +26,7 @@ export function update_specialised_object_ids_pending_save (state: RootState, ob
 
 export function update_wcomponent_last_source_of_truth (state: RootState, item: WComponent)
 {
-    item = tidy_wcomponent(item)
+    item = tidy_wcomponent(item, state.specialised_objects.wcomponents_by_id)
     item = clean_base_object_of_sync_meta_fields(item) // defensive
 
     state = update_subsubsubstate(state, "sync", "last_source_of_truth_specialised_objects_by_id", "wcomponents", item.id, item)

@@ -109,7 +109,7 @@ function _WComponentCounterfactualForm (props: Props)
     }
 
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id)
     const target_VAP_set = target_VAP_sets.find(({ id }) => id === wcomponent.target_VAP_set_id)
 
 

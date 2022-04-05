@@ -30,7 +30,10 @@ export function ValueAndPredictionEntryRow (props: OwnProps)
 {
     const { VAP_visual, show_judgements, counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent)
+    // Using an empty wcomponents_by_id for now as judgements on state_value should not be supported (for now)
+    // and I want to think more about this use case before implementing it
+    const wcomponents_by_id = {}
+    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent, wcomponents_by_id)
     const certainty_percent_num = VAP_visual.certainty * 100
     const certainty_percent_str = `${certainty_percent_num}%`
     const rounded_certainty_percent = Math.round(certainty_percent_num)

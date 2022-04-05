@@ -36,7 +36,9 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
     if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [] }
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
+    // todo should implement this fully?
+    const wcomponents_by_id = {}
+    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
 
     // Defensively set to empty array
     const { values_and_prediction_sets = [] } = wcomponent

@@ -179,7 +179,7 @@ function _WComponentForm (props: Props)
     const orig_validity_predictions = wcomponent_can_have_validity_predictions(wcomponent) ? (wcomponent.validity || []) : undefined
 
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent)
+    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
     let UI_value: DerivedValueForUI | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined

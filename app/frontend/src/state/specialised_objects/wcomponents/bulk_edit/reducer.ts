@@ -42,7 +42,7 @@ function handle_bulk_edit_wcomponents (state: RootState, action: ActionBulkEditW
 
             const edited_wcomponent = modify_label_ids(wcomponent_with_change, remove_label_ids, add_label_ids)
 
-            const tidied = tidy_wcomponent(edited_wcomponent)
+            const tidied = tidy_wcomponent(edited_wcomponent, state.specialised_objects.wcomponents_by_id)
             state = handle_upsert_wcomponent(state, tidied, false)
         })
     }

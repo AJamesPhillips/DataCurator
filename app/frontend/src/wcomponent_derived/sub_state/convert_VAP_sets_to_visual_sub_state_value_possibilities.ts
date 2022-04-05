@@ -35,7 +35,9 @@ export function convert_VAP_sets_to_visual_sub_state_value_possibilities (args: 
 
     const target_VAP_sets = get_substate_target_VAP_sets(target_wcomponent, target_VAP_set_id)
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
+    // todo should implement this fully?
+    const wcomponents_by_id = {}
+    const VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id)
     const values: StateValueCore[] = []
     target_VAP_sets.forEach(VAP_set =>
     {

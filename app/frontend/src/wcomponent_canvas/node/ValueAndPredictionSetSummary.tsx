@@ -27,7 +27,9 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
 {
     const [show_all_judgements, set_show_all_judgements] = useState(false)
     const { counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
-    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent)
+    // todo should implement this fully?
+    const wcomponents_by_id = {}
+    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent, wcomponents_by_id)
     const VAP_visuals_data = convert_VAP_set_to_VAP_visuals({ ...props, VAP_set: counterfactual_VAP_set, VAPs_represent })
     const data_with_non_zero_certainty = VAP_visuals_data.filter(d => d.certainty > 0)
 

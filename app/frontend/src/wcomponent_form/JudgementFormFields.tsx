@@ -61,7 +61,10 @@ function _JudgementFormFields (props: Props)
     const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
 
 
-    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent)
+    // Using an empty wcomponents_by_id for now as judgements on state_value should not be supported (for now)
+    // and I want to think more about this use case before implementing it
+    const wcomponents_by_id = {}
+    const target_VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id)
     let boolean_options: AutocompleteOption[] = []
     if (target_VAPs_represent === VAPsType.boolean)
     {

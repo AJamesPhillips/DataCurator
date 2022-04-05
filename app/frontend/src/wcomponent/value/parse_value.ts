@@ -77,7 +77,7 @@ export function value_possibility_for_UI (value_possibility: SimpleValuePossibil
 
 
 
-export function get_VAPs_representing_parsed_value (VAP: VAP, VAPs_represent: VAPsType): ParsedValue
+export function get_parsed_value_represented_by_a_VAP (VAP: VAP, VAPs_represent: VAPsType): ParsedValue
 {
     let parsed_value = parse_VAP_value(VAP, VAPs_represent)
     if (VAPs_represent === VAPsType.boolean) {

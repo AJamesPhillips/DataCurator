@@ -8,7 +8,7 @@ import {
     add_uncertain_VAP_visual,
     ensure_VAP_set_entries_consistent_with_representing_type,
 } from "./utils_to_convert_VAP_set_to_visuals"
-import { get_VAPs_representing_parsed_value } from "../../wcomponent/value/parse_value"
+import { get_parsed_value_represented_by_a_VAP } from "../../wcomponent/value/parse_value"
 
 
 
@@ -30,7 +30,7 @@ export function convert_VAP_set_to_VAP_visuals (args: ConvertVAPSetToVAPVisualsD
     const boolean_representation = get_boolean_representation(args.wcomponent)
     const data: VAPVisual[] = cleaned_VAP_set.entries.map(VAP =>
     {
-        const parsed_value = get_VAPs_representing_parsed_value(VAP, args.VAPs_represent)
+        const parsed_value = get_parsed_value_represented_by_a_VAP(VAP, args.VAPs_represent)
         const value_text = parsed_value_to_string(parsed_value, boolean_representation)
         const certainty = VAP.probability * (shared_conviction !== undefined ? shared_conviction : VAP.conviction)
         total_certainties += certainty

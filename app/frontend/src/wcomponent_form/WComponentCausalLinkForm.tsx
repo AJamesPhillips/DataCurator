@@ -29,7 +29,10 @@ export function WComponentCausalLinkForm (props: OwnProps)
 
 
     const from_statev2 = wcomponent_is_statev2(from_wcomponent)
-    const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent) === VAPsType.number
+    // Using an empty wcomponents_by_id for now as making causal connections from state_value should not be
+    // supported (for now) and I want to think more about this use case before implementing it
+    const wcomponents_by_id = {}
+    const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent, wcomponents_by_id) === VAPsType.number
 
 
     const show_primary_effect = editing || wcomponent.effect_when_true !== undefined
