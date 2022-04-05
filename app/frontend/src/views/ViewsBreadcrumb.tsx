@@ -123,6 +123,7 @@ function _ViewsBreadcrumb (props: Props)
                 }
                 force_editable={true}
                 threshold_minimum_score={false}
+                retain_options_order={true}
             />
         </Box>
         )}
