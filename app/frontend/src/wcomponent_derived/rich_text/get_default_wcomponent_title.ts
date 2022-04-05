@@ -72,14 +72,16 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
     }
     else if (wcomponent_is_state_value(args.wcomponent))
     {
-        title = `State value (no target set) <auto generated>`
+        title = `State value (no parent or attribute set) <auto generated>`
 
-        const { attribute_wcomponent_id: target_wcomponent_id } = args.wcomponent
-        if (target_wcomponent_id)
+        const { owner_wcomponent_id, attribute_wcomponent_id } = args.wcomponent
+        if (owner_wcomponent_id || attribute_wcomponent_id)
         {
-            title = `@@${target_wcomponent_id}`
+            title = owner_wcomponent_id ? `@@${owner_wcomponent_id} ` : `No owner of `
 
-            title += ` <auto generated>`
+            title += attribute_wcomponent_id ? `@@${attribute_wcomponent_id} ` : `no attribute `
+
+            title += `<auto generated>`
         }
     }
 

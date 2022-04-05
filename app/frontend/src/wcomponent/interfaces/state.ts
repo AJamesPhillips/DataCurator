@@ -45,6 +45,7 @@ export const wcomponent_statev2_subtypes: WComponentStateV2SubType[] = Object.ke
 export interface WComponentStateValue extends WComponentNodeBase
 {
     type: "state_value"
+    owner_wcomponent_id: string | undefined
     attribute_wcomponent_id: string | undefined
 }
 
