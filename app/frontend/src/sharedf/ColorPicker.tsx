@@ -29,7 +29,7 @@ export function ColorPicker (props: OwnProps)
     const on_blur = (partial_color: Partial<Color>) =>
     {
         const valid_new_color = get_valid_new_color(color, partial_color)
-        _set_color(valid_new_color)
+        if (colours_different(color, valid_new_color)) _set_color(valid_new_color)
         if (colours_different(props.color, valid_new_color)) props.conditional_on_blur(valid_new_color)
     }
 
@@ -41,7 +41,7 @@ export function ColorPicker (props: OwnProps)
             value={color.r}
             allow_undefined={false}
             conditional_on_change={r => set_color({ r })}
-            always_on_blur={r => on_blur({ r })}
+            conditional_on_blur={r => on_blur({ r })}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -51,7 +51,7 @@ export function ColorPicker (props: OwnProps)
             value={color.g}
             allow_undefined={false}
             conditional_on_change={g => set_color({ g })}
-            always_on_blur={g => on_blur({ g })}
+            conditional_on_blur={g => on_blur({ g })}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -61,7 +61,7 @@ export function ColorPicker (props: OwnProps)
             value={color.b}
             allow_undefined={false}
             conditional_on_change={b => set_color({ b })}
-            always_on_blur={b => on_blur({ b })}
+            conditional_on_blur={b => on_blur({ b })}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -70,7 +70,7 @@ export function ColorPicker (props: OwnProps)
             value={color.a}
             allow_undefined={false}
             conditional_on_change={a => set_color({ a })}
-            always_on_blur={a => on_blur({ a })}
+            conditional_on_blur={a => on_blur({ a })}
             style={{ width: 65 }}
         /> &nbsp;
 
