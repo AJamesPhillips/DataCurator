@@ -1,3 +1,4 @@
+import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
 import { old_ids_and_functions_regex, uuids_and_functions_regex } from "./id_regexs"
 import type { ReplaceFunctionIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_url, format_wcomponent_link } from "./templates"
@@ -37,6 +38,18 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
         else if (!referenced_wcomponent) return // let id be replaced in the normal way
 
         else if (funktion === "url") replacement = format_wcomponent_url(root_url, id)
+        else if (funktion === "value")
+        {
+            const created_at_ms = new Date().getTime()
+            const value = get_wcomponent_state_UI_value({
+                wcomponent: referenced_wcomponent,
+                VAP_set_id_to_counterfactual_v2_map: {},
+                created_at_ms,
+                sim_ms: created_at_ms,
+            })
+
+            replacement = value.values_string
+        }
         else
         {
             // Add link at start
@@ -74,12 +87,13 @@ function get_functional_ids_from_text (text: string): { id: string, funktion: /*
 
 
 
-type Funktion = "url" | "title" | "description" | "map"
+type Funktion = "url" | "title" | "description" | "map" | "value"
 const _supported_functions: {[f in Funktion]: true} = {
     url: true,
     title: true,
     description: true,
     map: true,
+    value: true,
 }
 const supported_funktions = new Set(Object.keys(_supported_functions))
 

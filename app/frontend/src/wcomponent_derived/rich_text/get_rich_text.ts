@@ -56,13 +56,6 @@ export function get_title (args: GetFieldTextArgs): string
     return replace_ids_in_text({ ...args, text })
 }
 
-export function get_description (args: GetFieldTextArgs): string
-{
-    const text = args.wcomponent.description
-
-    return replace_ids_in_text({ ...args, text })
-}
-
 
 
 interface ReplaceValueInTextArgs
