@@ -19,7 +19,7 @@ interface OwnProps
 
 const map_state = (state: RootState) => ({
     rich_text: state.display_options.consumption_formatting,
-    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
     created_at_ms: state.routing.args.created_at_ms,
@@ -38,13 +38,13 @@ class _RichMarkDown extends Component <Props>
     {
         const {
             text, rich_text,
-            wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
+            composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
             placeholder = "...",
             created_at_ms, sim_ms,
         } = this.props
 
         const value = replace_ids_in_text({
-            text, rich_text, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
+            text, rich_text, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
         })
         return <Markdown options={MARKDOWN_OPTIONS}>
             {(value && add_newlines_to_markdown(value)) || placeholder}
