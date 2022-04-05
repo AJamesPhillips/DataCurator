@@ -15,6 +15,7 @@ import {
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
+    wcomponent_is_state_value,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 
@@ -85,7 +86,13 @@ function _WComponentBackReferences (props: Props)
                                 || wc.to_id === wcomponent_id
                             )
                         )
+                        || (wcomponent_is_state_value(wc) &&
+                            (
+                                wc.attribute_wcomponent_id === wcomponent_id
+                            )
+                        )
                 })
+                .filter(wc => wc.id !== wcomponent_id)
         }
 
         set_other_wcomponents(relevant_wcomponents)
@@ -121,7 +128,15 @@ function _WComponentBackReferences (props: Props)
                     args={undefined}
                 >
                     <Markdown>
-                        {get_title({ rich_text: true, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
+                        {get_title({
+                            rich_text: true,
+                            wcomponent,
+                            wcomponents_by_id,
+                            knowledge_views_by_id,
+                            wc_id_to_counterfactuals_map: undefined,
+                            created_at_ms,
+                            sim_ms,
+                        }) || `No title for component ${wcomponent.id}`}
                     </Markdown>
                 </Link>
             </div>
