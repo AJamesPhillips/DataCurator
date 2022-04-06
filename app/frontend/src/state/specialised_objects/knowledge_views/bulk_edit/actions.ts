@@ -68,7 +68,8 @@ interface BulkAddToKnowledgeViewProps
 {
     wcomponent_ids: string[]
     knowledge_view_id: string
-    bulk_entry?: KnowledgeViewWComponentEntry
+    override_entry?: KnowledgeViewWComponentEntry
+    default_entry?: KnowledgeViewWComponentEntry
 }
 export interface ActionBulkAddToKnowledgeView extends Action, BulkAddToKnowledgeViewProps {}
 

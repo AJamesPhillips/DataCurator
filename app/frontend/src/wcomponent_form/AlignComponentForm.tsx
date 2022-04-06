@@ -85,8 +85,8 @@ function _AlignComponentForm (props: Props)
                 if (!knowledge_view_id) return
 
                 const state = get_store().getState()
-                const bulk_entry = get_middle_of_screen(state)
-                props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, bulk_entry })
+                const override_entry = get_middle_of_screen(state)
+                props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, override_entry })
             }}
             is_left={true}
         />

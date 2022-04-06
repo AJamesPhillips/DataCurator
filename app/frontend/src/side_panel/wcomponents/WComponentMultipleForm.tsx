@@ -20,6 +20,9 @@ import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkF
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { wcomponent_type_options } from "../../wcomponent_form/type_options"
 import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import { get_middle_of_screen } from "../../state/display_options/display"
+import { get_store } from "../../state/store"
 
 
 
@@ -204,19 +207,27 @@ function _WComponentMultipleForm (props: Props)
 
         {editing && <p>
             <h3>Add to knowledge view</h3>
-            {all_wcomponent_ids_present_in_current_kv ?
+
+            {all_wcomponent_ids_present_in_current_kv ? "" : <span>
+                <WarningTriangle message="Not all components present in current view so will be added to center of view." />
+                Not all components present in current view so will be added to center of view.
+            </span>}
+
             <SelectKnowledgeView
                 on_change={knowledge_view_id =>
                 {
                     if (!knowledge_view_id) return
 
+                    const state = get_store().getState()
+                    const default_entry = get_middle_of_screen(state)
+
                     bulk_add_to_knowledge_view({
                         wcomponent_ids: selected_wcomponent_ids,
                         knowledge_view_id,
+                        default_entry,
                     })
                 }}
             />
-            : " (Disabled - not all components present in current view)" }
         </p>}
 
 
