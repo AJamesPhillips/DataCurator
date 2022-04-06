@@ -233,7 +233,7 @@ function _WComponentCanvasNode (props: Props)
 
     const use_styles = makeStyles(theme => ({
         sizer: {
-            transform: `scale(${kv_entry.s ? kv_entry.s : 1 })`,
+            transform: `scale(${(kv_entry.s && is_on_canvas) ? kv_entry.s : 1 })`,
             // @NOTE: The transformOrigin defaults to center center (50% 50%), but this may not be
             // best for determining position of connectors, values can be set
             // with keywords left/right/center or top/center/bottom
