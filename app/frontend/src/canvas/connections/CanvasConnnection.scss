@@ -29,7 +29,7 @@
     cursor: pointer;
     pointer-events: stroke;
 }
-.any_drag_event, .graph_background_pointer_down
+.canvas_drag_event, .graph_background_pointer_down
 {
     .connection_line_background.mouseable, .connection_end.mouseable
     {

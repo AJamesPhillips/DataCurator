@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
+import { connect, ConnectedProps, useStore } from "react-redux"
 
 import type { ChildrenRawData } from "../layout/interfaces"
 import type { RootState } from "../state/State"
@@ -10,6 +10,8 @@ import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvas
 import { Canvas } from "../canvas/Canvas"
 import { MainArea } from "../layout/MainArea"
 import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
+import { useEffect, useState } from "preact/hooks"
+import { pub_sub } from "../state/pub_sub/pub_sub"
 // import { WComponentCanvasNodeDebugCanvasPointerPosition } from "../debug/WComponentCanvasNodeDebugCanvasPointerPosition"
 
 
@@ -25,10 +27,12 @@ const map_state = (state: RootState) =>
 
     const { wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
 
+
     const any_node_is_moving = state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0
     const any_frame_is_resizing = state.meta_wcomponents.frame_is_resizing
-    // todo rename as any_drag_event does not include the dragging of connections from one component to another
-    const any_drag_event = any_node_is_moving || any_frame_is_resizing
+    // canvas_drag_event does not include the dragging of connections from one component
+    // to another or dragging node background frame handles
+    const canvas_drag_event = any_node_is_moving || any_frame_is_resizing
 
     return {
         ready,
@@ -37,7 +41,7 @@ const map_state = (state: RootState) =>
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
         show_large_grid: state.display_options.show_large_grid,
-        any_drag_event,
+        canvas_drag_event,
     }
 }
 
@@ -49,8 +53,25 @@ type Props = ConnectedProps<typeof connector>
 function _KnowledgeGraphView (props: Props)
 {
     const elements = get_children(props)
+    const [canvas_pointed_down, set_canvas_pointed_down] = useState(false)
 
-    const extra_class_names = props.any_drag_event ? " any_drag_event " : ""
+    useEffect(() =>
+    {
+        return pub_sub.canvas.sub("canvas_pointer_down", () =>
+        {
+            set_canvas_pointed_down(true)
+        })
+    })
+
+    useEffect(() =>
+    {
+        return pub_sub.canvas.sub("canvas_pointer_up", () =>
+        {
+            set_canvas_pointed_down(false)
+        })
+    })
+
+    const extra_class_names = (props.canvas_drag_event || canvas_pointed_down) ? " canvas_drag_event " : ""
 
     return <MainArea
         main_content={<Canvas
