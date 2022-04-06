@@ -65,7 +65,15 @@ export const MARKDOWN_OPTIONS: MarkdownToJSX.Options =
         script: (props: { children: string }) => props.children,
         // This allows us to render `<auto generated>` as an empty string
         auto: (props: { children: string }) => "",
-        iframe: (props: { children: string }) => props.children,
+        // Re-enable iframes to allow embedding youtube videos
+        iframe: (props: { children: string, src: string }) =>
+        {
+            const { src } = props
+            const url = new URL(src)
+            const allow = url.hostname === "www.youtube.com"
+
+            return allow ? <iframe {...props} /> : null
+        },
         tweet: (props: { id: string }) =>
         {
             const src = `https://platform.twitter.com/embed/Tweet.html?dnt=false&frame=false&hideCard=false&hideThread=false&id=${props.id}&lang=en-gb&theme=light&widgetsVersion=0a8eea3%3A1643743420422&width=400px"`
