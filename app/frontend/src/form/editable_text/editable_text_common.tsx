@@ -18,7 +18,6 @@ export interface EditableTextCommonOwnProps
     value: string
     conditional_on_change?: (new_value: string) => void
     conditional_on_blur?: (value: string) => void
-    always_on_blur?: (value: string) => void
     force_focus_on_first_render?: boolean
     force_editable?: boolean
     select_all_on_focus?: boolean
@@ -80,7 +79,7 @@ function _EditableTextCommon (props: Props)
     const id_insertion_point = useRef<number | undefined>(undefined)
 
 
-    if (force_editable === false || (!props.conditional_on_change && !props.conditional_on_blur && !props.always_on_blur) || disabled || (presenting && force_editable !== true))
+    if (force_editable === false || (!props.conditional_on_change && !props.conditional_on_blur) || disabled || (presenting && force_editable !== true))
     {
         const class_name = (disabled ? "disabled" : "")
         const have_value = props.value !== undefined
@@ -151,9 +150,8 @@ function _EditableTextCommon (props: Props)
             value,
             initial_value: props.value,
             conditional_on_blur: props.conditional_on_blur,
-            always_on_blur: props.always_on_blur,
         })
-    }, [props.value, props.conditional_on_blur, props.always_on_blur])
+    }, [props.value, props.conditional_on_blur])
 
 
     const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
@@ -163,7 +161,7 @@ function _EditableTextCommon (props: Props)
 
 
     // When component unmounts, check if it is still being edited.  If so then the `wrapped_on_blur` above has
-    // not yet fired and we need to call the conditional_on_blur and always_on_blur
+    // not yet fired and we need to call conditional_on_blur
     useEffect(() =>
     {
         return () =>
@@ -179,10 +177,9 @@ function _EditableTextCommon (props: Props)
                 value,
                 initial_value: props.value,
                 conditional_on_blur: props.conditional_on_blur,
-                always_on_blur: props.always_on_blur,
             })
         }
-    }, [props.value, props.conditional_on_blur, props.always_on_blur])
+    }, [props.value, props.conditional_on_blur])
 
 
     const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack

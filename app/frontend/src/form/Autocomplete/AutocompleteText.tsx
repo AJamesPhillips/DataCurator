@@ -178,7 +178,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
     const handle_key_down = async (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[]) =>
     {
-        e.stopImmediatePropagation() // stops things like `?` and `ctrl+e` from firing
+        e.stopImmediatePropagation() // stops things like `?` and `ctrl + e` from firing
 
         const key = e.key
 
