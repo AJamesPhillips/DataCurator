@@ -61,9 +61,6 @@ function _WComponentStateValueForm (props: Props)
     } = props
 
 
-    let possible_owner_wcomponents = Object.values(wcomponents_by_id)
-        .filter(wc => wc.id !== wcomponent.id)
-
     // If the current knowledge view has a wcomponent, then assume this is the owner
     // wcomponent and put this to the top of the list.  Otherwise sort to put the most
     // recently created components to the top of the list
@@ -71,6 +68,7 @@ function _WComponentStateValueForm (props: Props)
         ? new Date().getTime()
         : wc.created_at.getTime()
 
+    let possible_owner_wcomponents = Object.values(wcomponents_by_id)
     possible_owner_wcomponents = sort_list(possible_owner_wcomponents, get_key, SortDirection.descending)
 
     const owner_wcomponent_id_options = get_wcomponent_search_options({
