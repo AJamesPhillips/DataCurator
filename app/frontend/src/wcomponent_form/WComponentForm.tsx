@@ -167,7 +167,7 @@ function _WComponentForm (props: Props)
     _focus_title.current = false
 
 
-    const upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
+    const wrapped_upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
         if (props.wcomponent_from_different_base) return
 
@@ -193,7 +193,7 @@ function _WComponentForm (props: Props)
 
 
     const title = get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
-    const conditional_on_blur_title = (title: string) => upsert_wcomponent({ title })
+    const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
     return <Box>
@@ -248,7 +248,7 @@ function _WComponentForm (props: Props)
                     const vanilla = prepare_new_contextless_wcomponent_object({ base_id, type }) as WComponent
                     const new_wcomponent = { ...vanilla, ...wcomponent }
                     new_wcomponent.type = type
-                    upsert_wcomponent(new_wcomponent)
+                    wrapped_upsert_wcomponent(new_wcomponent)
                 }}
             />
         </FormControl>}
@@ -264,7 +264,7 @@ function _WComponentForm (props: Props)
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
                     allow_none={true}
-                    on_change={option_id => upsert_wcomponent({ subtype: option_id })}
+                    on_change={option_id => wrapped_upsert_wcomponent({ subtype: option_id })}
                 />
             </div>
         </p>}
@@ -275,7 +275,7 @@ function _WComponentForm (props: Props)
                 force_editable={force_editable}
                 placeholder="Description..."
                 value={wcomponent.description}
-                conditional_on_blur={description => upsert_wcomponent({ description })}
+                conditional_on_blur={description => wrapped_upsert_wcomponent({ description })}
                 hide_label={true}
             />
         </FormControl>}
@@ -303,17 +303,17 @@ function _WComponentForm (props: Props)
 
         {wcomponent_is_state_value(wcomponent) && <WComponentStateValueForm
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
         {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
         {wcomponent_is_counterfactual_v2(wcomponent) && <WComponentCounterfactualForm
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
@@ -323,8 +323,8 @@ function _WComponentForm (props: Props)
                 connection_terminal_description="From"
                 wcomponent_id={from_wcomponent && from_wcomponent.id}
                 connection_terminal_type={wcomponent.from_type}
-                on_update_id={from_id => upsert_wcomponent({ from_id })}
-                on_update_type={from_type => upsert_wcomponent({ from_type })}
+                on_update_id={from_id => wrapped_upsert_wcomponent({ from_id })}
+                on_update_type={from_type => wrapped_upsert_wcomponent({ from_type })}
             />
         </p>
 
@@ -333,8 +333,8 @@ function _WComponentForm (props: Props)
                 connection_terminal_description="To"
                 wcomponent_id={to_wcomponent && to_wcomponent.id}
                 connection_terminal_type={wcomponent.to_type}
-                on_update_id={to_id => upsert_wcomponent({ to_id })}
-                on_update_type={to_type => upsert_wcomponent({ to_type })}
+                on_update_id={to_id => wrapped_upsert_wcomponent({ to_id })}
+                on_update_type={to_type => wrapped_upsert_wcomponent({ to_type })}
             />
         </p>
 
@@ -343,7 +343,7 @@ function _WComponentForm (props: Props)
                 value="Reverse Direction"
                 onClick={() =>
                 {
-                    upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
+                    wrapped_upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
                 }}
             />
         </p>}
@@ -354,24 +354,24 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             from_wcomponent={from_wcomponent}
             editing={editing}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
         {wcomponent_is_plain_connection(wcomponent) && <WComponentConnectionForm
             wcomponent={wcomponent}
             editing={editing}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
         {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields
-            {...{ wcomponent, upsert_wcomponent }}
+            {...{ wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent }}
         />}
 
 
         {(wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && <WComponentParentGoalOrActionForm
-            {...{ wcomponent, upsert_wcomponent }}
+            {...{ wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent }}
         />}
 
 
@@ -379,18 +379,18 @@ function _WComponentForm (props: Props)
             <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
-                on_change={label_ids => upsert_wcomponent({ label_ids })}
+                on_change={label_ids => wrapped_upsert_wcomponent({ label_ids })}
             />
         </FormControl>}
 
         {wcomponent_is_event(wcomponent)&& <WComponentEventAtFormField
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
         {wcomponent_is_prioritisation(wcomponent) && <WComponentDateTimeFormField
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
@@ -402,7 +402,7 @@ function _WComponentForm (props: Props)
                     // TODO remove this hack and restore existence predictions
                     item_descriptor={(wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction"}
                     predictions={orig_validity_predictions}
-                    update_predictions={new_predictions => upsert_wcomponent({ validity: new_predictions }) }
+                    update_predictions={new_predictions => wrapped_upsert_wcomponent({ validity: new_predictions }) }
                 />
             </p>
 
@@ -416,7 +416,7 @@ function _WComponentForm (props: Props)
                 <PredictionList
                     item_descriptor="(Deprecated, please delete) Existence prediction"
                     predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
-                    update_predictions={new_predictions => upsert_wcomponent({
+                    update_predictions={new_predictions => wrapped_upsert_wcomponent({
                         existence: new_predictions.length ? new_predictions : undefined
                     })}
                 />
@@ -438,7 +438,7 @@ function _WComponentForm (props: Props)
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
                     {
-                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
+                        wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
                 />}
                 {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
@@ -448,7 +448,7 @@ function _WComponentForm (props: Props)
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
                     {
-                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
+                        wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                     }}
                 />}
             </p>
@@ -469,7 +469,7 @@ function _WComponentForm (props: Props)
                 update_value_possibilities={value_possibilities =>
                 {
                     const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
-                    upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
+                    wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                 }}
             />
             <hr />
@@ -481,7 +481,7 @@ function _WComponentForm (props: Props)
         {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields
             force_editable={force_editable}
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         /> }
 
         <br />
@@ -494,7 +494,7 @@ function _WComponentForm (props: Props)
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
                 on_change={new_custom_created_at => {
-                    upsert_wcomponent({ custom_created_at: new_custom_created_at })
+                    wrapped_upsert_wcomponent({ custom_created_at: new_custom_created_at })
                 }}
             /><br/>
         </FormControl>
@@ -503,13 +503,13 @@ function _WComponentForm (props: Props)
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
-                conditional_on_blur={color => upsert_wcomponent({ label_color: color })}
+                conditional_on_blur={color => wrapped_upsert_wcomponent({ label_color: color })}
             />
         </p>}
 
         {editing && <WComponentImageForm
             wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
         {!editing && wcomponent.summary_image && <p>
             <a href={wcomponent.summary_image} target="_blank"><ExternalLinkIcon />Open image</a>
@@ -519,12 +519,12 @@ function _WComponentForm (props: Props)
             <span className="description_label">Hide node title</span>
             <EditableCheckbox
                 value={wcomponent.hide_title}
-                on_change={hide_title => upsert_wcomponent({ hide_title })}
+                on_change={hide_title => wrapped_upsert_wcomponent({ hide_title })}
             />
             <span className="description_label">Hide node state</span>
             <EditableCheckbox
                 value={wcomponent.hide_state}
-                on_change={hide_state => upsert_wcomponent({ hide_state })}
+                on_change={hide_state => wrapped_upsert_wcomponent({ hide_state })}
             />
 
             <hr />
@@ -549,7 +549,7 @@ function _WComponentForm (props: Props)
         {editing && wcomponent.deleted_at && <div>
             <Button
                 title="Undo delete"
-                onClick={() => upsert_wcomponent({ deleted_at: undefined })}
+                onClick={() => wrapped_upsert_wcomponent({ deleted_at: undefined })}
             >Restore</Button>
         </div>}
 
