@@ -9,6 +9,7 @@ export function PrivacyPolicy ()
         <p>Last updated: April 12, 2022</p>
         <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
         <p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created using the <a href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/" target="_blank">Privacy Policy Template</a>.</p>
+        <p>If you read this policy and you are a lawyer and you think it could be improved then <a href="https://github.com/centerofci/datacurator/issues" rel="external nofollow noopener" target="_blank">please do get in touch</a> to suggest a different policy template we can use.</p>
         <h1>Interpretation and Definitions</h1>
         <h2>Interpretation</h2>
         <p>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</p>
