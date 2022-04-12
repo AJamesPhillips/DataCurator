@@ -154,6 +154,11 @@ export function LandingPage()
                             <img src="/cci_logo.svg" style={{ width: 120, marginTop: 40 }} />
                         </a>
                     </p>
+
+                    <p>
+                        <a href="/privacy-policy/">Privacy Policy</a><br/>
+                        <a href="/terms-and-conditions/">Terms and Conditions</a>
+                    </p>
                 </Box>
                 <Box component="footer">
                 </Box>
