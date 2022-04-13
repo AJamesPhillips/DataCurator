@@ -10,7 +10,8 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
 {
     knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view) // defensive
 
-    let wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids)
+    let wc_id_map = knowledge_view.wc_id_map
+    // wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids)
     if (remove_passthrough_entries)
     {
         wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map)
