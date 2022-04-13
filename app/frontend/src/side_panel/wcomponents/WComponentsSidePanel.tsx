@@ -44,6 +44,7 @@ const map_state = (state: RootState) =>
 const map_dispatch = {
     clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
     set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage,
+    add_wcomponent_to_store: ACTIONS.specialised_object.add_wcomponent_to_store,
 }
 
 
@@ -55,10 +56,9 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentsSidePanel (props: Props)
 {
     const [searching_for_unfound, set_searching_for_unfound] = useState<boolean | undefined>(undefined)
-    const [searched_for_wcomponent, set_searched_for_wcomponent] = useState<WComponent | undefined>(undefined)
 
     const { ready, item_id: id } = props
-    const wcomponent = props.wcomponent || searched_for_wcomponent
+    const wcomponent = props.wcomponent
 
     const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.need_to_choose_base_id
         : !ready ? DisplayType.loading
@@ -69,35 +69,32 @@ function _WComponentsSidePanel (props: Props)
 
     function clear_old_wcomponent_from_other_base ()
     {
-        if (id && wcomponent && wcomponent.id !== id)
+        if (id && wcomponent?.id !== id)
         {
             set_searching_for_unfound(undefined)
-            set_searched_for_wcomponent(undefined)
         }
     }
 
 
     function look_for_wcomponent_in_any_base ()
     {
-        if (!ready) return
-
-        if (display_type === DisplayType.render_wcomponent &&
-            id && // type guard (display_type will be no_id if id === null)
-            !wcomponent && searching_for_unfound === undefined)
+        if (ready
+            && display_type === DisplayType.render_wcomponent
+            && id // this is only a type guard as display_type will be "no_id" if `id === null`
+            && !wcomponent
+            && searching_for_unfound === undefined
+        )
         {
-            (async () => {
-                let component_form_closed = false
+            ;(async () => {
 
                 set_searching_for_unfound(true)
                 const result = await search_for_wcomponent_in_all_bases(id)
-                if (component_form_closed) return
 
-                set_searching_for_unfound(false)
-                set_searched_for_wcomponent(result.wcomponent)
-
-                return () => {
-                    component_form_closed = true
+                if (result.wcomponent)
+                {
+                    props.add_wcomponent_to_store({ wcomponent: result.wcomponent })
                 }
+                set_searching_for_unfound(false)
             })()
         }
     }
@@ -155,7 +152,7 @@ function _WComponentsSidePanel (props: Props)
 
     if (wcomponent)
     {
-        const wcomponent_from_different_base = !props.wcomponent && !!searched_for_wcomponent
+        const wcomponent_from_different_base = !!props.wcomponent && props.wcomponent.base_id !== props.chosen_base_id
         return <WComponentForm wcomponent={wcomponent} wcomponent_from_different_base={wcomponent_from_different_base} />
     }
 

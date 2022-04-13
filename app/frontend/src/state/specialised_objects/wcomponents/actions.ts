@@ -49,8 +49,26 @@ export const is_delete_wcomponent = (action: AnyAction): action is ActionDeleteW
 
 
 
+interface AddWComponentToStoreArgs
+{
+    wcomponent: WComponent
+}
+interface ActionAddWComponentToStore extends Action, AddWComponentToStoreArgs {}
+
+const add_wcomponent_to_store_type = "add_wcomponent_to_store"
+
+const add_wcomponent_to_store = (args: AddWComponentToStoreArgs): ActionAddWComponentToStore =>
+    ({ type: add_wcomponent_to_store_type, ...args })
+
+export const is_add_wcomponent_to_store = (action: AnyAction): action is ActionAddWComponentToStore => {
+    return action.type === add_wcomponent_to_store_type
+}
+
+
+
 export const wcomponent_actions = {
     upsert_wcomponent,
     delete_wcomponent,
+    add_wcomponent_to_store,
     ...bulk_editing_wcomponents_actions,
 }

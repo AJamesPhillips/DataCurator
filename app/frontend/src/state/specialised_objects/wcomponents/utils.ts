@@ -31,3 +31,15 @@ export function handle_upsert_wcomponent (state: RootState, wcomponent: WCompone
 
     return state
 }
+
+
+
+export function handle_add_wcomponent_to_store (state: RootState, wcomponent: WComponent): RootState
+{
+    const map = { ...state.specialised_objects.wcomponents_by_id }
+    map[wcomponent.id] = wcomponent
+
+    state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
+
+    return state
+}
