@@ -105,10 +105,8 @@ const map_state = (state: RootState, { wcomponent, wcomponent_from_different_bas
         from_wcomponent,
         to_wcomponent,
 
-        // todo refactor these names.  It's confusing that we're using the unmodified_editing,
-        // editing and force_editable
-        unmodified_editing: !state.display_options.consumption_formatting,
-        editing: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
+        is_in_editing_mode: !state.display_options.consumption_formatting,
+        editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
         force_editable: wcomponent_from_different_base ? false : undefined,
 
         created_at_ms: state.routing.args.created_at_ms,
@@ -132,7 +130,7 @@ function _WComponentForm (props: Props)
 {
     const { wcomponent, ready, base_id,
         wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
-        editing, force_editable, created_at_ms, sim_ms } = props
+        editable, force_editable, created_at_ms, sim_ms } = props
 
     const wcomponent_id = wcomponent.id
     const [previous_id, set_previous_id] = useState<string>(wcomponent_id)
@@ -192,7 +190,7 @@ function _WComponentForm (props: Props)
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
-    const title = get_title({ rich_text: !editing, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = get_title({ rich_text: !editable, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
@@ -203,7 +201,7 @@ function _WComponentForm (props: Props)
         >
             <WarningTriangle message="" />
             &nbsp;
-            {props.unmodified_editing
+            {props.is_in_editing_mode
                 ? <span>Editing disabled. Change to base {props.wcomponent.base_id} to edit</span>
                 : <span>Change to base {props.wcomponent.base_id} to view</span>}
         </div>}
@@ -232,7 +230,7 @@ function _WComponentForm (props: Props)
         {// If it is a state component then hide the entry when not editing & no actual state
          // values, i.e. simplify the entry to just pretend it's a typeless component
         }
-        {(editing || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editable || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
             {// Keep up to date in WComponentMultipleForm
             }
             <AutocompleteText
@@ -254,7 +252,7 @@ function _WComponentForm (props: Props)
         </FormControl>}
 
 
-        {wcomponent_is_statev2(wcomponent) && (editing || has_VAP_sets) &&
+        {wcomponent_is_statev2(wcomponent) && (editable || has_VAP_sets) &&
         <p>
             <span className="description_label">Subtype</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
@@ -270,7 +268,7 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(editing || wcomponent.description) && <FormControl fullWidth={true} margin="normal">
+        {(editable || wcomponent.description) && <FormControl fullWidth={true} margin="normal">
             <EditableText
                 force_editable={force_editable}
                 placeholder="Description..."
@@ -338,7 +336,7 @@ function _WComponentForm (props: Props)
             />
         </p>
 
-        {editing && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+        {editable && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
             <Button
                 value="Reverse Direction"
                 onClick={() =>
@@ -353,14 +351,14 @@ function _WComponentForm (props: Props)
         {wcomponent_is_causal_link(wcomponent) && <WComponentCausalLinkForm
             wcomponent={wcomponent}
             from_wcomponent={from_wcomponent}
-            editing={editing}
+            editing={editable}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
         {wcomponent_is_plain_connection(wcomponent) && <WComponentConnectionForm
             wcomponent={wcomponent}
-            editing={editing}
+            editing={editable}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
@@ -375,7 +373,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {(editing || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editable || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl component="fieldset" fullWidth={true} margin="normal">
             <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
@@ -394,7 +392,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {orig_validity_predictions && (editing || orig_validity_predictions.length > 0) && <div>
+        {orig_validity_predictions && (editable || orig_validity_predictions.length > 0) && <div>
             <br />
 
             <p>
@@ -427,7 +425,7 @@ function _WComponentForm (props: Props)
         </div>}
 
 
-        {(orig_values_and_prediction_sets !== undefined && (editing || orig_values_and_prediction_sets.length > 0)) && <div>
+        {(orig_values_and_prediction_sets !== undefined && (editable || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
                 {VAPs_represent === VAPsType.undefined && <div>
                     Set subtype to show Value Predictions
@@ -459,10 +457,10 @@ function _WComponentForm (props: Props)
 
         {VAPs_represent !== VAPsType.undefined
             && orig_values_and_prediction_sets !== undefined
-            && (editing || (Object.keys(orig_value_possibilities || {}).length > 0))
+            && (editable || (Object.keys(orig_value_possibilities || {}).length > 0))
             && <div>
             <ValuePossibilitiesComponent
-                editing={editing}
+                editing={editable}
                 VAPs_represent={VAPs_represent}
                 value_possibilities={orig_value_possibilities}
                 values_and_prediction_sets={orig_values_and_prediction_sets}
@@ -499,7 +497,7 @@ function _WComponentForm (props: Props)
             /><br/>
         </FormControl>
 
-        {editing && <p>
+        {editable && <p>
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
@@ -507,15 +505,15 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
-        {editing && <WComponentImageForm
+        {editable && <WComponentImageForm
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-        {!editing && wcomponent.summary_image && <p>
+        {!editable && wcomponent.summary_image && <p>
             <a href={wcomponent.summary_image} target="_blank"><ExternalLinkIcon />Open image</a>
         </p>}
 
-        {editing && <p>
+        {editable && <p>
             <span className="description_label">Hide node title</span>
             <EditableCheckbox
                 value={wcomponent.hide_title}
@@ -538,7 +536,7 @@ function _WComponentForm (props: Props)
         <br />
 
 
-        {editing && !wcomponent.deleted_at && <div>
+        {editable && !wcomponent.deleted_at && <div>
             <ConfirmatoryDeleteButton
                 button_text="Delete"
                 tooltip_text="Remove from all knowledge views"
@@ -546,7 +544,7 @@ function _WComponentForm (props: Props)
             />
         </div>}
 
-        {editing && wcomponent.deleted_at && <div>
+        {editable && wcomponent.deleted_at && <div>
             <Button
                 title="Undo delete"
                 onClick={() => wrapped_upsert_wcomponent({ deleted_at: undefined })}
