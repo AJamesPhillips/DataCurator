@@ -4,7 +4,7 @@ import { TextField } from "@material-ui/core"
 
 import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"
-import { useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 import { Button } from "../sharedf/Button"
 import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import type { RootState } from "../state/State"
@@ -60,6 +60,27 @@ function _EditableCustomDateTime (props: Props)
     }
 
 
+    // Copied from editable_text_common.  TODO, refactor and reuse that implmentation?
+    // When component unmounts, check if it is still being edited.  If so then the `handle_on_blur` above has
+    // not yet fired and we need to call conditional_on_blur
+    const el_ref = useRef<undefined | HTMLInputElement>(undefined)
+    const ref_conditional_on_change = useRef(conditional_on_change)
+    ref_conditional_on_change.current = conditional_on_change
+    useEffect(() =>
+    {
+        return () =>
+        {
+            if (!el_ref.current) return
+
+            const is_editing_this_specific_text = document.activeElement === el_ref.current
+            if (!is_editing_this_specific_text) return
+
+            const new_value = handle_on_blur({ working_value: el_ref.current.value, invariant_value })
+            ref_conditional_on_change.current(new_value)
+        }
+    }, [])
+
+
     return <div className={class_name} title={title}>
         <TextField
             disabled={not_editable}
@@ -69,7 +90,9 @@ function _EditableCustomDateTime (props: Props)
             onFocus={() => set_editing(true)}
             inputRef={((r: HTMLInputElement | null) =>
             {
-                if (!r || !editing) return
+                if (!r) return
+                el_ref.current = r
+                if (!editing) return
                 // Because we do not dispatch any state changes to react on changing the value
                 // this code block should only be run **once** on the render cycle immediately
                 // after focusing the input element
