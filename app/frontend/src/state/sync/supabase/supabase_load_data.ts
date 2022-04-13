@@ -1,7 +1,7 @@
 import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_supabase } from "../../../supabase/get_supabase"
 import { supabase_get_knowledge_views } from "./knowledge_view"
-import { supabase_get_wcomponents } from "./wcomponent"
+import { supabase_get_wcomponents, supabase_get_wcomponents_from_other_bases } from "./wcomponent"
 import { local_data } from "../local/data"
 
 
@@ -23,8 +23,22 @@ export async function supabase_load_data (load_state_from_storage: boolean, base
     if (wcomponents_response.error) return Promise.reject(wcomponents_response.error)
 
 
-    return Promise.resolve<SpecialisedObjectsFromToServer>({
+    const wcomponents_other_bases_response = await supabase_get_wcomponents_from_other_bases({
+        supabase, base_id,
         knowledge_views: knowledge_views_response.items,
         wcomponents: wcomponents_response.items,
+    })
+    if (wcomponents_other_bases_response.error) return Promise.reject(wcomponents_other_bases_response.error)
+
+
+    const wcomponents = [
+        ...wcomponents_response.items,
+        ...wcomponents_other_bases_response.wcomponents,
+    ]
+
+
+    return Promise.resolve<SpecialisedObjectsFromToServer>({
+        knowledge_views: knowledge_views_response.items,
+        wcomponents,
     })
 }

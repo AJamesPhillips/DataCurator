@@ -7,6 +7,7 @@ import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
+import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 
 
 
@@ -34,26 +35,53 @@ export function supabase_get_wcomponents (args: GetWComponentsArgs)
 
 
 
-type GetWComponentFromAnyBaseArgs =
+type GetWComponentsFromAnyBaseArgs =
 {
     supabase: SupabaseClient
-    id: string
+    ids: string[]
 }
-export async function supabase_get_wcomponent_from_any_base (args: GetWComponentFromAnyBaseArgs)
+export async function supabase_get_wcomponents_from_any_base (args: GetWComponentsFromAnyBaseArgs)
 {
     const result = await supabase_get_items<SupabaseReadWComponent, WComponent>({
         supabase: args.supabase,
         all_bases: true,
         base_id: undefined,
-        specific_id: args.id,
+        specific_ids: args.ids,
         table: TABLE_NAME,
         converter: wcomponent_supabase_to_app,
     })
 
     return {
         error: result.error,
-        wcomponent: result.items[0],
+        wcomponents: result.items,
     }
+}
+
+
+
+interface GetWcomponentsFromOtherBases
+{
+    supabase: SupabaseClient
+    base_id: number
+    knowledge_views: KnowledgeView[]
+    wcomponents: WComponent[]
+}
+export async function supabase_get_wcomponents_from_other_bases (args: GetWcomponentsFromOtherBases)
+{
+    const downloaded_wcomponent_ids = new Set<string>()
+    args.wcomponents.forEach(wc => downloaded_wcomponent_ids.add(wc.id))
+
+    const missing_wcomponent_ids = new Set<string>()
+    args.knowledge_views.map(kv => Object.keys(kv.wc_id_map).forEach(id =>
+    {
+        if (!downloaded_wcomponent_ids.has(id)) missing_wcomponent_ids.add(id)
+    }))
+
+    // console .log(`missing_wcomponent_ids: ${missing_wcomponent_ids.size}`)
+
+    const ids = Array.from(missing_wcomponent_ids)
+
+    return await supabase_get_wcomponents_from_any_base({ supabase: args.supabase, ids })
 }
 
 

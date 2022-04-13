@@ -12,7 +12,7 @@ import { Button } from "../../sharedf/Button"
 import { ACTIONS } from "../../state/actions"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_supabase } from "../../supabase/get_supabase"
-import { supabase_get_wcomponent_from_any_base } from "../../state/sync/supabase/wcomponent"
+import { supabase_get_wcomponents_from_any_base } from "../../state/sync/supabase/wcomponent"
 import { WComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
 import { NotFoundWComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm"
 
@@ -90,9 +90,9 @@ function _WComponentsSidePanel (props: Props)
                 set_searching_for_unfound(true)
                 const result = await search_for_wcomponent_in_all_bases(id)
 
-                if (result.wcomponent)
+                if (result.wcomponents[0])
                 {
-                    props.add_wcomponent_to_store({ wcomponent: result.wcomponent })
+                    props.add_wcomponent_to_store({ wcomponent: result.wcomponents[0] })
                 }
                 set_searching_for_unfound(false)
             })()
@@ -190,5 +190,5 @@ enum DisplayType {
 function search_for_wcomponent_in_all_bases (wcomponent_id: string)
 {
     const supabase = get_supabase()
-    return supabase_get_wcomponent_from_any_base({ supabase, id: wcomponent_id })
+    return supabase_get_wcomponents_from_any_base({ supabase, ids: [wcomponent_id] })
 }
