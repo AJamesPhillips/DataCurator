@@ -8,6 +8,7 @@ interface UpdateSyncStatusArgs
 {
     status: SYNC_STATUS
     data_type: SyncDataType
+    loading_base_id?: number
     error_message?: string
     attempt?: number
 }

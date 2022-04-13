@@ -26,7 +26,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
     if (is_update_sync_status(action))
     {
-        const { status, error_message = "", attempt: retry_attempt } = action
+        const { status, loading_base_id, error_message = "", attempt: retry_attempt } = action
 
         const sync_state_for_data_type: SyncStateForDataType =
         {
@@ -35,6 +35,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
             error_message,
             retry_attempt,
         }
+        if (loading_base_id !== undefined) sync_state_for_data_type.loading_base_id = loading_base_id
 
         state = update_substate(state, "sync", action.data_type, sync_state_for_data_type)
         state = update_ready_for_fields(state)
@@ -56,7 +57,7 @@ export const sync_reducer = (state: RootState, action: AnyAction): RootState =>
 
         const last: LastSourceOfTruthSpecialisedObjectsById = { wcomponents: {}, knowledge_views: {} }
         state = update_substate(state, "sync", "last_source_of_truth_specialised_objects_by_id", last)
-        state = update_substate(state, "sync", "specialised_objects", { status: undefined, error_message: "", retry_attempt: 0 })
+        state = update_substate(state, "sync", "specialised_objects", { status: undefined, loading_base_id: undefined, error_message: "", retry_attempt: 0 })
         state = update_ready_for_fields(state)
     }
 

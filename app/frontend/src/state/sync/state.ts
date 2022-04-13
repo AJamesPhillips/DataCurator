@@ -45,6 +45,7 @@ export interface SpecialisedObjectsSaveConflicts
 export interface SyncStateForDataType
 {
     status: SYNC_STATUS | undefined
+    loading_base_id: number | undefined
     error_message: string
 
     retry_attempt: number | undefined
