@@ -8,6 +8,15 @@ import { update_modified_or_deleted_by } from "../update_modified_by"
 
 export function handle_upsert_wcomponent (state: RootState, wcomponent: WComponent, is_source_of_truth?: boolean, mark_as_deleted: boolean = false): RootState
 {
+    // Defensive.  Extra check in case editing is attempted from a different base.
+    // Not 100% sure we need to prevent editing from a different base but this approach
+    // allows for a simplier approach in the code, UX & UI to be taken for now.
+    if (state.user_info.chosen_base_id !== wcomponent.base_id)
+    {
+        console.error(`Trying to save wcomponent "${wcomponent.id}" but its base_id "${wcomponent.base_id}" || ${state.user_info.chosen_base_id}`)
+        return state
+    }
+
     const map = { ...state.specialised_objects.wcomponents_by_id }
     wcomponent = is_source_of_truth ? wcomponent : update_modified_or_deleted_by(wcomponent, state, mark_as_deleted)
     map[wcomponent.id] = wcomponent
