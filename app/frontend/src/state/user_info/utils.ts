@@ -8,9 +8,12 @@ import type { SYNC_STATUS } from "../sync/state"
 
 
 
-export async function refresh_bases_for_current_user (store?: Store<RootState>)
+export async function refresh_bases_for_current_user (store?: Store<RootState>, full_reload_required = false)
 {
     if (!store) store = get_store()
+
+    if (full_reload_required) store.dispatch(ACTIONS.user_info.update_bases({ bases: undefined }))
+
 
     const { user } = store.getState().user_info
 

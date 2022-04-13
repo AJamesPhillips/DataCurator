@@ -43,8 +43,7 @@ export function user_info_subscribers (store: StoreType)
 
     pub_sub.user.sub("stale_bases", full_reload_required =>
     {
-        if (full_reload_required) store.dispatch(ACTIONS.user_info.update_bases({ bases: undefined }))
-        refresh_bases_for_current_user(store)
+        refresh_bases_for_current_user(store, full_reload_required)
     })
 
 
