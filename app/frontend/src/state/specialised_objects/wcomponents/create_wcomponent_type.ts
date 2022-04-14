@@ -5,6 +5,8 @@ import {
     WComponent,
     wcomponent_is_action,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_statev2,
+    wcomponent_is_state_value,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { ACTIONS } from "../../actions"
@@ -20,6 +22,7 @@ import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { get_latest_sim_ms_for_routing } from "../../routing/utils/get_latest_sim_ms_for_routing"
 import { get_default_parent_goal_or_action_ids } from "../get_default_parent_goal_or_action_ids"
+import type { WComponentStateValue } from "../../../wcomponent/interfaces/state"
 
 
 
@@ -42,6 +45,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
     wcomponent = set_parent_goal_or_action_ids(wcomponent, state)
+    wcomponent = set_owner_and_attribute_ids(wcomponent, state)
 
 
     const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state)
@@ -135,4 +139,38 @@ function get_knowledge_view_entry (add_to_knowledge_view: AddToKnowledgeViewArgs
     }
 
     return add_to_knowledge_view
+}
+
+
+
+function set_owner_and_attribute_ids (wcomponent: WComponent, state: RootState): WComponent
+{
+    if (wcomponent_is_state_value(wcomponent))
+    {
+        const current_knowledge_view = get_current_composed_knowledge_view_from_state(state)
+        const current_knowledge_view_wc = state.specialised_objects.wcomponents_by_id[current_knowledge_view?.id || ""]
+
+        const owner_wcomponent_id = wcomponent.owner_wcomponent_id || current_knowledge_view_wc?.id
+
+        let attribute_wcomponent_id = wcomponent.attribute_wcomponent_id
+        const selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_list
+        const selected_wcomponent_id = selected_wcomponent_ids[0]
+
+        if (selected_wcomponent_ids.length === 1 && selected_wcomponent_id)
+        {
+            const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponent_id)
+            if (selected_wcomponent && wcomponent_is_statev2(selected_wcomponent))
+            {
+                attribute_wcomponent_id = selected_wcomponent.id
+            }
+        }
+
+        wcomponent = {
+            ...wcomponent,
+            owner_wcomponent_id,
+            attribute_wcomponent_id,
+        } as WComponentStateValue
+    }
+
+    return wcomponent
 }
