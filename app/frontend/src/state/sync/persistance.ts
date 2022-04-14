@@ -23,6 +23,7 @@ export function sync_starting_state (): SyncState
         status: undefined,
         error_message: "",
         retry_attempt: undefined,
+        loading_base_id: undefined,
     }
 
     const state: SyncState = {
