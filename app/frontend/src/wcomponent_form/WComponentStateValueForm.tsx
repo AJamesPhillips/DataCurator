@@ -16,6 +16,8 @@ import { SortDirection, sort_list } from "../shared/utils/sort"
 import { get_possibilities_from_VAP_sets } from "../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { get_items_by_id } from "../shared/utils/get_items"
+import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
+import { square_distance_between_kv_entries } from "../canvas/position_utils"
 
 
 
@@ -29,7 +31,7 @@ interface OwnProps
 const map_state = (state: RootState) =>
 {
     return {
-        current_knowledge_view_id: get_current_composed_knowledge_view_from_state(state)?.id,
+        current_knowledge_view: get_current_composed_knowledge_view_from_state(state),
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         wcomponent_ids_with_state_VAPs: state.derived.wcomponent_ids_by_type.any_state_VAPs,
@@ -54,7 +56,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentStateValueForm (props: Props)
 {
     const {
-        current_knowledge_view_id,
+        current_knowledge_view,
         wcomponents_by_id,
         knowledge_views_by_id,
         wcomponent,
@@ -66,7 +68,7 @@ function _WComponentStateValueForm (props: Props)
     // If the current knowledge view has a wcomponent, then assume this is the owner
     // wcomponent and put this to the top of the list.  Otherwise sort to put the most
     // recently created components to the top of the list
-    const get_key = (wc: WComponent) => wc.id === current_knowledge_view_id
+    const get_key = (wc: WComponent) => wc.id === current_knowledge_view?.id
         ? new Date().getTime()
         : wc.created_at.getTime()
 
@@ -88,8 +90,17 @@ function _WComponentStateValueForm (props: Props)
         .filter(is_defined)
         .filter(wcomponent_should_have_state_VAP_sets)
 
+    // Sort to have nearest components suggested first
+    const position = current_knowledge_view?.composed_wc_id_map[wcomponent.id]
+    function get_distance (other_wcomponent: WComponent)
+    {
+        const other_position = current_knowledge_view?.composed_wc_id_map[other_wcomponent.id]
+        return square_distance_between_kv_entries(position, other_position)
+    }
+    const sorted_wcomponents_with_state_VAP_sets = sort_list(wcomponents_with_state_VAP_sets, get_distance, SortDirection.ascending)
+
     const attribute_wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: wcomponents_with_state_VAP_sets,
+        wcomponents: sorted_wcomponents_with_state_VAP_sets,
         wcomponents_by_id,
         knowledge_views_by_id,
         wc_id_to_counterfactuals_map,

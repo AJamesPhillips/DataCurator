@@ -61,3 +61,18 @@ export function offset_entry_by_half_node (kv_entry: KnowledgeViewWComponentEntr
 
     return { left, top }
 }
+
+
+
+export function distance_between_kv_entries (position: KnowledgeViewWComponentEntry | undefined, other_position: KnowledgeViewWComponentEntry | undefined)
+{
+    return square_distance_between_kv_entries(position, other_position) ** 0.5
+}
+
+
+export function square_distance_between_kv_entries (position: KnowledgeViewWComponentEntry | undefined, other_position: KnowledgeViewWComponentEntry | undefined)
+{
+    if (!position || !other_position) return Number.POSITIVE_INFINITY
+
+    return (position.left - other_position.left) ** 2 + (position.top - other_position.top) ** 2
+}
