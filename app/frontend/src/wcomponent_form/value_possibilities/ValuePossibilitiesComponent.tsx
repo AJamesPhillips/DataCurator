@@ -16,12 +16,15 @@ import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/int
 import {
     get_possibilities_from_VAP_sets,
 } from "../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
+import { WComponent, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 
 
 
 interface OwnProps
 {
     editing: boolean
+    attribute_wcomponent: WComponent | undefined
     VAPs_represent: VAPsType
     value_possibilities: ValuePossibilitiesById | undefined
     values_and_prediction_sets: VAPSet[]
@@ -43,6 +46,10 @@ export function ValuePossibilitiesComponent (props: OwnProps)
     // Note: `editable_list_entry` makes no semantic sense here, only using to get the
     // CSS styles applied for `expansion_button`.
     const class_name = `editable_list_entry ${show_value_possibilities ? "expanded" : ""}`
+
+
+    const { attribute_wcomponent } = props
+
 
     return <div className={class_name}>
         <div
@@ -100,13 +107,24 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                 }}
             />}
 
-            {props.editing && props.value_possibilities === undefined && <Button
+            {props.editing && <Button
                 value="Use defaults"
                 fullWidth={true}
                 onClick={() =>
                 {
                     const possible_values = get_possibilities_from_VAP_sets(props.VAPs_represent, undefined, props.values_and_prediction_sets)
                     const value_possibilities = get_items_by_id(possible_values, "default_possible_values")
+                    props.update_value_possibilities(value_possibilities)
+                }}
+            />}
+
+            {props.editing && attribute_wcomponent && wcomponent_is_statev2(attribute_wcomponent) && <Button
+                value="Use attribute's possibilities"
+                fullWidth={true}
+                onClick={() =>
+                {
+                    const possible_values = get_possibilities_from_VAP_sets(props.VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || [])
+                    const value_possibilities = get_items_by_id(possible_values, "attribute's possible_values")
                     props.update_value_possibilities(value_possibilities)
                 }}
             />}

@@ -4,16 +4,18 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { is_defined } from "../shared/utils/is_defined"
-import { WComponent, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentStateValue } from "../wcomponent/interfaces/state"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import { Button } from "../sharedf/Button"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { SortDirection, sort_list } from "../shared/utils/sort"
+import { get_possibilities_from_VAP_sets } from "../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
+import { get_items_by_id } from "../shared/utils/get_items"
 
 
 
@@ -135,7 +137,20 @@ function _WComponentStateValueForm (props: Props)
                     allow_none={true}
                     selected_option_id={wcomponent.attribute_wcomponent_id}
                     options={attribute_wcomponent_id_options}
-                    on_change={attribute_wcomponent_id => upsert_wcomponent({ attribute_wcomponent_id })}
+                    on_change={attribute_wcomponent_id =>
+                    {
+                        const attribute_wcomponent = wcomponents_by_id[attribute_wcomponent_id || ""]
+
+                        let { value_possibilities } = wcomponent
+                        if ((!value_possibilities || !Object.keys(value_possibilities)) && wcomponent_is_statev2(attribute_wcomponent))
+                        {
+                            const VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id)
+                            const possible_values = get_possibilities_from_VAP_sets(VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || [])
+                            value_possibilities = get_items_by_id(possible_values, "attribute's possible_values")
+                        }
+
+                        upsert_wcomponent({ attribute_wcomponent_id, value_possibilities })
+                    }}
                     on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
                     on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
                 />

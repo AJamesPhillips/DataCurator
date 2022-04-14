@@ -38,8 +38,8 @@ export function get_wcomponent_VAPs_represent (wcomponent: WComponent | undefine
     }
     else if (wcomponent_is_state_value(wcomponent))
     {
-        const target_wcomponent = wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
-        if (target_wcomponent) VAPs_represent = get_wcomponent_VAPs_represent(target_wcomponent, wcomponents_by_id, _wcomponent_ids_touched)
+        const attribute_wcomponent = wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
+        if (attribute_wcomponent) VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id, _wcomponent_ids_touched)
     }
     else
     {

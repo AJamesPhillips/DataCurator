@@ -10,7 +10,7 @@ export function get_items_by_id <I extends { id: string, title?: string }> (item
     {
         if (map[item.id])
         {
-            throw new Error(`Duplicate ${description}.id: "${map[item.id]}".  "${map[item.id]!.title}" and "${item.title}"`)
+            throw new Error(`Duplicate "${description}".id: "${map[item.id]}".  "${map[item.id]!.title}" and "${item.title}"`)
         }
         map[item.id] = item
     })

@@ -461,6 +461,7 @@ function _WComponentForm (props: Props)
             && <div>
             <ValuePossibilitiesComponent
                 editing={editable}
+                attribute_wcomponent={wcomponents_by_id[(wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id) || ""]}
                 VAPs_represent={VAPs_represent}
                 value_possibilities={orig_value_possibilities}
                 values_and_prediction_sets={orig_values_and_prediction_sets}
