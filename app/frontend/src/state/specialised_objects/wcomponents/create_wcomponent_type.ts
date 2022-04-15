@@ -19,10 +19,12 @@ import type { AddToKnowledgeViewArgs } from "./actions"
 import type { RootState } from "../../State"
 import { get_store } from "../../store"
 import type { HasBaseId } from "../../../shared/interfaces/base"
-import type { KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { get_latest_sim_ms_for_routing } from "../../routing/utils/get_latest_sim_ms_for_routing"
 import { get_default_parent_goal_or_action_ids } from "../get_default_parent_goal_or_action_ids"
 import type { WComponentStateValue } from "../../../wcomponent/interfaces/state"
+import { get_wcomponent_VAPs_represent } from "../../../wcomponent/get_wcomponent_VAPs_represent"
+import { get_possibilities_from_VAP_sets } from "../../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
+import { get_items_by_id } from "../../../shared/utils/get_items"
 
 
 
@@ -45,7 +47,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
     wcomponent = set_parent_goal_or_action_ids(wcomponent, state)
-    wcomponent = set_owner_and_attribute_ids(wcomponent, state)
+    wcomponent = set_state_value_fields(wcomponent, state)
 
 
     const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state)
@@ -123,13 +125,18 @@ function get_knowledge_view_entry (add_to_knowledge_view: AddToKnowledgeViewArgs
 
     if (!add_to_knowledge_view && current_knowledge_view)
     {
-        let position: KnowledgeViewWComponentEntry | undefined
-
+        let target_wcomponent_id: string | undefined = undefined
         if (wcomponent_is_judgement_or_objective(wcomponent))
         {
-            position = current_knowledge_view.composed_wc_id_map[wcomponent.judgement_target_wcomponent_id]
+            target_wcomponent_id = wcomponent.judgement_target_wcomponent_id
+        }
+        else if (wcomponent_is_state_value(wcomponent))
+        {
+            target_wcomponent_id = wcomponent.attribute_wcomponent_id
         }
 
+
+        let position = current_knowledge_view.composed_wc_id_map[target_wcomponent_id || ""]
         if (!position)
         {
             position = get_middle_of_screen(state)
@@ -143,16 +150,18 @@ function get_knowledge_view_entry (add_to_knowledge_view: AddToKnowledgeViewArgs
 
 
 
-function set_owner_and_attribute_ids (wcomponent: WComponent, state: RootState): WComponent
+function set_state_value_fields (wcomponent: WComponent, state: RootState): WComponent
 {
     if (wcomponent_is_state_value(wcomponent))
     {
         const current_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-        const current_knowledge_view_wc = state.specialised_objects.wcomponents_by_id[current_knowledge_view?.id || ""]
+        const { wcomponents_by_id } = state.specialised_objects
+        const current_knowledge_view_wc = wcomponents_by_id[current_knowledge_view?.id || ""]
 
         const owner_wcomponent_id = wcomponent.owner_wcomponent_id || current_knowledge_view_wc?.id
 
-        let attribute_wcomponent_id = wcomponent.attribute_wcomponent_id
+        let { attribute_wcomponent_id, value_possibilities } = wcomponent
+
         const selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_list
         const selected_wcomponent_id = selected_wcomponent_ids[0]
 
@@ -161,7 +170,16 @@ function set_owner_and_attribute_ids (wcomponent: WComponent, state: RootState):
             const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponent_id)
             if (selected_wcomponent && wcomponent_is_statev2(selected_wcomponent))
             {
+                const attribute_wcomponent = selected_wcomponent
                 attribute_wcomponent_id = selected_wcomponent.id
+
+
+                if (!value_possibilities || !Object.keys(value_possibilities))
+                {
+                    const VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id)
+                    const possible_values = get_possibilities_from_VAP_sets(VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || [])
+                    value_possibilities = get_items_by_id(possible_values, "attribute's possible_values")
+                }
             }
         }
 
@@ -169,6 +187,7 @@ function set_owner_and_attribute_ids (wcomponent: WComponent, state: RootState):
             ...wcomponent,
             owner_wcomponent_id,
             attribute_wcomponent_id,
+            value_possibilities,
         } as WComponentStateValue
     }
 
