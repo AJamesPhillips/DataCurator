@@ -22,6 +22,7 @@ import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { remove_element, replace_element } from "../../utils/list"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import { ValuePossibilityLink } from "../value_possibilities/ValuePossibilityLink"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 
 
 
@@ -143,7 +144,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditableTextSingleLine
                     placeholder="Min"
                     value={orig_min || ""}
-                    conditional_on_blur={new_min => crud.update_item({ ...VAP, min: new_min })}
+                    on_blur={new_min => crud.update_item({ ...VAP, min: new_min })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
                 <br />
             </div>}
@@ -154,7 +156,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     disabled={is_boolean}
                     placeholder="Value"
                     value={is_boolean ? (orig_probability > 0.5 ? "True" : "False") : orig_value}
-                    conditional_on_blur={value => crud.update_item({ ...VAP, value })}
+                    on_blur={value => crud.update_item({ ...VAP, value })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
 
                 {!is_number && !is_boolean && <div
@@ -174,7 +177,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditableTextSingleLine
                     placeholder="Max"
                     value={orig_max || ""}
-                    conditional_on_blur={max => crud.update_item({ ...VAP, max })}
+                    on_blur={max => crud.update_item({ ...VAP, max })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
                 <br />
             </div>}
@@ -186,10 +190,11 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     disabled={disabled_prob}
                     placeholder="Probability"
                     value={orig_probability}
-                    conditional_on_blur={new_probability =>
+                    on_blur={new_probability =>
                     {
                         crud.update_item({ ...VAP, probability: new_probability })
                     }}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
             </div>}
 
@@ -197,7 +202,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditablePercentage
                     placeholder="Confidence"
                     value={orig_conviction}
-                    conditional_on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
+                    on_blur={new_conviction => crud.update_item({ ...VAP, conviction: new_conviction })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
             </div>}
 
@@ -208,11 +214,12 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     size="medium"
                     value={is_boolean ? undefined : orig_relative_probability}
                     allow_undefined={true}
-                    conditional_on_blur={new_relative_probability =>
+                    on_blur={new_relative_probability =>
                     {
                         new_relative_probability = is_boolean ? undefined : (new_relative_probability || 0)
                         crud.update_item({ ...VAP, relative_probability: new_relative_probability })
                     }}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
             </div>}
 
@@ -242,7 +249,8 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
         <EditableText
             placeholder="..."
             value={item.description}
-            conditional_on_blur={description => crud.update_item({ ...item, description })}
+            on_blur={description => crud.update_item({ ...item, description })}
+            on_blur_type={EditableTextOnBlurType.conditional}
         />
     </div>
 }

@@ -11,19 +11,29 @@ import type { CreationContext } from "../../creation_context/interfaces"
 
 
 
-export interface EditableTextCommonOwnProps
+export type EditableTextCommonOwnProps =
 {
     disabled?: boolean
     placeholder: string
     value: string
     conditional_on_change?: (new_value: string) => void
-    conditional_on_blur?: (value: string) => void
     force_focus_on_first_render?: boolean
     force_editable?: boolean
     select_all_on_focus?: boolean
     size?: "small" | "medium"
     hide_label?: boolean
     style?: h.JSX.CSSProperties
+} & ({
+    on_blur?: undefined
+    on_blur_type?: undefined
+} | {
+    on_blur: (value: string) => void
+    on_blur_type: EditableTextOnBlurType
+})
+
+export enum EditableTextOnBlurType {
+    conditional,
+    always,
 }
 
 
@@ -39,7 +49,7 @@ export interface EditableTextComponentArgs
 }
 
 
-interface OwnProps extends EditableTextCommonOwnProps
+type OwnProps = EditableTextCommonOwnProps &
 {
     component: (args: EditableTextComponentArgs) => h.JSX.Element
 }
@@ -68,6 +78,7 @@ function _EditableTextCommon (props: Props)
         force_editable,
         select_all_on_focus,
         force_focus_on_first_render,
+        on_blur_type = EditableTextOnBlurType.conditional,
     } = props
 
 
@@ -79,7 +90,7 @@ function _EditableTextCommon (props: Props)
     const id_insertion_point = useRef<number | undefined>(undefined)
 
 
-    if (force_editable === false || (!props.conditional_on_change && !props.conditional_on_blur) || disabled || (presenting && force_editable !== true))
+    if (force_editable === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && force_editable !== true))
     {
         const class_name = (disabled ? "disabled" : "")
         const have_value = props.value !== undefined
@@ -131,16 +142,18 @@ function _EditableTextCommon (props: Props)
     }, [props.value, props.creation_context, props.conditional_on_change])
 
 
-    const wrapped_conditional_on_blur = useMemo(() => (new_value: string) =>
+    const wrapped_on_blur = useMemo(() => (new_value: string) =>
     {
         if (props.use_creation_context)
         {
             new_value = custom_creation_context_replace_text(props.creation_context, new_value)
         }
 
-        if (new_value !== props.value) props.conditional_on_blur && props.conditional_on_blur(new_value)
+        const value_has_changed = new_value !== props.value
+        if (on_blur_type === EditableTextOnBlurType.always || value_has_changed) props.on_blur && props.on_blur(new_value)
+
         set_value(new_value)
-    }, [props.value, props.creation_context, props.conditional_on_blur])
+    }, [props.value, props.creation_context, on_blur_type, props.on_blur])
 
 
 
@@ -166,21 +179,21 @@ function _EditableTextCommon (props: Props)
         // component from the search box.
         if (id_insertion_point.current !== undefined) return
 
-        wrapped_conditional_on_blur(e.currentTarget.value)
-    }, [props.value, wrapped_conditional_on_blur])
+        wrapped_on_blur(e.currentTarget.value)
+    }, [props.value, wrapped_on_blur])
 
 
 
     const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
     {
-        handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_conditional_on_blur)
-    }, [wrapped_conditional_on_change, wrapped_conditional_on_blur])
+        handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur)
+    }, [wrapped_conditional_on_change, wrapped_on_blur])
 
 
     // When component unmounts, check if it is still being edited.  If so then the `handle_on_blur` above has
-    // not yet fired and we need to call conditional_on_blur
-    const ref_wrapped_conditional_on_blur = useRef(wrapped_conditional_on_blur)
-    ref_wrapped_conditional_on_blur.current = wrapped_conditional_on_blur
+    // not yet fired and we need to call on_blur
+    const ref_wrapped_on_blur = useRef(wrapped_on_blur)
+    ref_wrapped_on_blur.current = wrapped_on_blur
     useEffect(() =>
     {
         return () =>
@@ -190,7 +203,7 @@ function _EditableTextCommon (props: Props)
             const is_editing_this_specific_text = document.activeElement === el_ref.current
             if (!is_editing_this_specific_text) return
 
-            ref_wrapped_conditional_on_blur.current(el_ref.current.value)
+            ref_wrapped_on_blur.current(el_ref.current.value)
         }
     }, [])
 
@@ -276,14 +289,14 @@ function handle_text_field_focus (args: HandleTextFieldFocusArgs)
         // Something else is interfering with this function.  It correctly runs on every focus event but
         // the 2nd, 4th, 6th, etc focus events result in all the text being selected followed by
         // being immediately deselected.  This only occurs when using `conditional_on_change` and not
-        // when using `conditional_on_blur`
+        // when using `on_blur`
         el.setSelectionRange(0, el.value.length)
     }
 }
 
 
 
-function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement | undefined, wrapped_conditional_on_change: (new_value: string) => void, wrapped_conditional_on_blur: (new_value: string) => void)
+function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement | undefined, wrapped_conditional_on_change: (new_value: string) => void, wrapped_on_blur: (new_value: string) => void)
 {
     const is_editing_this_specific_text = document.activeElement === el
 
@@ -293,7 +306,7 @@ function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaEle
 
     handle_ctrl_k_link_insert(e, el, wrapped_conditional_on_change)
 
-    handle_stop_propagation(e, el, wrapped_conditional_on_blur)
+    handle_stop_propagation(e, el, wrapped_on_blur)
 }
 
 
@@ -344,11 +357,11 @@ function handle_ctrl_k_link_insert (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaE
 }
 
 
-function handle_stop_propagation (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement, wrapped_conditional_on_blur: (new_value: string) => void)
+function handle_stop_propagation (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement, wrapped_on_blur: (new_value: string) => void)
 {
     if (e.ctrlKey && e.key === "e")
     {
-        wrapped_conditional_on_blur(el.value)
+        wrapped_on_blur(el.value)
         // Allow ctrl + e to propagate
         return
     }

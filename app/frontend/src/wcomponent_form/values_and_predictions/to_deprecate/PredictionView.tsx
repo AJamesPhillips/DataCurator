@@ -2,6 +2,7 @@ import { h } from "preact"
 
 import { EditablePercentage } from "../../../form/EditablePercentage"
 import { EditableText } from "../../../form/editable_text/EditableText"
+import { EditableTextOnBlurType } from "../../../form/editable_text/editable_text_common"
 import type { Prediction } from "../../../shared/uncertainty/interfaces"
 import { UncertainDateTimeForm } from "../../uncertain_datetime/UncertainDateTimeForm"
 import { PredictionSummary } from "./PredictionSummary"
@@ -57,6 +58,11 @@ export function PredictionViewDetails (props: OwnProps_Details)
         on_change(new_prediction)
     }
 
+    const on_blur_props = !update_prediction ? {} : {
+        on_blur: (new_explanation: string) => update_prediction({ explanation: new_explanation }),
+        on_blur_type: EditableTextOnBlurType.conditional,
+    }
+
     return <div>
         <br />
         <UncertainDateTimeForm
@@ -68,7 +74,7 @@ export function PredictionViewDetails (props: OwnProps_Details)
             <span className="description_label">Explanation</span> <EditableText
                 placeholder="Explanation..."
                 value={explanation}
-                conditional_on_blur={update_prediction && (new_explanation => update_prediction({ explanation: new_explanation }))}
+                {...on_blur_props}
             />
         </div>}
     </div>

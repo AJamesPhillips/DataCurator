@@ -18,6 +18,7 @@ import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { set_VAP_probabilities } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 
 
 
@@ -101,23 +102,25 @@ export const get_details2_for_single_VAP_set = (VAPs_represent: VAPsType, editin
                 disabled={false}
                 placeholder="Confidence"
                 value={conviction}
-                conditional_on_blur={conviction =>
+                on_blur={conviction =>
                 {
                     const shared_entry_values = { ...VAP_set.shared_entry_values, conviction }
                     // Overwrite all the existing convictions with this conviction
                     const entries = VAP_set.entries.map(e => ({ ...e, conviction }))
                     crud.update_item({ ...VAP_set, entries, shared_entry_values })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
         </div>}
         {display_explanation && <EditableText
             placeholder="Explanation"
             value={explanation}
-            conditional_on_blur={explanation =>
+            on_blur={explanation =>
             {
                 const shared_entry_values = { ...VAP_set.shared_entry_values, explanation }
                 crud.update_item({ ...VAP_set, shared_entry_values })
             }}
+            on_blur_type={EditableTextOnBlurType.conditional}
         />}
 
         <br />

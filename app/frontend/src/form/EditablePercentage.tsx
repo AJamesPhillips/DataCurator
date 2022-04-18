@@ -4,6 +4,7 @@ import "./Editable.css"
 import { bounded } from "../shared/utils/bounded"
 import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 import { ratio_to_percentage_string } from "../sharedf/percentages"
+import { EditableTextOnBlurType } from "./editable_text/editable_text_common"
 
 
 
@@ -13,7 +14,8 @@ interface OwnProps
     placeholder: string
     value: number | undefined
     conditional_on_change?: (new_value: number) => void
-    conditional_on_blur?: (new_value: number) => void
+    on_blur?: (new_value: number) => void
+    on_blur_type?: EditableTextOnBlurType
 }
 
 
@@ -21,8 +23,8 @@ export function EditablePercentage (props: OwnProps)
 {
     const value = ratio_to_percentage_string(props.value)
 
-    const { conditional_on_change, conditional_on_blur, disabled } = props
-    if ((!conditional_on_change && !conditional_on_blur) || disabled)
+    const { conditional_on_change, on_blur, on_blur_type=EditableTextOnBlurType.conditional, disabled } = props
+    if ((!conditional_on_change && !on_blur) || disabled)
     {
         const class_name = "editable_percentage" + (disabled ? "disabled" : "")
         const have_value = props.value !== undefined
@@ -42,10 +44,11 @@ export function EditablePercentage (props: OwnProps)
                 const valid_value = string_to_percentage(new_value)
                 if (valid_value !== undefined) conditional_on_change && conditional_on_change(valid_value)
             }}
-            conditional_on_blur={new_value => {
+            on_blur={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) conditional_on_blur && conditional_on_blur(valid_value)
+                if (valid_value !== undefined) on_blur && on_blur(valid_value)
             }}
+            on_blur_type={on_blur_type}
         />&nbsp;%
     </div>
 }

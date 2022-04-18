@@ -5,6 +5,7 @@ import "./Editable.css"
 import "./EditableNumber.css"
 import type { RootState } from "../state/State"
 import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
+import { EditableTextOnBlurType } from "./editable_text/editable_text_common"
 
 
 
@@ -15,18 +16,19 @@ type OwnProps =
     default_value_when_invalid?: number
     size?: "small" | "medium"
     style?: h.JSX.CSSProperties
+    on_blur_type?: EditableTextOnBlurType
 } & (
 {
     value: number
     allow_undefined: false
     conditional_on_change?: (new_value: number) => void
-    conditional_on_blur?: (value: number) => void
+    on_blur?: (value: number) => void
 } |
 {
     value: number | undefined
     allow_undefined: true
     conditional_on_change?: (new_value: number | undefined) => void
-    conditional_on_blur?: (value: number | undefined) => void
+    on_blur?: (value: number | undefined) => void
 })
 
 
@@ -48,7 +50,8 @@ function _EditableNumber (props: Props)
     const {
         allow_undefined,
         conditional_on_change,
-        conditional_on_blur,
+        on_blur,
+        on_blur_type,
         disabled,
         editing,
         default_value_when_invalid = 0,
@@ -57,7 +60,7 @@ function _EditableNumber (props: Props)
 
     let class_name = "editable_number"
 
-    if (!editing || (!conditional_on_change && !conditional_on_blur) || disabled)
+    if (!editing || (!conditional_on_change && !on_blur) || disabled)
     {
         class_name = class_name + (editing ? "" : " not_editable ") + (disabled ? " disabled " : "")
         const have_value = props.value !== undefined
@@ -84,12 +87,13 @@ function _EditableNumber (props: Props)
                 if (on_event_handler_accepts_undefined(conditional_on_change, allow_undefined)) conditional_on_change(valid_value)
                 else if (valid_value !== undefined) conditional_on_change(valid_value)
             }}
-            conditional_on_blur={value =>
+            on_blur={value =>
             {
-                if (!conditional_on_blur) return
+                if (!on_blur) return
 
-                handle_blur({ value, default_value_when_invalid, on_blur: conditional_on_blur, allow_undefined })
+                handle_blur({ value, default_value_when_invalid, on_blur, allow_undefined })
             }}
+            on_blur_type={on_blur_type || EditableTextOnBlurType.conditional}
         />
     </div>
 }

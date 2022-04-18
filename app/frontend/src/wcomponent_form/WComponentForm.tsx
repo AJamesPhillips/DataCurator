@@ -74,6 +74,7 @@ import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -211,7 +212,8 @@ function _WComponentForm (props: Props)
                 force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={title}
-                conditional_on_blur={conditional_on_blur_title}
+                on_blur={conditional_on_blur_title}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 force_focus_on_first_render={focus_title}
                 hide_label={true}
             />
@@ -273,7 +275,8 @@ function _WComponentForm (props: Props)
                 force_editable={force_editable}
                 placeholder="Description..."
                 value={wcomponent.description}
-                conditional_on_blur={description => wrapped_upsert_wcomponent({ description })}
+                on_blur={description => wrapped_upsert_wcomponent({ description })}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 hide_label={true}
             />
         </FormControl>}

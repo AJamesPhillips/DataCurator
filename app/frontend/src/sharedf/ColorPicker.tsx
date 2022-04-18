@@ -6,6 +6,7 @@ import { EditableNumber } from "../form/EditableNumber"
 import type { Color } from "../shared/interfaces/color"
 import { bounded } from "../shared/utils/bounded"
 import { color_to_string } from "./color"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -47,7 +48,8 @@ export function ColorPicker (props: OwnProps)
             value={color.r}
             allow_undefined={false}
             conditional_on_change={r => set_color({ r })}
-            conditional_on_blur={r => on_blur({ r })}
+            on_blur={r => on_blur({ r })}
+            on_blur_type={EditableTextOnBlurType.always}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -57,7 +59,8 @@ export function ColorPicker (props: OwnProps)
             value={color.g}
             allow_undefined={false}
             conditional_on_change={g => set_color({ g })}
-            conditional_on_blur={g => on_blur({ g })}
+            on_blur={g => on_blur({ g })}
+            on_blur_type={EditableTextOnBlurType.always}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -67,7 +70,8 @@ export function ColorPicker (props: OwnProps)
             value={color.b}
             allow_undefined={false}
             conditional_on_change={b => set_color({ b })}
-            conditional_on_blur={b => on_blur({ b })}
+            on_blur={b => on_blur({ b })}
+            on_blur_type={EditableTextOnBlurType.always}
             style={{ width: 65 }}
         /> &nbsp;
 
@@ -76,7 +80,8 @@ export function ColorPicker (props: OwnProps)
             value={color.a}
             allow_undefined={false}
             conditional_on_change={a => set_color({ a })}
-            conditional_on_blur={a => on_blur({ a })}
+            on_blur={a => on_blur({ a })}
+            on_blur_type={EditableTextOnBlurType.always}
             style={{ width: 65 }}
         /> &nbsp;
 

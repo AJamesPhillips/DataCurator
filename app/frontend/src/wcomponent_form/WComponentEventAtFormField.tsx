@@ -11,6 +11,7 @@ import { EditablePercentage } from "../form/EditablePercentage"
 import type { Prediction } from "../shared/uncertainty/interfaces"
 import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
 import { Button } from "../sharedf/Button"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -69,12 +70,14 @@ function _WComponentEventAtFormField (props: Props)
             <EditablePercentage
                 placeholder="Probability"
                 value={event_at?.probability}
-                conditional_on_blur={new_probability => upsert_event_at({ probability: new_probability })}
+                on_blur={new_probability => upsert_event_at({ probability: new_probability })}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
             <EditablePercentage
                 placeholder="Confidence"
                 value={event_at?.conviction}
-                conditional_on_blur={new_conviction => upsert_event_at({ conviction: new_conviction })}
+                on_blur={new_conviction => upsert_event_at({ conviction: new_conviction })}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
             &nbsp; {event_at && <PredictionBadge
                 disabled={true}

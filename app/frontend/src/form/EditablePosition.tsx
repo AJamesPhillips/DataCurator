@@ -3,6 +3,7 @@ import { useState } from "preact/hooks"
 
 import { grid_small_step, h_step, round_coordinate_small_step, v_step } from "../canvas/position_utils"
 import { EditableNumber } from "./EditableNumber"
+import { EditableTextOnBlurType } from "./editable_text/editable_text_common"
 
 
 
@@ -36,7 +37,8 @@ export function EditablePosition (props: OwnProps)
             placeholder="Right"
             value={change_left}
             allow_undefined={false}
-            conditional_on_blur={new_change_left => set_change_left(round_coordinate_small_step(new_change_left))}
+            on_blur={new_change_left => set_change_left(round_coordinate_small_step(new_change_left))}
+            on_blur_type={EditableTextOnBlurType.conditional}
         />
         <input
             type="button"
@@ -71,7 +73,8 @@ export function EditablePosition (props: OwnProps)
             placeholder="Up"
             value={-change_top}
             allow_undefined={false}
-            conditional_on_blur={new_change_top => set_change_top(round_coordinate_small_step(-new_change_top))}
+            on_blur={new_change_top => set_change_top(round_coordinate_small_step(-new_change_top))}
+            on_blur_type={EditableTextOnBlurType.conditional}
         />
         <input
             type="button"

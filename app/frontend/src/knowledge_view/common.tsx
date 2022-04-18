@@ -19,6 +19,7 @@ import { create_wcomponent } from "../state/specialised_objects/wcomponents/crea
 import { KnowledgeViewChangeBase } from "./change_base/KnowledgeViewChangeBase"
 import { SelectKnowledgeView } from "./SelectKnowledgeView"
 import { useMemo } from "preact/hooks"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -62,10 +63,11 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             <EditableTextSingleLine
                 placeholder="Title"
                 value={knowledge_view.title}
-                conditional_on_blur={new_title => {
+                on_blur={new_title => {
                     const default_title = knowledge_view.is_base ? "All" : make_default_kv_title()
                     crud.update_item({ ...knowledge_view, title: new_title ?? default_title })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
 
             {has_wcomponent && <Link
@@ -100,9 +102,10 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             <EditableText
                 placeholder="..."
                 value={knowledge_view.description}
-                conditional_on_blur={description => {
+                on_blur={description => {
                     crud.update_item({ ...knowledge_view, description })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
         </p>}
 

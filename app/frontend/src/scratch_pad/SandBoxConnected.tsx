@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import type { RootState } from "../state/State"
 import "./SandBox.css"
 
@@ -31,7 +32,8 @@ function _SandBoxConnected (props: Props)
             placeholder="1"
             force_focus_on_first_render={true}
             value={some_string}
-            conditional_on_blur={set_some_string}
+            on_blur={set_some_string}
+            on_blur_type={EditableTextOnBlurType.conditional}
         />
         {/* <EditableText
             placeholder="2"

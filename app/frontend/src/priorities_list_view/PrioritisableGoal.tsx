@@ -7,6 +7,7 @@ import type { PrioritisedGoalOrActionAttributes, WComponentPrioritisation } from
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -50,7 +51,7 @@ function _PrioritisableGoal (props: Props)
                 placeholder="Effort"
                 allow_undefined={true}
                 value={effort}
-                conditional_on_blur={new_effort =>
+                on_blur={new_effort =>
                 {
                     const goals_attributes: PrioritisedGoalOrActionAttributes = { ...goal_prioritisation_attributes }
                     if (new_effort === undefined) delete goals_attributes[goal.id]
@@ -59,6 +60,7 @@ function _PrioritisableGoal (props: Props)
                     const new_selected_prioritisation = { ...selected_prioritisation, goals: goals_attributes }
                     props.upsert_wcomponent({ wcomponent: new_selected_prioritisation })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
         </div>}
 

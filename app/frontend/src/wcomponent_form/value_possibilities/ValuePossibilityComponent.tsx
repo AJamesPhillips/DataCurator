@@ -8,6 +8,7 @@ import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
 import { VALUE_POSSIBILITY_IDS_to_text } from "../../wcomponent/value/parse_value"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 
 
 
@@ -39,13 +40,14 @@ export function ValuePossibilityComponent (props: OwnProps)
                     hide_label={true}
                     value={value_possibility.value}
                     conditional_on_change={value => set_current_value(value)}
-                    conditional_on_blur={value =>
+                    on_blur={value =>
                     {
                         update_value_possibility({
                             ...value_possibility,
                             value: value,
                         })
                     }}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
             </Typography>
         </Box>

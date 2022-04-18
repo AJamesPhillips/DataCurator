@@ -5,6 +5,7 @@ import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { WComponent, WComponentCausalConnection, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { Button } from "../sharedf/Button"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -91,7 +92,8 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
                 allow_undefined={true}
                 style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_false
-                conditional_on_blur={effect_when_true => change_effect({ effect_when_true, effect_when_false })}
+                on_blur={effect_when_true => change_effect({ effect_when_true, effect_when_false })}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
         </div>}
 
@@ -102,7 +104,8 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
                 allow_undefined={true}
                 style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_true
-                conditional_on_blur={effect_when_false => change_effect({ effect_when_false, effect_when_true })}
+                on_blur={effect_when_false => change_effect({ effect_when_false, effect_when_true })}
+                on_blur_type={EditableTextOnBlurType.conditional}
             />
         </div>}
 

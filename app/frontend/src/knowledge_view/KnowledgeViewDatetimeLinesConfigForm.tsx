@@ -10,6 +10,7 @@ import {
 } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import { Button } from "../sharedf/Button"
 import type { DatetimeLineConfig } from "../shared/interfaces/datetime_lines"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -89,10 +90,11 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 placeholder="Time origin position"
                 value={final_time_origin_x.value}
                 allow_undefined={true}
-                conditional_on_blur={new_time_origin_x =>
+                on_blur={new_time_origin_x =>
                 {
                     update_item({ time_origin_x: new_time_origin_x })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 style={{ width: "70%" }}
             />
             {editing && <IndicateSource source={final_time_origin_x.source} />}
@@ -103,10 +105,11 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 placeholder="Time scale"
                 value={final_time_scale.value}
                 allow_undefined={true}
-                conditional_on_blur={new_time_scale =>
+                on_blur={new_time_scale =>
                 {
                     update_item({ time_scale: new_time_scale })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 style={{ width: "70%" }}
             />
             {editing && <IndicateSource source={final_time_scale.source} />}
@@ -117,10 +120,11 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 placeholder="Time line number"
                 value={final_time_line_number.value}
                 allow_undefined={true}
-                conditional_on_blur={new_time_line_number =>
+                on_blur={new_time_line_number =>
                 {
                     update_item({ time_line_number: new_time_line_number })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 style={{ width: "70%" }}
             />
             {editing && <IndicateSource source={final_time_line_number.source} />}
@@ -131,10 +135,11 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
                 placeholder="Days between time line"
                 value={final_time_line_spacing_days.value}
                 allow_undefined={true}
-                conditional_on_blur={new_time_line_spacing_days =>
+                on_blur={new_time_line_spacing_days =>
                 {
                     update_item({ time_line_spacing_days: new_time_line_spacing_days })
                 }}
+                on_blur_type={EditableTextOnBlurType.conditional}
                 style={{ width: "70%" }}
             />
             {editing && <IndicateSource source={final_time_line_spacing_days.source} />}
