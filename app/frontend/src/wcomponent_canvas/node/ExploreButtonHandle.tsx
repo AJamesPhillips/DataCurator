@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Store } from "redux"
 
+import "./Handles.scss"
 import {
     get_new_knowledge_view_object,
     navigate_to_knowledge_view_or_kvwcomponent,
@@ -52,13 +53,15 @@ type Props = ConnectedProps<typeof connector> & ExploreButtonHandleOwnProps
 
 function _ExploreButtonHandle (props: Props)
 {
-    let { kvwc, is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
+    let { kvwc } = props
+    const { is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
 
-    const hidden = !kvwc && (props.presenting || (!props.presenting && !is_highlighted))
+    const is_editing = !props.presenting
+    const hidden = !kvwc && (props.presenting || (is_editing && !is_highlighted))
 
     const is_current_knowledge_view = props.subview_id === props.wcomponent_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
-    const enable_creating_new_kv = !props.presenting && !!props.wcomponent
+    const enable_creating_new_kv = is_editing && !!props.wcomponent
 
     const click_outcome = is_current_knowledge_view ? (
             parent_knowledge_view_id
