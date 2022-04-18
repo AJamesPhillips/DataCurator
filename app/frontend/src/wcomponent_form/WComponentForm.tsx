@@ -252,7 +252,7 @@ function _WComponentForm (props: Props)
         </FormControl>}
 
 
-        {wcomponent_is_statev2(wcomponent) && (editable || has_VAP_sets) &&
+        {wcomponent_is_statev2(wcomponent) && (editable || wcomponent.subtype) &&
         <p>
             <span className="description_label">Subtype</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
