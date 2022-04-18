@@ -9,6 +9,16 @@ $handle_width:1em;
     font-size: $handle_width;
     width: 25px; // I do not understand how this works but it makes it slightly wider
     // background:rgba(255, 255, 255, 0.7)
+
+    // This does not work on Firefox, also blurs the square grid background
+    // The aim is so that when there are two nodes, with node A being positioned by default under node B
+    // and node A having a knowledge view but node B not having a knowledge view, then currently whilst
+    // in edit mode, the magnifying glass is shown from node A, but it's not obvious that clicking this
+    // will actually create a new knowledge view for node B.
+    // It would be preferable to have a CSS solution for this but I suspect it will always be sub optimal
+    // and a much more complex solution in code will be needed to only shown the node handles when their
+    // corresponding node is visible and positioned on the top
+    // backdrop-filter: blur(2px);
 }
 
 
