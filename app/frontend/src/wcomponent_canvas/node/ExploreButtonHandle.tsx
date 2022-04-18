@@ -1,6 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Store } from "redux"
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import SearchIcon from "@material-ui/icons/Search"
 
 import "./Handles.scss"
 import {
@@ -15,7 +17,7 @@ import type {
 } from "../../shared/interfaces/knowledge_view"
 import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
-import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { get_overlapping_wcomponent_ids, get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
@@ -37,12 +39,16 @@ const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
 {
     const wcomponent = get_wcomponent_from_state(state, own_props.wcomponent_id)
 
+    const overlapping_wcomponent_ids = get_overlapping_wcomponent_ids(state, own_props.wcomponent_id) || []
+    const any_overlapping_wcomponents_have_kvs = overlapping_wcomponent_ids.find(id => state.specialised_objects.knowledge_views_by_id[id])
+
     return {
         wcomponent,
         kvwc: state.specialised_objects.knowledge_views_by_id[own_props.wcomponent_id],
         subview_id: state.routing.args.subview_id,
         nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids.map[own_props.wcomponent_id],
         presenting: state.display_options.consumption_formatting,
+        any_overlapping_wcomponents_have_kvs,
     }
 }
 
@@ -54,10 +60,14 @@ type Props = ConnectedProps<typeof connector> & ExploreButtonHandleOwnProps
 function _ExploreButtonHandle (props: Props)
 {
     let { kvwc } = props
-    const { is_highlighted, nested_knowledge_view_ids_entry: nested_map } = props
+    const {
+        is_highlighted,
+        nested_knowledge_view_ids_entry: nested_map,
+        any_overlapping_wcomponents_have_kvs,
+    } = props
 
     const is_editing = !props.presenting
-    const hidden = !kvwc && (props.presenting || (is_editing && !is_highlighted))
+    const hidden = !kvwc && (props.presenting || (is_editing && !is_highlighted && !any_overlapping_wcomponents_have_kvs))
 
     const is_current_knowledge_view = props.subview_id === props.wcomponent_id
     const parent_knowledge_view_id = nested_map && nested_map.parent_id
@@ -80,15 +90,16 @@ function _ExploreButtonHandle (props: Props)
         + (kvwc ? " has_knowledge_view " : "")
         + (current_but_no_parent ? " current_but_no_parent " : "")
         + (click_outcome < 0 ? " disabled " : "")
+        + (click_outcome === ClickOutComes.create_then_navigate ? " will_create_on_click " : "")
 
     const title = click_outcome === ClickOutComes.navigate_up_to_kv_parent ? "Navigate up to parent"
         : click_outcome === ClickOutComes.disabled__current_but_no_parent ? "No parent to navigate up to"
         : click_outcome === ClickOutComes.navigate_to_kv ? "Navigate to knowledge view"
         : click_outcome === ClickOutComes.create_then_navigate ? "Create then navigate to knowledge view"
-        : click_outcome === ClickOutComes.disabled__need_component_to_create_then_navigate ? "Need component to create a new knowledge view"
+        : click_outcome === ClickOutComes.disabled__need_component_to_create_then_navigate ? "Error: could not find the component to create a new knowledge view for"
         : "Unknown error"
 
-    return <span
+    return <div
         className={class_name}
         title={title}
         onClick={e => // using onClick so that WComponentForm input onBlur functions can fire
@@ -123,9 +134,9 @@ function _ExploreButtonHandle (props: Props)
         }}
     >
         {is_current_knowledge_view
-            ? <span>&#8593;</span>
-            : <span>&#128269;</span>}
-    </span>
+            ? <ArrowUpwardIcon />
+            : <SearchIcon />}
+    </div>
 }
 
 export const ExploreButtonHandle = connector(_ExploreButtonHandle) as FunctionalComponent<ExploreButtonHandleOwnProps>
