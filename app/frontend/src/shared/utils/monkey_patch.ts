@@ -21,8 +21,8 @@ if (!Array.prototype.first) {
         enumerable: false,
         writable: false,
         configurable: false,
-        value: function first<T> (that: T[]): T | undefined {
-            return that[0]
+        value: function first<T> (this: T[]): T | undefined {
+            return this[0]
         }
     })
 }
@@ -34,8 +34,8 @@ if (!Array.prototype.last) {
         enumerable: false,
         writable: false,
         configurable: false,
-        value: function last<T> (that: T[]): T | undefined {
-            return that[that.length - 1]
+        value: function last<T> (this: T[]): T | undefined {
+            return this[this.length - 1]
         }
     })
 }
@@ -47,9 +47,9 @@ if (!Array.prototype.find_last) {
         enumerable: false,
         writable: false,
         configurable: false,
-        value: function find_last<T> (that: T[], predicate: (t: T) => boolean): T | undefined {
-            for (let index = that.length - 1; index >= 0; --index) {
-                if (predicate(that[index]!)) return that[index]
+        value: function find_last<T> (this: T[], predicate: (t: T) => boolean): T | undefined {
+            for (let index = this.length - 1; index >= 0; --index) {
+                if (predicate(this[index]!)) return this[index]
             }
             return undefined
         }
@@ -63,8 +63,8 @@ if (!Array.prototype.find_last) {
 //         enumerable: false,
 //         writable: false,
 //         configurable: false,
-//         value: function replaceAll (that: string, search: string, replace: string): string {
-//             return that.split(search).join(replace)
+//         value: function replaceAll (this: string, search: string, replace: string): string {
+//             return this.split(search).join(replace)
 //         }
 //     })
 // }
