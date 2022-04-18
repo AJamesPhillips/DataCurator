@@ -32,7 +32,6 @@ import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
 import {
     is_on_current_knowledge_view,
-    get_wcomponent_from_state,
     get_current_temporal_value_certainty_from_wcomponent,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
@@ -49,7 +48,7 @@ import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import {
     start_moving_wcomponents,
 } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useMemo, useState } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
 import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value"
@@ -312,6 +311,8 @@ function _WComponentCanvasNode (props: Props)
 
     const _kv_entry = is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined
 
+    const label_ids = useMemo(() => calculate_label_ids(wcomponent), [wcomponent])
+
 
     return <div>
         <WComponentCanvasNodeBackgroundFrame
@@ -374,7 +375,7 @@ function _WComponentCanvasNode (props: Props)
                         color="disabled"
                     />}
 
-                    {wcomponent && <LabelsListV2 label_ids={wcomponent.label_ids} />}
+                    {wcomponent && <LabelsListV2 label_ids={label_ids} />}
                 </div>
             </div>}
             extra_css_class={extra_css_class}
@@ -513,4 +514,26 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     }
 
     return { background, font }
+}
+
+
+
+function calculate_label_ids (wcomponent?: WComponent)
+{
+    if (!wcomponent) return []
+
+    const ids = [...wcomponent.label_ids || []]
+    const ids_set = new Set(ids)
+
+    if (wcomponent_is_action(wcomponent) && wcomponent.parent_goal_or_action_ids)
+    {
+        wcomponent.parent_goal_or_action_ids.forEach(id =>
+        {
+            if (ids_set.has(id)) return
+            ids.push(id)
+            ids_set.add(id)
+        })
+    }
+
+    return ids
 }
