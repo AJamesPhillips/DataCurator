@@ -1,6 +1,6 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
-import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_action } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponent"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
 import { supabase_create_item } from "./create_items"
@@ -68,14 +68,26 @@ interface GetWcomponentsFromOtherBases
 }
 export async function supabase_get_wcomponents_from_other_bases (args: GetWcomponentsFromOtherBases)
 {
-    const downloaded_wcomponent_ids = new Set<string>()
-    args.wcomponents.forEach(wc => downloaded_wcomponent_ids.add(wc.id))
+    const downloaded_wcomponent_ids = new Set(args.wcomponents.map(wc => wc.id))
 
     const missing_wcomponent_ids = new Set<string>()
-    args.knowledge_views.map(kv => Object.keys(kv.wc_id_map).forEach(id =>
+    function record_missing_ids (ids: string[])
     {
-        if (!downloaded_wcomponent_ids.has(id)) missing_wcomponent_ids.add(id)
-    }))
+        ids.forEach(id =>
+        {
+            if (!downloaded_wcomponent_ids.has(id)) missing_wcomponent_ids.add(id)
+        })
+    }
+
+
+    args.knowledge_views.forEach(kv => record_missing_ids(Object.keys(kv.wc_id_map)))
+
+    args.wcomponents.forEach(wc =>
+    {
+        record_missing_ids(wc.label_ids || [])
+
+        if (wcomponent_is_action(wc)) record_missing_ids(wc.parent_goal_or_action_ids || [])
+    })
 
     // console .log(`missing_wcomponent_ids: ${missing_wcomponent_ids.size}`)
 
