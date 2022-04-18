@@ -8,6 +8,10 @@ import { FormControl, FormLabel } from "@material-ui/core"
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
+import { SortDirection, sort_list } from "../shared/utils/sort"
+import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { is_defined } from "../shared/utils/is_defined"
+import { useMemo } from "preact/hooks"
 
 
 
@@ -21,7 +25,8 @@ interface OwnProps
 const map_state = (state: RootState) =>
 {
     return {
-        allowed_wcomponent_ids: state.derived.wcomponent_ids_by_type.goal_or_action,
+        current_kv_id: get_current_knowledge_view_from_state(state)?.id,
+        goal_or_action_wcomponent_ids: state.derived.wcomponent_ids_by_type.goal_or_action,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         is_editing: !state.display_options.consumption_formatting,
@@ -38,12 +43,29 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentParentGoalOrActionForm (props: Props)
 {
-    const { wcomponent, upsert_wcomponent } = props
+    const { wcomponent, wcomponents_by_id, upsert_wcomponent } = props
+
+
+    const sorted_goal_or_action_wcomponents = useMemo(() =>
+    {
+        const goal_or_action_wcomponents = Array.from(props.goal_or_action_wcomponent_ids)
+            .map(id => wcomponents_by_id[id])
+            .filter(is_defined)
+
+        function sort_ids (wc: WComponent)
+        {
+            // Prioritise current knowledge view
+            // Todo also prioritise any of the parent knowledge views this is nested under
+            return wc.id === props.current_kv_id ? new Date().getTime() : wc.created_at.getTime()
+        }
+
+        return sort_list(goal_or_action_wcomponents, sort_ids, SortDirection.descending)
+    }, [props.goal_or_action_wcomponent_ids, wcomponents_by_id, props.current_kv_id])
 
 
     const wcomponent_id_options = get_wcomponent_search_options({
-        allowed_wcomponent_ids: props.allowed_wcomponent_ids,
-        wcomponents_by_id: props.wcomponents_by_id,
+        wcomponents: sorted_goal_or_action_wcomponents,
+        wcomponents_by_id,
         knowledge_views_by_id: props.knowledge_views_by_id,
         wc_id_to_counterfactuals_map: {},
         created_at_ms: props.created_at_ms,
