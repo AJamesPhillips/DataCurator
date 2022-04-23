@@ -19,7 +19,6 @@ interface PrioritisationEntryNodeProps
     x: number
     y: number
     width: number
-    height: number
 
     display: boolean
 }
@@ -45,7 +44,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _PrioritisationEntryNode (props: Props)
 {
-    const { wcomponents_by_id, knowledge_views_by_id, created_at_ms, x, y, width, height, effort, display } = props
+    const { wcomponents_by_id, knowledge_views_by_id, created_at_ms, x, y, width, effort, display } = props
     const wcomponent = wcomponents_by_id[props.wcomponent_id]
     if (!wcomponent) return null
 
@@ -71,7 +70,7 @@ function _PrioritisationEntryNode (props: Props)
     }
 
     return <CanvasNode
-        position={{ left: x, top: y, width: w, height }}
+        position={{ left: x, top: y, width: w }}
         display={display}
         on_pointer_down={e =>
         {
