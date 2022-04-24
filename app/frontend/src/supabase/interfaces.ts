@@ -71,7 +71,6 @@ export interface SupabaseWriteItem<I>
     id: string
     modified_at?: string
     base_id: number
-    title: string
     json: I
 }
 

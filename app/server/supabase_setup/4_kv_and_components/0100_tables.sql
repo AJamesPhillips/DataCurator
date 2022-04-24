@@ -27,9 +27,14 @@ CREATE TABLE IF NOT EXISTS wcomponents (
   base_id bigint NOT NULL,
   title text NOT NULL,
   json json NOT NULL,
+  type text NOT NULL DEFAULT '',
+  attribute_id uuid NULL,
   CONSTRAINT fk_wcomponents_base
     FOREIGN KEY(base_id)
     REFERENCES bases(id),
   CONSTRAINT wcomponents_unique_short_ids
-    UNIQUE (short_id)
+    UNIQUE (short_id),
+  CONSTRAINT fk_wcomponents_attribute_id_wcomponents
+    FOREIGN KEY(attribute_id)
+    REFERENCES wcomponents(id)
 );

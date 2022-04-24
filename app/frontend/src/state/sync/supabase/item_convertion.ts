@@ -16,7 +16,6 @@ export function app_item_to_supabase <U extends Base & { title: string }> (item:
         id: item.id,
         modified_at: (item.modified_at ? item.modified_at.toISOString() : undefined) as any,
         base_id,
-        title: item.title,
         json,
     }
 }

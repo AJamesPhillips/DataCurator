@@ -28,7 +28,7 @@ BEGIN
   SET
     modified_at = now(),
     -- base_id = item.base_id,  // do not allow changing the base_id
-    title = item.title,
+    title = item.json::json->>'title',
     json = item.json
   WHERE id = item.id AND modified_at = item.modified_at;
 
@@ -90,7 +90,9 @@ BEGIN
   SET
     modified_at = now(),
     -- base_id = item.base_id,  // do not allow changing the base_id
-    title = item.title,
+    title = item.json::json->>'title',
+    type = item.json::json->>'type',
+    attribute_id = (item.json::json->>'attribute_wcomponent_id')::uuid,
     json = item.json
   WHERE id = item.id AND modified_at = item.modified_at;
 
