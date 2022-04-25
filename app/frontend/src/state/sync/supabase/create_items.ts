@@ -9,8 +9,8 @@ type CreateItemArgs<SWrite, SRead, U> =
     supabase: SupabaseClient
     table: string
     item: U
-    converter_supabase_to_app: (item: SRead) => U
     converter_app_to_supabase: (item: U) => SWrite
+    converter_supabase_to_app: (item: SRead) => U
 }
 export async function supabase_create_item <SWrite extends { id: string }, SRead extends SWrite, U extends Base> (args: CreateItemArgs<SWrite, SRead, U>): Promise<UpsertItemReturn<U>>
 {

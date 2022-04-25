@@ -40,7 +40,7 @@ export async function supabase_get_items <S extends { id: string, base_id: numbe
     if (args.specific_ids !== undefined)
     {
         const specific_ids = args.specific_ids.slice(offset, offset_max_inclusive + 1)
-        console.trace("specific_ids", offset, offset_max_inclusive + 1, specific_ids.slice(0, 3))
+        // console. log("specific_ids", offset, offset_max_inclusive + 1, specific_ids.slice(0, 3))
         query = query.in("id", specific_ids as any)
     }
 

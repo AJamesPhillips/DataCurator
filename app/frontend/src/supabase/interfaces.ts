@@ -1,5 +1,6 @@
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentType } from "../wcomponent/interfaces/wcomponent_base"
 
 
 
@@ -72,6 +73,8 @@ export interface SupabaseWriteItem<I>
     modified_at?: string
     base_id: number
     json: I
+    // Not needed for update, only needed for create
+    title: string
 }
 
 export interface SupabaseReadItem<I> extends SupabaseWriteItem<I>
@@ -87,5 +90,11 @@ export interface SupabaseReadItem<I> extends SupabaseWriteItem<I>
 export interface SupabaseWriteKnowledgeView extends SupabaseWriteItem<KnowledgeView> {}
 export interface SupabaseReadKnowledgeView extends SupabaseReadItem<KnowledgeView> {}
 
-export interface SupabaseWriteWComponent extends SupabaseWriteItem<WComponent> {}
-export interface SupabaseReadWComponent extends SupabaseReadItem<WComponent> {}
+export interface SupabaseWriteWComponent extends SupabaseWriteItem<WComponent> {
+    type: WComponentType
+    attribute_id: string | undefined
+}
+export interface SupabaseReadWComponent extends SupabaseReadItem<WComponent> {
+    type: WComponentType // not needed but included otherwise type error
+    attribute_id: string | undefined
+}

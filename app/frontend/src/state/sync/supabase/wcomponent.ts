@@ -1,6 +1,6 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
-import { WComponent, wcomponent_is_action } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_action, wcomponent_is_state_value } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponent"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
 import { supabase_create_item } from "./create_items"
@@ -157,7 +157,11 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): 
 
 function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWriteWComponent
 {
-    return app_item_to_supabase(item, base_id)
+    return {
+        ...app_item_to_supabase(item, base_id),
+        type: item.type,
+        attribute_id: wcomponent_is_state_value(item) ? item.attribute_wcomponent_id : undefined,
+    }
 }
 
 

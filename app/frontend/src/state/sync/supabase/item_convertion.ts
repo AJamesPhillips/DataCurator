@@ -4,7 +4,12 @@ import { clean_base_object_of_sync_meta_fields } from "./clean_base_object_for_s
 
 
 
-export function app_item_to_supabase <U extends Base & { title: string }> (item: U, base_id?: number): SupabaseWriteItem<U>
+interface CommonFields
+{
+    title: string
+}
+
+export function app_item_to_supabase <U extends Base & CommonFields> (item: U, base_id?: number): SupabaseWriteItem<U>
 {
     base_id = item.base_id ?? base_id
 
@@ -12,12 +17,16 @@ export function app_item_to_supabase <U extends Base & { title: string }> (item:
 
     const json = clean_base_object_of_sync_meta_fields(item)
 
-    return {
+    const supabase_item: SupabaseWriteItem<U> = {
         id: item.id,
         modified_at: (item.modified_at ? item.modified_at.toISOString() : undefined) as any,
         base_id,
         json,
+        // Not needed for update, only needed for create
+        title: item.title,
     }
+
+    return supabase_item
 }
 
 
