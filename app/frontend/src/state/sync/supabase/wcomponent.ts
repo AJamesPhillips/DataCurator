@@ -8,6 +8,7 @@ import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
+import { get_ids_from_text } from "../../../wcomponent_derived/rich_text/replace_normal_ids"
 
 
 
@@ -71,7 +72,7 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWcompo
     const downloaded_wcomponent_ids = new Set(args.wcomponents.map(wc => wc.id))
 
     const missing_wcomponent_ids = new Set<string>()
-    function record_missing_ids (ids: string[])
+    function determine_if_missing_ids (ids: string[])
     {
         ids.forEach(id =>
         {
@@ -80,13 +81,18 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWcompo
     }
 
 
-    args.knowledge_views.forEach(kv => record_missing_ids(Object.keys(kv.wc_id_map)))
+    args.knowledge_views.forEach(kv => determine_if_missing_ids(Object.keys(kv.wc_id_map)))
 
     args.wcomponents.forEach(wc =>
     {
-        record_missing_ids(wc.label_ids || [])
+        determine_if_missing_ids(wc.label_ids || [])
 
-        if (wcomponent_is_action(wc)) record_missing_ids(wc.parent_goal_or_action_ids || [])
+        let ids = get_ids_from_text(wc.title)
+        determine_if_missing_ids(ids)
+        ids = get_ids_from_text(wc.description)
+        determine_if_missing_ids(ids)
+
+        if (wcomponent_is_action(wc)) determine_if_missing_ids(wc.parent_goal_or_action_ids || [])
     })
 
     // console .log(`missing_wcomponent_ids: ${missing_wcomponent_ids.size}`)

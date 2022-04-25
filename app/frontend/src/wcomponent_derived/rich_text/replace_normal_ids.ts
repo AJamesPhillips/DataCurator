@@ -38,9 +38,9 @@ export function replace_normal_ids (text: string, current_depth: number, args: R
 
 
 
-function get_ids_from_text (text: string): string[]
+export function get_ids_from_text (text: string): string[]
 {
-    const matches = [ ...text.matchAll(uuids_regex)] //, ...text.matchAll(old_ids_regex)]
+    const matches = [ ...text.matchAll(uuids_regex) ] //, ...text.matchAll(old_ids_regex)]
     return matches.map(entry => entry[1]!.slice(2))
 }
 
