@@ -24,7 +24,7 @@ export function ensure_a_knowledge_view_subscriber (store: StoreType)
             return
         }
 
-        const knowledge_view = get_new_knowledge_view_object({ title: "All", is_base: true, base_id }, state.creation_context)
+        const knowledge_view = get_new_knowledge_view_object({ title: "All", base_id }, state.creation_context)
         store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
         ensure_any_knowledge_view_displayed(store)
     }

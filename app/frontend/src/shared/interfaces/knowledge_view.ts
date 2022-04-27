@@ -22,7 +22,6 @@ export interface KnowledgeView extends Base, Project {
     description: string
 
     wc_id_map: KnowledgeViewWComponentIdEntryMap
-    is_base?: true
     // Used for sharing data
     foundation_knowledge_view_ids?: string[]
     // Used for semantically organising knowledge views in relation to each other

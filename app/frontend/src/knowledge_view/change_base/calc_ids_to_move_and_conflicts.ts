@@ -96,8 +96,6 @@ function get_ids_to_move (args: GetWComponentIdsToMoveArgs)
     const conflicted_wc_ids_in_kvs_to_keep: WComponentMoveBaseConflicts = {}
     args.knowledge_views_to_keep.forEach(kv =>
     {
-        if (kv.is_base) return
-
         Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) =>
         {
             if (kv_entry.blocked || kv_entry.passthrough) return
