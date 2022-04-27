@@ -3,27 +3,19 @@ import { ACTIONS } from "../../actions"
 import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
 import type { StoreType } from "../../store"
 import { selector_chosen_base_id } from "../../user_info/selector"
-import { get_base_knowledge_view } from "../accessors"
 
 
 
-export function ensure_base_knowledge_view_subscriber (store: StoreType)
+export function ensure_a_knowledge_view_subscriber (store: StoreType)
 {
     return () =>
     {
         const state = store.getState()
 
+        // TODO, check this is negative when changing base
         if (!state.sync.ready_for_reading) return
 
-        if (state.derived.base_knowledge_view) return
-
-        // double check
-        const base_knowledge_view = get_base_knowledge_view(Object.values(state.specialised_objects.knowledge_views_by_id))
-        if (base_knowledge_view)
-        {
-            console.error("Should have set base_knowledge_view by now but state.derived.base_knowledge_view is undefined")
-            return
-        }
+        if (state.derived.knowledge_views.length) return
 
         const base_id = selector_chosen_base_id(state)
         if (base_id === undefined)

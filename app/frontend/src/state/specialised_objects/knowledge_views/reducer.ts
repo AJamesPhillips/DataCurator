@@ -32,9 +32,6 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
         {
             const entry: KnowledgeViewWComponentEntry = { ...add_to_knowledge_view.position }
             state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry, add_to_top)
-
-            // See issue #170
-            // state = add_wcomponent_to_base_knowledge_view(state, wcomponent.id, entry)
         }
 
         const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id]
@@ -118,26 +115,4 @@ function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_vie
     const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)
-}
-
-
-
-function add_wcomponent_to_base_knowledge_view (state: RootState, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
-{
-    const { base_knowledge_view } = state.derived
-    if (!base_knowledge_view)
-    {
-        console.error("There should always be a base knowledge view once wcomponents are being added")
-        return state
-    }
-
-    const existing_entry = base_knowledge_view.wc_id_map[wcomponent_id]
-
-    if (existing_entry)
-    {
-        // Nothing needs to be done
-        return state
-    }
-
-    return add_wcomponent_entry_to_knowledge_view(state, base_knowledge_view, wcomponent_id, entry)
 }

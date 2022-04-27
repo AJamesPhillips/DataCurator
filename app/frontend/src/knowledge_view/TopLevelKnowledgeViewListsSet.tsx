@@ -15,7 +15,6 @@ interface OwnProps {}
 
 const map_state = (state: RootState) => ({
     ready: state.sync.ready_for_reading,
-    base_knowledge_view: state.derived.base_knowledge_view,
     knowledge_views: state.derived.knowledge_views,
     nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
@@ -37,10 +36,10 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _TopLevelKnowledgeViewListsSet (props: Props)
 {
-    if (!props.base_knowledge_view)
+    if (props.knowledge_views.length === 0)
     {
         return <div style={{ cursor: "progress" }}>
-            {props.ready ? "Automatically creating base knowledge view..." : "Loading..." }
+            {props.ready ? "Automatically creating a knowledge view..." : "Loading..." }
         </div>
     }
 

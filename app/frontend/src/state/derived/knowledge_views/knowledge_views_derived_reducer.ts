@@ -36,7 +36,6 @@ import { get_wcomponent_ids_by_type } from "../get_wcomponent_ids_by_type"
 import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../State"
 import type { RootState } from "../../State"
 import {
-    get_base_knowledge_view,
     get_nested_knowledge_view_ids,
     sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
@@ -115,7 +114,6 @@ function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
     const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, SortDirection.ascending)
-    const base_knowledge_view = get_base_knowledge_view(knowledge_views)
     const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views)
     sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
 
@@ -124,7 +122,6 @@ function update_derived_knowledge_view_state (state: RootState): RootState
         derived: {
             ...state.derived,
             knowledge_views,
-            base_knowledge_view,
             nested_knowledge_view_ids,
         },
     }

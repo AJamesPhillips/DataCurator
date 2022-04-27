@@ -78,30 +78,6 @@ export function get_knowledge_view_from_state (state: RootState, knowledge_view_
 
 
 
-export function get_base_knowledge_view (knowledge_views: KnowledgeView[])
-{
-    const base_knowledge_views = knowledge_views.filter(kv => kv.is_base)
-
-    let base_knowledge_view: KnowledgeView | undefined
-    base_knowledge_view = base_knowledge_views[0]
-
-    // (Partially) handles any bugs resulting in multiple `is_base` knowledge views being created
-    if (base_knowledge_views.length > 1)
-    {
-        base_knowledge_views.forEach(kv =>
-        {
-            if (kv.created_at.getTime() < base_knowledge_view!.created_at.getTime())
-            {
-                base_knowledge_view = kv
-            }
-        })
-    }
-
-    return base_knowledge_view
-}
-
-
-
 interface KnowledgeViewWithParentId extends KnowledgeView
 {
     parent_knowledge_view_id: string

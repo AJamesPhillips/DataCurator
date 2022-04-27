@@ -98,7 +98,6 @@ export interface DerivedState
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 
-    base_knowledge_view: KnowledgeView | undefined
     nested_knowledge_view_ids: NestedKnowledgeViewIds
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
