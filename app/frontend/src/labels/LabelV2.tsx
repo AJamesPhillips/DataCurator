@@ -8,6 +8,7 @@ import type { RootState } from "../state/State"
 import { color_to_opposite, color_to_string } from "../sharedf/color"
 import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
+import { COLOURS } from "../canvas/display"
 
 
 
@@ -58,7 +59,7 @@ function _LabelV2 (props: Props)
     return <div
         className="label_v2"
         style={{
-            backgroundColor: color_to_string(wcomponent?.label_color),
+            backgroundColor: color_to_string(wcomponent?.label_color || COLOURS.white_a75),
             color: color_to_string(color_to_opposite(wcomponent?.label_color)),
         }}
         // onPointerOver={() => on_mouse_over_option && on_mouse_over_option(option.id)}

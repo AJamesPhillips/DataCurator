@@ -1,3 +1,4 @@
+import type { Color } from "../shared/interfaces/color"
 
 
 const SCALE = 10
@@ -32,10 +33,15 @@ export const action_height = 1 * SCALE
 
 
 // Keep in sync with display_colors.scss
-export const COLOURS = {
-    green: "#C8F7B8",
-    yellow: "#FDE6A8",
-    blue: "#C5D6FD",
-    red: "#F7D2DE",
-    white: "#FFF",
+export const COLOURS: {
+    white: Color
+    white_a75: Color
+} = {
+    // green: "#C8F7B8",
+    // yellow: "#FDE6A8",
+    // blue: "#C5D6FD",
+    // red: "#F7D2DE",
+    // white: "#FFF",
+    white: { r: 255, g: 255, b: 255, a: 1 },
+    white_a75: { r: 255, g: 255, b: 255, a: 0.75 },
 }

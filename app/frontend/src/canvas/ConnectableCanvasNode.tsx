@@ -60,7 +60,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     const main_content_styles: h.JSX.CSSProperties =
     {
         boxShadow: props.glow ? `${props.glow} 0px 0px 10px` : "",
-        backgroundColor: props.color, // || COLOURS.white,
+        backgroundColor: props.color,
     }
 
 
