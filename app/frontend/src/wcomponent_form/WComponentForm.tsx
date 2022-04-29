@@ -96,6 +96,7 @@ const map_state = (state: RootState, { wcomponent, wcomponent_from_different_bas
 
     const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state)
 
+    const is_in_editing_mode = !state.display_options.consumption_formatting
 
     return {
         ready: state.sync.ready_for_reading,
@@ -106,9 +107,12 @@ const map_state = (state: RootState, { wcomponent, wcomponent_from_different_bas
         from_wcomponent,
         to_wcomponent,
 
-        is_in_editing_mode: !state.display_options.consumption_formatting,
-        editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
-        force_editable: wcomponent_from_different_base ? false : undefined,
+        is_in_editing_mode,
+        editable: is_in_editing_mode,
+        force_editable: is_in_editing_mode,
+        wcomponent_from_different_base,
+        // editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
+        // force_editable: wcomponent_from_different_base ? false : undefined,
 
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
@@ -199,12 +203,11 @@ function _WComponentForm (props: Props)
         {props.wcomponent_from_different_base && <div
             style={{ cursor: "pointer" }}
             onClick={() => props.update_chosen_base_id({ base_id: props.wcomponent.base_id })}
+            title={`Click to change to base ${props.wcomponent.base_id}`}
         >
             <WarningTriangle message="" />
             &nbsp;
-            {props.is_in_editing_mode
-                ? <span>Editing disabled. Change to base {props.wcomponent.base_id} to edit</span>
-                : <span>Change to base {props.wcomponent.base_id} to view</span>}
+            Is owned by base {props.wcomponent.base_id}
         </div>}
 
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>

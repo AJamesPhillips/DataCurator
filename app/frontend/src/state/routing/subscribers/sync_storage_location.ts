@@ -29,8 +29,9 @@ export function sync_storage_location_subscriber (store: Store<RootState>)
         {
             if (base_id !== new_base_id)
             {
-                // console .log("Change route: ", new_base_id)
+                // todo document if change_route also should update the chosen_base_id
                 store.dispatch(ACTIONS.routing.change_route({ args: { storage_location: new_base_id } }))
+                // console .log("Change route: ", new_base_id)
             }
             else
             {
