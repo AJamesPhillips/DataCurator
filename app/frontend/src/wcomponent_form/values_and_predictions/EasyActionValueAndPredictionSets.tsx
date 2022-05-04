@@ -23,6 +23,7 @@ import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabili
 interface OwnProps
 {
     VAPs_represent: VAPsType
+    base_id: number
     existing_value_possibilities: ValuePossibilitiesById | undefined
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     update_VAPSets_and_value_possibilities: (args: HasVAPSetsAndMaybeValuePossibilities) => void
@@ -36,7 +37,6 @@ const map_state = (state: RootState) =>
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
-        base_id: selector_chosen_base_id(state) || -1,
         current_created_at_ms: state.routing.args.created_at_ms,
     }
 }

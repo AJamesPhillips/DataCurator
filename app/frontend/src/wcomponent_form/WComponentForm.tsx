@@ -83,7 +83,7 @@ interface OwnProps {
     wcomponent_from_different_base?: boolean // Quick hack to deal with loading wcomponents from other bases
 }
 
-const map_state = (state: RootState, { wcomponent, wcomponent_from_different_base }: OwnProps) =>
+const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 {
     let from_wcomponent: WComponent | undefined = undefined
     let to_wcomponent: WComponent | undefined = undefined
@@ -110,7 +110,6 @@ const map_state = (state: RootState, { wcomponent, wcomponent_from_different_bas
         is_in_editing_mode,
         editable: is_in_editing_mode,
         force_editable: is_in_editing_mode,
-        wcomponent_from_different_base,
         // editable: wcomponent_from_different_base ? false : !state.display_options.consumption_formatting,
         // force_editable: wcomponent_from_different_base ? false : undefined,
 
@@ -172,8 +171,6 @@ function _WComponentForm (props: Props)
 
     const wrapped_upsert_wcomponent = (partial_wcomponent: Partial<WComponent>) =>
     {
-        if (props.wcomponent_from_different_base) return
-
         const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent
         props.upsert_wcomponent({ wcomponent: updated })
     }
@@ -202,12 +199,12 @@ function _WComponentForm (props: Props)
     return <Box>
         {props.wcomponent_from_different_base && <div
             style={{ cursor: "pointer" }}
-            onClick={() => props.update_chosen_base_id({ base_id: props.wcomponent.base_id })}
-            title={`Click to change to base ${props.wcomponent.base_id}`}
+            onClick={() => props.update_chosen_base_id({ base_id: wcomponent.base_id })}
+            title={`Click to change to base ${wcomponent.base_id}`}
         >
             <WarningTriangle message="" />
             &nbsp;
-            Is owned by base {props.wcomponent.base_id}
+            Is owned by base {wcomponent.base_id}
         </div>}
 
         <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
@@ -248,7 +245,12 @@ function _WComponentForm (props: Props)
                     if (!type) return
 
                     // This ensures it will always have the fields it is expected to have
-                    const vanilla = prepare_new_contextless_wcomponent_object({ base_id, type }) as WComponent
+                    const vanilla = prepare_new_contextless_wcomponent_object({
+                        type,
+                        // Coherent & defensive even if its "not used", i.e. because of spread from
+                        // wcomponent into new_component below
+                        base_id: wcomponent.base_id,
+                    })
                     const new_wcomponent = { ...vanilla, ...wcomponent }
                     new_wcomponent.type = type
                     wrapped_upsert_wcomponent(new_wcomponent)
@@ -438,6 +440,7 @@ function _WComponentForm (props: Props)
                 </div>}
                 {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
                     VAPs_represent={VAPs_represent}
+                    base_id={wcomponent.base_id}
                     existing_value_possibilities={orig_value_possibilities}
                     values_and_prediction_sets={orig_values_and_prediction_sets}
                     update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
