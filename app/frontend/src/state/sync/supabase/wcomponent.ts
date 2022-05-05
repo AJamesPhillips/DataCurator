@@ -61,14 +61,14 @@ export async function supabase_get_wcomponents_from_any_base (args: GetWComponen
 
 
 
-interface GetWcomponentsFromOtherBases
+interface GetWComponentsFromOtherBases
 {
     supabase: SupabaseClient
     base_id: number
     knowledge_views: KnowledgeView[]
     wcomponents: WComponent[]
 }
-export async function supabase_get_wcomponents_from_other_bases (args: GetWcomponentsFromOtherBases)
+export async function supabase_get_wcomponents_from_other_bases (args: GetWComponentsFromOtherBases)
 {
     const downloaded_wcomponent_ids = new Set(args.wcomponents.map(wc => wc.id))
 
