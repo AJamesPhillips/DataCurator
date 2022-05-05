@@ -23,8 +23,7 @@ import { set_window_title } from "./window_title/set_window_title"
 import { SandboxCircularConnections } from "./scratch_pad/SandboxCircularConnections"
 import { DataApp } from "./x_data_app/DataApp"
 import { get_data_app_store } from "./x_data_app/state/get_data_app_store"
-import { PrivacyPolicy } from "./home/PrivacyPolicy"
-import { TermsAndConditions } from "./home/TermsAndConditions"
+
 
 
 const root = document.getElementById("root")
@@ -81,11 +80,11 @@ if (root)
     }
     else if (window.location.pathname === "/privacy-policy/" || window.location.pathname === "/privacy-policy")
     {
-        render(<PrivacyPolicy />, root)
+        render(<div>Will render public/privacy-policy</div>, root)
     }
     else if (window.location.pathname === "/terms-and-conditions/" || window.location.pathname === "/terms-and-conditions")
     {
-        render(<TermsAndConditions />, root)
+        render(<div>Will render public/terms-and-conditions.html</div>, root)
     }
     else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim")
     {
