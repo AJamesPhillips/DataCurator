@@ -18,6 +18,10 @@ export interface SyncState extends SyncStateByType
 
     network_functional: boolean
     network_function_last_checked: Date | undefined
+
+    wcomponent_ids_to_search_for_in_any_base: Set<string>
+    wcomponent_ids_searching_for_in_any_base: Set<string>
+    wcomponent_ids_searched_for_in_any_base: Set<string>
 }
 
 

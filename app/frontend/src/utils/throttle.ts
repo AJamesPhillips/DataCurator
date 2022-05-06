@@ -1,4 +1,12 @@
-// TODO document difference between these two
+// The difference between throttle and min_throttle is that:
+//   throttle - returns a throttle function that when calls keeps pushing back the time
+//              it will be invoked.  As such it collects all the possible calls to it if
+//              they occur in a chain where the maximum time between any one call is the
+//              delay_ms.  This is useful for throttling things like a user typing a search
+//              term in a search box.
+//   min_throttle - will always invoke after delay_ms and with the latest arguments that
+//              have been passed to it.
+//
 
 
 

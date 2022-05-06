@@ -116,6 +116,7 @@ const map_dispatch = {
     pointerupdown_on_component: ACTIONS.meta_wcomponents.pointerupdown_on_component,
     pointerupdown_on_connection_terminal: ACTIONS.meta_wcomponents.pointerupdown_on_connection_terminal,
     set_wcomponent_ids_to_move: ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move,
+    request_searching_for_wcomponents_by_id_in_any_base: ACTIONS.sync.request_searching_for_wcomponents_by_id_in_any_base,
 }
 
 
@@ -142,6 +143,13 @@ function _WComponentCanvasNode (props: Props)
 
     if (!composed_kv) return <div>No current knowledge view</div>
     // if (!wcomponent) return <div>Could not find component of id {id}</div>
+
+
+    useEffect(() =>
+    {
+        if (wcomponent) return
+        props.request_searching_for_wcomponents_by_id_in_any_base({ ids: [id] })
+    }, [!!wcomponent])
 
 
     const kv_entry_maybe = composed_kv.composed_wc_id_map[id]

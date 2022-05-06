@@ -25,10 +25,10 @@ export function handle_upsert_wcomponent (state: RootState, wcomponent: WCompone
 
 
 
-export function handle_add_wcomponent_to_store (state: RootState, wcomponent: WComponent): RootState
+export function handle_add_wcomponents_to_store (state: RootState, wcomponents: WComponent[]): RootState
 {
     const map = { ...state.specialised_objects.wcomponents_by_id }
-    map[wcomponent.id] = wcomponent
+    wcomponents.forEach(wcomponent => map[wcomponent.id] = wcomponent)
 
     state = update_substate(state, "specialised_objects", "wcomponents_by_id", map)
 

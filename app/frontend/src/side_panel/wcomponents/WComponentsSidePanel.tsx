@@ -23,7 +23,7 @@ interface OwnProps {}
 
 const map_state = (state: RootState) =>
 {
-    const { ready_for_reading: ready } = state.sync
+    const { ready_for_reading } = state.sync
     const { bases_by_id, chosen_base_id } = state.user_info
     const { sub_route, item_id } = state.routing
     const wcomponent = get_wcomponent_from_state(state, item_id)
@@ -32,12 +32,13 @@ const map_state = (state: RootState) =>
     return {
         bases_by_id,
         chosen_base_id,
-        ready,
+        ready_for_reading,
         sub_route,
         item_id,
         wcomponent,
         selected_ids,
         editing: !state.display_options.consumption_formatting,
+        wcomponent_ids_searched_for_in_any_base: state.sync.wcomponent_ids_searched_for_in_any_base,
     }
 }
 
@@ -45,7 +46,7 @@ const map_state = (state: RootState) =>
 const map_dispatch = {
     clear_selected_wcomponents: ACTIONS.meta_wcomponents.clear_selected_wcomponents,
     set_or_toggle_display_select_storage: ACTIONS.controls.set_or_toggle_display_select_storage,
-    add_wcomponent_to_store: ACTIONS.specialised_object.add_wcomponent_to_store,
+    request_searching_for_wcomponents_by_id_in_any_base: ACTIONS.sync.request_searching_for_wcomponents_by_id_in_any_base,
 }
 
 
@@ -56,52 +57,26 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentsSidePanel (props: Props)
 {
-    const [searching_for_unfound, set_searching_for_unfound] = useState<boolean | undefined>(undefined)
-
-    const { ready, item_id: id } = props
+    const { ready_for_reading, item_id: id } = props
+    const searching_for_unfound = id ? !props.wcomponent_ids_searched_for_in_any_base.has(id) : false
     const wcomponent = props.wcomponent
 
     const display_type: DisplayType = (props.bases_by_id && !props.chosen_base_id) ? DisplayType.need_to_choose_base_id
-        : !ready ? DisplayType.loading
+        : !ready_for_reading ? DisplayType.loading
         : props.sub_route === "wcomponents_edit_multiple" ? DisplayType.edit_multiple
         : id === null ? DisplayType.no_id
         : DisplayType.render_wcomponent
 
 
-    function clear_old_wcomponent_from_other_base ()
+    // Look for wcomponent in any base
+    useEffect(() =>
     {
-        if (id && wcomponent?.id !== id)
-        {
-            set_searching_for_unfound(undefined)
-        }
-    }
+        if (wcomponent) return
+        if (display_type !== DisplayType.render_wcomponent) return
+        if (!id) return
 
-
-    function look_for_wcomponent_in_any_base ()
-    {
-        if (ready
-            && display_type === DisplayType.render_wcomponent
-            && id // this is only a type guard as display_type will be "no_id" if `id === null`
-            && !wcomponent
-            && searching_for_unfound === undefined
-        )
-        {
-            ;(async () => {
-
-                set_searching_for_unfound(true)
-                const result = await search_for_wcomponent_in_all_bases(id)
-
-                if (result.wcomponents[0])
-                {
-                    props.add_wcomponent_to_store({ wcomponent: result.wcomponents[0] })
-                }
-                set_searching_for_unfound(false)
-            })()
-        }
-    }
-
-    useEffect(clear_old_wcomponent_from_other_base, [wcomponent, id])
-    useEffect(look_for_wcomponent_in_any_base, [ready, display_type, wcomponent, searching_for_unfound, id])
+        props.request_searching_for_wcomponents_by_id_in_any_base({ ids: [id] })
+    }, [ready_for_reading, display_type, id, wcomponent, searching_for_unfound])
 
 
     if (display_type === DisplayType.need_to_choose_base_id) return <div>
@@ -186,12 +161,4 @@ enum DisplayType {
     edit_multiple,
     no_id,
     render_wcomponent,
-}
-
-
-
-function search_for_wcomponent_in_all_bases (wcomponent_id: string)
-{
-    const supabase = get_supabase()
-    return supabase_get_wcomponents_from_any_base({ supabase, ids: [wcomponent_id] })
 }

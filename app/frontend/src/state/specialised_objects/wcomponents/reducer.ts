@@ -11,10 +11,10 @@ import { update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_update_specialised_object_sync_info } from "../../sync/actions"
 import { get_wcomponent_from_state } from "../accessors"
-import { is_upsert_wcomponent, is_delete_wcomponent, is_add_wcomponent_to_store } from "./actions"
+import { is_upsert_wcomponent, is_delete_wcomponent, is_add_wcomponents_to_store } from "./actions"
 import { bulk_editing_wcomponents_reducer } from "./bulk_edit/reducer"
 import { tidy_wcomponent } from "./tidy_wcomponent"
-import { handle_add_wcomponent_to_store, handle_upsert_wcomponent } from "./utils"
+import { handle_add_wcomponents_to_store, handle_upsert_wcomponent } from "./utils"
 import type { WComponentsById } from "../../../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -43,10 +43,10 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
     }
 
 
-    if (is_add_wcomponent_to_store(action))
+    if (is_add_wcomponents_to_store(action))
     {
-        const tidied = tidy_wcomponent(action.wcomponent, state.specialised_objects.wcomponents_by_id)
-        state = handle_add_wcomponent_to_store(state, tidied)
+        const tidied = action.wcomponents.map(wc => tidy_wcomponent(wc, state.specialised_objects.wcomponents_by_id))
+        state = handle_add_wcomponents_to_store(state, tidied)
     }
 
 
