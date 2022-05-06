@@ -15,6 +15,7 @@ import { get_supabase } from "../../supabase/get_supabase"
 import { supabase_get_wcomponents_from_any_base } from "../../state/sync/supabase/wcomponent"
 import { WComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
 import { NotFoundWComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm"
+import { ListOrphanedWComponents } from "./ListOrphanedWComponents"
 
 
 
@@ -146,6 +147,8 @@ function _WComponentsSidePanel (props: Props)
         </p>}
 
         <CreateNewWComponent />
+
+        <ListOrphanedWComponents />
 
     </div>
 
