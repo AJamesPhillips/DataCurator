@@ -36,15 +36,22 @@ export async function supabase_get_items <S extends { id: string, base_id: numbe
         .from<S>(args.table)
         .select("*")
         .order("id", { ascending: true })
-        .range(offset, offset_max_inclusive)
+
 
     if (args.base_id !== undefined) query = query.eq("base_id", args.base_id as any)
-    if (args.specific_ids !== undefined)
+
+
+    if (args.specific_ids === undefined)
+    {
+        query = query.range(offset, offset_max_inclusive)
+    }
+    else
     {
         const specific_ids = args.specific_ids.slice(offset, offset_max_inclusive + 1)
         // console. log("specific_ids", offset, offset_max_inclusive + 1, specific_ids.slice(0, 3))
         query = query.in("id", specific_ids as any)
     }
+
 
     const res1 = await query
     let error = res1.error || undefined
