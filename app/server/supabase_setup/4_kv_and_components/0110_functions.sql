@@ -9,17 +9,28 @@ security definer -- can use "security definer" as we check
 SET search_path = public
 as $$
 DECLARE
+  existing knowledge_views%ROWTYPE;
   -- allowed_base_ids bigint;
   num_of_rows int;
-  existing knowledge_views%ROWTYPE;
 BEGIN
-  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
 
-  -- IF item.base_id not in allowed_base_ids THEN
-  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
+  SELECT * INTO existing FROM knowledge_views WHERE id = item.id;
+
+  IF NOT FOUND THEN
+    RAISE sqlstate 'PT404' using
+      message = 'Not Found',
+      detail = 'Unknown knowledge_view',
+      hint = 'Can not find knowledge_view by that id';
+  END IF;
+
+
+  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
+  -- IF existing.base_id not in allowed_base_ids THEN
+  IF existing.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
     RAISE sqlstate 'PT403' using
       message = 'Forbidden',
       detail = 'Invalid base',
+      -- hint = concat('You do not own or are an editor of this base ', item.base_id, ' and its knowledge_views');
       hint = 'You do not own or are an editor of this base and its knowledge_views';
   END IF;
 
@@ -27,7 +38,6 @@ BEGIN
   UPDATE knowledge_views
   SET
     modified_at = now(),
-    -- base_id = item.base_id,  // do not allow changing the base_id
     title = item.json::json->>'title',
     json = item.json
   WHERE id = item.id AND modified_at = item.modified_at;
@@ -40,17 +50,10 @@ BEGIN
 
 
   IF num_of_rows = 0 THEN
-    IF NOT FOUND THEN
-      RAISE sqlstate 'PT404' using
-        message = 'Not Found',
-        detail = 'Unknown knowledge_view',
-        hint = 'Can not find knowledge_view by that id';
-    ELSE
-      RAISE sqlstate 'PT409' using
-        message = 'Conflict',
-        detail = row_to_json(existing),
-        hint = 'You must update with a matching modified_at';
-    END IF;
+    RAISE sqlstate 'PT409' using
+      message = 'Conflict',
+      detail = row_to_json(existing),
+      hint = 'You must update with a matching modified_at';
   END IF;
 
 
@@ -71,17 +74,28 @@ security definer -- can use "security definer" as we check
 SET search_path = public
 as $$
 DECLARE
+  existing wcomponents%ROWTYPE;
   -- allowed_base_ids bigint;
   num_of_rows int;
-  existing wcomponents%ROWTYPE;
 BEGIN
-  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
 
-  -- IF item.base_id not in allowed_base_ids THEN
-  IF item.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
+  SELECT * INTO existing FROM wcomponents WHERE id = item.id;
+
+  IF NOT FOUND THEN
+    RAISE sqlstate 'PT404' using
+      message = 'Not Found',
+      detail = 'Unknown wcomponent',
+      hint = 'Can not find wcomponent by that id';
+  END IF;
+
+
+  -- allowed_base_ids := (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user());
+  -- IF existing.base_id not in allowed_base_ids THEN
+  IF existing.base_id not in (select get_owned_base_ids_for_authorised_user() UNION select get_bases_editable_for_authorised_user()) THEN
     RAISE sqlstate 'PT403' using
       message = 'Forbidden',
       detail = 'Invalid base',
+      -- hint = concat('You do not own or are an editor of this base ', item.base_id, ' and its wcomponents');
       hint = 'You do not own or are an editor of this base and its wcomponents';
   END IF;
 
@@ -89,7 +103,6 @@ BEGIN
   UPDATE wcomponents
   SET
     modified_at = now(),
-    -- base_id = item.base_id,  // do not allow changing the base_id
     title = item.json::json->>'title',
     type = item.json::json->>'type',
     attribute_id = (item.json::json->>'attribute_wcomponent_id')::uuid,
@@ -104,17 +117,10 @@ BEGIN
 
 
   IF num_of_rows = 0 THEN
-    IF NOT FOUND THEN
-      RAISE sqlstate 'PT404' using
-        message = 'Not Found',
-        detail = 'Unknown wcomponent',
-        hint = 'Can not find wcomponent by that id';
-    ELSE
-      RAISE sqlstate 'PT409' using
-        message = 'Conflict',
-        detail = row_to_json(existing),
-        hint = 'You must update with a matching modified_at';
-    END IF;
+    RAISE sqlstate 'PT409' using
+      message = 'Conflict',
+      detail = row_to_json(existing),
+      hint = 'You must update with a matching modified_at';
   END IF;
 
 
