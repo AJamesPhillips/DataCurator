@@ -93,11 +93,12 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         to_wcomponent = get_wcomponent_from_state(state, wcomponent.to_id)
     }
 
-    const base_for_wcomponent = (state.user_info.bases_by_id || {})[wcomponent.base_id]
 
     const wc_id_to_counterfactuals_map = get_wc_id_to_counterfactuals_v2_map(state)
 
     const is_in_editing_mode = !state.display_options.consumption_formatting
+    const base_for_wcomponent = (state.user_info.bases_by_id || {})[wcomponent.base_id]
+    const allowed_to_edit = !!(base_for_wcomponent?.can_edit)
 
     return {
         ready: state.sync.ready_for_reading,
@@ -108,8 +109,9 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         from_wcomponent,
         to_wcomponent,
 
-        // TODO, check if we can edit the base this component belongs to.
-        force_editable: is_in_editing_mode && !!(base_for_wcomponent?.can_edit),
+        is_in_editing_mode,
+        allowed_to_edit,
+        force_editable: is_in_editing_mode && allowed_to_edit,
         base_for_wcomponent,
 
         created_at_ms: state.routing.args.created_at_ms,
@@ -196,6 +198,11 @@ function _WComponentForm (props: Props)
 
 
     return <Box>
+        {props.is_in_editing_mode && !props.allowed_to_edit && <div>
+            <WarningTriangle message="" />
+            &nbsp;
+            Not allow to edit.  Ask base owner to give you edit permissions.
+        </div>}
         {props.wcomponent_from_different_base && <div
             style={{ cursor: "pointer" }}
             onClick={() => props.update_chosen_base_id({ base_id: wcomponent.base_id })}

@@ -85,7 +85,7 @@ function _ViewOptions (props: Props)
                 <PresentToAllIcon />
             </IconButton>
 
-            {are_in_edit_mode && present_warning && <Modal
+            {/* {are_in_edit_mode && present_warning && <Modal
                 title=""
                 size="small"
                 scrollable={false}
@@ -104,7 +104,7 @@ function _ViewOptions (props: Props)
                         <Button onClick={() => set_present_warning(false)}>Ok</Button>
                     </p>
                 </div>}
-            />}
+            />} */}
         </ButtonGroup>
     )
 }
