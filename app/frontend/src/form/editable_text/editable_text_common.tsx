@@ -90,7 +90,7 @@ function _EditableTextCommon (props: Props)
     const id_insertion_point = useRef<number | undefined>(undefined)
 
 
-    if (force_editable === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && force_editable !== true))
+    if (force_editable === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && force_editable === undefined))
     {
         const class_name = (disabled ? "disabled" : "")
         const have_value = props.value !== undefined

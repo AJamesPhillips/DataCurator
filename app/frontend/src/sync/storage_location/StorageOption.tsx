@@ -23,13 +23,10 @@ export function StorageOption (props: OwnProps)
 {
     const { user, users_by_id, base, selected, on_click, on_click_edit } = props
 
-    const { title, id, public_read, access_level } = base
+    const { title, public_read, access_level } = base
 
-    const is_owner = base.owner_user_id === user?.id
-    const is_editor = access_level === "editor"
-    const owner_or_editor = is_editor || is_owner
-    const access_description = is_owner ? "Editor (Owner)"
-        : is_editor ? "Editor"
+    const access_description = access_level === "owner" ? "Editor (Owner)"
+        : access_level === "editor" ? "Editor"
         : access_level === "viewer" ? "Viewer"
         : base.public_read ? "Viewer (public access)" : "?"
 
@@ -47,13 +44,13 @@ export function StorageOption (props: OwnProps)
         <td>{access_description}</td>
 
         {/* <td className="narrow" style={{ color: "grey", fontSize: 12 }}>{id}</td> */}
-        <td className="narrow edit_title" onClick={!owner_or_editor ? undefined : e =>
+        <td className="narrow edit_title" onClick={!base.can_edit ? undefined : e =>
             {
                 e.stopImmediatePropagation()
                 on_click_edit()
             }}
         >
-            {owner_or_editor && <EditIcon />}
+            {base.can_edit && <EditIcon />}
         </td>
     </tr>
 }

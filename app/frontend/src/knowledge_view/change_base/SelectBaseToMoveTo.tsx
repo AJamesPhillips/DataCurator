@@ -30,8 +30,7 @@ function _SelectBaseToMoveTo (props: Props)
 {
     const selected_option_id = props.base_id_to_move_to === undefined ? undefined : `${props.base_id_to_move_to}`
     const options_of_other_editable_bases: AutocompleteOption[] = Object.values(props.bases_by_id || {})
-        .filter(b => b.id !== props.chosen_base_id)
-        .filter(b => b.access_level === "editor" || b.access_level === "owner")
+        .filter(b => (b.id !== props.chosen_base_id) && b.can_edit)
         .map(base => ({ id: `${base.id}`, title: base.title }))
 
     return <div>

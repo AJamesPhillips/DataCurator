@@ -40,6 +40,7 @@ export interface DBSupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 export interface SupabaseKnowledgeBaseWithAccess extends SupabaseKnowledgeBase
 {
     access_level: ACCESS_CONTROL_LEVEL
+    can_edit: boolean
 }
 
 

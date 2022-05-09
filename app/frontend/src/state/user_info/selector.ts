@@ -48,7 +48,7 @@ export function selector_editable_bases (state: RootState)
     if (!user) return undefined // if no user then no editing so by definition no editable base
     if (!bases_by_id) return undefined
 
-    return Object.values(bases_by_id).filter(b => b.access_level === "editor" || b.access_level === "owner")
+    return Object.values(bases_by_id).filter(b => b.can_edit)
 }
 
 

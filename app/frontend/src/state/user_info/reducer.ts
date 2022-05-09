@@ -92,7 +92,7 @@ export const user_info_reducer = (state: RootState, action: AnyAction): RootStat
 
 
 
-function build_bases_by_id_map (bases: SupabaseKnowledgeBaseWithAccess[] | undefined)
+function build_bases_by_id_map (bases: SupabaseKnowledgeBaseWithAccess[] | undefined): SupabaseKnowledgeBaseWithAccessById | undefined
 {
     let bases_by_id: SupabaseKnowledgeBaseWithAccessById | undefined = undefined
 

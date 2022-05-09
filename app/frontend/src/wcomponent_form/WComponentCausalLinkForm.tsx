@@ -89,6 +89,7 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
             <span className="description_label">{primary_effect_description}</span> &nbsp; <EditableNumber
                 placeholder="..."
                 value={effect_when_true}
+                force_editable={editing}
                 allow_undefined={true}
                 style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_false
@@ -101,6 +102,7 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
             <span className="description_label">Effect when false</span> &nbsp; <EditableNumber
                 placeholder="..."
                 value={effect_when_false}
+                force_editable={editing}
                 allow_undefined={true}
                 style={{ width: "100px" }}
                 // Remember to also send unchanged effect_when_true

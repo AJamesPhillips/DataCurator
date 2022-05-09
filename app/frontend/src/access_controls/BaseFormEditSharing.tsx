@@ -43,11 +43,7 @@ function _BaseFormEditSharing (props: Props)
     const [access_controls, set_access_controls] = useState<SupabaseAccessControl[] | undefined>(undefined)
     const [error, set_error] = useState<PostgrestError | undefined>(undefined)
 
-
-    const { access_level } = base
-
     const is_owner = base.owner_user_id === user.id
-    const owner_or_editor = access_level === "editor" || is_owner
     // const access_description = owner_or_editor ? "Editor"
     //     : access_level === "viewer" ? "Viewer"
     //     : base.public_read ? "Viewer (public access)" : "?"
