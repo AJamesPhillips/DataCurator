@@ -84,7 +84,7 @@ interface KnowledgeViewWithParentId extends KnowledgeView
 }
 
 
-export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[]): NestedKnowledgeViewIds
+export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[], chosen_base_id: number | undefined): NestedKnowledgeViewIds
 {
     const map: NestedKnowledgeViewIds = { top_ids: [], map: {} }
 
@@ -104,14 +104,14 @@ export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[])
     })
 
 
-    add_child_views(unused_knowledge_views, map)
+    add_child_views(unused_knowledge_views, map, chosen_base_id)
 
     return map
 }
 
 
 
-function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds)
+function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds, chosen_base_id: number | undefined)
 {
     if (potential_children.length === 0) return
 
@@ -136,7 +136,15 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
 
     if (potential_children.length === lack_parent.length)
     {
-        console.error(`Circular knowledge view tree.  Look in "Views" for: ${lack_parent.map(kv => `${kv.title} ${kv.id}`).join(", ")}`)
+        const lack_parent_in_this_base = lack_parent.filter(kv => kv.base_id === chosen_base_id)
+        if (lack_parent_in_this_base.length)
+        {
+            // This says "maybe" because if the knowledge view is nested under a
+            // knowledge view in a different base then it's ok as it's parent
+            // exists just in a different base
+            console.error(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
+        }
+
         lack_parent.forEach(({ id, title, sort_type }) =>
         {
             map.top_ids.push(id)
@@ -145,7 +153,7 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
     }
     else
     {
-        add_child_views(lack_parent, map)
+        add_child_views(lack_parent, map, chosen_base_id)
     }
 }
 

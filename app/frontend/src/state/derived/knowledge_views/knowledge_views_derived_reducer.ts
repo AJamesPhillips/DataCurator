@@ -117,10 +117,8 @@ function update_derived_knowledge_view_state (state: RootState): RootState
     const chosen_base_id = selector_chosen_base_id(state)
 
     const knowledge_views_across_all_bases = Object.values(knowledge_views_by_id)
-    const knowledge_views_from_this_base = knowledge_views_across_all_bases.filter(kv => kv.base_id === chosen_base_id)
-
-    const knowledge_views = sort_list(knowledge_views_from_this_base, ({ title }) => title, SortDirection.ascending)
-    const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views)
+    const knowledge_views = sort_list(knowledge_views_across_all_bases, ({ title }) => title, SortDirection.ascending)
+    const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views, chosen_base_id)
     sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
 
     state = {
