@@ -29,15 +29,16 @@ $handle_width:1em;
     border-radius: 3px;
     transition: background-color 0.2s, color 0.2s;
     cursor: pointer;
+
+    &.error_disabled
+    {
+        color: rgba(200,0,0,0.3);
+        cursor: not-allowed;
+    }
 }
-.node_handle:hover
+.node_handle.highlight_on_hover:hover
 {
     color: rgba(0,0,0,1);
-
-    &.disabled
-    {
-        color: rgba(0,0,0,0.3);
-    }
 }
 
 

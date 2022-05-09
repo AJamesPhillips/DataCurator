@@ -89,8 +89,9 @@ function _ExploreButtonHandle (props: Props)
         + (hidden ? " hidden " : "")
         + (kvwc ? " has_knowledge_view " : "")
         + (current_but_no_parent ? " current_but_no_parent " : "")
-        + (click_outcome < 0 ? " disabled " : "")
+        // + (click_outcome < 0 ? "" : " highlight_on_hover ")
         + (click_outcome === ClickOutComes.create_then_navigate ? " will_create_on_click " : "")
+        + (click_outcome === ClickOutComes.disabled__need_component_to_create_then_navigate ? " error_disabled " : "")
 
     const title = click_outcome === ClickOutComes.navigate_up_to_kv_parent ? "Navigate up to parent"
         : click_outcome === ClickOutComes.disabled__current_but_no_parent ? "No parent to navigate up to"

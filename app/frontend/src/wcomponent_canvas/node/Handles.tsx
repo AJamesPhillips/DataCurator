@@ -39,8 +39,10 @@ function HandleForMoving (props: HandleForMovingProps)
 {
     const { show_move_handle, user_requested_node_move } = props
 
+    const class_name = "node_handle movement highlight_on_hover"
+
     if (!show_move_handle) return <div
-        className="node_handle movement"
+        className={class_name}
     >&nbsp;</div>
 
 
@@ -53,7 +55,7 @@ function HandleForMoving (props: HandleForMovingProps)
     }
 
     return <div
-        className="node_handle movement"
+        className={class_name}
         onPointerDown={handle_pointer_down}
     >&#10021;</div>
 }

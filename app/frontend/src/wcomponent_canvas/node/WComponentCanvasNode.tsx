@@ -212,7 +212,7 @@ function _WComponentCanvasNode (props: Props)
     })
 
 
-    const children: h.JSX.Element[] = (!wcomponent || props.node_is_moving) ? [] : [
+    const children: h.JSX.Element[] = props.node_is_moving ? [] : [
         <Handles
             show_move_handle={is_on_canvas && is_editing && is_highlighted}
             user_requested_node_move={(position: Position) =>

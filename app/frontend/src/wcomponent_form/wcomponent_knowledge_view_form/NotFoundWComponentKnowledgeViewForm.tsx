@@ -5,6 +5,7 @@ import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { ACTIONS } from "../../state/actions"
 import { get_current_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import { WComponentKnowledgeViewForm } from "./WComponentKnowledgeViewForm"
 import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
 
 
@@ -45,6 +46,8 @@ function _NotFoundWComponentKnowledgeViewForm (props: Props)
 
 
     return <div>
+        <WComponentKnowledgeViewForm wcomponent_id={wcomponent_id} />
+
         {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
             <ConfirmatoryDeleteButton
                 button_text="Delete from knowledge view"
