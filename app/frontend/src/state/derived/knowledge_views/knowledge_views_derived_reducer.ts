@@ -43,6 +43,7 @@ import {
 } from "../../specialised_objects/accessors"
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
+import { selector_chosen_base_id } from "../../user_info/selector"
 
 
 
@@ -113,7 +114,12 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
-    const knowledge_views = sort_list( Object.values(knowledge_views_by_id), ({ title }) => title, SortDirection.ascending)
+    const chosen_base_id = selector_chosen_base_id(state)
+
+    const knowledge_views_across_all_bases = Object.values(knowledge_views_by_id)
+    const knowledge_views_from_this_base = knowledge_views_across_all_bases.filter(kv => kv.base_id === chosen_base_id)
+
+    const knowledge_views = sort_list(knowledge_views_from_this_base, ({ title }) => title, SortDirection.ascending)
     const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views)
     sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
 
