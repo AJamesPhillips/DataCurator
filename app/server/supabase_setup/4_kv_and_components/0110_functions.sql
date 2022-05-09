@@ -4,8 +4,15 @@
 CREATE OR REPLACE FUNCTION update_knowledge_view (item knowledge_views)
 returns knowledge_views
 language plpgsql
-security definer -- can use "security definer" as we check
--- in the function if they have the privileges to edit these rows
+
+-- This policy is necessary instead of using "security invoker", because that policy
+-- would be too open and allow version unsafe updates (i.e. updates that do not first
+-- check that the modified_at is the same in the DB as that given in the item to
+-- update with).
+-- We can use "security definer" as we check in the function if they have the
+-- privileges to edit these rows.
+security definer
+
 SET search_path = public
 as $$
 DECLARE
@@ -69,8 +76,15 @@ $$;
 CREATE OR REPLACE FUNCTION update_wcomponent (item wcomponents)
 returns wcomponents
 language plpgsql
-security definer -- can use "security definer" as we check
--- in the function if they have the privileges to edit these rows
+
+-- This policy is necessary instead of using "security invoker", because that policy
+-- would be too open and allow version unsafe updates (i.e. updates that do not first
+-- check that the modified_at is the same in the DB as that given in the item to
+-- update with).
+-- We can use "security definer" as we check in the function if they have the
+-- privileges to edit these rows.
+security definer
+
 SET search_path = public
 as $$
 DECLARE
