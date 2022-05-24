@@ -18,6 +18,9 @@
     h1
     {
         padding: 10px;
+        // This is a quick hack to ensure the column width does not reduce when no entries in it
+        // todo: copy the css from .action_list_view_content .action_list which uses min-width
+        min-width: 370px;
     }
 
 
