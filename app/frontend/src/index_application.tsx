@@ -78,14 +78,25 @@ if (root)
         const store = get_store({ load_state_from_storage: true })
         render(<Provider store={store}><App /></Provider>, root)
     }
-    else if (window.location.pathname === "/privacy-policy/" || window.location.pathname === "/privacy-policy")
+
+    else if (window.location.pathname === "/privacy-policy")
     {
-        render(<div>Will render public/privacy-policy</div>, root)
+        render(<div>Will render public/privacy-policy.html</div>, root)
     }
-    else if (window.location.pathname === "/terms-and-conditions/" || window.location.pathname === "/terms-and-conditions")
+    else if (window.location.pathname === "/privacy-policy/")
+    {
+        render(<div>Will need to remove trailing / and link to privacy-policy or privacy-policy.html to render correctly</div>, root)
+    }
+
+    else if (window.location.pathname === "/terms-and-conditions")
     {
         render(<div>Will render public/terms-and-conditions.html</div>, root)
     }
+    else if (window.location.pathname === "/terms-and-conditions/")
+    {
+        render(<div>Will need to remove trailing / and link to terms-and-conditions or terms-and-conditions.html to render correctly</div>, root)
+    }
+
     else if (window.location.pathname === "/sim/" || window.location.pathname === "/sim")
     {
         render(<SimHome />, root)

@@ -156,8 +156,8 @@ export function LandingPage()
                     </p>
 
                     <p>
-                        <a href="/privacy-policy/">Privacy Policy</a><br/>
-                        <a href="/terms-and-conditions/">Terms and Conditions</a>
+                        <a href="/privacy-policy">Privacy Policy</a><br/>
+                        <a href="/terms-and-conditions">Terms and Conditions</a>
                     </p>
                 </Box>
                 <Box component="footer">
