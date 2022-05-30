@@ -25,7 +25,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ListOrphanedWComponents (props: Props)
 {
-    const [orphaned_wcomponents, set_orphaned_wcomponents] = useState<WComponent[]>([])
+    const [orphaned_wcomponents, set_orphaned_wcomponents] = useState<undefined | WComponent[]>(undefined)
 
     const find_components = useMemo(() =>
     {
@@ -57,27 +57,31 @@ function _ListOrphanedWComponents (props: Props)
     }, [])
 
     return <div>
-        <h3>
-            List Orphaned Components
+        <h3 style={{ marginTop: 30, marginBottom: 0 }}>
+            Orphaned Components
         </h3>
         <span className="description_label">
-            Show all components in this base which are not part of a knowledge view in this base.
+            Show all components in this knowledge base which are not in one or more knowledge views in this base.
         </span>
 
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">
             <Button onClick={() => find_components()}>
-                Find components
+                Find orphan components
             </Button>
         </ButtonGroup>
 
-        <table>
+        {orphaned_wcomponents && orphaned_wcomponents.length > 0 && <table>
         <tbody style={{ cursor: "pointer" }}>
             {orphaned_wcomponents.map(wc => <tr onClick={() => props.change_route({ item_id: wc.id })}>
                 <td>{wc.type}</td>
                 <td><RichMarkDown text={wc.title} /></td>
             </tr>)}
         </tbody>
-        </table>
+        </table>}
+
+        {orphaned_wcomponents && orphaned_wcomponents.length === 0 && <p>
+            No orphaned components found.
+        </p>}
     </div>
 }
 
