@@ -8,6 +8,7 @@ import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
+import { set_union } from "../../utils/set"
 import { calc_ids_to_move_and_conflicts, WComponentMoveBaseConflicts } from "./calc_ids_to_move_and_conflicts"
 import { SelectBaseToMoveTo } from "./SelectBaseToMoveTo"
 import { WComponentMoveConflicts } from "./WComponentMoveConflicts"
@@ -38,8 +39,9 @@ function _KnowledgeViewChangeBase (props: Props)
 {
     const { knowledge_view, nested_knowledge_view_ids_map, knowledge_views_by_id, wcomponents_by_id, chosen_base_id } = props
 
+    const [ids_to_move_without_conflict, set_ids_to_move_without_conflict] = useState<Set<string>>(new Set())
     const [wcomponents_move_conflicts, set_wcomponents_move_conflicts] = useState<WComponentMoveBaseConflicts | undefined>(undefined)
-    const [ids_to_move, set_ids_to_move] = useState<string[] | undefined>(undefined)
+
     const [base_id_to_move_to, set_base_id_to_move_to] = useState<number | undefined>(undefined)
 
     const [result, set_result] = useState<PostgrestResponse<{}> | undefined>(undefined)
@@ -52,18 +54,22 @@ function _KnowledgeViewChangeBase (props: Props)
     </div>
 
 
-    if (!wcomponents_move_conflicts || !ids_to_move) return <div>
+    if (!wcomponents_move_conflicts) return <div>
         <h4>Change base of knowledge view</h4>
 
         <Button
             value="Check if safe to move"
             onClick={() =>
             {
-                const { ids_to_move, wcomponents_move_conflicts } = calc_ids_to_move_and_conflicts({
-                    knowledge_view, nested_knowledge_view_ids_map, knowledge_views_by_id, wcomponents_by_id,
+                const { kv_ids_to_move, wc_ids_to_move, wcomponents_move_conflicts } = calc_ids_to_move_and_conflicts(
+                {
+                    root_knowledge_view_id_to_move: knowledge_view.id,
+                    nested_knowledge_view_ids_map,
+                    knowledge_views_by_id,
+                    wcomponents_by_id,
                 })
+                set_ids_to_move_without_conflict(set_union(kv_ids_to_move, wc_ids_to_move))
                 set_wcomponents_move_conflicts(wcomponents_move_conflicts)
-                set_ids_to_move(ids_to_move)
             }}
         />
     </div>
@@ -72,7 +78,7 @@ function _KnowledgeViewChangeBase (props: Props)
     // TODO: calculate which components and knowledge views are currently selected which belong to a base id
     // that's different to the current chosen_base_id
     const wcomponent_conflict_number = Object.keys(wcomponents_move_conflicts).length
-    const ids_to_move_without_conflict = ids_to_move.filter(id => !wcomponents_move_conflicts[id])
+    const total_possible_ids_to_move = ids_to_move_without_conflict.size + wcomponent_conflict_number
 
 
     return <div>
@@ -80,8 +86,9 @@ function _KnowledgeViewChangeBase (props: Props)
 
         {wcomponent_conflict_number > 0 && <p>
             There are other knowledge views which are not nested under this knowledge view and that
-            contain <span style={{ color: "darkred" }}>{wcomponent_conflict_number} non-deleted,
-            and therefore conflicting, component</span> entries.  These entries can be moved to the new base or left assigned to this base.  All the knowledge views will be moved regardless, even if their corresponding component remains in a different base.
+            contain <span style={{ color: "darkred" }}>{wcomponent_conflict_number} components</span> that
+            are also in this knowledge view.  These entries can be moved to the new base or left assigned
+            to this base.  All the nested knowledge views and their components will be moved regardless.
             {/* If these components are moved to the new base then their entries in the other knowledge views
             will be <span style={{ fontSize: 11, color: "darkred" }}>PERMANENTLY</span> removed.
             In the future it will be possible to blend components from multiple bases so this warning will not apply
@@ -89,7 +96,7 @@ function _KnowledgeViewChangeBase (props: Props)
         </p>}
 
         {wcomponent_conflict_number > 0 && <p>
-            <i><b>{wcomponent_conflict_number} component(s) in other knowledge views:</b></i>
+            <i><b>{wcomponent_conflict_number} component(s) also present in other knowledge views:</b></i>
 
             <WComponentMoveConflicts
                 wcomponents_move_conflicts={wcomponents_move_conflicts}
@@ -114,19 +121,21 @@ function _KnowledgeViewChangeBase (props: Props)
 
         {base_id_to_move_to !== undefined && <div>
             <ConfirmatoryButton
-                disabled={ids_to_move.length === 0}
-                button_text={`Move all ${ids_to_move.length} to new base (including conflicted)`}
+                disabled={total_possible_ids_to_move === 0}
+                button_text={`Move all ${total_possible_ids_to_move} to new base (including conflicted)`}
                 on_click={() =>
                 {
+                    const ids_to_move = Array.from(ids_to_move_without_conflict).concat(Object.keys(wcomponents_move_conflicts))
                     move_ids_to_new_base(ids_to_move, chosen_base_id, base_id_to_move_to, set_result)
                 }}
             />
             <ConfirmatoryButton
-                disabled={ids_to_move_without_conflict.length === 0}
-                button_text={`Move ${ids_to_move_without_conflict.length} (no conflicts) to new base`}
+                disabled={ids_to_move_without_conflict.size === 0}
+                button_text={`Move ${ids_to_move_without_conflict.size} (no conflicts) to new base`}
                 on_click={() =>
                 {
-                    move_ids_to_new_base(ids_to_move_without_conflict, chosen_base_id, base_id_to_move_to, set_result)
+                    const ids_to_move = Array.from(ids_to_move_without_conflict)
+                    move_ids_to_new_base(ids_to_move, chosen_base_id, base_id_to_move_to, set_result)
                 }}
             />
         </div>}
