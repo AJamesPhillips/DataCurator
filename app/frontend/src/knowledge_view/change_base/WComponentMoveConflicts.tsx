@@ -1,3 +1,4 @@
+import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { Link } from "../../sharedf/Link"
@@ -48,7 +49,7 @@ function _WComponentMoveConflicts (props: Props)
                     item_id={wc_id}
                     args={undefined}
                 >
-                    Component "{wcomponent_title}" in:
+                    Component "<Markdown>{wcomponent_title}</Markdown>" in:
                 </Link>
 
                 <ul>
