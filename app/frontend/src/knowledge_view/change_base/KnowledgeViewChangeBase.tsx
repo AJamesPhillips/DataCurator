@@ -120,18 +120,18 @@ function _KnowledgeViewChangeBase (props: Props)
 
 
         {base_id_to_move_to !== undefined && <div>
-            <ConfirmatoryButton
+            {ids_to_move_without_conflict.size !== total_possible_ids_to_move && <ConfirmatoryButton
                 disabled={total_possible_ids_to_move === 0}
-                button_text={`Move all ${total_possible_ids_to_move} to new base (including conflicted)`}
+                button_text={`Move all ${total_possible_ids_to_move} components to new base (including conflicted)`}
                 on_click={() =>
                 {
                     const ids_to_move = Array.from(ids_to_move_without_conflict).concat(Object.keys(wcomponents_move_conflicts))
                     move_ids_to_new_base(ids_to_move, chosen_base_id, base_id_to_move_to, set_result)
                 }}
-            />
+            />}
             <ConfirmatoryButton
                 disabled={ids_to_move_without_conflict.size === 0}
-                button_text={`Move ${ids_to_move_without_conflict.size} (no conflicts) to new base`}
+                button_text={`Move ${ids_to_move_without_conflict.size} components (no conflicts) to new base`}
                 on_click={() =>
                 {
                     const ids_to_move = Array.from(ids_to_move_without_conflict)
