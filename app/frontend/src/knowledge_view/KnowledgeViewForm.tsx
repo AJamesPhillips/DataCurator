@@ -26,12 +26,15 @@ const map_state = (state: RootState) =>
         current_view: state.routing.args.view,
         current_subview_id: state.routing.args.subview_id,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        chosen_base_id: state.user_info.chosen_base_id,
+        bases_by_id: state.user_info.bases_by_id,
     }
 }
 
 
 const map_dispatch = {
     upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view,
+    update_chosen_base_id: ACTIONS.user_info.update_chosen_base_id,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -47,7 +50,7 @@ function _KnowledgeViewForm (props: Props)
     if (!knowledge_view) return <div>No knowledge view selected</div>
 
     const possible_parent_knowledge_view_ids = useMemo(() =>
-        props.knowledge_views.map(kv => kv.id)
+        props.knowledge_views.filter(kv => kv.base_id === props.chosen_base_id).map(kv => kv.id)
     , [props.knowledge_views])
 
     const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id)
@@ -63,6 +66,9 @@ function _KnowledgeViewForm (props: Props)
         ...props,
         possible_parent_knowledge_view_ids,
         current_kv_parent_ids,
+        chosen_base_id: props.chosen_base_id,
+        bases_by_id: props.bases_by_id,
+        update_chosen_base_id: props.update_chosen_base_id,
     })(knowledge_view, crud)
 }
 

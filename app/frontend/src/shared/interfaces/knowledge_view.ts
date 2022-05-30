@@ -5,7 +5,7 @@ import type { DatetimeLineConfig } from "./datetime_lines"
 
 
 
-export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived"
+export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived" | "errored"
 export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
 
 

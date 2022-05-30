@@ -8,6 +8,7 @@ import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { is_defined } from "../../../shared/utils/is_defined"
 
 
 
@@ -40,6 +41,7 @@ export function supabase_get_knowledge_views (args: SupabaseGetKnowledgeViewsArg
 interface GetKnowledgeViewsFromOtherBases
 {
     supabase: SupabaseClient
+    knowledge_views: KnowledgeView[]
     wcomponents_from_other_bases: WComponent[]
 }
 export async function supabase_get_knowledge_views_from_other_bases (args: GetKnowledgeViewsFromOtherBases)
@@ -48,7 +50,22 @@ export async function supabase_get_knowledge_views_from_other_bases (args: GetKn
         .filter(wc => !wc.deleted_at)
     const wcomponent_ids = Array.from(new Set(wcomponents_from_other_bases.map(wc => wc.id)))
 
-    return await supabase_get_knowledge_views({ supabase: args.supabase, ids: wcomponent_ids, all_bases: true })
+    const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map(kv => kv.id))
+    const parent_kv_ids: string[] = args.knowledge_views.map(kv => kv.parent_knowledge_view_id)
+        .filter(is_defined)
+        .filter(id => !downloaded_knowledge_view_ids.has(id))
+    let kv_ids = wcomponent_ids.concat(parent_kv_ids)
+
+    args.knowledge_views.map(kv => kv.foundation_knowledge_view_ids)
+        .forEach(ids =>
+        {
+            ids?.filter(id => !downloaded_knowledge_view_ids.has(id))
+                .forEach(id => kv_ids.push(id))
+        })
+
+    kv_ids = Array.from(new Set(kv_ids))
+
+    return await supabase_get_knowledge_views({ supabase: args.supabase, ids: kv_ids, all_bases: true })
 }
 
 

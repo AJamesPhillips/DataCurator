@@ -7,6 +7,7 @@ import type {
 import type { NestedKnowledgeViewIds } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"
 
 
 
@@ -24,6 +25,10 @@ export interface KnowledgeViewFormProps
     wcomponents_by_id: WComponentsById
     editing: boolean
     upsert_knowledge_view: (args: { knowledge_view: KnowledgeView }) => void
+
+    chosen_base_id: number | undefined
+    bases_by_id: { [base_id: string]: SupabaseKnowledgeBaseWithAccess } | undefined
+    update_chosen_base_id: (args: { base_id: number | undefined }) => void
 }
 
 

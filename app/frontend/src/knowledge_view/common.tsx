@@ -20,6 +20,7 @@ import { KnowledgeViewChangeBase } from "./change_base/KnowledgeViewChangeBase"
 import { SelectKnowledgeView } from "./SelectKnowledgeView"
 import { useMemo } from "preact/hooks"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { WarningTriangle } from "../sharedf/WarningTriangle"
 
 
 
@@ -51,6 +52,10 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""]
 
 
+    const kv_from_different_base = knowledge_view.base_id !== props.chosen_base_id
+    const base_for_knowledge_view = (props.bases_by_id || {})[knowledge_view.base_id]
+
+
     const is_current_kv = props.current_subview_id === knowledge_view.id
 
     const allow_nest_under_knowledge_view_ids = useMemo(() =>
@@ -58,7 +63,31 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     , [props.possible_parent_knowledge_view_ids])
 
 
+    let kv_nesting_error = ""
+    if (nested_kv?.ERROR_is_circular) kv_nesting_error = "Is circularly nested"
+    if (nested_kv?.ERROR_parent_kv_missing)
+    {
+        kv_nesting_error = "Parent knowledge view is missing (may be present in a different knowledge base)"
+    }
+
+    let kv_nesting_warning = ""
+    if (nested_kv?.ERROR_parent_from_diff_base)
+    {
+        kv_nesting_warning = "Parent knowledge view from a different base"
+    }
+
+
     return <div style={{ backgroundColor: "white", border: "thin solid #aaa", borderRadius: 3, padding: 5, margin: 5 }}>
+        {kv_from_different_base && <div
+            style={{ cursor: "pointer" }}
+            onClick={() => props.update_chosen_base_id({ base_id: knowledge_view.base_id })}
+            title={`Click to change to base ${knowledge_view.base_id}`}
+        >
+            <WarningTriangle message="" />
+            &nbsp;
+            Is part of base "{base_for_knowledge_view?.title}"
+        </div>}
+
         <p style={{ display: "inline-flex" }}>
             <EditableTextSingleLine
                 placeholder="Title"
@@ -130,12 +159,11 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
         </p>
 
 
-        {(editing || nested_kv?.ERROR_is_circular) && <p>
+        {(editing || kv_nesting_error || kv_nesting_warning) && <p>
             <span className="description_label">Nest under</span>
 
-            {nested_kv?.ERROR_is_circular && <div style={{ backgroundColor: "pink" }}>
-                Is circularly nested
-            </div>}
+            {kv_nesting_error && <div style={{ backgroundColor: "pink" }}> {kv_nesting_error} </div>}
+            {kv_nesting_warning && <div><WarningTriangle message={kv_nesting_warning}/> {kv_nesting_warning}</div>}
 
             <SelectKnowledgeView
                 selected_option_id={knowledge_view.parent_knowledge_view_id}

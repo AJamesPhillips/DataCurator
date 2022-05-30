@@ -33,6 +33,7 @@ export async function supabase_load_data (load_state_from_storage: boolean, base
 
     const knowledge_views_other_bases_response = await supabase_get_knowledge_views_from_other_bases({
         supabase,
+        knowledge_views: knowledge_views_response.items,
         wcomponents_from_other_bases: wcomponents_other_bases_response.wcomponents,
     })
     if (knowledge_views_other_bases_response.error) return Promise.reject(knowledge_views_other_bases_response.error)

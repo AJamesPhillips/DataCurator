@@ -153,8 +153,8 @@ interface KnowledgeViewOption
 
 function calc_if_is_hidden (entry: NestedKnowledgeViewIdsEntry): KnowledgeViewOption
 {
-    const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived"
-    const color = entry.ERROR_is_circular ? pink : undefined
+    const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived" || entry.sort_type === "errored"
+    const color = entry.sort_type === "errored" ? pink : undefined
     return { id: entry.id, title: entry.title, is_hidden, color }
 }
 

@@ -12,22 +12,26 @@ interface OwnProps extends KnowledgeViewListCoreProps { }
 
 export function KnowledgeViewListsSet (props: OwnProps)
 {
-    const { priority, normal, hidden, archived } = useMemo(() =>
+    const { priority, normal, hidden, archived, errored } = useMemo(() =>
     {
         const priority: KnowledgeView[] = []
         const normal: KnowledgeView[] = []
         const hidden: KnowledgeView[] = []
         const archived: KnowledgeView[] = []
+        const errored: KnowledgeView[] = []
 
         props.knowledge_views.forEach(kv =>
         {
-            if (kv.sort_type === "hidden") hidden.push(kv)
+            const entry = props.nested_knowledge_view_ids.map[kv.id]
+
+            if (entry?.sort_type === "errored") errored.push(kv)
+            else if (kv.sort_type === "hidden") hidden.push(kv)
             else if (kv.sort_type === "archived") archived.push(kv)
             else if (kv.sort_type === "priority") priority.push(kv)
             else normal.push(kv)
         })
 
-        return { priority, normal, hidden, archived }
+        return { priority, normal, hidden, archived, errored }
     }, [props.knowledge_views])
 
 
@@ -55,6 +59,13 @@ export function KnowledgeViewListsSet (props: OwnProps)
             {...props}
             knowledge_views={archived}
             sort_type="archived"
+        />
+
+        <br />
+        <KnowledgeViewList
+            {...props}
+            knowledge_views={errored}
+            sort_type="errored"
         />
     </div>
 }

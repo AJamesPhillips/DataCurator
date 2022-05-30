@@ -88,7 +88,11 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWCompo
     }
 
 
-    args.knowledge_views.forEach(kv => determine_if_missing_ids(Object.keys(kv.wc_id_map)))
+    args.knowledge_views.forEach(kv =>
+    {
+        determine_if_missing_ids(Object.keys(kv.wc_id_map))
+        // kv.parent_knowledge_view_id && determine_if_missing_ids([kv.parent_knowledge_view_id])
+    })
 
     args.wcomponents.forEach(wc =>
     {

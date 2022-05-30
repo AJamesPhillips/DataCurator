@@ -47,7 +47,7 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
     const expanded_initial_state = calc_expanded_initial_state(props)
 
 
-    if (sort_type === "hidden" || sort_type === "archived")
+    if (sort_type === "hidden" || sort_type === "archived" || sort_type === "errored")
     {
         return <ExpandableList
             items_count={knowledge_views.length}

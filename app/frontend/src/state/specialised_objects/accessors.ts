@@ -86,6 +86,11 @@ interface KnowledgeViewWithParentId extends KnowledgeView
 
 export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[], chosen_base_id: number | undefined): NestedKnowledgeViewIds
 {
+    const all_kvs_ids_any_base = new Set(knowledge_views.map(kv => kv.id))
+    knowledge_views = knowledge_views.filter(kv => kv.base_id === chosen_base_id)
+    const all_kvs_ids_only_this_base = new Set(knowledge_views.map(kv => kv.id))
+
+
     const map: NestedKnowledgeViewIds = { top_ids: [], map: {} }
 
     const unused_knowledge_views: KnowledgeViewWithParentId[] = []
@@ -104,14 +109,14 @@ export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[],
     })
 
 
-    add_child_views(unused_knowledge_views, map, chosen_base_id)
+    add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, unused_knowledge_views, map, chosen_base_id)
 
     return map
 }
 
 
 
-function add_child_views (potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds, chosen_base_id: number | undefined)
+function add_child_views (all_kvs_ids_any_base: Set<string>, all_kvs_ids_only_this_base: Set<string>, potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds, chosen_base_id: number | undefined)
 {
     if (potential_children.length === 0) return
 
@@ -147,15 +152,29 @@ function add_child_views (potential_children: KnowledgeViewWithParentId[], map: 
             console.error(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
         }
 
-        lack_parent.forEach(({ id, title, sort_type }) =>
+        lack_parent.forEach(({ id, title, parent_knowledge_view_id }) =>
         {
             map.top_ids.push(id)
-            map.map[id] = { id, title, sort_type, parent_id: undefined, child_ids: [], ERROR_is_circular: true }
+
+            const ERROR_is_circular = all_kvs_ids_only_this_base.has(parent_knowledge_view_id)
+            const ERROR_parent_kv_missing = !all_kvs_ids_any_base.has(parent_knowledge_view_id)
+            const ERROR_parent_from_diff_base = !ERROR_is_circular && !ERROR_parent_kv_missing
+
+            map.map[id] = {
+                id,
+                title,
+                sort_type: "errored",
+                parent_id: undefined,
+                child_ids: [],
+                ERROR_is_circular,
+                ERROR_parent_kv_missing,
+                ERROR_parent_from_diff_base,
+            }
         })
     }
     else
     {
-        add_child_views(lack_parent, map, chosen_base_id)
+        add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, lack_parent, map, chosen_base_id)
     }
 }
 
@@ -178,6 +197,7 @@ const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
     normal: "1",
     hidden: "2",
     archived: "3",
+    errored: "4",
 }
 function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: NestedKnowledgeViewIdsMap)
 {

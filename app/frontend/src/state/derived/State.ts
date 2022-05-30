@@ -21,7 +21,9 @@ export interface NestedKnowledgeViewIdsEntry
     sort_type: KnowledgeViewSortType
     parent_id: string | undefined
     child_ids: string[]
-    ERROR_is_circular?: true
+    ERROR_is_circular?: boolean
+    ERROR_parent_kv_missing?: boolean
+    ERROR_parent_from_diff_base?: boolean
 }
 
 export interface NestedKnowledgeViewIdsMap

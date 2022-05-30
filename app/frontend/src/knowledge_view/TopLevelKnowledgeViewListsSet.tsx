@@ -23,10 +23,13 @@ const map_state = (state: RootState) => ({
     current_view: state.routing.args.view,
     current_subview_id: state.routing.args.subview_id,
     editing: !state.display_options.consumption_formatting,
+    chosen_base_id: state.user_info.chosen_base_id,
+    bases_by_id: state.user_info.bases_by_id,
 })
 
 const map_dispatch = {
     upsert_knowledge_view: ACTIONS.specialised_object.upsert_knowledge_view,
+    update_chosen_base_id: ACTIONS.user_info.update_chosen_base_id,
 }
 
 const connector = connect(map_state, map_dispatch)
@@ -45,7 +48,7 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
 
 
     const possible_parent_knowledge_view_ids = useMemo(() =>
-        props.knowledge_views.map(kv => kv.id)
+        props.knowledge_views.filter(kv => kv.base_id === props.chosen_base_id).map(kv => kv.id)
     , [props.knowledge_views])
     const knowledge_views = props.nested_knowledge_view_ids.top_ids.map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
@@ -59,6 +62,9 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
         possible_parent_knowledge_view_ids={possible_parent_knowledge_view_ids}
         upsert_knowledge_view={props.upsert_knowledge_view}
         current_kv_parent_ids={current_kv_parent_ids}
+        chosen_base_id={props.chosen_base_id}
+        bases_by_id={props.bases_by_id}
+        update_chosen_base_id={props.update_chosen_base_id}
     />
 }
 
