@@ -43,7 +43,7 @@ import {
 } from "../../specialised_objects/accessors"
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
-import { selector_chosen_base_id } from "../../user_info/selector"
+import { selector_chosen_base, selector_chosen_base_id } from "../../user_info/selector"
 
 
 
@@ -51,7 +51,8 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 {
 
     const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id
-    if (one_or_more_knowledge_views_changed)
+    const base_changed = selector_chosen_base(initial_state) !== selector_chosen_base(state)
+    if (one_or_more_knowledge_views_changed || base_changed)
     {
         state = update_derived_knowledge_view_state(state)
     }

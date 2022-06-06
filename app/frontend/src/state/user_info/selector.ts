@@ -25,11 +25,22 @@ export function selector_need_to_set_user_name (state: RootState)
 }
 
 
-export function selector_chosen_base (state: RootState)
+export function selector_chosen_base (state: RootState, log_error = "")
 {
     const { bases_by_id, chosen_base_id } = state.user_info
-    const base = bases_by_id && bases_by_id[chosen_base_id || ""]
-    return base
+    const chosen_base = bases_by_id && bases_by_id[chosen_base_id || ""]
+
+    function log_error_msg (message: string)
+    {
+        if (!log_error) return
+        console.error(message + log_error)
+    }
+
+    if (!bases_by_id) log_error_msg("No state.user_info.bases_by_id present")
+    if (chosen_base_id === undefined) log_error_msg("No state.user_info.chosen_base_id present")
+    if (chosen_base === undefined) log_error_msg("No chosen_base present")
+
+    return chosen_base
 }
 
 

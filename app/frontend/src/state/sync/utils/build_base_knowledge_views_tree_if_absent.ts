@@ -1,11 +1,11 @@
 import { modify_base } from "../../../supabase/bases"
 import type { KnowledgeViewTree } from "../../../supabase/interfaces"
-import { ACTIONS } from "../../actions"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../../derived/State"
 import { pub_sub } from "../../pub_sub/pub_sub"
 import { get_nested_knowledge_view_ids } from "../../specialised_objects/accessors"
 import type { RootState } from "../../State"
 import type { StoreType } from "../../store"
+import { selector_chosen_base } from "../../user_info/selector"
 
 
 
@@ -13,7 +13,7 @@ export async function build_base_knowledge_views_tree_if_absent (store: StoreTyp
 {
     const state = store.getState()
 
-    const chosen_base = get_chosen_base(state)
+    const chosen_base = selector_chosen_base(state, " during build_base_knowledge_views_tree_if_absent")
     if (!chosen_base) return
 
     if (chosen_base.knowledge_view_tree)
@@ -39,37 +39,6 @@ export async function build_base_knowledge_views_tree_if_absent (store: StoreTyp
 
 
 
-function get_chosen_base (state: RootState)
-{
-    const { bases_by_id, chosen_base_id } = state.user_info
-
-    // Defensive
-    if (!bases_by_id)
-    {
-        console.error("No state.user_info.bases_by_id present when build_base_knowledge_views_tree_if_absent")
-        return
-    }
-
-    // Defensive
-    if (chosen_base_id === undefined)
-    {
-        console.error("No state.user_info.chosen_base_id present when build_base_knowledge_views_tree_if_absent")
-        return
-    }
-
-    const chosen_base = bases_by_id[chosen_base_id]
-    // Defensive
-    if (chosen_base === undefined)
-    {
-        console.error("No chosen_base present when build_base_knowledge_views_tree_if_absent")
-        return
-    }
-
-    return chosen_base
-}
-
-
-
 function build_base_knowledge_view_tree (state: RootState): KnowledgeViewTree | undefined
 {
     const knowledge_views = Object.values(state.specialised_objects.knowledge_views_by_id)
@@ -82,7 +51,7 @@ function build_base_knowledge_view_tree (state: RootState): KnowledgeViewTree | 
 
 
 
-export function convert_nested_knowledge_view_ids_to_simple_tree ({ top_ids, map }: NestedKnowledgeViewIds): KnowledgeViewTree | undefined
+function convert_nested_knowledge_view_ids_to_simple_tree ({ top_ids, map }: NestedKnowledgeViewIds): KnowledgeViewTree | undefined
 {
     return _convert_nested_knowledge_view_ids_to_simple_tree(top_ids, map)
 }
