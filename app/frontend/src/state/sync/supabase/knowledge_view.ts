@@ -2,13 +2,12 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import { parse_knowledge_view } from "../../../wcomponent/parse_json/parse_knowledge_view"
-import type { SupabaseReadKnowledgeView, SupabaseWriteKnowledgeView } from "../../../supabase/interfaces"
+import type { KnowledgeViewTree, KnowledgeViewTreeEntry, SupabaseKnowledgeBase, SupabaseReadKnowledgeView, SupabaseWriteKnowledgeView } from "../../../supabase/interfaces"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
-import { is_defined } from "../../../shared/utils/is_defined"
 
 
 
@@ -38,6 +37,40 @@ export function supabase_get_knowledge_views (args: SupabaseGetKnowledgeViewsArg
 
 
 
+type SupabaseGetBaseTreeKnowledgeViewsArgs =
+{
+    supabase: SupabaseClient
+    base: SupabaseKnowledgeBase
+    knowledge_views: KnowledgeView[]
+}
+export function supabase_get_base_tree_knowledge_views (args: SupabaseGetBaseTreeKnowledgeViewsArgs)
+{
+    let specific_ids = get_kv_ids_from_tree(args.base.knowledge_view_tree || {})
+
+    // Exclude if already downloaded
+    const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map(kv => kv.id))
+    specific_ids = specific_ids.filter(id => !downloaded_knowledge_view_ids.has(id))
+
+    return supabase_get_items<SupabaseReadKnowledgeView, KnowledgeView>({
+        supabase: args.supabase,
+        all_bases: true,
+        table: TABLE_NAME,
+        converter: knowledge_view_supabase_to_app,
+        specific_ids,
+    })
+}
+
+
+function get_kv_ids_from_tree (tree: KnowledgeViewTree): string[]
+{
+    const ids = Object.keys(tree)
+    const entries = Object.values(tree)
+
+    return ids.concat(...entries.map(entry => get_kv_ids_from_tree(entry.children || {})))
+}
+
+
+
 interface GetKnowledgeViewsFromOtherBases
 {
     supabase: SupabaseClient
@@ -46,26 +79,32 @@ interface GetKnowledgeViewsFromOtherBases
 }
 export async function supabase_get_knowledge_views_from_other_bases (args: GetKnowledgeViewsFromOtherBases)
 {
-    const wcomponents_from_other_bases = args.wcomponents_from_other_bases
+    let kv_ids_to_attempt_downloading = args.wcomponents_from_other_bases
         .filter(wc => !wc.deleted_at)
-    const wcomponent_ids = Array.from(new Set(wcomponents_from_other_bases.map(wc => wc.id)))
+        .map(wc => wc.id)
 
-    const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map(kv => kv.id))
-    const parent_kv_ids: string[] = args.knowledge_views.map(kv => kv.parent_knowledge_view_id)
-        .filter(is_defined)
-        .filter(id => !downloaded_knowledge_view_ids.has(id))
-    let kv_ids = wcomponent_ids.concat(parent_kv_ids)
-
-    args.knowledge_views.map(kv => kv.foundation_knowledge_view_ids)
-        .forEach(ids =>
+    args.knowledge_views.forEach(kv =>
+    {
+        if (kv.parent_knowledge_view_id)
         {
-            ids?.filter(id => !downloaded_knowledge_view_ids.has(id))
-                .forEach(id => kv_ids.push(id))
-        })
+            kv_ids_to_attempt_downloading.push(kv.parent_knowledge_view_id)
+        }
 
-    kv_ids = Array.from(new Set(kv_ids))
+        kv.foundation_knowledge_view_ids?.forEach(id => kv_ids_to_attempt_downloading.push(id))
+    })
 
-    return await supabase_get_knowledge_views({ supabase: args.supabase, ids: kv_ids, all_bases: true })
+    // Exclude if already downloaded
+    const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map(kv => kv.id))
+    kv_ids_to_attempt_downloading = kv_ids_to_attempt_downloading.filter(id => !downloaded_knowledge_view_ids.has(id))
+
+    // Make unique
+    kv_ids_to_attempt_downloading = Array.from(new Set(kv_ids_to_attempt_downloading))
+
+    return await supabase_get_knowledge_views({
+        supabase: args.supabase,
+        ids: kv_ids_to_attempt_downloading,
+        all_bases: true,
+    })
 }
 
 

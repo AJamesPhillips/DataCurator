@@ -11,10 +11,11 @@ import type { WComponentPrioritisation } from "../../wcomponent/interfaces/prior
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
 import type { ComposedDatetimeLineConfig } from "../../shared/interfaces/datetime_lines"
+import type { KnowledgeViewTreeEntry } from "../../supabase/interfaces"
 
 
 
-export interface NestedKnowledgeViewIdsEntry
+export interface NestedKnowledgeViewIdsEntry extends KnowledgeViewTreeEntry
 {
     id: string
     title: string

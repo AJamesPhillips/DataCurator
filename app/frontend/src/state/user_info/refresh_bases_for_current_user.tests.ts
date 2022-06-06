@@ -21,21 +21,25 @@ export function run_tests ()
         id: 1, inserted_at, updated_at, owner_user_id: user_id, public_read: false, title: "owned by this user",
         access_level: "owner",
         can_edit: true,
+        knowledge_view_tree: {},
     }
     const a_base_with_editor_access: SupabaseKnowledgeBaseWithAccess = {
         id: 2, inserted_at, updated_at, owner_user_id: other_user_id, public_read: false, title: "editable by this user",
         access_level: "editor",
         can_edit: true,
+        knowledge_view_tree: {},
     }
     const a_base_with_viewer_access: SupabaseKnowledgeBaseWithAccess = {
         id: 3, inserted_at, updated_at, owner_user_id: other_user_id, public_read: false, title: "viewable by this user",
         access_level: "viewer",
         can_edit: false,
+        knowledge_view_tree: {},
     }
     const a_public_base: SupabaseKnowledgeBaseWithAccess = {
         id: 3, inserted_at, updated_at, owner_user_id: other_user_id, public_read: true, title: "public viewable by this user",
         access_level: "viewer",
         can_edit: false,
+        knowledge_view_tree: {},
     }
     const bases = [
         an_owned_base,

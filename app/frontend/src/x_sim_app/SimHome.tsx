@@ -21,11 +21,12 @@ export function SimHome ()
 
     useEffect(() =>
     {
-        supabase_load_data(true, base_id).then(data =>
-        {
-            set_knowledge_views_by_id(get_items_by_id(data.knowledge_views, ""))
-            set_wcomponents_by_id(get_items_by_id(data.wcomponents, ""))
-        })
+        // Disabled for now
+        // supabase_load_data(true, base_id).then(data =>
+        // {
+        //     set_knowledge_views_by_id(get_items_by_id(data.knowledge_views, ""))
+        //     set_wcomponents_by_id(get_items_by_id(data.wcomponents, ""))
+        // })
         get_simulations().then(sims => set_simulations(sims))
     }, [])
 

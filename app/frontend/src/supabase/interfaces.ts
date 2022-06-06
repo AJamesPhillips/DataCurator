@@ -1,4 +1,4 @@
-import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
+import type { KnowledgeView, KnowledgeViewTreeSortType } from "../shared/interfaces/knowledge_view"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../wcomponent/interfaces/wcomponent_base"
 
@@ -17,6 +17,17 @@ export type SupabaseUsersById = { [id: string]: SupabaseUser }
 // ++++++++++++++++ public.bases ++++++++++++++++
 
 
+export interface KnowledgeViewTree
+{
+    [id: string]: KnowledgeViewTreeEntry
+}
+
+export interface KnowledgeViewTreeEntry
+{
+    // id: string
+    sort_type: KnowledgeViewTreeSortType
+    children?: KnowledgeViewTree
+}
 
 export interface SupabaseKnowledgeBase
 {
@@ -27,6 +38,8 @@ export interface SupabaseKnowledgeBase
     public_read: boolean
     title: string
     default_knowledge_view_id?: string
+    // optional to support older data formats but should always be present going forwards
+    knowledge_view_tree?: KnowledgeViewTree
 }
 export interface JoinedAccessControlsPartial
 {
