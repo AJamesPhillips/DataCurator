@@ -10,7 +10,7 @@ import {
 import type {
     KnowledgeView,
     KnowledgeViewsById,
-    KnowledgeViewSortType,
+    KnowledgeViewTreeSortType,
 } from "../../shared/interfaces/knowledge_view"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
@@ -192,7 +192,7 @@ export function sort_nested_knowledge_map_ids_by_priority_then_title (map: Neste
 
 
 
-const sort_type_to_prefix: { [sort_type in KnowledgeViewSortType]: string } = {
+const sort_type_to_prefix: { [sort_type in KnowledgeViewTreeSortType]: string } = {
     priority: "0",
     normal: "1",
     hidden: "2",

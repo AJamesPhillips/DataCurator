@@ -5,8 +5,8 @@ import type { DatetimeLineConfig } from "./datetime_lines"
 
 
 
-export type KnowledgeViewSortType = "priority" | "normal" | "hidden" | "archived" | "errored"
-export const knowledge_view_sort_types: KnowledgeViewSortType[] = ["priority", "normal", "hidden", "archived"]
+export type KnowledgeViewTreeSortType = "priority" | "normal" | "hidden" | "archived" | "errored"
+export const knowledge_view_tree_sort_types: KnowledgeViewTreeSortType[] = ["priority", "normal", "hidden", "archived"]
 
 
 
@@ -26,7 +26,7 @@ export interface KnowledgeView extends Base, Project {
     foundation_knowledge_view_ids?: string[]
     // Used for semantically organising knowledge views in relation to each other
     parent_knowledge_view_id?: string
-    sort_type: KnowledgeViewSortType
+    sort_type: KnowledgeViewTreeSortType
 
     active_counterfactual_v2_ids?: string[]
 

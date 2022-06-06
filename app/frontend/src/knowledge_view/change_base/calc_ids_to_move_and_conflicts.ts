@@ -221,4 +221,4 @@ function run_tests ()
     test(Object.keys(result.wcomponents_move_conflicts), [wc_E.id, wc_F.id])
 }
 
-run_tests()
+// run_tests()

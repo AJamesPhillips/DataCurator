@@ -1,6 +1,6 @@
 import type {
     KnowledgeView,
-    KnowledgeViewSortType,
+    KnowledgeViewTreeSortType,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
 import type {
@@ -18,7 +18,7 @@ export interface NestedKnowledgeViewIdsEntry
 {
     id: string
     title: string
-    sort_type: KnowledgeViewSortType
+    sort_type: KnowledgeViewTreeSortType
     parent_id: string | undefined
     child_ids: string[]
     ERROR_is_circular?: boolean

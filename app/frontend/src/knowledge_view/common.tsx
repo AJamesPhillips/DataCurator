@@ -6,7 +6,7 @@ import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { get_today_str } from "../shared/utils/date_helpers"
 import { is_defined } from "../shared/utils/is_defined"
-import { KnowledgeView, knowledge_view_sort_types } from "../shared/interfaces/knowledge_view"
+import { KnowledgeView, knowledge_view_tree_sort_types } from "../shared/interfaces/knowledge_view"
 import type { NestedKnowledgeViewIdsMap } from "../state/derived/State"
 import { FoundationKnowledgeViewsList } from "./FoundationKnowledgeViewsList"
 import type { KnowledgeViewFormProps } from "./interfaces"
@@ -180,7 +180,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             <span className="description_label">Sort status</span>
             <AutocompleteText
                 selected_option_id={knowledge_view.sort_type}
-                options={knowledge_view_sort_types.map(type => ({ id: type, title: type }))}
+                options={knowledge_view_tree_sort_types.map(type => ({ id: type, title: type }))}
                 allow_none={false}
                 on_change={sort_type => sort_type && crud.update_item({ ...knowledge_view, sort_type })}
             />
