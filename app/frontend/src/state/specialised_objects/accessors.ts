@@ -3,7 +3,6 @@ import {
     WComponentsById,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_event,
-    wcomponent_is_statev2,
     wcomponent_is_sub_state,
     wcomponent_should_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -13,13 +12,15 @@ import type {
     KnowledgeViewTreeSortType,
 } from "../../shared/interfaces/knowledge_view"
 import type { RootState } from "../State"
-import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
+import type { NestedKnowledgeViewsList } from "../derived/State"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
-import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
-import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
+import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
-import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
+import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import { selector_chosen_base } from "../user_info/selector"
+import type { KnowledgeViewTree } from "../../supabase/interfaces"
 
 
 
@@ -78,115 +79,58 @@ export function get_knowledge_view_from_state (state: RootState, knowledge_view_
 
 
 
-interface KnowledgeViewWithParentId extends KnowledgeView
+export function get_nested_knowledge_views_from_base_tree (state: RootState): NestedKnowledgeViewsList
 {
-    parent_knowledge_view_id: string
+    let map: NestedKnowledgeViewsList = []
+
+    const chosen_base = selector_chosen_base(state)
+    if (!chosen_base) return map
+
+    const { knowledge_view_tree } = chosen_base
+    if (!knowledge_view_tree) return map
+
+    map = get_nested_knowledge_view_ids_from_tree(state.specialised_objects.knowledge_views_by_id, knowledge_view_tree)
+
+    return map
 }
 
 
-export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[], chosen_base_id: number | undefined): NestedKnowledgeViewIds
+function get_nested_knowledge_view_ids_from_tree (knowledge_views_by_id: KnowledgeViewsById, knowledge_view_tree: KnowledgeViewTree): NestedKnowledgeViewsList
 {
-    const all_kvs_ids_any_base = new Set(knowledge_views.map(kv => kv.id))
-    knowledge_views = knowledge_views.filter(kv => kv.base_id === chosen_base_id)
-    const all_kvs_ids_only_this_base = new Set(knowledge_views.map(kv => kv.id))
+    const map: NestedKnowledgeViewsList = []
 
-
-    const map: NestedKnowledgeViewIds = { top_ids: [], map: {} }
-
-    const unused_knowledge_views: KnowledgeViewWithParentId[] = []
-    knowledge_views.forEach(kv =>
+    const ids = Object.keys(knowledge_view_tree)
+    ids.forEach(id =>
     {
-        const { parent_knowledge_view_id, title, sort_type } = kv
-        if (parent_knowledge_view_id)
-        {
-            unused_knowledge_views.push({ ...kv, parent_knowledge_view_id })
-        }
-        else
-        {
-            map.top_ids.push(kv.id)
-            map.map[kv.id] = { id: kv.id, title, sort_type, parent_id: undefined, child_ids: [] }
-        }
+        const entry = knowledge_view_tree[id]!
+        const kv = knowledge_views_by_id[id]
+
+        const ERROR_kv_missing = !kv
+
+        const children_list: NestedKnowledgeViewsList = get_nested_knowledge_view_ids_from_tree(knowledge_views_by_id, entry.children || {})
+
+        map.push({
+            id,
+            title: kv?.title || "<Missing>",
+            sort_type: entry.sort_type,
+            parent_id: undefined,
+            children_list,
+            ERROR_kv_missing,
+        })
     })
-
-
-    add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, unused_knowledge_views, map, chosen_base_id)
 
     return map
 }
 
 
 
-function add_child_views (all_kvs_ids_any_base: Set<string>, all_kvs_ids_only_this_base: Set<string>, potential_children: KnowledgeViewWithParentId[], map: NestedKnowledgeViewIds, chosen_base_id: number | undefined)
+export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewsList)
 {
-    if (potential_children.length === 0) return
+    map = sort_knowledge_map_ids_by_priority_then_title(map)
 
-
-    const lack_parent: KnowledgeViewWithParentId[] = []
-
-    potential_children.forEach(potential_child =>
+    Object.values(map).forEach(entry =>
     {
-        const parent_kv = map.map[potential_child.parent_knowledge_view_id]
-        if (parent_kv)
-        {
-            const { id, title, sort_type } = potential_child
-            parent_kv.child_ids.push(id)
-
-            map.map[id] = {
-                id, title, sort_type, parent_id: parent_kv.id, child_ids: []
-            }
-        }
-        else lack_parent.push(potential_child)
-    })
-
-
-    if (potential_children.length === lack_parent.length)
-    {
-        const lack_parent_in_this_base = lack_parent.filter(kv => kv.base_id === chosen_base_id)
-        if (lack_parent_in_this_base.length)
-        {
-            // This says "maybe" because if the knowledge view is nested under a
-            // knowledge view in a different base then it's ok as its parent
-            // exists just in a different base.  i.e. we're in knowledge base 1,
-            // this component kv belongs to knowledge base 1, but it has been nested
-            // under a view that is owner by knowledge base 2.
-            console.error(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
-        }
-
-        lack_parent.forEach(({ id, title, parent_knowledge_view_id }) =>
-        {
-            map.top_ids.push(id)
-
-            const ERROR_is_circular = all_kvs_ids_only_this_base.has(parent_knowledge_view_id)
-            const ERROR_parent_kv_missing = !all_kvs_ids_any_base.has(parent_knowledge_view_id)
-            const ERROR_parent_from_diff_base = !ERROR_is_circular && !ERROR_parent_kv_missing
-
-            map.map[id] = {
-                id,
-                title,
-                sort_type: "errored",
-                parent_id: undefined,
-                child_ids: [],
-                ERROR_is_circular,
-                ERROR_parent_kv_missing,
-                ERROR_parent_from_diff_base,
-            }
-        })
-    }
-    else
-    {
-        add_child_views(all_kvs_ids_any_base, all_kvs_ids_only_this_base, lack_parent, map, chosen_base_id)
-    }
-}
-
-
-
-export function sort_nested_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewIds)
-{
-    map.top_ids = sort_knowledge_map_ids_by_priority_then_title(map.top_ids, map.map)
-
-    Object.values(map.map).forEach(entry =>
-    {
-        entry.child_ids = sort_knowledge_map_ids_by_priority_then_title(entry.child_ids, map.map)
+        entry.children_list = sort_knowledge_map_ids_by_priority_then_title(entry.children_list)
     })
 }
 
@@ -199,11 +143,10 @@ const sort_type_to_prefix: { [sort_type in KnowledgeViewTreeSortType]: string } 
     archived: "3",
     errored: "4",
 }
-function sort_knowledge_map_ids_by_priority_then_title (ids: string[], map: NestedKnowledgeViewIdsMap)
+function sort_knowledge_map_ids_by_priority_then_title (map: NestedKnowledgeViewsList)
 {
-    return sort_list(ids, id =>
+    return sort_list(map, entry =>
     {
-        const entry = map[id]!
         return sort_type_to_prefix[entry.sort_type] + entry.title.toLowerCase()
     }, SortDirection.ascending)
 }

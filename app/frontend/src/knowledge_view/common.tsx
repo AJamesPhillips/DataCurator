@@ -45,7 +45,7 @@ export const make_default_kv_title = () => get_today_str(false)
 
 export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowledge_view: KnowledgeView, crud: ListItemCRUDRequiredU<KnowledgeView>) =>
 {
-    const { editing, nested_knowledge_view_ids } = props
+    const { editing, nested_knowledge_views } = props
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)

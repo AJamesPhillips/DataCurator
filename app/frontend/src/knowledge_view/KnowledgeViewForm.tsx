@@ -20,7 +20,7 @@ const map_state = (state: RootState) =>
         knowledge_view,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         knowledge_views: state.derived.knowledge_views,
-        nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
+        nested_knowledge_view_ids: state.derived.nested_knowledge_views,
         creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
         current_view: state.routing.args.view,

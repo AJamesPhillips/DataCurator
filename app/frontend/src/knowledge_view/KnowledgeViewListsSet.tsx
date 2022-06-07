@@ -22,12 +22,12 @@ export function KnowledgeViewListsSet (props: OwnProps)
 
         props.knowledge_views.forEach(kv =>
         {
-            const entry = props.nested_knowledge_view_ids.map[kv.id]
+            const sort_type = props.map_knowledge_view_id_to_sort_type[kv.id]
 
-            if (entry?.sort_type === "errored") errored.push(kv)
-            else if (kv.sort_type === "hidden") hidden.push(kv)
-            else if (kv.sort_type === "archived") archived.push(kv)
-            else if (kv.sort_type === "priority") priority.push(kv)
+            if (!sort_type || sort_type === "errored") errored.push(kv)
+            else if (sort_type === "hidden") hidden.push(kv)
+            else if (sort_type === "archived") archived.push(kv)
+            else if (sort_type === "priority") priority.push(kv)
             else normal.push(kv)
         })
 

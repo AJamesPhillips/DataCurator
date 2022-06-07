@@ -25,8 +25,10 @@ export interface KnowledgeView extends Base, Project {
     // Used for sharing data
     foundation_knowledge_view_ids?: string[]
     // Used for semantically organising knowledge views in relation to each other
+    // DEPRECATED.  Replace by base.knowledge_view_tree
     parent_knowledge_view_id?: string
-    sort_type: KnowledgeViewTreeSortType
+    // DEPRECATED.  Replace by base.knowledge_view_tree
+    sort_type?: KnowledgeViewTreeSortType
 
     active_counterfactual_v2_ids?: string[]
 

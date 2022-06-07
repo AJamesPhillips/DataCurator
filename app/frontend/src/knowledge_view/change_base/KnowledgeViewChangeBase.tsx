@@ -23,7 +23,7 @@ interface OwnProps
 
 const map_state = (state: RootState) =>
 ({
-    nested_knowledge_view_ids_map: state.derived.nested_knowledge_view_ids.map,
+    nested_knowledge_view_ids_map: state.derived.nested_knowledge_views.map,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     chosen_base_id: state.user_info.chosen_base_id,

@@ -15,27 +15,26 @@ import type { KnowledgeViewTreeEntry } from "../../supabase/interfaces"
 
 
 
-export interface NestedKnowledgeViewIdsEntry extends KnowledgeViewTreeEntry
+export interface NestedKnowledgeViewsMap
+{
+    [id: string]: NestedKnowledgeViewEntry
+}
+export type NestedKnowledgeViewsList = NestedKnowledgeViewEntry[]
+
+export interface NestedKnowledgeViewEntry extends KnowledgeViewTreeEntry
 {
     id: string
     title: string
-    sort_type: KnowledgeViewTreeSortType
     parent_id: string | undefined
-    child_ids: string[]
-    ERROR_is_circular?: boolean
-    ERROR_parent_kv_missing?: boolean
-    ERROR_parent_from_diff_base?: boolean
+    children_list: NestedKnowledgeViewsList
+    ERROR_kv_missing?: boolean
 }
 
-export interface NestedKnowledgeViewIdsMap
-{
-    [id: string]: NestedKnowledgeViewIdsEntry
+
+export interface MapKnowledgeViewIdToTreeSortType {
+    [id: string]: KnowledgeViewTreeSortType
 }
 
-export type NestedKnowledgeViewIds = {
-    top_ids: string[]
-    map: NestedKnowledgeViewIdsMap
-}
 
 
 export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_map">, "datetime_line_config">
@@ -101,7 +100,9 @@ export interface DerivedState
     wcomponent_ids_by_type: WComponentIdsByType
     knowledge_views: KnowledgeView[]
 
-    nested_knowledge_view_ids: NestedKnowledgeViewIds
+    nested_knowledge_views: NestedKnowledgeViewsList
+    map_knowledge_view_id_to_entry: NestedKnowledgeViewsMap
+    map_knowledge_view_id_to_sort_type: MapKnowledgeViewIdToTreeSortType
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
     judgement_or_objective_ids_by_goal_or_action_id: { [goal_wcomponent_id: string]: string[] }

@@ -4,7 +4,7 @@ import type {
     KnowledgeViewsById,
     KnowledgeViewTreeSortType,
 } from "../shared/interfaces/knowledge_view"
-import type { NestedKnowledgeViewIds } from "../state/derived/State"
+import type { MapKnowledgeViewIdToTreeSortType } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"
@@ -14,7 +14,7 @@ import type { SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"
 export interface KnowledgeViewFormProps
 {
     possible_parent_knowledge_view_ids: string[]
-    nested_knowledge_view_ids: NestedKnowledgeViewIds
+    map_knowledge_view_id_to_sort_type: MapKnowledgeViewIdToTreeSortType
     knowledge_views_by_id: KnowledgeViewsById
     creation_context: CreationContextState | undefined
     current_view: ViewType

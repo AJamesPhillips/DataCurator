@@ -6,6 +6,7 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import type { RootState } from "../state/State"
+import { get_path } from "./utils/get_path"
 
 
 
@@ -21,7 +22,7 @@ interface OwnProps {
 
 const map_state = (state: RootState) => ({
     knowledge_views: state.derived.knowledge_views,
-    nested_knowledge_view_ids_map: state.derived.nested_knowledge_view_ids.map,
+    nested_knowledge_views: state.derived.nested_knowledge_views,
 })
 
 
@@ -39,7 +40,7 @@ function _SelectKnowledgeView (props: Props)
         exclude_ids = new Set(),
         on_change,
         knowledge_views,
-        nested_knowledge_view_ids_map,
+        nested_knowledge_views,
     } = props
 
 
@@ -49,19 +50,14 @@ function _SelectKnowledgeView (props: Props)
 
         return filtered_knowledge_views.map(({ id, title }) =>
         {
-            let subtitle = ""
-            let entry = nested_knowledge_view_ids_map[id]
-            while (entry)
-            {
-                subtitle = " / " + entry.title + subtitle
-                entry = nested_knowledge_view_ids_map[entry?.parent_id || ""]
-            }
+            const path = get_path(nested_knowledge_views, id)
+            const subtitle = " / " + path.map(p => p.title).join(" / ")
 
             return { id, title, subtitle }
         })
         .sort((kv1, kv2) => kv1.title < kv2.title ? -1 : 1)
     }
-    , [knowledge_views, allowed_ids, exclude_ids, nested_knowledge_view_ids_map])
+    , [knowledge_views, allowed_ids, exclude_ids, nested_knowledge_views])
 
 
     return <AutocompleteText

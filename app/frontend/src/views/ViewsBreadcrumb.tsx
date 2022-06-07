@@ -3,12 +3,12 @@ import { connect, ConnectedProps } from "react-redux"
 import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@material-ui/core"
 
 import { AutocompleteText, OPTION_NONE_ID } from "../form/Autocomplete/AutocompleteText"
-import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
-import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
+import type { NestedKnowledgeViewEntry, NestedKnowledgeViewsList } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 import type { Color } from "../shared/interfaces/color"
+import { get_path } from "../knowledge_view/utils/get_path"
 
 
 
@@ -21,7 +21,7 @@ const map_state = (state: RootState) =>
         presenting: state.display_options.consumption_formatting,
         view: state.routing.args.view,
         kv_id,
-        nested_kv_ids_map: state.derived.nested_knowledge_view_ids,
+        nested_kv_list: state.derived.nested_knowledge_views,
     }
 }
 
@@ -57,37 +57,9 @@ function _ViewsBreadcrumb (props: Props)
 {
     if (!props.ready_for_reading) return null
 
-    const { kv_id, nested_kv_ids_map } = props
-    let nested_kv = nested_kv_ids_map.map[kv_id]
+    const { kv_id, nested_kv_list } = props
 
-    const levels: Level[] = []
-    let last_parent_id: string | undefined = OPTION_NONE_ID
-
-    while (nested_kv)
-    {
-        const entries = nested_kv.child_ids
-            .map(id => nested_kv_ids_map.map[id])
-            .filter(is_defined)
-
-        if (entries.length)
-        {
-            const options = entries.map(calc_if_is_hidden)
-
-            levels.unshift({
-                options,
-                selected_id: last_parent_id,
-                parent_id: nested_kv.id,
-            })
-        }
-        last_parent_id = nested_kv.id
-
-        nested_kv = nested_kv.parent_id !== undefined ? nested_kv_ids_map.map[nested_kv.parent_id] : undefined
-    }
-
-    const top_level_options = nested_kv_ids_map.top_ids.map(id => nested_kv_ids_map.map[id])
-        .filter(is_defined)
-        .map(calc_if_is_hidden)
-    levels.unshift({ options: top_level_options, selected_id: last_parent_id, parent_id: undefined })
+    const levels: Level[] = get_levels(nested_kv_list, kv_id)
 
     return <Breadcrumbs>
         <Box>
@@ -151,7 +123,7 @@ interface KnowledgeViewOption
     color?: Color
 }
 
-function calc_if_is_hidden (entry: NestedKnowledgeViewIdsEntry): KnowledgeViewOption
+function calc_if_is_hidden (entry: NestedKnowledgeViewEntry): KnowledgeViewOption
 {
     const is_hidden = entry.sort_type === "hidden" || entry.sort_type === "archived" || entry.sort_type === "errored"
     const color = entry.sort_type === "errored" ? pink : undefined
@@ -159,3 +131,26 @@ function calc_if_is_hidden (entry: NestedKnowledgeViewIdsEntry): KnowledgeViewOp
 }
 
 const pink: Color = { r: 231, g: 190, b: 201, a: 1 }
+
+
+
+function get_levels (nested_kv_list: NestedKnowledgeViewsList, kv_id: string): Level[]
+{
+    const path = get_path(nested_kv_list, kv_id)
+    let options: KnowledgeViewOption[] = nested_kv_list.map(calc_if_is_hidden)
+    let parent_id: string | undefined = OPTION_NONE_ID
+
+    return path.map(entry =>
+    {
+        const level: Level = {
+            options,
+            selected_id: entry.id,
+            parent_id,
+        }
+
+        options = (entry.children_list || []).map(calc_if_is_hidden)
+        parent_id = entry.id
+
+        return level
+    })
+}

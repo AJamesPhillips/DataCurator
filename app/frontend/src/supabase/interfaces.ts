@@ -24,7 +24,6 @@ export interface KnowledgeViewTree
 
 export interface KnowledgeViewTreeEntry
 {
-    // id: string
     sort_type: KnowledgeViewTreeSortType
     children?: KnowledgeViewTree
 }

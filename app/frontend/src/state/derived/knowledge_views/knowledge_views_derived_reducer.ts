@@ -36,10 +36,9 @@ import { get_wcomponent_ids_by_type } from "../get_wcomponent_ids_by_type"
 import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../State"
 import type { RootState } from "../../State"
 import {
-    get_nested_knowledge_view_ids,
+    get_nested_knowledge_views_from_base_tree,
     sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
-    get_knowledge_view_from_state,
 } from "../../specialised_objects/accessors"
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
@@ -115,19 +114,18 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 function update_derived_knowledge_view_state (state: RootState): RootState
 {
     const { knowledge_views_by_id } = state.specialised_objects
-    const chosen_base_id = selector_chosen_base_id(state)
 
     const knowledge_views_across_all_bases = Object.values(knowledge_views_by_id)
     const knowledge_views = sort_list(knowledge_views_across_all_bases, ({ title }) => title, SortDirection.ascending)
-    const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views, chosen_base_id)
-    sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
+    const nested_knowledge_views = get_nested_knowledge_views_from_base_tree(state)
+    sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_views)
 
     state = {
         ...state,
         derived: {
             ...state.derived,
             knowledge_views,
-            nested_knowledge_view_ids,
+            nested_knowledge_views,
         },
     }
 

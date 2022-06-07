@@ -46,7 +46,7 @@ const map_state = (state: RootState, own_props: ExploreButtonHandleOwnProps) =>
         wcomponent,
         kvwc: state.specialised_objects.knowledge_views_by_id[own_props.wcomponent_id],
         subview_id: state.routing.args.subview_id,
-        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_view_ids.map[own_props.wcomponent_id],
+        nested_knowledge_view_ids_entry: state.derived.nested_knowledge_views.map[own_props.wcomponent_id],
         presenting: state.display_options.consumption_formatting,
         any_overlapping_wcomponents_have_kvs,
     }

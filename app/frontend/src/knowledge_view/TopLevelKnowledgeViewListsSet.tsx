@@ -16,7 +16,8 @@ interface OwnProps {}
 const map_state = (state: RootState) => ({
     ready: state.sync.ready_for_reading,
     knowledge_views: state.derived.knowledge_views,
-    nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
+    nested_knowledge_views: state.derived.nested_knowledge_views,
+    map_knowledge_view_id_to_sort_type: state.derived.map_knowledge_view_id_to_sort_type,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     creation_context: state.creation_context,
@@ -50,10 +51,10 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
     const possible_parent_knowledge_view_ids = useMemo(() =>
         props.knowledge_views.filter(kv => kv.base_id === props.chosen_base_id).map(kv => kv.id)
     , [props.knowledge_views])
-    const knowledge_views = props.nested_knowledge_view_ids.top_ids.map(id => props.knowledge_views_by_id[id])
+    const knowledge_views = props.nested_knowledge_views.map(entry => props.knowledge_views_by_id[entry.id])
         .filter(is_defined)
 
-    const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_view_ids.map, props.current_subview_id)
+    const current_kv_parent_ids = get_all_parent_knowledge_view_ids(props.nested_knowledge_views.map, props.current_subview_id)
 
     return <KnowledgeViewListsSet
         {...props}
