@@ -96,7 +96,7 @@ export function get_nested_knowledge_view_ids (knowledge_views: KnowledgeView[],
     const unused_knowledge_views: KnowledgeViewWithParentId[] = []
     knowledge_views.forEach(kv =>
     {
-        const { parent_knowledge_view_id, title, sort_type } = kv
+        const { parent_knowledge_view_id, title, sort_type = "normal" } = kv
         if (parent_knowledge_view_id)
         {
             unused_knowledge_views.push({ ...kv, parent_knowledge_view_id })
@@ -128,7 +128,7 @@ function add_child_views (all_kvs_ids_any_base: Set<string>, all_kvs_ids_only_th
         const parent_kv = map.map[potential_child.parent_knowledge_view_id]
         if (parent_kv)
         {
-            const { id, title, sort_type } = potential_child
+            const { id, title, sort_type = "normal" } = potential_child
             parent_kv.child_ids.push(id)
 
             map.map[id] = {
@@ -149,7 +149,7 @@ function add_child_views (all_kvs_ids_any_base: Set<string>, all_kvs_ids_only_th
             // exists just in a different base.  i.e. we're in knowledge base 1,
             // this component kv belongs to knowledge base 1, but it has been nested
             // under a view that is owner by knowledge base 2.
-            console.error(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
+            console.warn(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
         }
 
         lack_parent.forEach(({ id, title, parent_knowledge_view_id }) =>
