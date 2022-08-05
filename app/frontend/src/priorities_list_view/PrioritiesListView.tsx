@@ -103,8 +103,8 @@ function _PrioritiesListViewContent (props: Props)
     const composed_wc_id_map = composed_knowledge_view?.composed_wc_id_map || {}
 
 
-    const selected_goal_prioritisation_attributes = selected_prioritisation && selected_prioritisation.goals
-    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals_and_actions, selected_goal_prioritisation_attributes)
+    const selected_prioritisation_goals = selected_prioritisation?.goals
+    const { potential_goals, prioritised_goals, deprioritised_goals } = partition_and_sort_goals(goals_and_actions, selected_prioritisation_goals)
 
 
     if (base_id === undefined) return <div>No base id chosen</div> // type guard
@@ -159,7 +159,8 @@ function _PrioritiesListViewContent (props: Props)
                                 wcomponent: {
                                     base_id,
                                     type: "prioritisation",
-                                    goals: selected_goal_prioritisation_attributes || {}
+                                    goals: selected_prioritisation_goals || {},
+                                    description: selected_prioritisation?.description || "",
                                 },
                                 add_to_knowledge_view: {
                                     id: knowledge_view_id,
@@ -168,7 +169,7 @@ function _PrioritiesListViewContent (props: Props)
                             })
                         }}
                     >
-                        {selected_goal_prioritisation_attributes ? "Copy" : "Add"}
+                        {selected_prioritisation_goals ? "Copy" : "Add"}
                     </Button>
                 </span>}
             </h1>
