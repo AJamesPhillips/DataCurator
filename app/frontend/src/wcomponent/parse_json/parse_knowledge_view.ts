@@ -81,7 +81,7 @@ function remove_wc_id_map_passthrough_entries (wc_id_map: KnowledgeViewWComponen
         deleted_ids.push(id)
     })
 
-    if (deleted_ids.length) console .log(`Deleted ${deleted_ids.length} passthrough ids`)
+    // if (deleted_ids.length) console .log(`Deleted ${deleted_ids.length} passthrough ids`)
 
     return new_wc_id_map
 }
