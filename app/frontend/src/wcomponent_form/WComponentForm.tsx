@@ -222,6 +222,7 @@ function _WComponentForm (props: Props)
                 on_blur_type={EditableTextOnBlurType.conditional}
                 force_focus_on_first_render={focus_title}
                 hide_label={true}
+                spellcheck={true}
             />
         </FormControl>
 

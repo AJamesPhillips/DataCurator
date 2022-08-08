@@ -23,6 +23,7 @@ export type EditableTextCommonOwnProps =
     size?: "small" | "medium"
     hide_label?: boolean
     style?: h.JSX.CSSProperties
+    spellcheck?: boolean
 } & ({
     on_blur?: undefined
     on_blur_type?: undefined

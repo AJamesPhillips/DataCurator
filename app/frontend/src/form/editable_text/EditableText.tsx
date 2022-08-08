@@ -28,6 +28,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onBlur={on_blur}
                 onKeyDown={on_key_down}
                 inputRef={on_render as any}
+                spellcheck={props.spellcheck}
             />
             // return <textarea
             //     style={{ height: "auto" }}
