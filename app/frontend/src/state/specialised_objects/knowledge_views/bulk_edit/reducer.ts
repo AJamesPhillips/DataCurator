@@ -255,6 +255,18 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
         wcomponent_ids.forEach(id => {
             const existing_entry = composed_kv.composed_wc_id_map[id]!
 
+            // When the user bulk moves (edits) elements, the elements that are
+            // not present on this view should be ignored.
+            // This can occur when one or more elements are selected on one
+            // knowledge view.
+            // Then the view is changed to a different knowledge view.
+            // This second knowledge view does not have all of the elements that
+            // were selected on the first knowledge view.
+            // And perhaps some more element are selected from this second
+            // knowledge view.
+            if (!existing_entry) return
+            if (existing_entry.blocked || existing_entry.passthrough) return
+
             const new_entry = { ...existing_entry }
 
             new_entry.left += change_left
