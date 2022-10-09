@@ -1,10 +1,10 @@
-import type { PostgrestError } from "@supabase/supabase-js"
+import type { ApiError, PostgrestError } from "@supabase/supabase-js"
 import { h } from "preact"
 
 
 
 // TODO merge with error_to_string
-export function DisplaySupabaseSessionError (props: { error: Error | null })
+export function DisplaySupabaseSessionError (props: { error: ApiError | null })
 {
     const { error } = props
     if (error === null) return null

@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
-import type { PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
+import type { ApiError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4 } from "uuid"
 import SyncIcon from "@material-ui/icons/Sync"
 
@@ -58,7 +58,7 @@ export function SandBoxSupabase ()
     const [user, set_user] = useState(supabase.auth.user())
     const [email, set_email] = useState("")
     const [password, set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
 
     const [waiting_user_registration_email, set_waiting_user_registration_email] = useState(false)
     const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false)

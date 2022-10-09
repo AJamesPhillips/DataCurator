@@ -26,6 +26,7 @@ import { check_and_handle_connection_and_session } from "./sync/user_info/window
 import { date_to_string } from "./form/datetime_utils"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 import { SIDE_PANEL_WIDTH } from "./side_panel/width"
+// import { go_antlr } from "./x_equations"
 
 
 
@@ -235,3 +236,6 @@ const use_styles = makeStyles(theme => ({
     hide: { display: "none" },
     warning_icon: { color: theme.palette.warning.main }
 }))
+
+
+// ;(window as any).go_antlr = go_antlr

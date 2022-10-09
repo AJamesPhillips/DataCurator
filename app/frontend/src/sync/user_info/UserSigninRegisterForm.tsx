@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"
 import "./UserSigninRegisterForm.scss"
@@ -41,7 +42,7 @@ function _UserSigninRegisterForm (props: Props)
     const [form_state, set_form_state] = useState<SigninRegisterFormState>("initial")
     const [email, _set_email] = useState("")
     const [password, _set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
 
     const [user_needs_to_provide_email, set_user_needs_to_provide_email] = useState(false)
     const [user_needs_to_provide_password, set_user_needs_to_provide_password] = useState(false)

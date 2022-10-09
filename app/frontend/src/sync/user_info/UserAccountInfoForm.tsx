@@ -3,6 +3,7 @@ import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, makeStyles, Typography } from "@material-ui/core"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
+import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"
 import { ACTIONS } from "../../state/actions"
@@ -67,7 +68,7 @@ function _UserAccountInfoForm (props: Props)
     const { user, user_name, need_to_set_user_name, need_to_handle_password_recovery, set_user } = props
 
     const [form_state, set_form_state] = useState<"initial" | "updating_password" | "updating_username">("initial")
-    const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
 
     console .log("user account info form need_to_set_user_name", need_to_set_user_name, "form_state", form_state)
 

@@ -2,6 +2,7 @@ import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
+import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"
 import { ACTIONS } from "../../state/actions"
@@ -47,7 +48,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
     } = props
 
     const [password, set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<Error | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
 
     if (!user) return null
 
