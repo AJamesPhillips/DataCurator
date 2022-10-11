@@ -25,7 +25,6 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "importsNotUsedAsValues": "error",
     "noUncheckedIndexedAccess": true
   }
 }
