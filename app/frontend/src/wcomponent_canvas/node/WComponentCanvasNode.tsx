@@ -74,6 +74,12 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const on_current_knowledge_view = is_on_current_knowledge_view(state, wcomponent_id)
     const { current_composed_knowledge_view } = state.derived
 
+    const wcomponent = state.derived.composed_wcomponents_by_id[wcomponent_id]
+    const kv_from_different_base = (
+        wcomponent
+        && current_composed_knowledge_view
+        && wcomponent.base_id !== current_composed_knowledge_view.base_id
+    )
 
     let have_judgements = false
     if (current_composed_knowledge_view)
@@ -85,7 +91,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         on_current_knowledge_view,
         current_composed_knowledge_view,
-        wcomponent: state.derived.composed_wcomponents_by_id[wcomponent_id],
+        wcomponent,
+        kv_from_different_base,
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
@@ -132,7 +139,10 @@ function _WComponentCanvasNode (props: Props)
         id,
         is_on_canvas = true, always_show = false,
         is_editing,
-        current_composed_knowledge_view: composed_kv, wcomponent, wc_id_to_counterfactuals_map,
+        wcomponent,
+        current_composed_knowledge_view: composed_kv,
+        kv_from_different_base,
+        wc_id_to_counterfactuals_map,
         composed_wcomponents_by_id, knowledge_views_by_id,
         is_current_item, selected_wcomponent_ids_set, is_highlighted,
         shift_or_control_keys_are_down,
@@ -330,14 +340,25 @@ function _WComponentCanvasNode (props: Props)
         <ConnectableCanvasNode
             position={_kv_entry}
             cover_image={wcomponent?.summary_image}
+            // TODO memoize these arguments if performance is poor and this is
+            // bottleneck
             node_main_content={<div>
                 {!wcomponent?.summary_image && <div className="background_image" />}
 
                 <div className="node_title">
+                    {/* TODO, document when this conditional is true... as
+                      * without a kv_entry there should be no Node rendered?
+                      */}
                     {kv_entry_maybe === undefined && is_editing && <span>
                         <WarningTriangle message="Missing from this knowledge view" />
                         &nbsp;
                     </span>}
+
+                    {kv_from_different_base && is_editing && <span>
+                        <WarningTriangle message="Is from a different base to this knowledge view" />
+                        &nbsp;
+                    </span>}
+
                     {(is_editing || !wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
                 </div>
 
