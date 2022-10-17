@@ -7,6 +7,8 @@ import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/dis
 import type { RootState } from "../state/State"
 import { TimeResolutionOptions } from "./TimeResolutionOptions"
 import { EditableCheckbox } from "../form/EditableCheckbox"
+import { shortcuts_map } from "../help_menu/shortcuts"
+import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
 
 
 
@@ -116,7 +118,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Use "Focused" Mode</b>
-            &nbsp; <span className="description">ctrl + d + f</span>
+            &nbsp; <PlainShortcutKeys {...shortcuts_map.toggle_focused} />
 
             <EditableCheckbox
                 value={props.focused_mode}
@@ -128,7 +130,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Show connections as more circular</b>
-            &nbsp; <span className="description">ctrl + d + c</span>
+            &nbsp; <PlainShortcutKeys {...shortcuts_map.toggle_circular_connections} />
 
             <EditableCheckbox
                 value={props.circular_links}
@@ -140,7 +142,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Animate connections</b>
-            &nbsp; <span className="description">ctrl + d + a</span>
+            &nbsp; <PlainShortcutKeys {...shortcuts_map.toggle_animating} />
 
             <EditableCheckbox
                 value={props.animate_connections}
@@ -193,6 +195,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
         <p className="section">
             <b>Whilst presenting, display time sliders for "created at" and "simulated" time</b>
+            &nbsp; <PlainShortcutKeys {...shortcuts_map.toggle_time} />
 
             <EditableCheckbox
                 value={props.display_time_sliders}

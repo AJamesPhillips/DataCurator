@@ -1,4 +1,6 @@
 import { h } from "preact"
+import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
+import { shortcuts_map } from "../help_menu/shortcuts"
 
 import { Button } from "../sharedf/Button"
 import {
@@ -28,7 +30,7 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_select_source_causal_components(store)}
             />
 
-            <div className="description">ctrl + s + c</div>
+            <PlainShortcutKeys {...shortcuts_map.expand_select_backwards} />
         </p>
 
 
@@ -39,7 +41,7 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_select_forward_causal_components(store)}
             />
 
-            <div className="description">ctrl + s + f</div>
+            <PlainShortcutKeys {...shortcuts_map.expand_select_forwards} />
         </p>
 
 
@@ -50,7 +52,7 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_select_all_components(store)}
             />
 
-            <div className="description">ctrl + a</div>
+            <PlainShortcutKeys {...shortcuts_map.select_all} />
         </p>
 
 
@@ -61,7 +63,7 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_expand_selected_components(store)}
             />
 
-            <div className="description">ctrl + s + e</div>
+            <PlainShortcutKeys {...shortcuts_map.expand_select} />
         </p>
 
 
@@ -72,7 +74,7 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_decrease_selected_components(store)}
             />
 
-            <div className="description">ctrl + s + d</div>
+            <PlainShortcutKeys {...shortcuts_map.decrease_select} />
         </p>
 
 
@@ -83,8 +85,9 @@ export function SelectionControlSidePanel (props: {})
                 onClick={() => conditionally_select_interconnections(store)}
             />
 
+            <PlainShortcutKeys {...shortcuts_map.select_interconnections} />
             <div className="description">
-                ctrl + s + i &nbsp; &nbsp; Only selects the immediate components inbetween.  e.g. if A---B--&gt;C---D--&gt;E, the selecting selecting node A and node C followed by this command will also select connection B.  But if only node A and node E are selected, then this command will not do anything.
+                Only selects the immediate components inbetween.  e.g. if A ---B--&gt; C ---D--&gt; E, then selecting nodes A and C followed by this command will also select connection B.  But if only node A and node E are selected, then this command will not do anything.
             </div>
         </p>
 
