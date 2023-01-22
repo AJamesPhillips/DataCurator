@@ -70,9 +70,17 @@ function _ContentControls (props: Props)
         <Box p={2} mb={2} borderTop={1} borderColor="primary.main" position="relative">
             <Collapse in={props.actually_display_time_sliders}>
                 <Box className={classes.drawer_content}>
-                    <Button onClick={() => props.toggle_linked_datetime_sliders()}>
+                    {/* Have disabled this link button for now (2023-01-22) as do not use it
+                        and potential use case is not documented */}
+                    {/* <Button
+                        onClick={() => props.toggle_linked_datetime_sliders()}
+                        title={props.linked_datetime_sliders
+                            ? "Simulation and created at datetime values are linked (click to unlink)"
+                            : "Simulation and created at datetimes change independently (click to link)"
+                        }
+                    >
                         {props.linked_datetime_sliders ? "Unlink" : "Link"}
-                    </Button>
+                    </Button> */}
                     <Box flexGrow={1}>
                         <TimeSlider
                             events={created_events}
