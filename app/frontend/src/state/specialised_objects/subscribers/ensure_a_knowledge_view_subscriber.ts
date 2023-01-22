@@ -6,6 +6,9 @@ import { selector_chosen_base_id } from "../../user_info/selector"
 
 
 
+// TODO, I'm pretty sure this code is still buggy and creating unnecessary
+// knowledge views.  For example `5ab5bb58-53d3-43af-9065-376a64b177c3` was
+// created on Nov 1st 2022
 export function ensure_a_knowledge_view_subscriber (store: StoreType)
 {
     return () =>
