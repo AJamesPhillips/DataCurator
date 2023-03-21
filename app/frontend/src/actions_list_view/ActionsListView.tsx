@@ -1,27 +1,25 @@
 import { FunctionalComponent, h } from "preact"
+import { useState, useRef, useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./ActionsListView.scss"
-import { MainArea } from "../layout/MainArea"
-import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
-import {
-    get_current_composed_knowledge_view_from_state,
-    get_wcomponents_from_ids,
-} from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import { ACTIONS } from "../state/actions"
-import { PrioritisableAction } from "./PrioritisableAction"
-import { SortDirection, sort_list } from "../shared/utils/sort"
-import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
-import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
-import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
-import type { Base } from "../shared/interfaces/base"
-import { SIDE_PANEL_WIDTH } from "../side_panel/width"
-import { useMemo, useRef, useState } from "preact/hooks"
 import { AddNewActionButton } from "./AddNewActionButton"
-import type { CanvasPoint, CanvasPointerEvent } from "../canvas/interfaces"
+import { PrioritisableAction } from "./PrioritisableAction"
+import { CanvasPointerEvent, CanvasPoint } from "../canvas/interfaces"
+import { MainArea } from "../layout/MainArea"
+import { Base } from "../shared/interfaces/base"
+import { sort_list, SortDirection } from "../shared/utils/sort"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
+import { SIDE_PANEL_WIDTH } from "../side_panel/width"
+import { ACTIONS } from "../state/actions"
+import { get_action_ids_for_actions_list_view } from "../state/actions_list_view/accessors"
+import { get_wcomponents_from_ids } from "../state/specialised_objects/accessors"
+import { RootState } from "../state/State"
 import { find_parent_element_by_classes } from "../utils/html"
+import { WComponentNodeAction } from "../wcomponent/interfaces/action"
+import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
+import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
+import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 
 
 
@@ -38,19 +36,7 @@ const map_state = (state: RootState) =>
 {
     const { wcomponents_by_id } = state.specialised_objects
 
-    let action_ids: Set<string> | undefined = undefined
-
-    const composed_knowledge_view = get_current_composed_knowledge_view_from_state(state)
-    const filter_by_knowledge_view = false
-    if (filter_by_knowledge_view)
-    {
-        if (composed_knowledge_view)
-        {
-            action_ids = composed_knowledge_view.wc_ids_by_type.action
-        }
-    }
-    else action_ids = state.derived.wcomponent_ids_by_type.action
-
+    const action_ids = get_action_ids_for_actions_list_view(state)
 
     return {
         action_ids,
