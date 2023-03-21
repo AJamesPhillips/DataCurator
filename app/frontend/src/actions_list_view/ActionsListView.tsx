@@ -84,10 +84,12 @@ function _ActionsListViewContent (props: Props)
     if (action_ids === undefined) return <div>No actions</div> // type guard
 
 
-    const now = new Date().getTime()
-    let actions = Array.from(action_ids).map(id => wcomponents_by_id[id])
-        .filter(wcomponent_is_action)
-    actions = sort_list(actions, get_modified_or_created_at, SortDirection.descending)
+    const actions = useMemo(() =>
+    {
+        const unsorted_actions = get_wcomponents_from_ids(wcomponents_by_id, action_ids)
+            .filter(wcomponent_is_action)
+        return sort_list(unsorted_actions, get_modified_or_created_at, SortDirection.descending)
+    }, [action_ids, wcomponents_by_id])
 
 
     const actions_icebox: WComponentNodeAction[] = []
@@ -95,11 +97,16 @@ function _ActionsListViewContent (props: Props)
     const actions_in_progress: WComponentNodeAction[] = []
     const actions_done_or_rejected: WComponentNodeAction[] = []
 
+    const now = new Date().getTime()
     actions.forEach(action =>
     {
         const attribute_values = get_wcomponent_state_value_and_probabilities({
             wcomponent: action,
-            VAP_set_id_to_counterfactual_v2_map: {}, created_at_ms: now, sim_ms: now
+            VAP_set_id_to_counterfactual_v2_map: {},
+            // MAYBE DO: allow the user to move back in time through the actions
+            //      previous states
+            created_at_ms: now,
+            sim_ms: now,
         })
 
         const most_probable = attribute_values.most_probable_VAP_set_values[0]
@@ -120,14 +127,11 @@ function _ActionsListViewContent (props: Props)
 
     const most_recent_action_id = useMemo(() =>
     {
-        let actions_on_current_kv = get_wcomponents_from_ids(wcomponents_by_id, action_ids)
-            .filter(wcomponent_is_action)
-
-        actions_on_current_kv = sort_list(actions_on_current_kv, get_created_at_ms, SortDirection.descending)
+        const actions_on_current_kv = sort_list(actions, get_created_at_ms, SortDirection.descending)
         const most_recent_action_id = (actions_on_current_kv || [])[0]?.id || ""
 
         return most_recent_action_id
-    }, [action_ids])
+    }, [actions])
 
 
     return <div
