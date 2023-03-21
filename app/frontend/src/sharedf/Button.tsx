@@ -21,12 +21,15 @@ export function Button (props: ButtonProps & SpecificProps)
 {
 
     return (
-        <Hidden xsUp={props.is_hidden} title={props.title}>
+        <Hidden xsUp={props.is_hidden}>
             <MaterialButton
                 className={props.className}
                 title={props.title}
                 color={props.color || "primary"}
-                style={props.style}
+                // 2023-03-21: Forcing pointer-events to `initial` allows the
+                // title to show even when button is disabled, this may break
+                // other things.
+                style={{ ...props.style, pointerEvents: "initial" }}
                 component={props.component}
                 disabled={props.disabled || false}
                 disableElevation={props.disableElevation || true}
