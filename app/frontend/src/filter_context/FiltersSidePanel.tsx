@@ -69,6 +69,21 @@ function _FiltersSidePanel (props: Props)
 
 
         <p>
+            Filter by label:
+
+            <LabelsEditor
+                allowed_label_ids={wc_label_ids}
+                label_ids={props.filters.include_by_label_ids}
+                on_change={include_by_label_ids =>
+                {
+                    props.set_filters({ filters: { ...props.filters, include_by_label_ids } })
+                }}
+                force_editable={true}
+            />
+        </p>
+
+
+        <p>
             Exclude by label:
 
             <LabelsEditor
@@ -84,14 +99,16 @@ function _FiltersSidePanel (props: Props)
 
 
         <p>
-            Filter (include) by any label (OR):
+            Filter by component type:
 
-            <LabelsEditor
-                allowed_label_ids={wc_label_ids}
-                label_ids={props.filters.include_by_label_ids}
-                on_change={include_by_label_ids =>
+            <MultiAutocompleteText
+                placeholder=""
+                selected_option_ids={props.filters.include_by_component_types}
+                options={wcomponent_include_type_options}
+                allow_none={true}
+                on_change={include_by_component_types =>
                 {
-                    props.set_filters({ filters: { ...props.filters, include_by_label_ids } })
+                    props.set_filters({ filters: { ...props.filters, include_by_component_types } })
                 }}
                 force_editable={true}
             />
@@ -115,21 +132,13 @@ function _FiltersSidePanel (props: Props)
         </p>
 
 
-        <p>
-            Filter (include) by component type:
+        {/*
+            MAYBE DO: Build an advanced search that allows user to use AND
+                instead of OR filters.
+            MAYBE DO: Then extend advanced search to allow user to build nested
+                queries.
+        */}
 
-            <MultiAutocompleteText
-                placeholder=""
-                selected_option_ids={props.filters.include_by_component_types}
-                options={wcomponent_include_type_options}
-                allow_none={true}
-                on_change={include_by_component_types =>
-                {
-                    props.set_filters({ filters: { ...props.filters, include_by_component_types } })
-                }}
-                force_editable={true}
-            />
-        </p>
 
         {/* <p>
             Filter actions to yours:
