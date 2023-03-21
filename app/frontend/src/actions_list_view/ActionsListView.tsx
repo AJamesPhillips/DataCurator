@@ -4,13 +4,15 @@ import { connect, ConnectedProps } from "react-redux"
 import "./ActionsListView.scss"
 import { MainArea } from "../layout/MainArea"
 import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_current_composed_knowledge_view_from_state, get_wcomponents_from_ids } from "../state/specialised_objects/accessors"
+import {
+    get_current_composed_knowledge_view_from_state,
+    get_wcomponents_from_ids,
+} from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { PrioritisableAction } from "./PrioritisableAction"
 import { SortDirection, sort_list } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import { selector_chosen_base_id } from "../state/user_info/selector"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
@@ -51,10 +53,8 @@ const map_state = (state: RootState) =>
 
 
     return {
-        composed_knowledge_view,
         action_ids,
         wcomponents_by_id,
-        base_id: selector_chosen_base_id(state),
         display_side_panel: state.controls.display_side_panel,
     }
 }
@@ -72,7 +72,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ActionsListViewContent (props: Props)
 {
-    const { composed_knowledge_view, action_ids, wcomponents_by_id, base_id } = props
+    const { action_ids, wcomponents_by_id } = props
 
     const [max_done_visible, set_max_done_visible] = useState(5)
     // pointer_down is the position on the user's physical screen
@@ -81,7 +81,6 @@ function _ActionsListViewContent (props: Props)
     const action_list_view_content_el = useRef<undefined | HTMLElement>(undefined)
 
 
-    if (base_id === undefined) return <div>No base id chosen</div> // type guard
     if (action_ids === undefined) return <div>No actions</div> // type guard
 
 
@@ -119,17 +118,16 @@ function _ActionsListViewContent (props: Props)
     const sorted_actions_todo = sort_list(actions_todo, a => a.todo_index || 0, SortDirection.descending)
 
 
-    const action_ids_for_current_kv = composed_knowledge_view?.wc_ids_by_type?.action
     const most_recent_action_id = useMemo(() =>
     {
-        let actions_on_current_kv = get_wcomponents_from_ids(wcomponents_by_id, action_ids_for_current_kv)
+        let actions_on_current_kv = get_wcomponents_from_ids(wcomponents_by_id, action_ids)
             .filter(wcomponent_is_action)
 
         actions_on_current_kv = sort_list(actions_on_current_kv, get_created_at_ms, SortDirection.descending)
         const most_recent_action_id = (actions_on_current_kv || [])[0]?.id || ""
 
         return most_recent_action_id
-    }, [action_ids_for_current_kv])
+    }, [action_ids])
 
 
     return <div
@@ -170,9 +168,6 @@ function _ActionsListViewContent (props: Props)
                 <AddNewActionButton
                     list_type="icebox"
                     most_recent_action_id={most_recent_action_id}
-                    composed_knowledge_view={composed_knowledge_view}
-                    wcomponents_by_id={wcomponents_by_id}
-                    base_id={base_id}
                 />
             </h1>
 
@@ -189,9 +184,6 @@ function _ActionsListViewContent (props: Props)
                 <AddNewActionButton
                     list_type="todo"
                     most_recent_action_id={most_recent_action_id}
-                    composed_knowledge_view={composed_knowledge_view}
-                    wcomponents_by_id={wcomponents_by_id}
-                    base_id={base_id}
                 />
             </h1>
 
@@ -208,9 +200,6 @@ function _ActionsListViewContent (props: Props)
                 <AddNewActionButton
                     list_type="in_progress"
                     most_recent_action_id={most_recent_action_id}
-                    composed_knowledge_view={composed_knowledge_view}
-                    wcomponents_by_id={wcomponents_by_id}
-                    base_id={base_id}
                 />
             </h1>
 
@@ -226,9 +215,6 @@ function _ActionsListViewContent (props: Props)
                 <AddNewActionButton
                     list_type="done"
                     most_recent_action_id={most_recent_action_id}
-                    composed_knowledge_view={composed_knowledge_view}
-                    wcomponents_by_id={wcomponents_by_id}
-                    base_id={base_id}
                 />
             </h1>
 

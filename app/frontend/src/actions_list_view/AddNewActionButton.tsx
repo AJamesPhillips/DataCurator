@@ -5,7 +5,6 @@ import "./AddNewActionButton.scss"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { Button } from "../sharedf/Button"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
-import type { ComposedKnowledgeView } from "../state/derived/State"
 import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { connect, ConnectedProps } from "react-redux"
@@ -13,22 +12,29 @@ import type { RootState } from "../state/State"
 import { set_action_VAP_set_state } from "../wcomponent_form/values_and_predictions/handle_update_VAP_sets"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
 import { update_value_possibilities_with_VAPSets } from "../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
+import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { selector_chosen_base_id } from "../state/user_info/selector"
+import { useMemo } from "preact/hooks"
+import { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
+import { CreationContextState } from "../state/creation_context/state"
 
 
+
+type ListTypeType = "icebox" | "todo" | "in_progress" | "done"
 
 interface OwnProps
 {
     most_recent_action_id: string
-    composed_knowledge_view: ComposedKnowledgeView | undefined
-    wcomponents_by_id: WComponentsById
-    base_id: number
-    list_type: "icebox" | "todo" | "in_progress" | "done"
+    list_type: ListTypeType
 }
 
 
 
 const map_state = (state: RootState) => ({
     creation_context: state.creation_context,
+    composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
+    wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    base_id: selector_chosen_base_id(state),
 })
 
 const connector = connect(map_state)
@@ -46,9 +52,68 @@ function _AddNewActionButton (props: Props)
     const { id: knowledge_view_id, composed_wc_id_map } = composed_knowledge_view
 
 
-    function handle_click ()
+    const handle_click = useMemo(() => make_handle_click({
+        base_id,
+        composed_wc_id_map,
+        most_recent_action_id,
+        wcomponents_by_id,
+        list_type,
+        creation_context,
+        knowledge_view_id,
+    }), [
+        base_id,
+        composed_wc_id_map,
+        most_recent_action_id,
+        wcomponents_by_id,
+        list_type,
+        creation_context,
+        knowledge_view_id,
+    ])
+
+
+    return <Button
+        className="add_new_action_button"
+        fullWidth={false}
+        onClick={handle_click}
+        disabled={base_id === undefined}
+        title={base_id === undefined ? "No knowledge base selected" : ""}
+    >
+        <AddIcon />
+    </Button>
+}
+
+export const AddNewActionButton = connector(_AddNewActionButton) as FunctionalComponent<OwnProps>
+
+
+
+interface MakeHandleClickArgs
+{
+    base_id: number | undefined
+    composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+    most_recent_action_id: string
+    wcomponents_by_id: WComponentsById
+    list_type: ListTypeType
+    creation_context: CreationContextState
+    knowledge_view_id: string
+}
+
+function make_handle_click (args: MakeHandleClickArgs)
+{
+    const {
+        base_id,
+        composed_wc_id_map,
+        most_recent_action_id,
+        wcomponents_by_id,
+        list_type,
+        creation_context,
+        knowledge_view_id,
+    } = args
+
+    return function handle_click ()
     {
-        const next_action_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_action_id, wcomponents_by_id) || { left: 0, top: 0 }
+        if (base_id === undefined) throw new Error(`No base_id defined in click for AddNewActionButton`)
+
+        const next_action_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_action_id, wcomponents_by_id)
 
         let values_and_prediction_sets: StateValueAndPredictionsSet[] = []
 
@@ -107,11 +172,4 @@ function _AddNewActionButton (props: Props)
             }
         })
     }
-
-
-    return <Button className="add_new_action_button" fullWidth={false} onClick={e => handle_click()}>
-        <AddIcon />
-    </Button>
 }
-
-export const AddNewActionButton = connector(_AddNewActionButton) as FunctionalComponent<OwnProps>
