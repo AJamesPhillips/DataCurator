@@ -17,7 +17,7 @@ export function props_diff (last_props: any)
     {
         if (first_props[prop_key] !== last_props[prop_key])
         {
-            console.log(`Diff props for "${prop_key}"`, first_props[prop_key], last_props[prop_key])
+            console .log(`Diff props for "${prop_key}"`, first_props[prop_key], last_props[prop_key])
         }
     })
 }

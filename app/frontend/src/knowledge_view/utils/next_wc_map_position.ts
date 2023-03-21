@@ -5,12 +5,16 @@ import { get_wc_position_to_id_map, wc_map_entry_to_coord_key } from "./get_wc_p
 
 
 
-export function get_next_available_wc_map_position (wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined, wcomponent_id: string | undefined, wcomponents_by_id: WComponentsById, direction_y = v_step)
+export function get_next_available_wc_map_position (wc_id_map: KnowledgeViewWComponentIdEntryMap | undefined, wcomponent_id: string | undefined, wcomponents_by_id: WComponentsById, direction_y = v_step): KnowledgeViewWComponentEntry
 {
-    if (!wc_id_map || !wcomponent_id) return undefined
+    const default_wc_map_position = { left: 0, top: 0 }
+
+
+    if (!wc_id_map || !wcomponent_id) return default_wc_map_position
+
 
     const entry = wc_id_map[wcomponent_id]
-    if (!entry) return undefined
+    if (!entry) return default_wc_map_position
 
 
     const coord_to_id_map = get_wc_position_to_id_map(wc_id_map, wcomponents_by_id)

@@ -153,7 +153,7 @@ function _PrioritiesListViewContent (props: Props)
                         onClick={e =>
                         {
                             const most_recent_prioritisation_id = (prioritisations || [])[0]?.id || ""
-                            const next_prioritisation_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_prioritisation_id, wcomponents_by_id) || { left: 0, top: 0 }
+                            const next_prioritisation_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_prioritisation_id, wcomponents_by_id)
 
                             create_wcomponent({
                                 wcomponent: {
