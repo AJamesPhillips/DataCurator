@@ -28,8 +28,10 @@ export function ensure_any_knowledge_view_displayed (store: StoreType)
         const display_side_panel = state.controls.display_side_panel
         const display_time_sliders = get_actually_display_time_sliders(state)
 
+        if (!a_knowledge_view) return
+
         const pos = optionally_calculate_spatial_temporal_position_to_move_to(state, a_knowledge_view, display_side_panel, display_time_sliders)
-        const args = { subview_id: a_knowledge_view?.id, ...pos }
+        const args = { subview_id: a_knowledge_view.id, ...pos }
         store.dispatch(ACTIONS.routing.change_route({ args }))
     }
 }
@@ -44,19 +46,24 @@ function current_knowledge_view_is_valid (state: RootState)
 
 
 
-function optionally_calculate_spatial_temporal_position_to_move_to (state: RootState, current_kv: KnowledgeView | undefined, display_side_panel: boolean, display_time_sliders: boolean): Partial<{ x: number, y: number, z: number, created_at_ms: number }>
+function optionally_calculate_spatial_temporal_position_to_move_to (state: RootState, current_kv: KnowledgeView, display_side_panel: boolean, display_time_sliders: boolean): { x: number, y: number, z: number, created_at_ms: number }
 {
-    if (!current_kv) return {}
+    // TODO: check this is still a correct comment as of 2023-03-22
+    //
+    // // We call `update_current_composed_knowledge_view_state` but then do not use this to update
+    // // `state.derived.current_composed_knowledge_view` and we do not use
+    // // `state.derived.current_composed_knowledge_view` in the first place because this code is called when the current
+    // // knowledge view is invalid (does not exist).  And so we navigate to a random knowledge view, and whilst we do that
+    // // we might as well understand where the components are positioned and send the user straight there.
+    //
+    // 2023-03-22:
+    // Instead of calling `update_current_composed_knowledge_view_state` to
+    // calculate the `current_composed_knowledge_view` could we just wait for this
+    // to be calculated through other routes then use the result to find the
+    // position to move to?
 
-    // We call `update_current_composed_knowledge_view_state` but then do not use this to update
-    // `state.derived.current_composed_knowledge_view` and we do not use
-    // `state.derived.current_composed_knowledge_view` in the first place because this code is called when the current
-    // knowledge view is invalid (does not exist).  And so we navigate to a random knowledge view, and whilst we do that
-    // we might as well understand where the components are positioned and send the user straight there.
-
-    let current_composed_knowledge_view: ComposedKnowledgeView | undefined = update_current_composed_knowledge_view_state(state, current_kv)
+    let current_composed_knowledge_view: ComposedKnowledgeView = update_current_composed_knowledge_view_state(state, current_kv)
     current_composed_knowledge_view = update_composed_knowledge_view_filters(state, current_composed_knowledge_view)
-    if (!current_composed_knowledge_view) return {}
 
     const { wcomponents_by_id } = state.specialised_objects
     const initial_wcomponent_id = state.routing.item_id || ""
@@ -75,6 +82,9 @@ function optionally_calculate_spatial_temporal_position_to_move_to (state: RootS
     })
 
     return {
+        x: 0,
+        y: 0,
+        z: 0,
         ...result.positions[0], // may be undefined
         created_at_ms: result.go_to_datetime_ms,
     }
