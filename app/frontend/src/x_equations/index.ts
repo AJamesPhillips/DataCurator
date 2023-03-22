@@ -284,7 +284,7 @@ function run_tests ()
     {
         const original_console_error = console.error
         const errors = []
-        console.error = function (error)
+        console.error = function (error: any)
         {
             errors.push(error)
         }
