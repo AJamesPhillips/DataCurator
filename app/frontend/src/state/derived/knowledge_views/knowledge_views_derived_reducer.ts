@@ -39,11 +39,11 @@ import {
     get_nested_knowledge_view_ids,
     sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
-    get_knowledge_view_from_state,
 } from "../../specialised_objects/accessors"
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 import { selector_chosen_base_id } from "../../user_info/selector"
+import { get_composed_wc_id_map } from "./get_composed_wc_id_map"
 
 
 
@@ -245,59 +245,6 @@ export function get_foundational_knowledge_views (knowledge_view: KnowledgeView,
     if (include_self) foundation_knowledge_views.push(knowledge_view)
 
     return foundation_knowledge_views
-}
-
-
-
-export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById)
-{
-    let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-    foundation_knowledge_views.forEach(foundational_kv =>
-    {
-        Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) =>
-        {
-            if (entry.passthrough) return
-
-            // ensure it is deleted first so that when (re)added it will placed last (on top)
-            delete composed_wc_id_map[id]
-            composed_wc_id_map[id] = entry
-        })
-    })
-
-    remove_deleted_wcomponents(composed_wc_id_map, wcomponents_by_id)
-
-    const result = partition_wc_id_map_on_blocked(composed_wc_id_map)
-    composed_wc_id_map = result.composed_wc_id_map
-    const composed_blocked_wc_id_map = result.composed_blocked_wc_id_map
-
-    return { composed_wc_id_map, composed_blocked_wc_id_map }
-}
-
-function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap, wcomponents_by_id: WComponentsById)
-{
-    Object.keys(composed_wc_id_map).forEach(id =>
-    {
-        const wcomponent = wcomponents_by_id[id]
-        // Allow not found wcomponents to be kept as they may be from a different base and just not loaded
-        // if (!wcomponent) delete composed_wc_id_map[id]
-        if (wcomponent?.deleted_at) delete composed_wc_id_map[id]
-    })
-}
-
-function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap)
-{
-    const composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-
-    Object.entries(composed_wc_id_map).forEach(([wcomponent_id, entry]) =>
-    {
-        if (entry.blocked)
-        {
-            composed_blocked_wc_id_map[wcomponent_id] = entry
-            delete composed_wc_id_map[wcomponent_id]
-        }
-    })
-
-    return { composed_wc_id_map, composed_blocked_wc_id_map }
 }
 
 

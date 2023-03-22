@@ -6,10 +6,11 @@ import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteTex
 import { is_defined } from "../shared/utils/is_defined"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
 import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { get_composed_wc_id_map, get_foundational_knowledge_views } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
+import { get_foundational_knowledge_views } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../state/State"
 import { Button } from "../sharedf/Button"
 import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
+import { get_composed_wc_id_map } from "../state/derived/knowledge_views/get_composed_wc_id_map"
 
 
 
