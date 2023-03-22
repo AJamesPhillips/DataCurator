@@ -24,7 +24,7 @@ import type { datacurator_grammarVisitor } from "./datacurator_grammarVisitor"
 
 export function go_antlr ()
 {
-    run_tests()
+    // run_tests()
 }
 
 
