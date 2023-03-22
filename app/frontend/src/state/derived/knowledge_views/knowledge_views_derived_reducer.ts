@@ -226,8 +226,10 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         available_filter_options,
         composed_datetime_line_config: datetime_lines_config,
     }
-    // do not need to do this but helps reduce confusion when debugging
+
+    // do not need to delete these properties this but helps reduce confusion when debugging
     delete (updated_composed_knowledge_view as any).wc_id_map
+    delete (updated_composed_knowledge_view as any).datetime_line_config
 
     return updated_composed_knowledge_view
 }
