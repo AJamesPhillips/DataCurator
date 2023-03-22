@@ -3,6 +3,7 @@ function Set_toJSON (key: string, value: any)
 {
     if (value instanceof Set) return [...value].sort()
     if (value instanceof Array) return [...value].sort()
+    if (value instanceof Object) return Object.keys(value).sort()
 
     return value
 }
