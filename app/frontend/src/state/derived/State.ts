@@ -37,7 +37,7 @@ export type NestedKnowledgeViewIds = {
 }
 
 
-export interface ComposedKnowledgeView extends Omit<Omit<KnowledgeView, "wc_id_map">, "datetime_line_config">
+export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" | "datetime_line_config">
 {
     // Should contain all kv entries where:
     //   .blocked === (false or undefined) and
