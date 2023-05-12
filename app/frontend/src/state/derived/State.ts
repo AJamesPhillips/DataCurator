@@ -11,6 +11,7 @@ import type { WComponentPrioritisation } from "../../wcomponent/interfaces/prior
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
 import type { ComposedDatetimeLineConfig } from "../../shared/interfaces/datetime_lines"
+import { DerivedAvailableFilterOptions } from "../filter_context/utils"
 
 
 
@@ -80,13 +81,6 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
 
 type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "goal_or_action" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
-
-
-export interface DerivedAvailableFilterOptions
-{
-    wc_label_ids: Set<string>
-    wc_types: WComponentType[]
-}
 
 
 

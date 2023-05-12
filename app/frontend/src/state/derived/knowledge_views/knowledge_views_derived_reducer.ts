@@ -33,7 +33,7 @@ import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_b
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
 import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
 import { get_wcomponent_ids_by_type } from "../get_wcomponent_ids_by_type"
-import type { ComposedKnowledgeView, DerivedAvailableFilterOptions, WComponentIdsByType } from "../State"
+import type { ComposedKnowledgeView, WComponentIdsByType } from "../State"
 import type { RootState } from "../../State"
 import {
     get_nested_knowledge_view_ids,
@@ -44,6 +44,7 @@ import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_composed_wc_id_map } from "./get_composed_wc_id_map"
+import { get_available_filter_options } from "../../filter_context/utils"
 
 
 
@@ -333,24 +334,6 @@ function get_wc_id_connections_map (link_ids: Set<string>, wcomponents_by_id: WC
     })
 
     return map
-}
-
-
-
-function get_available_filter_options (wcomponents: WComponent[]): DerivedAvailableFilterOptions
-{
-    const wc_label_ids = new Set<string>()
-    const wc_types_set = new Set<WComponentType>()
-
-    wcomponents.forEach(wc =>
-    {
-        if (wc.label_ids) wc.label_ids.forEach(id => wc_label_ids.add(id))
-        wc_types_set.add(wc.type)
-    })
-
-    const wc_types: WComponentType[] = Array.from(wc_types_set).sort()
-
-    return { wc_label_ids, wc_types }
 }
 
 
