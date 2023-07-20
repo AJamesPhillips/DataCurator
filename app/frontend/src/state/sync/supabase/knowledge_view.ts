@@ -7,7 +7,7 @@ import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
-import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_not_deleted, WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../../shared/utils/is_defined"
 
 
@@ -47,7 +47,7 @@ interface GetKnowledgeViewsFromOtherBases
 export async function supabase_get_knowledge_views_from_other_bases (args: GetKnowledgeViewsFromOtherBases)
 {
     const wcomponents_from_other_bases = args.wcomponents_from_other_bases
-        .filter(wc => !wc.deleted_at)
+        .filter(wc => wcomponent_is_not_deleted(wc))
     const wcomponent_ids = Array.from(new Set(wcomponents_from_other_bases.map(wc => wc.id)))
 
     const downloaded_knowledge_view_ids = new Set(args.knowledge_views.map(kv => kv.id))

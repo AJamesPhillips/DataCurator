@@ -8,7 +8,7 @@ import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ACTIONS } from "../../state/actions"
 import { useMemo, useState } from "preact/hooks"
 import { get_store } from "../../state/store"
-import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_not_deleted, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { RichMarkDown } from "../../sharedf/RichMarkDown"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
 
@@ -46,7 +46,7 @@ function _ListOrphanedWComponents (props: Props)
                 })
 
             const orphaned_wcomponents = Object.values(wcomponents_by_id)
-                .filter(wc => !wc.deleted_at && !all_wcomponent_ids_in_knowledge_views.has(wc.id))
+                .filter(wc => wcomponent_is_not_deleted(wc) && !all_wcomponent_ids_in_knowledge_views.has(wc.id))
 
             const sorted_orphaned_wcomponents = sort_list(orphaned_wcomponents,
                 wc => (wc.modified_at || wc.created_at).getTime(),

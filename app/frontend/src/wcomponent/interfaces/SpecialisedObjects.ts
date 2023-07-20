@@ -218,6 +218,16 @@ export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is 
 }
 
 
+export function wcomponent_is_deleted (wcomponent: WComponent | undefined)
+{
+    return wcomponent ? wcomponent.deleted_at !== undefined : undefined
+}
+export function wcomponent_is_not_deleted (wcomponent: WComponent | undefined)
+{
+    return wcomponent ? wcomponent.deleted_at === undefined : undefined
+}
+
+
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
     const { validity } = wcomponent as ValidityPredictions

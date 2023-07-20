@@ -1,6 +1,6 @@
 import { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/interfaces/knowledge_view"
 import { test } from "../../../shared/utils/test"
-import { WComponentsById } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponentsById, wcomponent_is_deleted } from "../../../wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -42,7 +42,7 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
         const wcomponent = wcomponents_by_id[id]
         // Allow not found wcomponents to be kept as they may be from a different base and just not loaded
         // if (!wcomponent) delete composed_wc_id_map[id]
-        if (wcomponent?.deleted_at) delete composed_wc_id_map[id]
+        if (wcomponent_is_deleted(wcomponent)) delete composed_wc_id_map[id]
     })
 }
 

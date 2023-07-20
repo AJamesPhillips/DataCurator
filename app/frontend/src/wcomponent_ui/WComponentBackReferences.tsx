@@ -14,6 +14,7 @@ import {
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
     wcomponent_is_state_value,
 } from "../wcomponent/interfaces/SpecialisedObjects"
@@ -56,7 +57,7 @@ function _WComponentBackReferences (props: Props)
         if (show_back_references)
         {
             relevant_wcomponents = Object.values(wcomponents_by_id)
-                .filter(wc => !wc.deleted_at)
+                .filter(wc => wcomponent_is_not_deleted(wc))
                 .filter(wc =>
                 {
                     return wc.title.includes(wcomponent_id)

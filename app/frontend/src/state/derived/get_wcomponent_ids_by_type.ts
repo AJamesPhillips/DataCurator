@@ -2,6 +2,7 @@ import { set_difference, set_union } from "../../utils/set"
 import {
     WComponentsById,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_is_deleted,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { wcomponent_has_single_statev2_datetime } from "../specialised_objects/accessors"
 import type { WComponentIdsByType } from "./State"
@@ -53,7 +54,7 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
             return
         }
 
-        if (wc.deleted_at) return
+        if (wcomponent_is_deleted(wc)) return
 
         wc_ids_by_type[wc.type].add(id)
         if (wcomponent_has_legitimate_non_empty_state_VAP_sets(wc) && wcomponent_has_single_statev2_datetime(wc))

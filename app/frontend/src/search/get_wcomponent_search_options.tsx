@@ -7,6 +7,7 @@ import {
     WComponent,
     WComponentsById,
     wcomponent_is_judgement_or_objective,
+    wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdToCounterfactualsV2Map } from "../wcomponent_derived/interfaces/counterfactual"
@@ -39,7 +40,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
     if (allowed_wcomponent_ids) wcomponents = wcomponents.filter(({ id }) => allowed_wcomponent_ids.has(id))
 
     const options = wcomponents
-        .filter(wc => !wc.deleted_at)
+        .filter(wcomponent_is_not_deleted)
         .map(wcomponent => {
             const title = get_title({
                 wcomponent,

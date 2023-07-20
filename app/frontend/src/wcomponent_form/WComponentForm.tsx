@@ -34,6 +34,8 @@ import {
     wcomponent_is_action,
     wcomponent_is_goal,
     wcomponent_is_state_value,
+    wcomponent_is_not_deleted,
+    wcomponent_is_deleted,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
@@ -555,15 +557,15 @@ function _WComponentForm (props: Props)
         <br />
 
 
-        {force_editable && !wcomponent.deleted_at && <div>
+        {force_editable && wcomponent_is_not_deleted(wcomponent) && <div>
             <ConfirmatoryDeleteButton
-                button_text="Delete"
+                button_text="Soft Delete (can undo)" // Todo: make recycle bin and empty after 30 days
                 tooltip_text="Remove from all knowledge views"
                 on_delete={() => props.delete_wcomponent({ wcomponent_id })}
             />
         </div>}
 
-        {force_editable && wcomponent.deleted_at && <div>
+        {force_editable && wcomponent_is_deleted(wcomponent) && <div>
             <Button
                 title="Undo delete"
                 onClick={() => wrapped_upsert_wcomponent({ deleted_at: undefined })}
