@@ -26,8 +26,8 @@ export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
 {
     const { editing, knowledge_view } = props
 
-    const foundational_knowledge_view = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)
-    const composed = get_composed_datetime_lines_config(foundational_knowledge_view, false)
+    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)
+    const composed = get_composed_datetime_lines_config(foundational_knowledge_views, false)
 
     const { datetime_line_config: orig_datetime_line_config = {} } = knowledge_view
 

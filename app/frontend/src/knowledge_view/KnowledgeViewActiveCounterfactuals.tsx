@@ -57,7 +57,7 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
 
     const selected_option_ids = knowledge_view.active_counterfactual_v2_ids || []
 
-    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
+    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
     const options = useMemo(() =>
     {
         const wc_id_map: KnowledgeViewWComponentIdEntryMap = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id).composed_wc_id_map

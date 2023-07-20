@@ -176,7 +176,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         },
     }
 
-    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id)
+    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
     const {
         composed_wc_id_map, composed_blocked_wc_id_map
     } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
@@ -237,7 +237,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
 
 
 
-export function get_foundational_knowledge_views (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById, include_self = true)
+export function get_foundational_knowledge_views (knowledge_view: KnowledgeView, knowledge_views_by_id: KnowledgeViewsById, include_self: boolean)
 {
     const { foundation_knowledge_view_ids = [] } = knowledge_view
     const foundation_knowledge_views = foundation_knowledge_view_ids.map(id => knowledge_views_by_id[id])
@@ -517,7 +517,7 @@ function update_ephemeral_overrides_of_current_composed_kv (current_composed_kno
     {
         // restore original composed_wc_id_map
         const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
-        const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id)
+        const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id, true)
         const composed_wc_id_maps = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
 
         current_composed_knowledge_view = {
