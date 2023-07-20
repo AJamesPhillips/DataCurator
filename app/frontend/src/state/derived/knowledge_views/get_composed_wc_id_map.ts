@@ -131,12 +131,12 @@ function run_tests ()
             deleted_at: date1,
 
             type: "statev2",
-            goals: {},
+            // goals: {},
             title: "",
             description: "",
             created_at: date1,
             base_id: 1,
-            datetime: {},
+            // datetime: {},
         }
     })
 
