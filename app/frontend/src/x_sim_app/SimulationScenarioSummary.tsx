@@ -43,7 +43,7 @@ export function SimulationScenarioSummary (props: Props)
     if (!scenario_kv) return <div>Unknown scenario knowledge view for id: {scenario_kv_id}</div>
 
     const composed_kv = useMemo(() => calculate_composed_knowledge_view({
-        knowledge_view: scenario_kv, knowledge_views_by_id, wcomponents_by_id
+        knowledge_view: scenario_kv, knowledge_views_by_id, wcomponents_by_id, is_on_actions_list_view: false,
     }), [scenario_kv, knowledge_views_by_id, wcomponents_by_id])
 
 

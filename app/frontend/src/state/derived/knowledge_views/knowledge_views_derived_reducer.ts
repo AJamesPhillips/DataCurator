@@ -28,6 +28,8 @@ import {
     wcomponent_is_prioritisation,
     wcomponent_is_plain_connection,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_is_action,
+    wcomponent_is_not_deleted,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
@@ -43,8 +45,10 @@ import {
 import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 import { selector_chosen_base_id } from "../../user_info/selector"
+import { get_is_on_actions_list_view } from "../../actions_list_view/accessors"
 import { get_composed_wc_id_map } from "./get_composed_wc_id_map"
 import { get_available_filter_options } from "../../filter_context/utils"
+import { v_step } from "../../../canvas/position_utils"
 
 
 
@@ -68,11 +72,10 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
 
     const kv_object_changed = initial_kv !== current_kv
-
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
+    const changed_on_actions_list_view = get_is_on_actions_list_view(initial_state) !== get_is_on_actions_list_view(state)
 
-
-    const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
+    const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed || changed_on_actions_list_view
 
     const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms
     const filters_changed = created_at_changed || initial_state.filter_context !== state.filter_context || one_or_more_wcomponents_changed
@@ -142,11 +145,14 @@ export function update_current_composed_knowledge_view_state (state: RootState, 
     const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
     const { current_composed_knowledge_view } = state.derived
 
+    const is_on_actions_list_view = get_is_on_actions_list_view(state)
+
     const updated_current_composed_knowledge_view = calculate_composed_knowledge_view({
         knowledge_view: current_kv,
         current_composed_knowledge_view,
         knowledge_views_by_id,
         wcomponents_by_id,
+        is_on_actions_list_view,
     })
 
     return updated_current_composed_knowledge_view
@@ -160,10 +166,11 @@ interface CalculateComposedKnowledgeViewArgs
     current_composed_knowledge_view?: ComposedKnowledgeView
     knowledge_views_by_id: KnowledgeViewsById
     wcomponents_by_id: WComponentsById
+    is_on_actions_list_view: boolean
 }
 export function calculate_composed_knowledge_view (args: CalculateComposedKnowledgeViewArgs)
 {
-    const { knowledge_view, knowledge_views_by_id, wcomponents_by_id } = args
+    const { knowledge_view, knowledge_views_by_id, wcomponents_by_id, is_on_actions_list_view } = args
     const current_composed_knowledge_view = args.current_composed_knowledge_view || {
         composed_visible_wc_id_map: {},
         active_judgement_or_objective_ids_by_target_id: {},
@@ -176,10 +183,31 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         },
     }
 
-    const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
-    const {
-        composed_wc_id_map, composed_blocked_wc_id_map
-    } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
+
+    let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+    let composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
+    let foundational_knowledge_views: KnowledgeView[] = []
+
+    if (is_on_actions_list_view)
+    {
+        const actions = Object.values(wcomponents_by_id)
+            .filter(wcomponent_is_action)
+            .filter(wcomponent_is_not_deleted)
+
+        actions.forEach((action, i) =>
+        {
+            composed_wc_id_map[action.id] = {
+                left: 0, top: i * v_step,
+            }
+        })
+    }
+    else
+    {
+        foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
+        ;({
+            composed_wc_id_map, composed_blocked_wc_id_map
+        } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id))
+    }
 
     const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id)
 
@@ -366,6 +394,8 @@ export function get_composed_datetime_lines_config (foundation_knowledge_views: 
 
 
 
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: undefined): undefined
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView
 export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
 {
     if (!current_composed_knowledge_view) return undefined
