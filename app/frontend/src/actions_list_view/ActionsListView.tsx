@@ -12,7 +12,7 @@ import { sort_list, SortDirection } from "../shared/utils/sort"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import { SIDE_PANEL_WIDTH } from "../side_panel/width"
 import { ACTIONS } from "../state/actions"
-import { get_action_ids_for_actions_list_view } from "../state/actions_list_view/accessors"
+// import { get_action_ids_for_actions_list_view } from "../state/actions_list_view/accessors"
 import { get_wcomponents_from_ids } from "../state/specialised_objects/accessors"
 import { RootState } from "../state/State"
 import { find_parent_element_by_classes } from "../utils/html"
@@ -35,11 +35,10 @@ export function ActionsListView (props: {})
 const map_state = (state: RootState) =>
 {
     const { wcomponents_by_id } = state.specialised_objects
-
-    const action_ids = get_action_ids_for_actions_list_view(state)
+    const composed_visible_wc_id_map = state.derived.current_composed_knowledge_view?.composed_visible_wc_id_map
 
     return {
-        action_ids,
+        composed_visible_wc_id_map,
         wcomponents_by_id,
         display_side_panel: state.controls.display_side_panel,
     }
@@ -58,7 +57,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ActionsListViewContent (props: Props)
 {
-    const { action_ids, wcomponents_by_id } = props
+    const { composed_visible_wc_id_map, wcomponents_by_id } = props
 
     const [max_done_visible, set_max_done_visible] = useState(5)
     // pointer_down is the position on the user's physical screen
@@ -67,8 +66,8 @@ function _ActionsListViewContent (props: Props)
     const action_list_view_content_el = useRef<undefined | HTMLElement>(undefined)
 
 
-    if (action_ids === undefined) return <div>No actions</div> // type guard
-
+    if (composed_visible_wc_id_map === undefined) return <div>No actions</div> // type guard
+    const action_ids = Object.keys(composed_visible_wc_id_map)
 
     const actions = useMemo(() =>
     {

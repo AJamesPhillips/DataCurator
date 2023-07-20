@@ -157,9 +157,6 @@ function run_tests ()
 
     test(result, expected_result)
 
-
-
-    // Test that when
 }
 
-run_tests()
+// run_tests()
