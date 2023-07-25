@@ -194,7 +194,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
 
         <p className="section">
-            <b>Whilst presenting, display time sliders for "created at" and "simulated" time</b>
+            <b>Display time sliders for "created at" and "simulated" time</b>
             &nbsp; <PlainShortcutKeys {...shortcuts_map.toggle_time} />
 
             <EditableCheckbox
