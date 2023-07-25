@@ -2,12 +2,13 @@ import { h } from "preact"
 import { Box, Typography } from "@material-ui/core"
 
 import { ActionCommands, ShortcutProps } from "./shortcuts"
+import { intersperse } from "../utils/array"
 
 
 export function PlainShortcutKeys (props: { shortcut: string[] })
 {
     return <div className="description" style={{ display: "inline" }}>
-        {props.shortcut.join(" + ")}
+        {intersperse(props.shortcut, () => <span>&nbsp;+&nbsp;</span>)}
     </div>
 }
 
