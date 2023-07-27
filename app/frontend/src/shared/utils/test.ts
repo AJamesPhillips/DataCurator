@@ -11,3 +11,10 @@ export function test <T> (got: T, expected: T, description="", sort_items=true)
     if (pass) console. log ("pass  " + description)
     else console.error (`fail: "${str_got}" !== "${str_expected}"  ${description}`)
 }
+
+
+export function describe (description: string, test_fn: () => undefined)
+{
+    console.log(description)
+    test_fn()
+}
