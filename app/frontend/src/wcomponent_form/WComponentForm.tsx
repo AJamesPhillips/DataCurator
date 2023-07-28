@@ -38,7 +38,7 @@ import {
     wcomponent_is_deleted,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"

@@ -9,7 +9,7 @@ import { ACTIONS } from "../../state/actions"
 import { useMemo, useState } from "preact/hooks"
 import { get_store } from "../../state/store"
 import { wcomponent_is_not_deleted, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { RichMarkDown } from "../../sharedf/RichMarkDown"
+import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
 
 

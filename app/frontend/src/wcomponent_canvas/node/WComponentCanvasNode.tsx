@@ -25,9 +25,9 @@ import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connectio
 import type { Position } from "../../canvas/interfaces"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
+import { get_title } from "../../sharedf/rich_text/get_rich_text"
 import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
-import { MARKDOWN_OPTIONS } from "../../sharedf/RichMarkDown"
+import { MARKDOWN_OPTIONS } from "../../sharedf/rich_text/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
 import {

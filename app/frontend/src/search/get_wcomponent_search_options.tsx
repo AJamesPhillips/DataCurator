@@ -11,7 +11,7 @@ import {
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdToCounterfactualsV2Map } from "../wcomponent_derived/interfaces/counterfactual"
-import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 

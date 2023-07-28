@@ -5,7 +5,7 @@ import "../Editable.css"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import { connect, ConnectedProps } from "react-redux"
-import { RichMarkDown } from "../../sharedf/RichMarkDown"
+import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import { ConditionalWComponentSearchWindow, OnFocusSetSelection } from "./ConditionalWComponentSearchWindow"
 import type { CreationContext } from "../../creation_context/interfaces"
 

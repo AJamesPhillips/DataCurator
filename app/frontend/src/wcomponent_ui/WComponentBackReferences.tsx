@@ -18,7 +18,7 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_state_value,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 

@@ -5,7 +5,7 @@ import { Link } from "../../sharedf/Link"
 
 import { lefttop_to_xy } from "../../state/display_options/display"
 import type { RootState } from "../../state/State"
-import { get_title } from "../../wcomponent_derived/rich_text/get_rich_text"
+import { get_title } from "../../sharedf/rich_text/get_rich_text"
 import type { WComponentMoveBaseConflicts } from "./calc_ids_to_move_and_conflicts"
 
 

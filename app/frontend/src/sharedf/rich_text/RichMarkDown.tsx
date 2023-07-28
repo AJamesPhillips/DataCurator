@@ -2,11 +2,11 @@ import { Component, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 
-import { add_newlines_to_markdown } from "../form/utils"
-import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import type { RootState } from "../state/State"
-import { replace_ids_in_text } from "../wcomponent_derived/rich_text/get_rich_text"
-import { AnchorTag } from "./AnchorTag"
+import { add_newlines_to_markdown } from "./add_newlines_to_markdown"
+import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import type { RootState } from "../../state/State"
+import { replace_ids_in_text } from "./get_rich_text"
+import { AnchorTag } from "../AnchorTag"
 import type { CSSProperties } from "@material-ui/styles"
 
 

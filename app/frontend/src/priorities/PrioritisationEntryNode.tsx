@@ -7,8 +7,8 @@ import "./PrioritisationEntryNode.scss"
 import { ACTIONS } from "../state/actions"
 import { CanvasNode } from "../canvas/CanvasNode"
 import type { RootState } from "../state/State"
-import { get_title } from "../wcomponent_derived/rich_text/get_rich_text"
-import { MARKDOWN_OPTIONS } from "../sharedf/RichMarkDown"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
+import { MARKDOWN_OPTIONS } from "../sharedf/rich_text/RichMarkDown"
 
 
 

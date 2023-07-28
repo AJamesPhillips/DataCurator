@@ -1,4 +1,4 @@
-import { get_wcomponent_state_UI_value } from "../get_wcomponent_state_UI_value"
+import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import { old_ids_and_functions_regex, uuids_and_functions_regex } from "./id_regexs"
 import type { ReplaceFunctionIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_url, format_wcomponent_link } from "./templates"
