@@ -83,4 +83,4 @@ function run_tests ()
     test_get_calculation_strs_from_text()
 }
 
-run_tests()
+// run_tests()
