@@ -13,7 +13,7 @@ export function replace_calculations_with_results (text: string, current_depth: 
 
     calculations.forEach((calculation, i) =>
     {
-        const replacer = new RegExp(`\\$\\$\\!${calculation}\\$\\$\\!`, "g")
+        const replacer = new RegExp(`\\$\\$\\!${calculation}\\$\\$\\!`, "")
 
         text = text.replace(replacer, `calculation ${i}`)
 
