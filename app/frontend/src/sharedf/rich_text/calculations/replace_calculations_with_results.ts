@@ -10,10 +10,11 @@ export function replace_calculations_with_results (text: string, current_depth: 
     const { root_url, depth_limit, get_title, render_links } = args
 
     const calculations = get_calculations_from_text(text)
+    if (calculations.length) console.log("calculations", calculations)
 
     calculations.forEach((calculation, i) =>
     {
-        const replacer = new RegExp(`\\$\\$\\!${calculation}\\$\\$\\!`, "")
+        const replacer = new RegExp(`\\$\\$\\!.*?\\$\\$\\!`, "s")
 
         text = text.replace(replacer, `calculation ${i}`)
 

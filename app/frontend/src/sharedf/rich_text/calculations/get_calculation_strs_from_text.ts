@@ -60,6 +60,20 @@ asd1 ${id1}
  $$!
 `)
     test(calculations, [` asd2 ${id1} `, "\n asd3\n "], "Should find calculations when indented $$! is present")
+
+
+    // Ignoring this for now (2023-07-28) as I think it's of minimal value & importance
+//     calculations = get_calculation_strs_from_text(`
+// asd1 ${id1}
+// \`\`\`
+// $$! asd2 $$!
+// \`\`\`
+
+//     $$!
+//     asd3
+//     $$!
+// `)
+//     test(calculations, [], "Should not find calculations when inside code blocks")
 }
 
 
