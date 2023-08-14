@@ -27,6 +27,7 @@ import { date_to_string } from "./form/datetime_utils"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 import { SIDE_PANEL_WIDTH } from "./side_panel/width"
 import { go_antlr } from "./x_equations"
+import { setup_tests_for_browser } from "./App.test"
 
 
 
@@ -239,3 +240,4 @@ const use_styles = makeStyles(theme => ({
 
 
 go_antlr()
+setup_tests_for_browser()
