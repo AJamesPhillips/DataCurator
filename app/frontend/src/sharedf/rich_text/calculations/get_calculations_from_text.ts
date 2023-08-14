@@ -1,7 +1,7 @@
 import { test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
-import { get_calculation_object_from_str } from "./get_calculation_object_from_str"
 import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text"
+import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
 
 
 
@@ -9,7 +9,7 @@ export function get_calculations_from_text (text: string): string[]
 {
     const calculation_strs = get_calculation_strs_from_text(text)
 
-    const calculation_object = calculation_strs.map(get_calculation_object_from_str)
+    const plain_calculation_object = calculation_strs.map(get_plain_calculation_object_from_str)
 
     return calculation_strs
 }
