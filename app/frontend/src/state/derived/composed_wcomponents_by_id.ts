@@ -50,7 +50,7 @@ function get_composed_wcomponents_by_id (state: RootState)
                 // todo, should probably deep clone these
                 ...target_wcomponent,
                 ...get_value_attributes(wcomponent),
-                _derived__using_value_from_wcomponent_id: wcomponent.id,
+                // _derived__using_value_from_wcomponent_id: wcomponent.id,
             }
 
         }
@@ -63,7 +63,7 @@ function get_composed_wcomponents_by_id (state: RootState)
                 composed_wcomponent = {
                     // Todo, should probably deep clone these
                     ...original_wcomponent,
-                    _derived__using_value_from_wcomponent_id: undefined,
+                    // _derived__using_value_from_wcomponent_id: undefined,
                 }
             }
         }
