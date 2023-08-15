@@ -1,24 +1,9 @@
-import { YAMLParseError, parse, stringify } from "yaml"
+import { YAMLParseError, parse } from "yaml"
 
 import { test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
+import { PlainCalculationObject } from "./interfaces"
 
-
-interface ValidCalculationObject
-{
-    valid: true
-    value: number | string
-    name?: string
-}
-
-interface InvalidCalculationObject
-{
-    valid: false
-    errors: (string | YAMLParseError)[]
-}
-
-
-type CalculationObject = ValidCalculationObject | InvalidCalculationObject
 
 
 const CalculationObjectError = {
@@ -26,7 +11,7 @@ const CalculationObjectError = {
 }
 
 
-export function get_plain_calculation_object_from_str (calculation_str: string): CalculationObject
+export function get_plain_calculation_object_from_str (calculation_str: string): PlainCalculationObject
 {
     calculation_str = calculation_str.trim()
 

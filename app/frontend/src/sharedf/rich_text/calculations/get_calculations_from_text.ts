@@ -2,10 +2,11 @@ import { test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
 import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text"
 import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
+import { PlainCalculationObject } from "./interfaces"
 
 
 
-export function get_calculations_from_text (text: string): string[]
+export function get_calculations_from_text (text: string): PlainCalculationObject[]
 {
     const calculation_strs = get_calculation_strs_from_text(text)
 
@@ -17,7 +18,7 @@ export function get_calculations_from_text (text: string): string[]
 
     // const calculation_object = plain_calculation_objects.map(get_)
 
-    return calculation_strs
+    return plain_calculation_objects
 }
 
 
