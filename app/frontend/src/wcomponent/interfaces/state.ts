@@ -48,6 +48,10 @@ export interface WComponentStateValue extends WComponentNodeBase
     // 2023-08-15 have removed the "owner_wcomponent_id" attribute.  See commit
     // message for longer description of why.
     // owner_wcomponent_id: string | undefined
+
+    // This should have probably been called target_attribute_wcomponent_id to
+    // make it clear this is the if of the wcomponent that this StateValue is
+    // providing and alternative value for.
     attribute_wcomponent_id: string | undefined
 }
 

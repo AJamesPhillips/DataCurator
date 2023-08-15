@@ -90,7 +90,7 @@ function _WComponentStateValueForm (props: Props)
 
     return <div>
         <p>
-            <span className="description_label">Attribute component</span> &nbsp;
+            <span className="description_label">Attribute (target) component</span> &nbsp;
 
             {wcomponent.attribute_wcomponent_id && <Link
                 route={undefined}
