@@ -154,11 +154,7 @@ function set_state_value_fields (wcomponent: WComponent, state: RootState): WCom
 {
     if (wcomponent_is_state_value(wcomponent))
     {
-        const current_knowledge_view = get_current_composed_knowledge_view_from_state(state)
         const { wcomponents_by_id } = state.specialised_objects
-        const current_knowledge_view_wc = wcomponents_by_id[current_knowledge_view?.id || ""]
-
-        const owner_wcomponent_id = wcomponent.owner_wcomponent_id || current_knowledge_view_wc?.id
 
         let { attribute_wcomponent_id, value_possibilities } = wcomponent
 
@@ -185,7 +181,6 @@ function set_state_value_fields (wcomponent: WComponent, state: RootState): WCom
 
         wcomponent = {
             ...wcomponent,
-            owner_wcomponent_id,
             attribute_wcomponent_id,
             value_possibilities,
         } as WComponentStateValue

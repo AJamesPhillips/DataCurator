@@ -16,7 +16,6 @@ import { SortDirection, sort_list } from "../shared/utils/sort"
 import { get_possibilities_from_VAP_sets } from "../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { get_items_by_id } from "../shared/utils/get_items"
-import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
 import { square_distance_between_kv_entries } from "../canvas/position_utils"
 
 
@@ -65,26 +64,6 @@ function _WComponentStateValueForm (props: Props)
     } = props
 
 
-    // If the current knowledge view has a wcomponent, then assume this is the owner
-    // wcomponent and put this to the top of the list.  Otherwise sort to put the most
-    // recently created components to the top of the list
-    const get_key = (wc: WComponent) => wc.id === current_knowledge_view?.id
-        ? new Date().getTime()
-        : wc.created_at.getTime()
-
-    let possible_owner_wcomponents = Object.values(wcomponents_by_id)
-    possible_owner_wcomponents = sort_list(possible_owner_wcomponents, get_key, SortDirection.descending)
-
-    const owner_wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: possible_owner_wcomponents,
-        wcomponents_by_id,
-        knowledge_views_by_id,
-        wc_id_to_counterfactuals_map,
-        created_at_ms: props.created_at_ms,
-        sim_ms: props.sim_ms,
-    })
-
-
     const wcomponents_with_state_VAP_sets = Array.from(props.wcomponent_ids_with_state_VAPs)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
@@ -110,29 +89,6 @@ function _WComponentStateValueForm (props: Props)
 
 
     return <div>
-        <p>
-            <span className="description_label">Owner component</span> &nbsp;
-
-            {wcomponent.owner_wcomponent_id && <Link
-                route={undefined}
-                sub_route={undefined}
-                item_id={wcomponent.owner_wcomponent_id}
-                args={undefined}
-            ><ExternalLinkIcon /> &nbsp;</Link>}
-
-            <div style={{ width: "60%", display: "inline-block" }}>
-                <AutocompleteText
-                    allow_none={true}
-                    selected_option_id={wcomponent.owner_wcomponent_id}
-                    options={owner_wcomponent_id_options}
-                    on_change={owner_wcomponent_id => upsert_wcomponent({ owner_wcomponent_id })}
-                    on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
-                    on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
-                />
-            </div>
-        </p>
-
-
         <p>
             <span className="description_label">Attribute component</span> &nbsp;
 

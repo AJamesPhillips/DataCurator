@@ -73,13 +73,13 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWCompo
     const downloaded_wcomponent_ids = new Set(args.wcomponents.map(wc => wc.id))
 
     const missing_wcomponent_ids = new Set<string>()
-    function determine_if_missing_ids (ids: string[], owner_wcomponent_id?: string)
+    function determine_if_missing_ids (ids: string[], source_of_ids: string)
     {
         ids.forEach(id =>
         {
             if (!is_valid_uuid(id))
             {
-                console. trace(`Found invalid UUID "${id}".  Owned by wcomponent_id: "${owner_wcomponent_id}"`)
+                console. trace(`Found invalid UUID "${id}".  Source of ids: "${source_of_ids}"`)
                 return
             }
 
@@ -90,20 +90,22 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWCompo
 
     args.knowledge_views.forEach(kv =>
     {
-        determine_if_missing_ids(Object.keys(kv.wc_id_map))
+        determine_if_missing_ids(Object.keys(kv.wc_id_map), `wc_id_map of knowledge view "${kv.id}"`)
         // kv.parent_knowledge_view_id && determine_if_missing_ids([kv.parent_knowledge_view_id])
     })
 
     args.wcomponents.forEach(wc =>
     {
-        determine_if_missing_ids(wc.label_ids || [], wc.id)
+        const source_of_ids = `wcomponent "${wc.id}"`
+
+        determine_if_missing_ids(wc.label_ids || [], source_of_ids)
 
         let ids = get_ids_from_text(wc.title)
-        determine_if_missing_ids(ids)
+        determine_if_missing_ids(ids, source_of_ids)
         ids = get_ids_from_text(wc.description)
-        determine_if_missing_ids(ids)
+        determine_if_missing_ids(ids, source_of_ids)
 
-        if (wcomponent_is_action(wc)) determine_if_missing_ids(wc.parent_goal_or_action_ids || [])
+        if (wcomponent_is_action(wc)) determine_if_missing_ids(wc.parent_goal_or_action_ids || [], source_of_ids)
     })
 
     // console .log(`missing_wcomponent_ids: ${missing_wcomponent_ids.size}`)
