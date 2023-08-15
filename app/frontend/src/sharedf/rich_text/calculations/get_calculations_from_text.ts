@@ -9,7 +9,13 @@ export function get_calculations_from_text (text: string): string[]
 {
     const calculation_strs = get_calculation_strs_from_text(text)
 
-    const plain_calculation_object = calculation_strs.map(get_plain_calculation_object_from_str)
+    const plain_calculation_objects = calculation_strs.map(get_plain_calculation_object_from_str)
+    if (plain_calculation_objects.length)
+    {
+        console.log("plain_calculation_objects....", plain_calculation_objects)
+    }
+
+    // const calculation_object = plain_calculation_objects.map(get_)
 
     return calculation_strs
 }

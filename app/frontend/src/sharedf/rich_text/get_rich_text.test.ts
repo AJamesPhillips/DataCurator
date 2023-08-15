@@ -21,9 +21,10 @@ function test_replace_ids_in_text ()
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
-        label_ids: [],
-    } }
+    const creation_context: CreationContextState = {
+        use_creation_context: false,
+        creation_context: { label_ids: [] },
+    }
 
     const wcomponents_by_id = {
         [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `@@${id3} was told @@${id2} is here` }, creation_context),
@@ -288,6 +289,50 @@ function test_rendering_title ()
 }
 
 
+function test_replace_calculations_in_text ()
+{
+    console. group("test_replace_calculations_in_text")
+
+    const id1 = uuid_v4_for_tests(1)
+
+    const dt = new Date("2023-08-14")
+    const ms = dt.getTime()
+
+    const creation_context: CreationContextState = {
+        use_creation_context: false,
+        creation_context: { label_ids: [] },
+    }
+
+    const wcomponents_by_id = {
+        [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `UK Homes` }, creation_context),
+        // [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }, creation_context),
+        // [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }, creation_context),
+    }
+
+    const knowledge_views_by_id = {}
+
+    const args: ReplaceIdsArgs = {
+        rich_text: true,
+        wcomponents_by_id,
+        knowledge_views_by_id,
+        wc_id_to_counterfactuals_map: undefined,
+        created_at_ms: ms,
+        sim_ms: ms,
+    }
+
+
+    let text = `
+$$!
+value: "@@${id1}"
+$$!
+`
+    let result = replace_ids_in_text({ ...args, text })
+    test(result, "", "Should replace calculation value ids with component value, title and hyperlink")
+
+    console. groupEnd()
+}
+
+
 
 export function run_get_rich_text_tests ()
 {
@@ -295,7 +340,9 @@ export function run_get_rich_text_tests ()
     // console. groupCollapsed("run_get_rich_text_tests")
     test_replace_ids_in_text()
     test_rendering_title()
+    test_replace_calculations_in_text()
     console. groupEnd()
 }
 
 // run_get_rich_text_tests()
+// test_replace_calculations_in_text()

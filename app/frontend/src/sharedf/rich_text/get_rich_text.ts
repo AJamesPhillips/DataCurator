@@ -1,16 +1,10 @@
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
-import { test } from "../../shared/utils/test"
-import type { CreationContextState } from "../../state/creation_context/state"
-import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
-import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type {
     WComponentsById,
     WComponent,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
-import { VAP_visual_false_id } from "../../wcomponent_derived/value_and_prediction/utils_to_convert_VAP_set_to_visuals"
 import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
 import type { ReplaceNormalIdsInTextArgs, ReplaceFunctionIdsInTextArgs } from "./interfaces"
 import { replace_calculations_with_results } from "./calculations/replace_calculations_with_results"
@@ -143,9 +137,9 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
         get_title: _get_title,
     }
 
+    text = replace_calculations_with_results(text, current_depth, args)
     text = replace_function_ids_in_text(text, current_depth, args)
     text = replace_normal_ids(text, current_depth, args)
-    text = replace_calculations_with_results(text, current_depth, args)
 
     return text
 }

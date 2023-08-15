@@ -42,11 +42,11 @@ export function replace_calculations_with_results (text: string, current_depth: 
 
 
 
-function test_replace_calculations_with_results ()
+function run_replace_calculations_with_results_tests ()
 {
     console. log("running tests of replace_calculations_with_results")
 
-    const id1 = "@@" + uuid_v4_for_tests(1)
+    const id1 = uuid_v4_for_tests(1)
     const args: ReplaceNormalIdsInTextArgs = {
         wcomponents_by_id: {},
         depth_limit: 2,
@@ -55,9 +55,14 @@ function test_replace_calculations_with_results ()
         get_title: () => "some title",
     }
 
-    let input_text = `$$! 123 $$!`
+    let input_text = `
+$$!
+value: "@@${id1}"
+$$!
+`
     let altered_text = replace_calculations_with_results(input_text, 1, args)
-    test(altered_text, "calculation 0", "Should replace calculations")
+    test(altered_text, `[27 million UK Homes](/${id1})`, "Should replace calculations")
 }
 
 
+run_replace_calculations_with_results_tests()

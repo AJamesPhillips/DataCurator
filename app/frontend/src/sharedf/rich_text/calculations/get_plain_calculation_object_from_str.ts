@@ -137,4 +137,4 @@ function run_tests ()
     test_get_plain_calculation_object_from_str()
 }
 
-run_tests()
+// run_tests()
