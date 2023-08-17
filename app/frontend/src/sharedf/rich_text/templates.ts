@@ -1,7 +1,7 @@
 
 
 // \u2717 --> ✗
-export const format_wcomponent_id_error = (root_url: string, id: string, error: string) => `\u2717${format_wcomponent_link(root_url, id, id)} (${error})`
+export const format_wcomponent_id_error = (text: string, error: string) => `\u2717${text} (${error})`
 
 
 export const format_wcomponent_url = (root_url: string, id: string, knowledge_view_id = "") => `${root_url}#wcomponents/${id}` + (knowledge_view_id ? `&subview_id=${knowledge_view_id}` : "") //&view=knowledge`
