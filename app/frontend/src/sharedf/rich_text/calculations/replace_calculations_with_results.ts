@@ -1,35 +1,25 @@
-import { get_calculations_from_text } from "./get_calculations_from_text"
+import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text"
+import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
+import { get_referenced_values } from "./get_referenced_values"
 import { ReplaceCalculationsWithResults } from "./interfaces"
 
 
 
 export function replace_calculations_with_results (text: string, args: ReplaceCalculationsWithResults)
 {
-    const calculations = get_calculations_from_text(text, args)
-    // if (calculations.length) console.log("calculations", calculations)
+    const calculation_strs = get_calculation_strs_from_text(text)
+
+    const plain_calculation_objects = calculation_strs.map(get_plain_calculation_object_from_str)
+
+    const calculation_object = plain_calculation_objects.map(o => get_referenced_values(o, args))
+
+    const calculations = calculation_object.map(o => (o.valid ? o.value_str : "error"))
 
     calculations.forEach((calculation, i) =>
     {
         const replacer = new RegExp(`\\$\\$\\!.*?\\$\\$\\!`, "s")
 
         text = text.replace(replacer, calculation)
-
-        // const referenced_wcomponent = args.wcomponents_by_id[calculation]
-        // if (!referenced_wcomponent)
-        // {
-        //     text = text.replace(replacer, format_wcomponent_id_error(root_url, calculation, "not found"))
-        //     return
-        // }
-
-
-        // const replacement_content = current_depth < depth_limit
-        //     ? get_title(referenced_wcomponent)
-        //     // Return id for ids which are too deep
-        //     : `@@${calculation}`
-
-        // const replacement_text = render_links ? format_wcomponent_link(root_url, calculation, replacement_content) : replacement_content
-
-        // text = text.replace(replacer, replacement_text)
     })
 
     return text
