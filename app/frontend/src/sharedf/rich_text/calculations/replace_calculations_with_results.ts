@@ -13,7 +13,10 @@ export function replace_calculations_with_results (text: string, args: ReplaceCa
 
     const calculation_object = plain_calculation_objects.map(o => get_referenced_values(o, args))
 
-    const calculations = calculation_object.map(o => (o.valid ? o.value_str : "error"))
+    const calculations = calculation_object.map(o => (o.valid
+        ? o.value_str
+        // Format it into code blocks to ensure spacing is correct for YAMLParse error
+        : "<code>" + (o.errors.join(", ") || "error") + "</code>"))
 
     calculations.forEach((calculation, i) =>
     {

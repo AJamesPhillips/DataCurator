@@ -35,6 +35,36 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
         }
         catch (e: any)
         {
+            let message = e.message as string
+            // This helps user debug issues as, for example, if they currently
+            // use unquoted ids like:
+            //
+            //     $$!
+            //     value: @@1235-uuidv4-id
+            //     $$!
+            //
+            // Then these ids are rendered in the YAMLParse error but without
+            // the following line of code they would then be replaced with a
+            // link to the wcomponent.
+            message = message.replaceAll("@@", "\\@\\@")
+            message = message.replaceAll(/^(?<replace>(?:\s\s)+)(?<post>\s?\^)/gm, (...args) =>
+            {
+                const { replace, post } = args[5]
+                const result = "&nbsp; ".repeat(replace.length / 2) + post
+                // Note there's something strange about the display of &nbsp;
+                // in <code> blocks in Firefox in that sometimes it looks like
+                // an extra space is included or ignored.
+                return result.replace("  ", " &nbsp;")
+            })
+
+            // Remove double newlines so that when placed into <code></code>
+            // blocks then markdown-to-jsx will not incorrectly break
+            // <code></code> block by inserting seperate <p></p> blocks
+            message = message.replaceAll("\n\n", "\n")
+
+            // mutate message of error object
+            e.message = message
+
             errors = [e]
             break
         }
@@ -54,7 +84,7 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 
 
-function test_get_plain_calculation_object_from_str ()
+export function test_get_plain_calculation_object_from_str ()
 {
     console. log("running tests of get_plain_calculation_object_from_str")
 
@@ -91,7 +121,7 @@ value: @@${id1}
     let invalid_YAML_error: YAMLParseError = {
         code: "BAD_SCALAR_START",
         linePos: [{ col: 8, line: 1 }, {col: 9, line: 1 }],
-        message: "Plain value cannot start with reserved character @ at line 1, column 8:\n\nvalue: @@10000000-0000-4000-a000-000000000000\n       ^\n",
+        message: "Plain value cannot start with reserved character @ at line 1, column 8:\nvalue: \\@\\@10000000-0000-4000-a000-000000000000\n&nbsp; &nbsp; &nbsp; &nbsp;^\n",
         name: "YAMLParseError",
         pos: [7, 8],
     }
@@ -115,11 +145,3 @@ value: 33
     test(plain_calculation_object, { valid: true, value: 33, name: "A" }, "Will find a name and value")
 }
 
-
-
-function run_tests ()
-{
-    test_get_plain_calculation_object_from_str()
-}
-
-// run_tests()
