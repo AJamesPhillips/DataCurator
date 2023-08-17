@@ -8,6 +8,7 @@ import { PlainCalculationObject } from "./interfaces"
 
 const CalculationObjectError = {
     empty_calculation: "Empty calculation object",
+    calculation_missing_value: "Calculation missing value attribute",
 }
 
 
@@ -74,6 +75,9 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 
         if (typeof parsed.name === "string") name = parsed.name
+
+
+        if (Number.isNaN(value)) errors.push(CalculationObjectError.calculation_missing_value)
 
     } while (false)
 

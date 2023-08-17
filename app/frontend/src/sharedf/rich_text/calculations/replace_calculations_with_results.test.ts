@@ -58,7 +58,7 @@ $$!
 $$!
 `
     expected_output_text = `
-error
+<code>Empty calculation object</code>
 `
     output_text = replace_calculations_with_results(input_text, args)
     test(output_text, expected_output_text, "Should error on finding no value in a calculations")
@@ -72,6 +72,20 @@ $$!
 `
     output_text = replace_calculations_with_results(input_text, args)
     test(output_text, expected_output_text, "Should find no calculations with unmatched calculation $$!")
+
+
+
+    input_text = `
+$$!
+calculation_of_something: A * B
+$$!
+`
+    expected_output_text = `
+<code>Calculation missing value attribute</code>
+`
+    ;(window as any).debug_now = true
+    output_text = replace_calculations_with_results(input_text, args)
+    test(output_text, expected_output_text, "Should error when calculation block is missing value")
 
 
     input_text = `
