@@ -137,8 +137,8 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
         get_title: _get_title,
     }
 
-    text = replace_calculations_with_results(text, current_depth, args)
     text = replace_function_ids_in_text(text, current_depth, args)
+    text = replace_calculations_with_results(text, current_depth, args)
     text = replace_normal_ids(text, current_depth, args)
 
     return text
