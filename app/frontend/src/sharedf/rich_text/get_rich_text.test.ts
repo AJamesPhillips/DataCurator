@@ -323,11 +323,11 @@ function test_replace_calculations_in_text ()
 
     let text = `
 $$!
-value: "@@${id1}"
+value: 123
 $$!
 `
     let result = replace_ids_in_text({ ...args, text })
-    test(result, "", "Should replace calculation value ids with component value, title and hyperlink")
+    test(result, "\n123\n", "Should replace calculation with string value")
 
     console. groupEnd()
 }

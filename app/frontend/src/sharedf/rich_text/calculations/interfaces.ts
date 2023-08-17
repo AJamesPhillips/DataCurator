@@ -1,5 +1,6 @@
 import { YAMLParseError } from "yaml"
 import { WComponentNodeStateV2 } from "../../../wcomponent/interfaces/state"
+import { ReplaceNormalIdsInTextArgs } from "../interfaces"
 
 
 
@@ -22,11 +23,12 @@ export type PlainCalculationObject = ValidPlainCalculationObject | InvalidPlainC
 
 
 
-interface ValidCalculationObject
+interface CompleteCalculationObject
 {
     valid: true
-    value: number | WComponentNodeStateV2
-    name?: string
+    name: string
+    value_str: string
+    value: number
 }
 
 interface InvalidCalculationObject
@@ -36,4 +38,12 @@ interface InvalidCalculationObject
 }
 
 
-export type CalculationObject = ValidCalculationObject | InvalidCalculationObject
+export type FullCalculationObject = CompleteCalculationObject | InvalidCalculationObject
+
+
+
+export interface ReplaceCalculationsWithResults extends ReplaceNormalIdsInTextArgs
+{
+    created_at_ms: number
+    sim_ms: number
+}
