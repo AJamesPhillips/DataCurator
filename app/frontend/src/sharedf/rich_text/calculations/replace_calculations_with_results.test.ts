@@ -97,7 +97,7 @@ calculation_of_something: A * B
 $$!
 `
         expected_output_text = `
-<code>Calculation missing value attribute</code><br /><br /> <code>Calculation missing value attribute</code>
+<code>Calculation missing value attribute</code><br /><br /><code>Calculation missing value attribute</code>
 `
     output_text = replace_calculations_with_results(input_text, args)
     test(output_text, expected_output_text, "Should insert breaks between calculation blocks that error and are represented by code blocks")

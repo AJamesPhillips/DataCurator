@@ -25,17 +25,24 @@ export function replace_calculations_with_results (text: string, args: ReplaceCa
         text = text.replace(replacer, calculation)
     })
 
-    // Ensure calculation code blocks (because they've errored) have a break
-    // between them if there's a newline between
-    // them.  For some reason the newlines are being deleted / ignored by other
-    // parts of our code or by markdown-to-jsx
+    // When a calculation has an error, we want to show the YAMLParse error to
+    // the user.  This needs to have a monospace font to correctly position the
+    // "^" character that highlights where in the calculation the offending
+    // parse error starts.  To do this we wrap the error in a code block.
+    // When two adjacent calculations both have errors, then even though there
+    // are newline characters between them, for some reason the newlines are
+    // being deleted / ignored by other parts of our code or by markdown-to-jsx
+    // The following code makes sure that adjacent "code" blocks have any
+    // newlines inbetween them converted into "<br />" which unlike
+    // the "\n" newline characters do not seem to get ignored / deleted on
+    // rendering from markdown to jsx.
     text = text.replaceAll(/<\/code>(\s*)<code>/gm, (...args) =>
     {
         const number_of_newlines = (args[1] as string).split("").filter(c => c === "\n").length
         const number_of_breaks = Math.max(number_of_newlines, 0)
         if (number_of_newlines)
         {
-            return "</code>" + "<br />".repeat(number_of_breaks) + " <code>"
+            return "</code>" + "<br />".repeat(number_of_breaks) + "<code>"
         }
         else return args[0]
     })
