@@ -46,7 +46,7 @@ export function add_newlines_to_markdown (text: string): string
 
 
 
-function run_tests ()
+export function run_add_newlines_to_markdown_tests ()
 {
     console. log("running tests of add_newlines_to_markdown")
 
@@ -150,5 +150,3 @@ some text
             test(prepared_text, expected_text, "Four prepended spaces for \`\`\` and normal text should stop <br> insertion")
     })
 }
-
-// run_tests()

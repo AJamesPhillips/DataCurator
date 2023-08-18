@@ -96,11 +96,25 @@ $$!
 calculation_of_something: A * B
 $$!
 `
-        expected_output_text = `
+    expected_output_text = `
 <code>Calculation missing value attribute</code><br /><br /><code>Calculation missing value attribute</code>
 `
     output_text = replace_calculations_with_results(input_text, args)
-    test(output_text, expected_output_text, "Should insert breaks between calculation blocks that error and are represented by code blocks")
+    test(output_text, expected_output_text, "Should insert breaks between calculations that error (and are therefore represented by code blocks)")
+
+
+    input_text = `
+$$!
+calculation_of_something: A * B
+$$! $$!
+calculation_of_something: A * B
+$$!
+`
+    expected_output_text = `
+<code>Calculation missing value attribute</code>&nbsp; <code>Calculation missing value attribute</code>
+`
+    output_text = replace_calculations_with_results(input_text, args)
+    test(output_text, expected_output_text, "Should insert two spaces (including one &nbsp;) between calculations that have a space between them and that also error (and are therefore represented by code blocks)")
 
 
     input_text = `

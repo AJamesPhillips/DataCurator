@@ -1,7 +1,7 @@
 import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text"
 import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
 import { get_referenced_values } from "./get_referenced_values"
-import { ReplaceCalculationsWithResults } from "./interfaces"
+import { FullCalculationObject, ReplaceCalculationsWithResults } from "./interfaces"
 
 
 
@@ -13,18 +13,32 @@ export function replace_calculations_with_results (text: string, args: ReplaceCa
 
     const calculation_object = plain_calculation_objects.map(o => get_referenced_values(o, args))
 
-    const calculations = calculation_object.map(o => (o.valid
-        ? o.value_str
-        // Format it into code blocks to ensure spacing is correct for YAMLParse error
-        : "<code>" + (o.errors.join(", ") || "error") + "</code>"))
+    const calculation_strings_for_presentation = calculation_object.map(format_calculations_for_presentation)
 
-    calculations.forEach((calculation, i) =>
+    calculation_strings_for_presentation.forEach((calculation, i) =>
     {
         const replacer = new RegExp(`\\$\\$\\!.*?\\$\\$\\!`, "s")
 
         text = text.replace(replacer, calculation)
     })
 
+    text = apply_markdown_tweaks(text)
+
+    return text
+}
+
+
+function format_calculations_for_presentation (o: FullCalculationObject)
+{
+    return o.valid
+        ? o.value_str
+        // Format it into code blocks to ensure spacing is correct for YAMLParse error
+        : "<code>" + (o.errors.join(", ") || "error") + "</code>"
+}
+
+
+function apply_markdown_tweaks (text: string): string
+{
     // When a calculation has an error, we want to show the YAMLParse error to
     // the user.  This needs to have a monospace font to correctly position the
     // "^" character that highlights where in the calculation the offending
@@ -47,13 +61,19 @@ export function replace_calculations_with_results (text: string, args: ReplaceCa
         else return args[0]
     })
 
-    // // Ensure code blocks have correct space between them
-    // text = text.replaceAll(/<\/code>( *)<code>/gm, (...args) =>
-    // {
-    //     const number_of_spaces = args[1].length
-    //     const number_of_nbsp_and_space = Math.ceil(Math.max(number_of_spaces, 1) / 2)
-    //     return "</code>" + "&nbsp; ".repeat(number_of_nbsp_and_space) + " <code>"
-    // })
+    // Ensure code blocks have "correct" space between them, however it is not
+    // the same number of spaces because again something strange in the
+    // formatting is happening where one or more normal spaces are being ignored
+    // so we have to use at least one &nbsp; to force markdown-to-jsx (or some
+    // other part of our code fudges) to display a space between two errored
+    // calculation blocks
+    text = text.replaceAll(/<\/code>( *)<code>/gm, (...args) =>
+    {
+        const number_of_spaces = args[1].length
+        const number_of_nbsp_and_space = Math.ceil(Math.max(number_of_spaces, 0) / 2)
+        const spaces = "&nbsp; ".repeat(number_of_nbsp_and_space)
+        return "</code>" + spaces + "<code>"
+    })
 
     return text
 }
