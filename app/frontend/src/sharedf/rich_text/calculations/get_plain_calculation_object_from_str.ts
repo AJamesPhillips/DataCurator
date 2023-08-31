@@ -7,7 +7,7 @@ import { PlainCalculationObject } from "./interfaces"
 
 
 const CalculationObjectError = {
-    empty_calculation: "Empty calculation object",
+    empty_calculation: "Empty calculation",
     calculation_missing_value: "Calculation missing value attribute",
 }
 
@@ -90,11 +90,11 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 export function run_get_plain_calculation_object_from_str_tests ()
 {
-    console. log("running tests of get_plain_calculation_object_from_str")
+    console. group("running tests of get_plain_calculation_object_from_str")
 
     let str = "  "
     let plain_calculation_object = get_plain_calculation_object_from_str(str)
-    test(plain_calculation_object, { valid: false, errors: ["Empty calculation object"] }, "Should find an invalid calculation object when empty string")
+    test(plain_calculation_object, { valid: false, errors: ["Empty calculation"] }, "Should find an invalid calculation object when empty string")
 
 
     str = "value: 10"
@@ -147,5 +147,7 @@ value: 33
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
     test(plain_calculation_object, { valid: true, value: 33, name: "A" }, "Will find a name and value")
+
+    console. groupEnd()
 }
 
