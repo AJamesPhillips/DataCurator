@@ -17,7 +17,7 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
     calculation_str = calculation_str.trim()
 
     let valid = true
-    let value = Number.NaN
+    let value: string | number = Number.NaN
     let name: undefined | string = undefined
     let errors: (string | YAMLParseError)[] = []
 
@@ -70,8 +70,10 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
             break
         }
 
-        if (typeof parsed.value === "number") value = parsed.value
-        else if (typeof parsed.value === "string") value = parsed.value
+
+        const parsed_value = parsed.value
+        if (typeof parsed_value === "number") value = parsed_value
+        else if (typeof parsed_value === "string") value = parsed_value
 
 
         if (typeof parsed.name === "string") name = parsed.name
