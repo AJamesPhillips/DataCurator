@@ -140,6 +140,7 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
 
                 <div
                     className="expansion_button"
+                    title={internal__expanded ? "Collapse" : "Expand"}
                     onClick={() => this.setState({ internal__expanded: !internal__expanded })}
                 />
             </div>
