@@ -2,6 +2,7 @@ import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text
 import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
 import { get_referenced_values } from "./get_referenced_values"
 import { FullCalculationObject, ReplaceCalculationsWithResults } from "./interfaces"
+// import { parse_calculation_equations } from "./parse_calculation_equations"
 
 
 
@@ -11,9 +12,13 @@ export function replace_calculations_with_results (text: string, args: ReplaceCa
 
     const plain_calculation_objects = calculation_strs.map(get_plain_calculation_object_from_str)
 
-    const calculation_object = plain_calculation_objects.map(o => get_referenced_values(o, args))
+    const calculation_objects = plain_calculation_objects.map(o => get_referenced_values(o, args))
 
-    const calculation_strings_for_presentation = calculation_object.map(format_calculations_for_presentation)
+    // const prepared_calculation_objects = parse_calculation_equations(calculation_objects)
+
+    // const computed_calculation_object = perform_calculations(prepared_calculation_objects)
+
+    const calculation_strings_for_presentation = calculation_objects.map(format_calculations_for_presentation)
 
     calculation_strings_for_presentation.forEach((calculation, i) =>
     {
