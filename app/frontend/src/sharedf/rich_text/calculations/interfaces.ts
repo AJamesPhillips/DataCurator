@@ -11,26 +11,6 @@ interface ValidPlainCalculationObject
     name?: string
 }
 
-interface InvalidPlainCalculationObject
-{
-    valid: false
-    errors: (string | YAMLParseError)[]
-}
-
-
-export type PlainCalculationObject = ValidPlainCalculationObject | InvalidPlainCalculationObject
-
-
-
-
-interface CompleteCalculationObject
-{
-    valid: true
-    name: string
-    value_str: string
-    value: number
-}
-
 interface InvalidCalculationObject
 {
     valid: false
@@ -38,7 +18,36 @@ interface InvalidCalculationObject
 }
 
 
-export type FullCalculationObject = CompleteCalculationObject | InvalidCalculationObject
+export type PlainCalculationObject = ValidPlainCalculationObject | InvalidCalculationObject
+
+
+
+
+interface _FullCalculationObject
+{
+    valid: true
+    name: string
+    value_str: string
+    value: number
+}
+
+
+export type FullCalculationObject = _FullCalculationObject | InvalidCalculationObject
+
+
+
+interface _ParsedCalculationObject
+{
+    valid: true
+    name: string
+    value_str: string
+    value: number
+    needs_computing: boolean
+}
+
+
+export type ParsedCalculationObject = _ParsedCalculationObject | InvalidCalculationObject
+
 
 
 

@@ -43,7 +43,7 @@ export function get_referenced_values (calculation: PlainCalculationObject, args
             },
         }
 
-        value = -1
+        value = Number.NaN
         // value = get_wcomponent_state_value_and_probabilities({
         //     wcomponent: wc
         //     VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
