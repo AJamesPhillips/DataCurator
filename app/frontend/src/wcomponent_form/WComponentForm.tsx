@@ -77,6 +77,7 @@ import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./t
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { perform_calculation } from "../calculations/perform_calculation"
 
 
 
@@ -197,6 +198,9 @@ function _WComponentForm (props: Props)
 
     const title = get_title({ rich_text: !force_editable, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
+
+
+    perform_calculation()
 
 
     return <Box>

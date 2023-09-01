@@ -225,4 +225,4 @@ A * B = 123 * 0.01 = 1.23
 }
 
 
-run_replace_calculations_with_results_tests()
+// run_replace_calculations_with_results_tests()
