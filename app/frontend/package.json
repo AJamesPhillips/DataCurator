@@ -40,6 +40,7 @@
     "markdown-to-jsx": "7.2.1",
     "preact": "10.5.7",
     "react-redux": "7.2.2",
+    "simulation": "3.0.0",
     "uuid": "8.3.2",
     "yaml": "2.3.1"
   },
