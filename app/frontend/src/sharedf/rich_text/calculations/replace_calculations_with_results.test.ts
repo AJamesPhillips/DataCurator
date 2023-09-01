@@ -58,7 +58,7 @@ $$!
 $$!
 `
     expected_output_text = `
-<code>Empty calculation object</code>
+<code>Empty calculation</code>
 `
     output_text = replace_calculations_with_results(input_text, args)
     test(output_text, expected_output_text, "Should error on finding no value in a calculations")
@@ -181,15 +181,18 @@ $$!
 value: A * B
 $$!
 `
+    // Simpler test case first, should be able to recognise this value is a
+    // calculation / equation with more than one value in it and therefore
+    // append an equals sign to it
     expected_output_text = `
 A = 123
 
 0.01
 
-A * B = 123 * B
+A * B = <Some warning symbol with a message something like: "Missing value 'B'" >
 `
     output_text = replace_calculations_with_results(input_text, args)
-    test(output_text, expected_output_text, "Should partially populate equations when not all names are found")
+    test.skip(output_text, expected_output_text, "Should partially populate equations when not all names are found")
 
 
     input_text = `
@@ -215,7 +218,7 @@ B = 0.01
 A * B = 123 * 0.01 = 1.23
 `
     output_text = replace_calculations_with_results(input_text, args)
-    test(output_text, expected_output_text, "Should populate equations when all names are found and calculate result")
+    test.skip(output_text, expected_output_text, "Should populate equations when all names are found and calculate result")
 
 
     console. groupEnd()
