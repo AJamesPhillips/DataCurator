@@ -45,7 +45,7 @@
     "yaml": "2.3.1"
   },
   "devDependencies": {
-    "@prefresh/snowpack": "2.0.1",
+    "@prefresh/snowpack": "3.2.0",
     "@snowpack/plugin-dotenv": "2.0.5",
     "@snowpack/plugin-sass": "1.4.0",
     "@snowpack/plugin-typescript": "1.1.1",
