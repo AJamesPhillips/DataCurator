@@ -29,7 +29,7 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 }
 
 
-export function describe (description: string, test_fn: () => undefined)
+export function describe (description: string, test_fn: () => void)
 {
     console.log(description)
     test_fn()
