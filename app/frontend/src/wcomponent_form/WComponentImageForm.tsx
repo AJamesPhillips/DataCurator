@@ -1,8 +1,11 @@
-import { Box, FormControl, FormControlLabel, TextField } from "@mui/material"
+import { TextField } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import type { WComponent } from "src/wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "src/state/State"
+
+import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { RootState } from "../state/State"
+
+
 interface OwnProps
 {
     wcomponent: WComponent
@@ -18,8 +21,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 export function _WComponentImageForm(props: Props)
 {
-    const { wcomponent, upsert_wcomponent } = props;
-    const summary_image = wcomponent.summary_image || undefined;
+    const { wcomponent, upsert_wcomponent } = props
+    const summary_image = wcomponent.summary_image || undefined
 
     // http://upload.wikimedia.org/wikipedia/commons/e/ec/Short-horned_chameleon_%28Calumma_brevicorne%29_female_Andasibe.jpg
     return (

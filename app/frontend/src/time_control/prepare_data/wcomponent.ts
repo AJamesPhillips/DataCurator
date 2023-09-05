@@ -109,7 +109,7 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
         create_event(new Date(locked_max_ms), type)
         create_event(new Date(locked_min_ms - 86400000), type)
         create_event(new Date(locked_max_ms + 86400000), type)
-    });
+    })
 
 
     created_events.sort(sort_by_datetime)

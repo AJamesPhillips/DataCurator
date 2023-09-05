@@ -92,6 +92,7 @@ function _ViewsBreadcrumb (props: Props)
     return <Breadcrumbs>
         <Box>
             <Select
+                variant="standard"
                 label={<Typography noWrap={true}>View Type:</Typography>}
                 name="select_view"
                 // onChange={e => navigate_view(e, props) }

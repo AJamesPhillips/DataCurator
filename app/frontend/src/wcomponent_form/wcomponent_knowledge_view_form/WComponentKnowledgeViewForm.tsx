@@ -88,7 +88,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry?.frame_height !== undefined)
 
     return <div>
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
                 <Slider
                     color="secondary"
@@ -107,7 +107,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Frame</FormLabel>
                 <p>
                     <Button

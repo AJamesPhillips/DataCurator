@@ -1,17 +1,17 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../state/State"
-import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { FormControl, FormLabel } from "@mui/material"
+
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import type { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
-import { SortDirection, sort_list } from "../shared/utils/sort"
-import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { is_defined } from "../shared/utils/is_defined"
-import { useMemo } from "preact/hooks"
+import { sort_list, SortDirection } from "../shared/utils/sort"
+import { RootState } from "../state/State"
+import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponentNodeAction } from "../wcomponent/interfaces/action"
+import { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 
 
 
@@ -73,7 +73,7 @@ function _WComponentParentGoalOrActionForm (props: Props)
     })
 
 
-    return <FormControl component="fieldset" fullWidth={true} margin="normal">
+    return <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
         <FormLabel component="legend">Parent Goal (or Action)</FormLabel>
         <MultiAutocompleteText
             placeholder="Add Label"

@@ -219,7 +219,11 @@ function _WComponentForm (props: Props)
             Is part of base "{props.base_for_wcomponent?.title}"
         </div>}
 
-        <FormControl fullWidth={true} margin="normal" style={{ fontWeight: 600, fontSize: 22 }}>
+        <FormControl
+            variant="standard"
+            fullWidth={true}
+            margin="normal"
+            style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
                 force_editable={force_editable}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
@@ -242,10 +246,11 @@ function _WComponentForm (props: Props)
         </span>}
 
 
-        {// If it is a state component then when not editing & no actual state values, then hide
-         // the entry  i.e. simplify the entry to just pretend it's a typeless component
+        {
+            // If it is a state component then when not editing & no actual state values, then hide
+            // the entry  i.e. simplify the entry to just pretend it's a typeless component
         }
-        {(force_editable || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(force_editable || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
             {// Keep up to date in WComponentMultipleForm
             }
             <AutocompleteText
@@ -288,7 +293,7 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(force_editable || wcomponent.description) && <FormControl fullWidth={true} margin="normal">
+        {(force_editable || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">
             <EditableText
                 force_editable={force_editable}
                 placeholder="Description..."
@@ -394,7 +399,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {(force_editable || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl component="fieldset" fullWidth={true} margin="normal">
+        {(force_editable || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
             <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
@@ -510,7 +515,7 @@ function _WComponentForm (props: Props)
         <br />
         <br />
 
-        <FormControl fullWidth={true}>
+        <FormControl variant="standard" fullWidth={true}>
             <EditableCustomDateTime
                 force_editable={force_editable}
                 title="Created at"

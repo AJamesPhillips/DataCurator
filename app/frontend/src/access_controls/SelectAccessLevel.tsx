@@ -42,6 +42,7 @@ export function SelectAccessLevelDropDown (props: SelectAccessLevelDropDownProps
     const levels: ACCESS_CONTROL_LEVEL[] = ["editor", "viewer", "none"]
 
     return <Select
+        variant="standard"
         disabled={props.disabled}
         value={props.current_level}
         title={props.title || "Select access level"}

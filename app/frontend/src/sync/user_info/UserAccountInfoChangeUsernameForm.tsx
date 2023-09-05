@@ -80,7 +80,7 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
     return <FormGroup className="section">
         <Box className={classes.root}>
 
-            <FormControl>
+            <FormControl variant="standard">
                 <TextField
                     disabled={is_saving}
                     onChange={(e: h.JSX.TargetedEvent<HTMLInputElement>) =>

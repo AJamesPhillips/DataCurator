@@ -3,9 +3,9 @@
 export{}
 declare global {
     interface Array<T> {
-        first (): T | undefined;
-        last (): T | undefined;
-        find_last (predicate: (t: T) => boolean): T | undefined;
+        first (): T | undefined
+        last (): T | undefined
+        find_last (predicate: (t: T) => boolean): T | undefined
     }
 
     interface String {

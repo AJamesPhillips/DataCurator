@@ -262,6 +262,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         style={props.extra_styles}
     >
         <TextField
+            variant="standard"
             disabled={props.force_editable !== undefined ? !props.force_editable : props.presenting}
             ref={((el: HTMLDivElement) =>
             {

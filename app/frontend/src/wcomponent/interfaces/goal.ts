@@ -1,4 +1,4 @@
-import type { HasObjectives } from "./judgement";
+import type { HasObjectives } from "./judgement"
 import type { WComponentNodeBase } from "./wcomponent_base"
 
 

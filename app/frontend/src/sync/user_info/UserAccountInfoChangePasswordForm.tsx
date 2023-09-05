@@ -77,7 +77,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
         {need_to_handle_password_recovery && <p>Please set a new password.</p>}
 
         <Box className={classes.root}>
-            <FormControl>
+            <FormControl variant="standard">
                 <TextField
                     inputProps={{
                         type: "password",

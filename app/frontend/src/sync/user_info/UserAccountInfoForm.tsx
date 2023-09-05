@@ -93,7 +93,7 @@ function _UserAccountInfoForm (props: Props)
         return <UserAccountInfoChangeUsernameForm on_close={() => set_form_state("initial")} />
     }
 
-    const classes = use_styles();
+    const classes = use_styles()
     return <Box className={classes.root}>
         <Box className={`${classes.section} ${classes.logout_section} section`}>
                 <p>

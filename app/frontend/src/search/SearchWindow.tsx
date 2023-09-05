@@ -33,7 +33,7 @@ export function SearchWindow (props: OwnProps)
     const [search_fields, set_search_fields] = useState<SearchFields>("all")
     const [search_type, set_search_type] = useState<SearchType>("best")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
-    const [is_accordion_open, set_is_accordion_open] = useState<boolean>(false);
+    const [is_accordion_open, set_is_accordion_open] = useState<boolean>(false)
     const warning_icon_basic_search =  <WarningIcon  titleAccess="You might be getting sub optimal search results!" style={{ color: yellow[600] }}  />
     const is_default_search = () => (search_type == "best" && search_fields == "all")
 
@@ -42,7 +42,7 @@ export function SearchWindow (props: OwnProps)
         title={props.search_window_title}
         child={<Box p={5}>
             <Accordion onChange={(e, expanded) => {
-                set_is_accordion_open(expanded);
+                set_is_accordion_open(expanded)
             }}>
                 <AccordionSummary expandIcon={(!is_default_search() && !is_accordion_open) ? warning_icon_basic_search : <ExpandMoreIcon /> }>
                     <Typography component="h2">
@@ -54,7 +54,7 @@ export function SearchWindow (props: OwnProps)
                     <Box width={1}>
                         <Box display="flex" justifyContent="flex-start" alignItems="stretch">
                             <Box mr={10} flexGrow={1} flexShrink={0}>
-                                <FormControl component="fieldset" fullWidth={true}>
+                                <FormControl variant="standard" component="fieldset" fullWidth={true}>
                                     <FormLabel component="legend">Search Type: </FormLabel>
                                     <RadioGroup
                                         name="search_type"
@@ -68,7 +68,7 @@ export function SearchWindow (props: OwnProps)
                                 </FormControl>
                             </Box>
                             <Box mr={10} flexGrow={1} flexShrink={0}>
-                                <FormControl component="fieldset" fullWidth={true}>
+                                <FormControl variant="standard" component="fieldset" fullWidth={true}>
                                     <FormLabel component="legend">Search Over: </FormLabel>
                                     <RadioGroup
                                         name="search_fields"
@@ -85,8 +85,8 @@ export function SearchWindow (props: OwnProps)
                                     variant="contained"
                                     color="primary"
                                     onClick={() => {
-                                        set_search_type('best');
-                                        set_search_fields('all');
+                                        set_search_type("best")
+                                        set_search_fields("all")
                                     }}
                                     endIcon={<RefreshIcon />}
                                 >

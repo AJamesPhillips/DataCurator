@@ -3,27 +3,27 @@ import type { TimeResolution } from "./datetime"
 
 
 // Copied from: https://github.com/AJamesPhillips/utils-ts/blob/0.3.0/ts/stored.ts#L4
-export function parse_date(value: Date | string): Date;
-export function parse_date(value: Date | string | undefined): Date | undefined;
-export function parse_date(value: Date | string | null): Date | null;
+export function parse_date(value: Date | string): Date
+export function parse_date(value: Date | string | undefined): Date | undefined
+export function parse_date(value: Date | string | null): Date | null
 export function parse_date(value: Date | string | undefined | null): Date | null | undefined {
     return (typeof value === "string") ? new Date(value.toString()) : value
 }
 
 
 export function time_ago_in_words (from_date: Date, include_seconds: boolean = false) {
-    return distance_of_time_in_words(from_date, new Date(), {include_seconds, include_tense: true});
+    return distance_of_time_in_words(from_date, new Date(), {include_seconds, include_tense: true})
 }
 
 interface Options {
-    include_seconds: boolean;
-    include_tense: boolean;
+    include_seconds: boolean
+    include_tense: boolean
 }
 
 const default_options = {
     include_seconds: true,
     include_tense: true,
-};
+}
 
 /**
  * Adapted from: https://gist.github.com/sulf/1157909/62a16f4c8204022b8f6d40716b81eef39ded6850
