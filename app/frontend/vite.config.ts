@@ -8,7 +8,7 @@ export default defineConfig({
       plugins: [
         // Adding this seems to silence a material-ui error about:
         // `Following component has two or more children with the same key attribute: "1633093980000"`
-        // ["@babel/plugin-transform-react-jsx-source"]
+        ["@babel/plugin-transform-react-jsx-source"]
       ]
     }
   })],
