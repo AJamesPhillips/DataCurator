@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
+import { styled } from "@mui/material/styles"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
-import makeStyles from "@mui/styles/makeStyles"
 import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"
@@ -10,6 +10,37 @@ import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
+
+
+const PREFIX = 'UserAccountInfoChangePasswordForm';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    update_button_container: `${PREFIX}-update_button_container`,
+    update_button: `${PREFIX}-update_button`
+};
+
+const Root = styled('wnProps')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
+        display:"flex",
+        justifyContent: "flex-start", alignContent: "center",
+    },
+
+    [`& .${classes.update_button_container}`]: {
+        flexGrow: 1,
+        textAlign: "left",
+        marginLeft: 15,
+    },
+
+    [`& .${classes.update_button}`]: {
+        borderTopLeftRadius: 0,
+        borderBottomLeftRadius:0,
+    }
+}));
 
 
 interface OwnProps {
@@ -121,20 +152,26 @@ function _UserAccountInfoChangePasswordForm (props: Props)
     </FormGroup>
 }
 
-const use_styles = makeStyles(theme => ({
-    root: {
+const use_styles = makeStyles((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
         display:"flex",
         justifyContent: "flex-start", alignContent: "center",
     },
-    update_button_container: {
+
+    [`& .${classes.update_button_container}`]: {
         flexGrow: 1,
         textAlign: "left",
         marginLeft: 15,
     },
-    update_button: {
+
+    [`& .${classes.update_button}`]: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius:0,
-    },
+    }
 }))
 
 export const UserAccountInfoChangePasswordForm = connector(_UserAccountInfoChangePasswordForm) as FunctionalComponent<OwnProps>

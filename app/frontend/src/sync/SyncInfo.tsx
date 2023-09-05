@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material"
-import makeStyles from "@mui/styles/makeStyles"
+import { styled } from "@mui/material/styles"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import SaveIcon from "@mui/icons-material/Save"
@@ -11,6 +11,44 @@ import { save_state } from "../state/sync/utils/save_state"
 import { ACTIONS } from "../state/actions"
 import { get_store } from "../state/store"
 import { is_defined } from "../shared/utils/is_defined"
+
+
+
+const PREFIX = 'SyncInfo';
+
+const classes = {
+    button: `${PREFIX}-button`,
+    animate: `${PREFIX}-animate`,
+    initially_hidden: `${PREFIX}-initially_hidden`,
+    initially_shown: `${PREFIX}-initially_shown`
+};
+
+const Root = styled('}')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.button}`]: {
+        textTransform: "none",
+        "&:hover .show": { fontSize: 0 },
+        "&:focus .show": { fontSize: 0 },
+        "&:hover .hide": { fontSize: "initial" },
+        "&:focus .hide": { fontSize: "initial" }
+    },
+
+    [`& .${classes.animate}`]: {
+        transitionProperty: "all",
+        transitionDuration: "0.23s"
+    },
+
+    [`& .${classes.initially_hidden}`]: {
+        fontSize: 0,
+    },
+
+    [`& .${classes.initially_shown}`]: {
+        fontSize: "initial",
+    }
+}));
 
 
 
@@ -93,23 +131,29 @@ export const SyncInfo = connector(_SyncInfo) as FunctionalComponent<{}>
 
 
 
-const use_styles = makeStyles(theme => ({
-    button: {
+const use_styles = makeStyles((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.button}`]: {
         textTransform: "none",
         "&:hover .show": { fontSize: 0 },
         "&:focus .show": { fontSize: 0 },
         "&:hover .hide": { fontSize: "initial" },
         "&:focus .hide": { fontSize: "initial" }
     },
-    animate: {
+
+    [`& .${classes.animate}`]: {
         transitionProperty: "all",
         transitionDuration: "0.23s"
     },
 
-    initially_hidden: {
+    [`& .${classes.initially_hidden}`]: {
         fontSize: 0,
     },
-    initially_shown: {
+
+    [`& .${classes.initially_shown}`]: {
         fontSize: "initial",
     }
 }))

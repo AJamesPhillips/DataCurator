@@ -1,7 +1,6 @@
 import { h } from "preact"
+import { styled } from "@mui/material/styles"
 import { Card, CardContent, CardMedia } from "@mui/material"
-
-import makeStyles from "@mui/styles/makeStyles"
 
 import "./ConnectableCanvasNode.scss"
 import { CanvasNode } from "./CanvasNode"
@@ -11,6 +10,27 @@ import type {
     ConnectionTerminalType,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { connection_radius, Terminal } from "./connections/terminal"
+
+
+
+const PREFIX = 'ConnectableCanvasNode';
+
+const classes = {
+    image: `${PREFIX}-image`
+};
+
+const StyledCanvasNode = styled(CanvasNode)((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.image}`]: {
+        maxHeight: "200px",
+        maxWidth: "100%",
+        margin: "0 auto",
+        width: "initial",
+    }
+}));
 
 
 
@@ -74,72 +94,78 @@ export function ConnectableCanvasNode (props: OwnProps)
     const classes = use_styles()
 
 
-    return <CanvasNode
-        position={props.position}
-        on_pointer_down={props.on_pointer_down}
-        on_pointer_up={props.on_pointer_up}
-        on_click={props.on_click}
-        on_pointer_enter={props.on_pointer_enter}
-        on_pointer_leave={props.on_pointer_leave}
-        extra_css_class={extra_css_class}
-        extra_styles={extra_node_styles}
-        extra_args={props.extra_args}
-    >
-    {/* <Box className="node_main_content" style={main_content_styles}> */}
-        <Card
-            className={"node_main_content " + (props.extra_css_class_node_main_content || "")}
-            variant="outlined" style={main_content_styles}
+    return (
+        <StyledCanvasNode
+            position={props.position}
+            on_pointer_down={props.on_pointer_down}
+            on_pointer_up={props.on_pointer_up}
+            on_click={props.on_click}
+            on_pointer_enter={props.on_pointer_enter}
+            on_pointer_leave={props.on_pointer_leave}
+            extra_css_class={extra_css_class}
+            extra_styles={extra_node_styles}
+            extra_args={props.extra_args}
         >
-            {(props.cover_image) && <CardMedia component="img"
-                image={props.cover_image}
-                className={classes.image}
-                onContextMenu={(e: h.JSX.TargetedMouseEvent<HTMLImageElement>) =>
-                {
-                    // This allows the right click default action to happen and offer users the
-                    // menu to open the image in a new tab
-                    e.stopImmediatePropagation()
-                }}
-            />}
-            <CardContent
-                // manually set padding to 16 as material-ui gives last child padding-bottom of 24px
-                style={{ padding: 16 }}
+        {/* <Box className="node_main_content" style={main_content_styles}> */}
+            <Card
+                className={"node_main_content " + (props.extra_css_class_node_main_content || "")}
+                variant="outlined" style={main_content_styles}
             >
-                {props.node_main_content}
-            </CardContent>
-
-            {props.terminals.map(({ type, style, label }) =>
-            {
-                return <div
-                    className="connection_terminal"
-                    style={{ ...connection_style_common, ...style }}
-                    onPointerDown={e =>
+                {(props.cover_image) && <CardMedia component="img"
+                    image={props.cover_image}
+                    className={classes.image}
+                    onContextMenu={(e: h.JSX.TargetedMouseEvent<HTMLImageElement>) =>
                     {
-                        e.stopPropagation()
-                        pointerupdown_on_connection_terminal(type, "down")
+                        // This allows the right click default action to happen and offer users the
+                        // menu to open the image in a new tab
+                        e.stopImmediatePropagation()
                     }}
-                    onPointerUp={e =>
-                    {
-                        e.stopPropagation()
-                        pointerupdown_on_connection_terminal(type, "up")
-                    }}
-                >{label}</div>
-            })}
-        </Card>
-    {/* </Box> */}
+                />}
+                <CardContent
+                    // manually set padding to 16 as material-ui gives last child padding-bottom of 24px
+                    style={{ padding: 16 }}
+                >
+                    {props.node_main_content}
+                </CardContent>
 
-        {props.other_children}
-    </CanvasNode>
+                {props.terminals.map(({ type, style, label }) =>
+                {
+                    return <div
+                        className="connection_terminal"
+                        style={{ ...connection_style_common, ...style }}
+                        onPointerDown={e =>
+                        {
+                            e.stopPropagation()
+                            pointerupdown_on_connection_terminal(type, "down")
+                        }}
+                        onPointerUp={e =>
+                        {
+                            e.stopPropagation()
+                            pointerupdown_on_connection_terminal(type, "up")
+                        }}
+                    >{label}</div>
+                })}
+            </Card>
+        {/* </Box> */}
+
+            {props.other_children}
+        </StyledCanvasNode>
+    );
 }
 
 
 
-const use_styles = makeStyles(theme => ({
-    image: {
+const use_styles = makeStyles((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.image}`]: {
         maxHeight: "200px",
         maxWidth: "100%",
         margin: "0 auto",
         width: "initial",
-    },
+    }
 }))
 
 

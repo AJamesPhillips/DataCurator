@@ -1,12 +1,29 @@
 import { FunctionalComponent, h } from "preact"
+import { styled } from "@mui/material/styles"
 import { IconButton, Tooltip } from "@mui/material"
-import makeStyles from "@mui/styles/makeStyles"
 import FilterTiltShift from "@mui/icons-material/FilterTiltShift"
 
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
 import { active_warning_styles } from "./active_warning_common"
 import { ACTIONS } from "../state/actions"
+
+
+
+const PREFIX = "ActiveFocusedMode"
+
+const classes = {
+    warning_icon: `${PREFIX}-warning_icon`
+};
+
+const Root = styled("ActiveFocusedMode")((
+    {
+        theme
+    }
+) => ({
+    // warning_button: {},
+    [`& .${classes.warning_icon}`]: { color: theme.palette.primary.main }
+}));
 
 
 
@@ -48,7 +65,11 @@ export const ActiveFocusedMode = connector(_ActiveFocusedMode) as FunctionalComp
 
 
 
-const inactive_warning_styles = makeStyles(theme => ({
+const inactive_warning_styles = makeStyles((
+    {
+        theme
+    }
+) => ({
     // warning_button: {},
-    warning_icon: { color: theme.palette.primary.main }
+    [`& .${classes.warning_icon}`]: { color: theme.palette.primary.main }
 }))

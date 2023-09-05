@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
+import { styled } from "@mui/material/styles"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, Typography } from "@mui/material"
-import makeStyles from "@mui/styles/makeStyles"
 import LogoutIcon from "@mui/icons-material/ExitToApp"
 import type { ApiError } from "@supabase/supabase-js"
 
@@ -14,6 +14,46 @@ import { save_and_optionally_signout } from "../../state/user_info/signout"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 import { UserAccountInfoChangePasswordForm } from "./UserAccountInfoChangePasswordForm"
 import { UserAccountInfoChangeUsernameForm } from "./UserAccountInfoChangeUsernameForm"
+
+
+
+const PREFIX = 'UserAccountInfoForm';
+
+const classes = {
+    root: `${PREFIX}-root`,
+    section: `${PREFIX}-section`,
+    logout_section: `${PREFIX}-logout_section`,
+    button: `${PREFIX}-button`,
+    label: `${PREFIX}-label`
+};
+
+const Root = styled('wnProps')((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
+        margin: 5,
+    },
+
+    [`& .${classes.section}`]: {
+        display:"flex",
+        justifyContent:"space-between",
+        alignItems:"center",
+    },
+
+    [`& .${classes.logout_section}`]: {
+        flexBasis:"100%",
+    },
+
+    [`& .${classes.button}`]: {
+        marginBottom: 5,
+    },
+
+    [`& .${classes.label}`]: {
+        marginBottom:10,
+    }
+}));
 
 
 
@@ -42,22 +82,30 @@ const map_dispatch = {
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
-const use_styles = makeStyles(theme => ({
-    root: {
+const use_styles = makeStyles((
+    {
+        theme
+    }
+) => ({
+    [`& .${classes.root}`]: {
         margin: 5,
     },
-    section: {
+
+    [`& .${classes.section}`]: {
         display:"flex",
         justifyContent:"space-between",
         alignItems:"center",
     },
-    logout_section: {
+
+    [`& .${classes.logout_section}`]: {
         flexBasis:"100%",
     },
-    button: {
+
+    [`& .${classes.button}`]: {
         marginBottom: 5,
     },
-    label: {
+
+    [`& .${classes.label}`]: {
         marginBottom:10,
     }
 }))
