@@ -33,8 +33,8 @@ export function SearchWindow (props: OwnProps)
     const [search_fields, set_search_fields] = useState<SearchFields>("all")
     const [search_type, set_search_type] = useState<SearchType>("best")
     const [search_type_used, set_search_type_used] = useState<SearchType | undefined>(undefined)
-    const [is_accordion_open, set_is_accordion_open] = useState<boolean>(false)
-    const warning_icon_basic_search =  <WarningIcon  titleAccess="You might be getting sub optimal search results!" style={{ color: yellow[600] }} />
+    const [is_accordion_open, set_is_accordion_open] = useState<boolean>(false);
+    const warning_icon_basic_search =  <WarningIcon  titleAccess="You might be getting sub optimal search results!" style={{ color: yellow[600] }}  />
     const is_default_search = () => (search_type == "best" && search_fields == "all")
 
     return <Modal

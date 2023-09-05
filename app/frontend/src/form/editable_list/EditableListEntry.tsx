@@ -1,6 +1,6 @@
 import { Component, h } from "preact"
 import { useMemo } from "preact/hooks"
-import { FormControl } from "@material-ui/core"
+import { FormControl } from "@mui/material"
 
 import "./EditableListEntry.css"
 import { ConfirmatoryDeleteButton } from "../ConfirmatoryDeleteButton"
