@@ -31,7 +31,7 @@ The data is store in a Supabase account we operate.  In future we would like you
   * allow people to build more complex (in terms of visuals & interactive) simulations like [TheWorldSim](https://theworldsim.org/sims/energy-explorer)
 * Improve multi user real time editing
   * add current user cursors'
-  * update 
+  * update
   * show which knowledge view/map other users are looking at
   * conflict-free replicated data type (CRDT) for description text and other fields
 * Use [Solid pods](https://solidproject.org/about) or a different self-hostable backend like [Mathesar](https://github.com/centerofci/mathesar/)
@@ -46,7 +46,7 @@ The data is store in a Supabase account we operate.  In future we would like you
 ### Install frontend dependencies
 
     cd app/frontend
-    yarn install
+    pnpm install
 
 ## Running the app
 
@@ -58,7 +58,26 @@ The data is store in a Supabase account we operate.  In future we would like you
 Then visit [http://localhost:8080/app#wcomponents/&view=knowledge](http://localhost:8080/app#wcomponents/&view=knowledge)
 
 
-## Console API
+# Deployment notes
+
+DataCurator currently hosted on Github
+
+## Setup
+
+    # Clone into adjacent directory
+    git clone git@github.com:AJamesPhillips/data-curator-build.git
+
+## Build & deployment
+
+Currently broken as of 2023-09-05
+
+    ./build.sh
+    cd ../data-curator-build
+    git commit
+    git push
+
+
+# Console API
 
 You can navigate to a knowledge view, open the developer console, and use the following script to get a matrix of the connected components:
 
@@ -85,16 +104,4 @@ If you want to get the components by a compound of their labels and an ordinal y
 ```
 
 
-## Disabled ~~Optional: Output data to Obsidian / Markdown~~
-
-This does not work at the moment because the support for the local server has been removed in favour of collaborative "source of truth" central DB in the form of supabase.
-
-<b style="background-color: pink; color: black;">This is write only.  If you edit these files outside DataCurator the changes will be overwritten and lost.</b>  (for now)
-
-
-1. Start the server
-2. Find the new file: app/server/config.json
-3. edit the entry for `output_markdown_directory` to be an absolute path to the directory to output the data.  For example: `"output_markdown_directory": "/Users/user_name/data_curator_info"` where `user_name` is replaced with your username and `data_curator_info` is a directory.
-
-
-## [Development notes](./DEVELOPMENT_NOTES.md)
+# [Development notes](./DEVELOPMENT_NOTES.md)

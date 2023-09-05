@@ -17,7 +17,7 @@ export function register_window_title_updater_subscriber (store: StoreType)
         if (kv && kv.title !== current_kv_title)
         {
             current_kv_title = kv.title
-            const title = APP_DETAILS.NAME + (current_kv_title ? (" | " + current_kv_title) : "")
+            const title = (current_kv_title ? (current_kv_title + " | ") : "") + APP_DETAILS.NAME
             set_window_title(title)
         }
     })

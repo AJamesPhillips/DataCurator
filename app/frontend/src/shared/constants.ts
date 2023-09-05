@@ -1,6 +1,6 @@
 
 export const APP_DETAILS = {
-    NAME: "CCI | Data Curator"
+    NAME: "CCI Data Curator"
 }
 
 export const LOG_LEVELS = {

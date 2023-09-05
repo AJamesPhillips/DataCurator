@@ -7,7 +7,7 @@ import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import type { RootState } from "../state/State"
-import "./SandBox.css"
+import "./SandBox.scss"
 
 
 
