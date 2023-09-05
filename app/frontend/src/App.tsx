@@ -2,7 +2,19 @@ import { FunctionalComponent, h } from "preact"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import clsx from "clsx"
-import { AppBar, Box, CssBaseline, Drawer, makeStyles, ThemeProvider, Toolbar, Typography } from "@material-ui/core"
+import {
+    AppBar,
+    Box,
+    CssBaseline,
+    Drawer,
+    ThemeProvider,
+    Theme,
+    StyledEngineProvider,
+    Toolbar,
+    Typography,
+} from "@mui/material"
+
+import makeStyles from "@mui/styles/makeStyles"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -31,6 +43,15 @@ import { setup_tests_for_browser } from "./App.test"
 
 
 
+
+declare module "@mui/styles/defaultTheme" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+
+
+
 const map_state = (state: RootState) =>
 ({
     display_side_panel: state.controls.display_side_panel,
@@ -55,7 +76,7 @@ function App(props: Props)
         setTimeout(() => check_and_handle_connection_and_session(get_store()), 1000)
     }, [props.network_functional, props.network_function_last_checked])
 
-    return (
+    return <StyledEngineProvider injectFirst>
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
 
@@ -128,7 +149,7 @@ function App(props: Props)
 
             </Box>
         </ThemeProvider>
-    )
+    </StyledEngineProvider>
 }
 
 export default connector(App) as FunctionalComponent<{}>
@@ -228,7 +249,7 @@ const use_styles = makeStyles(theme => ({
     },
 
     small_full_width: {
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("md")]: {
             flexGrow: 0, flexShrink: 1, flexBasis: "100%",
             margin: 0,
         }

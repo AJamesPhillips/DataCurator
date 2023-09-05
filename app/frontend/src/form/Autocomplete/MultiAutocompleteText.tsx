@@ -7,7 +7,7 @@ import type { RootState } from "../../state/State"
 import { AutocompleteText } from "./AutocompleteText"
 import type { AutocompleteOption } from "./interfaces"
 import { SelectedOption } from "./SelectedOption"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 
 

@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { TextField } from "@material-ui/core"
+import { TextField } from "@mui/material"
 import FlexSearch, { Index } from "flexsearch"
 import fuzzysort from "fuzzysort"
 import { useRef, useEffect, useState, useMemo } from "preact/hooks"

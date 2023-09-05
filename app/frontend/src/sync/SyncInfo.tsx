@@ -1,8 +1,9 @@
-import { Button, makeStyles, Typography } from "@material-ui/core"
+import { Button, Typography } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import SaveIcon from "@material-ui/icons/Save"
-import SyncProblemIcon from "@material-ui/icons/SyncProblem"
+import SaveIcon from "@mui/icons-material/Save"
+import SyncProblemIcon from "@mui/icons-material/SyncProblem"
 
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { RootState } from "../state/State"

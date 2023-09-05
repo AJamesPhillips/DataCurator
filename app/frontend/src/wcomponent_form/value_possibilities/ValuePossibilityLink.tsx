@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useMemo } from "preact/hooks"
-import LinkOffIcon from "@material-ui/icons/LinkOff"
+import LinkOffIcon from "@mui/icons-material/LinkOff"
 
 import "./ValuePossibilityLink.css"
 import type { StateValueAndPrediction as VAP } from "../../wcomponent/interfaces/state"

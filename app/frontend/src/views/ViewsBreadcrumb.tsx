@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@material-ui/core"
+import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@mui/material"
 
 import { AutocompleteText, OPTION_NONE_ID } from "../form/Autocomplete/AutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"

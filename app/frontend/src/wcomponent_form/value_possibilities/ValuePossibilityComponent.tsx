@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
-import { Box, IconButton, Typography } from "@material-ui/core"
-import DeleteIcon from "@material-ui/icons/Delete"
+import { Box, IconButton, Typography } from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
 
 import "../../form/editable_list/EditableListEntry.css"
 import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
@@ -61,7 +61,7 @@ export function ValuePossibilityComponent (props: OwnProps)
         </Box>}
 
 
-        {editing && <IconButton onClick={() => update_value_possibility(undefined)}>
+        {editing && <IconButton onClick={() => update_value_possibility(undefined)} size="large">
             <DeleteIcon />
         </IconButton>}
     </Box>

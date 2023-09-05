@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 import "../../form/editable_list/EditableListEntry.css"
 import { Button } from "../../sharedf/Button"

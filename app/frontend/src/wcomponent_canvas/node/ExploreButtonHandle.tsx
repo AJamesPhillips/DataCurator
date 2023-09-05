@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Store } from "redux"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
-import SearchIcon from "@material-ui/icons/Search"
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
+import SearchIcon from "@mui/icons-material/Search"
 
 import "./Handles.scss"
 import {

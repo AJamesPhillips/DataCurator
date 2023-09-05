@@ -1,4 +1,4 @@
-import { Box, FormControl, FormLabel, Slider } from "@material-ui/core"
+import { Box, FormControl, FormLabel, Slider } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 

@@ -1,16 +1,16 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import ArrowBackIcon from "@material-ui/icons/ArrowBack"
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 
 import "./PrioritisableAction.scss"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
-import { IconButton } from "@material-ui/core"
+import { IconButton } from "@mui/material"
 
 
 

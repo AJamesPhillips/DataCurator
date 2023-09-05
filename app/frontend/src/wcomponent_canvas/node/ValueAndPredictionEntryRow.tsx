@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 import "./ValueAndPredictionSetSummary.scss"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"

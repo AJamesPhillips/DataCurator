@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward"
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward"
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 
 import "./KnowledgeGraphTimeMarkers.scss"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"

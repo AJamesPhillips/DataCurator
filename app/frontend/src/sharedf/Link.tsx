@@ -8,7 +8,7 @@ import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import type { ROUTE_TYPES, RoutingStateArgs, SUB_ROUTE_TYPES } from "../state/routing/interfaces"
 import { merge_routing_state } from "../state/routing/merge_routing_state"
-import { Button } from "@material-ui/core"
+import { Button } from "@mui/material"
 import { useRef, useState } from "preact/hooks"
 
 

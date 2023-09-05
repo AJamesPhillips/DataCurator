@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { useEffect } from "preact/hooks"
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
-import { Box, IconButton, Tooltip } from "@material-ui/core"
+import FilterCenterFocusIcon from "@mui/icons-material/FilterCenterFocus"
+import { Box, IconButton, Tooltip } from "@mui/material"
 
 import { pub_sub } from "../state/pub_sub/pub_sub"
 

@@ -1,8 +1,8 @@
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { makeStyles } from "@material-ui/core"
-import DescriptionIcon from "@material-ui/icons/Description"
+import makeStyles from "@mui/styles/makeStyles"
+import DescriptionIcon from "@mui/icons-material/Description"
 
 import "./WComponentCanvasNode.scss"
 import {
@@ -551,7 +551,7 @@ function calculate_label_ids (wcomponent?: WComponent)
 {
     if (!wcomponent) return []
 
-    const ids = [...wcomponent.label_ids || []]
+    const ids = [...(wcomponent.label_ids || [])]
     const ids_set = new Set(ids)
 
     if (wcomponent_is_action(wcomponent) && wcomponent.parent_goal_or_action_ids)

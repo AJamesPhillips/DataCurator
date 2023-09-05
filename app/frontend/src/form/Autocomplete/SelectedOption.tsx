@@ -1,6 +1,6 @@
 import { h } from "preact"
-import { ButtonGroup, IconButton, Tooltip, Typography } from "@material-ui/core"
-import ClearIcon from "@material-ui/icons/Clear"
+import { ButtonGroup, IconButton, Tooltip, Typography } from "@mui/material"
+import ClearIcon from "@mui/icons-material/Clear"
 
 import { Button } from "../../sharedf/Button"
 import type { AutocompleteOption } from "./interfaces"
@@ -52,7 +52,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
                     </Typography>
                 </Tooltip>
             </Button>
-            {editing && <IconButton onClick={() => on_remove_option(option.id)}>
+            {editing && <IconButton onClick={() => on_remove_option(option.id)} size="large">
                 <ClearIcon />
             </IconButton>}
         </ButtonGroup>

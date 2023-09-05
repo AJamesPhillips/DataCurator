@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ButtonGroup, IconButton, Tooltip } from "@material-ui/core"
-import EditIcon from "@material-ui/icons/Edit"
-import PresentToAllIcon from "@material-ui/icons/PresentToAll"
+import { ButtonGroup, IconButton, Tooltip } from "@mui/material"
+import EditIcon from "@mui/icons-material/Edit"
+import PresentToAllIcon from "@mui/icons-material/PresentToAll"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
@@ -72,7 +72,7 @@ function _ViewOptions (props: Props)
                     component={are_in_edit_mode ? "div" : undefined}
                     onClick={are_in_edit_mode ? undefined : props.toggle_consumption_formatting}
                     value="editing"
-                >
+                    size="large">
                     <EditIcon style={{ color: button_edit_color }} />
                 </IconButton>
             </Tooltip>
@@ -81,7 +81,7 @@ function _ViewOptions (props: Props)
                 disabled={props.presenting}
                 onClick={props.toggle_consumption_formatting}
                 value="presenting"
-            >
+                size="large">
                 <PresentToAllIcon />
             </IconButton>
 

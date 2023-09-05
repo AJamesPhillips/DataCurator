@@ -1,7 +1,23 @@
 import { h } from "preact"
-import { Avatar, Badge, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, withStyles } from "@material-ui/core"
-import PersonIcon from "@material-ui/icons/Person"
-import PeopleIcon from "@material-ui/icons/People"
+import {
+    Avatar,
+    Badge,
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    IconButton,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemText,
+} from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
+import withStyles from "@mui/styles/withStyles"
+import PersonIcon from "@mui/icons-material/Person"
+import PeopleIcon from "@mui/icons-material/People"
 import { useState } from "preact/hooks"
 
 

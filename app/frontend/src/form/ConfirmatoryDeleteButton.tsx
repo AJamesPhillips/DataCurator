@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@mui/icons-material/Delete"
 
 import type { RootState } from "../state/State"
 import { ConfirmatoryButton } from "./ConfirmatoryButton"

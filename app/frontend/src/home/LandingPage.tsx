@@ -1,12 +1,27 @@
-import { h } from "preact"
-import ChevronRightIcon from "@material-ui/icons/ChevronRight"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 
 import "./LandingPage.scss"
-import { Box, Button, Container, makeStyles, ThemeProvider, Typography } from "@material-ui/core"
+import {
+    Box,
+    Button,
+    Container,
+    ThemeProvider,
+    Theme,
+    StyledEngineProvider,
+    Typography,
+} from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import { DefaultTheme } from "../ui_themes/material_default"
 import { get_supabase } from "../supabase/get_supabase"
 import { get_persisted_state_object } from "../state/persistence/persistence_utils"
 import type { UserInfoState } from "../state/user_info/state"
+
+
+
+declare module "@mui/styles/defaultTheme" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 
 
@@ -19,7 +34,7 @@ export function LandingPage()
 
     const classes = use_styles()
 
-    return (
+    return <StyledEngineProvider injectFirst>
         <ThemeProvider theme={DefaultTheme}>
             <Container maxWidth="md" className={classes.root}>
                 <Box component="header" className={classes.header}>
@@ -164,7 +179,7 @@ export function LandingPage()
                 </Box>
             </Container>
         </ThemeProvider>
-    )
+    </StyledEngineProvider>
 }
 
 const use_styles = makeStyles(theme => ({

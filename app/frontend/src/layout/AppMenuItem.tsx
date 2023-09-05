@@ -1,6 +1,6 @@
 import { ComponentChildren, FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { MenuItem as MaterialMenuItem } from "@material-ui/core"
+import { MenuItem as MaterialMenuItem } from "@mui/material"
 
 import { Link } from "../sharedf/Link"
 import type { ROUTE_TYPES } from "../state/routing/interfaces"

@@ -1,9 +1,16 @@
-import { Box, ThemeProvider, Tooltip } from "@material-ui/core"
+import { Box, ThemeProvider, Theme, StyledEngineProvider, Tooltip } from "@mui/material"
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { DefaultTheme, WarningTheme } from "../ui_themes/material_default"
 import { Button } from "../sharedf/Button"
+
+
+
+declare module "@mui/styles/defaultTheme" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 
 
@@ -25,6 +32,7 @@ export function ConfirmatoryButton (props: OwnProps)
 
     return (
         <div style={{ display: "flex", justifyContent: "space-between", margin: "4px 0px" }}>
+            <StyledEngineProvider injectFirst>
             <ThemeProvider theme={WarningTheme}>
                 <Button
                     color="secondary"
@@ -45,6 +53,8 @@ export function ConfirmatoryButton (props: OwnProps)
                     </Tooltip>
                 </Button>
             </ThemeProvider>
+            </StyledEngineProvider>
+            <StyledEngineProvider injectFirst>
             <ThemeProvider theme={DefaultTheme}>
                 <Button
                     color="primary"
@@ -65,6 +75,7 @@ export function ConfirmatoryButton (props: OwnProps)
                     </Tooltip>
                 </Button>
             </ThemeProvider>
+            </StyledEngineProvider>
         </div>
     )
 }

@@ -1,4 +1,4 @@
-import Warning from "@material-ui/icons/Warning"
+import Warning from "@mui/icons-material/Warning"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 

@@ -1,5 +1,5 @@
-import { IconButton, Tooltip } from "@material-ui/core"
-import FilterIcon from "@material-ui/icons/Filter"
+import { IconButton, Tooltip } from "@mui/material"
+import FilterIcon from "@mui/icons-material/Filter"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 

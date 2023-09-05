@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, ButtonGroup, IconButton, Slider } from "@material-ui/core"
-import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore"
-import NavigateNextIcon from "@material-ui/icons/NavigateNext"
+import { Box, ButtonGroup, IconButton, Slider } from "@mui/material"
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
+import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 
 import "./time_slider.scss"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
@@ -86,14 +86,14 @@ function _TimeSlider (props: Props)
                         onClick={move_to_event_datetime(-1)}
                         disabled={current_index.bounds === "n/a" || current_index.index <= 0}
                         title={"Previous " + props.title + " datetime"}
-                    >
+                        size="large">
                         <NavigateBeforeIcon />
                     </IconButton>
                     <IconButton
                         onClick={move_to_event_datetime(1)}
                         disabled={current_index.bounds === "n/a" || current_index.index >= (event_start_datetimes_ms.length - 1)}
                         title={"Next " + props.title + " datetime"}
-                    >
+                        size="large">
                         <NavigateNextIcon />
                     </IconButton>
                 </ButtonGroup>

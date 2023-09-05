@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, Button, FormControl, FormGroup, makeStyles, TextField } from "@material-ui/core"
+import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"

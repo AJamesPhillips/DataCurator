@@ -1,6 +1,7 @@
 import { FunctionalComponent, h } from "preact"
-import { IconButton, makeStyles, Tooltip } from "@material-ui/core"
-import FilterTiltShift from "@material-ui/icons/FilterTiltShift"
+import { IconButton, Tooltip } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
+import FilterTiltShift from "@mui/icons-material/FilterTiltShift"
 
 import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"

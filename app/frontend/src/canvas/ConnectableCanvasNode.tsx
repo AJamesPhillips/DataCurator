@@ -1,5 +1,7 @@
 import { h } from "preact"
-import { Card, CardContent, CardMedia, makeStyles } from "@material-ui/core"
+import { Card, CardContent, CardMedia } from "@mui/material"
+
+import makeStyles from "@mui/styles/makeStyles"
 
 import "./ConnectableCanvasNode.scss"
 import { CanvasNode } from "./CanvasNode"

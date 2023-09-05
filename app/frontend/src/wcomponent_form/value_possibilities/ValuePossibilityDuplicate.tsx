@@ -1,6 +1,6 @@
 import { h } from "preact"
-import { Typography } from "@material-ui/core"
-import WarningIcon from "@material-ui/icons/Warning"
+import { Typography } from "@mui/material"
+import WarningIcon from "@mui/icons-material/Warning"
 
 
 

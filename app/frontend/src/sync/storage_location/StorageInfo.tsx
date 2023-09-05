@@ -1,8 +1,8 @@
-import { Button, Typography } from "@material-ui/core"
+import { Button, Typography } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import PermDataSettingIcon from "@material-ui/icons/PermDataSetting"
+import PermDataSettingIcon from "@mui/icons-material/PermDataSetting"
 
 import "./StorageInfo.scss"
 import type { RootState } from "../../state/State"
@@ -52,7 +52,7 @@ function _StorageInfo (props: Props)
                 onClick={() => set_or_toggle_display_select_storage(true)}
                 size="small"
                 endIcon={<PermDataSettingIcon titleAccess="Create and Select Knowledge Bases" />}
-                style={{textTransform: 'none'}}
+                style={{textTransform: "none"}}
                 variant="contained"
             >
                 <span class="storage_name">{props.base_name || "Choose store"}</span>

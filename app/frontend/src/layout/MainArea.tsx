@@ -2,7 +2,7 @@ import { h } from "preact"
 
 import "./MainArea.scss"
 import { MainContentControls } from "./MainContentControls"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 
 

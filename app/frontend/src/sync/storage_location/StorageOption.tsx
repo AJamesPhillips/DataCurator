@@ -1,5 +1,5 @@
 import { h } from "preact"
-import EditIcon from "@material-ui/icons/Edit"
+import EditIcon from "@mui/icons-material/Edit"
 
 import "./StorageOption.scss"
 import type { SupabaseKnowledgeBaseWithAccess, SupabaseUsersById } from "../../supabase/interfaces"

@@ -1,5 +1,6 @@
 import { h } from "preact"
-import { Box, LinearProgress, makeStyles, TextField, Typography } from "@material-ui/core"
+import { Box, LinearProgress, TextField, Typography } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import { Ref, useRef, useState } from "preact/hooks"
 
 

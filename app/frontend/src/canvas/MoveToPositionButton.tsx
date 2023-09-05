@@ -1,7 +1,7 @@
 import { h, FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, IconButton } from "@material-ui/core"
-import FilterCenterFocusIcon from "@material-ui/icons/FilterCenterFocus"
+import { Box, IconButton } from "@mui/material"
+import FilterCenterFocusIcon from "@mui/icons-material/FilterCenterFocus"
 
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"

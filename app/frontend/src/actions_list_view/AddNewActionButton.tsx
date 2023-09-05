@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from "preact"
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from "@mui/icons-material/Add"
 
 import "./AddNewActionButton.scss"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"

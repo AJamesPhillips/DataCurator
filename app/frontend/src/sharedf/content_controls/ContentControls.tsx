@@ -1,9 +1,10 @@
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, Button, Toolbar, makeStyles, Collapse, IconButton, Tooltip } from "@material-ui/core"
-import TuneIcon from "@material-ui/icons/Tune"
-import DoubleArrowIcon from "@material-ui/icons/DoubleArrow"
+import { Box, Button, Toolbar, Collapse, IconButton, Tooltip } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
+import TuneIcon from "@mui/icons-material/Tune"
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow"
 
 import "./ContentControls.scss"
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"

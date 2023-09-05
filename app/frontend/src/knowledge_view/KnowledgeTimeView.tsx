@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box } from "@material-ui/core"
+import { Box } from "@mui/material"
 
 import "./KnowledgeTimeView.scss"
 import type { RootState } from "../state/State"

@@ -1,8 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, Button, makeStyles, Typography } from "@material-ui/core"
-import LogoutIcon from "@material-ui/icons/ExitToApp"
+import { Box, Button, Typography } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
+import LogoutIcon from "@mui/icons-material/ExitToApp"
 import type { ApiError } from "@supabase/supabase-js"
 
 import "../common.scss"

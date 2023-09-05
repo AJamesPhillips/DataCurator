@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import type { ApiError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4 } from "uuid"
-import SyncIcon from "@material-ui/icons/Sync"
+import SyncIcon from "@mui/icons-material/Sync"
 
 import "./SandBox.scss"
 import { get_new_knowledge_view_object } from "../knowledge_view/create_new_knowledge_view"

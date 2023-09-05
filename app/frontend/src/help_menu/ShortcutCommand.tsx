@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { Box, Typography } from "@material-ui/core"
+import { Box, Typography } from "@mui/material"
 
 import { ActionCommands, ShortcutProps } from "./shortcuts"
 import { intersperse } from "../utils/array"

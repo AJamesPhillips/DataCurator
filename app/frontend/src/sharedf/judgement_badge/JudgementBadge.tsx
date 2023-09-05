@@ -1,7 +1,7 @@
 import { h } from "preact"
-import TrendingUpIcon from "@material-ui/icons/TrendingUp"
-import TrendingFlatIcon from "@material-ui/icons/TrendingFlat"
-import TrendingDownIcon from "@material-ui/icons/TrendingDown"
+import TrendingUpIcon from "@mui/icons-material/TrendingUp"
+import TrendingFlatIcon from "@mui/icons-material/TrendingFlat"
+import TrendingDownIcon from "@mui/icons-material/TrendingDown"
 import { QuestionMarkIcon } from "../../sharedf/icons/QuestionMarkIcon"
 
 import "./JudgementBadge.scss"

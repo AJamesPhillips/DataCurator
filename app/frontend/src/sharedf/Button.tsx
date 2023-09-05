@@ -1,7 +1,7 @@
 import { h } from "preact"
-import { Button as MaterialButton } from "@material-ui/core"
-import type { ButtonProps } from "@material-ui/core/Button"
-import { Hidden } from "@material-ui/core"
+import { Button as MaterialButton } from "@mui/material"
+import type { ButtonProps } from "@mui/material/Button"
+import { Hidden } from "@mui/material"
 
 import "./Button.scss"
 

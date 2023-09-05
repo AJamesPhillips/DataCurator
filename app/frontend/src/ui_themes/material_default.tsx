@@ -1,8 +1,8 @@
-import { createTheme, ThemeOptions } from "@material-ui/core/styles"
+import { createTheme, DeprecatedThemeOptions, adaptV4Theme } from "@mui/material/styles"
 
 
 
-const _default_theme_options: ThemeOptions = {
+const _default_theme_options: DeprecatedThemeOptions = {
     breakpoints: {
         values: {
             xs: 0,
@@ -13,7 +13,7 @@ const _default_theme_options: ThemeOptions = {
         },
     },
     palette: {
-        type: 'light',
+        mode: "light",
         primary: {
             main: '#cecece',
         },
@@ -55,8 +55,16 @@ const _default_theme_options: ThemeOptions = {
 
 
 
-export const DefaultTheme = createTheme(_default_theme_options)
-export const WarningTheme = createTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } })
-export const ErrorTheme = createTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } })
-export const InfoTheme = createTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } })
-export const SuccessTheme = createTheme({ ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } })
+export const DefaultTheme = createTheme(adaptV4Theme(_default_theme_options))
+export const WarningTheme = createTheme(adaptV4Theme(
+    { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } }
+))
+export const ErrorTheme = createTheme(adaptV4Theme(
+    { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } }
+))
+export const InfoTheme = createTheme(adaptV4Theme(
+    { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } }
+))
+export const SuccessTheme = createTheme(adaptV4Theme(
+    { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } }
+))

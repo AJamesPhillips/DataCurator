@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useEffect, useRef, useState } from "preact/hooks"
-import { Box, FormControl, FormLabel } from "@material-ui/core"
+import { Box, FormControl, FormLabel } from "@mui/material"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"

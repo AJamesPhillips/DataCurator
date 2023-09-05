@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useMemo } from "preact/hooks"
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@material-ui/core"
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
 
 import "./NewItemForm.css"
 import { Button } from "../../sharedf/Button"

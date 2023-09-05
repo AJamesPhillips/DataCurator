@@ -55,7 +55,7 @@ function _FiltersSidePanel (props: Props)
 
     const wcomponent_exclude_type_options = useMemo(() =>
     {
-        const all_exclude_types = ([...wc_types || []])
+        const all_exclude_types = ([...(wc_types || [])])
             .concat(filters.exclude_by_component_types)
 
         return all_exclude_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))
@@ -64,7 +64,7 @@ function _FiltersSidePanel (props: Props)
 
     const wcomponent_include_type_options = useMemo(() =>
     {
-        const all_include_types = ([...wc_types || []])
+        const all_include_types = ([...(wc_types || [])])
             .concat(filters.include_by_component_types)
 
         return all_include_types.map(type => ({ id: type, title: wcomponent_type_to_text(type) }))

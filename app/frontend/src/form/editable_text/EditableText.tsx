@@ -5,7 +5,7 @@ import {
     EditableTextCommon,
     EditableTextComponentArgs,
 } from "./editable_text_common"
-import { TextField } from "@material-ui/core"
+import { TextField } from "@mui/material"
 
 
 

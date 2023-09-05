@@ -1,6 +1,6 @@
 import { h } from "preact"
 import { useState } from "preact/hooks"
-import Box from "@material-ui/core/Box"
+import Box from "@mui/material/Box"
 
 import {
     EditableListEntryItemProps,

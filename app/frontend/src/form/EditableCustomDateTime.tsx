@@ -1,6 +1,6 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { TextField } from "@material-ui/core"
+import { TextField } from "@mui/material"
 
 import "./Editable.css"
 import { date_to_string, correct_datetime_for_local_time_zone, valid_date } from "./datetime_utils"

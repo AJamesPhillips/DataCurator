@@ -1,4 +1,4 @@
-import { Box, FormControl, FormControlLabel, TextField } from "@material-ui/core"
+import { Box, FormControl, FormControlLabel, TextField } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { WComponent } from "src/wcomponent/interfaces/SpecialisedObjects"
