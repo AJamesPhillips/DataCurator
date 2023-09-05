@@ -1,30 +1,7 @@
 import { h } from "preact"
-import { styled } from "@mui/material/styles"
 import { Box, LinearProgress, TextField, Typography } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import { Ref, useRef, useState } from "preact/hooks"
-
-
-
-const PREFIX = 'DragDropUploader';
-
-const classes = {
-    container: `${PREFIX}-container`
-};
-
-const StyledBox = styled(Box)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.container}`]: {
-        borderColor: "red",
-        borderStyle: "dashed",
-        borderWidth: 2,
-        display: "flex", flexDirection: "column",
-        height: "100%",
-        justifyContent: "center", alignItems: "stretch",
-    }
-}));
 
 
 
@@ -101,7 +78,7 @@ export function DragDropUploader(props: OwnProps) {
     // onDragLeave={interceptAndDoNothing}
     // onDrop={drop}
     return (
-        <StyledBox className={`${classes.container}`} >
+        <Box className={`${classes.container}`} >
             <TextField
                 inputProps={{
                     accept: props.valid_file_types,
@@ -122,18 +99,14 @@ export function DragDropUploader(props: OwnProps) {
                     </Box>
                 )
             })}
-        </StyledBox>
-    );
+        </Box>
+    )
 }
 
 
 
-const use_styles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.container}`]: {
+const use_styles = makeStyles(theme => ({
+    container: {
         borderColor: "red",
         borderStyle: "dashed",
         borderWidth: 2,

@@ -1,7 +1,7 @@
 import Markdown from "markdown-to-jsx"
-import { styled } from "@mui/material/styles"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import makeStyles from "@mui/styles/makeStyles"
 import DescriptionIcon from "@mui/icons-material/Description"
 
 import "./WComponentCanvasNode.scss"
@@ -53,33 +53,6 @@ import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
 import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
-
-
-
-const PREFIX = 'WComponentCanvasNode';
-
-const classes = {
-    sizer: `${PREFIX}-sizer`
-};
-
-const Root = styled(
-    'sim_ms)\n                {\n                    if (certainty === 1 || certainty === undefined)\n                    {\n                        background = " past_certain "\n                        font = " color_light "\n                    }\n                    else\n                    {\n                        // Warning that either you need to update your data or this is warning that this is uncertain\n                        background = " past_uncertain "\n                    }\n                }\n                else if (!datetime) // is eternal\n                {\n                    if (certainty === 1 || certainty === undefined)\n                    {\n                        background = " past_certain "\n                        font = " color_light "\n                    }\n                }\n\n            }\n        // }\n        // else\n        // {\n        //     // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"\n        //     //     : ((wcomponent_is_goal(args.wcomponent)\n        //     //     // || wcomponent_is_judgement_or_objective(wcomponent)\n        //     //     ) ? "rgb(207, 255, 198)" : "")\n        // }\n    }\n\n    return { background, font }\n}\n\n\n\nfunction calculate_label_ids (wcomponent?: WComponent)\n{\n    if (!wcomponent) return []\n\n    const ids = [...(wcomponent.label_ids || [])]\n    const ids_set = new Set(ids)\n\n    if (wcomponent_is_action(wcomponent) && wcomponent.parent_goal_or_action_ids)\n    {\n        wcomponent.parent_goal_or_action_ids.forEach(id ='
-)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.sizer}`]: {
-        transform: `scale(${(kv_entry.s && is_on_canvas) ? kv_entry.s : 1 })`,
-        // @NOTE: The transformOrigin defaults to center center (50% 50%), but this may not be
-        // best for determining position of connectors, values can be set
-        // with keywords left/right/center or top/center/bottom
-        // or percents, and the order is x-axis, y-axis
-
-        // transformOrigin: "center center"
-        transformOrigin: "left top",
-    }
-}));
 
 
 
@@ -275,12 +248,8 @@ function _WComponentCanvasNode (props: Props)
 
     const show_all_details = is_editing //|| is_current_item
 
-    const use_styles = makeStyles((
-        {
-            theme
-        }
-    ) => ({
-        [`& .${classes.sizer}`]: {
+    const use_styles = makeStyles(theme => ({
+        sizer: {
             transform: `scale(${(kv_entry.s && is_on_canvas) ? kv_entry.s : 1 })`,
             // @NOTE: The transformOrigin defaults to center center (50% 50%), but this may not be
             // best for determining position of connectors, values can be set

@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
-import { styled } from "@mui/material/styles"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, Toolbar, Collapse, IconButton, Tooltip } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import TuneIcon from "@mui/icons-material/Tune"
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow"
 
@@ -19,41 +19,6 @@ import { get_actually_display_time_sliders } from "../../state/controls/accessor
 import { ActiveFilterWarning } from "../ActiveFilterWarning"
 import { ActiveCreationContextWarning } from "../ActiveCreationContextWarning"
 import { ActiveFocusedMode } from "../ActiveFocusedMode"
-
-
-
-const PREFIX = 'ContentControls';
-
-const classes = {
-    toolbar: `${PREFIX}-toolbar`,
-    move_to_button_and_warnings: `${PREFIX}-move_to_button_and_warnings`,
-    drawer_content: `${PREFIX}-drawer_content`,
-    warning_icon: `${PREFIX}-warning_icon`
-};
-
-const Root = styled('wnProps')((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.toolbar}`]: {
-        justifyContent: "space-between",
-    },
-
-    [`& .${classes.move_to_button_and_warnings}`]: {
-        display: "flex",
-        flexDirection: "row",
-    },
-
-    [`& .${classes.drawer_content}`]: {
-        display: "flex", flexDirection: "row",
-        alignItems: "center", alignContent: "center",
-    },
-
-    [`& .${classes.warning_icon}`]: {
-        color: theme.palette.warning.main
-    }
-}));
 
 
 
@@ -219,26 +184,19 @@ export const ContentControls = connector(_ContentControls) as FunctionalComponen
 
 
 
-const use_styles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.toolbar}`]: {
+const use_styles = makeStyles(theme => ({
+    toolbar: {
         justifyContent: "space-between",
     },
-
-    [`& .${classes.move_to_button_and_warnings}`]: {
+    move_to_button_and_warnings: {
         display: "flex",
         flexDirection: "row",
     },
-
-    [`& .${classes.drawer_content}`]: {
+    drawer_content: {
         display: "flex", flexDirection: "row",
         alignItems: "center", alignContent: "center",
     },
-
-    [`& .${classes.warning_icon}`]: {
+    warning_icon: {
         color: theme.palette.warning.main
-    }
+    },
 }))

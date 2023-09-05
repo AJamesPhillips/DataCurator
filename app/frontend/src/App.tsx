@@ -1,5 +1,4 @@
 import { FunctionalComponent, h } from "preact"
-import { styled } from "@mui/material/styles"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import clsx from "clsx"
@@ -14,6 +13,8 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material"
+
+import makeStyles from "@mui/styles/makeStyles"
 
 import "./App.scss"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
@@ -43,141 +44,6 @@ import { setup_tests_for_browser } from "./App.test"
 
 
 
-const PREFIX = "data_curator_app"
-
-const classes = {
-    root: `${PREFIX}-root`,
-    app_bar: `${PREFIX}-app_bar`,
-    app_bar_with_open_side_panel: `${PREFIX}-app_bar_with_open_side_panel`,
-    content: `${PREFIX}-content`,
-    content_with_open_side_panel: `${PREFIX}-content_with_open_side_panel`,
-    drawer: `${PREFIX}-drawer`,
-    side_panel: `${PREFIX}-side_panel`,
-    side_panel_content: `${PREFIX}-side_panel_content`,
-    sidebar_toolbar: `${PREFIX}-sidebar_toolbar`,
-    toolbar: `${PREFIX}-toolbar`,
-    toolbar_section: `${PREFIX}-toolbar_section`,
-    toolbar_item: `${PREFIX}-toolbar_item`,
-    help_popup: `${PREFIX}-help_popup`,
-    small_full_width: `${PREFIX}-small_full_width`,
-    grow: `${PREFIX}-grow`,
-    hide: `${PREFIX}-hide`,
-    warning_icon: `${PREFIX}-warning_icon`
-}
-
-const Root = styled("Box")(({ theme }) => (
-{
-    [`& .${classes.root}`]: {
-        width: "100%", height: "100%",
-        overflow: "hidden",
-        display: "flex",
-    },
-
-    [`& .${classes.app_bar}`]: {
-        transition: theme.transitions.create(["all"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        zIndex: theme.zIndex.drawer + 1,
-    },
-
-    [`& .${classes.app_bar_with_open_side_panel}`]: {
-        // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`, maxWidth: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
-        // marginRight: SIDE_PANEL_WIDTH,
-        // transition: theme.transitions.create(["all"], {
-        //     easing: theme.transitions.easing.easeOut,
-        //     duration: theme.transitions.duration.enteringScreen,
-        // }),
-    },
-
-    [`& .${classes.content}`]: {
-        width: "100%",
-        // position: "relative",
-        // zIndex: 1,
-        flexGrow: 1,
-        // flexShrink: 1,
-        display: "flex",
-        // flexDirection: "column", flexWrap: "nowrap",
-        marginRight: -SIDE_PANEL_WIDTH,
-        transition: theme.transitions.create(["margin"], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-
-    [`& .${classes.content_with_open_side_panel}`]: {
-        marginRight: 0,
-        transition: theme.transitions.create(["margin"], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-
-    [`& .${classes.drawer}`]: {
-        width: SIDE_PANEL_WIDTH,
-        flexShrink: 0,
-    },
-
-    [`& .${classes.side_panel}`]: {
-        backgroundColor: theme.palette.background.paper,
-        width: SIDE_PANEL_WIDTH,
-        position: "relative",
-        paddingTop: 50,
-    },
-
-    [`& .${classes.side_panel_content}`]: {
-        marginTop: 10, padding: 10,
-    },
-
-    [`& .${classes.sidebar_toolbar}`]: {
-        flexGrow: 1,
-        justifyContent: "flex-end"
-    },
-
-    [`& .${classes.toolbar}`]: {
-        flexGrow: 1,
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-        [theme.breakpoints.up("md")]: {
-            flexWrap: "nowrap"
-        }
-    },
-
-    [`& .${classes.toolbar_section}`]: {
-        display: "inherit",
-        flexGrow: 0,
-        flexShrink: 1,
-        flexBasis: "auto",
-        marginRight: 5,
-        "&:last-child": { marginRight: 0 },
-        "&:empty": { display: "none" }
-    },
-
-    [`& .${classes.toolbar_item}`]: {
-        marginRight: 5,
-        "&:last-child": { marginRight: 0 }
-    },
-
-    [`& .${classes.help_popup}`]: {
-        position: "relative",
-        zIndex: theme.zIndex.drawer + 1,
-    },
-
-    [`& .${classes.small_full_width}`]: {
-        [theme.breakpoints.down("md")]: {
-            flexGrow: 0, flexShrink: 1, flexBasis: "100%",
-            margin: 0,
-        }
-    },
-
-    [`& .${classes.grow}`]: { flexGrow: 1 },
-    [`& .${classes.hide}`]: { display: "none" },
-    [`& .${classes.warning_icon}`]: { color: theme.palette.warning.main }
-}))
-
-
-
-
 declare module "@mui/styles/defaultTheme" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
@@ -200,7 +66,7 @@ type Props = ConnectedProps<typeof connector>
 
 
 
-function App (props: Props)
+function App(props: Props)
 {
     const classes = use_styles()
 
@@ -290,18 +156,14 @@ export default connector(App) as FunctionalComponent<{}>
 
 
 
-const use_styles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.root}`]: {
+const use_styles = makeStyles(theme => ({
+    root: {
         width: "100%", height: "100%",
         overflow: "hidden",
         display: "flex",
     },
 
-    [`& .${classes.app_bar}`]: {
+    app_bar: {
         transition: theme.transitions.create(["all"], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
@@ -309,7 +171,7 @@ const use_styles = makeStyles((
         zIndex: theme.zIndex.drawer + 1,
     },
 
-    [`& .${classes.app_bar_with_open_side_panel}`]: {
+    app_bar_with_open_side_panel: {
         // width: `calc(100% - ${SIDE_PANEL_WIDTH}px)`, maxWidth: `calc(100% - ${SIDE_PANEL_WIDTH}px)`,
         // marginRight: SIDE_PANEL_WIDTH,
         // transition: theme.transitions.create(["all"], {
@@ -317,8 +179,7 @@ const use_styles = makeStyles((
         //     duration: theme.transitions.duration.enteringScreen,
         // }),
     },
-
-    [`& .${classes.content}`]: {
+    content: {
         width: "100%",
         // position: "relative",
         // zIndex: 1,
@@ -333,7 +194,7 @@ const use_styles = makeStyles((
         }),
     },
 
-    [`& .${classes.content_with_open_side_panel}`]: {
+    content_with_open_side_panel: {
         marginRight: 0,
         transition: theme.transitions.create(["margin"], {
             easing: theme.transitions.easing.easeOut,
@@ -341,28 +202,26 @@ const use_styles = makeStyles((
         }),
     },
 
-    [`& .${classes.drawer}`]: {
+    drawer: {
         width: SIDE_PANEL_WIDTH,
         flexShrink: 0,
     },
 
-    [`& .${classes.side_panel}`]: {
+    side_panel: {
         backgroundColor: theme.palette.background.paper,
         width: SIDE_PANEL_WIDTH,
         position: "relative",
         paddingTop: 50,
     },
 
-    [`& .${classes.side_panel_content}`]: {
+    side_panel_content: {
         marginTop: 10, padding: 10,
     },
-
-    [`& .${classes.sidebar_toolbar}`]: {
+    sidebar_toolbar: {
         flexGrow: 1,
         justifyContent: "flex-end"
     },
-
-    [`& .${classes.toolbar}`]: {
+    toolbar: {
         flexGrow: 1,
         justifyContent: "space-between",
         flexWrap: "wrap",
@@ -370,8 +229,7 @@ const use_styles = makeStyles((
             flexWrap: "nowrap"
         }
     },
-
-    [`& .${classes.toolbar_section}`]: {
+    toolbar_section: {
         display: "inherit",
         flexGrow: 0,
         flexShrink: 1,
@@ -380,27 +238,25 @@ const use_styles = makeStyles((
         "&:last-child": { marginRight: 0 },
         "&:empty": { display: "none" }
     },
-
-    [`& .${classes.toolbar_item}`]: {
+    toolbar_item: {
         marginRight: 5,
         "&:last-child": { marginRight: 0 }
     },
 
-    [`& .${classes.help_popup}`]: {
+    help_popup: {
         position: "relative",
         zIndex: theme.zIndex.drawer + 1,
     },
 
-    [`& .${classes.small_full_width}`]: {
+    small_full_width: {
         [theme.breakpoints.down("md")]: {
             flexGrow: 0, flexShrink: 1, flexBasis: "100%",
             margin: 0,
         }
     },
-
-    [`& .${classes.grow}`]: { flexGrow: 1 },
-    [`& .${classes.hide}`]: { display: "none" },
-    [`& .${classes.warning_icon}`]: { color: theme.palette.warning.main }
+    grow: { flexGrow: 1 },
+    hide: { display: "none" },
+    warning_icon: { color: theme.palette.warning.main }
 }))
 
 

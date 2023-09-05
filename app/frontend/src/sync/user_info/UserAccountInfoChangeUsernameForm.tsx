@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
-import { styled } from "@mui/material/styles"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import type { PostgrestError } from "@supabase/postgrest-js"
 
 import "../common.scss"
@@ -13,44 +13,6 @@ import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import type { SupabaseUser } from "../../supabase/interfaces"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { AsyncState } from "../../utils/async_state"
-
-
-
-const PREFIX = 'UserAccountInfoChangeUsernameForm';
-
-const classes = {
-    root: `${PREFIX}-root`,
-    username_input: `${PREFIX}-username_input`,
-    update_button_container: `${PREFIX}-update_button_container`,
-    update_button: `${PREFIX}-update_button`
-};
-
-const Root = styled('wnProps')((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.root}`]: {
-        display:"flex",
-        justifyContent: "flex-start", alignContent: "center",
-    },
-
-    [`& .${classes.username_input}`]: {
-        borderTopRightRadius:0,
-        borderBottomRightRadius:0,
-    },
-
-    [`& .${classes.update_button_container}`]: {
-        flexGrow: 1,
-        textAlign: "left",
-        marginLeft: 15,
-    },
-
-    [`& .${classes.update_button}`]: {
-        borderTopLeftRadius: 0,
-        borderBottomLeftRadius:0,
-    }
-}));
 
 
 
@@ -168,31 +130,24 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
     </FormGroup>
 }
 
-const use_styles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.root}`]: {
+const use_styles = makeStyles(theme => ({
+    root: {
         display:"flex",
         justifyContent: "flex-start", alignContent: "center",
     },
-
-    [`& .${classes.username_input}`]: {
+    username_input: {
         borderTopRightRadius:0,
         borderBottomRightRadius:0,
     },
-
-    [`& .${classes.update_button_container}`]: {
+    update_button_container: {
         flexGrow: 1,
         textAlign: "left",
         marginLeft: 15,
     },
-
-    [`& .${classes.update_button}`]: {
+    update_button: {
         borderTopLeftRadius: 0,
         borderBottomLeftRadius:0,
-    }
+    },
 }))
 
 export const UserAccountInfoChangeUsernameForm = connector(_UserAccountInfoChangeUsernameForm) as FunctionalComponent<OwnProps>

@@ -1,5 +1,4 @@
 import { h } from "preact"
-import { styled } from "@mui/material/styles"
 import {
     Avatar,
     Badge,
@@ -15,36 +14,11 @@ import {
     ListItemAvatar,
     ListItemText,
 } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
+import withStyles from "@mui/styles/withStyles"
 import PersonIcon from "@mui/icons-material/Person"
 import PeopleIcon from "@mui/icons-material/People"
 import { useState } from "preact/hooks"
-
-
-
-const PREFIX = 'ActiveUserWidget';
-
-const classes = {
-    badge: `${PREFIX}-badge`,
-    button: `${PREFIX}-button`,
-    icon: `${PREFIX}-icon`
-};
-
-const StyledBox = styled(Box)((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.button}`]: {
-        display:"inline-block",
-        marginRight:"1em",
-        border: `1px ${theme.palette.divider} solid`
-    },
-
-    [`& .${classes.icon}`]: {
-        position:"relative",
-        zIndex:10,
-    }
-}));
 
 
 
@@ -66,7 +40,7 @@ export function ActiveUserWidget ()
 
 
     return (
-        <StyledBox>
+        <Box>
             <IconButton
                 aria-label={`${active_user_count}  Active users`}
                 className={classes.button}
@@ -78,9 +52,7 @@ export function ActiveUserWidget ()
                     color="secondary"
                     overlap="rectangle"
                     max={10}
-                    classes={{
-                        badge: classes.badge
-                    }}>
+                >
                     {(active_user_count == 1) && <PersonIcon className={classes.icon} />}
                     {(active_user_count > 1) && <PeopleIcon className={classes.icon} />}
 
@@ -115,25 +87,25 @@ export function ActiveUserWidget ()
                     </Button>
                 </DialogActions>
             </Dialog>
-        </StyledBox>
-    );
+        </Box>
+    )
 }
 
 
-const StyledBadge = Badge
+const StyledBadge = withStyles((theme) => ({
+    badge: {
+        top:2, right:"-0.42em",
+        zIndex: 1,
+    },
+  }))(Badge)
 
-const use_styles = makeStyles((
-    {
-        theme
-    }
-) => ({
-    [`& .${classes.button}`]: {
+const use_styles = makeStyles(theme => ({
+    button: {
         display:"inline-block",
         marginRight:"1em",
         border: `1px ${theme.palette.divider} solid`
     },
-
-    [`& .${classes.icon}`]: {
+    icon: {
         position:"relative",
         zIndex:10,
     }
