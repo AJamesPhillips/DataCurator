@@ -29,8 +29,26 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 }
 
 
-export function describe (description: string, test_fn: () => void)
+interface DescribeFn
 {
-    console.log(description)
+    (description: string, test_fn: () => void): void
+}
+
+interface Describe extends DescribeFn
+{
+    skip: (description: string, test_fn: () => void) => void
+}
+
+
+const describe_fn: DescribeFn = (description: string, test_fn: () => void) =>
+{
+    console .group(description)
     test_fn()
+    console .groupEnd()
+}
+
+export const describe: Describe = describe_fn as any
+describe.skip = (description: string, test_fn: () => void) =>
+{
+    console. log ("skipping  " + description)
 }

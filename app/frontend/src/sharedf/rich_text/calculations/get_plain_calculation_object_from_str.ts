@@ -1,6 +1,6 @@
 import { YAMLParseError, parse } from "yaml"
 
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
 import { PlainCalculationObject } from "./interfaces"
 
@@ -90,10 +90,8 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 
 
-export function run_get_plain_calculation_object_from_str_tests ()
+export const run_get_plain_calculation_object_from_str_tests = () => describe("running tests of get_plain_calculation_object_from_str", () =>
 {
-    console. group("running tests of get_plain_calculation_object_from_str")
-
     let str = "  "
     let plain_calculation_object = get_plain_calculation_object_from_str(str)
     test(plain_calculation_object, { valid: false, errors: ["Empty calculation"] }, "Should find an invalid calculation object when empty string")
@@ -149,7 +147,4 @@ value: 33
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
     test(plain_calculation_object, { valid: true, value: 33, name: "A" }, "Will find a name and value")
-
-    console. groupEnd()
-}
-
+})

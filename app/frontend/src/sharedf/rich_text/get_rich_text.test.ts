@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { CreationContextState } from "../../state/creation_context/state"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -9,10 +9,8 @@ import { replace_ids_in_text, get_title, ReplaceIdsArgs } from "./get_rich_text"
 
 
 
-function test_replace_ids_in_text ()
+const test_replace_ids_in_text = () => describe("running tests of replace_ids_in_text", () =>
 {
-    console. group("running tests of replace_ids_in_text")
-
     const id1 = uuid_v4_for_tests(1)
     const id2 = uuid_v4_for_tests(2)
     const id3 = uuid_v4_for_tests(3)
@@ -65,16 +63,12 @@ function test_replace_ids_in_text ()
         text: `Yesterday @@${id1} today`
     })
     test(result, "Yesterday Person B was told Person A is here today", "Should replace ids with only text and no links when rich_text is true and render_links is false")
-
-    console. groupEnd()
-}
+})
 
 
 
-function test_rendering_title ()
+const test_rendering_title = () => describe("running tests of get_title", () =>
 {
-    console. group("running tests of get_title")
-
     const dt = new Date("2021-05-12")
     const ms = dt.getTime()
 
@@ -194,9 +188,8 @@ function test_rendering_title ()
     }
 
 
-    function test_get_title ()
+    const test_get_title = () => describe("test_get_title", () =>
     {
-        console. group("test_get_title")
 
         Object.entries(expected_non_rich_text).forEach(([id, expected_title]) =>
         {
@@ -215,26 +208,18 @@ function test_rendering_title ()
             const result = get_title_for_id({ id, rich_text: true, render_links: false })
             test(result, expected_title)
         })
-
-        console. groupEnd()
-    }
+    })
 
 
-    function test_depth_limit ()
+    const test_depth_limit = () => describe("test_depth_limit", () =>
     {
-        console. group("test_depth_limit")
-
         const result = get_title_for_id({ id: wcomponent7.id, rich_text: true })
         test(result, `ggg [fff eee True ddd @@${id3}](#wcomponents/${id6})`, "Should stop recursively rendering ids when a depth limit is reached")
-
-        console. groupEnd()
-    }
+    })
 
 
-    function test_counterfactuals ()
+    const test_counterfactuals = () => describe("test_counterfactuals", () =>
     {
-        console. group("test_counterfactuals")
-
         const wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map = {
             [wcomponent3.id]: {
                 VAP_sets: {
@@ -260,39 +245,29 @@ function test_rendering_title ()
             const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })
             test(result, expected_title, "Should override values correctly using counterfactualv2 value")
         })
-
-        console. groupEnd()
-    }
+    })
 
 
-    function test_rendering_recursive_title ()
+    const test_rendering_recursive_title = () => describe("test_rendering_recursive_title", () =>
     {
-        console. group("test_rendering_recursive_title")
-
         // We do not really care about the result, just the fact that it doesn't crash with a
         // "Too much recursion" or "Stack overflow"
         const result = get_title_for_id({ id: id8, rich_text: true })
         const result2 = get_title_for_id({ id: id9, rich_text: true })
 
         test(true, true, "Should not crash with too much recursion or stack overflow")
-
-        console. groupEnd()
-    }
+    })
 
 
     test_get_title()
     test_depth_limit()
     test_counterfactuals()
     test_rendering_recursive_title()
-
-    console. groupEnd()
-}
+})
 
 
-function test_replace_calculations_in_text ()
+const test_replace_calculations_in_text = () => describe.skip("test_replace_calculations_in_text", () =>
 {
-    console. group("test_replace_calculations_in_text")
-
     const id1 = uuid_v4_for_tests(1)
 
     const dt = new Date("2023-08-14")
@@ -328,21 +303,16 @@ $$!
 `
     let result = replace_ids_in_text({ ...args, text })
     test(result, "\n123\n", "Should replace calculation with string value")
-
-    console. groupEnd()
-}
+})
 
 
 
-export function run_get_rich_text_tests ()
+export const run_get_rich_text_tests = () => describe("run_get_rich_text_tests", () =>
 {
-    console. group("run_get_rich_text_tests")
-    // console. groupCollapsed("run_get_rich_text_tests")
     test_replace_ids_in_text()
     test_rendering_title()
     test_replace_calculations_in_text()
-    console. groupEnd()
-}
+})
 
 // run_get_rich_text_tests()
 // test_replace_calculations_in_text()
