@@ -1,6 +1,6 @@
 import "./Canvas.scss"
 
-import { Component, FunctionalComponent, h } from "preact"
+import { Component, ComponentChildren, FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Dispatch } from "redux"
 
@@ -23,9 +23,9 @@ const MAX_DOUBLE_TAP_XY_PIXEL_MOVEMENT = 10
 
 interface OwnProps
 {
-    svg_children?: preact.ComponentChildren[] | null
-    svg_upper_children?: preact.ComponentChildren[] | null
-    overlay?: preact.ComponentChildren | preact.ComponentChildren[] | null
+    svg_children?: ComponentChildren[] | null
+    svg_upper_children?: ComponentChildren[] | null
+    overlay?: ComponentChildren | ComponentChildren[] | null
     plain_background?: boolean
     show_large_grid?: boolean
     extra_class_names?: string

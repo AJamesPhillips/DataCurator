@@ -60,9 +60,6 @@ dependencies:
     version: 2.3.1
 
 devDependencies:
-  '@babel/plugin-transform-react-jsx-source':
-    specifier: ^7.22.5
-    version: 7.22.5(@babel/core@7.22.15)
   '@preact/preset-vite':
     specifier: 2.5.0
     version: 2.5.0(@babel/core@7.22.15)(preact@10.16.0)(vite@4.3.9)
@@ -330,16 +327,6 @@ packages:
     dependencies:
       '@babel/core': 7.22.15
       '@babel/plugin-transform-react-jsx': 7.22.15(@babel/core@7.22.15)
-    dev: true
-
-  /@babel/plugin-transform-react-jsx-source@7.22.5(@babel/core@7.22.15):
-    resolution: {integrity: sha512-yIiRO6yobeEIaI0RTbIr8iAK9FcBHLtZq0S89ZPjDLQXBA4xvghaKqI0etp/tF3htTM0sazJKKLz9oEiGRtu7w==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.22.15
-      '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
   /@babel/plugin-transform-react-jsx@7.22.15(@babel/core@7.22.15):

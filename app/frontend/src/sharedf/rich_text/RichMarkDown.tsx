@@ -1,4 +1,4 @@
-import { Component, FunctionalComponent, h } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 
@@ -7,7 +7,6 @@ import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accesso
 import type { RootState } from "../../state/State"
 import { replace_ids_in_text } from "./get_rich_text"
 import { AnchorTag } from "../AnchorTag"
-import type { CSSProperties } from "@material-ui/styles"
 
 
 
@@ -31,25 +30,21 @@ const connector = connect(map_state)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 
-class _RichMarkDown extends Component <Props>
+function _RichMarkDown (props: Props)
 {
+    const {
+        text, rich_text,
+        composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
+        placeholder = "...",
+        created_at_ms, sim_ms,
+    } = props
 
-    render ()
-    {
-        const {
-            text, rich_text,
-            composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
-            placeholder = "...",
-            created_at_ms, sim_ms,
-        } = this.props
-
-        const value = replace_ids_in_text({
-            text, rich_text, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
-        })
-        return <Markdown options={MARKDOWN_OPTIONS}>
-            {(value && add_newlines_to_markdown(value)) || placeholder}
-        </Markdown>
-    }
+    const value = replace_ids_in_text({
+        text, rich_text, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
+    })
+    return <Markdown options={MARKDOWN_OPTIONS}>
+        {(value && add_newlines_to_markdown(value)) || placeholder}
+    </Markdown>
 }
 
 export const RichMarkDown = connector(_RichMarkDown) as FunctionalComponent<OwnProps>

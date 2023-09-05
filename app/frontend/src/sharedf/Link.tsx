@@ -1,4 +1,4 @@
-import { Component, ComponentClass, h } from "preact"
+import { ComponentChildren, FunctionalComponent, h } from "preact"
 import type { Dispatch } from "redux"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -9,6 +9,7 @@ import { ACTIONS } from "../state/actions"
 import type { ROUTE_TYPES, RoutingStateArgs, SUB_ROUTE_TYPES } from "../state/routing/interfaces"
 import { merge_routing_state } from "../state/routing/merge_routing_state"
 import { Button } from "@material-ui/core"
+import { useRef, useState } from "preact/hooks"
 
 
 
@@ -21,6 +22,7 @@ interface OwnProps {
     selected_on?: Set<"route" | "args.view" | "args.subview_id">
     extra_class_name?: string
     extra_css_style?: h.JSX.CSSProperties
+    children: ComponentChildren
 }
 
 
@@ -63,78 +65,64 @@ const map_dispatch = (dispatch: Dispatch, own_props: OwnProps) => ({
 const connector = connect(map_state, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
-interface State { clicked: boolean }
 
-
-class _Link extends Component<Props, State>
+function _Link (props: Props)
 {
-    constructor (props: Props)
+    const [clicked, set_clicked] = useState(false)
+    const remove_clicked_class = useRef<NodeJS.Timeout | undefined>(undefined)
+
+    if (clicked && !remove_clicked_class!.current)
     {
-        super(props)
-        this.state = { clicked: false }
+        remove_clicked_class.current = setTimeout(() => {
+
+            set_clicked(false)
+            remove_clicked_class.current = undefined
+        }, 300)
     }
 
-    private remove_clicked_class: NodeJS.Timeout | undefined
-    componentWillUpdate (new_props: Props, new_state: State)
-    {
 
-        if (new_state.clicked && !this.remove_clicked_class)
-        {
+    const partial_routing_args: Partial<RoutingStateArgs> = props.args || {}
 
-            this.remove_clicked_class = setTimeout(() => {
+    const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
+        e.stopImmediatePropagation()
+        e.preventDefault()
 
-                this.setState({ clicked: false })
-                this.remove_clicked_class = undefined
+        if (props.selected) return // no-op
+        set_clicked(true)
 
-            }, 300)
-        }
+        // If `on_pointer_down` returns true then do not change route as the handler
+        // has done this already or does not want a ChangeRoute Action to fire
+        if (props.on_pointer_down && props.on_pointer_down()) return
+
+        props.change_route(partial_routing_args)
     }
 
-    render ()
-    {
-        const partial_routing_args: Partial<RoutingStateArgs> = this.props.args || {}
+    const full_routing_state = merge_routing_state(props.current_routing_state, props)
+    const full_routing_args = { ...props.current_routing_state.args, ...partial_routing_args }
+    full_routing_state.args = full_routing_args
 
-        const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
-            e.stopImmediatePropagation()
-            e.preventDefault()
-
-            if (this.props.selected) return // no-op
-            this.setState({ clicked: true })
-
-            // If `on_pointer_down` returns true then do not change route as the handler
-            // has done this already or does not want a ChangeRoute Action to fire
-            if (this.props.on_pointer_down && this.props.on_pointer_down()) return
-
-            this.props.change_route(partial_routing_args)
-        }
-
-        const full_routing_state = merge_routing_state(this.props.current_routing_state, this.props)
-        const full_routing_args = { ...this.props.current_routing_state.args, ...partial_routing_args }
-        full_routing_state.args = full_routing_args
-
-        const class_name = ("link "
-            + (this.state.clicked ? " clicked_animate " : "")
-            + (this.props.selected ? " selected " : "")
-            + (this.props.extra_class_name || "")
-        )
+    const class_name = ("link "
+        + (clicked ? " clicked_animate " : "")
+        + (props.selected ? " selected " : "")
+        + (props.extra_class_name || "")
+    )
 
 
-        // TODO perhaps just get rid of the anchor tag all together?  We're not using it as
-        // an anchor tag at all as we're surpressing all of it's default behaviours
-        return <a
-            onPointerDown={on_pointer_down}
-            onClick={e => { e.stopImmediatePropagation(); e.preventDefault() }}
-            href={routing_state_to_string({ ...full_routing_state })}
-            className={class_name}
-            style={this.props.extra_css_style}
-        >
-            {this.props.children || "Link"}
-        </a>
-    }
+    // TODO perhaps just get rid of the anchor tag all together?  We're not using it as
+    // an anchor tag at all as we're surpressing all of its default behaviours
+    return <a
+        onPointerDown={on_pointer_down}
+        onClick={e => { e.stopImmediatePropagation(); e.preventDefault() }}
+        href={routing_state_to_string({ ...full_routing_state })}
+        className={class_name}
+        style={props.extra_css_style}
+    >
+        {props.children || "Link"}
+    </a>
 }
 
 
-export const Link = connector(_Link) as ComponentClass<OwnProps>
+export const Link = connector(_Link) as FunctionalComponent<OwnProps>
 
 
 interface LinkButtonOwnProps extends OwnProps
@@ -174,4 +162,4 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
     )
 }
 
-export const LinkButton = connector(_LinkButton) as ComponentClass<OwnProps & LinkButtonOwnProps>
+export const LinkButton = connector(_LinkButton) as FunctionalComponent<OwnProps & LinkButtonOwnProps>
