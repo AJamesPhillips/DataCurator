@@ -43,12 +43,10 @@ import { setup_tests_for_browser } from "./App.test"
 
 
 
-
 declare module "@mui/styles/defaultTheme" {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
 
 
 
@@ -68,8 +66,6 @@ type Props = ConnectedProps<typeof connector>
 
 function App(props: Props)
 {
-    const classes = use_styles()
-
     useEffect(() =>
     {
         if (props.network_functional) return
@@ -79,81 +75,90 @@ function App(props: Props)
     return <StyledEngineProvider injectFirst>
         <ThemeProvider theme={DefaultTheme}>
             <CssBaseline />
-
-            {!props.network_functional && <Modal
-                title=""
-                size="small"
-                child={<Box>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Reconnecting...
-                    </Typography>
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Last attempt: {date_to_string({ date: props.network_function_last_checked, time_resolution: "second" })}
-                    </Typography>
-                </Box>}
-            />}
-
-            <Box id="app" className={classes.root}>
-                <AppBar elevation={1} id="header" position="fixed" className={"app_header " + classes.app_bar}>
-                    <Toolbar variant="dense" className={classes.toolbar}>
-                        <Box className={`${classes.toolbar_section} ${classes.grow} ${classes.small_full_width}`}>
-                            <Box className={`${classes.toolbar_item}`}>
-                                <ViewOptions />
-                            </Box>
-                            <Box className={`${classes.toolbar_item} ${classes.grow}`}>
-                                <ViewsBreadcrumb />
-                            </Box>
-                        </Box>
-                        <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end">
-                            <Box className={`${classes.toolbar_item}`}>
-                                <ActiveCreatedAtFilterWarning />
-                                <ActiveFilterWarning />
-                                <ActiveCreationContextWarning />
-                            </Box>
-                            <Box className={`${classes.toolbar_item}`}><ActiveUserWidget /></Box>
-                            <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
-                            <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
-                            <Box className={`${classes.toolbar_item}`}><UserInfo /></Box>
-                            <Box className={`${classes.toolbar_item}`}><SidePanelOrMenuButton /></Box>
-                        </Box>
-                    </Toolbar>
-                </AppBar>
-
-                <Box
-                    id="app_content"
-                    component="div"
-                    className={clsx(classes.content, {
-                        [classes.content_with_open_side_panel]: props.display_side_panel,
-                        animate_connections: props.animate_connections,
-                    })}
-                >
-                    <MainAreaRouter />
-                </Box>
-
-                <Drawer
-                    anchor="right"
-                    className={classes.drawer}
-                    open={props.display_side_panel}
-                    variant="persistent"
-                >
-                    <Box component="aside" className={classes.side_panel} id="side_panel">
-                        <Box id="side_panel_content" className={classes.side_panel_content}>
-                            <AppMenuItemsContainer />
-                            <SidePanel />
-                        </Box>
-                    </Box>
-                </Drawer>
-                <Box className={classes.help_popup}>
-                    <HelpMenu />
-                </Box>
-
-            </Box>
+            <StyledApp {...props} />
         </ThemeProvider>
     </StyledEngineProvider>
 }
 
 export default connector(App) as FunctionalComponent<{}>
 
+
+
+function StyledApp (props: Props)
+{
+    const classes = use_styles()
+
+    return <>
+        {!props.network_functional && <Modal
+            title=""
+            size="small"
+            child={<Box>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Reconnecting...
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    Last attempt: {date_to_string({ date: props.network_function_last_checked, time_resolution: "second" })}
+                </Typography>
+            </Box>}
+        />}
+
+        <Box id="app" className={classes.root}>
+            <AppBar elevation={1} id="header" position="fixed" className={"app_header " + classes.app_bar}>
+                <Toolbar variant="dense" className={classes.toolbar}>
+                    <Box className={`${classes.toolbar_section} ${classes.grow} ${classes.small_full_width}`} >
+                        <Box className={`${classes.toolbar_item}`}>
+                            <ViewOptions />
+                        </Box>
+                        <Box className={`${classes.toolbar_item} ${classes.grow}`}>
+                            <ViewsBreadcrumb />
+                        </Box>
+                    </Box>
+                    <Box className={`${classes.toolbar_section} ${classes.small_full_width}`} justifyContent="flex-end" >
+                        <Box className={`${classes.toolbar_item}`}>
+                            <ActiveCreatedAtFilterWarning />
+                            <ActiveFilterWarning />
+                            <ActiveCreationContextWarning />
+                        </Box>
+                        <Box className={`${classes.toolbar_item}`}><ActiveUserWidget /></Box>
+                        <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>
+                        <Box className={`${classes.toolbar_item}`}><StorageInfo /></Box>
+                        <Box className={`${classes.toolbar_item}`}><UserInfo /></Box>
+                        <Box className={`${classes.toolbar_item}`}><SidePanelOrMenuButton /></Box>
+                    </Box>
+                </Toolbar>
+            </AppBar>
+
+            <Box
+                id="app_content"
+                component="div"
+                className={clsx(classes.content, {
+                    [classes.content_with_open_side_panel]: props.display_side_panel,
+                    animate_connections: props.animate_connections,
+                })}
+            >
+                <MainAreaRouter />
+            </Box>
+
+            <Drawer
+                anchor="right"
+                className={classes.drawer}
+                open={props.display_side_panel}
+                variant="persistent"
+            >
+                <Box component="aside" className={classes.side_panel} id="side_panel">
+                    <Box id="side_panel_content" className={classes.side_panel_content}>
+                        <AppMenuItemsContainer />
+                        <SidePanel />
+                    </Box>
+                </Box>
+            </Drawer>
+            <Box className={classes.help_popup}>
+                <HelpMenu />
+            </Box>
+
+        </Box>
+    </>
+}
 
 
 const use_styles = makeStyles(theme => ({
@@ -235,6 +240,9 @@ const use_styles = makeStyles(theme => ({
         flexShrink: 1,
         flexBasis: "auto",
         marginRight: 5,
+        // height: "32px",
+        // lineHeight: "20px",
+        // fontSize: "14px",
         "&:last-child": { marginRight: 0 },
         "&:empty": { display: "none" }
     },

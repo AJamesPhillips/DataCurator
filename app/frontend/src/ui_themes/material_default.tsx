@@ -1,8 +1,8 @@
-import { createTheme, DeprecatedThemeOptions, adaptV4Theme } from "@mui/material/styles"
+import { createTheme, ThemeOptions } from "@mui/material/styles"
 
 
 
-const _default_theme_options: DeprecatedThemeOptions = {
+const _default_theme_options: ThemeOptions = {
     breakpoints: {
         values: {
             xs: 0,
@@ -55,16 +55,16 @@ const _default_theme_options: DeprecatedThemeOptions = {
 
 
 
-export const DefaultTheme = createTheme(adaptV4Theme(_default_theme_options))
-export const WarningTheme = createTheme(adaptV4Theme(
+export const DefaultTheme = createTheme(_default_theme_options)
+export const WarningTheme = createTheme(
     { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.warning, secondary: _default_theme_options.palette?.error } }
-))
-export const ErrorTheme = createTheme(adaptV4Theme(
+)
+export const ErrorTheme = createTheme(
     { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.error } }
-))
-export const InfoTheme = createTheme(adaptV4Theme(
+)
+export const InfoTheme = createTheme(
     { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.info } }
-))
-export const SuccessTheme = createTheme(adaptV4Theme(
+)
+export const SuccessTheme = createTheme(
     { ...DefaultTheme, palette: { primary: _default_theme_options.palette?.success } }
-))
+)

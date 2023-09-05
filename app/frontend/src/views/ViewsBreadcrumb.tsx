@@ -89,7 +89,7 @@ function _ViewsBreadcrumb (props: Props)
         .map(calc_if_is_hidden)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, parent_id: undefined })
 
-    return <Breadcrumbs>
+    return <Breadcrumbs style={{ marginTop: "8px" }}>
         <Box>
             <Select
                 variant="standard"
