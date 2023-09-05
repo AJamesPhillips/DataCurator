@@ -2,14 +2,14 @@ lockfileVersion: '6.0'
 
 dependencies:
   '@material-ui/core':
-    specifier: 4.11.4
-    version: 4.11.4(react-dom@17.0.2)(react@17.0.2)
+    specifier: 4.12.4
+    version: 4.12.4(react-dom@17.0.2)(react@17.0.2)
   '@material-ui/icons':
-    specifier: 4.11.2
-    version: 4.11.2(@material-ui/core@4.11.4)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 4.11.3
+    version: 4.11.3(@material-ui/core@4.12.4)(react-dom@17.0.2)(react@17.0.2)
   '@material-ui/lab':
-    specifier: 4.0.0-alpha.58
-    version: 4.0.0-alpha.58(@material-ui/core@4.11.4)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 4.0.0-alpha.61
+    version: 4.0.0-alpha.61(@material-ui/core@4.12.4)(react-dom@17.0.2)(react@17.0.2)
   '@supabase/supabase-js':
     specifier: 1.35.7
     version: 1.35.7
@@ -60,6 +60,9 @@ dependencies:
     version: 2.3.1
 
 devDependencies:
+  '@babel/plugin-transform-react-jsx-source':
+    specifier: ^7.22.5
+    version: 7.22.5(@babel/core@7.22.15)
   '@preact/preset-vite':
     specifier: 2.5.0
     version: 2.5.0(@babel/core@7.22.15)(preact@10.16.0)(vite@4.3.9)
@@ -327,6 +330,16 @@ packages:
     dependencies:
       '@babel/core': 7.22.15
       '@babel/plugin-transform-react-jsx': 7.22.15(@babel/core@7.22.15)
+    dev: true
+
+  /@babel/plugin-transform-react-jsx-source@7.22.5(@babel/core@7.22.15):
+    resolution: {integrity: sha512-yIiRO6yobeEIaI0RTbIr8iAK9FcBHLtZq0S89ZPjDLQXBA4xvghaKqI0etp/tF3htTM0sazJKKLz9oEiGRtu7w==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.22.15
+      '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
   /@babel/plugin-transform-react-jsx@7.22.15(@babel/core@7.22.15):
@@ -668,10 +681,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@material-ui/core@4.11.4(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-oqb+lJ2Dl9HXI9orc6/aN8ZIAMkeThufA5iZELf2LQeBn2NtjVilF5D2w7e9RpntAzDb4jK5DsVhkfOvFY/8fg==}
+  /@material-ui/core@4.12.4(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-tr7xekNlM9LjA6pagJmL8QCgZXaubWUwkJnoYcMKd4gw/t4XiyvnTkjdGrUVicyB2BsdaAv1tvow45bPM4sSwQ==}
     engines: {node: '>=8.0.0'}
-    deprecated: 'You can now upgrade to @mui/material. See the guide: https://mui.com/guides/migration-v4/'
+    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
@@ -696,10 +709,9 @@ packages:
       react-transition-group: 4.4.5(react-dom@17.0.2)(react@17.0.2)
     dev: false
 
-  /@material-ui/icons@4.11.2(@material-ui/core@4.11.4)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-fQNsKX2TxBmqIGJCSi3tGTO/gZ+eJgWmMJkgDiOfyNaunNaxcklJQFaFogYcFl0qFuaEz1qaXYXboa/bUXVSOQ==}
+  /@material-ui/icons@4.11.3(@material-ui/core@4.12.4)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-IKHlyx6LDh8n19vzwH5RtHIOHl9Tu90aAAxcbWME6kp4dmvODM3UvOHJeMIDzUbd4muuJKHmlNoBN+mDY4XkBA==}
     engines: {node: '>=8.0.0'}
-    deprecated: 'You can now upgrade to @mui/icons. See the guide: https://mui.com/guides/migration-v4/'
     peerDependencies:
       '@material-ui/core': ^4.0.0
       '@types/react': ^16.8.6 || ^17.0.0
@@ -710,17 +722,17 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.22.15
-      '@material-ui/core': 4.11.4(react-dom@17.0.2)(react@17.0.2)
+      '@material-ui/core': 4.12.4(react-dom@17.0.2)(react@17.0.2)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
     dev: false
 
-  /@material-ui/lab@4.0.0-alpha.58(@material-ui/core@4.11.4)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-GKHlJqLxUeHH3L3dGQ48ZavYrqGOTXkFkiEiuYMAnAvXAZP4rhMIqeHOPXSUQan4Bd8QnafDcpovOSLnadDmKw==}
+  /@material-ui/lab@4.0.0-alpha.61(@material-ui/core@4.12.4)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-rSzm+XKiNUjKegj8bzt5+pygZeckNLOr+IjykH8sYdVk7dE9y2ZuUSofiMV2bJk3qU+JHwexmw+q0RyNZB9ugg==}
     engines: {node: '>=8.0.0'}
-    deprecated: 'You can now upgrade to @mui/lab. See the guide: https://mui.com/guides/migration-v4/'
+    deprecated: Material UI v4 doesn't receive active development since September 2021. See the guide https://mui.com/material-ui/migration/migration-v4/ to upgrade to v5.
     peerDependencies:
-      '@material-ui/core': ^4.9.10
+      '@material-ui/core': ^4.12.1
       '@types/react': ^16.8.6 || ^17.0.0
       react: ^16.8.0 || ^17.0.0
       react-dom: ^16.8.0 || ^17.0.0
@@ -729,7 +741,7 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.22.15
-      '@material-ui/core': 4.11.4(react-dom@17.0.2)(react@17.0.2)
+      '@material-ui/core': 4.12.4(react-dom@17.0.2)(react@17.0.2)
       '@material-ui/utils': 4.11.3(react-dom@17.0.2)(react@17.0.2)
       clsx: 1.2.1
       prop-types: 15.8.1

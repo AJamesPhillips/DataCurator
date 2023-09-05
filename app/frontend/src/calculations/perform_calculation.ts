@@ -21,5 +21,5 @@ export function perform_calculation ()
 
     const calculation_result = results
 
-    console.log("calculation result", calculation_result)
+    // console.log("calculation result", calculation_result)
 }
