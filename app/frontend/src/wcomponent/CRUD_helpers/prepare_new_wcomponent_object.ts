@@ -34,11 +34,11 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
     if (partial_wcomponent.type === "causal_link" || partial_wcomponent.type === "relation_link")
     {
         let link: WComponentConnection = {
+            ...base,
             from_id: "",
             to_id: "",
             from_type: "state",
             to_type: "state",
-            ...base,
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
         }
@@ -58,11 +58,11 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
     else if (partial_wcomponent.type === "judgement" || partial_wcomponent.type === "objective")
     {
         const judgement: WComponentJudgement = {
+            ...base,
             judgement_target_wcomponent_id: "",
             judgement_operator: "==",
             judgement_comparator_value: "True",
             judgement_manual: undefined,
-            ...base,
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
         }
@@ -95,8 +95,8 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
     {
         const goal: WComponentNodeGoal = {
             ...base,
-            ...partial_wcomponent,
             objective_ids: [],
+            ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
         }
         wcomponent = goal
@@ -104,10 +104,10 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
     else if (partial_wcomponent.type === "action")
     {
         const action: WComponentNodeAction = {
+            ...base,
             values_and_prediction_sets: [],
             reason_for_status: "",
             depends_on_action_ids: [],
-            ...base,
             ...partial_wcomponent,
             type: partial_wcomponent.type, // only added to remove type warning
         }
