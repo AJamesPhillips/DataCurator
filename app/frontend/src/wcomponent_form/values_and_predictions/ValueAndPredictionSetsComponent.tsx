@@ -26,7 +26,7 @@ import {
     get_details_for_single_VAP_set,
     get_details2_for_single_VAP_set,
 } from "./common"
-import { new_value_and_prediction_set } from "./NewValueAndPredictionSet"
+import { new_value_and_prediction_set__jsx_factory } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
@@ -112,7 +112,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     const new_VAP_set_form_item_props: EditableListEntryItemProps<VAPSet, ListItemCRUDRequiredCU<VAPSet>> = {
         get_created_at: get_actual_created_at_datetime,
         get_custom_created_at: get_actual_custom_created_at_datetime,
-        get_summary: new_value_and_prediction_set(VAPs_represent, possible_value_possibilities),
+        get_summary: new_value_and_prediction_set__jsx_factory(VAPs_represent, possible_value_possibilities),
         get_details: () => <div />, // get_details_for_single_VAP_set(VAPs_represent),
         get_details2: () => <div />, // get_details2_for_single_VAP_set(VAPs_represent, editing),
         extra_class_names: `value_and_prediction_set new`,

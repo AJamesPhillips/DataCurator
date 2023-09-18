@@ -19,7 +19,7 @@ import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabili
 
 
 
-export const new_value_and_prediction_set = (VAPs_represent: VAPsType, possible_value_possibilities: ValuePossibilitiesById | undefined) =>
+export const new_value_and_prediction_set__jsx_factory = (VAPs_represent: VAPsType, possible_value_possibilities: ValuePossibilitiesById | undefined) =>
 {
     const any_value_possibilities = Object.keys(possible_value_possibilities || {}).length > 0
     const hide_advanced_for_type_other = VAPs_represent === VAPsType.other && any_value_possibilities
