@@ -90,7 +90,7 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 
 
-export const run_get_plain_calculation_object_from_str_tests = () => describe("running tests of get_plain_calculation_object_from_str", () =>
+export const run_get_plain_calculation_object_from_str_tests = describe("running tests of get_plain_calculation_object_from_str", () =>
 {
     let str = "  "
     let plain_calculation_object = get_plain_calculation_object_from_str(str)

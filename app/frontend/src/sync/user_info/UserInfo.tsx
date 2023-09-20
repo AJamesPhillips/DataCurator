@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
-import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
+import type { AuthUser as SupabaseAuthUser } from "@supabase/supabase-js"
 import { FunctionalComponent, h } from "preact"
 import { useRef } from "preact/hooks"
 import { useEffect, useState } from "preact/hooks"

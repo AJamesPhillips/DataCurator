@@ -31,24 +31,27 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 
 interface DescribeFn
 {
-    (description: string, test_fn: () => void): void
+    (description: string, test_fn: () => void): () => void
 }
 
 interface Describe extends DescribeFn
 {
-    skip: (description: string, test_fn: () => void) => void
+    skip: (description: string, test_fn: () => void) => () => void
 }
 
 
 const describe_fn: DescribeFn = (description: string, test_fn: () => void) =>
 {
-    console .group(description)
-    test_fn()
-    console .groupEnd()
+    return () =>
+    {
+        console .group(description)
+        test_fn()
+        console .groupEnd()
+    }
 }
 
 export const describe: Describe = describe_fn as any
 describe.skip = (description: string, test_fn: () => void) =>
 {
-    console. log ("skipping  " + description)
+    return () => console .log("skipping  " + description)
 }
