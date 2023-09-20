@@ -147,4 +147,5 @@ value: 33
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
     test(plain_calculation_object, { valid: true, value: 33, name: "A" }, "Will find a name and value")
-})
+
+}, false)
