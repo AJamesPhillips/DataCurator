@@ -12,3 +12,6 @@ export function is_valid_uuid (uuid: string)
 
 export const old_ids_and_functions_regex = /.*?(@@\w*\d+)\.([\w]+)/g
 export const uuids_and_functions_regex = /.*?(@@[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12})\.([\w]+)/gi
+
+
+export const non_square_bracket_ids_regex = /(?:^|.*?[^\[a-zA-Z0-9_])([a-zA-Z][a-zA-Z0-9_]*)/gi
