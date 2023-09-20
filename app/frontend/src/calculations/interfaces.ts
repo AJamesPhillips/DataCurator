@@ -20,17 +20,6 @@ interface InvalidCalculationObject
 export type PlainCalculationObjectV1 = ValidPlainCalculationObject | InvalidCalculationObject
 
 
-/**
- * Version 2 of PlainCalculationObject
- */
-export interface PlainCalculationObject
-{
-    name: string
-    value: string  // strings might be an @@<uuid v4>
-}
-
-
-
 interface _FullCalculationObject
 {
     valid: true
@@ -63,4 +52,21 @@ export interface ReplaceCalculationsWithResults extends ReplaceNormalIdsInTextAr
 {
     created_at_ms: number
     sim_ms: number
+}
+
+
+
+
+/**
+ * Version 2 of PlainCalculationObject
+ */
+export interface PlainCalculationObject
+{
+    name: string
+    value: string  // strings might be an @@<uuid v4>
+}
+
+export interface CalculationResult
+{
+    value: number | undefined
 }
