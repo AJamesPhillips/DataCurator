@@ -4,6 +4,7 @@ import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { perform_calculations } from "./perform_calculations"
 
@@ -80,7 +81,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
     const id1 = uuid_v4_for_tests(1)
     const base_id = 0
-    const vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+    let vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
     vap_set_1.entries[0]!.value = "12.3"
     wcomponents_by_id = {
         [id1]: prepare_new_contextless_wcomponent_object({
@@ -97,6 +98,29 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     expected_calculation_result = [
         { value: 123 },
     ]
-    test.skip(calculation_result, expected_calculation_result, "Can reference wcomponent values")
+    test(calculation_result, expected_calculation_result, "Can reference wcomponent values")
+
+
+
+    vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+    test(vap_set_1.entries[1]!.value_id, VALUE_POSSIBILITY_IDS.boolean_false, "Test is setting the correct VAP set entry")
+    vap_set_1.entries[1]!.probability = 1
+
+    wcomponents_by_id = {
+        [id1]: prepare_new_contextless_wcomponent_object({
+            base_id,
+            id: id1,
+            type: "statev2",
+            values_and_prediction_sets: [vap_set_1]
+        }),
+    }
+    calculations = [
+        { name: "A", value: `IfThenElse(@@${id1}, 15, 10)` },
+    ]
+    calculation_result = perform_calculations(calculations, wcomponents_by_id)
+    expected_calculation_result = [
+        { value: 10 },
+    ]
+    test(calculation_result, expected_calculation_result, "Can use wcomponent boolean values")
 
 }, true)

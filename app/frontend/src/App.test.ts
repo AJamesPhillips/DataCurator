@@ -5,7 +5,7 @@ import { run_replace_calculations_with_results_tests } from "./calculations/rich
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
 import { run_replace_normal_ids_tests } from "./sharedf/rich_text/replace_normal_ids.test"
 import { run_perform_calculations_test } from "./calculations/perform_calculations.test"
-import { run_convert_equation_tests } from "./calculations/convert_equation.test"
+import { run_normalise_calculation_ids_and_extract_uuids_tests } from "./calculations/normalise_calculation_ids.test"
 
 
 
@@ -17,7 +17,7 @@ function run_all_tests ()
     run_get_plain_calculation_object_from_str_tests()
     run_add_newlines_to_markdown_tests()
     run_parse_calculation_equations_tests()
-    run_convert_equation_tests()
+    run_normalise_calculation_ids_and_extract_uuids_tests()
     run_perform_calculations_test()
 }
 

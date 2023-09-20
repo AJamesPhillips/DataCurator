@@ -4,11 +4,19 @@ import { SIMULATION_JS_RESERVED_WORDS } from "./reserved_words"
 
 
 
-export function convert_equation (equation: string): string
+export function normalise_calculation_ids_and_extract_uuids (equation: string): { uuids: string[], converted_calculation: string }
+{
+    const uuid_v4s = get_ids_from_text(equation)
+    const converted_calculation = normalise_calculation_ids(equation, uuid_v4s)
+
+    return { uuids: uuid_v4s, converted_calculation }
+}
+
+
+export function normalise_calculation_ids (equation: string, uuid_v4s: string[]): string
 {
     let converted_equation = equation
 
-    const uuid_v4s = get_ids_from_text(equation)
     uuid_v4s.forEach(id =>
     {
         const replacer = new RegExp(`@@${id}`, "g")
@@ -81,5 +89,5 @@ function get_non_square_bracket_ids_from_text (text: string): string[]
 
 function exclude_reserved_simulationjs_words (potential_non_square_bracket_ids: string[])
 {
-    return potential_non_square_bracket_ids.filter(id => !SIMULATION_JS_RESERVED_WORDS.has(id))
+    return potential_non_square_bracket_ids.filter(id => !SIMULATION_JS_RESERVED_WORDS.has(id.toLowerCase()))
 }

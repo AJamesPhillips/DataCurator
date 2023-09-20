@@ -10,7 +10,7 @@ declare module "simulation" {
     interface ModelVariableConfig
     {
         name: string
-        value: number | string
+        value: number | string | "True" | "False"
     }
 
 
