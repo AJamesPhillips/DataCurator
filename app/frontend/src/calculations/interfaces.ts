@@ -1,6 +1,5 @@
 import { YAMLParseError } from "yaml"
-import { WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
-import { ReplaceNormalIdsInTextArgs } from "../../sharedf/rich_text/interfaces"
+import { ReplaceNormalIdsInTextArgs } from "../sharedf/rich_text/interfaces"
 
 
 
@@ -18,7 +17,7 @@ interface InvalidCalculationObject
 }
 
 
-export type PlainCalculationObject = ValidPlainCalculationObject | InvalidCalculationObject
+export type PlainCalculationObjectV1 = ValidPlainCalculationObject | InvalidCalculationObject
 
 
 

@@ -1,4 +1,4 @@
-import { FullCalculationObject, ParsedCalculationObject } from "./interfaces"
+import { FullCalculationObject, ParsedCalculationObject } from "../interfaces"
 
 
 

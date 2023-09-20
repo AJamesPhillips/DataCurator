@@ -1,11 +1,11 @@
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import { ReplaceNormalIdsInTextArgs } from "../../sharedf/rich_text/interfaces"
 import { replace_normal_ids } from "../../sharedf/rich_text/replace_normal_ids"
-import { FullCalculationObject, PlainCalculationObject, ReplaceCalculationsWithResults } from "./interfaces"
+import { FullCalculationObject, PlainCalculationObjectV1, ReplaceCalculationsWithResults } from "../interfaces"
 
 
 
-export function get_referenced_values (calculation: PlainCalculationObject, args: ReplaceCalculationsWithResults): FullCalculationObject
+export function get_referenced_values (calculation: PlainCalculationObjectV1, args: ReplaceCalculationsWithResults): FullCalculationObject
 {
     if (!calculation.valid) return calculation
 

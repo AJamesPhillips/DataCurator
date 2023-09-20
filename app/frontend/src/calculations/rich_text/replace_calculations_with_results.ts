@@ -1,7 +1,7 @@
 import { get_calculation_strs_from_text } from "./get_calculation_strs_from_text"
 import { get_plain_calculation_object_from_str } from "./get_plain_calculation_object_from_str"
 import { get_referenced_values } from "./get_referenced_values"
-import { FullCalculationObject, ReplaceCalculationsWithResults } from "./interfaces"
+import { FullCalculationObject, ReplaceCalculationsWithResults } from "../interfaces"
 // import { parse_calculation_equations } from "./parse_calculation_equations"
 
 

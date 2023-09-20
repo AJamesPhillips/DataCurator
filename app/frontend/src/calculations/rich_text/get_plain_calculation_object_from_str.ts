@@ -2,7 +2,7 @@ import { YAMLParseError, parse } from "yaml"
 
 import { describe, test } from "../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
-import { PlainCalculationObject } from "./interfaces"
+import { PlainCalculationObjectV1 } from "../interfaces"
 
 
 
@@ -12,7 +12,7 @@ const CalculationObjectError = {
 }
 
 
-export function get_plain_calculation_object_from_str (calculation_str: string): PlainCalculationObject
+export function get_plain_calculation_object_from_str (calculation_str: string): PlainCalculationObjectV1
 {
     calculation_str = calculation_str.trim()
 

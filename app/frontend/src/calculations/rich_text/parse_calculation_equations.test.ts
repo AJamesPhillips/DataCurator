@@ -1,5 +1,5 @@
 import { test } from "../../shared/utils/test"
-import { FullCalculationObject, ParsedCalculationObject } from "./interfaces"
+import { FullCalculationObject, ParsedCalculationObject } from "../interfaces"
 import { parse_calculation_equations } from "./parse_calculation_equations"
 
 

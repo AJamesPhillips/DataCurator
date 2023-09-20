@@ -6,7 +6,7 @@ import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/pre
 import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { replace_calculations_with_results } from "./replace_calculations_with_results"
-import { ReplaceCalculationsWithResults } from "./interfaces"
+import { ReplaceCalculationsWithResults } from "../interfaces"
 
 
 
