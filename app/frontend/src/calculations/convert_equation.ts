@@ -1,4 +1,4 @@
-import { non_square_bracket_ids_regex } from "../sharedf/rich_text/id_regexs"
+import { non_square_bracket_ids_regex, square_bracket_ids_regex } from "../sharedf/rich_text/id_regexs"
 import { get_ids_from_text } from "../sharedf/rich_text/replace_normal_ids"
 import { SIMULATION_JS_RESERVED_WORDS } from "./reserved_words"
 
@@ -9,11 +9,30 @@ export function convert_equation (equation: string): string
     let converted_equation = equation
 
     const uuid_v4s = get_ids_from_text(equation)
-    uuid_v4s.forEach((id, index) =>
+    uuid_v4s.forEach(id =>
     {
         const replacer = new RegExp(`@@${id}`, "g")
 
-        const replacement_content = `[uuidv4${index}]`
+        const replacement_content = `[${id}]`
+
+        converted_equation = converted_equation.replace(replacer, replacement_content)
+    })
+
+
+    // Now make all square bracket ids not findable by non_square_bracket_ids_regex
+    // (I can't figure out how to do this with a regex)
+    // As some like the uuid will match on this:
+    //     [10000000-0000-4000-a000-000000000000]
+    //                         ^^^^
+    // And some like ids with spaces will match:
+    //     [ some id ]
+    //       ^^^^ ^^
+    const ids_to_hide = get_spaced_square_bracket_ids_from_text(converted_equation)
+    ids_to_hide.forEach((id, index) =>
+    {
+        const replacer = new RegExp(`\\[${id}\\]`, "g")
+
+        const replacement_content = `[id_to_hide${index}]`
 
         converted_equation = converted_equation.replace(replacer, replacement_content)
     })
@@ -31,9 +50,9 @@ export function convert_equation (equation: string): string
     })
 
 
-    uuid_v4s.forEach((id, index) =>
+    ids_to_hide.forEach((id, index) =>
     {
-        const replacer = new RegExp(`\\[uuidv4${index}\\]`, "g")
+        const replacer = new RegExp(`\\[id_to_hide${index}\\]`, "g")
 
         const replacement_content = `[${id}]`
 
@@ -46,7 +65,14 @@ export function convert_equation (equation: string): string
 
 
 
-export function get_non_square_bracket_ids_from_text (text: string): string[]
+function get_spaced_square_bracket_ids_from_text (text: string): string[]
+{
+    const matches = [ ...text.matchAll(square_bracket_ids_regex) ]
+    return matches.map(entry => entry[1]!)
+}
+
+
+function get_non_square_bracket_ids_from_text (text: string): string[]
 {
     const matches = [ ...text.matchAll(non_square_bracket_ids_regex) ]
     return matches.map(entry => entry[1]!)

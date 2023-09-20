@@ -46,4 +46,14 @@ export const run_convert_equation_tests = describe("convert_equation", () =>
     result_calculation_string = convert_equation(calculation_string)
     test(result_calculation_string, expected_converted_calculation, "Simulation.js equality signs not processed into square brackets")
 
+    calculation_string = `[Some agent].FindAll([Some state]) + B`
+    expected_converted_calculation = `[Some agent].FindAll([Some state]) + [B]`
+    result_calculation_string = convert_equation(calculation_string)
+    test(result_calculation_string, expected_converted_calculation, "Simulation.js agent functions not processed into square brackets")
+
+    calculation_string = `[ Some variable ] + [ another variable ]`
+    expected_converted_calculation = `[ Some variable ] + [ another variable ]`
+    result_calculation_string = convert_equation(calculation_string)
+    test(result_calculation_string, expected_converted_calculation, "Existing square bracket id with spaces is not altered")
+
 }, false)

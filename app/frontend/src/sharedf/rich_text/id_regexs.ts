@@ -15,3 +15,4 @@ export const uuids_and_functions_regex = /.*?(@@[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F
 
 
 export const non_square_bracket_ids_regex = /(?:^|.*?[^\[a-zA-Z0-9_])([a-zA-Z][a-zA-Z0-9_]*)/gi
+export const square_bracket_ids_regex = /.*?\[([^\]]+)\]/gi
