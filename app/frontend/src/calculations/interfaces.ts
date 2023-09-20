@@ -69,4 +69,5 @@ export interface PlainCalculationObject
 export interface CalculationResult
 {
     value: number | undefined
+    error?: string
 }

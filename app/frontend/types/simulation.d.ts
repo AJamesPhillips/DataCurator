@@ -22,7 +22,15 @@ declare module "simulation" {
 
         simulate (): SimulationResult { }
 
-        Link (component1: SimulationComponent, component2: SimulationComponent) { }
+        Link (source_component: SimulationComponent, consuming_component: SimulationComponent) { }
+    }
+
+    export interface SimulationError
+    {
+        code: number
+        columnNumber: number
+        lineNumber: number
+        message: string
     }
 }
 
