@@ -77,7 +77,7 @@ import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./t
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
-import { perform_calculation } from "../calculations/perform_calculation"
+import { perform_calculations } from "../calculations/perform_calculations"
 
 
 
@@ -200,7 +200,9 @@ function _WComponentForm (props: Props)
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
-    perform_calculation()
+    const calculation_result = perform_calculations([], {})
+    // console.log("Result = ", calculation_result[0]!._data.data[0])//![model_components[0]!._node.id])
+
 
 
     return <Box>

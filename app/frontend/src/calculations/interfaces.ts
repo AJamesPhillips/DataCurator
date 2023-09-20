@@ -20,6 +20,15 @@ interface InvalidCalculationObject
 export type PlainCalculationObjectV1 = ValidPlainCalculationObject | InvalidCalculationObject
 
 
+/**
+ * Version 2 of PlainCalculationObject
+ */
+export interface PlainCalculationObject
+{
+    name: string
+    value: string  // strings might be an @@<uuid v4>
+}
+
 
 
 interface _FullCalculationObject
