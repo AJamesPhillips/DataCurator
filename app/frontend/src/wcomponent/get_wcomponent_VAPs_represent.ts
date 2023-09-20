@@ -19,7 +19,7 @@ export function get_wcomponent_VAPs_represent (wcomponent: WComponent | undefine
 
     if (_wcomponent_ids_touched.has(wcomponent?.id || ""))
     {
-        console. log(`Recursion prevented in "get_wcomponent_VAPs_represent" for wcomponent id: "${wcomponent?.id}" type: "${wcomponent?.type}"`)
+        console .log(`Recursion prevented in "get_wcomponent_VAPs_represent" for wcomponent id: "${wcomponent?.id}" type: "${wcomponent?.type}"`)
         return VAPs_represent
     }
     if (wcomponent) _wcomponent_ids_touched.add(wcomponent.id)

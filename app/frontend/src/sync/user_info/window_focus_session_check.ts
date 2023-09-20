@@ -70,12 +70,12 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
         else if (response.error)
         {
             debugger // temporary addition whilst we develop this in parallel with other work, will remove later
-            console. log("Unexpected error whilst check_connection_and_session", response.error)
+            console .log("Unexpected error whilst check_connection_and_session", response.error)
             return CheckConnectionAndSessionResult.unexpected_error
         }
         else
         {
-            // console. log("On window focus event, successfully accessed user info.")
+            // console .log("On window focus event, successfully accessed user info.")
             return CheckConnectionAndSessionResult.success
         }
     }

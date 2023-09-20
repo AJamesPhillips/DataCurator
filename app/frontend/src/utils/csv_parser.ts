@@ -70,7 +70,7 @@ export function csv_to_array (str_data: string)
 
 function run_tests ()
 {
-    console. log("running tests of csv_to_array")
+    console .log("running tests of csv_to_array")
 
     test(csv_to_array(``), [[``]])
     test(csv_to_array(`,`), [[``, ``]])

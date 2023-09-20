@@ -14,7 +14,7 @@ export function get_calculation_strs_from_text (text: string): string[]
 
 function test_get_calculation_strs_from_text ()
 {
-    console. log("running tests of get_calculation_strs_from_text")
+    console .log("running tests of get_calculation_strs_from_text")
 
     const id1 = "@@" + uuid_v4_for_tests(1)
 

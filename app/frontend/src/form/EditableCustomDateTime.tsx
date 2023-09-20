@@ -239,7 +239,7 @@ function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
 
 // function run_tests ()
 // {
-//     console. log("running tests of handle_on_blur")
+//     console .log("running tests of handle_on_blur")
 
 //     let valid: boolean
 //     let invariant_value: Date | undefined

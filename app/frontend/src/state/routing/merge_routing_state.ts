@@ -47,7 +47,7 @@ export function merge_routing_state (current_routing_state: RoutingState, new_ro
 
 function run_tests ()
 {
-    console. log("running tests of merge_routing_state")
+    console .log("running tests of merge_routing_state")
 
     const dt = new Date("2021-04-09 23:25:26")
     const dt2 = new Date("2022-01-01 01:01:01")

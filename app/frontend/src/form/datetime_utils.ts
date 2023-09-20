@@ -84,7 +84,7 @@ export function correct_datetime_for_local_time_zone (value: string)
 
 function run_tests ()
 {
-    console. log("running tests of correct_datetime_for_local_time_zone")
+    console .log("running tests of correct_datetime_for_local_time_zone")
 
     let result: Date | undefined
 

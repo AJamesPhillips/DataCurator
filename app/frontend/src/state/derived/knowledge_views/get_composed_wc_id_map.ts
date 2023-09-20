@@ -67,7 +67,7 @@ function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWCompo
 
 function run_tests ()
 {
-    console. log("running tests of get_composed_wc_id_map etc")
+    console .log("running tests of get_composed_wc_id_map etc")
 
     const date1 = new Date("2023-03-22 15:15:00")
 

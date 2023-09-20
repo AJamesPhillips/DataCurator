@@ -180,7 +180,7 @@ function parse_int_or_undefined (val: string): number | undefined
 
 function run_tests ()
 {
-    console. log("running tests of routing_state_to_string")
+    console .log("running tests of routing_state_to_string")
 
     let state: RoutingState
     let result: string

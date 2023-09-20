@@ -69,7 +69,7 @@ export function find_nearest_index_in_sorted_list <I> (sorted_list: I[], get_key
 
 function run_tests ()
 {
-    console. log("running tests of find_index_in_sorted_list and find_nearest_index_in_sorted_list")
+    console .log("running tests of find_index_in_sorted_list and find_nearest_index_in_sorted_list")
 
     let result = find_index_in_sorted_list([1, 2, 3, 4, 5, 6, 7, 8, 9], i => i, 3)
     test(result, 2)

@@ -56,7 +56,7 @@ function reduce_display_string_values (value_strings: string[])
 
 // function run_tests ()
 // {
-//     console. log("running tests of get_wcomponent_statev2_value")
+//     console .log("running tests of get_wcomponent_statev2_value")
 
 //     const dt0 = new Date("2021-05-01 00:00")
 //     const dt1 = new Date("2021-05-01 00:01")

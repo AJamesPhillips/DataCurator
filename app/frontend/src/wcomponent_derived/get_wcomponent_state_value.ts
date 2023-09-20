@@ -106,7 +106,7 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
 
 function run_tests ()
 {
-    console. log("running tests of get_wcomponent_statev2_value")
+    console .log("running tests of get_wcomponent_statev2_value")
 
     const dt0 = new Date("2021-05-01 00:00")
     const dt1 = new Date("2021-05-01 00:01")

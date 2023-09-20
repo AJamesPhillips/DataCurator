@@ -45,7 +45,7 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = derived_state_reducer(initial_state, state)
     state = derived_meta_wcomponents_state_reducer(initial_state, state)
 
-    // console. log (action.type, action)
+    // console .log(action.type, action)
 
     ;(window as any).debug_state = state
 

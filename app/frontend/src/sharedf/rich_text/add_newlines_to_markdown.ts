@@ -48,7 +48,7 @@ export function add_newlines_to_markdown (text: string): string
 
 export function run_add_newlines_to_markdown_tests ()
 {
-    console. log("running tests of add_newlines_to_markdown")
+    console .log("running tests of add_newlines_to_markdown")
 
     test(add_newlines_to_markdown(`
 test 1

@@ -51,7 +51,7 @@ export function calc_new_counterfactual_state (args: CalcNewCounterfactualStateA
 
 function run_tests ()
 {
-    console. log("running tests of calc_new_counterfactual_state")
+    console .log("running tests of calc_new_counterfactual_state")
 
     let probability: number
     let conviction: number

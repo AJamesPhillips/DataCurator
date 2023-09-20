@@ -11,7 +11,7 @@ export function run_parse_calculation_equations_tests ()
     const skip = true
     if (skip)
     {
-        console. log("Skipping tests of parse_calculation_equations")
+        console .log("Skipping tests of parse_calculation_equations")
         console. groupEnd()
         return
     }
