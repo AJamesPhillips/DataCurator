@@ -1,6 +1,6 @@
-import { get_wcomponent_state_UI_value } from "../../../wcomponent_derived/get_wcomponent_state_UI_value"
-import { ReplaceNormalIdsInTextArgs } from "../interfaces"
-import { replace_normal_ids } from "../replace_normal_ids"
+import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
+import { ReplaceNormalIdsInTextArgs } from "../../sharedf/rich_text/interfaces"
+import { replace_normal_ids } from "../../sharedf/rich_text/replace_normal_ids"
 import { FullCalculationObject, PlainCalculationObject, ReplaceCalculationsWithResults } from "./interfaces"
 
 

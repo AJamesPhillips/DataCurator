@@ -7,7 +7,7 @@ import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcom
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
 import type { ReplaceNormalIdsInTextArgs, ReplaceFunctionIdsInTextArgs } from "./interfaces"
-import { replace_calculations_with_results } from "./calculations/replace_calculations_with_results"
+import { replace_calculations_with_results } from "../../calculations/rich_text/replace_calculations_with_results"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 

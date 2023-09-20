@@ -1,7 +1,7 @@
 import { YAMLParseError, parse } from "yaml"
 
-import { describe, test } from "../../../shared/utils/test"
-import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
+import { describe, test } from "../../shared/utils/test"
+import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { PlainCalculationObject } from "./interfaces"
 
 

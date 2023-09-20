@@ -1,6 +1,6 @@
 import { YAMLParseError } from "yaml"
-import { WComponentNodeStateV2 } from "../../../wcomponent/interfaces/state"
-import { ReplaceNormalIdsInTextArgs } from "../interfaces"
+import { WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
+import { ReplaceNormalIdsInTextArgs } from "../../sharedf/rich_text/interfaces"
 
 
 

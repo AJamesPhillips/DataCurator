@@ -1,5 +1,5 @@
-import { test } from "../../../shared/utils/test"
-import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
+import { test } from "../../shared/utils/test"
+import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 
 
 
