@@ -100,6 +100,9 @@ function run_model (model: Model, model_component: SimulationComponent)
     catch (e) {
         const err = e as SimulationError
         error = `${err.message}`
+        // Defensive approach to ensure there's always an error in case
+        // err.message is ever an empty string
+        error = error || "Unknown calculation error"
     }
 
     return { value, error }
