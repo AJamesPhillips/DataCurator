@@ -77,6 +77,8 @@ import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrAction
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { perform_calculations } from "../calculations/perform_calculations"
+import { PlainCalculationObject } from "../calculations/interfaces"
+import { WComponentCalculatonsForm } from "./WComponentCalculatonsForm"
 
 
 
@@ -199,6 +201,8 @@ function _WComponentForm (props: Props)
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
+    const temp_wcomponent_calculations: PlainCalculationObject[] = []
+
 
     return <Box>
         {props.is_in_editing_mode && !props.allowed_to_edit && <div>
@@ -283,6 +287,15 @@ function _WComponentForm (props: Props)
                     allow_none={true}
                     on_change={option_id => wrapped_upsert_wcomponent({ subtype: option_id })}
                 />
+            </div>
+        </p>}
+
+
+        {wcomponent_is_statev2(wcomponent) && (force_editable || temp_wcomponent_calculations.length > 0) &&
+        <p>
+            <span className="description_label">Calculations</span>&nbsp;
+            <div style={{ width: "60%", display: "inline-block" }}>
+                <WComponentCalculatonsForm wcomponent={wcomponent} />
             </div>
         </p>}
 
