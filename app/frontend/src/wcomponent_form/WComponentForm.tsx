@@ -49,7 +49,6 @@ import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayVal
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
 import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
 import { WComponentFromTo } from "./WComponentFromTo"
-import { WComponentLatestPrediction } from "./WComponentLatestPrediction"
 import { ChosenObjectivesFormFields } from "./ChosenObjectivesFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
@@ -233,9 +232,6 @@ function _WComponentForm (props: Props)
                 spellcheck={true}
             />
         </FormControl>
-
-
-        <WComponentLatestPrediction wcomponent={wcomponent} />
 
 
         {UI_value?.is_defined && <span>
