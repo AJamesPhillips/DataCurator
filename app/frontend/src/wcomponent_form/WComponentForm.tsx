@@ -200,10 +200,6 @@ function _WComponentForm (props: Props)
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
-    const calculation_result = perform_calculations([], {})
-    // console.log("Result = ", calculation_result[0]!._data.data[0])//![model_components[0]!._node.id])
-
-
 
     return <Box>
         {props.is_in_editing_mode && !props.allowed_to_edit && <div>
