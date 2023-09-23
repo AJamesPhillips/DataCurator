@@ -1,3 +1,4 @@
+import { PlainCalculationObject } from "../../calculations/interfaces"
 import type { Base } from "../../shared/interfaces/base"
 import type { TemporalUncertainty, PredictionBase } from "../../shared/uncertainty/interfaces"
 import type { ValuePossibilitiesById } from "./possibility"
@@ -29,6 +30,11 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase
     // boolean subtype specific explainable fields
     // boolean_true_str?: string
     // boolean_false_str?: string
+
+    // Not sure yet if calculations belong only on StateV2 or if this should be
+    // an interface and be made available for several different types of component
+    // It certainly belongs on this component though.
+    calculations?: PlainCalculationObject[]
 }
 
 

@@ -201,9 +201,6 @@ function _WComponentForm (props: Props)
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
-    const temp_wcomponent_calculations: PlainCalculationObject[] = []
-
-
     return <Box>
         {props.is_in_editing_mode && !props.allowed_to_edit && <div>
             <WarningTriangle message="" />
@@ -291,12 +288,10 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {wcomponent_is_statev2(wcomponent) && (force_editable || temp_wcomponent_calculations.length > 0) &&
+        {wcomponent_is_statev2(wcomponent) && (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
         <p>
             <span className="description_label">Calculations</span>&nbsp;
-            <div style={{ width: "60%", display: "inline-block" }}>
-                <WComponentCalculatonsForm wcomponent={wcomponent} />
-            </div>
+            <WComponentCalculatonsForm wcomponent={wcomponent} />
         </p>}
 
 
