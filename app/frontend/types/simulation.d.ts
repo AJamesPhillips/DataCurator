@@ -59,6 +59,7 @@ interface SimulationComponent
 {
     _node: SimulationNode
     model: {}
+    units: string
 }
 
 interface SimulationResult

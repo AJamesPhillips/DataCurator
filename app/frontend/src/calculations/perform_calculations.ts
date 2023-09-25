@@ -1,4 +1,4 @@
-import { Model, SimulationError } from "simulation"
+import { Model, ModelVariableConfig, SimulationError } from "simulation"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { normalise_calculation_ids_and_extract_uuids } from "./normalise_calculation_ids"
@@ -19,15 +19,17 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         })
 
         const { uuids, converted_calculation } = normalise_calculation_ids_and_extract_uuids(calculation.value)
-        const model_component = model.Variable({
+
+        const model_config: ModelVariableConfig = {
             name: calculation.name,
             value: converted_calculation,
-            units: calculation.units,
-        })
+        }
+        if (calculation.units !== undefined) model_config.units = calculation.units
+        const model_component = model.Variable(model_config)
 
         prepare_other_components(model, model_component, values, uuids, wcomponents_by_id)
 
-        const calculation_result = run_model(model, model_component)
+        const calculation_result = run_model(model, calculation.units, model_component)
 
         // Store calculation value for use in future calculations
         values[calculation.name] = calculation_result
@@ -86,11 +88,11 @@ function prepare_other_components (model: Model, model_component: SimulationComp
 
 
 
-function run_model (model: Model, model_component: SimulationComponent): CalculationResult
+function run_model (model: Model, initial_units: string | undefined, model_component: SimulationComponent, retrying_with_units = false): CalculationResult
 {
     let value: number | undefined = undefined
     let error = ""
-    const units = model_component._node.getAttribute("Units")
+    let units = model_component._node.getAttribute("Units")
 
     try {
         const calculation_result = model.simulate()
@@ -98,15 +100,28 @@ function run_model (model: Model, model_component: SimulationComponent): Calcula
     }
     catch (e) {
         const err = e as SimulationError
-        error = `${err.message}`
-        // Defensive approach to ensure there's always an error in case
-        // err.message is ever an empty string
-        error = error || "Unknown calculation error"
+        const units_error = (typeof err.message === "string") && err.message.startsWith("Wrong units generated for") && err.message.match(/and got (.+?)\.(?:$| Either)/)
+        // If no units were initially specified and the error is about wrong
+        // units then try to recompute using the units the model expects
+        if (!initial_units && units_error && !retrying_with_units)
+        {
+            units = units_error[1]!
+            model_component.units = units
+            const second_attempt = run_model(model, initial_units, model_component, true)
+            ;({ value, units } = second_attempt)
+            if (second_attempt.error) error = second_attempt.error
+        }
+        else
+        {
+            // Defensive approach to ensure there's always some content in the
+            // error in case err.message is ever undefined or an empty string
+            error = `${err.message || "Unknown calculation error"}`
+        }
     }
 
     const calculation_result: CalculationResult = { value, error, units }
     if (!calculation_result.error) delete calculation_result.error
-    if (calculation_result.units === "undefined") calculation_result.units = ""
+    if (calculation_result.units === "Unitless") calculation_result.units = ""
 
     return calculation_result
 }

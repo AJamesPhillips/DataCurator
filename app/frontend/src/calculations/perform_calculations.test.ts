@@ -17,6 +17,8 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     let calculation_result = perform_calculations(calculations, wcomponents_by_id)
     let expected_calculation_result: CalculationResult[] = []
 
+
+
     test(calculation_result, expected_calculation_result, "No calculations should return no results")
 
 
@@ -127,6 +129,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     }, true)
 
 
+
     describe("Can use values with units", () =>
     {
         calculations = [
@@ -140,4 +143,59 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     }, true)
 
 
-}, true)
+
+    describe("Can use values without units being initially defined", () =>
+    {
+        calculations = [
+            { name: "A", value: `{2 Meters}` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 2, units: "Meters" },
+        ]
+        test(calculation_result, expected_calculation_result, "Computes correct units")
+    }, true)
+
+
+
+    describe("Can use values with units initially being undefined", () =>
+    {
+        calculations = [
+            { name: "A", value: `{2 Meters}`, units: undefined },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 2, units: "Meters" },
+        ]
+        test(calculation_result, expected_calculation_result, "Computes correct units")
+    }, true)
+
+
+
+    describe("Does not compute units if some are already specified", () =>
+    {
+        calculations = [
+            { name: "A", value: `{2 Meters}`, units: "kg" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: undefined, units: "kg", error: "Wrong units generated for [A]. Expected Kg, and got Meters." },
+        ]
+        test(calculation_result, expected_calculation_result, "Computes correct units")
+    }, true)
+
+
+
+    describe("Does not compute units if 'Unitless' is specified", () =>
+    {
+        calculations = [
+            { name: "A", value: `{2 Meters}`, units: "Unitless" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: undefined, units: "", error: "Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation." },
+        ]
+        test(calculation_result, expected_calculation_result, "Computes correct units")
+    }, true)
+
+}, false)
