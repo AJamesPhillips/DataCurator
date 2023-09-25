@@ -288,11 +288,12 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {wcomponent_is_statev2(wcomponent) && (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
-        <p>
-            <span className="description_label">Calculations</span>&nbsp;
-            <WComponentCalculatonsForm wcomponent={wcomponent} />
-        </p>}
+        {wcomponent_is_statev2(wcomponent) &&
+        (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
+        <WComponentCalculatonsForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
+        />}
 
 
         {(force_editable || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">

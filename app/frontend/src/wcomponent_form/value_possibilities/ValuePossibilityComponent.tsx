@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { Box, IconButton, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
