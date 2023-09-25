@@ -78,7 +78,7 @@ import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { perform_calculations } from "../calculations/perform_calculations"
 import { PlainCalculationObject } from "../calculations/interfaces"
-import { WComponentCalculatonsForm } from "./WComponentCalculatonsForm"
+import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 
 
 
