@@ -28,9 +28,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
-        { value: 3 },
-        { value: 4 },
-        { value: 7 },
+        { value: 3, units: "" },
+        { value: 4, units: "" },
+        { value: 7, units: "" },
     ]
     test(calculation_result, expected_calculation_result, "3 simple calculations should return 3 results")
 
@@ -43,9 +43,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
-        { value: 3 + 1 },
-        { value: undefined, error: "The primitive [some_undeclared_variable] could not be found." },
-        { value: 5 + 1 },
+        { value: 3 + 1, units: "" },
+        { value: undefined, error: "The primitive [some_undeclared_variable] could not be found.", units: "" },
+        { value: 5 + 1, units: "" },
     ]
     test(calculation_result, expected_calculation_result, "Failure to find a value should still perform other valid calculations")
 
@@ -58,9 +58,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
-        { value: 1 + 1 },
-        { value: 4 },
-        { value: 8 },
+        { value: 1 + 1, units: "" },
+        { value: 4, units: "" },
+        { value: 8, units: "" },
     ]
     test(calculation_result, expected_calculation_result, "Can cope with self reference")
 
@@ -72,8 +72,8 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
-        { value: 1 + 1 },
-        { value: 4 },
+        { value: 1 + 1, units: "" },
+        { value: 4, units: "" },
     ]
     test(calculation_result, expected_calculation_result, "Can cope with references with spaces")
 
@@ -96,7 +96,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
-        { value: 123 },
+        { value: 123, units: "" },
     ]
     test(calculation_result, expected_calculation_result, "Can reference wcomponent values")
 
@@ -121,10 +121,23 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 10 },
+            { value: 10, units: "" },
         ]
         test(calculation_result, expected_calculation_result, "Can use wcomponent boolean values")
     }, true)
 
 
-}, false)
+    describe("Can use values with units", () =>
+    {
+        calculations = [
+            { name: "A", value: `{2 Meters} + {10 Centimeters}`, units: "Meters" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 2.10, units: "Meters" },
+        ]
+        test(calculation_result, expected_calculation_result, "Computes correct value and includes units in result")
+    }, true)
+
+
+}, true)

@@ -64,10 +64,12 @@ export interface PlainCalculationObject
 {
     name: string
     value: string  // strings might be an @@<uuid v4>
+    units?: string
 }
 
 export interface CalculationResult
 {
     value: number | undefined
+    units: string
     error?: string
 }

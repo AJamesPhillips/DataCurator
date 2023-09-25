@@ -8,7 +8,7 @@ import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_deri
 
 export function perform_calculations (calculations: PlainCalculationObject[], wcomponents_by_id: WComponentsById)
 {
-    const values: { [id: string]: number | undefined } = {}
+    const values: { [id: string]: CalculationResult } = {}
 
     const calculation_results: CalculationResult[] = calculations.map(calculation =>
     {
@@ -22,17 +22,15 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         const model_component = model.Variable({
             name: calculation.name,
             value: converted_calculation,
+            units: calculation.units,
         })
 
         prepare_other_components(model, model_component, values, uuids, wcomponents_by_id)
 
-        const { value, error } = run_model(model, model_component)
+        const calculation_result = run_model(model, model_component)
 
         // Store calculation value for use in future calculations
-        values[calculation.name] = value
-
-        const calculation_result: CalculationResult = { value }
-        if (error) calculation_result.error = error
+        values[calculation.name] = calculation_result
 
         return calculation_result
     })
@@ -42,14 +40,14 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
 
 
 
-function prepare_other_components (model: Model, model_component: SimulationComponent, values: { [id: string]: number | undefined }, uuids: string[], wcomponents_by_id: WComponentsById)
+function prepare_other_components (model: Model, model_component: SimulationComponent, values: { [id: string]: CalculationResult }, uuids: string[], wcomponents_by_id: WComponentsById)
 {
     const other_components: { [id: string]: SimulationComponent } = {}
 
-    Object.entries(values).forEach(([name, value]) =>
+    Object.entries(values).forEach(([name, calc_result]) =>
     {
-        if (value !== undefined) {
-            const component = model.Variable({ name, value })
+        if (calc_result.value !== undefined) {
+            const component = model.Variable({ name, value: calc_result.value, units: calc_result.units })
             other_components[name] = component
         }
     })
@@ -76,7 +74,7 @@ function prepare_other_components (model: Model, model_component: SimulationComp
         // Note that currently the value of boolean's is a string of "True" or "False"
         if (typeof value === "boolean") return
 
-        const component = model.Variable({ name: uuid, value })
+        const component = model.Variable({ name: uuid, value, units: "" })
         other_components[uuid] = component
     })
 
@@ -88,10 +86,11 @@ function prepare_other_components (model: Model, model_component: SimulationComp
 
 
 
-function run_model (model: Model, model_component: SimulationComponent)
+function run_model (model: Model, model_component: SimulationComponent): CalculationResult
 {
     let value: number | undefined = undefined
     let error = ""
+    const units = model_component._node.getAttribute("Units")
 
     try {
         const calculation_result = model.simulate()
@@ -105,5 +104,9 @@ function run_model (model: Model, model_component: SimulationComponent)
         error = error || "Unknown calculation error"
     }
 
-    return { value, error }
+    const calculation_result: CalculationResult = { value, error, units }
+    if (!calculation_result.error) delete calculation_result.error
+    if (calculation_result.units === "undefined") calculation_result.units = ""
+
+    return calculation_result
 }

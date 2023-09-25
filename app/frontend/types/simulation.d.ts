@@ -11,6 +11,7 @@ declare module "simulation" {
     {
         name: string
         value: number | string | "True" | "False"
+        units?: string
     }
 
 
@@ -49,6 +50,8 @@ interface SimulationNode
     _primitive: { model: {} }
     source: null
     target: null
+    getAttribute (attribute_name: "Units"): string
+    getAttribute (attribute_name: string): any
 }
 
 
