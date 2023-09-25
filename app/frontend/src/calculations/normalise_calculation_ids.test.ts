@@ -3,6 +3,7 @@ import { uuid_v4_for_tests } from "../utils/uuid_v4_for_tests"
 import { normalise_calculation_ids_and_extract_uuids } from "./normalise_calculation_ids"
 
 
+
 export const run_normalise_calculation_ids_and_extract_uuids_tests = describe("normalise_calculation_ids_and_extract_uuids", () =>
 {
     const id1 = uuid_v4_for_tests(1)
@@ -55,5 +56,10 @@ export const run_normalise_calculation_ids_and_extract_uuids_tests = describe("n
     expected_converted_calculation = `[ Some variable ] + [ another variable ]`
     result_calculation_string = normalise_calculation_ids_and_extract_uuids(calculation_string).converted_calculation
     test(result_calculation_string, expected_converted_calculation, "Existing square bracket id with spaces is not altered")
+
+    calculation_string = `{4 miles} / {6.4e3 meters}`
+    expected_converted_calculation = `{4 miles} / {6.4e3 meters}`
+    result_calculation_string = normalise_calculation_ids_and_extract_uuids(calculation_string).converted_calculation
+    test(result_calculation_string, expected_converted_calculation, "Units inside curly braces are left unaltered")
 
 }, false)
