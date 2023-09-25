@@ -25,16 +25,16 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
     const result = results[index]
 
-    let result_string = ""
-    if (result?.value && values_different(calc.value, result.value))
+    let result_string = <span />
+    if (result && result.value && values_different(calc.value, result.value))
     {
-        result_string = `= ${result?.value}`
+        result_string = <span>&nbsp;=&nbsp;{result.value} <span style={{ fontSize: "75%" }}>{result.units}</span></span>
     }
 
-    return <div key={calc.name + " " + index}>
-        <Box style={{ width: "100%" }}>
+    return <Box key={calc.name + " " + index} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>
+        <Box style={{ width: "100%", display: "flex" }}>
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
-            {calc.name} =
+            {calc.name}&nbsp;=&nbsp;
             <EditableTextSingleLine
                 placeholder="Calculation"
                 hide_label={true}
@@ -48,7 +48,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         {props.editing && <IconButton onClick={() => props.update_calculation(null)} size="large">
             <DeleteIcon />
         </IconButton>}
-    </div>
+    </Box>
 }
 
 
