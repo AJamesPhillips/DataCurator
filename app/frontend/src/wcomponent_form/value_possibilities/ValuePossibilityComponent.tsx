@@ -6,7 +6,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import "../../form/editable_list/EditableListEntry.css"
 import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
-import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { VALUE_POSSIBILITY_IDS_to_text } from "../../wcomponent/value/parse_value"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 
@@ -33,7 +33,7 @@ export function ValuePossibilityComponent (props: OwnProps)
 
     return <Box key={props.value_possibility.id} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>
         <Box style={{ width: "100%" }}>
-            <ValuePossibilityDuplicate warning={warning} />
+            <WarningTriangleV2 warning={warning} label="Duplicate" />
             <Typography noWrap textOverflow="ellipsis" variant="caption">
                 <EditableTextSingleLine
                     placeholder="Possible value"

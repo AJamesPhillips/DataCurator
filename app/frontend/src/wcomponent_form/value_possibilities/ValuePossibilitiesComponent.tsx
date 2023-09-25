@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 import { Box } from "@mui/material"
 
@@ -11,7 +10,7 @@ import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
 import {
     prepare_new_value_possibility,
 } from "../../wcomponent/CRUD_helpers/prepare_new_value_possibility"
-import { ValuePossibilityDuplicate } from "./ValuePossibilityDuplicate"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
 import {
     get_possibilities_from_VAP_sets,
@@ -62,7 +61,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
                     Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}
                 </h4>
                 <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
-                    <ValuePossibilityDuplicate warning={warning} label="" />
+                    <WarningTriangleV2 warning={warning} label="" />
                 </div>
             </div>
 
