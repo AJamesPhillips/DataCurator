@@ -8,7 +8,7 @@ export function replace_normal_ids (text: string, current_depth: number, args: R
 {
     const { root_url, depth_limit, get_title, render_links } = args
 
-    const ids = get_ids_from_text(text)
+    const ids = get_double_at_mentioned_uuids_from_text(text)
     ids.forEach(id =>
     {
         const replacer = new RegExp(`@@${id}`, "g")
@@ -38,7 +38,7 @@ export function replace_normal_ids (text: string, current_depth: number, args: R
 
 
 
-export function get_ids_from_text (text: string): string[]
+export function get_double_at_mentioned_uuids_from_text (text: string): string[]
 {
     const matches = [ ...text.matchAll(double_at_mentioned_uuids_regex) ] //, ...text.matchAll(old_ids_regex)]
     return matches.map(entry => entry[1]!.slice(2))

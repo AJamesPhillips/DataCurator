@@ -1,12 +1,12 @@
 import { curly_bracket_content_regex, non_square_bracket_ids_regex, square_bracket_ids_regex } from "../sharedf/rich_text/id_regexs"
-import { get_ids_from_text } from "../sharedf/rich_text/replace_normal_ids"
+import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/replace_normal_ids"
 import { SIMULATION_JS_RESERVED_WORDS } from "./reserved_words"
 
 
 
 export function normalise_calculation_ids_and_extract_uuids (equation: string): { uuids: string[], converted_calculation: string }
 {
-    const uuid_v4s = get_ids_from_text(equation)
+    const uuid_v4s = get_double_at_mentioned_uuids_from_text(equation)
     const converted_calculation = normalise_calculation_ids(equation, uuid_v4s)
 
     return { uuids: uuid_v4s, converted_calculation }

@@ -8,7 +8,7 @@ import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
-import { get_ids_from_text } from "../../../sharedf/rich_text/replace_normal_ids"
+import { get_double_at_mentioned_uuids_from_text } from "../../../sharedf/rich_text/replace_normal_ids"
 import { is_valid_uuid } from "../../../sharedf/rich_text/id_regexs"
 
 
@@ -100,9 +100,9 @@ export async function supabase_get_wcomponents_from_other_bases (args: GetWCompo
 
         determine_if_missing_ids(wc.label_ids || [], source_of_ids)
 
-        let ids = get_ids_from_text(wc.title)
+        let ids = get_double_at_mentioned_uuids_from_text(wc.title)
         determine_if_missing_ids(ids, source_of_ids)
-        ids = get_ids_from_text(wc.description)
+        ids = get_double_at_mentioned_uuids_from_text(wc.description)
         determine_if_missing_ids(ids, source_of_ids)
 
         if (wcomponent_is_action(wc)) determine_if_missing_ids(wc.parent_goal_or_action_ids || [], source_of_ids)

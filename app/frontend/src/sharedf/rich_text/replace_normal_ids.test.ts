@@ -4,7 +4,7 @@ import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ReplaceNormalIdsInTextArgs } from "./interfaces"
-import { get_ids_from_text, replace_normal_ids } from "./replace_normal_ids"
+import { get_double_at_mentioned_uuids_from_text, replace_normal_ids } from "./replace_normal_ids"
 
 
 
@@ -120,17 +120,17 @@ function test_get_ids_from_text ()
     let ids: string[] = []
 
 
-    ids = get_ids_from_text("")
+    ids = get_double_at_mentioned_uuids_from_text("")
     test(ids, [], "Should find no IDs in empty string")
 
 
-    ids = get_ids_from_text("asd @@wc123 asd name@example.com #label dfg @@345 sf")
+    ids = get_double_at_mentioned_uuids_from_text("asd @@wc123 asd name@example.com #label dfg @@345 sf")
     test(ids, [], `Should not find old ids of "wc123", "345"`)
 
 
     const id1 = uuid_v4_for_tests(1)
     const id2 = uuid_v4_for_tests(2)
-    ids = get_ids_from_text(`asd @@${id1} asd name@example.com #label dfg @@${id2} sf`)
+    ids = get_double_at_mentioned_uuids_from_text(`asd @@${id1} asd name@example.com #label dfg @@${id2} sf`)
     test(ids, [id1, id2], `Should find uuid ids`)
 
     console. groupEnd()
