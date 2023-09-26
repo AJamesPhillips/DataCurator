@@ -8,6 +8,7 @@ import { run_perform_calculations_test } from "./calculations/perform_calculatio
 import { run_normalise_calculation_ids_tests } from "./calculations/normalise_calculation_ids.test"
 import { run_normalise_calculation_numbers_tests } from "./calculations/normalise_calculation_numbers.test"
 import { run_number_to_string_test } from "./shared/format_number_to_string.test"
+import { run_number_to_significant_figures_test } from "./shared/format_number_to_significant_figures.test"
 
 
 
@@ -22,6 +23,7 @@ function run_all_tests ()
     run_normalise_calculation_numbers_tests()
     run_normalise_calculation_ids_tests()
     run_perform_calculations_test()
+    run_number_to_significant_figures_test()
     run_number_to_string_test()
 }
 
