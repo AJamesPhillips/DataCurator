@@ -198,4 +198,17 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         test(calculation_result, expected_calculation_result, "Computes correct units")
     }, true)
 
-}, false)
+
+    describe("Can process numbers with thousands comma seperators", () =>
+    {
+        calculations = [
+            { name: "A", value: "1,200,300e4 / {4,001,000e3 km}", units: "1/km" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 3, units: "1/km" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can compute numbers with thousands commas")
+    }, true)
+
+}, true)

@@ -1,8 +1,10 @@
 import { Model, ModelVariableConfig, SimulationError } from "simulation"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
-import { normalise_calculation_ids_and_extract_uuids } from "./normalise_calculation_ids"
+import { normalise_calculation_ids } from "./normalise_calculation_ids"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
+import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/replace_normal_ids"
+import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
 
 
 
@@ -18,7 +20,9 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
             timeUnits: "Years"
         })
 
-        const { uuids, converted_calculation } = normalise_calculation_ids_and_extract_uuids(calculation.value)
+        const uuid_v4s = get_double_at_mentioned_uuids_from_text(calculation.value)
+        let converted_calculation = normalise_calculation_numbers(calculation.value)
+        converted_calculation = normalise_calculation_ids(converted_calculation, uuid_v4s)
 
         const model_config: ModelVariableConfig = {
             name: calculation.name,
@@ -27,7 +31,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         if (calculation.units !== undefined) model_config.units = calculation.units
         const model_component = model.Variable(model_config)
 
-        prepare_other_components(model, model_component, values, uuids, wcomponents_by_id)
+        prepare_other_components(model, model_component, values, uuid_v4s, wcomponents_by_id)
 
         const calculation_result = run_model(model, calculation.units, model_component)
 
