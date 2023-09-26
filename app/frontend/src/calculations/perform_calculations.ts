@@ -5,6 +5,7 @@ import { normalise_calculation_ids } from "./normalise_calculation_ids"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
 import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/replace_normal_ids"
 import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
+import { convert_percentages } from "./convert_percentages"
 
 
 
@@ -22,6 +23,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
 
         const uuid_v4s = get_double_at_mentioned_uuids_from_text(calculation.value)
         let converted_calculation = normalise_calculation_numbers(calculation.value)
+        converted_calculation = convert_percentages(converted_calculation)
         converted_calculation = normalise_calculation_ids(converted_calculation, uuid_v4s)
 
         const model_config: ModelVariableConfig = {
