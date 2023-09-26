@@ -40,6 +40,8 @@ type TimeUnits = "years"
 type TimeUnitsAll = "Years" | TimeUnits
 
 
+type ModelAttributeNames = "name" | "Note" | "Equation" | "Units" | "MaxConstraintUsed" | "MinConstraintUsed" | "MaxConstraint" | "MinConstraint" | "ShowSlider" | "SliderMax" | "SliderMin" | "SliderStep" | "Image" | "FlipHorizontal" | "FlipVertical" | "LabelPosition"
+
 interface SimulationNode
 {
     attributes: {}
@@ -51,7 +53,7 @@ interface SimulationNode
     source: null
     target: null
     getAttribute (attribute_name: "Units"): string
-    getAttribute (attribute_name: string): any
+    getAttribute (attribute_name: ModelAttributeNames): any
 }
 
 
