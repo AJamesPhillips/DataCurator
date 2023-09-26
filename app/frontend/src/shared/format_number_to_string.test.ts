@@ -61,4 +61,21 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
 
     }, true)
 
-}, false)
+
+    describe("no unnecessary significant figures", () =>
+    {
+        formatted_number = format_number_to_string(1, 2, NumberDisplayType.bare)
+        test(formatted_number, "1", "bare number")
+
+        formatted_number = format_number_to_string(1000, 2, NumberDisplayType.scaled)
+        test(formatted_number, "1 thousand", "scaled number")
+
+        formatted_number = format_number_to_string(1000, 2, NumberDisplayType.abbreviated_scaled)
+        test(formatted_number, "1 k", "abbreviated scaled number")
+
+        formatted_number = format_number_to_string(1000, 2, NumberDisplayType.scientific)
+        test(formatted_number, "1e3", "scientific number")
+
+    }, true)
+
+}, true)
