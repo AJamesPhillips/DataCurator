@@ -7,6 +7,7 @@ import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { useState } from "preact/hooks"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
+import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
 
 
 
@@ -28,7 +29,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     let result_string = <span />
     if (result && result.value && values_different(calc.value, result.value))
     {
-        result_string = <span>&nbsp;=&nbsp;{result.value} <span style={{ fontSize: "75%" }}>{result.units}</span></span>
+        result_string = <span>&nbsp;=&nbsp;{format_number_to_string(result.value, 2, NumberDisplayType.scaled)} <span style={{ fontSize: "75%" }}>{result.units}</span></span>
     }
 
     return <Box key={calc.name + " " + index} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>

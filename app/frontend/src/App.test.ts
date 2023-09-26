@@ -7,6 +7,7 @@ import { run_replace_normal_ids_tests } from "./sharedf/rich_text/replace_normal
 import { run_perform_calculations_test } from "./calculations/perform_calculations.test"
 import { run_normalise_calculation_ids_tests } from "./calculations/normalise_calculation_ids.test"
 import { run_normalise_calculation_numbers_tests } from "./calculations/normalise_calculation_numbers.test"
+import { run_number_to_string_test } from "./shared/format_number_to_string.test"
 
 
 
@@ -21,6 +22,7 @@ function run_all_tests ()
     run_normalise_calculation_numbers_tests()
     run_normalise_calculation_ids_tests()
     run_perform_calculations_test()
+    run_number_to_string_test()
 }
 
 

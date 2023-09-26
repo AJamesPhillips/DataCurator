@@ -211,4 +211,4 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         test(calculation_result, expected_calculation_result, "Can compute numbers with thousands commas")
     }, true)
 
-}, true)
+}, false)
