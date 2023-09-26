@@ -22,6 +22,15 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     formatted_number = format_number_to_string(0.1264, -0.2, NumberDisplayType.scientific)
     test(formatted_number, "1e-1", "Copes with significant_figures that are fractional and or < 1")
 
+    formatted_number = format_number_to_string(27000000, 2, NumberDisplayType.scaled)
+    test(formatted_number, "27 million", "27 million")
+
+    formatted_number = format_number_to_string(270000000, 2, NumberDisplayType.scaled)
+    test(formatted_number, "270 million", "270 million")
+
+    formatted_number = format_number_to_string(2700000000, 2, NumberDisplayType.scaled)
+    test(formatted_number, "2.7 billion", "2.7 billion")
+
 
     describe("negative numbers", () =>
     {
@@ -78,4 +87,4 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
 
     }, true)
 
-}, true)
+}, false)

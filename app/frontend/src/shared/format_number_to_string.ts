@@ -1,3 +1,4 @@
+import { format_number_to_significant_figures } from "./format_number_to_significant_figures"
 
 
 export enum NumberDisplayType
@@ -65,7 +66,7 @@ function scale_number (num: number, max_significant_figures: number): string
 
     const minimised_significant_figures = minimise_significant_figures(num, max_significant_figures)
 
-    return num.toPrecision(minimised_significant_figures) + " " + suffixes[suffixIndex]
+    return format_number_to_significant_figures(num, minimised_significant_figures) + " " + suffixes[suffixIndex]
 }
 
 
@@ -82,7 +83,7 @@ function abbreviate_number (num: number, max_significant_figures: number): strin
 
     const minimised_significant_figures = minimise_significant_figures(num, max_significant_figures)
 
-    return num.toPrecision(minimised_significant_figures) + " " + suffixes[suffixIndex]
+    return format_number_to_significant_figures(num, minimised_significant_figures) + " " + suffixes[suffixIndex]
 }
 
 
@@ -92,7 +93,7 @@ function minimise_significant_figures (num: number, max_significant_figures: num
 
     while (minimised_significant_figures > 1)
     {
-        if (Number.parseFloat(num.toPrecision(minimised_significant_figures)) === num)
+        if (Number.parseFloat(num.toPrecision(minimised_significant_figures - 1)) === num)
         {
             --minimised_significant_figures
         }
