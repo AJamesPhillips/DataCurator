@@ -126,7 +126,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 10, units: "" },
         ]
         test(calculation_result, expected_calculation_result, "Can use wcomponent boolean values")
-    }, true)
+    })
 
 
 
@@ -140,7 +140,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 2.10, units: "Meters" },
         ]
         test(calculation_result, expected_calculation_result, "Computes correct value and includes units in result")
-    }, true)
+    })
 
 
 
@@ -154,7 +154,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 2, units: "Meters" },
         ]
         test(calculation_result, expected_calculation_result, "Computes correct units")
-    }, true)
+    })
 
 
 
@@ -168,7 +168,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 2, units: "Meters" },
         ]
         test(calculation_result, expected_calculation_result, "Computes correct units")
-    }, true)
+    })
 
 
 
@@ -182,7 +182,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: undefined, units: "kg", error: "Wrong units generated for [A]. Expected Kg, and got Meters." },
         ]
         test(calculation_result, expected_calculation_result, "Computes correct units")
-    }, true)
+    })
 
 
 
@@ -196,7 +196,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: undefined, units: "", error: "Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation." },
         ]
         test(calculation_result, expected_calculation_result, "Computes correct units")
-    }, true)
+    })
 
 
 
@@ -210,7 +210,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 3, units: "1/km" },
         ]
         test(calculation_result, expected_calculation_result, "Can compute numbers with thousands commas")
-    }, true)
+    })
 
 
 
@@ -224,6 +224,6 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 70, units: "Widgets/Years" },
         ]
         test(calculation_result, expected_calculation_result, "Widgets/Years^2  *  Years")
-    }, true)
+    })
 
 }, false)

@@ -1,4 +1,4 @@
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import {
     prepare_new_contextless_wcomponent_object,
 } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -54,7 +54,7 @@ export function calc_if_wcomponent_should_exclude_because_label_or_type (wcompon
 
 
 
-function run_tests ()
+export const test_calc_if_wcomponent_should_exclude_because_label_or_type = describe("calc_if_wcomponent_should_exclude_because_label_or_type", () =>
 {
     const wcomponent1 = prepare_new_contextless_wcomponent_object({
         id: "1", base_id: 1,
@@ -122,6 +122,5 @@ function run_tests ()
     ;({ should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent1, label_filter_args__include_1))
     test(should_exclude, false)
     test(lacks_include, false)
-}
 
-// run_tests()
+}, false)

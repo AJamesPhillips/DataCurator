@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { cloneable_generator_factory } from "../../utils/generators"
 import { random_int } from "../../utils/random"
 import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -95,9 +95,9 @@ export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<
 
 
 
-export function run_tests ()
+export const test_get_actions_parent_ids = describe("get_actions_parent_ids", () =>
 {
-    function make_goal (title: string, parent_goal_or_action_ids: string[] = [])
+    function helper_func__make_goal (title: string, parent_goal_or_action_ids: string[] = [])
     {
         return prepare_new_contextless_wcomponent_object({
             type: "goal",
@@ -109,7 +109,7 @@ export function run_tests ()
     }
 
 
-    function make_action (title: string, parent_goal_or_action_ids: string[] = [])
+    function helper_func__make_action (title: string, parent_goal_or_action_ids: string[] = [])
     {
         return prepare_new_contextless_wcomponent_object({
             type: "action",
@@ -121,7 +121,7 @@ export function run_tests ()
     }
 
 
-    function get_derived_state (wcomponents: (WComponentNodeAction | WComponentNodeGoal)[])
+    function helper_func__get_derived_state (wcomponents: (WComponentNodeAction | WComponentNodeGoal)[])
     {
         const wcomponents_by_id: WComponentsById = {}
         const all_action_ids = new Set<string>()
@@ -138,41 +138,39 @@ export function run_tests ()
     }
 
 
-    function get_cloneable_actions_parent_ids (action: WComponentNodeAction, all_actions_and_goals: (WComponentNodeAction | WComponentNodeGoal)[])
+    function helper_func__get_cloneable_actions_parent_ids (action: WComponentNodeAction, all_actions_and_goals: (WComponentNodeAction | WComponentNodeGoal)[])
     {
         const args: ActionsParentIdsArgs =
         {
             action,
-            ...get_derived_state(all_actions_and_goals)
+            ...helper_func__get_derived_state(all_actions_and_goals)
         }
         return cloneable_generator_factory(args, get_actions_parent_ids)
     }
 
 
 
-    function no_parents_only_self ()
+    describe("No parents only self", () =>
     {
-        const action0 = make_action("action0", [])
-        const actions_parent_ids = get_cloneable_actions_parent_ids(action0, [action0])
+        const action0 = helper_func__make_action("action0", [])
+        const actions_parent_ids = helper_func__get_cloneable_actions_parent_ids(action0, [action0])
 
         const result = actions_parent_ids.next()
         test(result.value, action0.id, "Should return own id")
         test(result.done, false, "Should have no more ids")
-    }
-
-    no_parents_only_self()
+    })
 
 
 
-    function branching_parents_grandparents ()
+    describe("Branching parents grandparents", () =>
     {
-        const goal1 = make_goal("goal1")
-        const goal2 = make_goal("goal2")
-        const goal3 = make_goal("goal3")
-        const subgoal2_3 = make_goal("subgoal2&3", [goal2.id, goal3.id])
-        const action1 = make_action("action1", [goal1.id, subgoal2_3.id])
+        const goal1 = helper_func__make_goal("goal1")
+        const goal2 = helper_func__make_goal("goal2")
+        const goal3 = helper_func__make_goal("goal3")
+        const subgoal2_3 = helper_func__make_goal("subgoal2&3", [goal2.id, goal3.id])
+        const action1 = helper_func__make_action("action1", [goal1.id, subgoal2_3.id])
 
-        let actions_parent_ids = get_cloneable_actions_parent_ids(action1, [
+        let actions_parent_ids = helper_func__get_cloneable_actions_parent_ids(action1, [
             action1,
             goal1,
             goal2,
@@ -244,23 +242,20 @@ export function run_tests ()
         result = actions_parent_ids.next(false) // false === id was not consumed
         test(result.value, undefined, "Should return undefined when exhausted parent and grandparent ids")
         test(result.done, true, "Should have no more ids")
-    }
-
-    branching_parents_grandparents()
+    })
 
 
 
-    // Action parents
-    // Should work if parents are actions, not just goals
-    function action_parents ()
+
+    describe("get_actions_parent_ids should work if parents are also actions, and not just for parents that are goals", () =>
     {
-        const action1 = make_action("action1")
-        const action2 = make_action("action2")
-        const action3 = make_action("action3")
-        const subaction2_3 = make_action("subaction2&3", [action2.id, action3.id])
-        const action4 = make_action("action1", [action1.id, subaction2_3.id])
+        const action1 = helper_func__make_action("action1")
+        const action2 = helper_func__make_action("action2")
+        const action3 = helper_func__make_action("action3")
+        const subaction2_3 = helper_func__make_action("subaction2&3", [action2.id, action3.id])
+        const action4 = helper_func__make_action("action1", [action1.id, subaction2_3.id])
 
-        let actions_parent_ids = get_cloneable_actions_parent_ids(action4, [
+        let actions_parent_ids = helper_func__get_cloneable_actions_parent_ids(action4, [
             action1,
             action2,
             action3,
@@ -286,21 +281,18 @@ export function run_tests ()
         result = actions_parent_ids.next()
         test(result.value, undefined, "Should return no more ids")
         test(result.done, true, "Should be done")
-    }
-
-    action_parents()
+    })
 
 
 
-    // Circular parents
-    function circular_parents ()
+    describe("Circular parents", () =>
     {
-        const goal1 = make_goal("goal1")
-        const action1 = make_action("action1", [goal1.id])
+        const goal1 = helper_func__make_goal("goal1")
+        const action1 = helper_func__make_action("action1", [goal1.id])
         goal1.parent_goal_or_action_ids = [action1.id]
-        const action2 = make_action("action2", [goal1.id])
+        const action2 = helper_func__make_action("action2", [goal1.id])
 
-        let actions_parent_ids = get_cloneable_actions_parent_ids(action2, [
+        let actions_parent_ids = helper_func__get_cloneable_actions_parent_ids(action2, [
             action1,
             action2,
             goal1,
@@ -319,28 +311,23 @@ export function run_tests ()
         test(result.done, false, "Should have not finished")
         result = actions_parent_ids.next()
         test(result.done, true, "Should have finished")
-    }
-
-    circular_parents()
+    })
 
 
 
-    function spread_iterator_containing_one_parent ()
+    describe("Spread iterator containing one parent", () =>
     {
-        const goal1 = make_goal("goal1")
-        const action1 = make_action("action1", [goal1.id])
+        const goal1 = helper_func__make_goal("goal1")
+        const action1 = helper_func__make_action("action1", [goal1.id])
 
-        const actions_parent_ids = get_cloneable_actions_parent_ids(action1, [
+        const actions_parent_ids = helper_func__get_cloneable_actions_parent_ids(action1, [
             action1,
             goal1,
         ])
 
         const result = [...actions_parent_ids]
         test(result, [action1.id, goal1.id], "Should return both ids")
-    }
-
-    spread_iterator_containing_one_parent()
-}
+    })
 
 
-// run_tests()
+}, false)

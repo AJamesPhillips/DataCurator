@@ -1,4 +1,4 @@
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/interfaces/knowledge_view"
 import { FieldMergerReturn, get_default_field_merger, MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
 import { get_new_knowledge_view_object } from "../../../knowledge_view/create_new_knowledge_view"
@@ -60,7 +60,7 @@ function get_custom_field_merger <U extends KnowledgeView, T extends keyof Knowl
 
                     if (merge.unresolvable_conflict)
                     {
-                        console .log("unresolvable_conflict in wc_id_map with wc_id: ", wc_id, "last_source_of_truth_value", last_source_of_truth_value[wc_id], "source_of_truth_value", source_of_truth_value[wc_id], "current_value", current_value[wc_id])
+                        console .debug("unresolvable_conflict in wc_id_map with wc_id: ", wc_id, "last_source_of_truth_value", last_source_of_truth_value[wc_id], "source_of_truth_value", source_of_truth_value[wc_id], "current_value", current_value[wc_id])
                     }
 
                     needs_save = needs_save || merge.needs_save
@@ -75,7 +75,7 @@ function get_custom_field_merger <U extends KnowledgeView, T extends keyof Knowl
 
 
 
-function run_tests ()
+export const test_merge_knowledge_views = describe("merge knowledge view functions", () =>
 {
     const dt1 = new Date("2021-01-01")
     // Either the modified_at values match (between attempted_update_value and the DB's initial value)
@@ -97,22 +97,12 @@ function run_tests ()
     const e = (position: number) => ({ left: position, top: position })
 
 
-    test_should_handle_adding_entry_on_client()
-    test_should_handle_adding_entries_on_client_and_remote()
-    test_should_handle_nonconflicting_changing_different_entries_on_client_and_remote()
-    test_should_handle_conflict_changing_same_entries_on_client_and_remote()
-    test_should_handle_resolveable_conflict_changing_same_entries_on_client_and_remote()
-
-    test_should_handle_non_and_conflict_changes_and_second_client_change()
-
-
-    function test_should_handle_adding_entry_on_client ()
+    describe("should handle adding entry on client", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) } }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -127,16 +117,16 @@ function run_tests ()
 
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_adding_entries_on_client_and_remote ()
+
+    describe("should handle adding entries on client and remote", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: {}, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1) } }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 2: e(3) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -151,16 +141,16 @@ function run_tests ()
 
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_nonconflicting_changing_different_entries_on_client_and_remote ()
+
+    describe("should handle nonconflicting changing different entries on client and remote", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1), 2: e(3) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 2: e(3) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 2: e(3) } }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(1), 2: e(5) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -175,16 +165,16 @@ function run_tests ()
 
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_conflict_changing_same_entries_on_client_and_remote ()
+
+    describe("should handle conflict changing same entries on client and remote", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4) } }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -199,16 +189,16 @@ function run_tests ()
 
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, ["wc_id_map"])
-    }
+    })
 
 
-    function test_should_handle_resolveable_conflict_changing_same_entries_on_client_and_remote ()
+
+    describe("should handle resolveable conflict changing same entries on client and remote", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
         const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, needs_save: true, saving: true }
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3) } }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -223,18 +213,17 @@ function run_tests ()
 
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_non_and_conflict_changes_and_second_client_change ()
+
+    describe("should handle non and conflict changes and second client change", () =>
     {
         const last_source_of_truth_value: KnowledgeView = get_new_knowledge_view_object({
             wc_id_map: { 0: e(1) }, modified_at: dt1, base_id: 0,
         })
-        // The user changes the position a second time
-        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 1: e(10) }, needs_save: true, saving: true }
         // The user changes the position the first time
-        const attempted_update_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(3), 1: e(10) } }
+        const current_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(4), 1: e(10) }, needs_save: true, saving: true }
         const source_of_truth_value: KnowledgeView = { ...last_source_of_truth_value, wc_id_map: { 0: e(2) }, modified_at: latest_modified_at }
 
         const merge = merge_knowledge_view({
@@ -249,10 +238,7 @@ function run_tests ()
 
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, ["wc_id_map"])
-    }
-
-}
+    })
 
 
-
-// run_tests()
+}, false)

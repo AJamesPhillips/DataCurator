@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type { StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
 import { prepare_new_VAP } from "./prepare_new_VAP"
@@ -50,7 +50,7 @@ export function update_VAPSets_with_possibilities (initial_values_and_prediction
 
 
 
-function run_tests ()
+export const test_update_VAPSets_with_possibilities = describe("update_VAPSets_with_possibilities", () =>
 {
     const val_prob_id_123 = "val_prob_id_123"
     const val_prob_id_456 = "val_prob_id_456"
@@ -110,6 +110,4 @@ function run_tests ()
         test(result[0]?.entries[2]?.description, value_possibilities[val_prob_id_456]?.description, "Updates description")
     }
 
-}
-
-// run_tests()
+}, false)

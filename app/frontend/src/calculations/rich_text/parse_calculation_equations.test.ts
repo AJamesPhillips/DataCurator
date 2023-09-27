@@ -1,21 +1,11 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { FullCalculationObject, ParsedCalculationObject } from "../interfaces"
 import { parse_calculation_equations } from "./parse_calculation_equations"
 
 
 
-export function run_parse_calculation_equations_tests ()
+export const run_parse_calculation_equations_tests = describe.skip("parse_calculation_equations", () =>
 {
-    console. group("running tests of parse_calculation_equations")
-
-    const skip = true
-    if (skip)
-    {
-        console .log("Skipping tests of parse_calculation_equations")
-        console. groupEnd()
-        return
-    }
-
 
     let input_calculation_objects: FullCalculationObject[] = []
     let output_calculation_objects: ParsedCalculationObject[] = []
@@ -41,8 +31,4 @@ export function run_parse_calculation_equations_tests ()
     output_calculation_objects = parse_calculation_equations(input_calculation_objects)
     test(output_calculation_objects, expected_calculation_objects, "Should mark value as needs computing")
 
-    console. groupEnd()
-}
-
-
-// run_parse_calculation_equations_tests()
+}, false)

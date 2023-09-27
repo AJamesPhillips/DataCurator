@@ -1,4 +1,4 @@
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 
 
 
@@ -37,7 +37,7 @@ export function cloneable_generator_factory <R, A, B, C> (args: R, generator_fac
 
 
 
-function run_tests ()
+export const test_cloneable_generator_factory = describe("cloneable_generator_factory", () =>
 {
     function* jumpable_sequence (args: {start: number}): Generator<number, number, number | undefined> {
         let i = args.start
@@ -65,6 +65,5 @@ function run_tests ()
 
 
     test(iter.next().value, 28, "should jump a third time on first branch")
-}
 
-// run_tests()
+}, false)

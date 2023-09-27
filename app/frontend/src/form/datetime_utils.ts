@@ -2,7 +2,7 @@
 
 import type { TemporalUncertainty } from "../shared/uncertainty/interfaces"
 import { date2str_auto } from "../shared/utils/date_helpers"
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 import type { TimeResolution } from "../shared/utils/datetime"
 import { uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
 
@@ -82,22 +82,19 @@ export function correct_datetime_for_local_time_zone (value: string)
 }
 
 
-function run_tests ()
+export const test_correct_datetime_for_local_time_zone = describe("correct_datetime_for_local_time_zone", () =>
 {
-    console .log("running tests of correct_datetime_for_local_time_zone")
-
     let result: Date | undefined
 
     result = correct_datetime_for_local_time_zone("2021-04-16 15:00")
-    test(result && result.toISOString(), "2021-04-16T14:00:00.000Z")
+    test(result && result.toISOString(), "2021-04-16T14:00:00.000Z", "Subtracts one hour (during summer time BST, will this fail during GMT?)")
 
     result = correct_datetime_for_local_time_zone("2021-04-16 00:00")
-    test(result && result.toISOString(), "2021-04-15T23:00:00.000Z")
+    test(result && result.toISOString(), "2021-04-15T23:00:00.000Z", "Subtracts one hour, goes back one day (during summer time BST, will this fail during GMT?)")
 
     result = correct_datetime_for_local_time_zone("2021-04-16")
     // This test **fails** because the date is parsed as UTC instead of the previous
     // datetimes being parsed as local timezone
-    test(result && result.toISOString(), "2021-04-15T23:00:00.000Z")
-}
+    test.skip(result && result.toISOString(), "2021-04-15T23:00:00.000Z")
 
-// run_tests()
+}, false)

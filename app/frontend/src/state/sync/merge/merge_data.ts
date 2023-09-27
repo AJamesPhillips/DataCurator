@@ -61,7 +61,7 @@ export function merge_base_object <U extends Base> (args: MergeDataArgs<U>): Mer
 
 
 
-function get_fields <U> (...items: U[]): (keyof U)[]
+function get_fields <U extends {}> (...items: U[]): (keyof U)[]
 {
     const fields_set: Set<keyof U> = new Set()
 
@@ -161,7 +161,7 @@ export function get_default_field_merger <U extends object, T extends keyof U> (
                 unresolvable_conflict = !are_equal(current_field_value, source_of_truth_field_value)
                 if (unresolvable_conflict)
                 {
-                    console .log("unresolvable_conflict with field: ", field, "last_source_of_truth_field_value", last_source_of_truth_field_value, "source_of_truth_field_value", source_of_truth_field_value, "current_field_value", current_field_value)
+                    console .debug("unresolvable_conflict with field: ", field, "last_source_of_truth_field_value", last_source_of_truth_field_value, "source_of_truth_field_value", source_of_truth_field_value, "current_field_value", current_field_value)
                 }
             }
         }

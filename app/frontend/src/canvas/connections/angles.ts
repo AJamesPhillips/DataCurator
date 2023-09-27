@@ -1,5 +1,5 @@
 import type { ConnectionTerminalDirectionType } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { get_angle, rads, normalise_angle_between_neg_Pi_and_Pi } from "../../utils/angles"
 import { bounded } from "../../shared/utils/bounded"
 import type { ConnectionTerminalLocationType } from "../../wcomponent/interfaces/connection"
@@ -68,10 +68,8 @@ function get_angle_from_connector (args: GetAngleFromConnectorArgs)
 
 
 
-function run_tests ()
+export const test_get_angle = describe.skip("get_angle (a lot of the tests are broken and need to be updated to match current working functionality)", () =>
 {
-    console .log("running tests of get_angle etc")
-
     const cx = 0
     const cy = 0
 
@@ -141,6 +139,5 @@ function run_tests ()
         const end_angle_to_receiving_terminal = get_angle_from_end_connector(angle, "to").toFixed(2)
         test(end_angle_to_receiving_terminal, expected_end_angles_to_receiving[index])
     })
-}
 
-// run_tests()
+}, false)

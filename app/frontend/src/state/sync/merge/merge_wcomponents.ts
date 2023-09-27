@@ -1,4 +1,4 @@
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import { prepare_new_contextless_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import type { WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
@@ -19,7 +19,7 @@ function get_custom_field_merger (field: keyof WComponent)
 
 
 
-function run_tests ()
+export const test_merge_wcomponent = describe("merge_wcomponent", () =>
 {
     const dt1 = new Date("2021-01-01")
     // Either the modified_at values match (between attempted_update_value and the DB's initial value)
@@ -39,22 +39,7 @@ function run_tests ()
     }
 
 
-    test_should_handle_update_on_client()
-    test_should_handle_nonconflicting_updates()
-    test_should_handle_conflicting_updates()
-
-    test_should_handle_multiple_updates_on_client()
-    test_should_handle_nonconflicting_updates_with_multiple_client_updates()
-    test_should_handle_conflicting_updates_with_multiple_client_updates()
-
-    test_should_handle_non_and_conflicting_updates()
-    test_should_handle_non_and_conflicting_updates_with_multiple_client_updates()
-
-    test_should_handle_different_custom_created_at()
-
-
-
-    function test_should_handle_update_on_client ()
+    describe("should handle update on client", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
@@ -75,10 +60,10 @@ function run_tests ()
 
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_nonconflicting_updates ()
+    describe("should handle nonconflicting updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
@@ -100,10 +85,10 @@ function run_tests ()
 
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_conflicting_updates ()
+    describe("should handle conflicting updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
@@ -125,10 +110,10 @@ function run_tests ()
         // There's nothing here that needs to be updated
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, ["title"])
-    }
+    })
 
 
-    function test_should_handle_multiple_updates_on_client ()
+    describe("should handle multiple updates on client", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
@@ -150,10 +135,10 @@ function run_tests ()
         test(merge.value.title, "TC")
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_nonconflicting_updates_with_multiple_client_updates ()
+    describe("should handle nonconflicting updates with multiple client updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
@@ -177,10 +162,10 @@ function run_tests ()
 
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, [])
-    }
+    })
 
 
-    function test_should_handle_conflicting_updates_with_multiple_client_updates ()
+    describe("should handle conflicting updates with multiple client updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", modified_at: dt1,
@@ -204,10 +189,10 @@ function run_tests ()
         // There's nothing here that needs to be updated
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, ["title"])
-    }
+    })
 
 
-    function test_should_handle_non_and_conflicting_updates ()
+    describe("should handle non and conflicting updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
@@ -230,10 +215,10 @@ function run_tests ()
         // Need to save the title
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, ["description"])
-    }
+    })
 
 
-    function test_should_handle_non_and_conflicting_updates_with_multiple_client_updates ()
+    describe("should handle non and conflicting updates with multiple client updates", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, title: "TA", description: "DA", modified_at: dt1,
@@ -258,10 +243,10 @@ function run_tests ()
         // Need to save the title
         test(merge.needs_save, true)
         test(merge.unresolvable_conflicted_fields, ["description"])
-    }
+    })
 
 
-    function test_should_handle_different_custom_created_at ()
+    describe("should handle different custom created at", () =>
     {
         const last_source_of_truth_value: WComponent = prepare_new_contextless_wcomponent_object({
             base_id: -1, custom_created_at: new Date("2021"), modified_at: dt1,
@@ -283,9 +268,6 @@ function run_tests ()
 
         test(merge.needs_save, false)
         test(merge.unresolvable_conflicted_fields, [])
-    }
-}
+    })
 
-
-
-// run_tests()
+}, false)

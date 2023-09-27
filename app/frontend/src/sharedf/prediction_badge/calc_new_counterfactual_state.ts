@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 
 
 
@@ -49,10 +49,8 @@ export function calc_new_counterfactual_state (args: CalcNewCounterfactualStateA
 
 
 
-function run_tests ()
+export const test_calc_new_counterfactual_state = describe("calc_new_counterfactual_state", () =>
 {
-    console .log("running tests of calc_new_counterfactual_state")
-
     let probability: number
     let conviction: number
     let expected_new_counterfactual_probability: number
@@ -235,6 +233,5 @@ function run_tests ()
     })
     test(result.new_counterfactual_probability, undefined)
     test(result.new_counterfactual_conviction, undefined)
-}
 
-// run_tests()
+}, false)

@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 
 
@@ -12,10 +12,8 @@ export function get_calculation_strs_from_text (text: string): string[]
 }
 
 
-function test_get_calculation_strs_from_text ()
+export const test_get_calculation_strs_from_text = describe("get_calculation_strs_from_text", () =>
 {
-    console .log("running tests of get_calculation_strs_from_text")
-
     const id1 = "@@" + uuid_v4_for_tests(1)
 
 
@@ -74,13 +72,4 @@ asd1 ${id1}
 //     $$!
 // `)
 //     test(calculations, [], "Should not find calculations when inside code blocks")
-}
-
-
-
-function run_tests ()
-{
-    test_get_calculation_strs_from_text()
-}
-
-// run_tests()
+}, false)

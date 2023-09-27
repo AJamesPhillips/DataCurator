@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import type { ActionChangeRouteArgs } from "./actions"
 import { get_datetime_or_ms } from "./datetime/routing_datetime"
 import type {
@@ -45,10 +45,8 @@ export function merge_routing_state (current_routing_state: RoutingState, new_ro
 
 
 
-function run_tests ()
+export const test_merge_routing_state = describe("merge_routing_state", () =>
 {
-    console .log("running tests of merge_routing_state")
-
     const dt = new Date("2021-04-09 23:25:26")
     const dt2 = new Date("2022-01-01 01:01:01")
     const dt3 = new Date("2023-01-01 01:01:01")
@@ -106,7 +104,5 @@ function run_tests ()
     new_routing_state = { args: { storage_location: undefined } }
     merged_routing_state = merge_routing_state(current_routing_state, new_routing_state)
     test(merged_routing_state.args.storage_location, undefined)
-}
 
-
-// run_tests()
+}, false)

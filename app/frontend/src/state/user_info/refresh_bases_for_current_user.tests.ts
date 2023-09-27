@@ -1,4 +1,4 @@
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import type {
     SupabaseKnowledgeBaseWithAccess,
 } from "../../supabase/interfaces"
@@ -10,7 +10,7 @@ import type { UserInfoState } from "./state"
 
 
 
-export function run_tests ()
+export const test_refresh_bases_for_current_user = describe("refresh_bases_for_current_user", () =>
 {
     const inserted_at = new Date()
     const updated_at = new Date()
@@ -155,7 +155,4 @@ export function run_tests ()
     // test(user_info.chosen_base_id, undefined)
     // // should need to create a base
     // test(wrapped_selector_needs_to_create_a_base(user_info), true)
-}
-
-
-// run_tests()
+}, false)

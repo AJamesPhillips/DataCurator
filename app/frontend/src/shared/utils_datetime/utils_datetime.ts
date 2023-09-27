@@ -1,4 +1,4 @@
-import { test } from "../utils/test"
+import { describe, test } from "../utils/test"
 import type { Base } from "../interfaces/base"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
@@ -69,13 +69,11 @@ export function partition_items_by_created_at_datetime <U extends Base> (args: P
 
 
 
-function test_partition_items_by_created_at_datetime ()
+export const test_partition_items_by_created_at_datetime = describe("partition_items_by_created_at_datetime", () =>
 {
-    console .log("running tests of partition_items_by_created_at_datetime")
-
     interface Simple extends Base {}
 
-    function ids_partition_items_by_created_at_datetime (args: PartitionItemsByCreatedAtDatetimeArgs<Simple>): PartitionItemsByCreatedAtDatetimeReturn<string>
+    function helper_func__ids_partition_items_by_created_at_datetime (args: PartitionItemsByCreatedAtDatetimeArgs<Simple>): PartitionItemsByCreatedAtDatetimeReturn<string>
     {
         const result = partition_items_by_created_at_datetime(args)
         return {
@@ -100,43 +98,35 @@ function test_partition_items_by_created_at_datetime ()
     const c2: Simple = { base_id: -1, id: "2", created_at: date2 }
 
     items = []
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date3_ms })
+    result = helper_func__ids_partition_items_by_created_at_datetime({ items, created_at_ms: date3_ms })
     test(result, {
         invalid_future_items: [],
         current_items: [],
     })
 
     items = [c1, c2]
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date3_ms })
+    result = helper_func__ids_partition_items_by_created_at_datetime({ items, created_at_ms: date3_ms })
     test(result, {
         invalid_future_items: [],
         current_items: [c1.id, c2.id],
     })
 
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date2_ms })
+    result = helper_func__ids_partition_items_by_created_at_datetime({ items, created_at_ms: date2_ms })
     test(result, {
         invalid_future_items: [],
         current_items: [c1.id, c2.id],
     })
 
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date1_ms })
+    result = helper_func__ids_partition_items_by_created_at_datetime({ items, created_at_ms: date1_ms })
     test(result, {
         invalid_future_items: [c2.id],
         current_items: [c1.id],
     })
 
-    result = ids_partition_items_by_created_at_datetime({ items, created_at_ms: date0_ms })
+    result = helper_func__ids_partition_items_by_created_at_datetime({ items, created_at_ms: date0_ms })
     test(result, {
         invalid_future_items: [c1.id, c2.id],
         current_items: [],
     })
-}
 
-
-
-function run_tests ()
-{
-    test_partition_items_by_created_at_datetime()
-}
-
-// run_tests()
+}, false)

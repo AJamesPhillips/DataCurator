@@ -1,7 +1,7 @@
 import { uncertain_datetime_is_eternal } from "../uncertainty/datetime"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { SortDirection, sort_list } from "../utils/sort"
-import { test } from "../utils/test"
+import { describe, test } from "../utils/test"
 import { Tense } from "../../wcomponent/interfaces/datetime"
 import { get_tense_of_uncertain_datetime } from "./get_tense_of_uncertain_datetime"
 
@@ -115,13 +115,12 @@ function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (a
 
 
 
-function test_partition_sorted_items_by_datetimes ()
+export const test_partition_sorted_items_by_datetimes = describe("partition_sorted_items_by_datetimes", () =>
 {
-    console .log("running tests of partition_sorted_items_by_datetimes")
 
     interface Simple extends HasUncertainDatetime { id: string }
 
-    function ids_partition_sorted_items_by_datetimes (args: PartitionSortedItemsByDatetimeArgs<Simple>): PartitionItemsByDatetimeReturn<string>
+    function helper_func__ids_partition_sorted_items_by_datetimes (args: PartitionSortedItemsByDatetimeArgs<Simple>): PartitionItemsByDatetimeReturn<string>
     {
         const result = partition_sorted_items_by_datetimes(args)
         return {
@@ -150,7 +149,7 @@ function test_partition_sorted_items_by_datetimes ()
     const s2 = { id: "30", created_at: date1, datetime: { value: date2 } }
 
     sorted_items = []
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
         past_items: [],
         present_item: undefined,
@@ -159,7 +158,7 @@ function test_partition_sorted_items_by_datetimes ()
 
 
     sorted_items = [s_eternal1, s_eternal2]
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [s_eternal2.id],
         present_item: s_eternal1.id,
@@ -168,61 +167,61 @@ function test_partition_sorted_items_by_datetimes ()
 
 
     sorted_items = [s2, s1, s_eternal2]
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [],
         present_item: s_eternal2.id,
         future_items: [s2.id, s1.id],
     })
 
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
     test(result, {
         past_items: [s_eternal2.id],
         present_item: s1.id,
         future_items: [s2.id],
     })
 
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
     test(result, {
         past_items: [s1.id, s_eternal2.id],
         present_item: s2.id,
         future_items: [],
     })
 
-    result = ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
         past_items: [s1.id, s_eternal2.id],
         present_item: s2.id,
         future_items: [],
     })
-}
+
+}, false)
 
 
 
-function test_sort_by_uncertain_event_datetimes ()
+export const test_sort_by_uncertain_event_datetimes = describe("sort_by_uncertain_event_datetimes", () =>
 {
-    console .log("running tests of sort_by_uncertain_event_datetimes")
 
     interface Simple extends HasUncertainDatetime { id: string }
 
-    function ids_sort_by_uncertain_event_datetimes (items: Simple[])
+    function helper_func__ids_sort_by_uncertain_event_datetimes (items: Simple[])
     {
         const result = sort_by_uncertain_event_datetimes(items)
         return result.map(({ id }) => id)
     }
 
 
-    function compare (items: Simple[], expected: Simple[])
+    function helper_func__compare (items: Simple[], expected: Simple[])
     {
         const items_reverse = [...items].reverse()
         const expected_ids = expected.map(({ id }) => id)
 
-        result = ids_sort_by_uncertain_event_datetimes(items)
-        const result2 = ids_sort_by_uncertain_event_datetimes(items_reverse)
+        result = helper_func__ids_sort_by_uncertain_event_datetimes(items)
+        const result2 = helper_func__ids_sort_by_uncertain_event_datetimes(items_reverse)
 
         // Should get same result from items forwards or backwards
         test(result, result2, "", false)
-        console .log(items.map(({ id }) => id).join(", "))
+        // console .log(items.map(({ id }) => id).join(", "))
         test(result, expected_ids, "", false)
     }
 
@@ -252,49 +251,40 @@ function test_sort_by_uncertain_event_datetimes ()
 
 
     items = []
-    result = ids_sort_by_uncertain_event_datetimes(items)
+    result = helper_func__ids_sort_by_uncertain_event_datetimes(items)
     test(result, [], "", false)
 
 
     // Not sure how to deal with multiple eternal entries so testing that sort is indeterminant for now
     items = [s_eternal, s_eternal2]
     const items_reverse = [...items].reverse()
-    result = ids_sort_by_uncertain_event_datetimes(items)
-    const result2 = ids_sort_by_uncertain_event_datetimes(items_reverse)
+    result = helper_func__ids_sort_by_uncertain_event_datetimes(items)
+    const result2 = helper_func__ids_sort_by_uncertain_event_datetimes(items_reverse)
     test(JSON.stringify(result) !== JSON.stringify(result2), true, "Should be different (indeterminant sort)")
 
 
     items = [s_eternal, s1, s2]
     expected = [s2, s1, s_eternal]
-    compare(items, expected)
+    helper_func__compare(items, expected)
 
 
     items = [s_eternal, s_min1, s_min2]
     expected = [s_min2, s_min1, s_eternal]
-    compare(items, expected)
+    helper_func__compare(items, expected)
 
 
     items = [s_eternal, s_max1, s_max2]
     expected = [s_max2, s_max1, s_eternal]
-    compare(items, expected)
+    helper_func__compare(items, expected)
 
 
     items = [s_eternal, s1, s2, s_min1, s_min2, s_max1, s_max2]
     expected = [s_min2, s2, s_max2, s_min1, s1, s_max1, s_eternal]
-    compare(items, expected)
+    helper_func__compare(items, expected)
 
 
     items = [s_eternal, s_min0_max3, s_min1_max2]
     expected = [s_min1_max2, s_min0_max3, s_eternal]
-    compare(items, expected)
-}
+    helper_func__compare(items, expected)
 
-
-
-function run_tests ()
-{
-    test_partition_sorted_items_by_datetimes()
-    test_sort_by_uncertain_event_datetimes()
-}
-
-// run_tests()
+}, false)

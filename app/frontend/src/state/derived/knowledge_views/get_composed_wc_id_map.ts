@@ -1,5 +1,5 @@
 import { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/interfaces/knowledge_view"
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import { WComponentsById, wcomponent_is_deleted } from "../../../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -65,10 +65,8 @@ function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWCompo
 
 
 
-function run_tests ()
+export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", () =>
 {
-    console .log("running tests of get_composed_wc_id_map etc")
-
     const date1 = new Date("2023-03-22 15:15:00")
 
     // Test get_composed_wc_id_map handles no data
@@ -157,6 +155,4 @@ function run_tests ()
 
     test(result, expected_result)
 
-}
-
-// run_tests()
+}, false)

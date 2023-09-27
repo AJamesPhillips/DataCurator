@@ -17,7 +17,7 @@ export function run_replace_normal_ids_tests ()
 
 function test_replace_normal_ids ()
 {
-    console. group("running tests of replace_normal_ids")
+    console .group("running tests of replace_normal_ids")
 
     let input_text = ""
     let output_text = ""
@@ -38,7 +38,7 @@ function test_replace_normal_ids ()
     }
 
 
-    console. group("render_links: true")
+    console .group("render_links: true")
     let args: ReplaceNormalIdsInTextArgs = {
         wcomponents_by_id,
         depth_limit: 2,
@@ -76,11 +76,11 @@ it: [Title 1](http://datacurator.org#wcomponents/10000000-0000-4000-a000-0000000
     output_text = replace_normal_ids(input_text, 2, args)
     test(output_text, expected_output_text, "Should not replace with component title when depth is exceeded")
 
-    console. groupEnd()
+    console .groupEnd()
 
 
 
-    console. group("render_links: false")
+    console .group("render_links: false")
     args = {
         wcomponents_by_id,
         depth_limit: 2,
@@ -106,16 +106,16 @@ it: [Title 1](http://datacurator.org#wcomponents/10000000-0000-4000-a000-0000000
     output_text = replace_normal_ids(input_text, 2, args)
     test(output_text, expected_output_text, "Should not replace with component title when depth is exceeded and not add link when render_links is false")
 
-    console. groupEnd()
+    console .groupEnd()
 
 
-    console. groupEnd()
+    console .groupEnd()
 }
 
 
 function test_get_ids_from_text ()
 {
-    console. group("running tests of get_ids_from_text")
+    console .group("running tests of get_ids_from_text")
 
     let ids: string[] = []
 
@@ -133,5 +133,5 @@ function test_get_ids_from_text ()
     ids = get_double_at_mentioned_uuids_from_text(`asd @@${id1} asd name@example.com #label dfg @@${id2} sf`)
     test(ids, [id1, id2], `Should find uuid ids`)
 
-    console. groupEnd()
+    console .groupEnd()
 }

@@ -1,7 +1,7 @@
 import type { CreationContextState } from "../../state/creation_context/state"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_value_and_prediction_set_id } from "../../shared/utils/ids"
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type {
@@ -76,7 +76,7 @@ export function create_new_VAP_set_version (current_VAP_set: VAPSet, creation_co
 
 
 
-function run_tests ()
+export const test_prepare_new_VAP_set = describe("prepare_new_VAP_set", () =>
 {
 
     const VAP_sets: VAPSet[] = [
@@ -98,6 +98,5 @@ function run_tests ()
     let result = prepare_new_VAP_set(VAPsType.other, value_possibilities, VAP_sets, 1, {})
 
     test(result.entries.length, 2, "If there are only two unique possibilities, only return 2 VAPs")
-}
 
-// run_tests()
+}, false)

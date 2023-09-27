@@ -2,7 +2,7 @@ import { Graph } from "graphlib"
 import * as GraphLib from "graphlib"
 const alg = (((GraphLib as any).default as typeof GraphLib) || GraphLib).alg
 
-import { test } from "./test"
+import { describe, test } from "./test"
 
 
 
@@ -368,10 +368,8 @@ function factory_ids_to_nodes <T> (graph: Graph): (ids: string[]) => T[]
 
 
 
-function run_tests ()
+export const test_graph_related_functions = describe("graph related functions", () =>
 {
-    console .log("running tests of make_graph, find_leaves")
-
     interface I
     {
         id: string
@@ -383,13 +381,14 @@ function run_tests ()
     const get_head_ids = (i: I) => i.head_ids
     const get_tail_ids = (i: I) => i.tail_ids
 
-    const _make_graph = (items: I[]) =>
+
+    const helper_func__make_graph = (items: I[]) =>
     {
         return make_graph({ items, get_id, get_head_ids, get_tail_ids })
     }
-    let graph: Graph
 
-    function test_graph (graph: Graph, id: string, expected: { item?: I; head_ids: string[]; tail_ids: string[] } )
+
+    function helper_func__test_graph (graph: Graph, id: string, expected: { item?: I; head_ids: string[]; tail_ids: string[] } )
     {
         test(graph.node(id), expected.item)
         const out = graph.outEdges(id) || []
@@ -399,15 +398,15 @@ function run_tests ()
     }
 
 
-    function simple_graph ()
+    function helper_func__simple_graph ()
     {
         const items = [{ id: "1", head_ids: [], tail_ids: [] }]
-        const graph = _make_graph(items)
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    function simple_circular_and_leaf ()
+    function helper_func__simple_circular_and_leaf ()
     {
         const items = [
             // Circular + leaf
@@ -420,12 +419,12 @@ function run_tests ()
         //   /--> 4
         //  1 --> 2 --> 3
         //  ^----/
-        const graph = _make_graph(items)
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    function simple_multi_group_graph ()
+    function helper_func__simple_multi_group_graph ()
     {
         const items = [
             { id: "1", head_ids: ["2"], tail_ids: [] },
@@ -436,12 +435,12 @@ function run_tests ()
             { id: "4", head_ids: ["5"], tail_ids: [] },
             { id: "5", head_ids: [], tail_ids: [] },
         ]
-        const graph = _make_graph(items)
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    function multi_group_graph ()
+    function helper_func__multi_group_graph ()
     {
         const items = [
             // disconnected (group 1)
@@ -489,12 +488,12 @@ function run_tests ()
         // 15 <-- 16 <-- 17
         // 15b <-- 16b <-- 17b
 
-        const graph = _make_graph(items)
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    function branched_circular_multi_leaf ()
+    function helper_func__branched_circular_multi_leaf ()
     {
         const items = [
             { id: "4", head_ids: ["2"], tail_ids: [] },
@@ -511,100 +510,108 @@ function run_tests ()
             // two routes to leaf
             { id: "9", head_ids: ["5"], tail_ids: [] },
         ]
-        //                 /--> 9 --+--> 5
-        //  4 -> 2 -> 3 -> 1 ------/
-        //  ^    ^    |    |  \--------> 6
-        //   \----\--/     \-----------> 7 --> 8
-        //                               ^     |
-        //                               \----/
-        const graph = _make_graph(items)
+        //                         /--> 9 --+--> 5
+        //  4 -> 2 -> 3 --------> 1 -------/
+        //  ^    ^    |            \--------> 6
+        //   \----\--/ \-> 7 -> 8
+        //                 ^    |
+        //                 \---/
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    function out_of_scope_node ()
+    function helper_func__out_of_scope_node ()
     {
         const items = [
             { id: "1", head_ids: ["2"], tail_ids: ["3"] },
         ]
         //  (3) --> 1 --> (2)
-        const graph = _make_graph(items)
+        const graph = helper_func__make_graph(items)
         return { items, graph }
     }
 
 
-    const s = simple_graph()
-    const m = multi_group_graph()
-    const scl = simple_circular_and_leaf()
-    const smg = simple_multi_group_graph()
-    const bcml = branched_circular_multi_leaf()
-    const oosn = out_of_scope_node()
+    const s = helper_func__simple_graph()
+    const m = helper_func__multi_group_graph()
+    const scl = helper_func__simple_circular_and_leaf()
+    const smg = helper_func__simple_multi_group_graph()
+    const bcml = helper_func__branched_circular_multi_leaf()
+    const oosn = helper_func__out_of_scope_node()
 
 
-    test_graph(s.graph, "0", { item: undefined, head_ids: [], tail_ids: [] })
-    test_graph(s.graph, "1", { item: s.items[0], head_ids: [], tail_ids: [] } )
+    describe("graph", () =>
+    {
+        helper_func__test_graph(s.graph, "0", { item: undefined, head_ids: [], tail_ids: [] })
+        helper_func__test_graph(s.graph, "1", { item: s.items[0], head_ids: [], tail_ids: [] } )
 
 
-    test_graph(m.graph, "1",   { item: m.items[0],  head_ids: [], tail_ids: [] })
-    test_graph(m.graph, "2",   { item: m.items[1],  head_ids: ["3"], tail_ids: [] })
-    test_graph(m.graph, "3",   { item: m.items[2],  head_ids: ["4"], tail_ids: ["2"] })
-    test_graph(m.graph, "4",   { item: m.items[3],  head_ids: [], tail_ids: ["3"] })
-    test_graph(m.graph, "5",   { item: m.items[4],  head_ids: [], tail_ids: ["6"] })
-    test_graph(m.graph, "6",   { item: m.items[5],  head_ids: ["5"], tail_ids: ["7"] })
-    test_graph(m.graph, "7",   { item: m.items[6],  head_ids: ["6"], tail_ids: [] })
-    test_graph(m.graph, "8",   { item: m.items[7],  head_ids: ["10"], tail_ids: ["9"] })
-    test_graph(m.graph, "9",   { item: m.items[8],  head_ids: ["8"], tail_ids: ["10"] })
-    test_graph(m.graph, "10",  { item: m.items[9],  head_ids: ["9"], tail_ids: ["8"] })
-    test_graph(m.graph, "11",  { item: m.items[10], head_ids: ["12", "13"], tail_ids: ["12", "13"] })
-    test_graph(m.graph, "12",  { item: m.items[11], head_ids: ["11", "13"], tail_ids: ["11", "13"] })
-    test_graph(m.graph, "13",  { item: m.items[12], head_ids: ["11", "12"], tail_ids: ["11", "12"] })
-    test_graph(m.graph, "14",  { item: m.items[13], head_ids: ["14"], tail_ids: ["14"] })
-    test_graph(m.graph, "15",  { item: m.items[14], head_ids: [], tail_ids: ["16"] })
-    test_graph(m.graph, "16",  { item: m.items[15], head_ids: ["15"], tail_ids: ["17"] })
-    test_graph(m.graph, "17",  { item: m.items[16], head_ids: ["16"], tail_ids: [] })
-    test_graph(m.graph, "15b", { item: m.items[17], head_ids: [], tail_ids: ["16b"] })
-    test_graph(m.graph, "16b", { item: m.items[18], head_ids: ["15b"], tail_ids: ["17b"] })
-    test_graph(m.graph, "17b", { item: m.items[19], head_ids: ["16b"], tail_ids: [] })
+        helper_func__test_graph(m.graph, "1",   { item: m.items[0],  head_ids: [], tail_ids: [] })
+        helper_func__test_graph(m.graph, "2",   { item: m.items[1],  head_ids: ["3"], tail_ids: [] })
+        helper_func__test_graph(m.graph, "3",   { item: m.items[2],  head_ids: ["4"], tail_ids: ["2"] })
+        helper_func__test_graph(m.graph, "4",   { item: m.items[3],  head_ids: [], tail_ids: ["3"] })
+        helper_func__test_graph(m.graph, "5",   { item: m.items[4],  head_ids: [], tail_ids: ["6"] })
+        helper_func__test_graph(m.graph, "6",   { item: m.items[5],  head_ids: ["5"], tail_ids: ["7"] })
+        helper_func__test_graph(m.graph, "7",   { item: m.items[6],  head_ids: ["6"], tail_ids: [] })
+        helper_func__test_graph(m.graph, "8",   { item: m.items[7],  head_ids: ["10"], tail_ids: ["9"] })
+        helper_func__test_graph(m.graph, "9",   { item: m.items[8],  head_ids: ["8"], tail_ids: ["10"] })
+        helper_func__test_graph(m.graph, "10",  { item: m.items[9],  head_ids: ["9"], tail_ids: ["8"] })
+        helper_func__test_graph(m.graph, "11",  { item: m.items[10], head_ids: ["12", "13"], tail_ids: ["12", "13"] })
+        helper_func__test_graph(m.graph, "12",  { item: m.items[11], head_ids: ["11", "13"], tail_ids: ["11", "13"] })
+        helper_func__test_graph(m.graph, "13",  { item: m.items[12], head_ids: ["11", "12"], tail_ids: ["11", "12"] })
+        helper_func__test_graph(m.graph, "14",  { item: m.items[13], head_ids: ["14"], tail_ids: ["14"] })
+        helper_func__test_graph(m.graph, "15",  { item: m.items[14], head_ids: [], tail_ids: ["16"] })
+        helper_func__test_graph(m.graph, "16",  { item: m.items[15], head_ids: ["15"], tail_ids: ["17"] })
+        helper_func__test_graph(m.graph, "17",  { item: m.items[16], head_ids: ["16"], tail_ids: [] })
+        helper_func__test_graph(m.graph, "15b", { item: m.items[17], head_ids: [], tail_ids: ["16b"] })
+        helper_func__test_graph(m.graph, "16b", { item: m.items[18], head_ids: ["15b"], tail_ids: ["17b"] })
+        helper_func__test_graph(m.graph, "17b", { item: m.items[19], head_ids: ["16b"], tail_ids: [] })
+
+        // make_graph should be able to gracefully handle edges going to nodes outside of scope
+        helper_func__test_graph(oosn.graph, "1", { item: oosn.items[0], head_ids: [], tail_ids: [] })
+    })
 
 
-    // make_graph should be able to gracefully handle edges going to nodes outside of scope
-    test_graph(oosn.graph, "1", { item: oosn.items[0], head_ids: [], tail_ids: [] })
+    describe("find_leaf_ids", () =>
+    {
+        test(find_leaf_ids(scl.graph), ["3", "4"])
+
+        test(find_leaf_ids(smg.graph), ["2", "3", "5"])
+
+        test(find_leaf_ids(bcml.graph), ["5", "6"])
+    })
 
 
-    // find_leaf_ids
-
-    test(find_leaf_ids(scl.graph), ["3", "4"])
-
-
-    test(find_leaf_ids(smg.graph), ["2", "3", "5"])
-
-
-    test(find_leaf_ids(bcml.graph), ["5", "6"])
-    test(find_leaf_ids_for_id(bcml.graph, "12"), [])
-    test(find_leaf_ids_for_id(bcml.graph, "1"), ["5", "6"])
-    test(find_leaf_ids_for_id(bcml.graph, "2"), ["5", "6"])
-    test(find_leaf_ids_for_id(bcml.graph, "7"), [])
-
-    // find_leaf_group_ids
-
-    test(find_leaf_group_ids(s), [["1"]])
+    describe("find_leaf_ids_for_id", () =>
+    {
+        test(find_leaf_ids_for_id(bcml.graph, "12"), [])
+        test(find_leaf_ids_for_id(bcml.graph, "1"), ["5", "6"])
+        test(find_leaf_ids_for_id(bcml.graph, "2"), ["5", "6"])
+        test(find_leaf_ids_for_id(bcml.graph, "7"), [])
+    })
 
 
-    test(find_leaf_group_ids(scl), [["4", "1", "2"], ["3", "2", "1"]])
+    describe("find_leaf_group_ids", () =>
+    {
+        test(find_leaf_group_ids(s), [["1"]])
 
-    // find_all_predecessors
+        test(find_leaf_group_ids(scl), [["3", "2", "1"], ["4", "1", "2"]])
+    })
 
-    test(find_all_predecessor_ids(s.graph, "1"), [])
+
+    describe("find_all_predecessor_ids", () =>
+    {
+        test(find_all_predecessor_ids(s.graph, "1"), [])
+
+        test(find_all_predecessor_ids(scl.graph, "1"), ["2"])
+        test(find_all_predecessor_ids(scl.graph, "2"), ["1"])
+        test(find_all_predecessor_ids(scl.graph, "3"), ["2", "1"])
+        test(find_all_predecessor_ids(scl.graph, "4"), ["1", "2"])
+
+        test(find_all_predecessor_ids(bcml.graph, "2"), ["4", "3"])
+        test(find_all_predecessor_ids(bcml.graph, "8"), ["7", "3", "2", "4"])
+        test(find_all_predecessor_ids(bcml.graph, "5"), ["9", "1", "3", "2", "4"])
+    })
 
 
-    test(find_all_predecessor_ids(scl.graph, "1"), ["2"])
-    test(find_all_predecessor_ids(scl.graph, "2"), ["1"])
-    test(find_all_predecessor_ids(scl.graph, "3"), ["1", "2"])
-    test(find_all_predecessor_ids(scl.graph, "4"), ["1", "2"])
-
-    test(find_all_predecessor_ids(bcml.graph, "2"), ["3", "4"])
-    test(find_all_predecessor_ids(bcml.graph, "8"), ["2", "3", "4", "7"])
-    test(find_all_predecessor_ids(bcml.graph, "5"), ["1", "2", "3", "4", "9"])
-}
-
-// run_tests()
+}, false)

@@ -10,6 +10,7 @@ import { date2str, get_today_str } from "../shared/utils/date_helpers"
 import type { RootState } from "../state/State"
 import type { TimeResolution } from "../shared/utils/datetime"
 import { find_parent_element_by_class } from "../utils/html"
+import { describe, test } from "../shared/utils/test"
 
 
 
@@ -237,36 +238,23 @@ function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
 
 
 
-// function run_tests ()
-// {
-//     console .log("running tests of handle_on_blur")
-
-//     let valid: boolean
-//     let invariant_value: Date | undefined
-//     let value: Date | undefined
-//     let working_value_date: Date
-//     let result: HandleOnBlurReturn
+export const test_handle_on_blur = describe("handle_on_blur", () =>
+{
+    let invariant_value: Date | undefined
+    let working_value: string
+    let result: Date | undefined
 
 
-//     valid = true
-//     working_value_date = new Date("2020-01-01")
-//     invariant_value = undefined
-//     value = new Date("2020-01-01")
-//     result = handle_on_blur({ valid, working_value_date, invariant_value, value })
-//     test(result.new_value, false)
-//     test(result.new_working_value, "2020-01-01")
+    invariant_value = undefined
+    working_value = "2020-01-01"
+    result = handle_on_blur({ invariant_value, working_value })
+    test(result?.getTime(), new Date("2020-01-01T00:00:00.000Z").getTime())
 
 
-//     valid = true
-//     invariant_value = undefined
-//     value = new Date("2021-04-25 08:37:41")
-//     working_value_date = new Date("2021-04-25 08:37")
-//     result = handle_on_blur({ valid, working_value_date, invariant_value, value })
+    invariant_value = undefined
+    working_value = "2021-04-25 08:37"
+    result = handle_on_blur({ invariant_value, working_value })
+    // Note no seconds
+    test(result?.getTime(), new Date("2021-04-25T07:37:00.000Z").getTime())
 
-//     // Note no seconds
-//     const new_str_datetime = "2021-04-25 08:37"
-//     test(result.new_value, new Date(new_str_datetime))
-//     test(result.new_working_value, new_str_datetime)
-// }
-
-// run_tests()
+}, false)

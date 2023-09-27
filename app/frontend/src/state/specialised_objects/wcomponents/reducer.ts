@@ -3,7 +3,7 @@ import { prepare_new_VAP_set } from "../../../wcomponent/CRUD_helpers/prepare_ne
 
 import { prepare_new_VAP } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import type { CreationContextState } from "../../creation_context/state"
-import { test } from "../../../shared/utils/test"
+import { describe, test } from "../../../shared/utils/test"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { VAPsType } from "../../../wcomponent/interfaces/VAPsType"
 import type { WComponentNodeStateV2, StateValueAndPrediction } from "../../../wcomponent/interfaces/state"
@@ -72,10 +72,8 @@ export const wcomponents_reducer = (state: RootState, action: AnyAction): RootSt
 
 
 
-function run_tests ()
+export const test_tidy_wcomponent = describe("tidy_wcomponent", () =>
 {
-    console .log("running tests of tidy_wcomponent")
-
     const sort_list = false
 
     const dt1 = new Date("2021-05-12")
@@ -142,6 +140,5 @@ function run_tests ()
 
     test(tidied_VAPs.map(({ relative_probability: rp }) => rp), [5, 0], "", sort_list)
     test(tidied_VAPs.map(({ probability }) => probability), [0, 1], "", sort_list)
-}
 
-// run_tests()
+}, false)

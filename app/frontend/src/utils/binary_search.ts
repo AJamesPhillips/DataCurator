@@ -1,4 +1,4 @@
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 
 
 
@@ -67,10 +67,8 @@ export function find_nearest_index_in_sorted_list <I> (sorted_list: I[], get_key
 
 
 
-function run_tests ()
+export const test_binary_search_functions = describe("binary search functions", () =>
 {
-    console .log("running tests of find_index_in_sorted_list and find_nearest_index_in_sorted_list")
-
     let result = find_index_in_sorted_list([1, 2, 3, 4, 5, 6, 7, 8, 9], i => i, 3)
     test(result, 2)
 
@@ -91,6 +89,5 @@ function run_tests ()
     test(result_nearest, { index: 2.5, exact: false, bounds: "in" })
     result_nearest = find_nearest_index_in_sorted_list([1, 2, 3, 4, 5, 6, 7, 8, 9], i => i, 9.5)
     test(result_nearest, { index: 8.5, exact: false, bounds: "higher" })
-}
 
-// run_tests()
+}, false)

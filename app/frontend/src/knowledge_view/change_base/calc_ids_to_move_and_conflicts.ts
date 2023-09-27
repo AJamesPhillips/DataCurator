@@ -1,5 +1,5 @@
 import type { KnowledgeView, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 import type { NestedKnowledgeViewIdsMap } from "../../state/derived/State"
 import { get_nested_knowledge_view_ids } from "../../state/specialised_objects/accessors"
 import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -146,7 +146,7 @@ function get_possible_wc_ids_to_move (args: GetPossibleWComponentIdsToMoveArgs)
 
 
 
-function run_tests ()
+export const test_calc_ids_to_move_and_conflicts_functions = describe("calc_ids_to_move_and_conflicts", () =>
 {
     const base_id = 1
 
@@ -219,6 +219,5 @@ function run_tests ()
     test(result.kv_ids_to_move, new Set([kv_B.id, kv_C.id, kv_I.id]))
     test(result.wc_ids_to_move, new Set([wc_B.id, wc_C.id, wc_I.id, wc_G.id, wc_H.id]))
     test(Object.keys(result.wcomponents_move_conflicts), [wc_E.id, wc_F.id])
-}
 
-// run_tests()
+}, false)

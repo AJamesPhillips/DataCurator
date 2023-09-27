@@ -12,7 +12,7 @@ import { ReplaceCalculationsWithResults } from "../interfaces"
 
 export function run_replace_calculations_with_results_tests ()
 {
-    console. group("running tests of replace_calculations_with_results")
+    console .group("running tests of replace_calculations_with_results")
 
     const created_at_ms = new Date("2023-08-17 17:40").getTime()
     const sim_ms = new Date("2023-08-17 17:40").getTime()
@@ -221,7 +221,7 @@ A * B = 123 * 0.01 = 1.23
     test.skip(output_text, expected_output_text, "Should populate equations when all names are found and calculate result")
 
 
-    console. groupEnd()
+    console .groupEnd()
 }
 
 

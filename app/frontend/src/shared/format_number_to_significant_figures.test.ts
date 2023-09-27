@@ -24,7 +24,7 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
 
         formatted_number = format_number_to_significant_figures(270000000.2, 2)
         test(formatted_number, "270000000", "270.2 million to 2 sf")
-    }, true)
+    })
 
 
     describe("Positive with decimals numbers", () =>
@@ -37,7 +37,7 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
 
         formatted_number = format_number_to_significant_figures(270000000.2, 11)
         test(formatted_number, "270000000.20", "270.2 million to 11 sf")
-    }, true)
+    })
 
 
     describe("Negative numbers", () =>
@@ -50,7 +50,7 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
 
         formatted_number = format_number_to_significant_figures(-270000000.2, 2)
         test(formatted_number, "-270000000", "-270.2 million to 2 sf")
-    }, true)
+    })
 
 
     describe("Small numbers", () =>
@@ -66,7 +66,7 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
 
         formatted_number = format_number_to_significant_figures(-0.0001236, 5)
         test(formatted_number, "-0.00012360", "-0.0001236 to 5 sf")
-    }, true)
+    })
 
 
     describe("Floating point precision numbers", () =>
@@ -76,6 +76,6 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
 
         formatted_number = format_number_to_significant_figures(17.955*100, 7)
         test(formatted_number, "1795.500", "17.955*100 to 7 sf, tests when floating point precision results in 1795.4999999999998")
-    }, true)
+    })
 
 }, false)

@@ -1,4 +1,4 @@
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 
 
 const regexp_unquoted = /(?:^)([^",\n\r]*),?/g
@@ -68,10 +68,8 @@ export function csv_to_array (str_data: string)
 }
 
 
-function run_tests ()
+export const test_csv_to_array = describe("csv_to_array", () =>
 {
-    console .log("running tests of csv_to_array")
-
     test(csv_to_array(``), [[``]])
     test(csv_to_array(`,`), [[``, ``]])
     test(csv_to_array(`a`), [[`a`]])
@@ -115,6 +113,5 @@ function run_tests ()
     test(csv_to_array(`"a""a"`), [[`a"a`]])
     test(csv_to_array(`"a"",""a"`), [[`a","a`]])
     test(csv_to_array(`""\n`), [[``], [``]])
-}
 
-// run_tests()
+}, false)

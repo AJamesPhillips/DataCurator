@@ -12,7 +12,7 @@ import {
     ALLOWED_ROUTE_ARGS_COUNT,
 } from "./interfaces"
 import { routing_arg_datetime_strings_to_datetime } from "./datetime/routing_datetime"
-import { test } from "../../shared/utils/test"
+import { describe, test } from "../../shared/utils/test"
 
 
 
@@ -178,10 +178,8 @@ function parse_int_or_undefined (val: string): number | undefined
 
 
 
-function run_tests ()
+export const test_routing_state_to_string = describe("routing_state_to_string", () =>
 {
-    console .log("running tests of routing_state_to_string")
-
     let state: RoutingState
     let result: string
 
@@ -203,7 +201,6 @@ function run_tests ()
         }
     }
     result = routing_state_to_string(state)
-    test(result, "#wcomponents/wc88/&zoom=100&y=158&x=101&view=knowledge&subview_id=kv77&sdate=2021-04-26&stime=10:23:13&cdate=2020-10-21&ctime=18:04:24")
-}
+    test(result, "#wcomponents/wc88/&storage_location=&subview_id=kv77&view=knowledge&x=101&y=158&zoom=100&sdate=2021-04-26&stime=10:23:13&cdate=2020-10-21&ctime=18:04:24")
 
-// run_tests()
+}, false)

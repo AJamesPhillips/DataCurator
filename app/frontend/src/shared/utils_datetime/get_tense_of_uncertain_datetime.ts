@@ -1,5 +1,5 @@
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
-import { test } from "../utils/test"
+import { describe, test } from "../utils/test"
 import { Tense } from "../../wcomponent/interfaces/datetime"
 
 
@@ -37,10 +37,8 @@ export function get_tense_of_uncertain_datetime (item: HasUncertainDatetime, sim
 
 
 
-function test_get_tense_of_item ()
+export const test_get_tense_of_uncertain_datetime = describe("get_tense_of_uncertain_datetime", () =>
 {
-    console .log("running tests of get_tense_of_item")
-
     let result: Tense
 
     const date1 = new Date("2021-04-01 00:01")
@@ -98,12 +96,5 @@ function test_get_tense_of_item ()
     test(result, Tense.past)
     result = get_tense_of_uncertain_datetime({ datetime: { min: date2, value: date3, max: date4 } }, date5_ms)
     test(result, Tense.past)
-}
 
-
-function run_tests ()
-{
-    test_get_tense_of_item()
-}
-
-// run_tests()
+}, false)

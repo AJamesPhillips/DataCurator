@@ -45,7 +45,7 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
 
         formatted_number = format_number_to_string(-1264, 2, NumberDisplayType.scientific)
         test(formatted_number, "-1.3e3", "scientific number")
-    }, true)
+    })
 
 
     describe("less than 1 numbers", () =>
@@ -68,7 +68,7 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         formatted_number = format_number_to_string(-0.001264, 2, NumberDisplayType.scientific)
         test(formatted_number, "-1.3e-3", "0> num >-1 scientific number")
 
-    }, true)
+    })
 
 
     describe("no unnecessary significant figures", () =>
@@ -85,6 +85,6 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         formatted_number = format_number_to_string(1000, 2, NumberDisplayType.scientific)
         test(formatted_number, "1e3", "scientific number")
 
-    }, true)
+    })
 
 }, false)

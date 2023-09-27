@@ -1,4 +1,4 @@
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 
 
 
@@ -21,7 +21,7 @@ export function intersperse <T, R> (array: T[], func: (entry_before: T, entry_af
 }
 
 
-function run_tests ()
+export const test_array_functions = describe("array functions", () =>
 {
     let result = intersperse<string, number>([], () => 0)
     test(result, [], "intersperse with no elements should be empty")
@@ -33,7 +33,4 @@ function run_tests ()
 
     result = intersperse<string, number>(["a", "b", "c"], (e1, e2) => e1.charCodeAt(0) + e2.charCodeAt(0))
     test(result, ["a", 195, "b", 197, "c"], "intersperse with 3 elements should have interspersed values")
-}
-
-
-// run_tests()
+}, false)

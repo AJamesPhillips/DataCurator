@@ -1,4 +1,4 @@
-import { test } from "../shared/utils/test"
+import { describe, test } from "../shared/utils/test"
 import { bounded } from "../shared/utils/bounded"
 
 
@@ -54,10 +54,8 @@ export function calculate_new_zoom_xy (args: CalculateNewZoomXYArgs)
 
 
 
-function run_tests ()
+export const test_calculate_new_zoom_xy = describe.skip("calculate_new_zoom_xy (a lot of the tests are broken and need to be updated to match current working functionality)", () =>
 {
-    console .log("running tests of calculate_new_zoom_xy etc")
-
     let result: { x: number, y: number }
     const width = 900
     const height = 600
@@ -138,6 +136,5 @@ function run_tests ()
 
     result = calc({ x: 100, y: 100, zoom, new_zoom, pointer })
     test(result, { x: 100, y: 100 })
-}
 
-// run_tests()
+}, false)
