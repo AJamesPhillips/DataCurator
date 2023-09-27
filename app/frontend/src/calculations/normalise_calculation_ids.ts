@@ -87,6 +87,7 @@ function hide_all_curly_bracket_content (converted_equation: string)
 
     curly_bracket_content_to_hide.forEach((curly_bracket_content, index) =>
     {
+        curly_bracket_content = curly_bracket_content.replaceAll("^", "\\^")
         const replacer = new RegExp(`\\{${curly_bracket_content}\\}`, "g")
 
         const replacement_content = `[hidden_curly_bracket_content_${index}]`

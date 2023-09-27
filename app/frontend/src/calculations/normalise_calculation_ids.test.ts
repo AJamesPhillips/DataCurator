@@ -7,9 +7,13 @@ import { normalise_calculation_ids } from "./normalise_calculation_ids"
 export const run_normalise_calculation_ids_tests = describe("normalise_calculation_ids", () =>
 {
     const id1 = uuid_v4_for_tests(1)
-    let calculation_string = `[A] + 3`
-    let expected_converted_calculation = `[A] + 3`
-    let result_calculation_string = normalise_calculation_ids(calculation_string, [])
+    let calculation_string = ""
+    let expected_converted_calculation = ""
+    let result_calculation_string = ""
+
+    calculation_string = `[A] + 3`
+    expected_converted_calculation = `[A] + 3`
+    result_calculation_string = normalise_calculation_ids(calculation_string, [])
     test(result_calculation_string, expected_converted_calculation, "Original square bracket IDs ignored")
 
     calculation_string = `[A] + B`
@@ -61,5 +65,10 @@ export const run_normalise_calculation_ids_tests = describe("normalise_calculati
     expected_converted_calculation = `{4 miles} / {6.4e3 meters}`
     result_calculation_string = normalise_calculation_ids(calculation_string, [])
     test(result_calculation_string, expected_converted_calculation, "Units inside curly braces are left unaltered")
+
+    calculation_string = `{7 Widgets/Years^2}`
+    expected_converted_calculation = `{7 Widgets/Years^2}`
+    result_calculation_string = normalise_calculation_ids(calculation_string, [])
+    test(result_calculation_string, expected_converted_calculation, "Compound units and those raised to power inside curly braces are left unaltered")
 
 }, false)

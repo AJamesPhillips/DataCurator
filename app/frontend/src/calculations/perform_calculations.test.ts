@@ -199,6 +199,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     }, true)
 
 
+
     describe("Can process numbers with thousands comma seperators", () =>
     {
         calculations = [
@@ -209,6 +210,20 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 3, units: "1/km" },
         ]
         test(calculation_result, expected_calculation_result, "Can compute numbers with thousands commas")
+    }, true)
+
+
+
+    describe("Can process numbers with compound units", () =>
+    {
+        calculations = [
+            { name: "A", value: "{7 Widgets/Years^2}*{10 Years}", units: "Widgets/Years" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 70, units: "Widgets/Years" },
+        ]
+        test(calculation_result, expected_calculation_result, "Widgets/Years^2  *  Years")
     }, true)
 
 }, false)
