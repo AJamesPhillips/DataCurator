@@ -27,7 +27,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const result = results[index]
 
     let result_string = <span />
-    if (result && result.value && values_different(calc.value, result.value))
+    if (result !== undefined && result.value !== undefined && values_different(calc.value, result.value))
     {
         result_string = <span>&nbsp;=&nbsp;{format_number_to_string(result.value, 2, NumberDisplayType.scaled)} <span style={{ fontSize: "75%" }}>{result.units}</span></span>
     }
