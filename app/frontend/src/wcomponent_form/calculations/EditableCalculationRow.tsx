@@ -28,7 +28,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const result = results[index]
 
     let output_element = <span />
-    if (result !== undefined && result.value !== undefined && values_different(calc.value, result.value))
+    if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
         const result_string = format_number_to_string(result.value, 2, NumberDisplayType.scaled)
         const result_units = prepare_result_units_for_display(result.units)
@@ -48,6 +48,14 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 hide_label={true}
                 value={calc.value}
                 on_blur={value => props.update_calculation({ ...calc, value })}
+                on_blur_type={EditableTextOnBlurType.conditional}
+            />
+            &nbsp;
+            <EditableTextSingleLine
+                placeholder="Units"
+                hide_label={true}
+                value={calc.units || ""}
+                on_blur={units => props.update_calculation({ ...calc, units: units ? units : undefined })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />
             {output_element}
