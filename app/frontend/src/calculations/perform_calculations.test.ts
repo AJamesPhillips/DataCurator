@@ -4,6 +4,7 @@ import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { perform_calculations } from "./perform_calculations"
@@ -83,24 +84,38 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
     const id1 = uuid_v4_for_tests(1)
     const base_id = 0
-    let vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
-    vap_set_1.entries[0]!.value = "12.3"
-    wcomponents_by_id = {
-        [id1]: prepare_new_contextless_wcomponent_object({
-            base_id,
-            id: id1,
-            type: "statev2",
-            values_and_prediction_sets: [vap_set_1]
-        }),
-    }
-    calculations = [
-        { name: "A", value: `@@${id1} * 10` },
-    ]
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    expected_calculation_result = [
-        { value: 123, units: "" },
-    ]
-    test(calculation_result, expected_calculation_result, "Can reference wcomponent values")
+    let vap_set_1: StateValueAndPredictionsSet
+    describe("Can use wcomponent values", () =>
+    {
+        vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+        vap_set_1.entries[0]!.value = "12.3"
+        wcomponents_by_id = {
+            [id1]: prepare_new_contextless_wcomponent_object({
+                base_id,
+                id: id1,
+                type: "statev2",
+                values_and_prediction_sets: [vap_set_1]
+            }),
+        }
+        calculations = [
+            { name: "A", value: `@@${id1} * 10` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 123, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation")
+
+
+        calculations = [
+            { name: "A", value: `{@@${id1} meters}` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 12.3, units: "meters" },
+        ]
+        test.skip(calculation_result, expected_calculation_result, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Calculations can reference wcomponent values and assign units~~")
+    })
 
 
 
