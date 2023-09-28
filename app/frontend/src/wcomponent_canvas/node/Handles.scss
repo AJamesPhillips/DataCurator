@@ -74,6 +74,8 @@ $handle_width:1em;
     &.will_create_on_click
     {
         color: rgb(177, 209, 255);
+        fill: currentColor;
+        stroke: currentColor;
     }
 }
 

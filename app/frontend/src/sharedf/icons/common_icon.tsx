@@ -14,6 +14,7 @@ export interface CommonIconOwnProps
 interface Props extends CommonIconOwnProps
 {
     d: string
+    svg_elements?: h.JSX.Element[]
 }
 
 
@@ -30,6 +31,7 @@ export function CommonIcon (props: Props)
     return <span title={props.title}>
         <svg className={className} viewBox="0 0 24 24" style={props.style}>
             <path d={props.d} />
+            {props.svg_elements}
         </svg>
     </span>
 }

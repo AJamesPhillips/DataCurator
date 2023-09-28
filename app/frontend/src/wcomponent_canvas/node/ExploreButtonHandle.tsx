@@ -23,6 +23,7 @@ import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
 import type { HasBaseId } from "../../shared/interfaces/base"
 import { get_middle_of_screen } from "../../state/display_options/display"
+import { AddSearchIcon } from "../../sharedf/icons/AddSearchIcon"
 
 
 
@@ -136,7 +137,9 @@ function _ExploreButtonHandle (props: Props)
     >
         {is_current_knowledge_view
             ? <ArrowUpwardIcon />
-            : <SearchIcon />}
+            : (click_outcome === ClickOutComes.create_then_navigate
+                ? <AddSearchIcon />
+                : <SearchIcon />)}
     </div>
 }
 
