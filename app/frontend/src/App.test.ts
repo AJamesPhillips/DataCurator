@@ -39,6 +39,7 @@ import { test_update_VAPSets_with_possibilities } from "./wcomponent/CRUD_helper
 import { test_default_possible_values } from "./wcomponent/value_possibilities/default_possible_values"
 import { test_get_possibilities_from_VAP_sets } from "./wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
 import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value.test"
+import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 
 
 
@@ -56,6 +57,8 @@ function run_all_tests ()
     run_number_to_significant_figures_test()
     run_number_to_string_test()
     run_convert_percentages_tests()
+    run_currency_symbol_functions_tests()
+
     test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()
     test_get_angle()

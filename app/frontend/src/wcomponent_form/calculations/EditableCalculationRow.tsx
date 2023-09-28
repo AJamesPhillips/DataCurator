@@ -8,6 +8,7 @@ import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSin
 import { useState } from "preact/hooks"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
+import { prepare_result_units_for_display } from "../../calculations/prepare_result_units_for_display"
 
 
 
@@ -26,10 +27,16 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
     const result = results[index]
 
-    let result_string = <span />
+    let output_element = <span />
     if (result !== undefined && result.value !== undefined && values_different(calc.value, result.value))
     {
-        result_string = <span>&nbsp;=&nbsp;{format_number_to_string(result.value, 2, NumberDisplayType.scaled)} <span style={{ fontSize: "75%" }}>{result.units}</span></span>
+        const result_string = format_number_to_string(result.value, 2, NumberDisplayType.scaled)
+        const result_units = prepare_result_units_for_display(result.units)
+
+        output_element = <span>
+            &nbsp;=&nbsp;{result_string}
+            <span style={{ fontSize: "75%" }}>&nbsp;{result_units}</span>
+        </span>
     }
 
     return <Box key={calc.name + " " + index} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>
@@ -43,7 +50,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 on_blur={value => props.update_calculation({ ...calc, value })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />
-            {result_string}
+            {output_element}
         </Box>
 
         {props.editing && <IconButton onClick={() => props.update_calculation(null)} size="large">
