@@ -7,15 +7,20 @@
 ### npm start
 
 Runs the app in the development mode.
-Open http://localhost:8080 to view it in the browser.
+Open http://localhost:5173 to view it in the browser.
 
 The page will reload if you make edits.
 You will also see any lint errors in the console.
 
-### npm test
+### ~~npm test~~
 
-Launches the test runner in the interactive watch mode.
-See the section about running tests for more information.
+~~Launches the test runner in the interactive watch mode.~~
+~~See the section about running tests for more information.~~
+Note: this does not currently work.  Instead:
+
+1. [open the browser app](http://localhost:5173/app)
+2. open the console
+3. call the function `run_tests()`
 
 ### npm run build
 
