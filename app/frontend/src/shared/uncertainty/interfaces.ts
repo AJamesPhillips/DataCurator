@@ -7,6 +7,9 @@ export interface PredictionBase
 {
     explanation: string
     probability: number
+    /**
+     * `conviction` is referenced to as confidence in UI
+     */
     conviction: number
 }
 

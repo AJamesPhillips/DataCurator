@@ -7,7 +7,13 @@ export interface CurrentValueAndProbability
     parsed_value: ParsedValue
     value_id?: string
     probability: number
+    /**
+     * `conviction` is referenced to as confidence in UI
+     */
     conviction: number
+    /**
+     * `certainty` is probability * confidence
+     */
     certainty: number
 }
 
