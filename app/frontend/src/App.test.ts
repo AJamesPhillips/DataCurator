@@ -41,6 +41,7 @@ import { test_get_possibilities_from_VAP_sets } from "./wcomponent/value_possibi
 import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value_and_probabilities.test"
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 import { test_get_wcomponent_state_UI_value } from "./wcomponent_derived/get_wcomponent_state_UI_value.test"
+import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
 
 
 
@@ -91,6 +92,7 @@ function run_all_tests ()
     test_get_possibilities_from_VAP_sets()
     test_get_wcomponent_state_value_and_probabilities()
     test_get_wcomponent_state_UI_value()
+    test_get_composed_wcomponents_by_id()
 }
 
 

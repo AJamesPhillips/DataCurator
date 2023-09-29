@@ -26,10 +26,10 @@ export function derived_composed_wcomponents_by_id_reducer (initial_state: RootS
 
 
 
-function get_composed_wcomponents_by_id (state: RootState)
+export function get_composed_wcomponents_by_id (state: RootState)
 {
     const { wcomponents_by_id } = state.specialised_objects
-    // todo, should probably deep clone this
+    // todo, should probably deep clone this to be more defensive
     const composed_wcomponents_by_id = { ...wcomponents_by_id }
 
 
@@ -39,39 +39,19 @@ function get_composed_wcomponents_by_id (state: RootState)
     {
         const wcomponent = composed_wcomponents_by_id[wcomponent_id]
 
-        let composed_wcomponent: WComponent | undefined = undefined
-
         if (wcomponent_is_state_value(wcomponent))
         {
             const target_wcomponent = composed_wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
             if (!wcomponent_is_statev2(target_wcomponent)) return
 
-            composed_wcomponent = {
-                // todo, should probably deep clone these
+            const composed_target_wcomponent: WComponent = {
+                // todo, should probably deep clone these to be more defensive
                 ...target_wcomponent,
                 ...get_value_attributes(wcomponent),
-                // _derived__using_value_from_wcomponent_id: wcomponent.id,
+                _derived__using_value_from_wcomponent_id: wcomponent.id,
             }
 
-        }
-        else if (wcomponent_is_statev2(wcomponent))
-        {
-            const original_wcomponent = wcomponents_by_id[wcomponent_id]
-
-            if (original_wcomponent)
-            {
-                composed_wcomponent = {
-                    // Todo, should probably deep clone these
-                    ...original_wcomponent,
-                    // _derived__using_value_from_wcomponent_id: undefined,
-                }
-            }
-        }
-
-
-        if (composed_wcomponent)
-        {
-            composed_wcomponents_by_id[composed_wcomponent.id] = composed_wcomponent
+            composed_wcomponents_by_id[composed_target_wcomponent.id] = composed_target_wcomponent
         }
     })
 
