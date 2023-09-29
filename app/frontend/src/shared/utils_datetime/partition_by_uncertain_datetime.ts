@@ -143,10 +143,10 @@ export const test_partition_sorted_items_by_datetimes = describe("partition_sort
     const date3 = new Date("2021-04-01 00:03")
     const date3_ms = date3.getTime()
 
-    const s_eternal1 = { id: "10", created_at: date1, datetime: {} }
-    const s_eternal2 = { id: "11", created_at: date2, datetime: {} }
-    const s1 = { id: "20", created_at: date1, datetime: { value: date1 } }
-    const s2 = { id: "30", created_at: date1, datetime: { value: date2 } }
+    const s_eternal1: Simple = { id: "10", datetime: {} } // created_at: date1
+    const s_eternal2: Simple = { id: "11", datetime: {} } // created_at: date2
+    const s1: Simple = { id: "20", datetime: { value: date1 } } // created_at: date1
+    const s2: Simple = { id: "30", datetime: { value: date2 } } // created_at: date1
 
     sorted_items = []
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
@@ -237,17 +237,17 @@ export const test_sort_by_uncertain_event_datetimes = describe("sort_by_uncertai
 
     let id = 0
     const next_id = () => `${id++}`
-    const s_eternal = { id: next_id(), datetime: {} }
-    const s_eternal2 = { id: next_id(), datetime: {} }
-    const s1 = { id: next_id(), datetime: { value: date1 } }
-    const s2 = { id: next_id(), datetime: { value: date2 } }
-    const s_max1 = { id: next_id(), datetime: { max: date1 } }
-    const s_max2 = { id: next_id(), datetime: { max: date2 } }
-    const s_min1 = { id: next_id(), datetime: { min: date1 } }
-    const s_min2 = { id: next_id(), datetime: { min: date2 } }
+    const s_eternal: Simple = { id: next_id(), datetime: {} }
+    const s_eternal2: Simple = { id: next_id(), datetime: {} }
+    const s1: Simple = { id: next_id(), datetime: { value: date1 } }
+    const s2: Simple = { id: next_id(), datetime: { value: date2 } }
+    const s_max1: Simple = { id: next_id(), datetime: { max: date1 } }
+    const s_max2: Simple = { id: next_id(), datetime: { max: date2 } }
+    const s_min1: Simple = { id: next_id(), datetime: { min: date1 } }
+    const s_min2: Simple = { id: next_id(), datetime: { min: date2 } }
 
-    const s_min0_max3 = { id: next_id(), datetime: { min: date0, max: date3 } }
-    const s_min1_max2 = { id: next_id(), datetime: { min: date1, max: date2 } }
+    const s_min0_max3: Simple = { id: next_id(), datetime: { min: date0, max: date3 } }
+    const s_min1_max2: Simple = { id: next_id(), datetime: { min: date1, max: date2 } }
 
 
     items = []
