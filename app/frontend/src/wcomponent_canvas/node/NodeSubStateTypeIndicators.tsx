@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { wcomponent_should_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentSubState } from "../../wcomponent/interfaces/substate"
 import type { RootState } from "../../state/State"
 import { LockClockIcon } from "../../sharedf/icons/LockClockIcon"
@@ -20,7 +20,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 {
     const { target_wcomponent_id } = own_props.wcomponent
     const maybe_target_wcomponent = state.specialised_objects.wcomponents_by_id[target_wcomponent_id || ""]
-    const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
+    const target_wcomponent = wcomponent_is_allowed_to_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
 
     return {
         target_wcomponent,

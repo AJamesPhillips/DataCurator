@@ -18,7 +18,7 @@ import {
     wcomponent_is_action,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_sub_state,
-    wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
@@ -288,7 +288,7 @@ function _WComponentCanvasNode (props: Props)
     {
         show_validity_value = (wcomponent_can_have_validity_predictions(derived_composed_wcomponent) && is_editing) || (wcomponent_has_validity_predictions(derived_composed_wcomponent) && is_current_item)
 
-        show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(derived_composed_wcomponent))
+        show_state_value = (is_editing && wcomponent_is_allowed_to_have_state_VAP_sets(derived_composed_wcomponent))
         || (!derived_composed_wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(derived_composed_wcomponent)
             || wcomponent_is_judgement_or_objective(derived_composed_wcomponent)

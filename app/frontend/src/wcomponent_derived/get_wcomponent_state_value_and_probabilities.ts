@@ -6,7 +6,7 @@ import { calc_prediction_certainty, calc_prediction_is_uncertain } from "./predi
 import {
     partition_and_prune_items_by_datetimes_and_versions,
 } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
-import { WComponent, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { get_VAPs_ordered_by_prob } from "./value_and_prediction/probable_VAPs"
 import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
@@ -34,7 +34,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
     const { wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms } = args
 
 
-    if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [] }
+    if (!wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [] }
 
     // todo should implement this fully?
     const wcomponents_by_id = {}

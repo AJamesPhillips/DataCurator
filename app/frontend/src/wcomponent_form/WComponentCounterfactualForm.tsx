@@ -13,7 +13,7 @@ import { is_defined } from "../shared/utils/is_defined"
 import type {
     WComponentCounterfactualV2,
 } from "../wcomponent/interfaces/counterfactual"
-import { wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
@@ -81,7 +81,7 @@ function _WComponentCounterfactualForm (props: Props)
     const wcomponent_statev2s_in_current_kv = Object.keys(composed_wc_id_map)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
-        .filter(wcomponent_should_have_state_VAP_sets)
+        .filter(wcomponent_is_allowed_to_have_state_VAP_sets)
 
     const wcomponent_id_options = get_wcomponent_search_options({
         wcomponents: wcomponent_statev2s_in_current_kv,
@@ -96,7 +96,7 @@ function _WComponentCounterfactualForm (props: Props)
     const target_wcomponent = wcomponents_by_id[wcomponent.target_wcomponent_id || ""]
     let target_VAP_sets: StateValueAndPredictionsSet[] = []
     let VAP_set_id_options: { id: string, title: string }[] = []
-    if (wcomponent_should_have_state_VAP_sets(target_wcomponent))
+    if (wcomponent_is_allowed_to_have_state_VAP_sets(target_wcomponent))
     {
         target_VAP_sets = target_wcomponent.values_and_prediction_sets || []
 

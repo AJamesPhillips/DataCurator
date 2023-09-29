@@ -5,7 +5,7 @@ import {
     wcomponent_is_event,
     wcomponent_is_statev2,
     wcomponent_is_sub_state,
-    wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type {
     KnowledgeView,
@@ -248,7 +248,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
     {
         const { target_wcomponent_id, selector } = wcomponent
         const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""]
-        const target_wcomponent = wcomponent_should_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
+        const target_wcomponent = wcomponent_is_allowed_to_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
         if (!target_wcomponent || !selector) return undefined
 
         const { target_VAP_set_id } = selector

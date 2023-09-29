@@ -1,6 +1,6 @@
 import {
     WComponent,
-    wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_statev2,
     wcomponent_is_action,
     wcomponent_is_causal_link,
@@ -25,7 +25,7 @@ export function get_wcomponent_VAPs_represent (wcomponent: WComponent | undefine
     if (wcomponent) _wcomponent_ids_touched.add(wcomponent.id)
 
 
-    if (!wcomponent_should_have_state_VAP_sets(wcomponent)) return VAPs_represent
+    if (!wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)) return VAPs_represent
 
 
     VAPs_represent = VAPsType.other

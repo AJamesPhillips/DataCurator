@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { is_defined } from "../shared/utils/is_defined"
-import { WComponent, wcomponent_is_statev2, wcomponent_should_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentStateValue } from "../wcomponent/interfaces/state"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
@@ -67,7 +67,7 @@ function _WComponentStateValueForm (props: Props)
     const wcomponents_with_state_VAP_sets = Array.from(props.wcomponent_ids_with_state_VAPs)
         .map(id => wcomponents_by_id[id])
         .filter(is_defined)
-        .filter(wcomponent_should_have_state_VAP_sets)
+        .filter(wcomponent_is_allowed_to_have_state_VAP_sets)
 
     // Sort to have nearest components suggested first
     const position = current_knowledge_view?.composed_wc_id_map[wcomponent.id]

@@ -21,7 +21,7 @@ import {
     WComponent,
     wcomponent_is_plain_connection,
     wcomponent_can_have_validity_predictions,
-    wcomponent_should_have_state_VAP_sets,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_statev2,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_causal_link,
@@ -188,7 +188,7 @@ function _WComponentForm (props: Props)
     let UI_value: DerivedValueForUI | undefined = undefined
     let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
-    if (wcomponent_should_have_state_VAP_sets(wcomponent))
+    if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
