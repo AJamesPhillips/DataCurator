@@ -1,3 +1,5 @@
+// Maybe can remove this file.  See issue #8
+
 import type { WComponentNodeStateV2 } from "../state"
 
 

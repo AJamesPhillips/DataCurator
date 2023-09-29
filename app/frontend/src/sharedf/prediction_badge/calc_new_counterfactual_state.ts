@@ -57,8 +57,6 @@ export const test_calc_new_counterfactual_state = describe("calc_new_counterfact
     let expected_new_counterfactual_conviction: number
     let result: CalcNewCounterfactualStateReturn
 
-    probability = 1
-    conviction = 1
     // Testing when conviction is 1 and probability uncertain
     probability = 0.5
     conviction = 1
