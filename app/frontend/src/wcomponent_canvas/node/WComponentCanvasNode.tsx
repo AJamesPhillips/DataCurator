@@ -74,11 +74,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const on_current_knowledge_view = is_on_current_knowledge_view(state, wcomponent_id)
     const { current_composed_knowledge_view } = state.derived
 
-    const wcomponent = state.derived.composed_wcomponents_by_id[wcomponent_id]
+    const derived_composed_wcomponent = state.derived.composed_wcomponents_by_id[wcomponent_id]
     const kv_from_different_base = (
-        wcomponent
+        derived_composed_wcomponent
         && current_composed_knowledge_view
-        && wcomponent.base_id !== current_composed_knowledge_view.base_id
+        && derived_composed_wcomponent.base_id !== current_composed_knowledge_view.base_id
     )
 
     let have_judgements = false
@@ -91,7 +91,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         on_current_knowledge_view,
         current_composed_knowledge_view,
-        wcomponent,
+        derived_composed_wcomponent,
         kv_from_different_base,
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
         composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
@@ -139,7 +139,7 @@ function _WComponentCanvasNode (props: Props)
         id,
         is_on_canvas = true, always_show = false,
         is_editing,
-        wcomponent,
+        derived_composed_wcomponent,
         current_composed_knowledge_view: composed_kv,
         kv_from_different_base,
         wc_id_to_counterfactuals_map,
@@ -157,9 +157,9 @@ function _WComponentCanvasNode (props: Props)
 
     useEffect(() =>
     {
-        if (wcomponent) return
+        if (derived_composed_wcomponent) return
         props.request_searching_for_wcomponents_by_id_in_any_base({ ids: [id] })
-    }, [!!wcomponent])
+    }, [!!derived_composed_wcomponent])
 
 
     const kv_entry_maybe = composed_kv.composed_wc_id_map[id]
@@ -191,8 +191,8 @@ function _WComponentCanvasNode (props: Props)
 
 
     const { wc_ids_excluded_by_filters } = composed_kv.filters
-    const validity_value = (always_show || !wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
-        wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
+    const validity_value = (always_show || !derived_composed_wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
+        wcomponent: derived_composed_wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
         selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
     })
     if (!validity_value) return null
@@ -243,7 +243,7 @@ function _WComponentCanvasNode (props: Props)
     ]
 
 
-    const title = !wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent, rich_text: true, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = !derived_composed_wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent: derived_composed_wcomponent, rich_text: true, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
 
     const show_all_details = is_editing //|| is_current_item
@@ -263,7 +263,7 @@ function _WComponentCanvasNode (props: Props)
     const classes = use_styles()
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color({
-        wcomponent, wcomponents_by_id: composed_wcomponents_by_id, sim_ms, created_at_ms, display_time_marks: props.display_time_marks,
+        wcomponent: derived_composed_wcomponent, wcomponents_by_id: composed_wcomponents_by_id, sim_ms, created_at_ms, display_time_marks: props.display_time_marks,
     })
 
     const extra_css_class = (
@@ -274,7 +274,7 @@ function _WComponentCanvasNode (props: Props)
         + (is_highlighted ? " node_is_highlighted " : "")
         + (is_current_item ? " node_is_current_item " : "")
         + (is_selected ? " node_is_selected " : "")
-        + (wcomponent ? ` node_is_type_${wcomponent.type} ` : "")
+        + (derived_composed_wcomponent ? ` node_is_type_${derived_composed_wcomponent.type} ` : "")
         + (show_all_details ? " compact_title " : "")
         + color.font
         + color.background
@@ -284,22 +284,22 @@ function _WComponentCanvasNode (props: Props)
     let show_validity_value = false
     let show_state_value = false
 
-    if (wcomponent)
+    if (derived_composed_wcomponent)
     {
-        show_validity_value = (wcomponent_can_have_validity_predictions(wcomponent) && is_editing) || (wcomponent_has_validity_predictions(wcomponent) && is_current_item)
+        show_validity_value = (wcomponent_can_have_validity_predictions(derived_composed_wcomponent) && is_editing) || (wcomponent_has_validity_predictions(derived_composed_wcomponent) && is_current_item)
 
-        show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(wcomponent))
-        || (!wcomponent.hide_state && (
-            wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent)
-            || wcomponent_is_judgement_or_objective(wcomponent)
-            || (wcomponent_has_objectives(wcomponent) && (wcomponent.objective_ids || []).length > 0)
+        show_state_value = (is_editing && wcomponent_should_have_state_VAP_sets(derived_composed_wcomponent))
+        || (!derived_composed_wcomponent.hide_state && (
+            wcomponent_has_legitimate_non_empty_state_VAP_sets(derived_composed_wcomponent)
+            || wcomponent_is_judgement_or_objective(derived_composed_wcomponent)
+            || (wcomponent_has_objectives(derived_composed_wcomponent) && (derived_composed_wcomponent.objective_ids || []).length > 0)
             // || is_highlighted
             // || is_current_item
             || props.have_judgements
         ))
     }
 
-    const sub_state_wcomponent = !wcomponent ? false : (is_editing || !wcomponent.hide_state) && wcomponent_is_sub_state(wcomponent) && wcomponent
+    const sub_state_wcomponent = !derived_composed_wcomponent ? false : (is_editing || !derived_composed_wcomponent.hide_state) && wcomponent_is_sub_state(derived_composed_wcomponent) && derived_composed_wcomponent
 
     const terminals = get_terminals({ is_on_canvas, is_editing, is_highlighted })
 
@@ -329,7 +329,7 @@ function _WComponentCanvasNode (props: Props)
 
     const _kv_entry = is_on_canvas ? (temporary_drag_kv_entry || kv_entry) : undefined
 
-    const label_ids = useMemo(() => calculate_label_ids(wcomponent), [wcomponent])
+    const label_ids = useMemo(() => calculate_label_ids(derived_composed_wcomponent), [derived_composed_wcomponent])
 
 
     return <div>
@@ -339,11 +339,11 @@ function _WComponentCanvasNode (props: Props)
 
         <ConnectableCanvasNode
             position={_kv_entry}
-            cover_image={wcomponent?.summary_image}
+            cover_image={derived_composed_wcomponent?.summary_image}
             // TODO memoize these arguments if performance is poor and this is
             // bottleneck
             node_main_content={<div>
-                {!wcomponent?.summary_image && <div className="background_image" />}
+                {!derived_composed_wcomponent?.summary_image && <div className="background_image" />}
 
                 <div className="node_title">
                     {/* TODO, document when this conditional is true... as
@@ -359,20 +359,20 @@ function _WComponentCanvasNode (props: Props)
                         &nbsp;
                     </span>}
 
-                    {(is_editing || !wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
+                    {(is_editing || !derived_composed_wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
                 </div>
 
-                {wcomponent && show_validity_value && <div className="node_validity_container">
+                {derived_composed_wcomponent && show_validity_value && <div className="node_validity_container">
                     {is_editing && <div className="description_label">validity</div>}
-                    <WComponentValidityValue wcomponent={wcomponent} />
+                    <WComponentValidityValue wcomponent={derived_composed_wcomponent} />
                 </div>}
 
-                {wcomponent && show_state_value && <div className="node_state_container">
+                {derived_composed_wcomponent && show_state_value && <div className="node_state_container">
                     {is_editing && <div className="description_label">state &nbsp;</div>}
-                    <WComponentJudgements wcomponent={wcomponent} hide_judgement_trend={false} />
+                    <WComponentJudgements wcomponent={derived_composed_wcomponent} hide_judgement_trend={false} />
                     <div className="value_and_prediction_summary">
                         <NodeValueAndPredictionSetSummary
-                            wcomponent={wcomponent}
+                            wcomponent={derived_composed_wcomponent}
                             created_at_ms={created_at_ms}
                             sim_ms={sim_ms}
                         />
@@ -393,18 +393,18 @@ function _WComponentCanvasNode (props: Props)
 
                 {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
 
-                {wcomponent && is_editing && <div className="description_label">
-                    {wcomponent_type_to_text(wcomponent.type)}
+                {derived_composed_wcomponent && is_editing && <div className="description_label">
+                    {wcomponent_type_to_text(derived_composed_wcomponent.type)}
                 </div>}
 
                 <div style={{ display: "flex" }}>
-                    {wcomponent?.description.trim() && <DescriptionIcon
+                    {derived_composed_wcomponent?.description.trim() && <DescriptionIcon
                         className="description_icon"
                         fontSize="small"
                         color="disabled"
                     />}
 
-                    {wcomponent && <LabelsListV2 label_ids={label_ids} />}
+                    {derived_composed_wcomponent && <LabelsListV2 label_ids={label_ids} />}
                 </div>
             </div>}
             extra_css_class={extra_css_class}
