@@ -48,13 +48,8 @@ interface CoreCounterfactualStateValueAndPredictionSetV2 extends StateValueAndPr
     target_VAP_id: string | undefined
 }
 
-function distort_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string | undefined): CoreCounterfactualStateValueAndPredictionSetV2
+function distort_VAP_set_for_counterfactual (VAP_set: StateValueAndPredictionsSet, target_VAP_id: string): CoreCounterfactualStateValueAndPredictionSetV2
 {
-    if (target_VAP_id === undefined)
-    {
-        target_VAP_id = VAP_set.entries[0]?.id
-    }
-
     const conviction = target_VAP_id === VAP_visual_uncertainty_id ? 0 : 1
 
     const shared_entry_values = {
