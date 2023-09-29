@@ -19,7 +19,7 @@ import { find_parent_element_by_classes } from "../utils/html"
 import { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
-import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value"
+import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
 
 
 

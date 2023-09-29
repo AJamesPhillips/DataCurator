@@ -1,5 +1,5 @@
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value"
+import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value_and_probabilities"
 import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 import type { DerivedValueForUI } from "./interfaces/value"
 import { get_boolean_representation, parsed_value_to_string } from "./value/parsed_value_presentation"

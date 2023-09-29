@@ -5,7 +5,7 @@ import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_he
 import { wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { StateValueAndPrediction, WComponentNodeStateV2, StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value"
+import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value_and_probabilities"
 import { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 
 

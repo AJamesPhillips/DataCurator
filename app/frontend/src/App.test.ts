@@ -38,7 +38,7 @@ import { test_prepare_new_VAP_set } from "./wcomponent/CRUD_helpers/prepare_new_
 import { test_update_VAPSets_with_possibilities } from "./wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { test_default_possible_values } from "./wcomponent/value_possibilities/default_possible_values"
 import { test_get_possibilities_from_VAP_sets } from "./wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
-import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value.test"
+import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value_and_probabilities.test"
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 
 

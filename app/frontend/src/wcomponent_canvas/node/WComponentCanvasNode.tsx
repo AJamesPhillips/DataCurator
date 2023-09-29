@@ -51,7 +51,7 @@ import {
 import { useEffect, useMemo, useState } from "preact/hooks"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
-import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value"
+import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
 
 
