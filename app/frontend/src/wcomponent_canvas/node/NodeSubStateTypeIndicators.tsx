@@ -66,10 +66,12 @@ function _NodeSubStateTypeIndicators (props: Props)
         <LockClockIcon
             className={time_substate_color}
             title={"Specific Time " + sub_state_type_status_to_title(time_substate)}
+            style={{ height: "30px" }}
         />
         <ReducedPossibilitiesIcon
             className={possibility_substate_color}
             title={"Specific Possibility " + sub_state_type_status_to_title(possibility_substate)}
+            style={{ height: "30px" }}
         />
     </div>
 }
