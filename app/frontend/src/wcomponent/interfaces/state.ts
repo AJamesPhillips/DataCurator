@@ -11,8 +11,10 @@ export interface HasVAPSetsAndMaybeValuePossibilities
     value_possibilities?: ValuePossibilitiesById // optional as there will be older data that lacks this field
     values_and_prediction_sets: StateValueAndPredictionsSet[]
 
-    // These are only used for manual debugging purposes
-    // _derived__using_value_from_wcomponent_id?: string | undefined
+    // Used in state.derived.composed_wcomponents_by_id, preferably this would
+    // form part of a system of "DerivedComposedXyz" types to make it clear
+    // these fields are never meant to be persisted (to the server/database)
+    _derived__using_value_from_wcomponent_id?: string | undefined
     // _derived__applied_counterfactual_from_wcomponent_id?: string | undefined
 }
 export interface HasValuePossibilities

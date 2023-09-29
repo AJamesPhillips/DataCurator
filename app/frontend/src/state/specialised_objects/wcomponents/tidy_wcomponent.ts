@@ -6,6 +6,7 @@ import {
     WComponentsById,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../../../wcomponent/get_wcomponent_VAPs_represent"
 
@@ -33,6 +34,18 @@ export function tidy_wcomponent (wcomponent: WComponent, wcomponents_by_id: WCom
 
         wcomponent.values_and_prediction_sets = corrected_VAPs_in_VAP_sets
     }
+
+
+    if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
+    {
+        if (wcomponent._derived__using_value_from_wcomponent_id)
+        {
+            console.error(`WComponent "${wcomponent.id}" had _derived__using_value_from_wcomponent_id set ("${wcomponent._derived__using_value_from_wcomponent_id}") but this should never happen and only be used on wcomponents from state.derived.composed_wcomponents_by_id`)
+        }
+        // This is defensive.  This field should never be populated for a wcomponent being saved
+        delete wcomponent._derived__using_value_from_wcomponent_id
+    }
+
 
     return wcomponent
 }

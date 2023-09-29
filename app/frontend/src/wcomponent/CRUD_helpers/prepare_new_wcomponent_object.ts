@@ -8,7 +8,7 @@ import type { WComponentNodeGoal } from "../interfaces/goal"
 import type { WComponentJudgement } from "../interfaces/judgement"
 import type { WComponentPrioritisation } from "../interfaces/priorities"
 import { WComponent, WComponentConnection, WComponentNode, wcomponent_is_causal_link } from "../interfaces/SpecialisedObjects"
-import type { WComponentNodeStateV2 } from "../interfaces/state"
+import type { WComponentNodeStateV2, WComponentStateValue } from "../interfaces/state"
 import type { WComponentBase } from "../interfaces/wcomponent_base"
 
 

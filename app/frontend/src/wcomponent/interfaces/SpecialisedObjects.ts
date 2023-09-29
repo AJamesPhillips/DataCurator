@@ -50,6 +50,7 @@ interface WComponentNodeProcessBase
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeStateV2
     | WComponentSubState
+    | WComponentStateValue
     | WComponentNodeProcess
     | WComponentNodeAction
     | WComponentNodeGoal

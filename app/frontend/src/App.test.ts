@@ -27,7 +27,6 @@ import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./
 import { test_get_composed_wc_id_map } from "./state/derived/knowledge_views/get_composed_wc_id_map"
 import { test_merge_routing_state } from "./state/routing/merge_routing_state"
 import { test_routing_state_to_string } from "./state/routing/routing"
-import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/reducer"
 import { test_merge_knowledge_views } from "./state/sync/merge/merge_knowledge_views"
 import { test_merge_wcomponent } from "./state/sync/merge/merge_wcomponents"
 import { test_refresh_bases_for_current_user } from "./state/user_info/refresh_bases_for_current_user.tests"
@@ -41,6 +40,7 @@ import { test_get_possibilities_from_VAP_sets } from "./wcomponent/value_possibi
 import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value_and_probabilities.test"
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 import { test_get_wcomponent_state_UI_value } from "./wcomponent_derived/get_wcomponent_state_UI_value.test"
+import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/tidy_wcomponent.test"
 import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
 
 
