@@ -28,6 +28,7 @@ interface GetWComponentStateValueAndProbabilitiesReturn
     most_probable_VAP_set_values: CurrentValueAndProbability[]
     any_uncertainty?: boolean
     counterfactual_applied?: boolean
+    derived__using_value_from_wcomponent_id?: string
 }
 export function get_wcomponent_state_value_and_probabilities (args: GetWComponentStateValueAndProbabilitiesArgs): GetWComponentStateValueAndProbabilitiesReturn
 {
@@ -61,6 +62,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
         most_probable_VAP_set_values,
         any_uncertainty,
         counterfactual_applied: present_item?.has_any_counterfactual_applied,
+        derived__using_value_from_wcomponent_id: wcomponent._derived__using_value_from_wcomponent_id,
     }
 }
 

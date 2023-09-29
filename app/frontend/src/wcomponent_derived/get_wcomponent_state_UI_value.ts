@@ -1,4 +1,4 @@
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_statev2, type WComponent, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value_and_probabilities"
 import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 import type { DerivedValueForUI } from "./interfaces/value"
@@ -33,11 +33,18 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
     const is_defined = most_probable_VAP_set_values.length > 0
     const values_string = reduce_display_string_values(value_strings)
 
+    let derived__using_value_from_wcomponent_id: string | undefined = undefined
+    if (wcomponent_is_allowed_to_have_state_VAP_sets(args.wcomponent))
+    {
+        derived__using_value_from_wcomponent_id = args.wcomponent._derived__using_value_from_wcomponent_id
+    }
+
     return {
         values_string,
         is_defined,
         counterfactual_applied,
         uncertain: any_uncertainty,
+        derived__using_value_from_wcomponent_id,
     }
 }
 

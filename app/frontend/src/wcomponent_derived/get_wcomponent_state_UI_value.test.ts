@@ -1,6 +1,10 @@
 import { TemporalUncertainty } from "../shared/uncertainty/interfaces"
 import { describe, test } from "../shared/utils/test"
-import { StateValueAndPrediction, WComponentNodeStateV2, StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
+import {
+    StateValueAndPrediction,
+    WComponentNodeStateV2,
+    StateValueAndPredictionsSet,
+} from "../wcomponent/interfaces/state"
 import { get_wcomponent_state_UI_value } from "./get_wcomponent_state_UI_value"
 import { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 
@@ -257,6 +261,27 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
         // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt0 })
         // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
+    })
+
+
+
+    describe("StateValue replacing VAPSets", () =>
+    {
+        // We're assuming that this dervied_composed_wcomponent was processed by
+        // and returned from the get_composed_wcomponents_by_id function
+        const dervied_composed_wcomponent: WComponentNodeStateV2 = {
+            ...wcomponent__type_other,
+            _derived__using_value_from_wcomponent_id: "abc123",
+        }
+
+        display_value = helper_func__statev2_value(dervied_composed_wcomponent, [[vap_p100]])
+        test(display_value, {
+            values_string: "A100",
+            is_defined: true,
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_value_from_wcomponent_id: "abc123",
+        }, "Returns the id of the (state value) component whose VAP sets are present in this component")
     })
 
 

@@ -27,6 +27,7 @@ export interface DerivedValueForUI
     values_string: string
     counterfactual_applied?: boolean
     uncertain?: boolean
+    derived__using_value_from_wcomponent_id?: string
 }
 
 
