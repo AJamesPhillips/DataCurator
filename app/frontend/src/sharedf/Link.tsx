@@ -13,7 +13,8 @@ import { useRef, useState } from "preact/hooks"
 
 
 
-interface OwnProps {
+interface OwnProps
+{
     route: ROUTE_TYPES | undefined
     sub_route: SUB_ROUTE_TYPES | undefined
     item_id: string | null | undefined
@@ -22,7 +23,7 @@ interface OwnProps {
     selected_on?: Set<"route" | "args.view" | "args.subview_id">
     extra_class_name?: string
     extra_css_style?: h.JSX.CSSProperties
-    children: ComponentChildren
+    children?: ComponentChildren
 }
 
 
