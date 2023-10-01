@@ -113,6 +113,8 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         from_wcomponent,
         to_wcomponent,
 
+        derived_composed_wcomponent: state.derived.composed_wcomponents_by_id[wcomponent.id],
+
         is_in_editing_mode,
         allowed_to_edit,
         force_editable: is_in_editing_mode && allowed_to_edit,
@@ -139,6 +141,7 @@ function _WComponentForm (props: Props)
 {
     const { wcomponent, ready, base_id,
         wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
+        derived_composed_wcomponent,
         force_editable, created_at_ms, sim_ms } = props
 
     const wcomponent_id = wcomponent.id
@@ -146,6 +149,8 @@ function _WComponentForm (props: Props)
 
 
     if (!ready) return <div>Loading...</div>
+    // Type guard
+    if (!derived_composed_wcomponent) return <div>Loading...</div>
     if (base_id === undefined) return <div>Choose a base first.</div>
 
 
@@ -190,14 +195,14 @@ function _WComponentForm (props: Props)
     let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
     if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
     {
-        UI_value = get_wcomponent_state_UI_value({ wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
+        UI_value = get_wcomponent_state_UI_value({ wcomponent: derived_composed_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
         orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
         orig_value_possibilities = wcomponent.value_possibilities
     }
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
-    const title = get_title({ rich_text: !force_editable, wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = get_title({ rich_text: !force_editable, wcomponent: derived_composed_wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
