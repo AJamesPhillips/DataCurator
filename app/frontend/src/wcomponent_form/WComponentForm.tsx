@@ -471,7 +471,10 @@ function _WComponentForm (props: Props)
         {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
                 {VAPs_represent === VAPsType.undefined && <div>
-                    Set subtype to show Value Predictions
+                    {wcomponent.type === "state_value"
+                        ? "Set subtype of target 'state' component to show Value Predictions on this 'state value' component"
+                        : "Set subtype to show Value Predictions"
+                    }
                 </div>}
                 {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
                     VAPs_represent={VAPs_represent}
