@@ -4,8 +4,9 @@ import { get_persisted_state_object, persist_state_object } from "../persistence
 import type { UserInfoState } from "./state"
 import { random_animal } from "../../utils/list_of_animals"
 import { get_supabase } from "../../supabase/get_supabase"
-import type { User } from "@supabase/gotrue-js"
+
 import { local_user } from "../sync/local/data"
+import { User } from "@supabase/supabase-js"
 
 
 

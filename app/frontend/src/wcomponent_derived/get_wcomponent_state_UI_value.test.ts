@@ -128,6 +128,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         is_defined: false,
         counterfactual_applied: undefined,
         uncertain: false,
+        derived__using_values_from_wcomponent_ids: undefined,
     }, "No VAP (value and prediction) defined")
 
     display_value = helper_func__statev2_value(wcomponent__type_other, [empty])
@@ -136,6 +137,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         is_defined: false,
         counterfactual_applied: false,
         uncertain: false,
+        derived__using_values_from_wcomponent_ids: undefined,
     }, "No value defined in VAP (value and prediction)")
 
     display_value = helper_func__statev2_value(wcomponent__type_other, [single])
@@ -144,6 +146,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         is_defined: true,
         counterfactual_applied: false,
         uncertain: false,
+        derived__using_values_from_wcomponent_ids: undefined,
     }, "Single with certainty")
 
     display_value = helper_func__statev2_value(wcomponent__type_other, [multiple])
@@ -152,6 +155,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         is_defined: true,
         counterfactual_applied: false,
         uncertain: true,
+        derived__using_values_from_wcomponent_ids: undefined,
     }, "Multiple with both uncertain")
 
     display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
@@ -160,6 +164,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         is_defined: true,
         counterfactual_applied: false,
         uncertain: false,
+        derived__using_values_from_wcomponent_ids: undefined,
     }, "Multiple with one uncertain")
 
     describe.skip("TODO: implement these other tests", () =>
@@ -280,7 +285,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
             is_defined: true,
             counterfactual_applied: false,
             uncertain: false,
-            derived__using_values_from_wcomponent_ids: "abc123",
+            derived__using_values_from_wcomponent_ids: ["abc123"],
         }, "Returns the id of the (state value) component whose VAP sets are present in this component")
     })
 

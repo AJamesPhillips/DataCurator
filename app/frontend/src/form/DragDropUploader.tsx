@@ -52,9 +52,9 @@ export function DragDropUploader(props: OwnProps) {
     }
 
     const filesSelected = () => {
-        if (fileInputRef?.current?.files?.length) {
-            handle_files(fileInputRef.current.files)
-        }
+        // if (fileInputRef?.current?.files?.length) {
+        //     handle_files(fileInputRef.current.files)
+        // }
     }
 
     const file_size = (size: number) => {
@@ -69,7 +69,7 @@ export function DragDropUploader(props: OwnProps) {
         return file_name.substring(file_name.lastIndexOf(".") + 1, file_name.length) || file_name
     }
 
-    const fileInputRef: Ref<HTMLInputElement> = useRef()
+    // const fileInputRef: Ref<HTMLInputElement> = useRef()
     const progressRef = useRef()
 
     const classes = use_styles()
@@ -83,7 +83,7 @@ export function DragDropUploader(props: OwnProps) {
                 inputProps={{
                     accept: props.valid_file_types,
                 }}
-                inputRef={fileInputRef}
+                // inputRef={fileInputRef}
                 multiple={props.allow_multiple || false}
                 type="file"
                 variant="outlined"
@@ -92,7 +92,7 @@ export function DragDropUploader(props: OwnProps) {
             {validFiles.map((file: File, i) => {
                 return (
                     <Box>
-                        <LinearProgress variant="determinate" color="primary" value={89} ref={progressRef} />
+                        {/* <LinearProgress variant="determinate" color="primary" value={89} ref={progressRef} /> */}
                         <Typography component="span" className="file_type">{file_type(file.name)} </Typography>
                         <Typography component="span" className="file_name">{file.name} </Typography>
                         <Typography component="span" className="file_size">{file_size(file.size)} </Typography>

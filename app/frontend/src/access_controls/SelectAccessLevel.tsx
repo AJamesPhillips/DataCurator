@@ -46,9 +46,9 @@ export function SelectAccessLevelDropDown (props: SelectAccessLevelDropDownProps
         disabled={props.disabled}
         value={props.current_level}
         title={props.title || "Select access level"}
-        onChange={(e: h.JSX.TargetedEvent<HTMLSelectElement, Event>) =>
+        onChange={e => // e: h.JSX.TargetedEvent<HTMLSelectElement, Event>) =>
         {
-            const level = e.currentTarget.getAttribute("data-value") as ACCESS_CONTROL_LEVEL
+            const level = (e.currentTarget! as HTMLSelectElement).getAttribute("data-value") as ACCESS_CONTROL_LEVEL
             props.on_change(level)
         }}
     >

@@ -1,7 +1,6 @@
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
-import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
-import type { PostgrestError } from "@supabase/postgrest-js"
+import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 
 import "../common.scss"
 import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"

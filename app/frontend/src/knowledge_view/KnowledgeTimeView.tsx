@@ -220,7 +220,7 @@ class DateRange {
                     <Box
                         width={1} maxWidth={1}
                         height={1} maxHeight={1}
-                        display="flex" flexDirection="row" flexWrap
+                        display="flex" flexDirection="row" flexWrap="wrap"
                     >
                         {all_range_dates.map((d, i) => {
                             return (

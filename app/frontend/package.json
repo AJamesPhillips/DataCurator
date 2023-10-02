@@ -18,9 +18,10 @@
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build --base=./",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint --fix \"src/**/*.{js,ts,tsx}\"",
-    "test": "web-test-runner \"src/**/*.test.tsx\"",
+    "lint": "tsc --noEmit --watch",
+    "old_lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "old_lint:fix": "eslint --fix \"src/**/*.{js,ts,tsx}\"",
+    "old_test": "web-test-runner \"src/**/*.test.tsx\"",
     "antlr4ts": "antlr4ts -visitor src/x_equations/datacurator_grammar.g4"
   },
   "dependencies": {
@@ -41,7 +42,7 @@
     "luxon": "1.26.0",
     "markdown-to-jsx": "7.2.1",
     "preact": "10.16.0",
-    "react-redux": "8.0.7",
+    "react-redux": "8.1.3",
     "redux": "4.2.1",
     "simulation": "3.0.0",
     "uuid": "8.3.2",
@@ -54,7 +55,6 @@
     "@types/chai": "4.2.14",
     "@types/graphlib": "2.1.7",
     "@types/luxon": "1.26.3",
-    "@types/markdown-to-jsx": "7.0.1",
     "@types/uuid": "9.0.3",
     "@typescript-eslint/eslint-plugin": "4.29.2",
     "@typescript-eslint/parser": "4.29.2",

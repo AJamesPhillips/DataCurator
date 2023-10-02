@@ -53,8 +53,8 @@ dependencies:
     specifier: 10.16.0
     version: 10.16.0
   react-redux:
-    specifier: 8.0.7
-    version: 8.0.7(react-dom@17.0.2)(react@17.0.2)(redux@4.2.1)
+    specifier: 8.1.3
+    version: 8.1.3(react-dom@17.0.2)(react@17.0.2)(redux@4.2.1)
   redux:
     specifier: 4.2.1
     version: 4.2.1
@@ -87,9 +87,6 @@ devDependencies:
   '@types/luxon':
     specifier: 1.26.3
     version: 1.26.3
-  '@types/markdown-to-jsx':
-    specifier: 7.0.1
-    version: 7.0.1(react@17.0.2)
   '@types/uuid':
     specifier: 9.0.3
     version: 9.0.3
@@ -1385,15 +1382,6 @@ packages:
 
   /@types/luxon@1.26.3:
     resolution: {integrity: sha512-2TELN+Pd3Ocde87sKJMSQ9Wdj0zc/okHK3/+fOQHr3CaWv4jtVtcMzmt1Foww1+5YvPd9B5vL3XR6u5KF0daEA==}
-    dev: true
-
-  /@types/markdown-to-jsx@7.0.1(react@17.0.2):
-    resolution: {integrity: sha512-m9WVgoC+xggBNuaqHj/ONk6erCr2S+ok18/OdDovlqD3UCHyRA66o/y5QvTrQhm2XEeDwz/zA89jyrEykSm2wg==}
-    deprecated: This is a stub types definition. markdown-to-jsx provides its own type definitions, so you do not need this installed.
-    dependencies:
-      markdown-to-jsx: 7.2.1(react@17.0.2)
-    transitivePeerDependencies:
-      - react
     dev: true
 
   /@types/mime@1.3.2:
@@ -3552,6 +3540,7 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: false
 
   /loupe@2.3.6:
     resolution: {integrity: sha512-RaPMZKiMy8/JruncMU5Bt6na1eftNoo++R4Y+N2FrxkDVTrGvcyzFTsaGif4QTeKESheMGegbhw6iUAq+5A8zA==}
@@ -3602,6 +3591,7 @@ packages:
       react: '>= 0.14.0'
     dependencies:
       react: 17.0.2
+    dev: false
 
   /marky@1.2.5:
     resolution: {integrity: sha512-q9JtQJKjpsVxCRVgQ+WapguSbKC3SQ5HEzFGPAJMStgh3QjCawp00UKv3MTTAArTmGmmPUvllHZoNbZ3gs0I+Q==}
@@ -3737,6 +3727,7 @@ packages:
   /object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /object-inspect@1.12.3:
     resolution: {integrity: sha512-geUvdk7c+eizMNUDkRpW1wJwgfOiOeHbxBR/hLXK1aT6zmVSO0jsQcs7fj6MGw89jC/cjGfLcNOrtMYtGqm81g==}
@@ -4038,10 +4029,9 @@ packages:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: false
 
-  /react-redux@8.0.7(react-dom@17.0.2)(react@17.0.2)(redux@4.2.1):
-    resolution: {integrity: sha512-1vRQuCQI5Y2uNmrMXg81RXKiBHY3jBzvCvNmZF437O/Z9/pZ+ba2uYHbemYXb3g8rjsacBGo+/wmfrQKzMhJsg==}
+  /react-redux@8.1.3(react-dom@17.0.2)(react@17.0.2)(redux@4.2.1):
+    resolution: {integrity: sha512-n0ZrutD7DaX/j9VscF+uTALI3oUPa/pO4Z3soOBIjuRn/FzVu6aehhysxZCLi6y7duMf52WNZGMl7CtuK5EnRw==}
     peerDependencies:
-      '@reduxjs/toolkit': ^1 || ^2.0.0-beta.0
       '@types/react': ^16.8 || ^17.0 || ^18.0
       '@types/react-dom': ^16.8 || ^17.0 || ^18.0
       react: ^16.8 || ^17.0 || ^18.0
@@ -4049,8 +4039,6 @@ packages:
       react-native: '>=0.59'
       redux: ^4 || ^5.0.0-beta.0
     peerDependenciesMeta:
-      '@reduxjs/toolkit':
-        optional: true
       '@types/react':
         optional: true
       '@types/react-dom':
@@ -4093,6 +4081,7 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
+    dev: false
 
   /readable-stream@3.6.2:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}

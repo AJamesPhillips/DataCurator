@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { Ref, useMemo, useRef, useState } from "preact/hooks"
+import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
 
 import "./CanvasConnnection.scss"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
@@ -204,7 +204,7 @@ function calc_d ({ x1, y1, relative_control_point_x1, relative_control_point_y1,
 const step_ms = 30
 const animation_total_ms = 1 * 1000
 const progress_step = step_ms / animation_total_ms
-function animate_to_target (path: SVGPathElement, path_background: SVGPathElement | undefined, current_position: Ref<DArgs | undefined>, target_position: DArgsWithProgress)
+function animate_to_target (path: SVGPathElement, path_background: SVGPathElement | undefined, current_position: MutableRef<DArgs | undefined>, target_position: DArgsWithProgress)
 {
     if (current_position.current === undefined || current_position.current === target_position)
     {

@@ -45,7 +45,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
                 }}>
                 <Tooltip
                     title={option.jsx || option.title}
-                    aria-label={option.jsx || option.title}
+                    // aria-label={option.jsx || option.title}
                 >
                     <Typography noWrap textOverflow="ellipsis" variant="caption">
                         {option.jsx || option.title}

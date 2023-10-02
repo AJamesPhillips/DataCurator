@@ -1,4 +1,4 @@
-import { ComponentClass, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { KnowledgeGraphView } from "../knowledge_view/KnowledgeGraphView"
@@ -44,4 +44,4 @@ function _MainAreaRouter (props: Props)
     return el
 }
 
-export const MainAreaRouter = connector(_MainAreaRouter) as ComponentClass<OwnProps>
+export const MainAreaRouter = connector(_MainAreaRouter) as FunctionalComponent<OwnProps>

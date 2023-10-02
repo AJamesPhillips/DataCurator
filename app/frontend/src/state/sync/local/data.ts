@@ -1,4 +1,4 @@
-import type { User } from "@supabase/gotrue-js"
+import { User } from "@supabase/supabase-js"
 import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { parse_knowledge_view } from "../../../wcomponent/parse_json/parse_knowledge_view"
 import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponent"

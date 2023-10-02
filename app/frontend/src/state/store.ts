@@ -1,4 +1,4 @@
-import { createStore, Action, Store } from "redux"
+import { createStore, Action, Store, AnyAction } from "redux"
 import { register_window_focus_session_check } from "../sync/user_info/window_focus_session_check"
 import { register_window_title_updater_subscriber } from "../window_title/register_window_title_updater_subscriber"
 import { controls_subscribers } from "./controls/subscribers"
@@ -23,7 +23,7 @@ import { user_info_subscribers } from "./user_info/subscribers"
 
 
 
-export type StoreType = Store<RootState, Action<any>> & { load_state_from_storage: boolean }
+export type StoreType = Store<RootState, AnyAction> & { load_state_from_storage: boolean }
 let cached_store: StoreType
 
 interface ConfigStoreArgs
