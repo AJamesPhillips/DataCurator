@@ -46,7 +46,7 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
         const { target_wcomponent_id, selector } = args.wcomponent
         if (target_wcomponent_id)
         {
-            title = `@@${target_wcomponent_id}`
+            title = `Sub state of @@${target_wcomponent_id}`
 
             if (selector?.target_value && selector?.target_value_id_type)
             {
@@ -77,7 +77,7 @@ export function get_default_wcomponent_title (args: GetFieldTextArgs)
         const { attribute_wcomponent_id } = args.wcomponent
         if (attribute_wcomponent_id)
         {
-            title = attribute_wcomponent_id ? `@@${attribute_wcomponent_id} ` : `No target attribute `
+            title = attribute_wcomponent_id ? `Alternative state value for @@${attribute_wcomponent_id} ` : `No target attribute `
 
             title += `<auto generated>`
         }
