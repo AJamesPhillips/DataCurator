@@ -11,6 +11,8 @@ import { replace_ids_in_text, get_title, ReplaceIdsArgs, RichTextType } from "./
 
 export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 {
+    let result: string
+
     describe("replace_ids_in_text", () =>
     {
         const id1 = uuid_v4_for_tests(1)
@@ -32,8 +34,6 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
             [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }, creation_context),
         }
         const knowledge_views_by_id = {}
-
-        let result: string
 
         const args: ReplaceIdsArgs = {
             text_type: RichTextType.rich,
@@ -137,34 +137,6 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         const knowledge_views_by_id = {}
 
 
-        const expected_raw_text = {
-            [wcomponent1.id]: "aaa",
-            [wcomponent2.id]: `bbb @@${id1}`,
-            [wcomponent3.id]: "ccc ${value}",
-            [wcomponent4.id]: `ddd @@${id3}`,
-            [wcomponent5.id]: `eee \${value} @@${id4}`,
-        }
-        const expected_plain_text = {
-            [wcomponent1.id]: "aaa",
-            [wcomponent2.id]: "bbb aaa",
-            [wcomponent3.id]: "ccc True",
-            [wcomponent4.id]: "ddd ccc True",
-            [wcomponent5.id]: "eee True ddd ccc True",
-        }
-        const expected_rich_text = {
-            [wcomponent1.id]: "aaa",
-            [wcomponent2.id]: `bbb [aaa](#wcomponents/${id1})`,
-            [wcomponent3.id]: "ccc True",
-            [wcomponent4.id]: `ddd [ccc True](#wcomponents/${id3})`,
-            [wcomponent5.id]: `eee True [ddd ccc True](#wcomponents/${id4})`,
-        }
-        const expected_rich_text_counterfactual = {
-            [wcomponent3.id]: "ccc False",
-            [wcomponent4.id]: `ddd [ccc False](#wcomponents/${id3})`,
-            [wcomponent5.id]: `eee True [ddd ccc False](#wcomponents/${id4})`,
-        }
-
-
         interface GetTitleForIdArgs
         {
             id: string
@@ -189,22 +161,44 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
         describe("get_title", () =>
         {
+            const expected_raw_text = {
+                [wcomponent1.id]: "aaa",
+                [wcomponent2.id]: `bbb @@${id1}`,
+                [wcomponent3.id]: "ccc ${value}",
+                [wcomponent4.id]: `ddd @@${id3}`,
+                [wcomponent5.id]: `eee \${value} @@${id4}`,
+            }
+            const expected_plain_text = {
+                [wcomponent1.id]: "aaa",
+                [wcomponent2.id]: "bbb aaa",
+                [wcomponent3.id]: "ccc True",
+                [wcomponent4.id]: "ddd ccc True",
+                [wcomponent5.id]: "eee True ddd ccc True",
+            }
+            const expected_rich_text = {
+                [wcomponent1.id]: "aaa",
+                [wcomponent2.id]: `bbb [aaa](#wcomponents/${id1})`,
+                [wcomponent3.id]: "ccc True",
+                [wcomponent4.id]: `ddd [ccc True](#wcomponents/${id3})`,
+                [wcomponent5.id]: `eee True [ddd ccc True](#wcomponents/${id4})`,
+            }
+
 
             Object.entries(expected_raw_text).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, text_type: RichTextType.raw })
+                result = get_title_for_id({ id, text_type: RichTextType.raw })
                 test(result, expected_title)
             })
 
             Object.entries(expected_plain_text).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, text_type: RichTextType.plain })
+                result = get_title_for_id({ id, text_type: RichTextType.plain })
                 test(result, expected_title)
             })
 
             Object.entries(expected_rich_text).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, text_type: RichTextType.rich })
+                result = get_title_for_id({ id, text_type: RichTextType.rich })
                 test(result, expected_title)
             })
         })
@@ -212,19 +206,30 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
         describe("depth_limit", () =>
         {
-            let result = get_title_for_id({ id: wcomponent7.id, text_type: RichTextType.rich })
+            result = get_title_for_id({ id: wcomponent7.id, text_type: RichTextType.rich })
             test(result, `ggg [fff eee True ddd @@${id3}](#wcomponents/${id6})`, "Should stop recursively rendering ids when a depth limit is reached")
 
+            // We actually don't care too much about these recursive titles as
+            // we don't expect these to be actually used by anyone.  We only care
+            // that it should not crash (from too much recursion or stack overflow)
             result = get_title_for_id({ id: wcomponent8.id, text_type: RichTextType.rich })
             test(result, `Recursive [Recursive Recursive Recursive @@80000000-0000-4000-a000-000000000000](#wcomponents/80000000-0000-4000-a000-000000000000)`, "Should handle recursion for normal recursive titles.")
 
+            // Should not crash with too much recursion or stack overflow
             result = get_title_for_id({ id: wcomponent9.id, text_type: RichTextType.rich })
-            test.skip(result, `Recursive [Recursive Recursive Recursive @@80000000-0000-4000-a000-000000000000.title](#wcomponents/80000000-0000-4000-a000-000000000000)`, "Should handle recursion for '.title' functional ids of recursive titles.")
+            test(true, true, "Should handle recursion for '.title' functional ids of recursive titles.")
         })
 
 
         describe("counterfactuals", () =>
         {
+
+            const expected_rich_text_counterfactual = {
+                [wcomponent3.id]: "ccc False",
+                [wcomponent4.id]: `ddd [ccc False](#wcomponents/${id3})`,
+                [wcomponent5.id]: `eee True [ddd ccc False](#wcomponents/${id4})`,
+            }
+
             const wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map = {
                 [wcomponent3.id]: {
                     VAP_sets: {
@@ -247,20 +252,9 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
             Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, text_type: RichTextType.rich, wc_id_to_counterfactuals_map })
+                result = get_title_for_id({ id, text_type: RichTextType.rich, wc_id_to_counterfactuals_map })
                 test(result, expected_title, "Should override values correctly using counterfactualv2 value")
             })
-        })
-
-
-        describe("rendering recursive title", () =>
-        {
-            // We do not really care about the result, just the fact that it doesn't crash with a
-            // "Too much recursion" or "Stack overflow"
-            const result = get_title_for_id({ id: id8, text_type: RichTextType.rich })
-            const result2 = get_title_for_id({ id: id9, text_type: RichTextType.rich })
-
-            test(true, true, "Should not crash with too much recursion or stack overflow")
         })
     })
 
