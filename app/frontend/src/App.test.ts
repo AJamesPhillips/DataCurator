@@ -42,12 +42,14 @@ import { run_currency_symbol_functions_tests } from "./calculations/hide_currenc
 import { test_get_wcomponent_state_UI_value } from "./wcomponent_derived/get_wcomponent_state_UI_value.test"
 import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/tidy_wcomponent.test"
 import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
+import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
 
 
 
 function run_all_tests ()
 {
     run_get_rich_text_tests()
+    run_remove_rich_text_tests()
     run_replace_calculations_with_results_tests()
     run_replace_normal_ids_tests()
     test_get_ids_from_text()
