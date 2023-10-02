@@ -49,6 +49,7 @@ import { get_is_on_actions_list_view } from "../../actions_list_view/accessors"
 import { get_composed_wc_id_map } from "./get_composed_wc_id_map"
 import { get_available_filter_options } from "../../filter_context/utils"
 import { v_step } from "../../../canvas/position_utils"
+import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
 
 
 
@@ -121,7 +122,12 @@ function update_derived_knowledge_view_state (state: RootState): RootState
     const chosen_base_id = selector_chosen_base_id(state)
 
     const knowledge_views_across_all_bases = Object.values(knowledge_views_by_id)
-    const knowledge_views = sort_list(knowledge_views_across_all_bases, ({ title }) => title, SortDirection.ascending)
+    const all_knowledge_views_with_plainer_titles = knowledge_views_across_all_bases.map(kv =>
+    ({
+        ...kv,
+        title: remove_rich_text(kv.title),
+    }))
+    const knowledge_views = sort_list(all_knowledge_views_with_plainer_titles, ({ title }) => title, SortDirection.ascending)
     const nested_knowledge_view_ids = get_nested_knowledge_view_ids(knowledge_views, chosen_base_id)
     sort_nested_knowledge_map_ids_by_priority_then_title(nested_knowledge_view_ids)
 
