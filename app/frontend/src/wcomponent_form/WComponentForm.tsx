@@ -113,6 +113,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
         from_wcomponent,
         to_wcomponent,
 
+        derived_composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
         derived_composed_wcomponent: state.derived.composed_wcomponents_by_id[wcomponent.id],
 
         is_in_editing_mode,
@@ -141,7 +142,7 @@ function _WComponentForm (props: Props)
 {
     const { wcomponent, ready, base_id,
         wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
-        derived_composed_wcomponent,
+        derived_composed_wcomponents_by_id, derived_composed_wcomponent,
         force_editable, created_at_ms, sim_ms } = props
 
     const wcomponent_id = wcomponent.id
@@ -202,7 +203,15 @@ function _WComponentForm (props: Props)
     const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
-    const title = get_title({ rich_text: !force_editable, wcomponent: derived_composed_wcomponent, wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = get_title({
+        rich_text: !force_editable,
+        wcomponent: derived_composed_wcomponent,
+        wcomponents_by_id: derived_composed_wcomponents_by_id,
+        knowledge_views_by_id,
+        wc_id_to_counterfactuals_map,
+        created_at_ms,
+        sim_ms,
+    })
     const conditional_on_blur_title = (title: string) => wrapped_upsert_wcomponent({ title })
 
 
