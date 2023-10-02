@@ -130,7 +130,6 @@ function _WComponentBackReferences (props: Props)
                 >
                     <Markdown>
                         {get_title({
-                            rich_text: true,
                             wcomponent,
                             wcomponents_by_id,
                             knowledge_views_by_id,

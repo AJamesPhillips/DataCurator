@@ -50,7 +50,7 @@ function _WComponentsList (props: Props)
                 onClick={() => props.change_route({ item_id: wcomponent.id })}
             >
                 {get_title({
-                    rich_text: true, wcomponent,
+                    wcomponent,
                     wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map,
                     created_at_ms, sim_ms,
                 })}

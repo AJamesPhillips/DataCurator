@@ -64,7 +64,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             }}
         >
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, knowledge_views_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
+                text={get_title({ wcomponents_by_id, knowledge_views_by_id, wcomponent: target_wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })}
             />
         </div>
         <div style={{ flex: "1", textAlign: "right" }}>
@@ -89,7 +89,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             />
 
             <RichMarkDown
-                text={get_title({ rich_text: true, wcomponents_by_id, knowledge_views_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
+                text={get_title({ wcomponents_by_id, knowledge_views_by_id, wcomponent: judgement, wc_id_to_counterfactuals_map: undefined, created_at_ms, sim_ms })}
             />
         </a>
     </div>

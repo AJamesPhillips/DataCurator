@@ -5,7 +5,7 @@ import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/pre
 import { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { VAP_visual_false_id } from "../../wcomponent_derived/value_and_prediction/utils_to_convert_VAP_set_to_visuals"
-import { replace_ids_in_text, get_title, ReplaceIdsArgs } from "./get_rich_text"
+import { replace_ids_in_text, get_title, ReplaceIdsArgs, RichTextType } from "./get_rich_text"
 
 
 
@@ -36,7 +36,7 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         let result: string
 
         const args: ReplaceIdsArgs = {
-            rich_text: true,
+            text_type: RichTextType.rich,
             wcomponents_by_id,
             knowledge_views_by_id,
             wc_id_to_counterfactuals_map: undefined,
@@ -46,25 +46,24 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
         result = replace_ids_in_text({
             ...args,
-            rich_text: false,
+            text_type: RichTextType.raw,
             text: `Yesterday @@${id1} today`
         })
-        test(result, `Yesterday @@${id1} today`, "Should not replace ids when rich_text is false")
+        test(result, `Yesterday @@${id1} today`, "Should not replace ids when text_type is RichTextType.raw")
 
         result = replace_ids_in_text({
             ...args,
-            rich_text: true,
+            text_type: RichTextType.plain,
             text: `Yesterday @@${id1} today`
         })
-        test(result, `Yesterday [Person B was told Person A is here](#wcomponents/${id1}) today`, "Should replace ids with text and links when rich_text is true")
+        test(result, "Yesterday Person B was told Person A is here today", "Should replace ids with only text and no links when text_type is RichTextType.plain")
 
         result = replace_ids_in_text({
             ...args,
-            rich_text: true,
-            render_links: false,
+            text_type: RichTextType.rich,
             text: `Yesterday @@${id1} today`
         })
-        test(result, "Yesterday Person B was told Person A is here today", "Should replace ids with only text and no links when rich_text is true and render_links is false")
+        test(result, `Yesterday [Person B was told Person A is here](#wcomponents/${id1}) today`, "Should replace ids with text and links when text_type is RichTextType.rich.  And should not render lower depth links so as not to have nested broken links.")
     })
 
 
@@ -138,12 +137,19 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         const knowledge_views_by_id = {}
 
 
-        const expected_non_rich_text = {
+        const expected_raw_text = {
             [wcomponent1.id]: "aaa",
             [wcomponent2.id]: `bbb @@${id1}`,
             [wcomponent3.id]: "ccc ${value}",
             [wcomponent4.id]: `ddd @@${id3}`,
             [wcomponent5.id]: `eee \${value} @@${id4}`,
+        }
+        const expected_plain_text = {
+            [wcomponent1.id]: "aaa",
+            [wcomponent2.id]: "bbb aaa",
+            [wcomponent3.id]: "ccc True",
+            [wcomponent4.id]: "ddd ccc True",
+            [wcomponent5.id]: "eee True ddd ccc True",
         }
         const expected_rich_text = {
             [wcomponent1.id]: "aaa",
@@ -151,13 +157,6 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
             [wcomponent3.id]: "ccc True",
             [wcomponent4.id]: `ddd [ccc True](#wcomponents/${id3})`,
             [wcomponent5.id]: `eee True [ddd ccc True](#wcomponents/${id4})`,
-        }
-        const expected_rich_text_no_links = {
-            [wcomponent1.id]: "aaa",
-            [wcomponent2.id]: "bbb aaa",
-            [wcomponent3.id]: "ccc True",
-            [wcomponent4.id]: "ddd ccc True",
-            [wcomponent5.id]: "eee True ddd ccc True",
         }
         const expected_rich_text_counterfactual = {
             [wcomponent3.id]: "ccc False",
@@ -169,17 +168,15 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         interface GetTitleForIdArgs
         {
             id: string
-            rich_text: boolean
-            render_links?: boolean
+            text_type: RichTextType
             wc_id_to_counterfactuals_map?: WcIdToCounterfactualsV2Map
         }
         function get_title_for_id (args: GetTitleForIdArgs)
         {
-            const { id, rich_text, render_links, wc_id_to_counterfactuals_map } = args
+            const { id, text_type, wc_id_to_counterfactuals_map } = args
 
             return get_title({
-                rich_text,
-                render_links,
+                text_type,
                 wcomponents_by_id,
                 knowledge_views_by_id,
                 wcomponent: wcomponents_by_id[id]!,
@@ -193,21 +190,21 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         describe("get_title", () =>
         {
 
-            Object.entries(expected_non_rich_text).forEach(([id, expected_title]) =>
+            Object.entries(expected_raw_text).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, rich_text: false })
+                const result = get_title_for_id({ id, text_type: RichTextType.raw })
+                test(result, expected_title)
+            })
+
+            Object.entries(expected_plain_text).forEach(([id, expected_title]) =>
+            {
+                const result = get_title_for_id({ id, text_type: RichTextType.plain })
                 test(result, expected_title)
             })
 
             Object.entries(expected_rich_text).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, rich_text: true })
-                test(result, expected_title)
-            })
-
-            Object.entries(expected_rich_text_no_links).forEach(([id, expected_title]) =>
-            {
-                const result = get_title_for_id({ id, rich_text: true, render_links: false })
+                const result = get_title_for_id({ id, text_type: RichTextType.rich })
                 test(result, expected_title)
             })
         })
@@ -215,8 +212,14 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
         describe("depth_limit", () =>
         {
-            const result = get_title_for_id({ id: wcomponent7.id, rich_text: true })
+            let result = get_title_for_id({ id: wcomponent7.id, text_type: RichTextType.rich })
             test(result, `ggg [fff eee True ddd @@${id3}](#wcomponents/${id6})`, "Should stop recursively rendering ids when a depth limit is reached")
+
+            result = get_title_for_id({ id: wcomponent8.id, text_type: RichTextType.rich })
+            test(result, `Recursive [Recursive Recursive Recursive @@80000000-0000-4000-a000-000000000000](#wcomponents/80000000-0000-4000-a000-000000000000)`, "Should handle recursion for normal recursive titles.")
+
+            result = get_title_for_id({ id: wcomponent9.id, text_type: RichTextType.rich })
+            test.skip(result, `Recursive [Recursive Recursive Recursive @@80000000-0000-4000-a000-000000000000.title](#wcomponents/80000000-0000-4000-a000-000000000000)`, "Should handle recursion for '.title' functional ids of recursive titles.")
         })
 
 
@@ -244,7 +247,7 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
 
             Object.entries(expected_rich_text_counterfactual).forEach(([id, expected_title]) =>
             {
-                const result = get_title_for_id({ id, rich_text: true, wc_id_to_counterfactuals_map })
+                const result = get_title_for_id({ id, text_type: RichTextType.rich, wc_id_to_counterfactuals_map })
                 test(result, expected_title, "Should override values correctly using counterfactualv2 value")
             })
         })
@@ -254,8 +257,8 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         {
             // We do not really care about the result, just the fact that it doesn't crash with a
             // "Too much recursion" or "Stack overflow"
-            const result = get_title_for_id({ id: id8, rich_text: true })
-            const result2 = get_title_for_id({ id: id9, rich_text: true })
+            const result = get_title_for_id({ id: id8, text_type: RichTextType.rich })
+            const result2 = get_title_for_id({ id: id9, text_type: RichTextType.rich })
 
             test(true, true, "Should not crash with too much recursion or stack overflow")
         })
@@ -283,7 +286,7 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         const knowledge_views_by_id = {}
 
         const args: ReplaceIdsArgs = {
-            rich_text: true,
+            text_type: RichTextType.rich,
             wcomponents_by_id,
             knowledge_views_by_id,
             wc_id_to_counterfactuals_map: undefined,

@@ -6,7 +6,7 @@ import { Link } from "../../sharedf/Link"
 import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
 import { ConnectedProps, connect } from "react-redux"
 import { RootState } from "../../state/State"
-import { get_title } from "../../sharedf/rich_text/get_rich_text"
+import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 
 
@@ -51,7 +51,7 @@ const map_state = (state: RootState, props: LinkToComponentOwnProps) =>
 
     const title = derived_composed_wcomponent && get_title({
         wcomponent: derived_composed_wcomponent,
-        rich_text: true, // TODO, rename rich_text to process_text or something
+        text_type: RichTextType.plain,
         wcomponents_by_id: composed_wcomponents_by_id,
         knowledge_views_by_id,
         wc_id_to_counterfactuals_map,

@@ -4,7 +4,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { is_defined } from "../shared/utils/is_defined"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
+import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { get_foundational_knowledge_views } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import type { RootState } from "../state/State"
@@ -70,8 +70,7 @@ function _KnowledgeViewActiveCounterFactuals (props: Props)
                 id: wcomponent.id,
                 title: get_title({
                     wcomponent,
-                    rich_text: true,
-                    render_links: false,
+                    text_type: RichTextType.plain,
                     wcomponents_by_id,
                     knowledge_views_by_id,
                     wc_id_to_counterfactuals_map: undefined,

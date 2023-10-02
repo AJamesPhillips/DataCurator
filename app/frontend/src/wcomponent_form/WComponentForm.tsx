@@ -38,7 +38,7 @@ import {
     wcomponent_is_deleted,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
+import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
@@ -204,7 +204,7 @@ function _WComponentForm (props: Props)
 
 
     const title = get_title({
-        rich_text: !force_editable,
+        text_type: force_editable ? RichTextType.raw : RichTextType.rich,
         wcomponent: derived_composed_wcomponent,
         wcomponents_by_id: derived_composed_wcomponents_by_id,
         knowledge_views_by_id,

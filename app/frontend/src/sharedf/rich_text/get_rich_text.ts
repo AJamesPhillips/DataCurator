@@ -16,10 +16,16 @@ import { replace_normal_ids } from "./replace_normal_ids"
 const DEFAULT_MAX_DEPTH_LIMIT = 3
 
 
+export enum RichTextType
+{
+    raw,
+    plain,
+    rich,
+}
+
 export interface ReplaceIdsArgs
 {
-    rich_text: boolean
-    render_links?: boolean
+    text_type: RichTextType
     wcomponents_by_id: WComponentsById
     knowledge_views_by_id: KnowledgeViewsById
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
@@ -31,8 +37,9 @@ export interface ReplaceIdsArgs
 }
 
 
-export interface GetFieldTextArgs extends ReplaceIdsArgs
+export interface GetFieldTextArgs extends Omit<ReplaceIdsArgs, "text_type">
 {
+    text_type?: RichTextType
     wcomponent: WComponent
 }
 export function get_title (args: GetFieldTextArgs): string
@@ -41,14 +48,16 @@ export function get_title (args: GetFieldTextArgs): string
         wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms,
     } = args
 
+    const text_type = args.text_type ?? RichTextType.rich
+
     let title = wcomponent.title
     if (!title) title = get_default_wcomponent_title(args)
 
-    if (!args.rich_text) return title
+    if (text_type === RichTextType.raw) return title
 
     const text = replace_value_in_text({ text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
-    return replace_ids_in_text({ ...args, text })
+    return replace_ids_in_text({ ...args, text, text_type })
 }
 
 
@@ -88,7 +97,7 @@ interface ReplaceIdsInTextArgs extends ReplaceIdsArgs
 export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
 {
     const {
-        text, rich_text, render_links, wcomponents_by_id, knowledge_views_by_id,
+        text, text_type, wcomponents_by_id, knowledge_views_by_id,
         depth_limit = DEFAULT_MAX_DEPTH_LIMIT,
         current_depth = 0,
         root_url = "",
@@ -97,25 +106,30 @@ export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
         sim_ms,
     } = args
 
-    if (!rich_text) return text
+    if (text_type === RichTextType.raw) return text
 
-    const replaced_text = _replace_ids_in_text(text, wcomponents_by_id, knowledge_views_by_id, render_links, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms)
+    const replaced_text = _replace_ids_in_text(text, text_type, wcomponents_by_id, knowledge_views_by_id, depth_limit, current_depth, root_url, wc_id_to_counterfactuals_map, created_at_ms, sim_ms)
 
     return replaced_text
 }
 
 
 
-function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById, knowledge_views_by_id: KnowledgeViewsById, render_links: boolean | undefined, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
+function _replace_ids_in_text (text: string, text_type: RichTextType, wcomponents_by_id: WComponentsById, knowledge_views_by_id: KnowledgeViewsById, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
 {
-    // TODO: document why we do not render links at top level i.e. when current_depth === 0 ?
-    render_links = render_links === false ? false : current_depth === 0
+    text_type = text_type === RichTextType.rich
+        // We only render links at top level i.e. when current_depth === 0 so that
+        // we do not have nested broken links.  See tests for example that renders
+        // text containing "...@@${id1}..." as a link to id1 but because the
+        // id1 component has a title that contains "...@@${id3} was told @@${id2}..."
+        // the id2 and id3 titles do not have their links rendered.
+        ? (current_depth === 0 ? RichTextType.rich : RichTextType.plain)
+        : text_type
 
     function _get_title (wcomponent: WComponent)
     {
         return get_title({
-            rich_text: true,
-            render_links,
+            text_type,
             wcomponents_by_id,
             knowledge_views_by_id,
             wc_id_to_counterfactuals_map,
@@ -132,7 +146,7 @@ function _replace_ids_in_text (text: string, wcomponents_by_id: WComponentsById,
         wcomponents_by_id,
         knowledge_views_by_id,
         depth_limit,
-        render_links,
+        render_links: text_type === RichTextType.rich,
         root_url,
         get_title: _get_title,
     }

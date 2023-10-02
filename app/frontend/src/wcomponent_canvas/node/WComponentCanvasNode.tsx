@@ -243,7 +243,7 @@ function _WComponentCanvasNode (props: Props)
     ]
 
 
-    const title = !derived_composed_wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent: derived_composed_wcomponent, rich_text: true, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = !derived_composed_wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent: derived_composed_wcomponent, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
 
 
     const show_all_details = is_editing //|| is_current_item

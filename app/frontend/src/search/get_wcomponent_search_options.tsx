@@ -11,7 +11,7 @@ import {
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdToCounterfactualsV2Map } from "../wcomponent_derived/interfaces/counterfactual"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
+import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 
@@ -44,8 +44,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
         .map(wcomponent => {
             const title = get_title({
                 wcomponent,
-                rich_text: true,
-                render_links: false,
+                text_type: RichTextType.plain,
                 wcomponents_by_id,
                 knowledge_views_by_id,
                 wc_id_to_counterfactuals_map,

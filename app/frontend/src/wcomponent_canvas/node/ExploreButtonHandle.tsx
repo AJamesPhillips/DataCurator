@@ -15,7 +15,6 @@ import type {
     KnowledgeView,
     KnowledgeViewWComponentEntry,
 } from "../../shared/interfaces/knowledge_view"
-import { get_title } from "../../sharedf/rich_text/get_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_overlapping_wcomponent_ids, get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
@@ -169,16 +168,16 @@ function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState
         [props.wcomponent.id]: props.wcomponent_current_kv_entry || middle_of_screen,
     }
 
-    const rendered_title = get_title({
-        wcomponent: props.wcomponent,
-        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
-        rich_text: true,
-        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
-        created_at_ms: state.routing.args.created_at_ms,
-        sim_ms: state.routing.args.sim_ms,
-    })
-    const title = rendered_title || `Knowledge view for ${props.wcomponent.id} created: ${get_today_str()}`
+    // const rendered_title = get_title({
+    //     wcomponent: props.wcomponent,
+    //     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
+    //     text_type: RichTextType.raw,
+    //     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+    //     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+    //     created_at_ms: state.routing.args.created_at_ms,
+    //     sim_ms: state.routing.args.sim_ms,
+    // })
+    const title = props.wcomponent.title || `Knowledge view for ${props.wcomponent.id} created: ${get_today_str()}`
 
 
     const current_kv = get_current_composed_knowledge_view_from_state(state)

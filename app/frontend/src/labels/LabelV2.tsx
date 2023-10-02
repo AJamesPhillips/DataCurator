@@ -47,7 +47,6 @@ function _LabelV2 (props: Props)
 
     const title = wcomponent ? get_title({
         wcomponent,
-        rich_text: true,
         wcomponents_by_id: props.wcomponents_by_id,
         knowledge_views_by_id: props.knowledge_views_by_id,
         wc_id_to_counterfactuals_map: props.wc_id_to_counterfactuals_map,

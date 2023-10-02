@@ -5,7 +5,7 @@ import Markdown, { MarkdownToJSX } from "markdown-to-jsx"
 import { add_newlines_to_markdown } from "./add_newlines_to_markdown"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import type { RootState } from "../../state/State"
-import { replace_ids_in_text } from "./get_rich_text"
+import { RichTextType, replace_ids_in_text } from "./get_rich_text"
 import { AnchorTag } from "../AnchorTag"
 
 
@@ -39,8 +39,9 @@ function _RichMarkDown (props: Props)
         created_at_ms, sim_ms,
     } = props
 
+    const text_type = rich_text ? RichTextType.rich : RichTextType.raw
     const value = replace_ids_in_text({
-        text, rich_text, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
+        text, text_type, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms
     })
     return <Markdown options={MARKDOWN_OPTIONS}>
         {(value && add_newlines_to_markdown(value)) || placeholder}

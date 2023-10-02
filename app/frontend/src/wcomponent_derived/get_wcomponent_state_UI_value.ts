@@ -1,4 +1,4 @@
-import { wcomponent_is_statev2, type WComponent, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_value_and_probabilities } from "./get_wcomponent_state_value_and_probabilities"
 import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 import type { DerivedValueForUI } from "./interfaces/value"

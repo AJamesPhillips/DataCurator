@@ -49,7 +49,6 @@ function _PrioritisationEntryNode (props: Props)
     if (!wcomponent) return null
 
     const title = get_title({
-        rich_text: true,
         wcomponent,
         wcomponents_by_id,
         knowledge_views_by_id,
