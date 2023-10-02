@@ -27,6 +27,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
     function inflate_counterfactuals_data (counterfactuals_data: (CounterfactualData[]) | undefined, VAP_sets: StateValueAndPredictionsSet[])
     {
         const counterfactuals_VAP_set_map: VAPSetIdToCounterfactualV2Map = {}
+        let counterfactual_id = 0
 
         ;(counterfactuals_data || []).forEach(counterfactual_data =>
         {
@@ -38,7 +39,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
 
                 counterfactuals.push({
                     base_id: -1,
-                    id: "",
+                    id: `cf${counterfactual_id++}`,
                     created_at: dt1,
                     type: "counterfactualv2",
                     title: "",
@@ -316,6 +317,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             ],
             any_uncertainty: false,
             counterfactual_applied: true,
+            derived__using_value_from_wcomponent_ids: ["cf0"],
         }, "No op counterfactual is applied to something already with certainty of 1")
 
 
@@ -326,6 +328,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             ],
             any_uncertainty: false,
             counterfactual_applied: true,
+            derived__using_value_from_wcomponent_ids: ["cf0"],
         }, "Counterfactual applied to VAP that had certainty of < 1")
 
 
@@ -336,6 +339,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             ],
             any_uncertainty: false,
             counterfactual_applied: true,
+            derived__using_value_from_wcomponent_ids: ["cf0"],
         }, "Counterfactual applied to VAP set with two VAPs that had certainty of < 1")
 
 
@@ -346,6 +350,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             ],
             any_uncertainty: false,
             counterfactual_applied: true,
+            derived__using_value_from_wcomponent_ids: ["cf0"],
         }, "Counterfactuals to force one option possibility over another that was certain")
 
 
@@ -356,6 +361,7 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             most_probable_VAP_set_values: [],
             any_uncertainty: false,
             counterfactual_applied: true,
+            derived__using_value_from_wcomponent_ids: ["123"],
         }, "Skipping because counterfactuals version 2 only works to force things to be true, not to be false.  For forcing something to be true, then you can use a StateValue component instead.")
     })
 
@@ -377,8 +383,12 @@ export const test_get_wcomponent_state_value_and_probabilities = describe("get_w
             ],
             any_uncertainty: false,
             counterfactual_applied: false,
-            derived__using_value_from_wcomponent_id: "abc123",
+            derived__using_value_from_wcomponent_ids: ["abc123"],
         }, "Returns the id of the (state value) component whose VAP sets are present in this component")
+
+        // todo add tests of when a StatevValue component overwrites the VAPSets
+        // of a StateV2 component, and then it in turn has a counterfactual
+        // applied to it or to its target StateV2 component
     })
 
 

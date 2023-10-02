@@ -280,7 +280,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
             is_defined: true,
             counterfactual_applied: false,
             uncertain: false,
-            derived__using_value_from_wcomponent_id: "abc123",
+            derived__using_values_from_wcomponent_ids: "abc123",
         }, "Returns the id of the (state value) component whose VAP sets are present in this component")
     })
 

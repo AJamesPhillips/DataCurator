@@ -19,6 +19,7 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
         most_probable_VAP_set_values,
         any_uncertainty,
         counterfactual_applied,
+        derived__using_value_from_wcomponent_ids,
     } = get_wcomponent_state_value_and_probabilities(args)
 
 
@@ -33,18 +34,18 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
     const is_defined = most_probable_VAP_set_values.length > 0
     const values_string = reduce_display_string_values(value_strings)
 
-    let derived__using_value_from_wcomponent_id: string | undefined = undefined
-    if (wcomponent_is_allowed_to_have_state_VAP_sets(args.wcomponent))
-    {
-        derived__using_value_from_wcomponent_id = args.wcomponent._derived__using_value_from_wcomponent_id
-    }
+    // let derived__using_values_from_wcomponent_ids: string[] | undefined = undefined
+    // if (wcomponent_is_allowed_to_have_state_VAP_sets(args.wcomponent))
+    // {
+    //     derived__using_values_from_wcomponent_ids = args.wcomponent._derived__using_value_from_wcomponent_id
+    // }
 
     return {
         values_string,
         is_defined,
         counterfactual_applied,
         uncertain: any_uncertainty,
-        derived__using_value_from_wcomponent_id,
+        derived__using_values_from_wcomponent_ids: derived__using_value_from_wcomponent_ids,
     }
 }
 

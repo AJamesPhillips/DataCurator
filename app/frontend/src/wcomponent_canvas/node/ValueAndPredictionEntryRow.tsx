@@ -13,7 +13,7 @@ import type {
 import { ExploreButtonHandle } from "./ExploreButtonHandle"
 import { Link } from "../../sharedf/Link"
 import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
-import { AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
+import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
 
 
 
@@ -87,12 +87,12 @@ function CounterfactualLink (props: CounterfactualLinkProps)
     const this_counterfactual_active = props.counterfactual.counterfactual_v2_id === props.active_counterfactual_v2_id
 
     const color = this_counterfactual_active
-        ? "darkorange"
+        ? ALTERNATIVE_VALUE_COLOR
         : (props.any_active ? "white" : "#ffc965")
 
     const style: h.JSX.CSSProperties = {
         fontSize: "25px",
-        color,
+        color, // Is this colour doing anything?
         verticalAlign: "middle",
         fontWeight: "bold",
     }

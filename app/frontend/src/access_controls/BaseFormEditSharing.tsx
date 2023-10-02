@@ -1,8 +1,7 @@
 import { FunctionalComponent, h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
-import type { PostgrestError } from "@supabase/postgrest-js"
+import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 
 import "./BaseFormEditSharing.scss"
 import type { SupabaseAccessControl, SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"

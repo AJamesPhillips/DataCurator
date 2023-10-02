@@ -9,3 +9,10 @@ export function AltRouteIcon (props: CommonIconOwnProps)
 {
     return <CommonIcon {...props} d={d} />
 }
+
+
+/**
+ * Used for when counterfactuals are active
+ * and for when StateValue is applied to a StateV2 component
+ */
+export const ALTERNATIVE_VALUE_COLOR = "darkorange"

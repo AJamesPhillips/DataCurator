@@ -13,6 +13,7 @@ import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/appl
 import type { CurrentValueAndProbability } from "./interfaces/value"
 import { parse_VAP_value } from "../wcomponent/value/parse_value"
 import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
+import { is_defined } from "../shared/utils/is_defined"
 
 
 
@@ -28,7 +29,7 @@ interface GetWComponentStateValueAndProbabilitiesReturn
     most_probable_VAP_set_values: CurrentValueAndProbability[]
     any_uncertainty?: boolean
     counterfactual_applied?: boolean
-    derived__using_value_from_wcomponent_id?: string
+    derived__using_value_from_wcomponent_ids?: string[]
 }
 export function get_wcomponent_state_value_and_probabilities (args: GetWComponentStateValueAndProbabilitiesArgs): GetWComponentStateValueAndProbabilitiesReturn
 {
@@ -58,11 +59,25 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
     const { most_probable_VAP_set_values, any_uncertainty } = get_most_probable_VAP_set_values(present_item, VAPs_represent)
 
+
+    let derived__using_value_from_wcomponent_ids: string[] | undefined = [
+        present_item?.active_counterfactual_v2_id,
+        // Should this live in this function or a higher level function? Perhaps
+        // we should only be returning `present_item?.active_counterfactual_v2_id`
+        // from this `get_wcomponent_state_value_and_probabilities` function?
+        wcomponent._derived__using_value_from_wcomponent_id,
+    ].filter(is_defined)
+
+    derived__using_value_from_wcomponent_ids = derived__using_value_from_wcomponent_ids.length
+        ? derived__using_value_from_wcomponent_ids
+        : undefined
+
+
     return {
         most_probable_VAP_set_values,
         any_uncertainty,
         counterfactual_applied: present_item?.has_any_counterfactual_applied,
-        derived__using_value_from_wcomponent_id: wcomponent._derived__using_value_from_wcomponent_id,
+        derived__using_value_from_wcomponent_ids,
     }
 }
 

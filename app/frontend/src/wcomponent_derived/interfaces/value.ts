@@ -25,9 +25,9 @@ export interface DerivedValueForUI
 {
     is_defined: boolean
     values_string: string
-    counterfactual_applied?: boolean
-    uncertain?: boolean
-    derived__using_value_from_wcomponent_id?: string
+    counterfactual_applied: boolean | undefined
+    uncertain: boolean | undefined
+    derived__using_values_from_wcomponent_ids: string[] | undefined
 }
 
 

@@ -18,5 +18,11 @@ export function get_wcomponent_validity_UI_value (props: GetWcomponentValidityUI
 
     const values_string = is_valid ? "Valid" : "Invalid"
 
-    return { is_defined, values_string }
+    return {
+        is_defined,
+        values_string,
+        counterfactual_applied: undefined,
+        uncertain: undefined,
+        derived__using_values_from_wcomponent_ids: undefined,
+    }
 }
