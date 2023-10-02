@@ -23,6 +23,8 @@ import { get_store } from "../../state/store"
 import type { HasBaseId } from "../../shared/interfaces/base"
 import { get_middle_of_screen } from "../../state/display_options/display"
 import { AddSearchIcon } from "../../sharedf/icons/AddSearchIcon"
+import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
+import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"
 
 
 
@@ -123,8 +125,8 @@ function _ExploreButtonHandle (props: Props)
                 if (!kvwc)
                 {
                     const success = prepare_wcomponent_knowledge_view(props, store)
-
                     if (!success) return
+
                     kvwc = success
 
                     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view: kvwc }))
@@ -168,16 +170,17 @@ function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState
         [props.wcomponent.id]: props.wcomponent_current_kv_entry || middle_of_screen,
     }
 
-    // const rendered_title = get_title({
-    //     wcomponent: props.wcomponent,
-    //     wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
-    //     text_type: RichTextType.raw,
-    //     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    //     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
-    //     created_at_ms: state.routing.args.created_at_ms,
-    //     sim_ms: state.routing.args.sim_ms,
-    // })
-    const title = props.wcomponent.title || `Knowledge view for ${props.wcomponent.id} created: ${get_today_str()}`
+    const rendered_title = get_title({
+        wcomponent: props.wcomponent,
+        wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
+        text_type: RichTextType.plain,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+        created_at_ms: state.routing.args.created_at_ms,
+        sim_ms: state.routing.args.sim_ms,
+    })
+    const rendered_title_with_less_rich_text = remove_rich_text(rendered_title)
+    const title = rendered_title_with_less_rich_text || `Knowledge view for ${props.wcomponent.id} created: ${get_today_str()}`
 
 
     const current_kv = get_current_composed_knowledge_view_from_state(state)
