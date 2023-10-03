@@ -38,10 +38,13 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase
     // boolean_true_str?: string
     // boolean_false_str?: string
 
-    // Not sure yet if calculations belong only on StateV2 or if this should be
+    // 2023-09-23  Not sure yet if calculations belong only on StateV2 or if this should be
     // an interface and be made available for several different types of component
     // It certainly belongs on this component though.
+    // 2023-10-03  As only this component has `subtype` then I think only this
+    // component can have calculations
     calculations?: PlainCalculationObject[]
+    units?: string
 }
 
 

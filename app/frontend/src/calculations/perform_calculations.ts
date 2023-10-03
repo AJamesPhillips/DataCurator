@@ -7,6 +7,7 @@ import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/re
 import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
 import { convert_percentages } from "./convert_percentages"
 import { hide_currency_symbols } from "./hide_currency_symbols"
+import { apply_units_from_component } from "./apply_units_from_component"
 
 
 
@@ -26,13 +27,18 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         let converted_calculation = normalise_calculation_numbers(calculation.value)
         converted_calculation = convert_percentages(converted_calculation)
         converted_calculation = hide_currency_symbols(converted_calculation)
+
+        let units: string | undefined = undefined
+        if (calculation.units !== undefined) units = calculation.units
+        units = apply_units_from_component(converted_calculation, units, wcomponents_by_id)
+
         converted_calculation = normalise_calculation_ids(converted_calculation, uuid_v4s)
 
         const model_config: ModelVariableConfig = {
             name: calculation.name,
             value: converted_calculation,
         }
-        if (calculation.units !== undefined) model_config.units = calculation.units
+        if (units !== undefined) model_config.units = units
         const model_component = model.Variable(model_config)
 
         prepare_other_components(model, model_component, values, uuid_v4s, wcomponents_by_id)

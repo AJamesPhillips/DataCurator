@@ -8,7 +8,6 @@ import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { perform_calculations } from "./perform_calculations"
-import { prepare_calculations } from "./prepare_calculations"
 
 
 
@@ -100,6 +99,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             title: "Some state component",
             type: "statev2",
             values_and_prediction_sets: [vap_set_1],
+            units: "seconds"
         })
         wcomponents_by_id = {
             [id1]: wcomponent_1,
@@ -112,9 +112,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 12.3, units: "meters" },
+            { value: 12.3, units: "seconds" },
         ]
-        test(calculation_result, expected_calculation_result, "Can access a wcomponent's value")
+        test(calculation_result, expected_calculation_result, "Can access a wcomponent's value and overrides any units given in calculation with wcomponent's units")
 
 
 
@@ -125,7 +125,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         expected_calculation_result = [
             { value: 123, units: "meters" },
         ]
-        test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation")
+        test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation and uses units given, overriding components units")
 
 
 
