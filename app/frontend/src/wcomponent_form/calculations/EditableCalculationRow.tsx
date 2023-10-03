@@ -23,7 +23,7 @@ export interface CalculationRowProps
 
 export function EditableCalculationRow (props: CalculationRowProps)
 {
-    const { calculation: calc, index, calculation_results: results } = props
+    const { calculation: calc, index, calculation_results: results, editing } = props
 
     const result = results[index]
 
@@ -43,21 +43,21 @@ export function EditableCalculationRow (props: CalculationRowProps)
         <Box style={{ width: "100%", display: "flex" }}>
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
             {calc.name}&nbsp;=&nbsp;
-            <EditableTextSingleLine
+            {(editing || (!editing && calc.value !== "")) &&<EditableTextSingleLine
                 placeholder="Calculation"
                 hide_label={true}
                 value={calc.value}
                 on_blur={value => props.update_calculation({ ...calc, value })}
                 on_blur_type={EditableTextOnBlurType.conditional}
-            />
+            />}
             &nbsp;
-            <EditableTextSingleLine
+            {(editing || (!editing && calc.units)) && <EditableTextSingleLine
                 placeholder="Units"
                 hide_label={true}
                 value={calc.units || ""}
                 on_blur={units => props.update_calculation({ ...calc, units: units ? units : undefined })}
                 on_blur_type={EditableTextOnBlurType.conditional}
-            />
+            />}
             {output_element}
         </Box>
 
