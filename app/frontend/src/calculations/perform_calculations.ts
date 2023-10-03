@@ -6,7 +6,7 @@ import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_deri
 import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/replace_normal_ids"
 import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
 import { convert_percentages } from "./convert_percentages"
-import { hide_currency_symbols } from "./hide_currency_symbols"
+import { hide_currency_symbols, unhide_currency_symbols } from "./hide_currency_symbols"
 import { apply_units_from_component } from "./apply_units_from_component"
 
 
@@ -31,6 +31,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         let units: string | undefined = undefined
         if (calculation.units !== undefined) units = calculation.units
         units = apply_units_from_component(converted_calculation, units, wcomponents_by_id)
+        units = hide_currency_symbols(units || "")
 
         converted_calculation = normalise_calculation_ids(converted_calculation, uuid_v4s)
 
@@ -47,6 +48,16 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
 
         // Store calculation value for use in future calculations
         values[calculation.name] = calculation_result
+
+        return calculation_result
+    })
+    .map(calculation_result =>
+    {
+        calculation_result.units = unhide_currency_symbols(calculation_result.units)
+        if (calculation_result.error)
+        {
+            calculation_result.error = unhide_currency_symbols(calculation_result.error)
+        }
 
         return calculation_result
     })

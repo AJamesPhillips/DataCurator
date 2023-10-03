@@ -285,4 +285,54 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         test(calculation_result, expected_calculation_result, "Widgets/Years^2  *  Years")
     })
 
+
+
+    // Note these tests and this functionality belongs inside the Simulation.JS
+    // package. See #239
+    describe("hide_currency_symbols", () =>
+    {
+        calculations = [
+            { name: "A", value: `{90 £ / year}`, units: "" },
+            { name: "B", value: `{10 £ / year}`, units: "" },
+            { name: "C", value: `A+B`, units: "" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 90, units: "£/(Year)" },
+            { value: 10, units: "£/(Year)" },
+            { value: 100, units: "£/(Year)" },
+        ]
+        test(calculation_result, expected_calculation_result, "Handles currency symbols specified inside curly braces")
+
+
+
+        calculations = [
+            { name: "A", value: `90`, units: "£ / year" },
+            { name: "B", value: `10`, units: "£ / year" },
+            { name: "C", value: `A+B`, units: "£ / year" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 90, units: "£ / year" },
+            { value: 10, units: "£ / year" },
+            { value: 100, units: "£ / year" },
+        ]
+        test(calculation_result, expected_calculation_result, "Handles currency symbols specified inside units field, and preserves them precisely")
+
+
+
+        calculations = [
+            { name: "A", value: `90`, units: "£ / year" },
+            { name: "B", value: `10`, units: "$ / year" },
+            { name: "C", value: `A+B`, units: "£ / year" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 90, units: "£ / year" },
+            { value: 10, units: "$ / year" },
+            { value: undefined, units: "£ / year", error: "Incompatible units for the addition of £/(Year) and $/(Year)." },
+        ]
+        test(calculation_result, expected_calculation_result, "Correctly formats currency symbols in error messages")
+    })
+
 }, false)
