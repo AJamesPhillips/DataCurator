@@ -8,18 +8,23 @@ import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { perform_calculations } from "./perform_calculations"
+import { prepare_calculations } from "./prepare_calculations"
 
 
 
 export const run_perform_calculations_test = describe("perform_calculations", () =>
 {
-    let calculations: PlainCalculationObject[] = []
-    let wcomponents_by_id: WComponentsById = {}
-    let calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    let expected_calculation_result: CalculationResult[] = []
+    let calculations: PlainCalculationObject[]
+    let wcomponents_by_id: WComponentsById
+    let calculation_result: CalculationResult[]
+    let expected_calculation_result: CalculationResult[]
 
 
 
+    calculations = []
+    wcomponents_by_id = {}
+    expected_calculation_result = []
+    calculation_result = perform_calculations(calculations, wcomponents_by_id)
     test(calculation_result, expected_calculation_result, "No calculations should return no results")
 
 
@@ -89,22 +94,39 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     {
         vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
         vap_set_1.entries[0]!.value = "12.3"
+        const wcomponent_1 = prepare_new_contextless_wcomponent_object({
+            base_id,
+            id: id1,
+            title: "Some state component",
+            type: "statev2",
+            values_and_prediction_sets: [vap_set_1],
+        })
         wcomponents_by_id = {
-            [id1]: prepare_new_contextless_wcomponent_object({
-                base_id,
-                id: id1,
-                type: "statev2",
-                values_and_prediction_sets: [vap_set_1]
-            }),
+            [id1]: wcomponent_1,
         }
+
+
+
         calculations = [
-            { name: "A", value: `@@${id1} * 10` },
+            { name: "A", value: `@@${id1}`, units: "meters" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 123, units: "" },
+            { value: 12.3, units: "meters" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can access a wcomponent's value")
+
+
+
+        calculations = [
+            { name: "A", value: `@@${id1} * 10`, units: "meters" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 123, units: "meters" },
         ]
         test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation")
+
 
 
         calculations = [
@@ -115,6 +137,17 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             { value: 12.3, units: "meters" },
         ]
         test.skip(calculation_result, expected_calculation_result, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Calculations can reference wcomponent values and assign units~~")
+
+
+
+        calculations = [
+            { name: "A", value: `@@${id1}.value`, units: "meters" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: undefined, units: "meters", error: "Object function not used on object" },
+        ]
+        test(calculation_result, expected_calculation_result, `Can not currently access the ".value" of a component in an equation`)
     })
 
 
@@ -201,8 +234,19 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
 
-    describe("Does not compute units if 'Unitless' is specified", () =>
+    describe(`Sets units to "" if 'Unitless' is specified`, () =>
     {
+        calculations = [
+            { name: "A", value: `2`, units: "Unitless" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 2, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, `Computes correct units of "" when "Unitless" is specified`)
+
+
+
         calculations = [
             { name: "A", value: `{2 Meters}`, units: "Unitless" },
         ]
@@ -210,7 +254,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         expected_calculation_result = [
             { value: undefined, units: "", error: "Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation." },
         ]
-        test(calculation_result, expected_calculation_result, "Computes correct units")
+        test(calculation_result, expected_calculation_result, `Computes correct units of "" when "Unitless" is specified as the units even though it conflicts with units given in calculation`)
     })
 
 
