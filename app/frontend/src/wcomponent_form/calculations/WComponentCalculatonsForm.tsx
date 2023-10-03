@@ -24,7 +24,7 @@ const map_state = (state: RootState) =>
 {
     return {
         editing: !state.display_options.consumption_formatting,
-        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        wcomponents_by_id: state.derived.composed_wcomponents_by_id,
     }
 }
 
