@@ -43,6 +43,7 @@ import { test_get_wcomponent_state_UI_value } from "./wcomponent_derived/get_wco
 import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/tidy_wcomponent.test"
 import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
+import { run_prepare_calculations_tests } from "./calculations/prepare_calculations.test"
 
 
 
@@ -58,6 +59,7 @@ function run_all_tests ()
     run_parse_calculation_equations_tests()
     run_normalise_calculation_numbers_tests()
     run_normalise_calculation_ids_tests()
+    run_prepare_calculations_tests()
     run_perform_calculations_test()
     run_number_to_significant_figures_test()
     run_number_to_string_test()

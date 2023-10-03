@@ -5,7 +5,9 @@ import { FullCalculationObject, ReplaceCalculationsWithResults } from "../interf
 // import { parse_calculation_equations } from "./parse_calculation_equations"
 
 
-
+/**
+ * @deprecated for now.  Using perform_calculations function in parent directory
+ */
 export function replace_calculations_with_results (text: string, args: ReplaceCalculationsWithResults)
 {
     const calculation_strs = get_calculation_strs_from_text(text)
