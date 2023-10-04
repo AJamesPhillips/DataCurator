@@ -1,6 +1,12 @@
 
 
 export const SIMULATION_JS_RESERVED_WORDS = new Set([
+    // Copied from formula/Formula.js -> bootCalc
+    "-parent",
+    "e",
+    "pi",
+    "phi",
+
     // Copied from CalcMap.js
     "mod",
     "expt",

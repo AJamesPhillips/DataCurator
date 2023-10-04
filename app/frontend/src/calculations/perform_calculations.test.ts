@@ -335,4 +335,18 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         test(calculation_result, expected_calculation_result, "Correctly formats currency symbols in error messages")
     })
 
+
+
+    describe("Handles reserved words correctly", () =>
+    {
+        calculations = [
+            { name: "A", value: `0.5 * (180 / Pi)` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 28.6478897565412, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, `Can run calculations using reserved word "Pi"`)
+    })
+
 }, false)
