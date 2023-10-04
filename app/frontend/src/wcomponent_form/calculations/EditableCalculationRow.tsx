@@ -23,6 +23,8 @@ export function EditableCalculationRow (props: CalculationRowProps)
 {
     const { calculation: calc, index, calculation_results: results, editing } = props
 
+    if (!editing && !calc.value && !calc.units) return null
+
     const result = results[index]
 
     let output_element = <span />
