@@ -44,6 +44,7 @@ import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/ti
 import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
 import { run_apply_units_from_component_tests } from "./calculations/apply_units_from_component.test"
+import { run_get_valid_calculation_name_id_tests } from "./wcomponent_form/calculations/get_valid_calculation_name_id.test"
 
 
 
@@ -65,6 +66,7 @@ function run_all_tests ()
     run_number_to_string_test()
     run_convert_percentages_tests()
     run_currency_symbol_functions_tests()
+    run_get_valid_calculation_name_id_tests()
 
     test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()

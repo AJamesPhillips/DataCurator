@@ -6,7 +6,7 @@ import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
-import { unhide_currency_symbols } from "../../calculations/hide_currency_symbols"
+import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 
 
 
@@ -16,12 +16,20 @@ export interface CalculationRowProps
     calculation: PlainCalculationObject
     index: number
     calculation_results: CalculationResult[]
+    existing_calculation_name_ids: string[]
     update_calculation: (calculation: PlainCalculationObject | null) => void
 }
 
 export function EditableCalculationRow (props: CalculationRowProps)
 {
-    const { calculation: calc, index, calculation_results: results, editing } = props
+    const {
+        calculation: calc,
+        index,
+        calculation_results: results,
+        editing,
+        existing_calculation_name_ids,
+    } = props
+
 
     if (!editing && !calc.value && !calc.units) return null
 
@@ -42,9 +50,25 @@ export function EditableCalculationRow (props: CalculationRowProps)
         <Box style={{ width: "100%", display: "flex" }}>
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
 
-            {calc.name}&nbsp;=&nbsp;
+            <EditableTextSingleLine
+                placeholder=""
+                hide_label={true}
+                value={calc.name}
+                on_blur={potential_name =>
+                {
+                    const other_existing_calculation_name_ids = existing_calculation_name_ids.filter(id => id !== calc.name)
+                    const valid_name = get_valid_calculation_name_id(other_existing_calculation_name_ids, potential_name)
+                    props.update_calculation({
+                        ...calc,
+                        name: valid_name,
+                    })
+                }}
+                on_blur_type={EditableTextOnBlurType.conditional}
+            />
 
-            {(editing || (!editing && calc.value !== "")) &&<EditableTextSingleLine
+            &nbsp;=&nbsp;
+
+            {(editing || (!editing && calc.value)) && <EditableTextSingleLine
                 placeholder="Calculation"
                 hide_label={true}
                 value={calc.value}

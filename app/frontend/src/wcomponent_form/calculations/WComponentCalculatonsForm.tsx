@@ -11,6 +11,7 @@ import { useState } from "preact/hooks"
 import { Button } from "../../sharedf/Button"
 import { PlainCalculationObject } from "../../calculations/interfaces"
 import { SIMULATION_JS_RESERVED_WORDS } from "../../calculations/reserved_words"
+import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 
 
 
@@ -50,6 +51,7 @@ function _WComponentCalculatonsForm (props: Props)
     const { calculations = [] } = wcomponent
 
     const calculation_results = perform_calculations(calculations, wcomponents_by_id)
+    const existing_calculation_name_ids = calculations.map(({ name }) => name)
 
     return <div className={"editable_list_entry " + (show_calculations ? "expanded" : "")}>
         <div
@@ -77,6 +79,7 @@ function _WComponentCalculatonsForm (props: Props)
                     calculation={calc}
                     index={index}
                     calculation_results={calculation_results}
+                    existing_calculation_name_ids={existing_calculation_name_ids}
                     update_calculation={new_calculation =>
                     {
                         const modified_calculations_with_nulls = [
@@ -98,7 +101,7 @@ function _WComponentCalculatonsForm (props: Props)
                 fullWidth={true}
                 onClick={() =>
                 {
-                    const new_calculation = prepare_new_calculation(calculations)
+                    const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
                     const modified_calculations = [ ...calculations, new_calculation ]
                     props.upsert_wcomponent({ calculations: modified_calculations })
                 }}
@@ -111,59 +114,10 @@ export const WComponentCalculatonsForm = connector(_WComponentCalculatonsForm) a
 
 
 
-function prepare_new_calculation (calculations: PlainCalculationObject[])
+function prepare_new_calculation (existing_calculation_name_ids: string[])
 {
-    let name = get_next_name_id(calculations)
-    let value = ""
+    const name = get_valid_calculation_name_id(existing_calculation_name_ids)
+    const value = ""
 
     return { name, value }
-}
-
-
-
-function get_disallowed_ids (calculations: PlainCalculationObject[])
-{
-    const disallowed_ids = new Set([
-        ...SIMULATION_JS_RESERVED_WORDS,
-        ...calculations.map(({ name }) => name),
-    ].map(entry => entry.toUpperCase().replaceAll(/\s*/g, "")))
-
-    return disallowed_ids
-}
-
-
-
-function get_next_name_id (calculations: PlainCalculationObject[])
-{
-    let candidate_name_id_num = 0
-    let candidate_name_id = num_to_name_id_string(candidate_name_id_num)
-
-    const disallowed_ids = get_disallowed_ids(calculations)
-
-    while (disallowed_ids.has(candidate_name_id))
-    {
-        ++candidate_name_id_num
-        candidate_name_id = num_to_name_id_string(candidate_name_id_num)
-    }
-
-    return candidate_name_id
-}
-
-
-function num_to_name_id_string (candidate_name_id_num: number)
-{
-    const nums = convert_to_base_26_array(candidate_name_id_num)
-    return nums.map(num => String.fromCharCode(num + 65)).join("")
-}
-
-
-function convert_to_base_26_array (num: number)
-{
-    let result = []
-    while (num >= 0) {
-      let remainder = num % 26
-      result.unshift(remainder)
-      num = Math.floor(num / 26) - 1
-    }
-    return result
 }
