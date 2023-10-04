@@ -10,6 +10,7 @@ import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { useState } from "preact/hooks"
 import { Button } from "../../sharedf/Button"
 import { PlainCalculationObject } from "../../calculations/interfaces"
+import { SIMULATION_JS_RESERVED_WORDS } from "../../calculations/reserved_words"
 
 
 
@@ -119,13 +120,27 @@ function prepare_new_calculation (calculations: PlainCalculationObject[])
 }
 
 
+
+function get_disallowed_ids (calculations: PlainCalculationObject[])
+{
+    const disallowed_ids = new Set([
+        ...SIMULATION_JS_RESERVED_WORDS,
+        ...calculations.map(({ name }) => name),
+    ].map(entry => entry.toUpperCase().replaceAll(/\s*/g, "")))
+
+    return disallowed_ids
+}
+
+
+
 function get_next_name_id (calculations: PlainCalculationObject[])
 {
     let candidate_name_id_num = 0
     let candidate_name_id = num_to_name_id_string(candidate_name_id_num)
 
-    const existing_ids = new Set(calculations.map(({ name }) => name.toUpperCase().replaceAll(/\s*/g, "")))
-    while (existing_ids.has(candidate_name_id))
+    const disallowed_ids = get_disallowed_ids(calculations)
+
+    while (disallowed_ids.has(candidate_name_id))
     {
         ++candidate_name_id_num
         candidate_name_id = num_to_name_id_string(candidate_name_id_num)
