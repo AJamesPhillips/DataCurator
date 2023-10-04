@@ -46,11 +46,22 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </span>
     }
 
-    return <Box key={calc.name + " " + index} p={1} flexGrow={1} flexShrink={1} flexBasis="100%" maxWidth="100%" marginTop="5px" style={{ display: "flex" }}>
-        <Box style={{ width: "100%", display: "flex" }}>
+    return <Box
+        key={calc.name + " " + index}
+        p={1}
+        flexGrow={1}
+        flexShrink={1}
+        flexBasis="100%"
+        maxWidth="100%"
+        marginTop="5px"
+        style={{ display: "flex" }}
+    >
+        {/* <Box style={{ width: "100%", display: "flex" }}> */}
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
 
             <EditableTextSingleLine
+                size="small"
+                style={{ width: "120px" }}
                 placeholder=""
                 hide_label={true}
                 value={calc.name}
@@ -84,7 +95,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 on_blur_type={EditableTextOnBlurType.conditional}
             />}
             {output_element}
-        </Box>
+        {/* </Box> */}
 
         {props.editing && <IconButton onClick={() => props.update_calculation(null)} size="large">
             <DeleteIcon />
