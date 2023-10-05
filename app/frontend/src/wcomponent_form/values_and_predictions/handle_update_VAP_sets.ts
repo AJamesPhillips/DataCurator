@@ -1,14 +1,11 @@
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
-import { ACTIONS } from "../../state/actions"
 import type { CreationContextState } from "../../state/creation_context/state"
 import type { ActionChangeRouteArgs } from "../../state/routing/actions"
-import { get_store } from "../../state/store"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import {
     update_value_possibilities_with_VAPSets,
 } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
-import type { WComponentNodeAction } from "../../wcomponent/interfaces/action"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet,
@@ -70,18 +67,27 @@ export function handle_update_VAP_sets (args: HandleUpdateVAPSetsArgs)
     const _1_minute = 1 * 60 * 1000
     const _10_minutes = 10 * _1_minute
 
-    if (new_latest_datetimes_ms.latest_created_at_ms > orig_latest_datetimes_ms.latest_created_at_ms) {
-        const created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + _1_minute
-        args.change_route({ args: { created_at_ms } })
+    let created_at_ms: number | undefined = undefined
+    if (new_latest_datetimes_ms.latest_created_at_ms > orig_latest_datetimes_ms.latest_created_at_ms)
+    {
+        created_at_ms = new_latest_datetimes_ms.latest_created_at_ms + _1_minute
     }
 
-    // Move to current sim_ms so that when changing an action's status it updates appropriately
-    const current_ms = new Date().getTime()
-    const sim_ms = new_latest_datetimes_ms.latest_sim_ms
-    const sim_ms_is_current = sim_ms < (current_ms + _1_minute) && sim_ms > (current_ms - _10_minutes)
 
-    if (args.sim_ms < sim_ms && sim_ms_is_current) {
-        args.change_route({ args: { sim_ms } })
+    const current_ms = new Date().getTime()
+    const latest_sim_ms_is_current = new_latest_datetimes_ms.latest_sim_ms < (current_ms + _1_minute)
+        && new_latest_datetimes_ms.latest_sim_ms > (current_ms - _10_minutes)
+
+    let sim_ms: number | undefined = undefined
+    // Move to current sim_ms so that when changing an action's status it updates appropriately
+    if ((args.sim_ms < new_latest_datetimes_ms.latest_sim_ms) && latest_sim_ms_is_current)
+    {
+        sim_ms = new_latest_datetimes_ms.latest_sim_ms
+    }
+
+    if (created_at_ms !== undefined || sim_ms !== undefined)
+    {
+        args.change_route({ args: { sim_ms, created_at_ms } })
     }
 }
 
