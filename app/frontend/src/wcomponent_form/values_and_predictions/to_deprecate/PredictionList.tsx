@@ -13,7 +13,6 @@ import type {
 } from "../../../form/editable_list/EditableListEntry"
 import type { RootState } from "../../../state/State"
 import { get_items_descriptor, ExpandableList } from "../../../form/editable_list/ExpandableList"
-import { ListHeader } from "../../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
@@ -98,25 +97,16 @@ function _PredictionList (props: Props)
     const render_past_list_content = factory_render_list_content({ items: past_items, get_id, item_props })
 
 
-    const title = editing
-        ? get_items_descriptor(item_descriptor, predictions.length, editing)
-        : item_descriptor
-
-
     const show_futures = editing || future_items.length > 0
     const show_presents = editing || present_items.length > 0
     const show_pasts = editing || past_items.length > 0
 
 
     return <div>
-        <ListHeader
-            items_descriptor={title}
-            on_click_header={undefined}
-            other_content={editing ? (() => <ListHeaderAddButton
-                new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id, props.creation_context))}
-            />) : undefined}
-        />
+        {editing && <ListHeaderAddButton
+            new_item_descriptor={item_descriptor}
+            on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id, props.creation_context))}
+        />}
 
         <NewItemForm
             new_item={new_item}

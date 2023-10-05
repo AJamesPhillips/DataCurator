@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
@@ -69,7 +69,6 @@ function _ValueAndPredictionSets (props: Props)
     return <ValueAndPredictionSetsComponent
         wcomponent_id={wcomponent_id}
 
-        item_descriptor="Value Prediction"
         VAPs_represent={VAPs_represent}
         update_values_and_predictions={new_values_and_prediction_sets =>
         {

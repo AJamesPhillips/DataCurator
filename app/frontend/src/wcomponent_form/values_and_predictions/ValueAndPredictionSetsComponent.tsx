@@ -10,7 +10,6 @@ import {
 } from "../../form/editable_list/EditableListEntry"
 import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
 import type { ExpandableListContentProps } from "../../form/editable_list/interfaces"
-import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import type { CreationContextState } from "../../state/creation_context/state"
@@ -37,7 +36,6 @@ interface OwnProps
 {
     wcomponent_id: string
 
-    item_descriptor: string
     VAPs_represent: VAPsType
     update_values_and_predictions: (updated_VAP_sets: VAPSet[]) => void
 
@@ -62,7 +60,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
     const {
         wcomponent_id,
-        item_descriptor, VAPs_represent, update_values_and_predictions,
+        VAPs_represent, update_values_and_predictions,
         existing_value_possibilities,
         values_and_prediction_sets: all_VAP_sets, invalid_future_items, future_items, present_item, past_items, previous_versions_by_id,
         editing
@@ -128,9 +126,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
     }
 
 
-    const VAPSets_items_descriptor = editing
-        ? get_items_descriptor(item_descriptor, all_VAP_sets.length, editing)
-        : item_descriptor
+    const item_descriptor = "Value Prediction"
 
 
     const show_futures = editing || future_items.length > 0
@@ -139,18 +135,14 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
 
 
     return <div className="value_and_prediction_sets">
-        <ListHeader
-            items_descriptor={VAPSets_items_descriptor}
-            on_click_header={undefined}
-            other_content={() => !editing ? null : <ListHeaderAddButton
-                new_item_descriptor={item_descriptor}
-                on_pointer_down_new_list_entry={() =>
-                {
-                    const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, all_VAP_sets, props.base_id, props.creation_context)
-                    set_new_item(new_VAP_set)
-                }}
-            />}
-        />
+        {editing && <ListHeaderAddButton
+            new_item_descriptor={item_descriptor}
+            on_pointer_down_new_list_entry={() =>
+            {
+                const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, all_VAP_sets, props.base_id, props.creation_context)
+                set_new_item(new_VAP_set)
+            }}
+        />}
 
         <NewItemForm
             new_item={new_item}
