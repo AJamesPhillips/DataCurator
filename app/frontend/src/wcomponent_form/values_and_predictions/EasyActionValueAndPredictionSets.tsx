@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
@@ -9,14 +9,11 @@ import type {
 } from "../../wcomponent/interfaces/state"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { Button } from "../../sharedf/Button"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
 import { sort_by_uncertain_event_datetimes } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
-import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { handle_update_VAP_sets, set_action_VAP_set_state } from "./handle_update_VAP_sets"
-import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabilities"
 
 
 

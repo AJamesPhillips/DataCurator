@@ -50,6 +50,8 @@ function _WComponentValidityPredictionsForm (props: Props)
     if (props.consumption_formatting && validity_predictions.length === 0) return null
 
 
+    // Note: I do not think `editable_list_entry` makes semantic sense here. We're
+    // only using it to get the CSS styles applied for `expansion_button`.
     return <div className={"editable_list_entry " + (show_form ? "expanded" : "")}>
         <div
             className="summary_header"
@@ -64,19 +66,19 @@ function _WComponentValidityPredictionsForm (props: Props)
 
             <div className="expansion_button"/>
         </div>
-        <div className="details">
-            <PredictionList
-                // TODO remove this hack and restore existence predictions
-                item_descriptor={(wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction"}
-                predictions={validity_predictions}
-                update_predictions={new_predictions =>
-                {
-                    const ms = new Date().getTime() + 1
-                    props.change_route({ args: { created_at_ms: ms, sim_ms: ms } })
-                    props.upsert_wcomponent({ validity: new_predictions })
-                }}
-            />
-        </div>
+
+        {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
+        {show_form && <PredictionList
+            // TODO remove this hack and restore existence predictions
+            item_descriptor={(wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction"}
+            predictions={validity_predictions}
+            update_predictions={new_predictions =>
+            {
+                const ms = new Date().getTime() + 1
+                props.change_route({ args: { created_at_ms: ms, sim_ms: ms } })
+                props.upsert_wcomponent({ validity: new_predictions })
+            }}
+        />}
     </div>
 }
 

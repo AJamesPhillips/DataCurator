@@ -145,7 +145,9 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
                 />
             </div>
 
-            <div className="details">
+
+            {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
+            {internal__expanded && <>
                 {get_details(item, crud)}
 
                 <div className="details2">
@@ -169,7 +171,7 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
                 <div className="details3">
                     {get_details3 && get_details3(item, crud)}
                 </div>
-            </div>
+            </>}
 
         </div>
     }

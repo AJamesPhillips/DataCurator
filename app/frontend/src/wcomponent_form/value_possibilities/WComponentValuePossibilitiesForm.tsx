@@ -33,7 +33,7 @@ interface OwnProps
 
 export function WComponentValuePossibilitiesForm (props: OwnProps)
 {
-    const [show_value_possibilities, set_show_value_possibilities] = useState(false)
+    const [show_form, set_show_form] = useState(false)
 
     if (props.VAPs_represent === VAPsType.undefined) return null
 
@@ -42,9 +42,9 @@ export function WComponentValuePossibilitiesForm (props: OwnProps)
     const warning = max_count > 1 ? "Duplicate value possibilities present" : ""
 
 
-    // Note: `editable_list_entry` makes no semantic sense here, only using to get the
-    // CSS styles applied for `expansion_button`.
-    const class_name = `editable_list_entry ${show_value_possibilities ? "expanded" : ""}`
+    // Note: I do not think `editable_list_entry` makes semantic sense here. We're
+    // only using it to get the CSS styles applied for `expansion_button`.
+    const class_name = `editable_list_entry ${show_form ? "expanded" : ""}`
 
 
     const { attribute_wcomponent } = props
@@ -54,11 +54,11 @@ export function WComponentValuePossibilitiesForm (props: OwnProps)
         <div
             className="summary_header"
             style={{ cursor: "pointer" }}
-            onClick={() => set_show_value_possibilities(!show_value_possibilities)}
+            onClick={() => set_show_form(!show_form)}
         >
             <div className="summary">
                 <h4 style={{ display: "inline-block" }}>
-                    Possible Values {(!show_value_possibilities && value_possibilities_list.length) ? `(${value_possibilities_list.length})` : ""}
+                    Possible Values {(!show_form && value_possibilities_list.length) ? `(${value_possibilities_list.length})` : ""}
                 </h4>
                 <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
                     <WarningTriangleV2 warning={warning} label="" />
@@ -68,7 +68,8 @@ export function WComponentValuePossibilitiesForm (props: OwnProps)
             <div className="expansion_button"/>
         </div>
 
-        {show_value_possibilities && <div>
+        {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
+        {show_form && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {value_possibilities_list.map(value_possibility => <ValuePossibilityComponent
                     editing={props.editing}

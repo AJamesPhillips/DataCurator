@@ -40,27 +40,28 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentCalculatonsForm (props: Props)
 {
-    const [show_calculations, set_show_calculations] = useState(false)
-
     const {
         wcomponent,
         wcomponents_by_id,
     } = props
 
     const { calculations = [] } = wcomponent
+    const [show_form, set_show_form] = useState(calculations.length > 0)
 
     const calculation_results = perform_calculations(calculations, wcomponents_by_id)
     const existing_calculation_name_ids = calculations.map(({ name }) => name)
 
-    return <div className={"editable_list_entry " + (show_calculations ? "expanded" : "")}>
+    // Note: I do not think `editable_list_entry` makes semantic sense here. We're
+    // only using it to get the CSS styles applied for `expansion_button`.
+    return <div className={"editable_list_entry " + (show_form ? "expanded" : "")}>
         <div
             className="summary_header"
             style={{ cursor: "pointer" }}
-            onClick={() => set_show_calculations(!show_calculations)}
+            onClick={() => set_show_form(!show_form)}
         >
             <div className="summary">
                 <h4 style={{ display: "inline-block" }}>
-                    Calculations {(!show_calculations && calculations.length) ? `(${calculations.length})` : ""}
+                    Calculations {(!show_form && calculations.length) ? `(${calculations.length})` : ""}
                 </h4>
                 <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
                     <WarningTriangleV2 warning={""} label="" />
@@ -71,7 +72,8 @@ function _WComponentCalculatonsForm (props: Props)
         </div>
 
 
-        {show_calculations && <div>
+        {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
+        {show_form && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {calculations.map((calc, index) => <EditableCalculationRow
                     editing={props.editing}
