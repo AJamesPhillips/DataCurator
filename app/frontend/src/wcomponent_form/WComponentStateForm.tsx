@@ -1,23 +1,21 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WComponent, wcomponent_is_statev2, wcomponent_is_state_value } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { HasVAPSetsAndMaybeValuePossibilities } from "../wcomponent/interfaces/state"
+import { WComponent, wcomponent_is_statev2, wcomponent_is_state_value, WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { WComponentValuePossibilitiesForm } from "./value_possibilities/WComponentValuePossibilitiesForm"
-import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
-import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
+import { WComponentValueAndPredictionsForm } from "./WComponentValueAndPredictionsForm"
 
 
 
 interface OwnProps
 {
     force_editable: boolean
-    wcomponent: WComponent & HasVAPSetsAndMaybeValuePossibilities
+    wcomponent: WComponentIsAllowedToHaveStateVAPSets
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
@@ -59,41 +57,15 @@ function _WComponentStateForm (props: Props)
         />}
 
 
-        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <>
-            <p>
-                {VAPs_represent === VAPsType.undefined && <div>
-                    {wcomponent.type === "state_value"
-                        ? "Set subtype of target 'state' component to show Value Predictions on this 'state value' component"
-                        : "Set subtype to show Value Predictions"
-                    }
-                </div>}
-                {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
-                    VAPs_represent={VAPs_represent}
-                    base_id={wcomponent.base_id}
-                    existing_value_possibilities={orig_value_possibilities}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
-                    {
-                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                    }}
-                    force_editable={force_editable}
-                />}
-                {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
-                    wcomponent_id={wcomponent.id}
-                    VAPs_represent={VAPs_represent}
-                    existing_value_possibilities={orig_value_possibilities}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
-                    {
-                        upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                    }}
-                    force_editable={force_editable}
-                />}
-            </p>
-
-            <hr />
-            <br />
-        </>}
+        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) &&
+        <WComponentValueAndPredictionsForm
+            force_editable={force_editable}
+            wcomponent={wcomponent}
+            upsert_wcomponent={upsert_wcomponent}
+            VAPs_represent={VAPs_represent}
+            orig_values_and_prediction_sets={orig_values_and_prediction_sets}
+            orig_value_possibilities={orig_value_possibilities}
+        />}
 
 
         {VAPs_represent !== VAPsType.undefined

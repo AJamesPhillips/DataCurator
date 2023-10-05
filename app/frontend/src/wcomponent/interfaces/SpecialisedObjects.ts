@@ -264,7 +264,8 @@ export function wcomponent_has_value_possibilities (wcomponent: WComponent | und
 
 
 // Need to keep in sync with wc_ids_by_type.any_state_VAPs
-export function wcomponent_is_allowed_to_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
+export type WComponentIsAllowedToHaveStateVAPSets = WComponent & HasVAPSetsAndMaybeValuePossibilities
+export function wcomponent_is_allowed_to_have_state_VAP_sets (wcomponent: WComponent | undefined): wcomponent is (WComponentIsAllowedToHaveStateVAPSets)
 {
     return wcomponent_is_statev2(wcomponent)
         || wcomponent_is_state_value(wcomponent)
@@ -281,7 +282,7 @@ export function wcomponent_is_allowed_to_have_state_VAP_sets (wcomponent: WCompo
 
 
 
-export function wcomponent_has_legitimate_non_empty_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponent & HasVAPSetsAndMaybeValuePossibilities)
+export function wcomponent_has_legitimate_non_empty_state_VAP_sets (wcomponent: WComponent): wcomponent is (WComponentIsAllowedToHaveStateVAPSets)
 {
     return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)
 }

@@ -33,11 +33,12 @@ interface OwnProps
 
 export function WComponentValuePossibilitiesForm (props: OwnProps)
 {
-    const [show_form, set_show_form] = useState(false)
+    const value_possibilities_list = value_possibilities_as_list(props.value_possibilities)
+    const [show_form, set_show_form] = useState(value_possibilities_list.length > 0)
 
     if (props.VAPs_represent === VAPsType.undefined) return null
 
-    const value_possibilities_list = value_possibilities_as_list(props.value_possibilities)
+
     const { count_of_value_possibilities, max_count } = get_count_of_value_possibilities(value_possibilities_list)
     const warning = max_count > 1 ? "Duplicate value possibilities present" : ""
 
