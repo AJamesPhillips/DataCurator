@@ -256,11 +256,17 @@ function _WComponentForm (props: Props)
 
 
         {
-            // If it is a state component then when not editing & no actual state values, then hide
-            // the entry  i.e. simplify the entry to just pretend it's a typeless component
+            // If it is a state component (i.e. it's type is "statev2") then when
+            // not editing & no actual state values, then hide the "type" i.e.
+            // simplify the entry to just pretend it's a typeless component because
+            // the "statev2" is the default type and we expect most components will
+            // have this type which whilst accurate, is not important to someone
+            // coming to consume / read / understand what this component is about
+            // and what the author is trying to communicate.
         }
         {(force_editable || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
             {// Keep up to date in WComponentMultipleForm
+             // todo, document how and what is meant to be kept up to date in WComponentMultipleForm
             }
             <AutocompleteText
                 force_editable={force_editable}
@@ -300,14 +306,6 @@ function _WComponentForm (props: Props)
                 />
             </div>
         </p>}
-
-
-        {wcomponent_is_statev2(wcomponent) &&
-        (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
-        <WComponentCalculatonsForm
-            wcomponent={wcomponent}
-            upsert_wcomponent={wrapped_upsert_wcomponent}
-        />}
 
 
         {(force_editable || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">
@@ -359,35 +357,35 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_is_plain_connection(wcomponent) && <div>
-        <p>
-            <WComponentFromTo
-                connection_terminal_description="From"
-                wcomponent_id={from_wcomponent && from_wcomponent.id}
-                connection_terminal_type={wcomponent.from_type}
-                on_update_id={from_id => wrapped_upsert_wcomponent({ from_id })}
-                on_update_type={from_type => wrapped_upsert_wcomponent({ from_type })}
-            />
-        </p>
+            <p>
+                <WComponentFromTo
+                    connection_terminal_description="From"
+                    wcomponent_id={from_wcomponent && from_wcomponent.id}
+                    connection_terminal_type={wcomponent.from_type}
+                    on_update_id={from_id => wrapped_upsert_wcomponent({ from_id })}
+                    on_update_type={from_type => wrapped_upsert_wcomponent({ from_type })}
+                />
+            </p>
 
-        <p>
-            <WComponentFromTo
-                connection_terminal_description="To"
-                wcomponent_id={to_wcomponent && to_wcomponent.id}
-                connection_terminal_type={wcomponent.to_type}
-                on_update_id={to_id => wrapped_upsert_wcomponent({ to_id })}
-                on_update_type={to_type => wrapped_upsert_wcomponent({ to_type })}
-            />
-        </p>
+            <p>
+                <WComponentFromTo
+                    connection_terminal_description="To"
+                    wcomponent_id={to_wcomponent && to_wcomponent.id}
+                    connection_terminal_type={wcomponent.to_type}
+                    on_update_id={to_id => wrapped_upsert_wcomponent({ to_id })}
+                    on_update_type={to_type => wrapped_upsert_wcomponent({ to_type })}
+                />
+            </p>
 
-        {force_editable && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-            <Button
-                value="Reverse Direction"
-                onClick={() =>
-                {
-                    wrapped_upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
-                }}
-            />
-        </p>}
+            {force_editable && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+                <Button
+                    value="Reverse Direction"
+                    onClick={() =>
+                    {
+                        wrapped_upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
+                    }}
+                />
+            </p>}
         </div>}
 
 
@@ -467,6 +465,13 @@ function _WComponentForm (props: Props)
             <br />
         </div>}
 
+
+        {wcomponent_is_statev2(wcomponent) &&
+        (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
+        <WComponentCalculatonsForm
+            wcomponent={wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
+        />}
 
         {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <div>
             <p>
