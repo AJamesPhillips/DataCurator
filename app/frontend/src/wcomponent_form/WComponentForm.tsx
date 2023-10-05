@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact"
+import { FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@mui/material"
@@ -76,9 +76,8 @@ import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./t
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
-import { perform_calculations } from "../calculations/perform_calculations"
-import { PlainCalculationObject } from "../calculations/interfaces"
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
+import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
 
 
 
@@ -185,9 +184,6 @@ function _WComponentForm (props: Props)
         const updated = get_updated_wcomponent(wcomponent, partial_wcomponent).wcomponent
         props.upsert_wcomponent({ wcomponent: updated })
     }
-
-
-    const orig_validity_predictions = wcomponent_can_have_validity_predictions(wcomponent) ? (wcomponent.validity || []) : undefined
 
 
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
@@ -433,39 +429,6 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {orig_validity_predictions && (force_editable || orig_validity_predictions.length > 0) && <div>
-            <br />
-
-            <p>
-                <PredictionList
-                    // TODO remove this hack and restore existence predictions
-                    item_descriptor={(wcomponent_is_plain_connection(wcomponent) ? "Existence " : "Validity ") + " prediction"}
-                    predictions={orig_validity_predictions}
-                    update_predictions={new_predictions => wrapped_upsert_wcomponent({ validity: new_predictions }) }
-                />
-            </p>
-
-            <hr />
-            <br />
-        </div>}
-
-
-        {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
-            <p style={{ color: "red" }}>
-                <PredictionList
-                    item_descriptor="(Deprecated, please delete) Existence prediction"
-                    predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
-                    update_predictions={new_predictions => wrapped_upsert_wcomponent({
-                        existence: new_predictions.length ? new_predictions : undefined
-                    })}
-                />
-            </p>
-
-            <hr />
-            <br />
-        </div>}
-
-
         {wcomponent_is_statev2(wcomponent) &&
         (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
         <WComponentCalculatonsForm
@@ -525,7 +488,6 @@ function _WComponentForm (props: Props)
                     wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                 }}
             />
-            <hr />
             <br />
         </div>}
 
@@ -536,6 +498,28 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         /> }
+
+
+        {wcomponent_can_have_validity_predictions(wcomponent) && <WComponentValidityPredictionsForm
+            force_editable={force_editable}
+            wcomponent={wcomponent}
+            upsert_wcomponent={wrapped_upsert_wcomponent}
+        />}
+
+
+        {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
+            <p style={{ color: "red" }}>
+                <PredictionList
+                    item_descriptor="(Deprecated, please delete) Existence prediction"
+                    predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
+                    update_predictions={new_predictions => wrapped_upsert_wcomponent({
+                        existence: new_predictions.length ? new_predictions : undefined
+                    })}
+                />
+            </p>
+
+            <hr />
+        </div>}
 
         <br />
         <br />

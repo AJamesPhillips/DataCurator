@@ -10,7 +10,6 @@ import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { useState } from "preact/hooks"
 import { Button } from "../../sharedf/Button"
 import { PlainCalculationObject } from "../../calculations/interfaces"
-import { SIMULATION_JS_RESERVED_WORDS } from "../../calculations/reserved_words"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 
 

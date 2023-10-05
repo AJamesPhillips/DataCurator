@@ -71,8 +71,8 @@ export function PredictionViewDetails (props: OwnProps_Details)
         />
         <br />
         {(props.editing || explanation) && <div>
-            <span className="description_label">Explanation</span> <EditableText
-                placeholder="Explanation..."
+            <EditableText
+                placeholder="Explanation"
                 value={explanation}
                 {...on_blur_props}
             />

@@ -239,7 +239,8 @@ const types_without_validity = new Set<WComponentType>([
     "counterfactualv2",
     "sub_state",
 ])
-export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & Partial<ValidityPredictions>)
+export type WComponentCanHaveValidityPredictions = WComponent & Partial<ValidityPredictions>
+export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is WComponentCanHaveValidityPredictions
 {
     return !types_without_validity.has(wcomponent.type)
 }

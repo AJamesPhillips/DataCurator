@@ -58,7 +58,7 @@ export function ValuePossibilitiesComponent (props: OwnProps)
         >
             <div className="summary">
                 <h4 style={{ display: "inline-block" }}>
-                    Possible Values {!show_value_possibilities && `(${value_possibilities_list.length})`}
+                    Possible Values {(!show_value_possibilities && value_possibilities_list.length) ? `(${value_possibilities_list.length})` : ""}
                 </h4>
                 <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
                     <WarningTriangleV2 warning={warning} label="" />
