@@ -45,7 +45,7 @@ export function WComponentValuePossibilitiesForm (props: OwnProps)
 
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
     // only using it to get the CSS styles applied for `expansion_button`.
-    const class_name = `editable_list_entry ${show_form ? "expanded" : ""}`
+    const class_name = `editable_list_entry padded ${show_form ? "expanded" : ""}`
 
 
     const { attribute_wcomponent } = props

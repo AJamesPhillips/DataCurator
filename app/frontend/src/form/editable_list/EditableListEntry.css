@@ -13,6 +13,12 @@
 }
 /*  -- copied from ValueAndPredictionSets.css  */
 
+.editable_list_entry.padded
+{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 
 .editable_list_entry .summary_header
 {

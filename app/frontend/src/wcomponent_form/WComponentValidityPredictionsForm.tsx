@@ -52,7 +52,7 @@ function _WComponentValidityPredictionsForm (props: Props)
 
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
     // only using it to get the CSS styles applied for `expansion_button`.
-    return <div className={"editable_list_entry " + (show_form ? "expanded" : "")}>
+    return <div className={"editable_list_entry padded " + (show_form ? "expanded" : "")}>
         <div
             className="summary_header"
             style={{ cursor: "pointer" }}

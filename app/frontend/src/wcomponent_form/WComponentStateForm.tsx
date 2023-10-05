@@ -71,8 +71,7 @@ function _WComponentStateForm (props: Props)
         {VAPs_represent !== VAPsType.undefined
             && orig_values_and_prediction_sets !== undefined
             && (force_editable || (Object.keys(orig_value_possibilities || {}).length > 0))
-            && <>
-            <WComponentValuePossibilitiesForm
+            && <WComponentValuePossibilitiesForm
                 editing={force_editable}
                 attribute_wcomponent={wcomponents_by_id[(wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id) || ""]}
                 VAPs_represent={VAPs_represent}
@@ -84,8 +83,7 @@ function _WComponentStateForm (props: Props)
                     upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                 }}
             />
-            <br />
-        </>}
+        }
     </>
 }
 
