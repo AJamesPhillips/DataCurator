@@ -72,6 +72,8 @@ export const test_merge_routing_state = describe("merge_routing_state", () =>
 
     let new_routing_state: ActionChangeRouteArgs
     let merged_routing_state: RoutingState
+    let msg_called: string
+    const spy_logger = (msg: string) => msg_called = msg
 
     // Should not remove key's with values === 0
     new_routing_state = { args: { x: 0 } }
@@ -85,20 +87,25 @@ export const test_merge_routing_state = describe("merge_routing_state", () =>
 
     // Should warn and handle setting datetime date and milliseconds
     new_routing_state = { args: { created_at_datetime: dt2, created_at_ms: dt3.getTime() } }
-    let msg_called = ""
-    const spy_logger = (msg: string) => msg_called = msg
+    msg_called = ""
     merged_routing_state = merge_routing_state(current_routing_state, new_routing_state, spy_logger)
     test(merged_routing_state.args.created_at_datetime, dt3)
     test(merged_routing_state.args.created_at_ms, dt3.getTime())
     test(msg_called, "do not set both new_ms and new_datetime")
-    msg_called = ""
 
     new_routing_state = { args: { sim_datetime: dt2, sim_ms: dt3.getTime() } }
+    msg_called = ""
     merged_routing_state = merge_routing_state(current_routing_state, new_routing_state, spy_logger)
     test(merged_routing_state.args.sim_datetime, dt3)
     test(merged_routing_state.args.sim_ms, dt3.getTime())
     test(msg_called, "do not set both new_ms and new_datetime")
-    msg_called = ""
+
+
+    new_routing_state = { args: { sim_ms: undefined, created_at_ms: undefined } }
+    merged_routing_state = merge_routing_state(current_routing_state, new_routing_state)
+    test(merged_routing_state.args.sim_ms, dt.getTime(), "should leave sim_ms unchanged when called with `{ args: { sim_ms: undefined }}`")
+    test(merged_routing_state.args.created_at_ms, dt.getTime(), "should leave created_at_ms unchanged when called with `{ args: { created_at_ms: undefined }}`")
+
 
     // Should remove chosen_base_id of undefined
     new_routing_state = { args: { storage_location: undefined } }
