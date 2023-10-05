@@ -16,7 +16,6 @@ import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_w
 import {
     get_wcomponent_state_UI_value,
 } from "../wcomponent_derived/get_wcomponent_state_UI_value"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import {
     WComponent,
     wcomponent_is_plain_connection,
@@ -37,16 +36,13 @@ import {
     wcomponent_is_not_deleted,
     wcomponent_is_deleted,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
 import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ColorPicker } from "../sharedf/ColorPicker"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
-import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
 import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
 import { WComponentFromTo } from "./WComponentFromTo"
 import { ChosenObjectivesFormFields } from "./ChosenObjectivesFormFields"
@@ -59,24 +55,15 @@ import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WC
 import { WComponentImageForm } from "./WComponentImageForm"
 import { Button } from "../sharedf/Button"
 import { selector_chosen_base_id } from "../state/user_info/selector"
-import { ValuePossibilitiesComponent } from "./value_possibilities/ValuePossibilitiesComponent"
-import type { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
-import {
-    update_VAPSets_with_possibilities,
-} from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
-import {
-    EasyActionValueAndPredictionSets,
-} from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
-import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
 import { WComponentStateForm } from "./WComponentStateForm"
 

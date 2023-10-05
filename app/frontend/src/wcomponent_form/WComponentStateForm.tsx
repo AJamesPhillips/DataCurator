@@ -8,7 +8,7 @@ import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
-import { ValuePossibilitiesComponent } from "./value_possibilities/ValuePossibilitiesComponent"
+import { WComponentValuePossibilitiesForm } from "./value_possibilities/WComponentValuePossibilitiesForm"
 import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
 
@@ -58,7 +58,8 @@ function _WComponentStateForm (props: Props)
             upsert_wcomponent={upsert_wcomponent}
         />}
 
-        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <div>
+
+        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <>
             <p>
                 {VAPs_represent === VAPsType.undefined && <div>
                     {wcomponent.type === "state_value"
@@ -92,13 +93,14 @@ function _WComponentStateForm (props: Props)
 
             <hr />
             <br />
-        </div>}
+        </>}
+
 
         {VAPs_represent !== VAPsType.undefined
             && orig_values_and_prediction_sets !== undefined
             && (force_editable || (Object.keys(orig_value_possibilities || {}).length > 0))
             && <>
-            <ValuePossibilitiesComponent
+            <WComponentValuePossibilitiesForm
                 editing={force_editable}
                 attribute_wcomponent={wcomponents_by_id[(wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id) || ""]}
                 VAPs_represent={VAPs_represent}

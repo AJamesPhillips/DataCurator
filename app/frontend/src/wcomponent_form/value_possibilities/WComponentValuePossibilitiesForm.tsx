@@ -31,7 +31,7 @@ interface OwnProps
 }
 
 
-export function ValuePossibilitiesComponent (props: OwnProps)
+export function WComponentValuePossibilitiesForm (props: OwnProps)
 {
     const [show_value_possibilities, set_show_value_possibilities] = useState(false)
 
