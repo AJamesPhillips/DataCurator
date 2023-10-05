@@ -112,10 +112,10 @@ function _PredictionList (props: Props)
         <ListHeader
             items_descriptor={title}
             on_click_header={undefined}
-            other_content={() => <ListHeaderAddButton
+            other_content={editing ? (() => <ListHeaderAddButton
                 new_item_descriptor={item_descriptor}
                 on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id, props.creation_context))}
-            />}
+            />) : undefined}
         />
 
         <NewItemForm
