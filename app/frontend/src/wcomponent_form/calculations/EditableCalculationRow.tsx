@@ -7,6 +7,7 @@ import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSin
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
+import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 
 
 
@@ -82,7 +83,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             {(editing || (!editing && calc.value)) && <EditableTextSingleLine
                 placeholder="Calculation"
                 hide_label={true}
-                value={calc.value}
+                value={editing ? calc.value : make_calculation_safe_for_rich_text(calc.value)}
                 on_blur={value => props.update_calculation({ ...calc, value })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />}
