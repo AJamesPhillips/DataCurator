@@ -43,10 +43,11 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentValidityPredictionsForm (props: Props)
 {
-    const [show_form, set_show_form] = useState(false)
-
     const { wcomponent } = props
     const { validity: validity_predictions = [] } = wcomponent
+
+    const [show_form, set_show_form] = useState(validity_predictions.length > 0)
+
     if (props.consumption_formatting && validity_predictions.length === 0) return null
 
 
