@@ -57,7 +57,8 @@ const _wcomponent_statev2_subtypes: {[P in WComponentStateV2SubType]: true} = {
 export const wcomponent_statev2_subtypes: WComponentStateV2SubType[] = Object.keys(_wcomponent_statev2_subtypes) as any
 
 
-// Choosing not to name this `WComponentNodeStateValue` as whether it is represented by a node or not is irrelevant
+// Choosing not to name this `WComponentNodeStateValue` as whether it is represented
+// by a node or not is irrelevant
 export interface WComponentStateValue extends WComponentNodeBase
 {
     type: "state_value"

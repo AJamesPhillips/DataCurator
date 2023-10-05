@@ -78,6 +78,7 @@ import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
+import { WComponentStateForm } from "./WComponentStateForm"
 
 
 
@@ -186,17 +187,13 @@ function _WComponentForm (props: Props)
     }
 
 
-    const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
     let UI_value: DerivedValueForUI | undefined = undefined
-    let orig_values_and_prediction_sets: StateValueAndPredictionsSet[] | undefined = undefined
-    let orig_value_possibilities: ValuePossibilitiesById | undefined = undefined
+    let has_VAP_sets = false
     if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent: derived_composed_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
-        orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
-        orig_value_possibilities = wcomponent.value_possibilities
+        has_VAP_sets = (wcomponent.values_and_prediction_sets?.length || 0) > 0
     }
-    const has_VAP_sets = (orig_values_and_prediction_sets?.length || 0) > 0
 
 
     const title = get_title({
@@ -429,68 +426,11 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {wcomponent_is_statev2(wcomponent) &&
-        (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
-        <WComponentCalculatonsForm
+        {wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent) && <WComponentStateForm
+            force_editable={force_editable}
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-
-        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) && <div>
-            <p>
-                {VAPs_represent === VAPsType.undefined && <div>
-                    {wcomponent.type === "state_value"
-                        ? "Set subtype of target 'state' component to show Value Predictions on this 'state value' component"
-                        : "Set subtype to show Value Predictions"
-                    }
-                </div>}
-                {VAPs_represent === VAPsType.action && <EasyActionValueAndPredictionSets
-                    VAPs_represent={VAPs_represent}
-                    base_id={wcomponent.base_id}
-                    existing_value_possibilities={orig_value_possibilities}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
-                    {
-                        wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                    }}
-                    force_editable={force_editable}
-                />}
-                {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
-                    wcomponent_id={wcomponent_id}
-                    VAPs_represent={VAPs_represent}
-                    existing_value_possibilities={orig_value_possibilities}
-                    values_and_prediction_sets={orig_values_and_prediction_sets}
-                    update_VAPSets_and_value_possibilities={({ value_possibilities, values_and_prediction_sets }) =>
-                    {
-                        wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                    }}
-                    force_editable={force_editable}
-                />}
-            </p>
-
-            <hr />
-            <br />
-        </div>}
-
-        {VAPs_represent !== VAPsType.undefined
-            && orig_values_and_prediction_sets !== undefined
-            && (force_editable || (Object.keys(orig_value_possibilities || {}).length > 0))
-            && <div>
-            <ValuePossibilitiesComponent
-                editing={force_editable}
-                attribute_wcomponent={wcomponents_by_id[(wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id) || ""]}
-                VAPs_represent={VAPs_represent}
-                value_possibilities={orig_value_possibilities}
-                values_and_prediction_sets={orig_values_and_prediction_sets}
-                update_value_possibilities={value_possibilities =>
-                {
-                    const values_and_prediction_sets = update_VAPSets_with_possibilities(orig_values_and_prediction_sets, value_possibilities)
-                    wrapped_upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
-                }}
-            />
-            <br />
-        </div>}
-
 
 
         {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields
