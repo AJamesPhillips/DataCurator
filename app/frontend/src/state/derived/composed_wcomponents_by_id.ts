@@ -1,5 +1,5 @@
 import { update_substate } from "../../utils/update_state"
-import { WComponent, wcomponent_is_statev2, wcomponent_is_state_value } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_statev2, wcomponent_is_state_value, WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_value_attributes } from "../../wcomponent/interfaces/state"
 import type { RootState } from "../State"
 import { get_knowledge_view_given_routing } from "./knowledge_views/get_knowledge_view_given_routing"
@@ -29,19 +29,21 @@ export function derived_composed_wcomponents_by_id_reducer (initial_state: RootS
 export function get_composed_wcomponents_by_id (state: RootState)
 {
     const { wcomponents_by_id } = state.specialised_objects
-    // todo, should probably deep clone this to be more defensive
-    const composed_wcomponents_by_id = { ...wcomponents_by_id }
-
+    const composed_wcomponents_by_id: WComponentsById = {}
 
     const { composed_wc_id_map } = state.derived.current_composed_knowledge_view || {}
 
     Object.keys(composed_wc_id_map || {}).forEach(wcomponent_id =>
     {
-        const wcomponent = composed_wcomponents_by_id[wcomponent_id]
+        const wcomponent = wcomponents_by_id[wcomponent_id]
+        if (!wcomponent) return
+
+        // todo, should probably deep clone this to be more defensive
+        composed_wcomponents_by_id[wcomponent_id] = { ...wcomponent }
 
         if (wcomponent_is_state_value(wcomponent))
         {
-            const target_wcomponent = composed_wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
+            const target_wcomponent = wcomponents_by_id[wcomponent.attribute_wcomponent_id || ""]
             if (!wcomponent_is_statev2(target_wcomponent)) return
 
             const composed_target_wcomponent: WComponent = {
