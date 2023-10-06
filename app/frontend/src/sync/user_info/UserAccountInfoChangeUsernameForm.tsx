@@ -3,6 +3,7 @@ import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
+import type { PostgrestError } from "@supabase/supabase-js"
 
 import "../common.scss"
 import type { RootState } from "../../state/State"
@@ -12,7 +13,6 @@ import { selector_need_to_set_user_name } from "../../state/user_info/selector"
 import type { SupabaseUser } from "../../supabase/interfaces"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
 import type { AsyncState } from "../../utils/async_state"
-import { PostgrestError } from "@supabase/supabase-js"
 
 
 

@@ -1,12 +1,11 @@
 import type { PostgrestError } from "@supabase/supabase-js"
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { get_supabase } from "../supabase/get_supabase"
 import type { ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"
 import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabaseErrors"
 import type { AsyncState } from "../utils/async_state"
-import { SelectAccessLevel, SelectAccessLevelDropDown } from "./SelectAccessLevel"
+import { SelectAccessLevelDropDown } from "./SelectAccessLevel"
 
 
 

@@ -1,10 +1,9 @@
-import { h } from "preact"
 import type { PostgrestResponse } from "@supabase/supabase-js"
 
 import { update_access_control } from "../supabase/access_controls"
 import type { SupabaseAccessControl, SupabaseUsersById, ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"
 import { get_user_name_for_display } from "../supabase/users"
-import { SelectAccessLevel, SelectAccessLevelDropDown } from "./SelectAccessLevel"
+import { SelectAccessLevelDropDown } from "./SelectAccessLevel"
 
 
 

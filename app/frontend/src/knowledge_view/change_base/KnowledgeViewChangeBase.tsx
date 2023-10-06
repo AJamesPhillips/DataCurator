@@ -1,6 +1,7 @@
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import type { PostgrestResponse } from "@supabase/supabase-js"
 
 import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
@@ -11,7 +12,6 @@ import { set_union } from "../../utils/set"
 import { calc_ids_to_move_and_conflicts, WComponentMoveBaseConflicts } from "./calc_ids_to_move_and_conflicts"
 import { SelectBaseToMoveTo } from "./SelectBaseToMoveTo"
 import { WComponentMoveConflicts } from "./WComponentMoveConflicts"
-import { PostgrestResponse } from "@supabase/supabase-js"
 
 
 

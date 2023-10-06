@@ -1,6 +1,7 @@
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+import type { PostgrestError } from "@supabase/supabase-js"
 
 import { StorageOption } from "./StorageOption"
 import type { RootState } from "../../state/State"
@@ -10,7 +11,6 @@ import { refresh_bases_for_current_user } from "../../state/user_info/refresh_ba
 import { SyncButton } from "../../sharedf/SyncButton"
 import type { AsyncState } from "../../utils/async_state"
 import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
-import { PostgrestError } from "@supabase/supabase-js"
 
 
 

@@ -1,4 +1,5 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
+
 import { SUPABASE_MAX_ROWS } from "./constants"
 
 

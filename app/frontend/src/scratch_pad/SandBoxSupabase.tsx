@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { useState, useEffect } from "preact/hooks"
 import type { ApiError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { v4 as uuid_v4 } from "uuid"

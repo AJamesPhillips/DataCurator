@@ -1,9 +1,8 @@
-import { h } from "preact"
 import EditIcon from "@mui/icons-material/Edit"
+import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 
 import "./StorageOption.scss"
 import type { SupabaseKnowledgeBaseWithAccess, SupabaseUsersById } from "../../supabase/interfaces"
-import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { get_user_name_for_display } from "../../supabase/users"
 
 
