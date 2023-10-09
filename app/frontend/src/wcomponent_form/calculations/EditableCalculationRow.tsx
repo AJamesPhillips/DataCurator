@@ -8,6 +8,7 @@ import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_c
 import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
+import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 
 
 
@@ -47,6 +48,10 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </span>
     }
 
+
+    const show_calc_value = editing || should_show_calc_value(calc.value)
+
+
     return <Box
         key={calc.name + " " + index}
         p={1}
@@ -78,17 +83,18 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 on_blur_type={EditableTextOnBlurType.conditional}
             />
 
-            &nbsp;=&nbsp;
-
-            {(editing || (!editing && calc.value)) && <EditableTextSingleLine
-                placeholder="Calculation"
-                hide_label={true}
-                value={editing ? calc.value : make_calculation_safe_for_rich_text(calc.value)}
-                on_blur={value => props.update_calculation({ ...calc, value })}
-                on_blur_type={EditableTextOnBlurType.conditional}
-            />}
-            &nbsp;
-            {(editing || (!editing && calc.units)) && <EditableTextSingleLine
+            {show_calc_value && <>
+                &nbsp;=&nbsp;
+                <EditableTextSingleLine
+                    placeholder="Calculation"
+                    hide_label={true}
+                    value={editing ? calc.value : make_calculation_safe_for_rich_text(calc.value)}
+                    on_blur={value => props.update_calculation({ ...calc, value })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
+                />
+                &nbsp;
+            </>}
+            {editing && <EditableTextSingleLine
                 placeholder="Units"
                 hide_label={true}
                 value={calc.units || ""}
@@ -109,4 +115,15 @@ export function EditableCalculationRow (props: CalculationRowProps)
 export function values_different (value1: string, value2: number)
 {
     return value1 !== value2.toString()
+}
+
+
+
+const CALULATION_SIGNS = /.*[\^*\/+\-()].*/g
+function should_show_calc_value (value: string): boolean
+{
+    // if (value.includes("@@")) debugger
+    value = value.replaceAll(double_at_mentioned_uuids_regex, "")
+    console.log(value, CALULATION_SIGNS.test(value))
+    return CALULATION_SIGNS.test(value)
 }
