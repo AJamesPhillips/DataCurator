@@ -55,14 +55,15 @@ export function EditableCalculationRow (props: CalculationRowProps)
         flexBasis="100%"
         maxWidth="100%"
         marginTop="5px"
+        flexDirection={editing ? "column" : "row"}
         style={{ display: "flex" }}
     >
-        {/* <Box style={{ width: "100%", display: "flex" }}> */}
+        <Box style={{ width: "100%", display: "flex" }}>
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
 
             <EditableTextSingleLine
                 size="small"
-                style={{ width: "120px" }}
+                // style={{ width: "120px" }}
                 placeholder=""
                 hide_label={true}
                 value={calc.name}
@@ -96,12 +97,20 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 on_blur={units => props.update_calculation({ ...calc, units: units ? units : undefined })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />}
-            {output_element}
-        {/* </Box> */}
 
-        {props.editing && <IconButton onClick={() => props.update_calculation(null)} size="large">
-            <DeleteIcon />
-        </IconButton>}
+            {!editing && output_element}
+        </Box>
+
+        {/* If we're editing then place the result on a new line */}
+        {editing && <Box style={{ width: "100%", display: "flex" }}>
+            {output_element}
+        </Box>}
+
+        {props.editing && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+            <IconButton onClick={() => props.update_calculation(null)} size="large">
+                <DeleteIcon />
+            </IconButton>
+        </Box>}
     </Box>
 }
 
