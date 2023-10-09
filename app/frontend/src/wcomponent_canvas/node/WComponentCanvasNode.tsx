@@ -397,11 +397,15 @@ function _WComponentCanvasNode (props: Props)
                     {wcomponent_type_to_text(derived_composed_wcomponent.type)}
                 </div>}
 
-                <div style={{ display: "flex" }}>
+                <div
+                    style={{ display: "flex" }}
+                    title={derived_composed_wcomponent?.description.trim() ? "Further details are included" : undefined}
+                >
                     {derived_composed_wcomponent?.description.trim() && <DescriptionIcon
                         className="description_icon"
                         fontSize="small"
                         color="disabled"
+                        // titleAccess="Further details are included" // this does not work for some reason
                     />}
 
                     {derived_composed_wcomponent && <LabelsListV2 label_ids={label_ids} />}

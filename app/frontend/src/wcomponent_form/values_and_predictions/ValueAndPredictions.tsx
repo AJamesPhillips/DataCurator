@@ -75,7 +75,8 @@ function _ValueAndPredictions (props: Props)
             }
         },
         delete_button_text: "Delete Value & Prediction",
-        hide_expansion_button: VAP => !editing && !VAP.description && !VAP.source && VAP.min === undefined && VAP.max === undefined
+        hide_expansion_button: VAP => !editing && !VAP.description && !VAP.source && VAP.min === undefined && VAP.max === undefined,
+        calc_initial_custom_expansion_state: VAP => !!(VAP.description || VAP.source || VAP.min !== undefined || VAP.max !== undefined),
     }
 
     const item_descriptor = "Value and prediction"
@@ -231,6 +232,13 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 probability={orig_probability}
                 conviction={orig_conviction}
             />
+            {/* {!editing && !expanded_view && (VAP.description || VAP.source) && <>&nbsp; <DescriptionIcon
+                className="description_icon"
+                fontSize="small"
+                color="disabled"
+                titleAccess="Further details are included"
+            />
+            </>} */}
         </div>
     </div>
 }
