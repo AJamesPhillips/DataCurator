@@ -15,7 +15,10 @@ export function stable_stringify (obj: any, opts: Options = {})
 
     const cycles = typeof opts.cycles === "boolean" ? opts.cycles : false
 
-    const replacer = opts.replacer || ((key: string | number, value: any) => value)
+    const replacer = opts.replacer || ((key: string | number, value: any) =>
+    {
+        return is_date(value) ? value.toISOString() : value
+    })
 
     const comparison_function_factory = opts.comparison_function && function (node: any)
     {
@@ -96,4 +99,11 @@ export function stable_stringify (obj: any, opts: Options = {})
         return "{" + out.join(",") + indent + "}"
 
     }({ "": obj }, "", obj, 0))
+}
+
+
+
+function is_date (value: any): value is Date
+{
+    return Object.prototype.toString.call(value) === "[object Date]"
 }

@@ -305,7 +305,7 @@ export function wcomponent_has_single_statev2_datetime (wcomponent: HasVAPSetsAn
 
 // I do not like making up new names but I don't know what else to call this.
 // It is a predictions place in time and how much certainty it reflects.
-interface TemporalValueCertainty
+export interface TemporalValueCertainty
 {
     temporal_uncertainty: TemporalUncertainty
     certainty: number | undefined
