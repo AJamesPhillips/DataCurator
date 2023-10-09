@@ -115,10 +115,8 @@ export function values_different (value1: string, value2: number)
 
 
 const CALULATION_SIGNS = /.*[\^*\/+\-()].*/g
-function should_show_calc_value (value: string): boolean
+export function should_show_calc_value (value: string): boolean
 {
-    // if (value.includes("@@")) debugger
     value = value.replaceAll(double_at_mentioned_uuids_regex, "")
-    console.log(value, CALULATION_SIGNS.test(value))
-    return CALULATION_SIGNS.test(value)
+    return !!value.match(CALULATION_SIGNS)
 }

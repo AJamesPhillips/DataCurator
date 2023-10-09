@@ -48,6 +48,7 @@ import { run_get_valid_calculation_name_id_tests } from "./wcomponent_form/calcu
 import { run_make_calculation_safe_for_rich_text_tests } from "./wcomponent_form/calculations/make_calculation_safe_for_rich_text.test"
 import { run_get_wcomponent_VAPs_represent_tests } from "./wcomponent/get_wcomponent_VAPs_represent.test"
 import { run_specialised_objects_accessors_tests } from "./state/specialised_objects/accessors.test"
+import { run_EditableCalculationRow_tests } from "./wcomponent_form/calculations/EditableCalculationRow.test"
 
 
 
@@ -73,6 +74,7 @@ function run_all_tests ()
     run_make_calculation_safe_for_rich_text_tests()
     run_get_wcomponent_VAPs_represent_tests()
     run_specialised_objects_accessors_tests()
+    run_EditableCalculationRow_tests()
 
     test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()
