@@ -76,10 +76,10 @@ function _WComponentCalculatonsForm (props: Props)
         {show_form && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {calculations.map((calc, index) => <EditableCalculationRow
+                    key={calc.name + " " + index}
                     editing={props.editing}
                     calculation={calc}
-                    index={index}
-                    calculation_results={calculation_results}
+                    calculation_result={calculation_results[index]}
                     existing_calculation_name_ids={existing_calculation_name_ids}
                     update_calculation={new_calculation =>
                     {

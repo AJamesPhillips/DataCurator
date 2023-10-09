@@ -16,8 +16,7 @@ export interface CalculationRowProps
 {
     editing: boolean
     calculation: PlainCalculationObject
-    index: number
-    calculation_results: CalculationResult[]
+    calculation_result: CalculationResult | undefined
     existing_calculation_name_ids: string[]
     update_calculation: (calculation: PlainCalculationObject | null) => void
 }
@@ -26,16 +25,13 @@ export function EditableCalculationRow (props: CalculationRowProps)
 {
     const {
         calculation: calc,
-        index,
-        calculation_results: results,
+        calculation_result: result,
         editing,
         existing_calculation_name_ids,
     } = props
 
 
     if (!editing && !calc.value && !calc.units) return null
-
-    const result = results[index]
 
     let output_element = <span />
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
@@ -53,7 +49,6 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
 
     return <Box
-        key={calc.name + " " + index}
         p={1}
         flexGrow={1}
         flexShrink={1}
