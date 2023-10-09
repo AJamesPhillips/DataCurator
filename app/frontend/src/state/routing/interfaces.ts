@@ -56,6 +56,8 @@ export const is_routing_view_types = (str: string): str is ViewType => routing_v
 export interface RoutingStateArgs
 {
     view: ViewType
+    // todo, document why the knowledge view id that is used to populate subview_id
+    // is refered to as a subview?
     subview_id: string
     zoom: number
     x: number
