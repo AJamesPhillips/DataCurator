@@ -57,6 +57,7 @@ export interface EditableListEntryItemProps<U, Crud>
     extra_class_names?: string
     delete_button_text?: string
     crud: Crud
+    hide_expansion_button?: (item: U) => boolean
 }
 
 
@@ -109,6 +110,7 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
             get_details3,
             crud,
             delete_button_text,
+            hide_expansion_button,
         } = this.props
         const { update_item, delete_item } = crud
 
@@ -138,11 +140,11 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
                     {get_summary(item, crud)}
                 </div>
 
-                <div
+                {!(hide_expansion_button && hide_expansion_button(item)) && <div
                     className="expansion_button"
                     title={internal__expanded ? "Collapse" : "Expand"}
                     onClick={() => this.setState({ internal__expanded: !internal__expanded })}
-                />
+                />}
             </div>
 
 

@@ -75,6 +75,7 @@ function _ValueAndPredictions (props: Props)
             }
         },
         delete_button_text: "Delete Value & Prediction",
+        hide_expansion_button: VAP => !editing && !VAP.description.trim()
     }
 
     const item_descriptor = "Value and prediction"
@@ -242,12 +243,11 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
         Boolean value of this state, i.e. either true (100%), false (0%) or somewhere in between.
     </div>
 
-    if (!editing && !item.description) return <div></div>
+    if (!editing && !item.description) return <></>
 
     return <div>
-        <div className="description_label">Description</div>
         <EditableText
-            placeholder="..."
+            placeholder="Description"
             value={item.description}
             on_blur={description => crud.update_item({ ...item, description })}
             on_blur_type={EditableTextOnBlurType.conditional}
