@@ -44,7 +44,7 @@ function _WComponentStateForm (props: Props)
     } = props
 
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
-    const orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets || []
+    const orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets
     const orig_value_possibilities = wcomponent.value_possibilities
 
 
