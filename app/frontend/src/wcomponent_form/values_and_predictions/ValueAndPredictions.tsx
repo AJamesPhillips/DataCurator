@@ -75,7 +75,7 @@ function _ValueAndPredictions (props: Props)
             }
         },
         delete_button_text: "Delete Value & Prediction",
-        hide_expansion_button: VAP => !editing && !VAP.description.trim()
+        hide_expansion_button: VAP => !editing && !VAP.description && !VAP.source && VAP.min === undefined && VAP.max === undefined
     }
 
     const item_descriptor = "Value and prediction"
@@ -117,7 +117,7 @@ interface GetSummaryArgs
     VAPs_represent: VAPsType
     editing: boolean
 }
-const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>): h.JSX.Element =>
+const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, crud: ListItemCRUDRequiredU<StateValueAndPrediction>, expanded_view: boolean): h.JSX.Element =>
 {
     const { value_possibilities, VAPs_represent, editing } = args
 
@@ -141,7 +141,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
     return <div className="value_and_prediction_summary">
         <br />
         <div className="temporal_uncertainty">
-            {is_number && (editing || orig_min) && <div>
+            {is_number && ((editing && expanded_view) || orig_min) && <div key="min">
                 <EditableTextSingleLine
                     placeholder="Min"
                     value={orig_min || ""}
@@ -152,6 +152,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
             </div>}
             {(editing || orig_value) && <div
                 style={{ position: "relative" /* Used to position PossibleValueLink*/ }}
+                key="value"
             >
                 <EditableTextSingleLine
                     disabled={is_boolean}
@@ -174,7 +175,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
                 <br />
             </div>}
-            {is_number && (editing || orig_max) && <div>
+            {is_number && ((editing && expanded_view) || orig_max) && <div key="max">
                 <EditableTextSingleLine
                     placeholder="Max"
                     value={orig_max || ""}
@@ -243,14 +244,23 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
         Boolean value of this state, i.e. either true (100%), false (0%) or somewhere in between.
     </div>
 
-    if (!editing && !item.description) return <></>
+    if (!editing && !item.description && !item.source) return <></>
 
     return <div>
-        <EditableText
+        {(editing || item.description) && <EditableText
             placeholder="Description"
             value={item.description}
-            on_blur={description => crud.update_item({ ...item, description })}
+            on_blur={description => crud.update_item({ ...item, description: description.trim() })}
             on_blur_type={EditableTextOnBlurType.conditional}
-        />
+        />}
+        {editing && <br />}
+        {(editing || item.source) && <EditableTextSingleLine
+            placeholder="Source"
+            size="small"
+            value={item.source || ""}
+            on_blur={source => crud.update_item({ ...item, source: source ? source.trim() : undefined })}
+            on_blur_type={EditableTextOnBlurType.conditional}
+        />}
+        {editing && <br />}
     </div>
 }

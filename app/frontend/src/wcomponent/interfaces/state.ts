@@ -159,4 +159,5 @@ export interface StateValueAndPrediction extends StateValueCore, PredictionBase
     // force the user to update the others to sum to 1.0 -- there may be a smarter logic / UI / UX
     // solution to this but for now we can use this solution.
     relative_probability?: number
+    source?: string
 }

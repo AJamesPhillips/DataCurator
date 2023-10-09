@@ -49,7 +49,7 @@ export interface EditableListEntryItemProps<U, Crud>
     get_created_at?: (item: U) => Date
     get_custom_created_at?: (item: U) => Date | undefined
     set_custom_created_at?: (item: U, new_custom_created_at: Date | undefined) => U
-    get_summary: (item: U, crud: Crud) => h.JSX.Element
+    get_summary: (item: U, crud: Crud, expanded_state: boolean) => h.JSX.Element
     get_details: (item: U, crud: Crud) => h.JSX.Element
     get_details2?: (item: U, crud: Crud) => h.JSX.Element
     get_details3?: (item: U, crud: Crud) => h.JSX.Element
@@ -137,7 +137,7 @@ export class EditableListEntry <T, Crud extends ListItemCRUDRequiredU<T>> extend
         return <div className={class_name}>
             <div className="summary_header">
                 <div className="summary">
-                    {get_summary(item, crud)}
+                    {get_summary(item, crud, internal__expanded)}
                 </div>
 
                 {!(hide_expansion_button && hide_expansion_button(item)) && <div
