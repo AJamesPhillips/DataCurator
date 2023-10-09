@@ -36,7 +36,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     let output_element = <span />
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
-        const result_string = format_number_to_string(result.value, 2, NumberDisplayType.scaled)
+        const result_string = format_number_to_string(result.value, 2, NumberDisplayType.simple)
 
         output_element = <span>
             &nbsp;=&nbsp;{result_string}

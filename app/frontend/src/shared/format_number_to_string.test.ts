@@ -8,7 +8,10 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     let formatted_number = ""
 
     formatted_number = format_number_to_string(1264, 2, NumberDisplayType.bare)
-    test(formatted_number, "1,300", "bare number")
+    test(formatted_number, "1300", "bare number")
+
+    formatted_number = format_number_to_string(1264, 2, NumberDisplayType.simple)
+    test(formatted_number, "1,300", "simple number")
 
     formatted_number = format_number_to_string(1264, 2, NumberDisplayType.scaled)
     test(formatted_number, "1.3 thousand", "scaled number")
@@ -35,7 +38,10 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     describe("negative numbers", () =>
     {
         formatted_number = format_number_to_string(-1264, 2, NumberDisplayType.bare)
-        test(formatted_number, "-1,300", "bare number")
+        test(formatted_number, "-1300", "bare number")
+
+        formatted_number = format_number_to_string(-1264, 2, NumberDisplayType.simple)
+        test(formatted_number, "-1,300", "simple number")
 
         formatted_number = format_number_to_string(-1264, 2, NumberDisplayType.scaled)
         test(formatted_number, "-1.3 thousand", "scaled number")
@@ -52,6 +58,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     {
         formatted_number = format_number_to_string(0.001264, 2, NumberDisplayType.bare)
         test(formatted_number, "0.0013", "bare number")
+
+        formatted_number = format_number_to_string(0.001264, 2, NumberDisplayType.simple)
+        test(formatted_number, "0.0013", "simple number")
 
         // Currently don't expect milli, micro, nano, etc as I think these are
         // more confusing for most people than million, billion etc becoming a
@@ -75,6 +84,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     {
         formatted_number = format_number_to_string(1, 2, NumberDisplayType.bare)
         test(formatted_number, "1", "bare number")
+
+        formatted_number = format_number_to_string(1, 2, NumberDisplayType.simple)
+        test(formatted_number, "1", "simple number")
 
         formatted_number = format_number_to_string(1000, 2, NumberDisplayType.scaled)
         test(formatted_number, "1 thousand", "scaled number")

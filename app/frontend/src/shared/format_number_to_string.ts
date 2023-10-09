@@ -3,7 +3,8 @@ import { format_number_to_significant_figures } from "./format_number_to_signifi
 
 export enum NumberDisplayType
 {
-    bare,
+    bare, // only the number so that numbers like 2023 do not have a comma
+    simple, // includes commas in numbers like 2,023
     scaled,
     abbreviated_scaled,
     scientific
@@ -18,6 +19,11 @@ export function format_number_to_string (num: number, max_significant_figures: n
     max_significant_figures = max_significant_figures < 1 ? 1 : max_significant_figures
 
     if (display_type === NumberDisplayType.bare)
+    {
+        const rounded_number = round_to_max_significant_figures(num, max_significant_figures)
+        formatted_number = rounded_number.toString()
+    }
+    else if (display_type === NumberDisplayType.simple)
     {
         const rounded_number = round_to_max_significant_figures(num, max_significant_figures)
         formatted_number = Math.abs(rounded_number) < 1 ? rounded_number.toString() : rounded_number.toLocaleString()
