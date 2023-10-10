@@ -97,3 +97,40 @@ export function unique_list <I> (items: I[]): I[]
 
     return filtered.length === items.length ? items : filtered
 }
+
+
+
+export function index_is_in_bounds<T> (existing: T[], index: number): boolean
+{
+    return existing.length > 0 && index >= 0 && index < existing.length
+}
+
+
+
+export function swap_elements<T> (existing: T[], index1: number, index2: number): T[]
+{
+    if (!index_is_in_bounds(existing, index1)) return existing
+    if (!index_is_in_bounds(existing, index2)) return existing
+
+    const min_index = Math.min(index1, index2)
+    const max_index = Math.max(index1, index2)
+
+    const existing_copy = [...existing]
+
+    const min_element = existing_copy[min_index]!
+    existing_copy[min_index] = existing_copy[max_index]!
+    existing_copy[max_index] = min_element
+
+    return existing_copy
+}
+
+
+
+export function insert_element_at_index<T> (existing: T[], new_element: T, index: number): T[]
+{
+    if (index <= 0) existing = [new_element, ...existing]
+    else if (index >= existing.length) existing = [...existing, new_element]
+    else existing = [...existing.slice(0, index), new_element, ...existing.slice(index)]
+
+    return existing
+}
