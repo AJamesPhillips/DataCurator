@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { CommonIconOwnProps, CommonIcon } from "./common_icon"
 
 
