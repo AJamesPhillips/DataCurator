@@ -16,18 +16,20 @@ declare module "@mui/styles/defaultTheme" {
 
 interface OwnProps
 {
-    on_click?: () => void,
+    on_click?: () => void
     button_text: string
     button_icon?: h.JSX.Element
     tooltip_text?: string
     disabled?: boolean
+    ready_to_progress?: boolean
+    on_cancel?: () => void
 }
 
 
 
 export function ConfirmatoryButton (props: OwnProps)
 {
-    const [ready_to_progress, set_ready_to_progress] = useState(false)
+    const [ready_to_progress, set_ready_to_progress] = useState(props.ready_to_progress ?? false)
     const { tooltip_text = "" } = props
 
     return (
@@ -65,6 +67,7 @@ export function ConfirmatoryButton (props: OwnProps)
                     {
                         e.stopImmediatePropagation()
                         set_ready_to_progress(!ready_to_progress)
+                        if (ready_to_progress && props.on_cancel) props.on_cancel()
                     }}
                     startIcon={ready_to_progress ? "" : props.button_icon }
                 >
