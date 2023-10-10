@@ -27,7 +27,7 @@ interface OwnProps
 
 export function ConfirmatoryButton (props: OwnProps)
 {
-    const [progressing, set_progressing] = useState(false)
+    const [ready_to_progress, set_ready_to_progress] = useState(false)
     const { tooltip_text = "" } = props
 
     return (
@@ -37,11 +37,11 @@ export function ConfirmatoryButton (props: OwnProps)
                 <Button
                     color="secondary"
                     disabled={props.disabled}
-                    is_hidden={!progressing}
+                    is_hidden={!ready_to_progress}
                     onClick={e =>
                     {
                         e.stopImmediatePropagation()
-                        set_progressing(false)
+                        set_ready_to_progress(false)
                         props.on_click && props.on_click()
                     }}
                     startIcon={props.button_icon}
@@ -59,18 +59,18 @@ export function ConfirmatoryButton (props: OwnProps)
                 <Button
                     color="primary"
                     disabled={props.disabled}
-                    fullWidth={!progressing}
+                    fullWidth={!ready_to_progress}
                     is_hidden={!props.on_click}
                     onClick={e =>
                     {
                         e.stopImmediatePropagation()
-                        set_progressing(!progressing)
+                        set_ready_to_progress(!ready_to_progress)
                     }}
-                    startIcon={progressing ? "" : props.button_icon }
+                    startIcon={ready_to_progress ? "" : props.button_icon }
                 >
-                    <Tooltip title={progressing ? "" : tooltip_text } aria-label={progressing ? "" : tooltip_text }>
+                    <Tooltip title={ready_to_progress ? "" : tooltip_text } aria-label={ready_to_progress ? "" : tooltip_text }>
                         <Box component="span">
-                            {progressing ? "Cancel" : props.button_text}
+                            {ready_to_progress ? "Cancel" : props.button_text}
                         </Box>
                     </Tooltip>
                 </Button>
