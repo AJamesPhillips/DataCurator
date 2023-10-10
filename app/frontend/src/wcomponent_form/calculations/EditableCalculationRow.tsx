@@ -17,10 +17,11 @@ import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
 import { AddRowBelow } from "../../sharedf/icons/AddRowBelow"
-import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 
 
+
+export type EditableCalculationRowCommands = "move_up" | "move_down" | "add_above" | "add_below"
 
 export interface CalculationRowProps
 {
@@ -29,7 +30,8 @@ export interface CalculationRowProps
     calculation_result: CalculationResult | undefined
     existing_calculation_name_ids: string[]
     update_calculation: (calculation: PlainCalculationObject | null) => void
-    update_calculations: (command: "move_up" | "move_down" | "add_above" | "add_below") => void
+    disallowed_commands: Set<EditableCalculationRowCommands>
+    update_calculations: (command: EditableCalculationRowCommands) => void
 }
 
 export function EditableCalculationRow (props: CalculationRowProps)
@@ -141,7 +143,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
         {props.editing && show_result_format_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
             <IconButton
-                onClick={() => props.update_calculations("move_up")}
+                onClick={() => props.update_calculations("add_above")}
                 size="large"
                 title="Add calculation above"
             >
@@ -149,18 +151,28 @@ export function EditableCalculationRow (props: CalculationRowProps)
             </IconButton>
 
             <IconButton
-                onClick={() => props.update_calculations("move_up")}
+                onClick={() => props.update_calculations("add_below")}
                 size="large"
                 title="Add calculation below"
             >
                 <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
             </IconButton>
 
-            <IconButton onClick={() => props.update_calculations("move_up")} size="large" title="Move calculation up">
+            <IconButton
+                onClick={() => props.update_calculations("move_up")}
+                size="large"
+                title="Move calculation up"
+                disabled={props.disallowed_commands.has("move_up")}
+            >
                 <ArrowUpward />
             </IconButton>
 
-            <IconButton onClick={() => props.update_calculations("move_down")} size="large" title="Move calculation down">
+            <IconButton
+                onClick={() => props.update_calculations("move_down")}
+                size="large"
+                title="Move calculation down"
+                disabled={props.disallowed_commands.has("move_down")}
+            >
                 <ArrowDownward />
             </IconButton>
 

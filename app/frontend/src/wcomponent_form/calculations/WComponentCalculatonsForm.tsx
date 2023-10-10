@@ -1,16 +1,17 @@
 import { FunctionalComponent } from "preact"
+import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box } from "@mui/material"
 
 import type { WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import type { RootState } from "../../state/State"
 import { perform_calculations } from "../../calculations/perform_calculations"
-import { EditableCalculationRow } from "./EditableCalculationRow"
+import { EditableCalculationRow, EditableCalculationRowCommands } from "./EditableCalculationRow"
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
-import { useState } from "preact/hooks"
 import { Button } from "../../sharedf/Button"
 import { PlainCalculationObject } from "../../calculations/interfaces"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
+import { index_is_in_bounds, insert_element_at_index, swap_elements } from "../../utils/list"
 
 
 
@@ -81,11 +82,11 @@ function _WComponentCalculatonsForm (props: Props)
                     calculation={calc}
                     calculation_result={calculation_results[index]}
                     existing_calculation_name_ids={existing_calculation_name_ids}
-                    update_calculation={new_calculation =>
+                    update_calculation={modified_calculation =>
                     {
                         const modified_calculations_with_nulls = [
                             ...calculations.slice(0, index),
-                            new_calculation,
+                            modified_calculation,
                             ...calculations.slice(index + 1),
                         ]
 
@@ -94,7 +95,44 @@ function _WComponentCalculatonsForm (props: Props)
 
                         props.upsert_wcomponent({ calculations: modified_calculations })
                     }}
-                    update_calculations={() => {}}
+                    disallowed_commands={(() => {
+                        const disallowed_commands = new Set<EditableCalculationRowCommands>()
+                        if (index === 0) disallowed_commands.add("move_up")
+                        if (index === (calculations.length - 1)) disallowed_commands.add("move_down")
+
+                        return disallowed_commands
+                    })()}
+                    update_calculations={command =>
+                    {
+                        if (command === "move_up")
+                        {
+                            const other_index = index - 1
+                            if (!index_is_in_bounds(calculations, other_index)) return
+
+                            const modified_calculations = swap_elements(calculations, index, other_index)
+                            props.upsert_wcomponent({ calculations: modified_calculations })
+                        }
+                        else if (command === "move_down")
+                        {
+                            const other_index = index + 1
+                            if (!index_is_in_bounds(calculations, other_index)) return
+
+                            const modified_calculations = swap_elements(calculations, index, other_index)
+                            props.upsert_wcomponent({ calculations: modified_calculations })
+                        }
+                        else if (command === "add_above")
+                        {
+                            const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
+                            const modified_calculations = insert_element_at_index(calculations, new_calculation, index)
+                            props.upsert_wcomponent({ calculations: modified_calculations })
+                        }
+                        else if (command === "add_below")
+                        {
+                            const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
+                            const modified_calculations = insert_element_at_index(calculations, new_calculation, index + 1)
+                            props.upsert_wcomponent({ calculations: modified_calculations })
+                        }
+                    }}
                 />)}
             </Box>
 
