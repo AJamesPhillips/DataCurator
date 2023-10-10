@@ -12,6 +12,8 @@ Open http://localhost:5173 to view it in the browser.
 The page will reload if you make edits.
 You will also see any lint errors in the console.
 
+Note: occasionally, and invariabily with MUI packages, the dependencies are not loaded correctly.  This seems to be solved with `npm start --force` that [uses `vite --force` to clear the vite cache](https://stackoverflow.com/a/74916125/539490).
+
 ### ~~npm test~~
 
 ~~Launches the test runner in the interactive watch mode.~~
@@ -26,7 +28,3 @@ Note: this does not currently work.  Instead:
 
 Builds the app for production to the `build/` folder.
 It correctly bundles Preact in production mode and optimizes the build for the best performance.
-
-### Q: What about Eject?
-
-No eject needed! Snowpack guarantees zero lock-in, and CSA strives for the same.
