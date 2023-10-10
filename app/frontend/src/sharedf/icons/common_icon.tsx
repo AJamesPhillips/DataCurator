@@ -26,9 +26,14 @@ export function CommonIcon (props: Props)
     className = "MuiSvgIcon-root " + className
     if (props.fontSize === "small") className += " MuiSvgIcon-fontSizeSmall "
 
-    // TODO, title only shows on bottom half of the icon as span only seems to be half the
+    // 1. TODO, document which example application of this code where: the title
+    // only shows on bottom half of the icon as span only seems to be half the
     // height of the icon it contains
-    return <span title={props.title}>
+    //
+    // 2. We apply the width and height from the style prop to the parent span as well
+    // so that the height and width of the span is the same as the svg, see
+    // `EditableCalculationRow` for example of where this is used.
+    return <span title={props.title} style={{ width: props.style?.width, height: props.style?.height }}>
         <svg className={className} viewBox="0 0 24 24" style={props.style}>
             <path d={props.d} />
             {props.svg_elements}

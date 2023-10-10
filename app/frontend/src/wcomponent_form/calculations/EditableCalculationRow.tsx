@@ -1,5 +1,11 @@
+import { useState } from "preact/hooks"
 import { Box, IconButton } from "@mui/material"
-import DeleteIcon from "@mui/icons-material/Delete"
+import {
+    ArrowDownward,
+    ArrowUpward,
+    Delete as DeleteIcon,
+    Settings as SettingsIcon,
+} from "@mui/icons-material"
 
 import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
@@ -9,6 +15,8 @@ import { NumberDisplayType, format_number_to_string } from "../../shared/format_
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
+import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
+import { AddRowBelow } from "../../sharedf/icons/AddRowBelow"
 
 
 
@@ -19,10 +27,13 @@ export interface CalculationRowProps
     calculation_result: CalculationResult | undefined
     existing_calculation_name_ids: string[]
     update_calculation: (calculation: PlainCalculationObject | null) => void
+    update_calculations: (command: "move_up" | "move_down" | "add_above" | "add_below") => void
 }
 
 export function EditableCalculationRow (props: CalculationRowProps)
 {
+    const [show_result_format_options, set_show_result_format_options] = useState(false)
+
     const {
         calculation: calc,
         calculation_result: result,
@@ -33,15 +44,23 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
     if (!editing && !calc.value && !calc.units) return null
 
-    let output_element = <span />
+    let output_element = <div />
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
         const result_string = format_number_to_string(result.value, 2, NumberDisplayType.simple)
 
-        output_element = <span>
+        output_element = <div>
             &nbsp;=&nbsp;{result_string}
-            <span style={{ fontSize: "75%" }}>&nbsp;{result.units}</span>
-        </span>
+            <span style={{ fontSize: "12px" }}>&nbsp;{result.units}</span>
+            {/* {editing && <IconButton
+                onClick={() => set_show_result_format_options(!show_result_format_options)}
+                size="small"
+                style={{ marginLeft: "5px" }}
+                // title="Format results"
+            >
+                <SettingsIcon />
+            </IconButton>} */}
+        </div>
     }
 
 
@@ -55,6 +74,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         flexBasis="100%"
         maxWidth="100%"
         marginTop="5px"
+        marginBottom={editing ? "18px" : undefined }
         flexDirection={editing ? "column" : "row"}
         style={{ display: "flex" }}
     >
@@ -104,9 +124,43 @@ export function EditableCalculationRow (props: CalculationRowProps)
         {/* If we're editing then place the result on a new line */}
         {editing && <Box style={{ width: "100%", display: "flex" }}>
             {output_element}
+            <IconButton
+                onClick={() => set_show_result_format_options(!show_result_format_options)}
+                size="small"
+                style={{ marginLeft: "auto" }}
+            >
+                <SettingsIcon />
+            </IconButton>
+            {/* <IconButton onClick={() => props.update_calculation(null)} size="large" style={{ marginLeft: "auto" }}>
+                <DeleteIcon />
+            </IconButton> */}
         </Box>}
 
-        {props.editing && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+        {props.editing && show_result_format_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+            <IconButton
+                onClick={() => props.update_calculations("move_up")}
+                size="large"
+                title="Add calculation above"
+            >
+                <AddRowAbove style={{ fill: "currentColor", height: "24px", width: "24px" }} />
+            </IconButton>
+
+            <IconButton
+                onClick={() => props.update_calculations("move_up")}
+                size="large"
+                title="Add calculation below"
+            >
+                <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
+            </IconButton>
+
+            <IconButton onClick={() => props.update_calculations("move_up")} size="large" title="Move calculation up">
+                <ArrowUpward />
+            </IconButton>
+
+            <IconButton onClick={() => props.update_calculations("move_down")} size="large" title="Move calculation down">
+                <ArrowDownward />
+            </IconButton>
+
             <IconButton onClick={() => props.update_calculation(null)} size="large">
                 <DeleteIcon />
             </IconButton>

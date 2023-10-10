@@ -94,6 +94,7 @@ function _WComponentCalculatonsForm (props: Props)
 
                         props.upsert_wcomponent({ calculations: modified_calculations })
                     }}
+                    update_calculations={() => {}}
                 />)}
             </Box>
 
