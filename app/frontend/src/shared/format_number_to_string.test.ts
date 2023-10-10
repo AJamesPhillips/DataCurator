@@ -99,4 +99,24 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
 
     })
 
+
+    describe("handles 0", () =>
+    {
+        formatted_number = format_number_to_string(0, 2, NumberDisplayType.bare)
+        test(formatted_number, "0", "bare number")
+
+        formatted_number = format_number_to_string(0, 2, NumberDisplayType.simple)
+        test(formatted_number, "0", "simple number")
+
+        formatted_number = format_number_to_string(0, 2, NumberDisplayType.scaled)
+        test(formatted_number, "0", "scaled number")
+
+        formatted_number = format_number_to_string(0, 2, NumberDisplayType.abbreviated_scaled)
+        test(formatted_number, "0", "abbreviated scaled number")
+
+        formatted_number = format_number_to_string(0, 2, NumberDisplayType.scientific)
+        test(formatted_number, "0e0", "scientific number")
+
+    })
+
 }, false)
