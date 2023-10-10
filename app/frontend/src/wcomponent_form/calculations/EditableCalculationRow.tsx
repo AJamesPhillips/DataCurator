@@ -17,6 +17,8 @@ import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
 import { AddRowBelow } from "../../sharedf/icons/AddRowBelow"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 
 
 
@@ -33,6 +35,7 @@ export interface CalculationRowProps
 export function EditableCalculationRow (props: CalculationRowProps)
 {
     const [show_result_format_options, set_show_result_format_options] = useState(false)
+    const [ready_to_delete, set_ready_to_delete] = useState(false)
 
     const {
         calculation: calc,
@@ -161,9 +164,16 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 <ArrowDownward />
             </IconButton>
 
-            <IconButton onClick={() => props.update_calculation(null)} size="large">
+            {!ready_to_delete && <IconButton onClick={() => set_ready_to_delete(true)} size="large">
                 <DeleteIcon />
-            </IconButton>
+            </IconButton>}
+            {ready_to_delete && <ConfirmatoryButton
+                on_click={() => props.update_calculation(null)}
+                button_text=""
+                button_icon={<DeleteIcon />}
+                ready_to_progress={true}
+                on_cancel={() => set_ready_to_delete(false)}
+            />}
         </Box>}
     </Box>
 }
