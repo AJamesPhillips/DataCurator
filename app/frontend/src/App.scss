@@ -79,11 +79,18 @@ blockquote p {
     color: white;
     width: max-content;
     opacity: 0;
-    -webkit-transition: opacity 0.75s ease-in-out;
+    -webkit-transition: opacity 0.25s ease-in-out;
 }
 
 [data-tooltip]:hover:after {
     opacity: 1;
+}
+
+[data-tooltip_left_0]:after {
+    left: 0%;
+}
+[data-tooltip_bottom_-60]:after {
+    bottom: -60%;
 }
 
 div[data-tooltip]:after {
