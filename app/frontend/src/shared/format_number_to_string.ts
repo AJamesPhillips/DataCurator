@@ -24,6 +24,11 @@ export function format_number_to_string (num: number, max_significant_figures: n
     {
         formatted_number = scale_number(num, max_significant_figures)
     }
+    else if (display_type === NUMBER_DISPLAY_TYPES.percentage)
+    {
+        const rounded_number = round_to_max_significant_figures(num * 100, max_significant_figures)
+        formatted_number = rounded_number.toString() + "%"
+    }
     else if (display_type === NUMBER_DISPLAY_TYPES.abbreviated_scaled)
     {
         formatted_number = abbreviate_number(num, max_significant_figures)

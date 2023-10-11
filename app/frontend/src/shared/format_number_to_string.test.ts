@@ -17,6 +17,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     formatted_number = format_number_to_string(1264, 2, NUMBER_DISPLAY_TYPES.scaled)
     test(formatted_number, "1.3 thousand", "scaled number")
 
+    formatted_number = format_number_to_string(0.1264, 2, NUMBER_DISPLAY_TYPES.percentage)
+    test(formatted_number, "13%", "number as percentage")
+
     formatted_number = format_number_to_string(1264, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
     test(formatted_number, "1.3 k", "abbreviated scaled number")
 
@@ -47,6 +50,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         formatted_number = format_number_to_string(-1264, 2, NUMBER_DISPLAY_TYPES.scaled)
         test(formatted_number, "-1.3 thousand", "scaled number")
 
+        formatted_number = format_number_to_string(-0.1264, 2, NUMBER_DISPLAY_TYPES.percentage)
+        test(formatted_number, "-13%", "percentage number")
+
         formatted_number = format_number_to_string(-1264, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
         test(formatted_number, "-1.3 k", "abbreviated scaled number")
 
@@ -68,6 +74,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         // milliaire is not an common aspiration.
         formatted_number = format_number_to_string(0.001264, 2, NUMBER_DISPLAY_TYPES.scaled)
         test(formatted_number, "0.0013", "scaled number")
+
+        formatted_number = format_number_to_string(0.001264, 2, NUMBER_DISPLAY_TYPES.percentage)
+        test(formatted_number, "0.13%", "percentage number")
 
         formatted_number = format_number_to_string(0.001264, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
         test(formatted_number, "0.0013", "abbreviated scaled number")
@@ -92,6 +101,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         formatted_number = format_number_to_string(1000, 2, NUMBER_DISPLAY_TYPES.scaled)
         test(formatted_number, "1 thousand", "scaled number")
 
+        formatted_number = format_number_to_string(10, 2, NUMBER_DISPLAY_TYPES.percentage)
+        test(formatted_number, "1000%", "percentage number")
+
         formatted_number = format_number_to_string(1000, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
         test(formatted_number, "1 k", "abbreviated scaled number")
 
@@ -112,6 +124,9 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
         formatted_number = format_number_to_string(0, 2, NUMBER_DISPLAY_TYPES.scaled)
         test(formatted_number, "0", "scaled number")
 
+        formatted_number = format_number_to_string(0, 2, NUMBER_DISPLAY_TYPES.percentage)
+        test(formatted_number, "0%", "percentage number")
+
         formatted_number = format_number_to_string(0, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
         test(formatted_number, "0", "abbreviated scaled number")
 
@@ -120,4 +135,4 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
 
     })
 
-}, false)
+}, true)

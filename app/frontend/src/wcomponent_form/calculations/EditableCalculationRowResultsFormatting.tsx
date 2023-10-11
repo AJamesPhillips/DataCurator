@@ -111,14 +111,20 @@ function get_number_display_options (result: number | undefined, result_sig_figs
             // subtitle: "Scaled",
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.scaled),
         },
+        "percentage": {
+            id: "percentage", order: 3,
+            result_display_type: "percentage",
+            // subtitle: "percentage",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.percentage),
+        },
         "abbreviated_scaled": {
-            id: "abbreviated_scaled", order: 3,
+            id: "abbreviated_scaled", order: 4,
             result_display_type: "abbreviated_scaled",
             // subtitle: "Scaled abbreviated",
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.abbreviated_scaled),
         },
         "scientific": {
-            id: "scientific", order: 4,
+            id: "scientific", order: 5,
             result_display_type: "scientific",
             // subtitle: "Scientific",
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.scientific),
