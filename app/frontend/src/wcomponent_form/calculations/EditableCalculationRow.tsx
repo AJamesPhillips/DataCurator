@@ -1,9 +1,6 @@
 import { useState } from "preact/hooks"
 import { Box, IconButton } from "@mui/material"
 import {
-    ArrowDownward,
-    ArrowUpward,
-    Delete as DeleteIcon,
     Settings as SettingsIcon,
 } from "@mui/icons-material"
 
@@ -15,10 +12,8 @@ import { NumberDisplayType, format_number_to_string } from "../../shared/format_
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
-import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
-import { AddRowBelow } from "../../sharedf/icons/AddRowBelow"
-import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 import { EditableNumber } from "../../form/EditableNumber"
+import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 
 
 
@@ -32,7 +27,6 @@ function get_default_significant_figures (calc_value: string): number
 }
 
 
-export type EditableCalculationRowCommands = "move_up" | "move_down" | "add_above" | "add_below"
 
 export interface CalculationRowProps
 {
@@ -56,7 +50,6 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
 
     const [show_options, set_show_options] = useState(false)
-    const [ready_to_delete, set_ready_to_delete] = useState(false)
     // Significant figures
     const default_significant_figures = get_default_significant_figures(calc.value)
     const { result_sig_figs = default_significant_figures } = calc
@@ -183,53 +176,11 @@ export function EditableCalculationRow (props: CalculationRowProps)
             </IconButton>
         </Box>}
 
-        {props.editing && show_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-            <IconButton
-                onClick={() => props.update_calculations("add_above")}
-                size="large"
-                // title="Add calculation above"
-                data-tooltip="Add above"
-            >
-                <AddRowAbove style={{ fill: "currentColor", height: "24px", width: "24px" }} />
-            </IconButton>
-
-            <IconButton
-                onClick={() => props.update_calculations("add_below")}
-                size="large"
-                data-tooltip="Add below"
-            >
-                <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
-            </IconButton>
-
-            <IconButton
-                onClick={() => props.update_calculations("move_up")}
-                size="large"
-                data-tooltip="Move up"
-                disabled={props.disallowed_commands.has("move_up")}
-            >
-                <ArrowUpward />
-            </IconButton>
-
-            <IconButton
-                onClick={() => props.update_calculations("move_down")}
-                size="large"
-                data-tooltip="Move down"
-                disabled={props.disallowed_commands.has("move_down")}
-            >
-                <ArrowDownward />
-            </IconButton>
-
-            {!ready_to_delete && <IconButton onClick={() => set_ready_to_delete(true)} size="large">
-                <DeleteIcon />
-            </IconButton>}
-            {ready_to_delete && <ConfirmatoryButton
-                on_click={() => props.update_calculation(null)}
-                button_text=""
-                button_icon={<DeleteIcon />}
-                ready_to_progress={true}
-                on_cancel={() => set_ready_to_delete(false)}
-            />}
-        </Box>}
+        {props.editing && show_options && <EditableCalculationRowOptions
+            delete_calculation={() => props.update_calculation(null)}
+            disallowed_commands={props.disallowed_commands}
+            update_calculations={props.update_calculations}
+        />}
     </Box>
 }
 
