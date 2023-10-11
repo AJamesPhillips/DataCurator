@@ -1,5 +1,6 @@
 import { YAMLParseError } from "yaml"
 import { ReplaceNormalIdsInTextArgs } from "../sharedf/rich_text/interfaces"
+import { NumberDisplayType } from "../shared/types"
 
 
 
@@ -66,6 +67,7 @@ export interface PlainCalculationObject
     value: string  // strings might be an @@<uuid v4>
     units?: string
     result_sig_figs?: number
+    result_display_type?: NumberDisplayType
 }
 
 export interface CalculationResult

@@ -1,14 +1,20 @@
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { PlainCalculationObject } from "../../calculations/interfaces"
+import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { AutocompleteOption } from "../../form/Autocomplete/interfaces"
+import { format_number_to_string } from "../../shared/format_number_to_string"
 
 
 
 interface OwnProps
 {
+    result: number | undefined
     default_significant_figures: number
     temp_result_sig_figs: number | undefined
     set_temp_result_sig_figs: (v: number | undefined) => void
+    result_display_type: NumberDisplayType | undefined
     update_calculation: (calc: Partial<PlainCalculationObject>) => void
 }
 
@@ -16,19 +22,23 @@ interface OwnProps
 export function EditableCalculationRowResultsFormatting (props: OwnProps)
 {
     const {
+        result,
         default_significant_figures,
         temp_result_sig_figs,
         set_temp_result_sig_figs,
+        result_display_type,
         update_calculation,
     } = props
 
-    return <div>
+    const options = get_number_display_options(result, temp_result_sig_figs ?? default_significant_figures)
+
+    return <div style={{ display: "flex", marginTop: -15 }}>
         <div
             data-tooltip="Significant figures" data-tooltip_left_-10 data-tooltip_bottom_-60
         >
             <EditableNumber
                 size="small"
-                style={{ marginLeft: 5, width: "80px" }}
+                style={{ marginLeft: 5, marginTop: 5, width: "80px" }}
                 placeholder="Sig. figs"
                 value={temp_result_sig_figs}
                 allow_undefined={true}
@@ -47,6 +57,23 @@ export function EditableCalculationRowResultsFormatting (props: OwnProps)
                 }}
             />
         </div>
+
+        <div
+            data-tooltip="Display type" data-tooltip_left_0 data-tooltip_bottom_-60
+            style={{ marginLeft: "10px", width: "120px" }}
+        >
+            <div className="description_label">Format</div>
+            <AutocompleteText
+                selected_option_id={result_display_type}
+                options={options}
+                on_change={id =>
+                {
+                    const option = options.find(o => o.id === id)
+                    const result_display_type: NumberDisplayType | undefined = option?.result_display_type
+                    update_calculation({ result_display_type })
+                }}
+            />
+        </div>
     </div>
 }
 
@@ -57,4 +84,51 @@ function sanitise_significant_figures_value (value: number | undefined): number 
     if (value === undefined) return undefined
 
     return Math.max(Math.round(value), 0)
+}
+
+
+
+function get_number_display_options (result: number | undefined, result_sig_figs: number)
+{
+    result = result ?? 1000.23
+
+    const options_by_id: {[k in NumberDisplayType]: AutocompleteOption & {order: number, result_display_type: NumberDisplayType}} = {
+        "bare": {
+            id: "bare", order: 0,
+            result_display_type: "bare",
+            // subtitle: "Bare",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.bare),
+        },
+        "simple": {
+            id: "simple", order: 1,
+            result_display_type: "simple",
+            // subtitle: "Simple",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.simple),
+        },
+        "scaled": {
+            id: "scaled", order: 2,
+            result_display_type: "scaled",
+            // subtitle: "Scaled",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.scaled),
+        },
+        "abbreviated_scaled": {
+            id: "abbreviated_scaled", order: 3,
+            result_display_type: "abbreviated_scaled",
+            // subtitle: "Scaled abbreviated",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.abbreviated_scaled),
+        },
+        "scientific": {
+            id: "scientific", order: 4,
+            result_display_type: "scientific",
+            // subtitle: "Scientific",
+            title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.scientific),
+        },
+    }
+
+    const options = Object.values(options_by_id).sort((a, b) =>
+    {
+        return a.order - b.order
+    })
+
+    return options
 }

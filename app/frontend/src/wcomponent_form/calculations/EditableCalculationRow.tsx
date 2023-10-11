@@ -8,13 +8,13 @@ import { CalculationResult, PlainCalculationObject } from "../../calculations/in
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
-import { NumberDisplayType, format_number_to_string } from "../../shared/format_number_to_string"
+import { format_number_to_string } from "../../shared/format_number_to_string"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
-import { EditableNumber } from "../../form/EditableNumber"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
+import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
 
 
 
@@ -51,18 +51,19 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
 
     const [show_options, set_show_options] = useState(false)
-    // Significant figures
+    // result significant figures
     const default_significant_figures = get_default_significant_figures(calc.value)
     const { result_sig_figs = default_significant_figures } = calc
     const [temp_result_sig_figs, set_temp_result_sig_figs] = useState<number | undefined>(result_sig_figs)
-
+    // result display type
+    const { result_display_type = NUMBER_DISPLAY_TYPES.simple } = calc
 
     if (!editing && !calc.value && !calc.units) return null
 
     let output_element = <div />
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
-        const result_string = format_number_to_string(result.value, temp_result_sig_figs ?? default_significant_figures, NumberDisplayType.simple)
+        const result_string = format_number_to_string(result.value, temp_result_sig_figs ?? default_significant_figures, result_display_type)
 
         output_element = <div>
             &nbsp;=&nbsp;{result_string}
@@ -137,12 +138,14 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </Box>
 
         {/* If we're editing then place the result on a new line */}
-        {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 10 : undefined }}>
+        {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 30 : undefined }}>
             {output_element}
             {show_options && <EditableCalculationRowResultsFormatting
+                result={result?.value}
                 default_significant_figures={default_significant_figures}
                 temp_result_sig_figs={temp_result_sig_figs}
                 set_temp_result_sig_figs={set_temp_result_sig_figs}
+                result_display_type={result_display_type}
                 update_calculation={partial =>
                 {
                     props.update_calculation({
