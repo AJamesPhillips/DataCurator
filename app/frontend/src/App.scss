@@ -86,6 +86,12 @@ blockquote p {
     opacity: 1;
 }
 
+[data-tooltip_left_-20]:after {
+    left: -20%;
+}
+[data-tooltip_left_-10]:after {
+    left: -10%;
+}
 [data-tooltip_left_0]:after {
     left: 0%;
 }

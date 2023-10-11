@@ -139,7 +139,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 10 : undefined }}>
             {output_element}
             {show_options && <div
-                data-tooltip="Significant figures" data-tooltip_left_0 data-tooltip_bottom_-60
+                data-tooltip="Significant figures" data-tooltip_left_-10 data-tooltip_bottom_-60
             >
                 <EditableNumber
                     size="small"
