@@ -14,6 +14,7 @@ import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
+import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
 
 
 
@@ -138,33 +139,18 @@ export function EditableCalculationRow (props: CalculationRowProps)
         {/* If we're editing then place the result on a new line */}
         {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 10 : undefined }}>
             {output_element}
-            {show_options && <div
-                data-tooltip="Significant figures" data-tooltip_left_-10 data-tooltip_bottom_-60
-            >
-                <EditableNumber
-                    size="small"
-                    style={{ marginLeft: 5, width: "80px" }}
-                    placeholder="Sig. figs"
-                    value={temp_result_sig_figs}
-                    allow_undefined={true}
-                    conditional_on_change={new_temp_result_sig_figs =>
-                    {
-                        new_temp_result_sig_figs = sanitise_significant_figures_value(new_temp_result_sig_figs)
-                        set_temp_result_sig_figs(new_temp_result_sig_figs)
-                    }}
-                    on_blur_type={EditableTextOnBlurType.always}
-                    on_blur={result_sig_figs =>
-                    {
-                        result_sig_figs = sanitise_significant_figures_value(result_sig_figs)
-                        const new_temp_result_sig_figs = result_sig_figs ?? default_significant_figures
-                        set_temp_result_sig_figs(new_temp_result_sig_figs)
-                        props.update_calculation({
-                            ...calc,
-                            result_sig_figs,
-                        })
-                    }}
-                />
-            </div>}
+            {show_options && <EditableCalculationRowResultsFormatting
+                default_significant_figures={default_significant_figures}
+                temp_result_sig_figs={temp_result_sig_figs}
+                set_temp_result_sig_figs={set_temp_result_sig_figs}
+                update_calculation={partial =>
+                {
+                    props.update_calculation({
+                        ...calc,
+                        ...partial,
+                    })
+                }}
+            />}
 
             {/* Whilst editing then display an icon "button" to show/hide options */}
             <IconButton
@@ -198,13 +184,4 @@ export function should_show_calc_value (value: string): boolean
 {
     value = value.replaceAll(double_at_mentioned_uuids_regex, "")
     return !!value.match(CALULATION_SIGNS)
-}
-
-
-
-function sanitise_significant_figures_value (value: number | undefined): number | undefined
-{
-    if (value === undefined) return undefined
-
-    return Math.max(Math.round(value), 0)
 }
