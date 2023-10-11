@@ -78,6 +78,7 @@ function _SyncInfo (props: Props)
             </Typography>
             <Typography
                 className={`${classes.animate} ${classes.initially_hidden} hide`}
+                color="initial"
                 component="span"
                 noWrap={true}
             >
