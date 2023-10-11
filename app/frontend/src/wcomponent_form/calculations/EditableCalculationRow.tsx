@@ -142,10 +142,13 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </Box>}
 
         {props.editing && show_result_format_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+            {/* todo next: Set result DP to 3
+            &amp; Set format to raw */}
             <IconButton
                 onClick={() => props.update_calculations("add_above")}
                 size="large"
-                title="Add calculation above"
+                // title="Add calculation above"
+                data-tooltip="Add above"
             >
                 <AddRowAbove style={{ fill: "currentColor", height: "24px", width: "24px" }} />
             </IconButton>
@@ -153,7 +156,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             <IconButton
                 onClick={() => props.update_calculations("add_below")}
                 size="large"
-                title="Add calculation below"
+                data-tooltip="Add below"
             >
                 <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
             </IconButton>
@@ -161,7 +164,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             <IconButton
                 onClick={() => props.update_calculations("move_up")}
                 size="large"
-                title="Move calculation up"
+                data-tooltip="Move up"
                 disabled={props.disallowed_commands.has("move_up")}
             >
                 <ArrowUpward />
@@ -170,7 +173,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             <IconButton
                 onClick={() => props.update_calculations("move_down")}
                 size="large"
-                title="Move calculation down"
+                data-tooltip="Move down"
                 disabled={props.disallowed_commands.has("move_down")}
             >
                 <ArrowDownward />
