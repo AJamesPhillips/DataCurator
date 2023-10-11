@@ -18,7 +18,18 @@ import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_rege
 import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
 import { AddRowBelow } from "../../sharedf/icons/AddRowBelow"
 import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
+import { EditableNumber } from "../../form/EditableNumber"
 
+
+
+const DEFAULT_SIGNIFICANT_FIGURES = 2
+function get_default_significant_figures (calc_value: string): number
+{
+    const num_val = parseInt(calc_value, 10)
+    // Making assumption that most years of interest to current debate will be between
+    // 1900 and 2200
+    return (Number.isSafeInteger(num_val) && num_val > 1900 && num_val < 2200) ? 4 : DEFAULT_SIGNIFICANT_FIGURES
+}
 
 
 export type EditableCalculationRowCommands = "move_up" | "move_down" | "add_above" | "add_below"
@@ -36,9 +47,6 @@ export interface CalculationRowProps
 
 export function EditableCalculationRow (props: CalculationRowProps)
 {
-    const [show_result_format_options, set_show_result_format_options] = useState(false)
-    const [ready_to_delete, set_ready_to_delete] = useState(false)
-
     const {
         calculation: calc,
         calculation_result: result,
@@ -47,18 +55,26 @@ export function EditableCalculationRow (props: CalculationRowProps)
     } = props
 
 
+    const [show_options, set_show_options] = useState(false)
+    const [ready_to_delete, set_ready_to_delete] = useState(false)
+    // Significant figures
+    const default_significant_figures = get_default_significant_figures(calc.value)
+    const { result_sig_figs = default_significant_figures } = calc
+    const [temp_result_sig_figs, set_temp_result_sig_figs] = useState<number | undefined>(result_sig_figs)
+
+
     if (!editing && !calc.value && !calc.units) return null
 
     let output_element = <div />
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
-        const result_string = format_number_to_string(result.value, 2, NumberDisplayType.simple)
+        const result_string = format_number_to_string(result.value, temp_result_sig_figs ?? default_significant_figures, NumberDisplayType.simple)
 
         output_element = <div>
             &nbsp;=&nbsp;{result_string}
             <span style={{ fontSize: "12px" }}>&nbsp;{result.units}</span>
             {/* {editing && <IconButton
-                onClick={() => set_show_result_format_options(!show_result_format_options)}
+                onClick={() => set_show_options(!show_options)}
                 size="small"
                 style={{ marginLeft: "5px" }}
                 // title="Format results"
@@ -127,23 +143,47 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </Box>
 
         {/* If we're editing then place the result on a new line */}
-        {editing && <Box style={{ width: "100%", display: "flex" }}>
+        {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 10 : undefined }}>
             {output_element}
+            {show_options && <div
+                data-tooltip="Significant figures" data-tooltip_left_0 data-tooltip_bottom_-60
+            >
+                <EditableNumber
+                    size="small"
+                    style={{ marginLeft: 5, width: "80px" }}
+                    placeholder="Sig. figs"
+                    value={temp_result_sig_figs}
+                    allow_undefined={true}
+                    conditional_on_change={new_temp_result_sig_figs =>
+                    {
+                        new_temp_result_sig_figs = sanitise_significant_figures_value(new_temp_result_sig_figs)
+                        set_temp_result_sig_figs(new_temp_result_sig_figs)
+                    }}
+                    on_blur_type={EditableTextOnBlurType.always}
+                    on_blur={result_sig_figs =>
+                    {
+                        result_sig_figs = sanitise_significant_figures_value(result_sig_figs)
+                        const new_temp_result_sig_figs = result_sig_figs ?? default_significant_figures
+                        set_temp_result_sig_figs(new_temp_result_sig_figs)
+                        props.update_calculation({
+                            ...calc,
+                            result_sig_figs,
+                        })
+                    }}
+                />
+            </div>}
+
+            {/* Whilst editing then display an icon "button" to show/hide options */}
             <IconButton
-                onClick={() => set_show_result_format_options(!show_result_format_options)}
+                onClick={() => set_show_options(!show_options)}
                 size="small"
                 style={{ marginLeft: "auto" }}
             >
                 <SettingsIcon />
             </IconButton>
-            {/* <IconButton onClick={() => props.update_calculation(null)} size="large" style={{ marginLeft: "auto" }}>
-                <DeleteIcon />
-            </IconButton> */}
         </Box>}
 
-        {props.editing && show_result_format_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-            {/* todo next: Set result DP to 3
-            &amp; Set format to raw */}
+        {props.editing && show_options && <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
             <IconButton
                 onClick={() => props.update_calculations("add_above")}
                 size="large"
@@ -207,4 +247,13 @@ export function should_show_calc_value (value: string): boolean
 {
     value = value.replaceAll(double_at_mentioned_uuids_regex, "")
     return !!value.match(CALULATION_SIGNS)
+}
+
+
+
+function sanitise_significant_figures_value (value: number | undefined): number | undefined
+{
+    if (value === undefined) return undefined
+
+    return Math.max(Math.round(value), 0)
 }

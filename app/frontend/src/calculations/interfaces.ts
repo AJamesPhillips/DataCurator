@@ -65,6 +65,7 @@ export interface PlainCalculationObject
     name: string
     value: string  // strings might be an @@<uuid v4>
     units?: string
+    result_sig_figs?: number
 }
 
 export interface CalculationResult
