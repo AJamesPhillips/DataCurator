@@ -93,7 +93,8 @@ function get_number_display_options (result: number | undefined, result_sig_figs
 {
     result = result ?? 1000.23
 
-    const options_by_id: {[k in NumberDisplayType]: AutocompleteOption & {order: number, result_display_type: NumberDisplayType}} = {
+    type Option = AutocompleteOption & {order: number, result_display_type: NumberDisplayType}
+    const options_by_id: {[k in NumberDisplayType]: Option} = {
         "bare": {
             id: "bare", order: 0,
             result_display_type: "bare",
@@ -132,7 +133,16 @@ function get_number_display_options (result: number | undefined, result_sig_figs
         },
     }
 
-    const options = Object.values(options_by_id).sort((a, b) =>
+
+    const optional_options_by_id: {[k: string]: Option} = {...options_by_id}
+
+    // Experiment with removing "duplicate" options
+    if (options_by_id.abbreviated_scaled.title === options_by_id.scaled.title) delete optional_options_by_id.abbreviated_scaled
+    if (options_by_id.scaled.title === options_by_id.simple.title) delete optional_options_by_id.scaled
+    if (options_by_id.simple.title === options_by_id.bare.title) delete optional_options_by_id.simple
+
+
+    const options = Object.values(optional_options_by_id).sort((a, b) =>
     {
         return a.order - b.order
     })
