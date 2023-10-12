@@ -67,7 +67,16 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
         output_element = <div>
             &nbsp;=&nbsp;{result_string}
-            <span style={{ fontSize: "12px" }}>&nbsp;{result.units}</span>
+            {result.units && <span
+                style={{ fontSize: "14px" }}
+            >
+                &nbsp;{result.units}
+            </span>}
+            {calc.result_description && (!editing || !show_options) && <span
+                style={{ fontSize: "14px" }}
+            >
+                &nbsp;{calc.result_description}
+            </span>}
             {/* {editing && <IconButton
                 onClick={() => set_show_options(!show_options)}
                 size="small"
@@ -163,6 +172,23 @@ export function EditableCalculationRow (props: CalculationRowProps)
             >
                 <SettingsIcon />
             </IconButton>
+        </Box>}
+
+        {props.editing && show_options && <Box style={{ width: "100%", display: "flex", marginTop: 10 }}>
+            <div style={{ display: "flex" }}>
+                <EditableTextSingleLine
+                    size="small"
+                    // style={{ marginLeft: 5, marginTop: 5, width: "80px" }}
+                    placeholder="Description"
+                    value={calc.result_description || ""}
+                    on_blur_type={EditableTextOnBlurType.conditional}
+                    on_blur={value =>
+                    {
+                        const result_description = value ? value : undefined
+                        props.update_calculation({ ...calc, result_description })
+                    }}
+                />
+            </div>
         </Box>}
 
         {props.editing && show_options && <EditableCalculationRowOptions

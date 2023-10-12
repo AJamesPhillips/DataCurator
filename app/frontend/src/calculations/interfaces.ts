@@ -68,6 +68,7 @@ export interface PlainCalculationObject
     units?: string
     result_sig_figs?: number
     result_display_type?: NumberDisplayType
+    result_description?: string
 }
 
 export interface CalculationResult
