@@ -66,6 +66,7 @@ export function EditableCalculationRowResultsFormatting (props: OwnProps)
             <AutocompleteText
                 selected_option_id={result_display_type}
                 options={options}
+                retain_options_order={true}
                 on_change={id =>
                 {
                     const option = options.find(o => o.id === id)
@@ -112,13 +113,13 @@ function get_number_display_options (result: number | undefined, result_sig_figs
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.scaled),
         },
         "percentage": {
-            id: "percentage", order: 3,
+            id: "percentage", order: 4,
             result_display_type: "percentage",
             // subtitle: "percentage",
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.percentage),
         },
         "abbreviated_scaled": {
-            id: "abbreviated_scaled", order: 4,
+            id: "abbreviated_scaled", order: 3,
             result_display_type: "abbreviated_scaled",
             // subtitle: "Scaled abbreviated",
             title: format_number_to_string(result, result_sig_figs, NUMBER_DISPLAY_TYPES.abbreviated_scaled),
