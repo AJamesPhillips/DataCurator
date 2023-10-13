@@ -14,18 +14,7 @@ import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for
 import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
-import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
-
-
-
-const DEFAULT_SIGNIFICANT_FIGURES = 2
-function get_default_significant_figures (calc_value: string): number
-{
-    const num_val = parseInt(calc_value, 10)
-    // Making assumption that most years of interest to current debate will be between
-    // 1900 and 2200
-    return (Number.isSafeInteger(num_val) && num_val > 1900 && num_val < 2200) ? 4 : DEFAULT_SIGNIFICANT_FIGURES
-}
+import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
 
 
 
@@ -56,7 +45,9 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const { result_sig_figs = default_significant_figures } = calc
     const [temp_result_sig_figs, set_temp_result_sig_figs] = useState<number | undefined>(result_sig_figs)
     // result display type
-    const { result_display_type = NUMBER_DISPLAY_TYPES.simple } = calc
+    const default_result_display_type = get_default_result_display_type(calc.value)
+    const { result_display_type = default_result_display_type } = calc
+
 
     if (!editing && !calc.value && !calc.units) return null
 
