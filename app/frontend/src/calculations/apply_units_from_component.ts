@@ -16,7 +16,7 @@ export function apply_units_from_component (calculation_string: string, units: s
     {
         const uuid = uuid_match[0].slice(2) // slice removes initial @@
         const component = wcomponents_by_id[uuid] as WComponentNodeStateV2
-        units = component?.units || units
+        units = component?.units// || units
     }
 
     return units

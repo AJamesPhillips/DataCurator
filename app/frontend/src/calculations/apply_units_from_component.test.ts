@@ -12,7 +12,7 @@ export const run_apply_units_from_component_tests = describe("apply_units_from_c
     let calculation_string: string
     let wcomponents_by_id: WComponentsById
     let prepared_units: string | undefined
-    let expected_prepared_units: string
+    let expected_prepared_units: string | undefined
 
     const id1 = uuid_v4_for_tests(1)
     const id2 = uuid_v4_for_tests(2)
@@ -66,8 +66,8 @@ export const run_apply_units_from_component_tests = describe("apply_units_from_c
 
     calculation_string = `@@${id2}`
     units = "meters"
-    expected_prepared_units = "meters"
+    expected_prepared_units = undefined
     prepared_units = apply_units_from_component(calculation_string, units, wcomponents_by_id)
-    test(prepared_units, expected_prepared_units, "Defaults to units set in calculation if component can not be found")
+    test(prepared_units, expected_prepared_units, "Defaults units to undefined when component can not be found, even if calculation has units given")
 
 }, false)
