@@ -8,6 +8,7 @@ import { ConnectedProps, connect } from "react-redux"
 import { RootState } from "../../state/State"
 import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { Tooltip } from "@mui/material"
 
 
 
@@ -27,9 +28,15 @@ export function DisplayValue (props: OwnProps)
     // never had uncertainty, but now with state_value being included in this then it can be
     // uncertain as well as `assumption_or_other_forced_value` being true.
     const class_name = `value ${assumption_or_other_forced_value ? "assumption" : ""} ${uncertain ? "uncertain" : ""}`
+    let tooltip_text = "Current value"
+    if (assumption_or_other_forced_value) tooltip_text += " is an assumption"
+    if (assumption_or_other_forced_value && uncertain) tooltip_text += " and"
+    if (uncertain) tooltip_text += " has uncertainty"
 
     return <>
-        <span className={class_name}>{values_string}</span>
+        <Tooltip className={class_name} title={tooltip_text} aria-label={tooltip_text}>
+            <span>{values_string}</span>
+        </Tooltip>
         {(derived__using_values_from_wcomponent_ids || []).map(uuid => <LinkToComponent uuid={uuid} />)}
     </>
 }

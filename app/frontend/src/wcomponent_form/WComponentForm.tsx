@@ -230,7 +230,7 @@ function _WComponentForm (props: Props)
 
 
         {UI_value?.is_defined && <span>
-            <span className="description_label">Value</span>
+            <span className="description_label">Value </span>
             <DisplayValue UI_value={UI_value} />
         </span>}
 

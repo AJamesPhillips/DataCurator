@@ -87,4 +87,4 @@ export const run_get_default_formatting_function_tests = describe("get default f
         })
     })
 
-}, true)
+}, false)

@@ -86,18 +86,11 @@ blockquote p {
     opacity: 1;
 }
 
-[data-tooltip_left_-20]:after {
-    left: -20%;
-}
-[data-tooltip_left_-10]:after {
-    left: -10%;
-}
-[data-tooltip_left_0]:after {
-    left: 0%;
-}
-[data-tooltip_bottom_-60]:after {
-    bottom: -60%;
-}
+[data-tooltip_left_-20]:after { left: -20%; }
+[data-tooltip_left_-10]:after { left: -10%; }
+[data-tooltip_left_0]:after { left: 0%; }
+[data-tooltip_bottom_-60]:after { bottom: -60%; }
+[data-tooltip_bottom_-140]:after { bottom: -140%; }
 
 div[data-tooltip]:after {
     // left: 5px!important;  // disabled as was not sure what this was doing
