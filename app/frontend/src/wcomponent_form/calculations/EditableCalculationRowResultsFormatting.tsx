@@ -34,6 +34,7 @@ export function EditableCalculationRowResultsFormatting (props: OwnProps)
 
     return <div style={{ display: "flex", marginTop: -15 }}>
         <div
+            // Using `<Tooltip title="Significant figures" ...` seems not to work
             data-tooltip="Significant figures" data-tooltip_left_-10 data-tooltip_bottom_-60
         >
             <EditableNumber
@@ -59,6 +60,7 @@ export function EditableCalculationRowResultsFormatting (props: OwnProps)
         </div>
 
         <div
+            // Using `<Tooltip title="Display type" ...` seems not to work
             data-tooltip="Display type" data-tooltip_left_0 data-tooltip_bottom_-60
             style={{ marginLeft: "10px", width: "120px" }}
         >

@@ -1,5 +1,5 @@
 import { ArrowUpward, ArrowDownward, Delete as DeleteIcon } from "@mui/icons-material"
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, Tooltip } from "@mui/material"
 
 import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 import { AddRowAbove } from "../../sharedf/icons/AddRowAbove"
@@ -23,40 +23,44 @@ export function EditableCalculationRowOptions (props: OwnProps)
     const [ready_to_delete, set_ready_to_delete] = useState(false)
 
     return <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
-        <IconButton
-            onClick={() => props.update_calculations("add_above")}
-            size="large"
-            // title="Add calculation above"
-            data-tooltip="Add above"
-        >
-            <AddRowAbove style={{ fill: "currentColor", height: "24px", width: "24px" }} />
-        </IconButton>
+        <Tooltip title="Add above">
+            <IconButton
+                onClick={() => props.update_calculations("add_above")}
+                size="large"
+                // title="Add calculation above"
+            >
+                <AddRowAbove style={{ fill: "currentColor", height: "24px", width: "24px" }} />
+            </IconButton>
+        </Tooltip>
 
-        <IconButton
-            onClick={() => props.update_calculations("add_below")}
-            size="large"
-            data-tooltip="Add below"
-        >
-            <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
-        </IconButton>
+        <Tooltip title="Add below">
+            <IconButton
+                onClick={() => props.update_calculations("add_below")}
+                size="large"
+            >
+                <AddRowBelow style={{ fill: "currentColor", height: "24px", width: "24px" }} />
+            </IconButton>
+        </Tooltip>
 
-        <IconButton
-            onClick={() => props.update_calculations("move_up")}
-            size="large"
-            data-tooltip="Move up"
-            disabled={props.disallowed_commands.has("move_up")}
-        >
-            <ArrowUpward />
-        </IconButton>
+        <Tooltip title="Move up">
+            <IconButton
+                onClick={() => props.update_calculations("move_up")}
+                size="large"
+                disabled={props.disallowed_commands.has("move_up")}
+            >
+                <ArrowUpward />
+            </IconButton>
+        </Tooltip>
 
-        <IconButton
-            onClick={() => props.update_calculations("move_down")}
-            size="large"
-            data-tooltip="Move down"
-            disabled={props.disallowed_commands.has("move_down")}
-        >
-            <ArrowDownward />
-        </IconButton>
+        <Tooltip title="Move down">
+            <IconButton
+                onClick={() => props.update_calculations("move_down")}
+                size="large"
+                disabled={props.disallowed_commands.has("move_down")}
+            >
+                <ArrowDownward />
+            </IconButton>
+        </Tooltip>
 
         {!ready_to_delete && <IconButton onClick={() => set_ready_to_delete(true)} size="large">
             <DeleteIcon />
