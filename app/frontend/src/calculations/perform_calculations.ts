@@ -28,8 +28,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         converted_calculation = convert_percentages(converted_calculation)
         converted_calculation = hide_currency_symbols(converted_calculation)
 
-        let units: string | undefined = undefined
-        if (calculation.units !== undefined) units = calculation.units
+        let units: string | undefined = calculation.units
         units = apply_units_from_component(converted_calculation, units, wcomponents_by_id)
         units = hide_currency_symbols(units || "")
 
