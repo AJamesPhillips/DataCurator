@@ -8,8 +8,10 @@ import { WarningTriangleV2 } from "../sharedf/WarningTriangleV2"
 import { RootState } from "../state/State"
 import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
 import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
-import { WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_is_statev2, WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -27,7 +29,6 @@ interface OwnProps
 const map_state = (state: RootState) =>
 {
     return {
-        editing: !state.display_options.consumption_formatting,
         wcomponents_by_id: state.derived.composed_wcomponents_by_id,
     }
 }
@@ -55,6 +56,10 @@ function _WComponentValueAndPredictionsForm (props: Props)
 
     const [show_form, set_show_form] = useState(orig_values_and_prediction_sets.length > 0)
 
+    const units = wcomponent_is_statev2(wcomponent) && wcomponent.units
+    const show_units = (props.force_editable && (VAPs_represent === VAPsType.number || !!units))
+        || (VAPs_represent === VAPsType.number && !!units)
+
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
     // only using it to get the CSS styles applied for `expansion_button`.
     return <div className={"editable_list_entry padded " + (show_form ? "expanded" : "")}>
@@ -74,6 +79,16 @@ function _WComponentValueAndPredictionsForm (props: Props)
 
             <div className="expansion_button"/>
         </div>
+
+        {wcomponent_is_statev2(wcomponent) && show_units && <EditableTextSingleLine
+            style={{ padding: "10px 0px" }}
+            size="small"
+            placeholder="Units"
+            hide_label={false}
+            value={wcomponent.units || ""}
+            on_blur={units => props.upsert_wcomponent({ units: units ? units : undefined })}
+            on_blur_type={EditableTextOnBlurType.conditional}
+        />}
 
 
         {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
