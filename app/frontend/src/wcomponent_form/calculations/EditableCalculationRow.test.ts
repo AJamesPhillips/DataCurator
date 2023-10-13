@@ -21,4 +21,4 @@ export const run_EditableCalculationRow_tests = describe("EditableCalculationRow
         test(result, true, "Should return true for A * B when called a second time")
     })
 
-}, true)
+}, false)
