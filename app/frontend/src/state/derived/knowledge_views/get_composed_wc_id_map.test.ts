@@ -1,5 +1,33 @@
+import { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { describe, test } from "../../../shared/utils/test"
+import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
 import { GetComposedWcIdMapReturn, get_composed_wc_id_map } from "./get_composed_wc_id_map"
+
+
+
+const wcomponent_id = uuid_v4_for_tests(1)
+
+function test_helper__make_knowledge_view (kv_wc_entry: KnowledgeViewWComponentEntry | undefined, kv_id: string, foundational_kv_id?: string)
+{
+    const date1 = new Date("2023-03-22 15:15:00")
+
+    const kv: KnowledgeView = {
+        id: kv_id,
+        foundation_knowledge_view_ids: foundational_kv_id ? [foundational_kv_id] : undefined,
+        wc_id_map: {},
+
+        title: "",
+        description: "",
+        sort_type: "normal",
+        created_at: date1,
+        base_id: 1,
+        goal_ids: [],
+    }
+
+    if (kv_wc_entry) kv.wc_id_map[wcomponent_id] = kv_wc_entry
+
+    return kv
+}
 
 
 
@@ -7,9 +35,13 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
 {
     const date1 = new Date("2023-03-22 15:15:00")
 
+    let result: GetComposedWcIdMapReturn
+    let expected_result: GetComposedWcIdMapReturn
+
+
     // Test get_composed_wc_id_map handles no data
-    let result = get_composed_wc_id_map([], {})
-    let expected_result: GetComposedWcIdMapReturn =
+    result = get_composed_wc_id_map([], {})
+    expected_result =
     {
         composed_wc_id_map: {},
         composed_blocked_wc_id_map: {},
@@ -17,80 +49,199 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
     test(result, expected_result)
 
 
-    // Test get_composed_wc_id_map handles nested knowledge view with
-    // passthrough, and blocked entries and deleted wcomponents
-    const deleted_wcomponent_id = "wc6"
-    result = get_composed_wc_id_map([
-        {
-            id: "kv1",
-            wc_id_map:
-            {
-                "wc1": { left: 0,  top: 0 },
-                "wc2": { left: 10, top: 0, passthrough: true },
-                "wc3": { left: 20, top: 0, blocked: true },
-                "wc4": { left: 30, top: 0 },
-                "wc5": { left: 40, top: 0 },
-                [deleted_wcomponent_id]: { left: 50, top: 0 },
-            },
-
-            title: "a1",
-            description: "b1",
-            sort_type: "normal",
-            created_at: date1,
-            base_id: 1,
-            goal_ids: [],
-        },
-        {
-            id: "kv2",
-            foundation_knowledge_view_ids: ["kv1"],
-            wc_id_map:
-            {
-                "wc1": { left: 0,  top: 10 },
-                "wc2": { left: 10, top: 10 },
-                "wc3": { left: 20, top: 10 },
-                "wc4": { left: 30, top: 10, passthrough: true },
-                "wc5": { left: 40, top: 10, blocked: true },
-            },
-
-            title: "a2",
-            description: "b2",
-            sort_type: "normal",
-            created_at: date1,
-            base_id: 1,
-            goal_ids: [],
-        },
-    ],
+    interface TestCase
     {
-        [deleted_wcomponent_id]:
-        {
-            id: deleted_wcomponent_id,
-            deleted_at: date1,
+        // the wcomponent entry in the current knowledge view
+        kv_wc_entry_in_current_kv: KnowledgeViewWComponentEntry | undefined
+        // the wcomponent entry in the foundation knowledge view
+        kv_wc_entry_in_foundation_kv: KnowledgeViewWComponentEntry | undefined
 
-            type: "statev2",
-            // goals: {},
-            title: "",
-            description: "",
-            created_at: date1,
-            base_id: 1,
-            // datetime: {},
-        }
-    })
+        expected_result_in_composed_wc_id_map: KnowledgeViewWComponentEntry | undefined
+        expected_result_in_composed_blocked_wc_id_map: KnowledgeViewWComponentEntry | undefined
 
-    expected_result =
-    {
-        composed_wc_id_map:
-        {
-            "wc1": { left: 0,  top: 10 },
-            "wc2": { left: 10, top: 10 },
-            "wc3": { left: 20, top: 10 },
-            "wc4": { left: 30, top: 0 },
-        },
-        composed_blocked_wc_id_map:
-        {
-            "wc5": { left: 40, top: 10, blocked: true },
-        },
+        test_description: string
+        test_description_part2: string
     }
 
-    test(result, expected_result)
+    const test_cases: TestCase[] = [
+        // No entry in current_kv
+        {
+            kv_wc_entry_in_current_kv:    undefined,
+            kv_wc_entry_in_foundation_kv: undefined,
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "missing in current, missing in foundation, ",
+            test_description_part2: "should find no entry to return",
+        },
+        {
+            kv_wc_entry_in_current_kv:    undefined,
+            kv_wc_entry_in_foundation_kv: { left: 0, top: 0 },
+            expected_result_in_composed_wc_id_map: { left: 0, top: 0 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "missing in current, defined in foundation, ",
+            test_description_part2: "should return entry in foundation",
+        },
+        {
+            kv_wc_entry_in_current_kv:    undefined,
+            kv_wc_entry_in_foundation_kv: { left: 0, top: 0, passthrough: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "missing in current, passthrough in foundation, ",
+            test_description_part2: "should find no entry to return",
+        },
+        {
+            kv_wc_entry_in_current_kv:    undefined,
+            kv_wc_entry_in_foundation_kv: { left: 0, top: 0, blocked: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 0, top: 0, blocked: true },
+            test_description: "missing in current, blocked in foundation, ",
+            test_description_part2: "should return entry in blocked",
+        },
+        // Normal entry in current_kv
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222 },
+            kv_wc_entry_in_foundation_kv: undefined,
+            expected_result_in_composed_wc_id_map: { left: 222, top: 222 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "normal entry in current, missing in foundation, ",
+            test_description_part2: "should return entry in current not foundation",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222 },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0 },
+            expected_result_in_composed_wc_id_map: { left: 222, top: 222 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "normal entry in current, defined in foundation, ",
+            test_description_part2: "should return entry in current not foundation",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222 },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, passthrough: true },
+            expected_result_in_composed_wc_id_map: { left: 222, top: 222 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "normal entry in current, passthrough in foundation, ",
+            test_description_part2: "should return entry in current not foundation",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222 },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, blocked: true },
+            expected_result_in_composed_wc_id_map: { left: 222, top: 222 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "normal entry in current, blocked in foundation, ",
+            test_description_part2: "should return entry in current not foundation and NOT show foundation's blocked entry in composed_blocked_wc_id_map",
+        },
+        // Passthrough entry in current_kv
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, passthrough: true },
+            kv_wc_entry_in_foundation_kv: undefined,
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "passthrough entry in current, missing in foundation, ",
+            test_description_part2: "should find no entry to return",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, passthrough: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0 },
+            expected_result_in_composed_wc_id_map: { left: 0, top: 0 },
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "passthrough entry in current, defined in foundation, ",
+            test_description_part2: "should return (passthrough) entry from foundation",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, passthrough: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, passthrough: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: undefined,
+            test_description: "passthrough entry in current, passthrough in foundation, ",
+            test_description_part2: "should find no entry to return",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, passthrough: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, blocked: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 0,   top: 0, blocked: true },
+            test_description: "passthrough entry in current, blocked in foundation, ",
+            test_description_part2: "should find no entry to return and show foundation's blocked entry in composed_blocked_wc_id_map",
+        },
+        // Blocked entry in current_kv
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, blocked: true },
+            kv_wc_entry_in_foundation_kv: undefined,
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 222, top: 222, blocked: true },
+            test_description: "blocked entry in current, missing in foundation, ",
+            test_description_part2: "should find no entry to return and show blocked entry from current kv in composed_blocked_wc_id_map",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, blocked: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0 },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 222, top: 222, blocked: true },
+            test_description: "blocked entry in current, defined in foundation, ",
+            test_description_part2: "should find no entry to return and show blocked entry from current kv in composed_blocked_wc_id_map",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, blocked: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, passthrough: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 222, top: 222, blocked: true },
+            test_description: "blocked entry in current, passthrough in foundation, ",
+            test_description_part2: "should find no entry to return and show blocked entry from current kv in composed_blocked_wc_id_map",
+        },
+        {
+            kv_wc_entry_in_current_kv:    { left: 222, top: 222, blocked: true },
+            kv_wc_entry_in_foundation_kv: { left: 0,   top: 0, blocked: true },
+            expected_result_in_composed_wc_id_map: undefined,
+            expected_result_in_composed_blocked_wc_id_map: { left: 222, top: 222, blocked: true },
+            test_description: "blocked entry in current, blocked in foundation, ",
+            test_description_part2: "should find no entry to return and show blocked entry from current kv in composed_blocked_wc_id_map",
+        },
+    ]
+
+
+    test_cases.forEach(test_case =>
+    {
+        const foundation_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_foundation_kv, "kv1")
+        const current_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_current_kv, "kv2", "kv1")
+
+        result = get_composed_wc_id_map([
+            foundation_knowledge_view,
+            current_knowledge_view,
+        ], {})
+
+        test(result.composed_wc_id_map[wcomponent_id], test_case.expected_result_in_composed_wc_id_map, "composed_wc_id_map " + test_case.test_description + test_case.test_description_part2)
+        test(result.composed_blocked_wc_id_map[wcomponent_id], test_case.expected_result_in_composed_blocked_wc_id_map, "composed_blocked_wc_id_map " + test_case.test_description + test_case.test_description_part2)
+    })
+
+
+    describe("deleted wcomponent", () =>
+    {
+        test_cases.forEach(test_case =>
+        {
+            const foundation_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_foundation_kv, "kv1")
+            const current_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_current_kv, "kv2", "kv1")
+
+            result = get_composed_wc_id_map([
+                foundation_knowledge_view,
+                current_knowledge_view,
+            ], {
+                [wcomponent_id]:
+                {
+                    id: wcomponent_id,
+                    deleted_at: date1,
+
+                    type: "statev2",
+                    title: "",
+                    description: "",
+                    created_at: date1,
+                    base_id: 1,
+                }
+            })
+
+            test(result.composed_wc_id_map[wcomponent_id], undefined, "composed_wc_id_map " + test_case.test_description + "should not return any entry")
+            test(result.composed_blocked_wc_id_map[wcomponent_id], undefined, "composed_blocked_wc_id_map " + test_case.test_description + "should not return any entry")
+        })
+    })
+
 
 }, false)
