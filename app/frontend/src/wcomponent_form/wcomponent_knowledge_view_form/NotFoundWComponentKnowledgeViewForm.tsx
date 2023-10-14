@@ -46,7 +46,12 @@ function _NotFoundWComponentKnowledgeViewForm (props: Props)
 
 
     return <div>
-        <WComponentKnowledgeViewForm wcomponent_id={wcomponent_id} />
+        <WComponentKnowledgeViewForm
+            wcomponent_id={wcomponent_id}
+            // Not 100% sure this is correct (perhaps should include where user
+            // is allowed to edit this as well) but it is true to the current implementation
+            editing_allowed={editing}
+        />
 
         {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
             <ConfirmatoryDeleteButton

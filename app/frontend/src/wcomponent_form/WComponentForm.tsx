@@ -495,7 +495,10 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        <WComponentKnowledgeViewForm wcomponent_id={wcomponent.id} />
+        <WComponentKnowledgeViewForm
+            wcomponent_id={wcomponent.id}
+            editing_allowed={editing_allowed}
+        />
 
 
         <br />

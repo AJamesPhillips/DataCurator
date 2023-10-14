@@ -27,6 +27,7 @@ import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
 interface OwnProps
 {
     wcomponent_id: string
+    editing_allowed: boolean
 }
 
 
@@ -45,7 +46,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
         composed_knowledge_view_entry,
         knowledge_view_entry,
-        editing: !state.display_options.consumption_formatting,
         middle_position_left: middle_position.left,
         middle_position_top: middle_position.top,
     }
@@ -65,7 +65,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentKnowledgeViewForm (props: Props)
 {
     const { wcomponent_id, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
-        knowledge_view_entry, editing } = props
+        knowledge_view_entry, editing_allowed } = props
 
 
     function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
@@ -88,7 +88,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry?.frame_height !== undefined)
 
     return <div>
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
                 <Slider
                     color="secondary"
@@ -107,7 +107,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
-        {(editing && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Frame</FormLabel>
                 <p>
                     <Button
@@ -169,7 +169,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
-        {editing && <p>
+        {editing_allowed && <p>
             <AlignComponentForm wcomponent_id={wcomponent_id} />
             <br />
         </p>}
@@ -205,7 +205,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             {(knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view"}
             {composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view"}
             <br />
-            {editing && <Button
+            {editing_allowed && <Button
                 value={(knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view"}
                 extra_class_names="left"
                 onClick={() => upsert_entry(knowledge_view_id, { blocked: undefined, passthrough: undefined })}
@@ -213,7 +213,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {(editing && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
+        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
             <ConfirmatoryDeleteButton
                 button_text="Delete from knowledge view"
                 tooltip_text={"Delete from current knowledge view (" + knowledge_view_title + ")"}
@@ -228,7 +228,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </p>}
 
 
-        {(editing && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough) && <div>
+        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough) && <div>
             <ConfirmatoryDeleteButton
                 button_text="Delete and Block from knowledge view"
                 tooltip_text={"Delete and Block from showing in current knowledge view (" + knowledge_view_title + ")"}
@@ -243,7 +243,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {editing && <p>
+        {editing_allowed && <p>
             Add to knowledge view
             <SelectKnowledgeView
                 on_change={knowledge_view_id =>
