@@ -19,7 +19,27 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
 
     const pass = str_got === str_expected
     if (pass) console .log("pass  " + description)
-    else console.error(`fail: "${str_got}" !== "${str_expected}"  ${description}`)
+    else
+    {
+        console.error(`fail: "${str_got}" !== "${str_expected}"  ${description}`)
+        try
+        {
+            if ((got as any)?.constructor === Object)
+            {
+                Object.entries(got as any).forEach(([key, got_value]) =>
+                {
+                    const expected_value = (expected as any)[key]
+                    const str_got_value = sort_items ? stable_stringify(got_value) : JSON.stringify(got_value)
+                    const str_expected_value = sort_items ? stable_stringify(expected_value) : JSON.stringify(expected_value)
+                    const pass = str_got_value === str_expected_value
+                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: "${str_got_value}", expected: "${str_expected_value}"`)
+                })
+            }
+
+        } catch (e) {
+            console.debug("error in providing debugging for test failure", e)
+        }
+    }
 }
 
 export const test: Test = test_fn as any
