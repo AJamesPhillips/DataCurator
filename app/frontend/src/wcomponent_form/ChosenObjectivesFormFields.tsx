@@ -23,7 +23,7 @@ interface OwnProps
 {
     wcomponent: WComponent & HasObjectives
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
-    force_editable?: boolean
+    editing_allowed?: boolean
 }
 
 
@@ -92,7 +92,7 @@ function _ChosenObjectivesFormFields (props: Props)
             Objectives
 
             <MultiAutocompleteText
-                force_editable={props.force_editable}
+                editing_allowed={props.editing_allowed}
                 placeholder="Objectives..."
                 selected_option_ids={objective_ids}
                 options={wcomponent_id_options}

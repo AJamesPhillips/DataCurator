@@ -18,7 +18,7 @@ export type EditableTextCommonOwnProps =
     value: string
     conditional_on_change?: (new_value: string) => void
     force_focus_on_first_render?: boolean
-    force_editable?: boolean
+    editing_allowed?: boolean
     select_all_on_focus?: boolean
     size?: "small" | "medium"
     hide_label?: boolean
@@ -76,7 +76,7 @@ function _EditableTextCommon (props: Props)
         placeholder,
         disabled,
         presenting,
-        force_editable,
+        editing_allowed,
         select_all_on_focus,
         force_focus_on_first_render,
         on_blur_type = EditableTextOnBlurType.conditional,
@@ -91,7 +91,7 @@ function _EditableTextCommon (props: Props)
     const id_insertion_point = useRef<number | undefined>(undefined)
 
 
-    if (force_editable === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && force_editable === undefined))
+    if (editing_allowed === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && editing_allowed === undefined))
     {
         const class_name = (disabled ? "disabled" : "")
         const have_value = props.value !== undefined

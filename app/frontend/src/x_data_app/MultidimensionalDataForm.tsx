@@ -39,7 +39,7 @@ export function MultidimensionalDataForm (props: OwnProps)
 
         <div style={{ display: "inline-flex" }}>
             Type &nbsp; <AutocompleteText
-            force_editable={true}
+            editing_allowed={true}
             selected_option_id={data_type}
             options={wcomponent_statev2_subtype_options}
             allow_none={false}

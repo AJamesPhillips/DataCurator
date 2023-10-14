@@ -17,7 +17,7 @@ type OwnProps =
     size?: "small" | "medium"
     style?: h.JSX.CSSProperties
     on_blur_type?: EditableTextOnBlurType
-    force_editable?: boolean
+    editing_allowed?: boolean
 } & (
 {
     value: number
@@ -56,7 +56,7 @@ function _EditableNumber (props: Props)
         disabled,
         editing,
         default_value_when_invalid = 0,
-        force_editable,
+        editing_allowed,
     } = props
 
 
@@ -80,7 +80,7 @@ function _EditableNumber (props: Props)
             size={props.size || "small"}
             style={props.style}
             value={value}
-            force_editable={force_editable}
+            editing_allowed={editing_allowed}
             select_all_on_focus={true}
             conditional_on_change={new_value =>
             {

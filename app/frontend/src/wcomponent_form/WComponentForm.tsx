@@ -105,7 +105,7 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
 
         is_in_editing_mode,
         allowed_to_edit,
-        force_editable: is_in_editing_mode && allowed_to_edit,
+        editing_allowed: is_in_editing_mode && allowed_to_edit,
         base_for_wcomponent,
 
         created_at_ms: state.routing.args.created_at_ms,
@@ -130,7 +130,7 @@ function _WComponentForm (props: Props)
     const { wcomponent, ready, base_id,
         wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, from_wcomponent, to_wcomponent,
         derived_composed_wcomponents_by_id, derived_composed_wcomponent,
-        force_editable, created_at_ms, sim_ms } = props
+        editing_allowed, created_at_ms, sim_ms } = props
 
     const wcomponent_id = wcomponent.id
     const [previous_id, set_previous_id] = useState<string>(wcomponent_id)
@@ -184,7 +184,7 @@ function _WComponentForm (props: Props)
 
 
     const title = get_title({
-        text_type: force_editable ? RichTextType.raw : RichTextType.rich,
+        text_type: editing_allowed ? RichTextType.raw : RichTextType.rich,
         wcomponent: derived_composed_wcomponent,
         wcomponents_by_id: derived_composed_wcomponents_by_id,
         knowledge_views_by_id,
@@ -217,7 +217,7 @@ function _WComponentForm (props: Props)
             margin="normal"
             style={{ fontWeight: 600, fontSize: 22 }}>
             <EditableText
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
                 placeholder={wcomponent.type === "action" ? "Passive imperative title..." : (wcomponent.type === "relation_link" ? "Verb..." : "Title...")}
                 value={title}
                 on_blur={conditional_on_blur_title}
@@ -244,12 +244,12 @@ function _WComponentForm (props: Props)
             // coming to consume / read / understand what this component is about
             // and what the author is trying to communicate.
         }
-        {(force_editable || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed || wcomponent.type !== "statev2" || has_VAP_sets) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
             {// Keep up to date in WComponentMultipleForm
              // todo, document how and what is meant to be kept up to date in WComponentMultipleForm
             }
             <AutocompleteText
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
                 placeholder="Type: "
                 selected_option_id={wcomponent.type}
                 options={wcomponent_type_options}
@@ -272,12 +272,12 @@ function _WComponentForm (props: Props)
         </FormControl>}
 
 
-        {wcomponent_is_statev2(wcomponent) && (force_editable || wcomponent.subtype) &&
+        {wcomponent_is_statev2(wcomponent) && (editing_allowed || wcomponent.subtype) &&
         <p>
             <span className="description_label">Subtype</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
-                    force_editable={force_editable}
+                    editing_allowed={editing_allowed}
                     placeholder="Subtype..."
                     selected_option_id={wcomponent.subtype}
                     options={wcomponent_statev2_subtype_options}
@@ -288,9 +288,9 @@ function _WComponentForm (props: Props)
         </p>}
 
 
-        {(force_editable || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">
+        {(editing_allowed || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">
             <EditableText
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
                 placeholder="Description..."
                 value={wcomponent.description}
                 on_blur={description => wrapped_upsert_wcomponent({ description })}
@@ -357,7 +357,7 @@ function _WComponentForm (props: Props)
                 />
             </p>
 
-            {force_editable && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+            {editing_allowed && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
                 <Button
                     value="Reverse Direction"
                     onClick={() =>
@@ -372,14 +372,14 @@ function _WComponentForm (props: Props)
         {wcomponent_is_causal_link(wcomponent) && <WComponentCausalLinkForm
             wcomponent={wcomponent}
             from_wcomponent={from_wcomponent}
-            editing={force_editable}
+            editing={editing_allowed}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
         {wcomponent_is_plain_connection(wcomponent) && <WComponentConnectionForm
             wcomponent={wcomponent}
-            editing={force_editable}
+            editing={editing_allowed}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
@@ -394,7 +394,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {(force_editable || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed || (wcomponent.label_ids && wcomponent.label_ids.length > 0)) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
             <FormLabel component="legend">Labels</FormLabel>
             <LabelsEditor
                 label_ids={wcomponent.label_ids}
@@ -414,21 +414,21 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent) && <WComponentStateForm
-            force_editable={force_editable}
+            editing_allowed={editing_allowed}
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
 
         {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields
-            force_editable={force_editable}
+            editing_allowed={editing_allowed}
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         /> }
 
 
         {wcomponent_can_have_validity_predictions(wcomponent) && <WComponentValidityPredictionsForm
-            force_editable={force_editable}
+            editing_allowed={editing_allowed}
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
@@ -453,7 +453,7 @@ function _WComponentForm (props: Props)
 
         <FormControl variant="standard" fullWidth={true}>
             <EditableCustomDateTime
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
                 title="Created at"
                 invariant_value={wcomponent.created_at}
                 value={wcomponent.custom_created_at}
@@ -463,7 +463,7 @@ function _WComponentForm (props: Props)
             /><br/>
         </FormControl>
 
-        {force_editable && <p>
+        {editing_allowed && <p>
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
@@ -471,15 +471,15 @@ function _WComponentForm (props: Props)
             />
         </p>}
 
-        {force_editable && <WComponentImageForm
+        {editing_allowed && <WComponentImageForm
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-        {!force_editable && wcomponent.summary_image && <p>
+        {!editing_allowed && wcomponent.summary_image && <p>
             <a href={wcomponent.summary_image} target="_blank"><ExternalLinkIcon />Open image</a>
         </p>}
 
-        {force_editable && <p>
+        {editing_allowed && <p>
             <span className="description_label">Hide node title</span>
             <EditableCheckbox
                 value={wcomponent.hide_title}
@@ -502,7 +502,7 @@ function _WComponentForm (props: Props)
         <br />
 
 
-        {force_editable && wcomponent_is_not_deleted(wcomponent) && <div>
+        {editing_allowed && wcomponent_is_not_deleted(wcomponent) && <div>
             <ConfirmatoryDeleteButton
                 button_text="Soft Delete (can undo)" // Todo: make recycle bin and empty after 30 days
                 tooltip_text="Remove from all knowledge views"
@@ -510,7 +510,7 @@ function _WComponentForm (props: Props)
             />
         </div>}
 
-        {force_editable && wcomponent_is_deleted(wcomponent) && <div>
+        {editing_allowed && wcomponent_is_deleted(wcomponent) && <div>
             <Button
                 title="Undo delete"
                 onClick={() => wrapped_upsert_wcomponent({ deleted_at: undefined })}

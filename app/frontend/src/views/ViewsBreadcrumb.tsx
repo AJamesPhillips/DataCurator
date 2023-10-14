@@ -122,7 +122,7 @@ function _ViewsBreadcrumb (props: Props)
                 on_choose_same={subview_id =>
                     props.change_route({ args: { subview_id: subview_id || level.parent_id } })
                 }
-                force_editable={true}
+                editing_allowed={true}
                 threshold_minimum_score={false}
                 retain_options_order={true}
             />

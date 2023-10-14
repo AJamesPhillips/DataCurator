@@ -15,7 +15,7 @@ interface OwnProps {
     allowed_ids?: Set<string>
     exclude_ids?: Set<string>
     on_change: (knowledge_view_id: string | undefined) => void
-    force_editable?: boolean
+    editing_allowed?: boolean
 }
 
 
@@ -70,7 +70,7 @@ function _SelectKnowledgeView (props: Props)
         selected_option_id={selected_option_id}
         options={options}
         on_change={on_change}
-        force_editable={props.force_editable}
+        editing_allowed={props.editing_allowed}
     />
 }
 

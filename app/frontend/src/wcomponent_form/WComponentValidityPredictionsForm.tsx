@@ -17,7 +17,7 @@ interface OwnProps
 {
     wcomponent: WComponentCanHaveValidityPredictions
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
-    force_editable?: boolean
+    editing_allowed?: boolean
 }
 
 

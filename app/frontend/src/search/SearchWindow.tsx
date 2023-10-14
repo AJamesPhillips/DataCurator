@@ -122,7 +122,7 @@ export function SearchWindow (props: OwnProps)
                 search_fields={search_fields}
                 search_type={search_type}
                 set_search_type_used={set_search_type_used}
-                force_editable={true}
+                editing_allowed={true}
                 threshold_minimum_score={-1000}
             />
         </Box>}

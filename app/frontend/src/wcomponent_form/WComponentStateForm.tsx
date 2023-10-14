@@ -14,7 +14,7 @@ import { WComponentValueAndPredictionsForm } from "./WComponentValueAndPredictio
 
 interface OwnProps
 {
-    force_editable: boolean
+    editing_allowed: boolean
     wcomponent: WComponentIsAllowedToHaveStateVAPSets
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
@@ -39,7 +39,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentStateForm (props: Props)
 {
     const {
-        force_editable, wcomponent, upsert_wcomponent,
+        editing_allowed, wcomponent, upsert_wcomponent,
         wcomponents_by_id,
     } = props
 
@@ -50,16 +50,16 @@ function _WComponentStateForm (props: Props)
 
     return <>
         {wcomponent_is_statev2(wcomponent) &&
-        (force_editable || (wcomponent.calculations?.length || 0) > 0) &&
+        (editing_allowed || (wcomponent.calculations?.length || 0) > 0) &&
         <WComponentCalculatonsForm
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
         />}
 
 
-        {(orig_values_and_prediction_sets !== undefined && (force_editable || orig_values_and_prediction_sets.length > 0)) &&
+        {(orig_values_and_prediction_sets !== undefined && (editing_allowed || orig_values_and_prediction_sets.length > 0)) &&
         <WComponentValueAndPredictionsForm
-            force_editable={force_editable}
+            editing_allowed={editing_allowed}
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
             VAPs_represent={VAPs_represent}
@@ -70,9 +70,9 @@ function _WComponentStateForm (props: Props)
 
         {VAPs_represent !== VAPsType.undefined
             && orig_values_and_prediction_sets !== undefined
-            && (force_editable || (Object.keys(orig_value_possibilities || {}).length > 0))
+            && (editing_allowed || (Object.keys(orig_value_possibilities || {}).length > 0))
             && <WComponentValuePossibilitiesForm
-                editing={force_editable}
+                editing={editing_allowed}
                 attribute_wcomponent={wcomponents_by_id[(wcomponent_is_state_value(wcomponent) && wcomponent.attribute_wcomponent_id) || ""]}
                 VAPs_represent={VAPs_represent}
                 value_possibilities={orig_value_possibilities}

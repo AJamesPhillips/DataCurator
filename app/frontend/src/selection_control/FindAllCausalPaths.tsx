@@ -65,7 +65,7 @@ function _FindAllCausalPaths (props: Props)
             allow_none={true}
             selected_option_ids={props.from_ids}
             options={node_options}
-            force_editable={true}
+            editing_allowed={true}
             on_change={new_from_ids => props.set_ids({ direction: "from", ids: new_from_ids })}
         />
         {props.selected_wcomponent_ids_list.length > 0 && <Button
@@ -83,7 +83,7 @@ function _FindAllCausalPaths (props: Props)
             allow_none={true}
             selected_option_ids={props.to_ids}
             options={node_options}
-            force_editable={true}
+            editing_allowed={true}
             on_change={new_to_ids => props.set_ids({ direction: "to", ids: new_to_ids })}
         />
         {props.selected_wcomponent_ids_list.length > 0 && <Button

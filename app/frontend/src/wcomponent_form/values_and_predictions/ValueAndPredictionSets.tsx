@@ -25,7 +25,7 @@ interface OwnProps
     existing_value_possibilities: ValuePossibilitiesById | undefined
     values_and_prediction_sets: StateValueAndPredictionsSet[]
     update_VAPSets_and_value_possibilities: (args: HasVAPSetsAndMaybeValuePossibilities) => void
-    force_editable?: boolean
+    editing_allowed?: boolean
 }
 
 
@@ -35,7 +35,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         current_created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         creation_context: state.creation_context,
-        editing: own_props.force_editable ?? !state.display_options.consumption_formatting,
+        editing: own_props.editing_allowed ?? !state.display_options.consumption_formatting,
         base_id: selector_chosen_base_id(state) || -1,
     }
 }

@@ -89,7 +89,7 @@ function _WComponentParentGoalOrActionForm (props: Props)
             }}
             // on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
             // on_mouse_leave_option={id => props.set_highlighted_wcomponent({ id, highlighted: false })}
-            // force_editable={props.force_editable}
+            // editing_allowed={props.editing_allowed}
         />
     </FormControl>
 }

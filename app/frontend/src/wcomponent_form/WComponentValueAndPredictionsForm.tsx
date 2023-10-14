@@ -17,7 +17,7 @@ import { EditableTextOnBlurType } from "../form/editable_text/editable_text_comm
 
 interface OwnProps
 {
-    force_editable: boolean
+    editing_allowed: boolean
     wcomponent: WComponentIsAllowedToHaveStateVAPSets
     upsert_wcomponent: (partial_wcomponent: Partial<WComponentIsAllowedToHaveStateVAPSets>) => void
     VAPs_represent: VAPsType
@@ -45,7 +45,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentValueAndPredictionsForm (props: Props)
 {
     const {
-        force_editable,
+        editing_allowed,
         wcomponent,
         upsert_wcomponent,
         VAPs_represent,
@@ -57,7 +57,7 @@ function _WComponentValueAndPredictionsForm (props: Props)
     const [show_form, set_show_form] = useState(orig_values_and_prediction_sets.length > 0)
 
     const units = wcomponent_is_statev2(wcomponent) && wcomponent.units
-    const show_units = (props.force_editable && (VAPs_represent === VAPsType.number || !!units))
+    const show_units = (props.editing_allowed && (VAPs_represent === VAPsType.number || !!units))
         || (VAPs_represent === VAPsType.number && !!units)
 
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
@@ -108,7 +108,7 @@ function _WComponentValueAndPredictionsForm (props: Props)
                 {
                     upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                 }}
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
             />}
             {VAPs_represent !== VAPsType.undefined && <ValueAndPredictionSets
                 wcomponent_id={wcomponent.id}
@@ -119,7 +119,7 @@ function _WComponentValueAndPredictionsForm (props: Props)
                 {
                     upsert_wcomponent({ value_possibilities, values_and_prediction_sets })
                 }}
-                force_editable={force_editable}
+                editing_allowed={editing_allowed}
             />}
         </div>}
     </div>

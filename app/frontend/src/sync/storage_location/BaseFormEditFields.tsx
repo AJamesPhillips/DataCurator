@@ -75,7 +75,7 @@ export function BaseFormEditFields (props: OwnProps)
             {
                 set_modified_base({ ...modified_base, default_knowledge_view_id })
             }}
-            force_editable={true}
+            editing_allowed={true}
         />
         <br />
         <br />

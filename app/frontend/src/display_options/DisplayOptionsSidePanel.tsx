@@ -63,7 +63,7 @@ function _DisplayOptionsSidePanel (props: Props)
                         if (!validity_filter) return
                         props.set_validity_filter({ validity_filter })
                     }}
-                    force_editable={true}
+                    editing_allowed={true}
                 />
             </div>
 
@@ -94,7 +94,7 @@ function _DisplayOptionsSidePanel (props: Props)
 
                         props.set_certainty_formatting({ certainty_formatting })
                     }}
-                    force_editable={true}
+                    editing_allowed={true}
                 />
             </div>
 
