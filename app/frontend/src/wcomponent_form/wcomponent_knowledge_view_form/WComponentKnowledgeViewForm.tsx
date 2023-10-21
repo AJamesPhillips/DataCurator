@@ -21,6 +21,9 @@ import { WComponentBackReferences } from "../../wcomponent_ui/WComponentBackRefe
 import { AlignComponentForm } from "../AlignComponentForm"
 import { default_frame_color } from "./default_frame_color"
 import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
+import { WComponentStatusInKnowledgeView, get_wcomponent_status_in_knowledge_view } from "./get_wcomponent_status_in_knowledge_view"
+import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
+import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
 
 
 
@@ -42,12 +45,13 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const middle_position = get_middle_of_screen(state)
 
     return {
-        knowledge_view_id: current_knowledge_view && current_knowledge_view.id,
-        knowledge_view_title: current_knowledge_view && current_knowledge_view.title,
+        knowledge_view: current_knowledge_view,
         composed_knowledge_view_entry,
         knowledge_view_entry,
         middle_position_left: middle_position.left,
         middle_position_top: middle_position.top,
+        knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     }
 }
 
@@ -64,8 +68,32 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentKnowledgeViewForm (props: Props)
 {
-    const { wcomponent_id, knowledge_view_id, knowledge_view_title, composed_knowledge_view_entry,
-        knowledge_view_entry, editing_allowed } = props
+    const { wcomponent_id, knowledge_view, composed_knowledge_view_entry,
+        knowledge_view_entry, editing_allowed,
+        knowledge_views_by_id, wcomponents_by_id,
+    } = props
+
+    if (!knowledge_view) return null
+
+
+    const knowledge_views_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
+    const composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_stack, wcomponents_by_id)
+    const wcomponent_status_in_knowledge_view = get_wcomponent_status_in_knowledge_view(editing_allowed, wcomponent_id, knowledge_view, composed_wc_id_maps_object)
+    const {
+        show_wcomponent_status_in_this_kv_section,
+        wcomponent_status_in_this_kv_text,
+
+        show_add_button,
+        add_button_text,
+
+        show_remove_button,
+        remove_button_text,
+        remove_button_tooltip,
+
+        show_remove_and_block_button,
+        remove_and_block_button_text,
+        remove_and_block_button_tooltip,
+    } = wcomponent_status_in_knowledge_view
 
 
     function upsert_entry (knowledge_view_id: string, new_entry_partial: Partial<KnowledgeViewWComponentEntry> = {})
@@ -83,12 +111,10 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
 
 
-    const not_present = !knowledge_view_entry || knowledge_view_entry.blocked || knowledge_view_entry.passthrough
-
     const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry?.frame_height !== undefined)
 
     return <div>
-        {(editing_allowed && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Size</FormLabel>
                 <Slider
                     color="secondary"
@@ -98,7 +124,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                     onChange={(e: Event, val: number | number[]) =>
                     {
                         const size = Array.isArray(val) ? val[0] : val
-                        upsert_entry(knowledge_view_id, { s: size })
+                        upsert_entry(knowledge_view.id, { s: size })
                     }}
                     step={0.25}
                     value={knowledge_view_entry.s ? knowledge_view_entry.s : 1}
@@ -107,7 +133,7 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
-        {(editing_allowed && knowledge_view_id && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
+        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Frame</FormLabel>
                 <p>
                     <Button
@@ -129,7 +155,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                                 args.frame_height = args.frame_height ?? (v_step + grid_small_step) * 2
                             }
 
-                            upsert_entry(knowledge_view_id, args)
+                            upsert_entry(knowledge_view.id, args)
                         }}
                     />
                 </p>
@@ -163,7 +189,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                     color={knowledge_view_entry.frame_color}
                     conditional_on_blur={frame_color =>
                     {
-                        upsert_entry(knowledge_view_id, { frame_color })
+                        upsert_entry(knowledge_view.id, { frame_color })
                     }}
                 />
             </FormControl>
@@ -201,22 +227,21 @@ function _WComponentKnowledgeViewForm (props: Props)
             <EditablePosition point={knowledge_view_entry} on_update={update} />
         </div>} */}
 
-        {knowledge_view_id && not_present && <div>
-            {(knowledge_view_entry?.blocked ? "Deleted from" : "Not present in") + " this knowledge view"}
-            {composed_knowledge_view_entry && !composed_knowledge_view_entry.blocked && " but is present in a foundational knowledge view"}
+        {show_wcomponent_status_in_this_kv_section && <div>
+            {wcomponent_status_in_this_kv_text}
             <br />
-            {editing_allowed && <Button
-                value={(knowledge_view_entry?.blocked ? "Re-add" : "Add") + " to current knowledge view"}
+            {show_add_button && <Button
+                value={add_button_text}
                 extra_class_names="left"
-                onClick={() => upsert_entry(knowledge_view_id, { blocked: undefined, passthrough: undefined })}
+                onClick={() => upsert_entry(knowledge_view.id, { blocked: undefined, passthrough: undefined })}
             />}
         </div>}
 
 
-        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.passthrough) && <p>
+        {show_remove_button && <p>
             <ConfirmatoryDeleteButton
-                button_text="Delete from knowledge view"
-                tooltip_text={"Delete from current knowledge view (" + knowledge_view_title + ")"}
+                button_text={remove_button_text}
+                tooltip_text={remove_button_tooltip}
                 on_delete={() =>
                 {
                     props.bulk_remove_from_knowledge_view({
@@ -228,10 +253,10 @@ function _WComponentKnowledgeViewForm (props: Props)
         </p>}
 
 
-        {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough) && <div>
+        {show_remove_and_block_button && <div>
             <ConfirmatoryDeleteButton
-                button_text="Delete and Block from knowledge view"
-                tooltip_text={"Delete and Block from showing in current knowledge view (" + knowledge_view_title + ")"}
+                button_text={remove_and_block_button_text}
+                tooltip_text={remove_and_block_button_tooltip}
                 on_delete={() =>
                 {
                     props.bulk_remove_from_knowledge_view({
