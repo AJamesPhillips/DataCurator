@@ -9,7 +9,7 @@ export interface ComposedWcIdMapsObject
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
 
-export function get_composed_wc_id_map (stack_of_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): ComposedWcIdMapsObject
+export function get_composed_wc_id_maps_object (stack_of_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): ComposedWcIdMapsObject
 {
     let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     stack_of_knowledge_views.forEach(knowledge_view =>

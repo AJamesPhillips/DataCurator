@@ -46,7 +46,7 @@ import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_is_on_actions_list_view } from "../../actions_list_view/accessors"
-import { get_composed_wc_id_map } from "./get_composed_wc_id_map"
+import { get_composed_wc_id_maps_object } from "./get_composed_wc_id_map"
 import { get_available_filter_options } from "../../filter_context/utils"
 import { v_step } from "../../../canvas/position_utils"
 import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
@@ -212,7 +212,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
         ;({
             composed_wc_id_map, composed_blocked_wc_id_map
-        } = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id))
+        } = get_composed_wc_id_maps_object(foundational_knowledge_views, wcomponents_by_id))
     }
 
     const overlapping_wc_ids = get_overlapping_wc_ids(composed_wc_id_map, wcomponents_by_id)
@@ -554,7 +554,7 @@ function update_ephemeral_overrides_of_current_composed_kv (current_composed_kno
         // restore original composed_wc_id_map
         const { knowledge_views_by_id, wcomponents_by_id } = state.specialised_objects
         const foundational_knowledge_views = get_foundational_knowledge_views(current_kv, knowledge_views_by_id, true)
-        const composed_wc_id_maps = get_composed_wc_id_map(foundational_knowledge_views, wcomponents_by_id)
+        const composed_wc_id_maps = get_composed_wc_id_maps_object(foundational_knowledge_views, wcomponents_by_id)
 
         current_composed_knowledge_view = {
             ...current_composed_knowledge_view,

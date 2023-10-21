@@ -1,7 +1,7 @@
 import { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { describe, test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
-import { ComposedWcIdMapsObject, get_composed_wc_id_map } from "./get_composed_wc_id_map"
+import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "./get_composed_wc_id_map"
 
 
 
@@ -40,7 +40,7 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
 
 
     // Test get_composed_wc_id_map handles no data
-    result = get_composed_wc_id_map([], {})
+    result = get_composed_wc_id_maps_object([], {})
     expected_result =
     {
         composed_wc_id_map: {},
@@ -204,7 +204,7 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
         const foundation_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_foundation_kv, "kv1")
         const current_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_current_kv, "kv2", "kv1")
 
-        result = get_composed_wc_id_map([
+        result = get_composed_wc_id_maps_object([
             foundation_knowledge_view,
             current_knowledge_view,
         ], {})
@@ -221,7 +221,7 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
             const foundation_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_foundation_kv, "kv1")
             const current_knowledge_view = test_helper__make_knowledge_view(test_case.kv_wc_entry_in_current_kv, "kv2", "kv1")
 
-            result = get_composed_wc_id_map([
+            result = get_composed_wc_id_maps_object([
                 foundation_knowledge_view,
                 current_knowledge_view,
             ], {
