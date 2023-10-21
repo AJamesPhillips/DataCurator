@@ -26,13 +26,16 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
         {
             if ((got as any)?.constructor === Object)
             {
-                Object.entries(got as any).forEach(([key, got_value]) =>
+                const keys = [...new Set([...Object.keys(got as any), ...Object.keys(expected as any)])]
+                keys.sort()
+                keys.forEach(key =>
                 {
+                    const got_value = (got as any)[key]
                     const expected_value = (expected as any)[key]
                     const str_got_value = sort_items ? stable_stringify(got_value) : JSON.stringify(got_value)
                     const str_expected_value = sort_items ? stable_stringify(expected_value) : JSON.stringify(expected_value)
                     const pass = str_got_value === str_expected_value
-                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: "${str_got_value}", expected: "${str_expected_value}"`)
+                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', expected: '${str_expected_value}'`)
                 })
             }
 
