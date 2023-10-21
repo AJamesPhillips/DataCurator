@@ -3,13 +3,13 @@ import { WComponentsById, wcomponent_is_deleted } from "../../../wcomponent/inte
 
 
 
-export interface GetComposedWcIdMapReturn
+export interface ComposedWcIdMapsObject
 {
     composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
 
-export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): GetComposedWcIdMapReturn
+export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): ComposedWcIdMapsObject
 {
     let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
     foundation_knowledge_views.forEach(foundational_kv =>
@@ -46,7 +46,7 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
 }
 
 
-function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap): GetComposedWcIdMapReturn
+function partition_wc_id_map_on_blocked (composed_wc_id_map: KnowledgeViewWComponentIdEntryMap): ComposedWcIdMapsObject
 {
     const composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
 

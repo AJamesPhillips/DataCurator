@@ -1,7 +1,7 @@
 import { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
 import { describe, test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
-import { GetComposedWcIdMapReturn, get_composed_wc_id_map } from "./get_composed_wc_id_map"
+import { ComposedWcIdMapsObject, get_composed_wc_id_map } from "./get_composed_wc_id_map"
 
 
 
@@ -35,8 +35,8 @@ export const test_get_composed_wc_id_map = describe("get_composed_wc_id_map", ()
 {
     const date1 = new Date("2023-03-22 15:15:00")
 
-    let result: GetComposedWcIdMapReturn
-    let expected_result: GetComposedWcIdMapReturn
+    let result: ComposedWcIdMapsObject
+    let expected_result: ComposedWcIdMapsObject
 
 
     // Test get_composed_wc_id_map handles no data
