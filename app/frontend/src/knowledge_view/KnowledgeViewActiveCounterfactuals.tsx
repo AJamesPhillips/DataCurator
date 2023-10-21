@@ -10,7 +10,7 @@ import { get_foundational_knowledge_views } from "../state/derived/knowledge_vie
 import type { RootState } from "../state/State"
 import { Button } from "../sharedf/Button"
 import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
-import { get_composed_wc_id_maps_object } from "../state/derived/knowledge_views/get_composed_wc_id_map"
+import { get_composed_wc_id_maps_object } from "../state/derived/knowledge_views/get_composed_wc_id_maps_object"
 
 
 

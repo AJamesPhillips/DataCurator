@@ -24,7 +24,7 @@ import { test_partition_sorted_items_by_datetimes, test_sort_by_uncertain_event_
 import { test_partition_items_by_created_at_datetime } from "./shared/utils_datetime/utils_datetime"
 import { test_calc_new_counterfactual_state } from "./sharedf/prediction_badge/calc_new_counterfactual_state"
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type"
-import { test_get_composed_wc_id_map } from "./state/derived/knowledge_views/get_composed_wc_id_map.test"
+import { run_get_composed_wc_id_maps_object_tests } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
 import { test_merge_routing_state } from "./state/routing/merge_routing_state"
 import { test_routing_state_to_string } from "./state/routing/routing"
 import { test_merge_knowledge_views } from "./state/sync/merge/merge_knowledge_views"
@@ -79,6 +79,7 @@ function run_all_tests ()
     run_EditableCalculationRow_tests()
     run_list_function_tests()
     run_get_default_formatting_function_tests()
+    run_get_composed_wc_id_maps_object_tests()
 
     test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()
@@ -95,7 +96,6 @@ function run_all_tests ()
     test_partition_items_by_created_at_datetime()
     test_calc_new_counterfactual_state()
     test_calc_if_wcomponent_should_exclude_because_label_or_type()
-    test_get_composed_wc_id_map()
     test_merge_routing_state()
     test_routing_state_to_string()
     test_tidy_wcomponent()

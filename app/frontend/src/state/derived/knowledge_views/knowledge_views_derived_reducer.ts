@@ -46,7 +46,7 @@ import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_
 import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_is_on_actions_list_view } from "../../actions_list_view/accessors"
-import { get_composed_wc_id_maps_object } from "./get_composed_wc_id_map"
+import { get_composed_wc_id_maps_object } from "./get_composed_wc_id_maps_object"
 import { get_available_filter_options } from "../../filter_context/utils"
 import { v_step } from "../../../canvas/position_utils"
 import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
