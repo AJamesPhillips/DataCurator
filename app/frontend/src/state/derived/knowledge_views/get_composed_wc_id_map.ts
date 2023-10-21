@@ -9,12 +9,12 @@ export interface ComposedWcIdMapsObject
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
 
-export function get_composed_wc_id_map (foundation_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): ComposedWcIdMapsObject
+export function get_composed_wc_id_map (stack_of_knowledge_views: KnowledgeView[], wcomponents_by_id: WComponentsById): ComposedWcIdMapsObject
 {
     let composed_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-    foundation_knowledge_views.forEach(foundational_kv =>
+    stack_of_knowledge_views.forEach(knowledge_view =>
     {
-        Object.entries(foundational_kv.wc_id_map).forEach(([id, entry]) =>
+        Object.entries(knowledge_view.wc_id_map).forEach(([id, entry]) =>
         {
             if (entry.passthrough) return
 
