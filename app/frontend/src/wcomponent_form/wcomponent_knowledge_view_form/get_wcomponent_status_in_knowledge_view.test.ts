@@ -483,8 +483,8 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                     add_button_text: "Re-add to current knowledge view",
 
                     show_remove_button: true,
-                    remove_button_text: "Remove from knowledge view",
-                    remove_button_tooltip: "Remove from current knowledge view (some title of kv2)",
+                    remove_button_text: "Remove block (allow to show through from foundational knowledge view)",
+                    remove_button_tooltip: "This is present in a foundational knowledge view but is currently blocked from appearing in this current knowledge view (some title of kv2)",
 
                     show_remove_and_block_button: false,
                 }

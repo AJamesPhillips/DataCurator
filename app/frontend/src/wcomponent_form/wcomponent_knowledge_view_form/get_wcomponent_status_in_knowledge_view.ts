@@ -80,6 +80,12 @@ export function get_wcomponent_status_in_knowledge_view (args: GetWcomponentStat
     {
         result.remove_button_text = "Remove from knowledge view"
         result.remove_button_tooltip = "Remove from current knowledge view (" + knowledge_view.title + ")"
+
+        if (knowledge_view_entry?.blocked && foundation_composed_wc_id_map[wcomponent_id])
+        {
+            result.remove_button_text = "Remove block (allow to show through from foundational knowledge view)"
+            result.remove_button_tooltip = "This is present in a foundational knowledge view but is currently blocked from appearing in this current knowledge view (" + knowledge_view.title + ")"
+        }
     }
 
     result.show_remove_and_block_button = !!(
