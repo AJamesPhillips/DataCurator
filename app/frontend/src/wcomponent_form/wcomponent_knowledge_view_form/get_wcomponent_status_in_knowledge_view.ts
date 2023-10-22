@@ -82,7 +82,14 @@ export function get_wcomponent_status_in_knowledge_view (args: GetWcomponentStat
         result.remove_button_tooltip = "Remove from current knowledge view (" + knowledge_view.title + ")"
     }
 
-    result.show_remove_and_block_button = !!(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked && !knowledge_view_entry.passthrough)
+    result.show_remove_and_block_button = !!(
+        editing_allowed
+        && knowledge_view_entry
+        && !knowledge_view_entry.blocked
+        && !knowledge_view_entry.passthrough
+        // a foundation knowledge view has this component
+        && foundation_composed_wc_id_map[wcomponent_id]
+    )
     if (result.show_remove_and_block_button)
     {
         result.remove_and_block_button_text = "Remove and Block from knowledge view"

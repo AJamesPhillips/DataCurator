@@ -118,9 +118,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
                 // No point showing block button when no foundational view
                 // containing this wcomponent
-                show_remove_and_block_button: true,
-                remove_and_block_button_text: "Remove and Block from knowledge view",
-                remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv1)",
+                show_remove_and_block_button: false,
             }
             test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
@@ -383,10 +381,9 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                     remove_button_text: "Remove from knowledge view",
                     remove_button_tooltip: "Remove from current knowledge view (some title of kv2)",
 
-                    // change this to false later
-                    show_remove_and_block_button: true,
-                    remove_and_block_button_text: "Remove and Block from knowledge view",
-                    remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv2)",
+                    // No point showing block button when no foundational view
+                    // containing this wcomponent
+                    show_remove_and_block_button: false,
                 }
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
@@ -452,7 +449,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                     remove_button_text: "Remove from knowledge view",
                     remove_button_tooltip: "Remove from current knowledge view (some title of kv2)",
 
-                    // change this to false later
+                    // Can show block button when foundational view containing this wcomponent
                     show_remove_and_block_button: true,
                     remove_and_block_button_text: "Remove and Block from knowledge view",
                     remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv2)",
@@ -521,10 +518,9 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                     remove_button_text: "Remove from knowledge view",
                     remove_button_tooltip: "Remove from current knowledge view (some title of kv2)",
 
-                    // change this to false later
-                    show_remove_and_block_button: true,
-                    remove_and_block_button_text: "Remove and Block from knowledge view",
-                    remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv2)",
+                    // No point showing block button when no foundational view
+                    // containing this wcomponent
+                    show_remove_and_block_button: false,
                 }
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
@@ -590,10 +586,9 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                     remove_button_text: "Remove from knowledge view",
                     remove_button_tooltip: "Remove from current knowledge view (some title of kv2)",
 
-                    // change this to false later
-                    show_remove_and_block_button: true,
-                    remove_and_block_button_text: "Remove and Block from knowledge view",
-                    remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv2)",
+                    // No point showing block button when no foundational view
+                    // containing this wcomponent
+                    show_remove_and_block_button: false,
                 }
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
