@@ -1,6 +1,7 @@
-import { KnowledgeView, KnowledgeViewWComponentEntry, KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
+import { KnowledgeView, KnowledgeViewWComponentEntry, KnowledgeViewWComponentIdEntryMap, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 import { describe, test } from "../../shared/utils/test"
 import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
+import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
@@ -9,9 +10,6 @@ import {
 } from "./get_wcomponent_status_in_knowledge_view"
 
 
-
-
-const wcomponent_id = uuid_v4_for_tests(1)
 
 function test_helper__make_knowledge_view (wc_id_map: KnowledgeViewWComponentIdEntryMap, kv_id: string, foundational_kv_id?: string)
 {
@@ -46,16 +44,22 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             "wc3": { left: 30, top: 0, passthrough: true },
             "wc4": { left: 40, top: 0, blocked: true },
         }, "kv1")
+        const knowledge_views_by_id: KnowledgeViewsById = {
+            [knowledge_view.id]: knowledge_view
+        }
 
-
-        const composed_wc_id_maps_object = get_composed_wc_id_maps_object([ knowledge_view ], {})
+        const knowledge_views_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
+        const composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_stack, {})
+        const knowledge_views_foundation_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, false)
+        const foundation_composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_foundation_stack, {})
 
         const expected_composed_wc_id_maps_object: ComposedWcIdMapsObject =
         {
             composed_wc_id_map:
             {
+                // wc1 won't be included
                 "wc2": { left: 20, top: 0 },
-                // "wc3": { left: 30, top: 0 },
+                // wc3 won't be included
             },
             composed_blocked_wc_id_map:
             {
@@ -64,6 +68,21 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
         }
         test(composed_wc_id_maps_object, expected_composed_wc_id_maps_object, "Sanity check (no1) that we're still dealing with the same data structure from get_composed_wc_id_maps_object so that following tests are valid")
 
+        const expected_foundation_composed_wc_id_maps_object: ComposedWcIdMapsObject =
+        {
+            composed_wc_id_map: {},
+            composed_blocked_wc_id_map: {},
+        }
+        test(foundation_composed_wc_id_maps_object, expected_foundation_composed_wc_id_maps_object, "Sanity check (no2) that we're still dealing with the same data structure from get_composed_wc_id_maps_object so that following tests are valid")
+
+
+        function test_helper__get_wcomponent_status_in_knowledge_view (editing_allowed: boolean, wcomponent_id: string)
+        {
+            return get_wcomponent_status_in_knowledge_view({
+                editing_allowed, wcomponent_id, knowledge_view,
+                composed_wc_id_maps_object, foundation_composed_wc_id_map: foundation_composed_wc_id_maps_object.composed_wc_id_map,
+            })
+        }
 
 
         let result: WComponentStatusInKnowledgeView
@@ -74,7 +93,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             const editing_allowed = true
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -88,7 +107,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: false,
                 show_add_button: false,
@@ -97,7 +116,8 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 remove_button_text: "Remove from knowledge view",
                 remove_button_tooltip: "Remove from current knowledge view (some title of kv1)",
 
-                // change this to false later
+                // No point showing block button when no foundational view
+                // containing this wcomponent
                 show_remove_and_block_button: true,
                 remove_and_block_button_text: "Remove and Block from knowledge view",
                 remove_and_block_button_tooltip: "Remove and Block from showing in current knowledge view (some title of kv1)",
@@ -105,7 +125,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -119,7 +139,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 // Maybe change to "Blocked from appearing in this knowledge view"
@@ -145,7 +165,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             const editing_allowed = false
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -156,7 +176,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: false,
                 show_add_button: false,
@@ -166,7 +186,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -178,7 +198,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
             test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-            result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+            result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
             expected_result = {
                 show_wcomponent_status_in_this_kv_section: true,
                 // Maybe change to "Blocked from appearing in this knowledge view"
@@ -243,7 +263,16 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
         }, "kv2", foundation_knowledge_view.id)
 
 
-        const composed_wc_id_maps_object = get_composed_wc_id_maps_object([ foundation_knowledge_view, knowledge_view ], {})
+        const knowledge_views_by_id: KnowledgeViewsById = {
+            [foundation_knowledge_view.id]: foundation_knowledge_view,
+            [knowledge_view.id]: knowledge_view,
+        }
+
+
+        const knowledge_views_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
+        const composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_stack, {})
+        const knowledge_views_foundation_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, false)
+        const foundation_composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_foundation_stack, {})
 
         const expected_composed_wc_id_maps_object: ComposedWcIdMapsObject =
         {
@@ -292,8 +321,34 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 "wc16": { blocked: true, left: 160, top: 0 },
             },
         }
-        test(composed_wc_id_maps_object, expected_composed_wc_id_maps_object, "Sanity check (no2) that we're still dealing with the same data structure from get_composed_wc_id_maps_object so that following tests are valid")
+        test(composed_wc_id_maps_object, expected_composed_wc_id_maps_object, "Sanity check (no3) that we're still dealing with the same data structure from get_composed_wc_id_maps_object so that following tests are valid")
 
+
+        const expected_foundation_composed_wc_id_maps_object: ComposedWcIdMapsObject =
+        {
+            composed_wc_id_map: {
+                "wc5": { left: 50, top: 222 },
+                "wc6": { left: 60, top: 222 },
+                "wc7": { left: 70, top: 222 },
+                "wc8": { left: 80, top: 222 },
+            },
+            composed_blocked_wc_id_map: {
+                "wc13": { blocked: true, left: 130, top: 222 },
+                "wc14": { blocked: true, left: 140, top: 222 },
+                "wc15": { blocked: true, left: 150, top: 222 },
+                "wc16": { blocked: true, left: 160, top: 222 },
+            },
+        }
+        test(foundation_composed_wc_id_maps_object, expected_foundation_composed_wc_id_maps_object, "Sanity check (no4) that we're still dealing with the same data structure from get_composed_wc_id_maps_object so that following tests are valid")
+
+
+        function test_helper__get_wcomponent_status_in_knowledge_view (editing_allowed: boolean, wcomponent_id: string)
+        {
+            return get_wcomponent_status_in_knowledge_view({
+                editing_allowed, wcomponent_id, knowledge_view,
+                composed_wc_id_maps_object, foundation_composed_wc_id_map: foundation_composed_wc_id_maps_object.composed_wc_id_map,
+            })
+        }
 
 
         let result: WComponentStatusInKnowledgeView
@@ -305,7 +360,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent not yet added to foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -319,7 +374,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent not yet added to top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -336,7 +391,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -351,7 +406,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent removed from this top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -374,7 +429,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent added to foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc5", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc5")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view but is present in a foundational knowledge view",
@@ -388,7 +443,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent not yet added to top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc6", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc6")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -405,7 +460,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc7", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc7")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view but is present in a foundational knowledge view",
@@ -420,7 +475,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent removed from this top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc8", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc8")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -443,7 +498,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent removed from foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc9", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc9")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -457,7 +512,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent not yet added to top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc10", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc10")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -474,7 +529,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc11", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc11")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -489,7 +544,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent removed from this top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc12", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc12")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -512,7 +567,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent removed and blocked in foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc13", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc13")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -526,7 +581,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent not yet added to top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc14", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc14")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -543,7 +598,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with normal wcomponent entry in top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc15", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc15")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -558,7 +613,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `and with wcomponent removed from this top/current/child knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc16", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc16")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -587,7 +642,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent not yet added to foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -598,7 +653,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -608,7 +663,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -620,7 +675,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -637,7 +692,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent added to foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -648,7 +703,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -658,7 +713,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -670,7 +725,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -687,7 +742,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent removed from foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -698,7 +753,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -708,7 +763,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -720,7 +775,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"
@@ -737,7 +792,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
 
             describe("with wcomponent removed and blocked in foundational knowledge view", () =>
             {
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc1")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -748,7 +803,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent not yet added to knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc2")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: false,
                     show_add_button: false,
@@ -758,7 +813,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with normal wcomponent entry in knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc3")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     wcomponent_status_in_this_kv_text: "Not present in this knowledge view",
@@ -770,7 +825,7 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
                 test(result, expected_result, `with wcomponent removed from this knowledge view`)
 
 
-                result = get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4", knowledge_view, composed_wc_id_maps_object)
+                result = test_helper__get_wcomponent_status_in_knowledge_view(editing_allowed, "wc4")
                 expected_result = {
                     show_wcomponent_status_in_this_kv_section: true,
                     // Maybe change to "Blocked from appearing in this knowledge view"

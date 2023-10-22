@@ -2,6 +2,14 @@ import { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../shared/i
 import { ComposedWcIdMapsObject } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
 
 
+interface GetWcomponentStatusInKnowledgeViewArgs
+{
+    editing_allowed: boolean
+    wcomponent_id: string
+    knowledge_view: KnowledgeView
+    composed_wc_id_maps_object: ComposedWcIdMapsObject
+    foundation_composed_wc_id_map: KnowledgeViewWComponentIdEntryMap
+}
 
 export type WComponentStatusInKnowledgeView =
 {
@@ -30,8 +38,16 @@ export type WComponentStatusInKnowledgeView =
 
 
 
-export function get_wcomponent_status_in_knowledge_view (editing_allowed: boolean, wcomponent_id: string, knowledge_view: KnowledgeView, composed_wc_id_maps_object: ComposedWcIdMapsObject): WComponentStatusInKnowledgeView
+export function get_wcomponent_status_in_knowledge_view (args: GetWcomponentStatusInKnowledgeViewArgs): WComponentStatusInKnowledgeView
 {
+    const {
+        editing_allowed,
+        wcomponent_id,
+        knowledge_view,
+        composed_wc_id_maps_object,
+        foundation_composed_wc_id_map,
+    } = args
+
     const result: WComponentStatusInKnowledgeView = {
         show_wcomponent_status_in_this_kv_section: false,
         show_add_button: false,

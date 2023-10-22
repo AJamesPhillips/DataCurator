@@ -78,7 +78,13 @@ function _WComponentKnowledgeViewForm (props: Props)
 
     const knowledge_views_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
     const composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_stack, wcomponents_by_id)
-    const wcomponent_status_in_knowledge_view = get_wcomponent_status_in_knowledge_view(editing_allowed, wcomponent_id, knowledge_view, composed_wc_id_maps_object)
+    const knowledge_views_foundation_stack = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, false)
+    const foundation_composed_wc_id_maps_object = get_composed_wc_id_maps_object(knowledge_views_foundation_stack, wcomponents_by_id)
+    const wcomponent_status_in_knowledge_view = get_wcomponent_status_in_knowledge_view({
+        editing_allowed, wcomponent_id, knowledge_view,
+        composed_wc_id_maps_object,
+        foundation_composed_wc_id_map: foundation_composed_wc_id_maps_object.composed_wc_id_map,
+    })
     const {
         show_wcomponent_status_in_this_kv_section,
         wcomponent_status_in_this_kv_text,
