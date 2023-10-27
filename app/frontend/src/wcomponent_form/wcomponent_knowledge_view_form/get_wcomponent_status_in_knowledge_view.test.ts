@@ -835,4 +835,4 @@ export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_U
         })
     })
 
-}, true)
+}, false)

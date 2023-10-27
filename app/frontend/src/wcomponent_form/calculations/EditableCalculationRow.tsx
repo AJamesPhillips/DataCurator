@@ -15,6 +15,7 @@ import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_rege
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
+import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 
 
 
@@ -66,7 +67,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             {calc.result_description && (!editing || !show_options) && <span
                 style={{ fontSize: "14px" }}
             >
-                &nbsp;{calc.result_description}
+                &nbsp;<RichMarkDown text={calc.result_description} />
             </span>}
             {/* {editing && <IconButton
                 onClick={() => set_show_options(!show_options)}

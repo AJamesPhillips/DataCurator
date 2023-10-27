@@ -23,6 +23,10 @@ export const run_number_to_string_test = describe("run_number_to_string_test", (
     formatted_number = format_number_to_string(1264, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
     test(formatted_number, "1.3 k", "abbreviated scaled number")
 
+    // formatted_number = format_number_to_string(27000000, 2, NUMBER_DISPLAY_TYPES.abbreviated_scaled)
+    // test(formatted_number, "27 M", "27 million abbreviated scaled number has correct capitalisation of M")
+    // TODO: add a NUMBER_DISPLAY_TYPES.abbreviated_scientific_scaled_number type ?
+
     formatted_number = format_number_to_string(1264, 2, NUMBER_DISPLAY_TYPES.scientific)
     test(formatted_number, "1.3e3", "scientific number")
 
