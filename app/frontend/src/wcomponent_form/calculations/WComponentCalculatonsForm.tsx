@@ -48,7 +48,16 @@ function _WComponentCalculatonsForm (props: Props)
     } = props
 
     const { calculations = [] } = wcomponent
+
+    // TODO remove this line.
+    // We added calculation.id slightly later so for the 3-5 components that
+    // have calculations without ids this line will ensure they all have one.
+    calculations.forEach((calc, index) => calc.id = calc.id ?? index)
+
     const [show_form, set_show_form] = useState(calculations.length > 0)
+    const initial_show_calc_options: {[id: number]: boolean} = {}
+    calculations.forEach(calc => initial_show_calc_options[calc.id] = false)
+    const [show_calc_options, set_show_calc_options] = useState(initial_show_calc_options)
 
     const calculation_results = perform_calculations(calculations, wcomponents_by_id)
     const existing_calculation_name_ids = calculations.map(({ name }) => name)
@@ -78,8 +87,17 @@ function _WComponentCalculatonsForm (props: Props)
         {show_form && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {calculations.map((calc, index) => <EditableCalculationRow
-                    key={calc.name + " " + index}
+                    key={calc.id}
                     editing={props.editing}
+                    show_options={show_calc_options[calc.id] || false}
+                    set_show_options={show_options =>
+                    {
+                        const new_show_calc_options = {
+                            ...show_calc_options,
+                            [calc.id]: show_options,
+                        }
+                        set_show_calc_options(new_show_calc_options)
+                    }}
                     calculation={calc}
                     calculation_result={calculation_results[index]}
                     existing_calculation_name_ids={existing_calculation_name_ids}
@@ -123,13 +141,13 @@ function _WComponentCalculatonsForm (props: Props)
                         }
                         else if (command === "add_above")
                         {
-                            const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
+                            const new_calculation = prepare_new_calculation(calculations)
                             const modified_calculations = insert_element_at_index(calculations, new_calculation, index)
                             props.upsert_wcomponent({ calculations: modified_calculations })
                         }
                         else if (command === "add_below")
                         {
-                            const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
+                            const new_calculation = prepare_new_calculation(calculations)
                             const modified_calculations = insert_element_at_index(calculations, new_calculation, index + 1)
                             props.upsert_wcomponent({ calculations: modified_calculations })
                         }
@@ -142,7 +160,7 @@ function _WComponentCalculatonsForm (props: Props)
                 fullWidth={true}
                 onClick={() =>
                 {
-                    const new_calculation = prepare_new_calculation(existing_calculation_name_ids)
+                    const new_calculation = prepare_new_calculation(calculations)
                     const modified_calculations = [ ...calculations, new_calculation ]
                     props.upsert_wcomponent({ calculations: modified_calculations })
                 }}
@@ -155,10 +173,14 @@ export const WComponentCalculatonsForm = connector(_WComponentCalculatonsForm) a
 
 
 
-function prepare_new_calculation (existing_calculation_name_ids: string[])
+function prepare_new_calculation (calculations: PlainCalculationObject[])
 {
-    const name = get_valid_calculation_name_id(existing_calculation_name_ids)
+    let next_id = -1
+    calculations.forEach(calc => next_id = Math.max(next_id, calc.id))
+    ++next_id
+
+    const name = get_valid_calculation_name_id(calculations.map(({ name }) => name))
     const value = ""
 
-    return { name, value }
+    return { id: next_id, name, value }
 }

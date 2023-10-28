@@ -22,6 +22,8 @@ import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 export interface CalculationRowProps
 {
     editing: boolean
+    show_options: boolean
+    set_show_options: (show_options: boolean) => void
     calculation: PlainCalculationObject
     calculation_result: CalculationResult | undefined
     existing_calculation_name_ids: string[]
@@ -37,10 +39,10 @@ export function EditableCalculationRow (props: CalculationRowProps)
         calculation_result: result,
         editing,
         existing_calculation_name_ids,
+        show_options,
+        set_show_options,
     } = props
 
-
-    const [show_options, set_show_options] = useState(false)
     // result significant figures
     const default_significant_figures = get_default_significant_figures(calc.value)
     const { result_sig_figs = default_significant_figures } = calc
