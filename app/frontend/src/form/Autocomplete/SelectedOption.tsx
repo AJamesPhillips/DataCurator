@@ -31,7 +31,9 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
 
 
     return (
-        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}>
+        <ButtonGroup size="small" color="primary" variant="contained" fullWidth={true} disableElevation={true}
+            style={{ margin: 5 }}
+        >
             <Button
                 onClick={e => pointer_down && pointer_down(e, option.id)}
                 disabled={!pointer_down}
@@ -52,7 +54,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
                     </Typography>
                 </Tooltip>
             </Button>
-            {editing && <IconButton onClick={() => on_remove_option(option.id)} size="large">
+            {editing && <IconButton onClick={() => on_remove_option(option.id)} size="small">
                 <ClearIcon />
             </IconButton>}
         </ButtonGroup>
