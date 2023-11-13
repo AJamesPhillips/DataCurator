@@ -91,6 +91,12 @@ export interface WComponentCausalConnection extends WComponentConnection
 }
 
 
+export function is_a_wcomponent (wcomponent: WComponent | undefined): wcomponent is WComponent
+{
+    return !!wcomponent
+}
+
+
 export function wcomponent_is_event (wcomponent: WComponent | undefined): wcomponent is WComponentNodeEvent
 {
     return wcomponent_is_a("event", wcomponent)
