@@ -32,7 +32,6 @@
     "@mui/material": "5.14.8",
     "@mui/styles": "5.14.7",
     "@supabase/supabase-js": "1.35.7",
-    "@types/localforage": "0.0.34",
     "antlr4ts": "0.5.0-alpha.4",
     "clsx": "2.0.0",
     "flexsearch": "0.7.21",
@@ -64,7 +63,7 @@
     "eslint": "7.32.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.3.4",
-    "sass": "1.66.1",
+    "sass": "1.69.5",
     "typescript": "5.2.2",
     "vite": "4.3.9",
     "vitest": "0.32.0"
