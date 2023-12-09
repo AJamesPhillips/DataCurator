@@ -372,7 +372,9 @@ export function get_composed_datetime_lines_config (foundation_knowledge_views: 
 }
 
 
-
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view: undefined): undefined
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view: ComposedKnowledgeView): ComposedKnowledgeView
+export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
 export function update_composed_knowledge_view_filters (state: RootState, current_composed_knowledge_view?: ComposedKnowledgeView): ComposedKnowledgeView | undefined
 {
     if (!current_composed_knowledge_view) return undefined

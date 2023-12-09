@@ -29,9 +29,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
     calculations = [
-        { name: "A", value: `3` },
-        { name: "B", value: `4` },
-        { name: "C", value: `[A] + B` },
+        { id: 0, name: "A", value: `3` },
+        { id: 1, name: "B", value: `4` },
+        { id: 2, name: "C", value: `[A] + B` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -44,9 +44,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
     calculations = [
-        { name: "A", value: `3 + 1` },
-        { name: "C", value: `A + some_undeclared_variable` },
-        { name: "D", value: `5 + 1` },
+        { id: 0,  name: "A", value: `3 + 1` },
+        { id: 1,  name: "C", value: `A + some_undeclared_variable` },
+        { id: 2,  name: "D", value: `5 + 1` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -59,9 +59,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
     calculations = [
-        { name: "A", value: `1 + 1` },
-        { name: "A", value: `A * 2` },
-        { name: "A", value: `A * 2` },
+        { id: 0,  name: "A", value: `1 + 1` },
+        { id: 1,  name: "A", value: `A * 2` },
+        { id: 2,  name: "A", value: `A * 2` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -74,8 +74,8 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
     calculations = [
-        { name: " A ", value: `1 + 1` },
-        { name: "B", value: `[ A ] * 2` },
+        { id: 0, name: " A ", value: `1 + 1` },
+        { id: 1, name: "B", value: `[ A ] * 2` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -108,7 +108,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `@@${id1}`, units: "meters" },
+            { id: 0, name: "A", value: `@@${id1}`, units: "meters" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -119,7 +119,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `@@${id1} * 10`, units: "meters" },
+            { id: 0, name: "A", value: `@@${id1} * 10`, units: "meters" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -130,7 +130,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `{@@${id1} meters}` },
+            { id: 0, name: "A", value: `{@@${id1} meters}` },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -141,7 +141,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `@@${id1}.value`, units: "meters" },
+            { id: 0, name: "A", value: `@@${id1}.value`, units: "meters" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -167,7 +167,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
             }),
         }
         calculations = [
-            { name: "A", value: `IfThenElse(@@${id1}, 15, 10)` },
+            { id: 0, name: "A", value: `IfThenElse(@@${id1}, 15, 10)` },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -181,7 +181,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Can use values with units", () =>
     {
         calculations = [
-            { name: "A", value: `{2 Meters} + {10 Centimeters}`, units: "Meters" },
+            { id: 0, name: "A", value: `{2 Meters} + {10 Centimeters}`, units: "Meters" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -195,7 +195,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Can use values without units being initially defined", () =>
     {
         calculations = [
-            { name: "A", value: `{2 Meters}` },
+            { id: 0, name: "A", value: `{2 Meters}` },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -209,7 +209,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Can use values with units initially being undefined", () =>
     {
         calculations = [
-            { name: "A", value: `{2 Meters}`, units: undefined },
+            { id: 0, name: "A", value: `{2 Meters}`, units: undefined },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -223,7 +223,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Does not compute units if some are already specified", () =>
     {
         calculations = [
-            { name: "A", value: `{2 Meters}`, units: "kg" },
+            { id: 0, name: "A", value: `{2 Meters}`, units: "kg" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -237,7 +237,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe(`Sets units to "" if 'Unitless' is specified`, () =>
     {
         calculations = [
-            { name: "A", value: `2`, units: "Unitless" },
+            { id: 0, name: "A", value: `2`, units: "Unitless" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -248,7 +248,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `{2 Meters}`, units: "Unitless" },
+            { id: 0, name: "A", value: `{2 Meters}`, units: "Unitless" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -262,7 +262,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Can process numbers with thousands comma seperators", () =>
     {
         calculations = [
-            { name: "A", value: "1,200,300e4 / {4,001,000e3 km}", units: "1/km" },
+            { id: 0, name: "A", value: "1,200,300e4 / {4,001,000e3 km}", units: "1/km" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -276,7 +276,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Can process numbers with compound units", () =>
     {
         calculations = [
-            { name: "A", value: "{7 Widgets/Years^2}*{10 Years}", units: "Widgets/Years" },
+            { id: 0, name: "A", value: "{7 Widgets/Years^2}*{10 Years}", units: "Widgets/Years" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -292,9 +292,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("hide_currency_symbols", () =>
     {
         calculations = [
-            { name: "A", value: `{90 £ / year}`, units: "" },
-            { name: "B", value: `{10 £ / year}`, units: "" },
-            { name: "C", value: `A+B`, units: "" },
+            { id: 0, name: "A", value: `{90 £ / year}`, units: "" },
+            { id: 1, name: "B", value: `{10 £ / year}`, units: "" },
+            { id: 2, name: "C", value: `A+B`, units: "" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -307,9 +307,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `90`, units: "£ / year" },
-            { name: "B", value: `10`, units: "£ / year" },
-            { name: "C", value: `A+B`, units: "£ / year" },
+            { id: 0, name: "A", value: `90`, units: "£ / year" },
+            { id: 1, name: "B", value: `10`, units: "£ / year" },
+            { id: 2, name: "C", value: `A+B`, units: "£ / year" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -322,9 +322,9 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
 
 
         calculations = [
-            { name: "A", value: `90`, units: "£ / year" },
-            { name: "B", value: `10`, units: "$ / year" },
-            { name: "C", value: `A+B`, units: "£ / year" },
+            { id: 0, name: "A", value: `90`, units: "£ / year" },
+            { id: 1, name: "B", value: `10`, units: "$ / year" },
+            { id: 2, name: "C", value: `A+B`, units: "£ / year" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -340,7 +340,7 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
     describe("Handles reserved words correctly", () =>
     {
         calculations = [
-            { name: "A", value: `0.5 * (180 / Pi)` },
+            { id: 0, name: "A", value: `0.5 * (180 / Pi)` },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
