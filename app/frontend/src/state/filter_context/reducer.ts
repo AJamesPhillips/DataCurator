@@ -29,10 +29,15 @@ export const filter_context_reducer = (state: RootState, action: AnyAction): Roo
             include_by_component_types: i_t,
             // Actions list filters
             filter_by_current_knowledge_view,
+            filter_by_text,
         } = action.filters
         const any_filters = (
             (e_l.length + i_l.length + e_t.length + i_t.length) > 0
-            || (is_on_actions_list_view && filter_by_current_knowledge_view)
+            ||
+            (is_on_actions_list_view && (
+                filter_by_current_knowledge_view
+                || filter_by_text.length > 0
+            ))
         )
         state = update_substate(state, "filter_context", "apply_filter", any_filters)
     }

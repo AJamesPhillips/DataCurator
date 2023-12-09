@@ -9,6 +9,8 @@ import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
 import { get_is_on_actions_list_view } from "../state/actions_list_view/accessors"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 
@@ -151,6 +153,24 @@ function _FiltersSidePanel (props: Props)
                         }
                         props.set_filters({ filters })
                     }}
+                />
+            </p>
+
+            <p>
+                Filter by text: <EditableTextSingleLine
+                    size="small"
+                    placeholder=""
+                    editing_allowed={true}
+                    value={props.filters.filter_by_text}
+                    on_blur={filter_by_text =>
+                    {
+                        const filters = {
+                            ...props.filters,
+                            filter_by_text: filter_by_text.trim(),
+                        }
+                        props.set_filters({ filters })
+                    }}
+                    on_blur_type={EditableTextOnBlurType.conditional}
                 />
             </p>
         </>}

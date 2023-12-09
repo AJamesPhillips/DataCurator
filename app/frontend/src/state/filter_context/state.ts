@@ -18,4 +18,5 @@ export interface FilterContextFilters
     include_by_component_types: WComponentType[]
     // Actions list filters
     filter_by_current_knowledge_view: boolean
+    filter_by_text: string
 }

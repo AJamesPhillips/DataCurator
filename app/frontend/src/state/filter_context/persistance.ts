@@ -32,6 +32,7 @@ export function filter_context_starting_state (): FilterContextState
             exclude_by_component_types: [],
             include_by_component_types: [],
             filter_by_current_knowledge_view: false,
+            filter_by_text: "",
         }
     } = obj
 
