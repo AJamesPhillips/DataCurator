@@ -8,6 +8,7 @@ import { LabelsEditor } from "../labels/LabelsEditor"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
+import { get_is_on_actions_list_view } from "../state/actions_list_view/accessors"
 
 
 
@@ -18,23 +19,12 @@ const map_state = (state: RootState) =>
         wc_types,
     } = state.derived.current_composed_knowledge_view?.available_filter_options || {}
 
-    // // The use of the get_available_filter_options function and this whole
-    // // block of code smells and should instead be refactored and modify:
-    // // `state.derived.current_composed_knowledge_view.available_filter_options`
-    // if (get_is_on_actions_list_view(state))
-    // {
-    //     const action_ids = get_action_ids_for_actions_list_view(state)
-    //     const actions = get_wcomponents_from_ids(state.specialised_objects.wcomponents_by_id, action_ids)
-    //         .filter(wcomponent_is_action)
-
-    //     ;({ wc_label_ids, wc_types } = get_available_filter_options(actions))
-    // }
-
     return {
         wc_label_ids,
         wc_types,
         apply_filter: state.filter_context.apply_filter,
         filters: state.filter_context.filters,
+        is_on_actions_list_view: get_is_on_actions_list_view(state),
     }
 }
 
@@ -142,6 +132,28 @@ function _FiltersSidePanel (props: Props)
                 editing_allowed={true}
             />
         </p>
+
+
+        {props.is_on_actions_list_view && <>
+            <br />
+            <hr />
+
+            <h3>Actions list filters</h3>
+
+            <p>
+                Filter by current knowledge view: <EditableCheckbox
+                    value={props.filters.filter_by_current_knowledge_view}
+                    on_change={() =>
+                    {
+                        const filters = {
+                            ...props.filters,
+                            filter_by_current_knowledge_view: !props.filters.filter_by_current_knowledge_view,
+                        }
+                        props.set_filters({ filters })
+                    }}
+                />
+            </p>
+        </>}
 
 
         {/*

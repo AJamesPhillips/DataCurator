@@ -31,6 +31,7 @@ export function filter_context_starting_state (): FilterContextState
             include_by_label_ids: [],
             exclude_by_component_types: [],
             include_by_component_types: [],
+            filter_by_current_knowledge_view: false,
         }
     } = obj
 
