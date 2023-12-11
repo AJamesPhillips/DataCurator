@@ -1,8 +1,6 @@
 import { h } from "preact"
 import { Card, CardContent, CardMedia } from "@mui/material"
 
-import makeStyles from "@mui/styles/makeStyles"
-
 import "./ConnectableCanvasNode.scss"
 import { CanvasNode } from "./CanvasNode"
 import "./display_colors.scss"
@@ -25,7 +23,7 @@ interface OwnProps
     glow?: false | "blue" | "orange"
     color?: string
     extra_css_class?: string
-    extra_css_class_node_main_content?: string
+    extra_styles_for_node_main_content?: h.JSX.CSSProperties
     other_children?: h.JSX.Element[]
     on_pointer_down?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
     on_pointer_up?: (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) => void
@@ -63,6 +61,7 @@ export function ConnectableCanvasNode (props: OwnProps)
     {
         boxShadow: props.glow ? `${props.glow} 0px 0px 10px` : "",
         backgroundColor: props.color,
+        ...props.extra_styles_for_node_main_content,
     }
 
 
@@ -71,7 +70,6 @@ export function ConnectableCanvasNode (props: OwnProps)
     } = props
 
     const extra_css_class = " connectable_canvas_node " + (props.extra_css_class || "")
-    const classes = use_styles()
 
 
     return <CanvasNode
@@ -87,12 +85,13 @@ export function ConnectableCanvasNode (props: OwnProps)
     >
     {/* <Box className="node_main_content" style={main_content_styles}> */}
         <Card
-            className={"node_main_content " + (props.extra_css_class_node_main_content || "")}
-            variant="outlined" style={main_content_styles}
+            className="node_main_content"
+            variant="outlined"
+            style={main_content_styles}
         >
             {(props.cover_image) && <CardMedia component="img"
                 image={props.cover_image}
-                className={classes.image}
+                className="node_image_content"
                 onContextMenu={(e: h.JSX.TargetedMouseEvent<HTMLImageElement>) =>
                 {
                     // This allows the right click default action to happen and offer users the
@@ -130,17 +129,6 @@ export function ConnectableCanvasNode (props: OwnProps)
         {props.other_children}
     </CanvasNode>
 }
-
-
-
-const use_styles = makeStyles(theme => ({
-    image: {
-        maxHeight: "200px",
-        maxWidth: "100%",
-        margin: "0 auto",
-        width: "initial",
-    },
-}))
 
 
 

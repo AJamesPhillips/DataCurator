@@ -5,10 +5,23 @@
     width: 250px;  // keep in sync with `NODE_WIDTH` in position_utils.ts
 }
 
+// TODO, document where "node" is set as a CSS property and or change it to a
+// longer name that's more specific / easier to search for.
 .connectable_canvas_node.node .node_main_content
 {
     min-height: 36px;
     white-space: normal;
+}
+.connectable_canvas_node .node_main_content
+{
+    transform-origin: left top; // helps with styling the scale of node
+}
+.connectable_canvas_node .node_main_content .node_image_content
+{
+    max-height: 200px;
+    max-width: 100%;
+    margin: 0 auto;
+    width: initial;
 }
 
 .connection_terminal {

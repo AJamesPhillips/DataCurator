@@ -1,7 +1,6 @@
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import makeStyles from "@mui/styles/makeStyles"
 import DescriptionIcon from "@mui/icons-material/Description"
 
 import "./WComponentCanvasNode.scss"
@@ -248,19 +247,15 @@ function _WComponentCanvasNode (props: Props)
 
     const show_all_details = is_editing //|| is_current_item
 
-    const use_styles = makeStyles(theme => ({
-        sizer: {
-            transform: `scale(${(kv_entry.s && is_on_canvas) ? kv_entry.s : 1 })`,
+    const size_scale_styles: h.JSX.CSSProperties = {
+            // transform-origin is now set in ConnectableCanvasNode.scss
             // @NOTE: The transformOrigin defaults to center center (50% 50%), but this may not be
             // best for determining position of connectors, values can be set
             // with keywords left/right/center or top/center/bottom
             // or percents, and the order is x-axis, y-axis
+        transform: `scale(${(kv_entry.s && is_on_canvas) ? kv_entry.s : 1 })`,
+    }
 
-            // transformOrigin: "center center"
-            transformOrigin: "left top",
-        }
-    }))
-    const classes = use_styles()
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color({
         wcomponent: derived_composed_wcomponent, wcomponents_by_id: composed_wcomponents_by_id, sim_ms, created_at_ms, display_time_marks: props.display_time_marks,
@@ -412,7 +407,7 @@ function _WComponentCanvasNode (props: Props)
                 </div>
             </div>}
             extra_css_class={extra_css_class}
-            extra_css_class_node_main_content={classes.sizer}
+            extra_styles_for_node_main_content={size_scale_styles}
             opacity={opacity}
             unlimited_width={false}
             glow={glow}
