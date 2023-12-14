@@ -70,8 +70,10 @@ function _EasyActionValueAndPredictionSets (props: Props)
     const last_is_potential = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_potential
     const last_is_paused = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_paused
     const last_is_in_progress = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_in_progress
+    const last_is_completed = last_value_id === ACTION_VALUE_POSSIBILITY_ID.action_completed
 
     const allow_in_progress = !last_VAP_set || last_is_potential || last_is_paused
+    const allow_in_progress_restart = last_is_completed
     const allow_pause = last_is_in_progress
     const allow_completed = !last_VAP_set || last_is_in_progress
 
@@ -99,8 +101,8 @@ function _EasyActionValueAndPredictionSets (props: Props)
 
 
     return <div>
-        {allow_in_progress && <Button
-            value="In Progress"
+        {(allow_in_progress || allow_in_progress_restart) && <Button
+            value={allow_in_progress_restart ? "Restart (In Progress)" : "In Progress"}
             fullWidth={true}
             color="secondary"
             onClick={() => mark_as(ACTION_VALUE_POSSIBILITY_ID.action_in_progress)}
