@@ -1,8 +1,6 @@
 import { useState } from "preact/hooks"
 import { Box, IconButton } from "@mui/material"
-import {
-    Settings as SettingsIcon,
-} from "@mui/icons-material"
+import { Settings as SettingsIcon } from "@mui/icons-material"
 
 import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"

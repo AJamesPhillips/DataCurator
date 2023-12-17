@@ -1,5 +1,4 @@
 import { Select, MenuItem } from "@mui/material"
-import { h } from "preact"
 
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"

@@ -24,11 +24,11 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
     }
 
 
-    function inflate_counterfactuals_data (counterfactuals_data: (CounterfactualData[]) | undefined, VAP_sets: StateValueAndPredictionsSet[])
+    function helper_func__inflate_counterfactuals_data (counterfactuals_data: CounterfactualData[], VAP_sets: StateValueAndPredictionsSet[])
     {
         const counterfactuals_VAP_set_map: VAPSetIdToCounterfactualV2Map = {}
 
-        ;(counterfactuals_data || []).forEach(counterfactual_data =>
+        counterfactuals_data.forEach(counterfactual_data =>
         {
             VAP_sets.forEach(VAP_set =>
             {
@@ -59,7 +59,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
 
     function helper_func__statev2_value (wcomponent: WComponentNodeStateV2, VAP_sets_data: StateValueAndPrediction[][], kwargs?: { counterfactuals_data?: CounterfactualData[], datetime?: TemporalUncertainty })
     {
-        const { counterfactuals_data, datetime = {} } = (kwargs || {})
+        const { counterfactuals_data = [], datetime = {} } = (kwargs || {})
 
         const values_and_prediction_sets: StateValueAndPredictionsSet[] = VAP_sets_data.map((VAPs, i) => ({
             base_id: -1,
@@ -72,7 +72,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         wcomponent = { ...wcomponent, values_and_prediction_sets }
 
 
-        const VAP_set_id_to_counterfactual_v2_map = inflate_counterfactuals_data(counterfactuals_data, values_and_prediction_sets)
+        const VAP_set_id_to_counterfactual_v2_map = helper_func__inflate_counterfactuals_data(counterfactuals_data, values_and_prediction_sets)
 
 
         return get_wcomponent_state_UI_value({
@@ -121,51 +121,56 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
     const uncertain_cn: StateValueAndPrediction[] = [vap_p100c50]
     const certain_no_cn: StateValueAndPrediction[] = [vap_p100c0]
 
+    describe("Basic tests of get_wcomponent_state_UI_value", () =>
+    {
 
-    display_value = helper_func__statev2_value(wcomponent__type_other, [])
-    test(display_value, {
-        values_string: "not defined",
-        is_defined: false,
-        counterfactual_applied: undefined,
-        uncertain: false,
-        derived__using_values_from_wcomponent_ids: undefined,
-    }, "No VAP (value and prediction) defined")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [])
+        test(display_value, {
+            values_string: "not defined",
+            is_defined: false,
+            counterfactual_applied: undefined,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "No VAP (value and prediction) defined")
 
-    display_value = helper_func__statev2_value(wcomponent__type_other, [empty])
-    test(display_value, {
-        values_string: "not defined",
-        is_defined: false,
-        counterfactual_applied: false,
-        uncertain: false,
-        derived__using_values_from_wcomponent_ids: undefined,
-    }, "No value defined in VAP (value and prediction)")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [empty])
+        test(display_value, {
+            values_string: "not defined",
+            is_defined: false,
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "No value defined in VAP (value and prediction)")
 
-    display_value = helper_func__statev2_value(wcomponent__type_other, [single])
-    test(display_value, {
-        values_string: "A100",
-        is_defined: true,
-        counterfactual_applied: false,
-        uncertain: false,
-        derived__using_values_from_wcomponent_ids: undefined,
-    }, "Single with certainty")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [single])
+        test(display_value, {
+            values_string: "A100",
+            is_defined: true,
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "Single with certainty")
 
-    display_value = helper_func__statev2_value(wcomponent__type_other, [multiple])
-    test(display_value, {
-        values_string: "A80, A20",
-        is_defined: true,
-        counterfactual_applied: false,
-        uncertain: true,
-        derived__using_values_from_wcomponent_ids: undefined,
-    }, "Multiple with both uncertain")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple])
+        test(display_value, {
+            values_string: "A80, A20",
+            is_defined: true,
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "Multiple with both uncertain")
 
-    display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
-    test(display_value, {
-        values_string: "A100",
-        is_defined: true,
-        counterfactual_applied: false,
-        uncertain: false,
-        derived__using_values_from_wcomponent_ids: undefined,
-    }, "Multiple with one uncertain")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
+        test(display_value, {
+            values_string: "A100",
+            is_defined: true,
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "Multiple with one uncertain")
+
+    })
+
 
     describe.skip("TODO: implement these other tests", () =>
     {
@@ -272,14 +277,14 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
 
     describe("StateValue replacing VAPSets", () =>
     {
-        // We're assuming that this dervied_composed_wcomponent was processed by
+        // We're assuming that this derived_composed_wcomponent was processed by
         // and returned from the get_composed_wcomponents_by_id function
-        const dervied_composed_wcomponent: WComponentNodeStateV2 = {
+        const derived_composed_wcomponent: WComponentNodeStateV2 = {
             ...wcomponent__type_other,
             _derived__using_value_from_wcomponent_id: "abc123",
         }
 
-        display_value = helper_func__statev2_value(dervied_composed_wcomponent, [[vap_p100]])
+        display_value = helper_func__statev2_value(derived_composed_wcomponent, [[vap_p100]])
         test(display_value, {
             values_string: "A100",
             is_defined: true,
