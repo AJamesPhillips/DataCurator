@@ -57,10 +57,33 @@ export function parse_VAP_value (VAP: VAP, VAPs_represent: VAPsType): ParsedValu
 {
     // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
     const parsed_value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
-        : (VAPs_represent === VAPsType.number ? parseFloat(VAP.value)
+        : (VAPs_represent === VAPsType.number ? parse_number(VAP.value)
         : VAP.value)
 
     return parsed_value
+}
+
+
+// TODO: Maybe we should replace this functionality with the simulation.js library
+// This would also allow handling of units and calculations and allow referencing
+// other component values via @@<wcomponent_id> syntax
+function parse_number (num_str: string): number
+{
+    num_str = num_str.trim()
+    const matches = num_str.match(/^(-?[0-9]*\.?[0-9]*)\s*(?:(e)\s*(-?[0-9]+))?\s*(\%)?$/)
+    let value = NaN
+    do
+    {
+        if (!matches) break
+        const [, num, exponent_sign, exponent, percentage] = matches
+        if (!num) break
+        value = parseFloat(num)
+        if (Number.isNaN(value)) break
+        if (exponent_sign && exponent) value = value * 10 ** parseInt(exponent)
+        if (percentage) value = value / 100
+    } while (false)
+
+    return value
 }
 
 

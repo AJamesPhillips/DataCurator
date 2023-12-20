@@ -52,6 +52,7 @@ import { run_EditableCalculationRow_tests } from "./wcomponent_form/calculations
 import { run_list_function_tests } from "./utils/list.test"
 import { run_get_default_formatting_function_tests } from "./wcomponent_form/calculations/get_default_formatting.test"
 import { run_get_wcomponent_status_in_knowledge_view_tests } from "./wcomponent_form/wcomponent_knowledge_view_form/get_wcomponent_status_in_knowledge_view.test"
+import { run_parse_value_tests } from "./wcomponent/value/parse_value.test"
 
 
 
@@ -82,6 +83,7 @@ function run_all_tests ()
     run_get_default_formatting_function_tests()
     run_get_composed_wc_id_maps_object_tests()
     run_get_wcomponent_status_in_knowledge_view_tests()
+    run_parse_value_tests()
 
     test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()
