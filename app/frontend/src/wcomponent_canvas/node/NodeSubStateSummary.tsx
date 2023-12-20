@@ -16,7 +16,7 @@ import { predicate_target_value_possibility } from "../../wcomponent_derived/sub
 import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
 import type { CounterfactualV2StateValueAndPredictionSetInfo } from "../../wcomponent/interfaces/counterfactual"
 import { ValueAndPredictionEntryRow } from "./ValueAndPredictionEntryRow"
-import { value_possibility_for_UI } from "../../wcomponent/value/parse_value"
+// import { value_possibility_for_UI } from "../../wcomponent/value/parse_value"
 import { ratio_to_percentage_string } from "../../sharedf/percentages"
 import { prune_items_by_created_at_and_versions } from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
