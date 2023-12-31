@@ -72,9 +72,9 @@ function _WComponentValueAndPredictionsForm (props: Props)
                 <h4 style={{ display: "inline-block" }}>
                     Value Predictions {(!show_form && orig_values_and_prediction_sets.length) ? `(${orig_values_and_prediction_sets.length})` : ""}
                 </h4>
-                <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
+                {/* <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
                     <WarningTriangleV2 warning={""} label="" />
-                </div>
+                </div> */}
             </div>
 
             <div className="expansion_button"/>
