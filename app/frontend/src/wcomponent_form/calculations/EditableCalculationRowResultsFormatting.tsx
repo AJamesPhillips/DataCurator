@@ -32,7 +32,7 @@ export function EditableCalculationRowResultsFormatting (props: OwnProps)
 
     const options = get_number_display_options(result, temp_result_sig_figs ?? default_significant_figures)
 
-    return <div style={{ display: "flex", marginTop: -15 }}>
+    return <div style={{ display: "flex" }}>
         <div
             // Using `<Tooltip title="Significant figures" ...` seems not to work
             data-tooltip="Significant figures" data-tooltip_left_-10 data-tooltip_bottom_-60

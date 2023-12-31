@@ -1,5 +1,5 @@
 
-/*  ++ copied from ValueAndPredictionSets.css  */
+
 .editable_list_entry, .form_section
 {
     border: thin solid rgba(73, 98, 167, 0.2);
@@ -7,7 +7,11 @@
     padding: 3px;
     background-color: white;
 }
-/*  -- copied from ValueAndPredictionSets.css  */
+.form_section.hidden_border
+{
+    border: thin solid rgba(0, 0, 0, 0);
+}
+
 
 .editable_list_entry.padded
 {

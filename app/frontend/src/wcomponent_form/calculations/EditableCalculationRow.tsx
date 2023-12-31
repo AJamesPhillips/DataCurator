@@ -64,7 +64,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             >
                 &nbsp;{result.units}
             </span>}
-            {calc.result_description && (!editing || !show_options) && <span
+            {calc.result_description && <span
                 style={{ fontSize: "14px" }}
             >
                 &nbsp;<RichMarkDown text={calc.result_description} />
@@ -94,8 +94,9 @@ export function EditableCalculationRow (props: CalculationRowProps)
         marginBottom={editing ? "18px" : undefined }
         flexDirection={editing ? "column" : "row"}
         style={{ display: "flex" }}
+        className={"form_section " + (show_options ? "" : "hidden_border")}
     >
-        <Box style={{ width: "100%", display: "flex" }}>
+        <div style={{ width: "100%", display: "flex" }}>
             {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
 
             <EditableTextSingleLine
@@ -136,25 +137,11 @@ export function EditableCalculationRow (props: CalculationRowProps)
             />}
 
             {!editing && output_element}
-        </Box>
+        </div>
 
         {/* If we're editing then place the result on a new line */}
-        {editing && <Box style={{ width: "100%", display: "flex", marginTop: show_options ? 30 : undefined }}>
+        {editing && <div style={{ width: "100%", display: "flex", marginTop: undefined }}>
             {output_element}
-            {show_options && <EditableCalculationRowResultsFormatting
-                result={result?.value}
-                default_significant_figures={default_significant_figures}
-                temp_result_sig_figs={temp_result_sig_figs}
-                set_temp_result_sig_figs={set_temp_result_sig_figs}
-                result_display_type={result_display_type}
-                update_calculation={partial =>
-                {
-                    props.update_calculation({
-                        ...calc,
-                        ...partial,
-                    })
-                }}
-            />}
 
             {/* Whilst editing then display an icon "button" to show/hide options */}
             <IconButton
@@ -164,9 +151,24 @@ export function EditableCalculationRow (props: CalculationRowProps)
             >
                 <SettingsIcon />
             </IconButton>
-        </Box>}
+        </div>}
 
-        {props.editing && show_options && <Box style={{ width: "100%", display: "flex", marginTop: 10 }}>
+        {props.editing && show_options && <EditableCalculationRowResultsFormatting
+            result={result?.value}
+            default_significant_figures={default_significant_figures}
+            temp_result_sig_figs={temp_result_sig_figs}
+            set_temp_result_sig_figs={set_temp_result_sig_figs}
+            result_display_type={result_display_type}
+            update_calculation={partial =>
+            {
+                props.update_calculation({
+                    ...calc,
+                    ...partial,
+                })
+            }}
+        />}
+
+        {props.editing && show_options && <div style={{ marginLeft: 10, width: "100%", display: "flex", marginTop: 20 }}>
             <div style={{ display: "flex" }}>
                 <EditableTextSingleLine
                     size="small"
@@ -181,7 +183,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
                     }}
                 />
             </div>
-        </Box>}
+        </div>}
 
         {props.editing && show_options && <EditableCalculationRowOptions
             delete_calculation={() => props.update_calculation(null)}
