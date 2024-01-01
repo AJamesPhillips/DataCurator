@@ -22,7 +22,7 @@ export function EditableCalculationRowOptions (props: OwnProps)
 {
     const [ready_to_delete, set_ready_to_delete] = useState(false)
 
-    return <Box style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+    return <>
         <Tooltip title="Add above">
             <IconButton
                 onClick={() => props.update_calculations("add_above")}
@@ -72,5 +72,5 @@ export function EditableCalculationRowOptions (props: OwnProps)
             ready_to_progress={true}
             on_cancel={() => set_ready_to_delete(false)}
         />}
-    </Box>
+    </>
 }

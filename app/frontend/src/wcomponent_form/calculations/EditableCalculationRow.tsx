@@ -14,6 +14,7 @@ import { EditableCalculationRowCommands, EditableCalculationRowOptions } from ".
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
+import { CSSProperties } from "preact/compat"
 
 
 
@@ -84,6 +85,9 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const show_calc_value = editing || should_show_calc_value(calc.value)
 
 
+    const common_css: CSSProperties = { width: "100%", display: "flex" }
+
+
     return <Box
         p={1}
         flexGrow={1}
@@ -96,9 +100,15 @@ export function EditableCalculationRow (props: CalculationRowProps)
         style={{ display: "flex" }}
         className={"form_section " + (show_options ? "" : "hidden_border")}
     >
-        <div style={{ width: "100%", display: "flex" }}>
-            {result && result.error && <WarningTriangleV2 warning={result.error} label="" />}
+        {result && <div style={{
+            ...common_css,
+            maxHeight: result.error ? 100 : 0,
+            transition: "max-height 1s ease 0s"
+        }}>
+            <WarningTriangleV2 warning={result.error || ""} label="" />
+        </div>}
 
+        <div style={{ width: "100%", display: "flex" }}>
             <EditableTextSingleLine
                 size="small"
                 // style={{ width: "120px" }}
@@ -140,7 +150,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         </div>
 
         {/* If we're editing then place the result on a new line */}
-        {editing && <div style={{ width: "100%", display: "flex", marginTop: undefined }}>
+        {editing && <div style={{ ...common_css, marginTop: undefined }}>
             {output_element}
 
             {/* Whilst editing then display an icon "button" to show/hide options */}
@@ -168,7 +178,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             }}
         />}
 
-        {props.editing && show_options && <div style={{ marginLeft: 10, width: "100%", display: "flex", marginTop: 20 }}>
+        {props.editing && show_options && <div style={{ ...common_css, marginLeft: 10, marginTop: 20 }}>
             <div style={{ display: "flex" }}>
                 <EditableTextSingleLine
                     size="small"
@@ -185,11 +195,13 @@ export function EditableCalculationRow (props: CalculationRowProps)
             </div>
         </div>}
 
-        {props.editing && show_options && <EditableCalculationRowOptions
-            delete_calculation={() => props.update_calculation(null)}
-            disallowed_commands={props.disallowed_commands}
-            update_calculations={props.update_calculations}
-        />}
+        {props.editing && show_options && <div style={{ ...common_css, justifyContent: "flex-end" }}>
+            <EditableCalculationRowOptions
+                delete_calculation={() => props.update_calculation(null)}
+                disallowed_commands={props.disallowed_commands}
+                update_calculations={props.update_calculations}
+            />
+        </div>}
     </Box>
 }
 
