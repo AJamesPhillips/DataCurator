@@ -54,6 +54,8 @@ interface OwnProps
 }
 
 
+// TODO maybe merge this component into _ValueAndPredictionSets as this is the
+// only place that it is used.
 export function ValueAndPredictionSetsComponent (props: OwnProps)
 {
     const [new_item, set_new_item] = useState<VAPSet | undefined>(undefined)

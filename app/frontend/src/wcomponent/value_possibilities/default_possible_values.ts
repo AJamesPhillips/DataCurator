@@ -29,6 +29,7 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
     }
     else if (simple_possibilities.length === 0)
     {
+        // TODO: get rid of this as it's a bit bizarre & random?
         (VAPs_represent === VAPsType.number ? ["1"] : [""])
         .forEach((value, index) =>
         {

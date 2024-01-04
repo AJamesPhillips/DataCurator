@@ -142,15 +142,21 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
     return <div className="value_and_prediction_summary">
         <br />
         <div className="temporal_uncertainty">
+
             {is_number && ((editing && expanded_view) || orig_min) && <div key="min">
                 <EditableTextSingleLine
                     placeholder="Min"
                     value={orig_min || ""}
-                    on_blur={new_min => crud.update_item({ ...VAP, min: new_min })}
-                    on_blur_type={EditableTextOnBlurType.conditional}
+                    // We can't use .trim() yet as the component does not update
+                    // correctly as `orig_min` will still be "" so it doesn't
+                    // trigger an update to the component.
+                    on_blur={new_min => crud.update_item({ ...VAP, min: new_min.trim() })}
+                    on_blur_type={EditableTextOnBlurType.always}
                 />
                 <br />
             </div>}
+
+
             {(editing || orig_value) && <div
                 style={{ position: "relative" /* Used to position PossibleValueLink*/ }}
                 key="value"
@@ -159,7 +165,10 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     disabled={is_boolean}
                     placeholder="Value"
                     value={is_boolean ? (orig_probability > 0.5 ? "True" : "False") : orig_value}
-                    on_blur={value => crud.update_item({ ...VAP, value })}
+                    // We can't use .trim() yet as the component does not update
+                    // correctly as `orig_min` will still be "" so it doesn't
+                    // trigger an update to the component.
+                    on_blur={new_value => crud.update_item({ ...VAP, value: new_value/*.trim()*/ })}
                     on_blur_type={EditableTextOnBlurType.conditional}
                 />
 
@@ -176,15 +185,21 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
                 <br />
             </div>}
+
+
             {is_number && ((editing && expanded_view) || orig_max) && <div key="max">
                 <EditableTextSingleLine
                     placeholder="Max"
                     value={orig_max || ""}
-                    on_blur={max => crud.update_item({ ...VAP, max })}
+                    // We can't use .trim() yet as the component does not update
+                    // correctly as `orig_min` will still be "" so it doesn't
+                    // trigger an update to the component.
+                    on_blur={new_max => crud.update_item({ ...VAP, max: new_max/*.trim()*/ })}
                     on_blur_type={EditableTextOnBlurType.conditional}
                 />
                 <br />
             </div>}
+
         </div>
 
         <div className="predictions">
