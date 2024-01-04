@@ -57,19 +57,28 @@ export function parse_VAP_value (VAP: VAP, VAPs_represent: VAPsType): ParsedValu
 {
     // TODO: When boolean, should we return something that's neither true nor false if probability === 0.5?
     const parsed_value = VAPs_represent === VAPsType.boolean ? VAP.probability > 0.5
-        : (VAPs_represent === VAPsType.number ? parse_number(VAP.value)
+        : (VAPs_represent === VAPsType.number ? parse_string_as_number(VAP.value)
         : VAP.value)
 
     return parsed_value
 }
 
 
+export function is_string_valid_number (num_str: string): boolean
+{
+    return !Number.isNaN(parse_string_as_number(num_str))
+}
+
+
 // TODO: Maybe we should replace this functionality with the simulation.js library
 // This would also allow handling of units and calculations and allow referencing
 // other component values via @@<wcomponent_id> syntax
-function parse_number (num_str: string): number
+function parse_string_as_number (num_str: string): number | null
 {
     num_str = num_str.trim()
+    // Allow empty strings to be return null instead of NaN.  NaN is resereved for invalid numbers
+    if (num_str === "") return null
+
     const matches = num_str.match(/^(-?[0-9]*\.?[0-9]*)\s*(?:(e)\s*(-?[0-9]+))?\s*(\%)?$/)
     let value = NaN
     do
