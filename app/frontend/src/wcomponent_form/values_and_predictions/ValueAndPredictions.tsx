@@ -23,6 +23,8 @@ import { remove_element, replace_element } from "../../utils/list"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import { ValuePossibilityLink } from "../value_possibilities/ValuePossibilityLink"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
+import { is_string_valid_number } from "../../wcomponent/value/parse_value"
 
 
 
@@ -144,6 +146,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
         <div className="temporal_uncertainty">
 
             {is_number && ((editing && expanded_view) || orig_min) && <div key="min">
+                <InvalidNumberWarning value={orig_min} />
                 <EditableTextSingleLine
                     placeholder="Min"
                     value={orig_min || ""}
@@ -161,6 +164,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 style={{ position: "relative" /* Used to position PossibleValueLink*/ }}
                 key="value"
             >
+                {is_number && <InvalidNumberWarning value={orig_value} />}
                 <EditableTextSingleLine
                     disabled={is_boolean}
                     placeholder="Value"
@@ -188,6 +192,7 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
 
 
             {is_number && ((editing && expanded_view) || orig_max) && <div key="max">
+                <InvalidNumberWarning value={orig_max} />
                 <EditableTextSingleLine
                     placeholder="Max"
                     value={orig_max || ""}
@@ -285,5 +290,19 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
             on_blur_type={EditableTextOnBlurType.conditional}
         />}
         {editing && <br />}
+    </div>
+}
+
+
+function InvalidNumberWarning (props: { value: string | undefined })
+{
+    const invalid = is_string_valid_number(props.value || "")
+
+    return <div style={{
+        display: "initial", // prevents overlapping the min and max input
+        maxHeight: invalid ? 100 : 0,
+        transition: "max-height 1s ease 0s"
+    }}>
+        <WarningTriangleV2 warning="Number is invalid" label="" />
     </div>
 }
