@@ -55,6 +55,7 @@ function _ValueAndPredictions (props: Props)
 
     const VAPs = props.values_and_predictions
     const class_name_only_one_VAP = (VAPs_represent === VAPsType.boolean && VAPs.length >= 1) ? "only_one_VAP" : ""
+    const is_number = VAPs_represent === VAPsType.number
 
     const item_props: EditableListEntryItemProps<StateValueAndPrediction, ListItemCRUDRequiredU<StateValueAndPrediction>> = {
         // Do not show created_at of VAPs when in VAP set
@@ -77,8 +78,8 @@ function _ValueAndPredictions (props: Props)
             }
         },
         delete_button_text: "Delete Value & Prediction",
-        hide_expansion_button: VAP => !editing && !VAP.description && !VAP.source && VAP.min === undefined && VAP.max === undefined,
-        calc_initial_custom_expansion_state: VAP => !!(VAP.description || VAP.source || VAP.min !== undefined || VAP.max !== undefined),
+        hide_expansion_button: VAP => !editing && !VAP.description && !VAP.source && (!is_number || (!VAP.min && !VAP.max)),
+        calc_initial_custom_expansion_state: VAP => !!(VAP.description || VAP.source || (is_number && (VAP.min || VAP.max))),
     }
 
     const item_descriptor = "Value and prediction"
