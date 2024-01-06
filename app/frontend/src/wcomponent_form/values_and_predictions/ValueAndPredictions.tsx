@@ -308,13 +308,13 @@ const get_details = (VAPs_represent: VAPsType, editing: boolean) => (item: State
 
 function InvalidNumberWarning (props: { value: string | undefined })
 {
-    const invalid = is_string_valid_number(props.value || "")
+    const valid = is_string_valid_number(props.value || "")
 
     return <div style={{
-        display: "initial", // prevents overlapping the min and max input
-        maxHeight: invalid ? 100 : 0,
+        maxHeight: valid ? 0 : 100,
+        overflow: "hidden",
         transition: "max-height 1s ease 0s"
     }}>
-        <WarningTriangleV2 warning="Number is invalid" label="" />
+        <WarningTriangleV2 warning="Number is invalid" />
     </div>
 }
