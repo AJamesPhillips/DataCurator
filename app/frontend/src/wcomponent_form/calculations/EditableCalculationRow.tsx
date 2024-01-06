@@ -100,12 +100,12 @@ export function EditableCalculationRow (props: CalculationRowProps)
         style={{ display: "flex" }}
         className={"form_section " + (show_options ? "" : "hidden_border")}
     >
-        {result && <div style={{
+        {<div style={{
             ...common_css,
-            maxHeight: result.error ? 100 : 0,
-            transition: "max-height 1s ease 0s"
+            maxHeight: result?.error ? 100 : 0,
+            transition: "max-height 1s ease 0s",
         }}>
-            <WarningTriangleV2 warning={result.error || ""} label="" />
+            <WarningTriangleV2 warning={result?.error || ""} always_display={true} />
         </div>}
 
         <div style={{ width: "100%", display: "flex" }}>
