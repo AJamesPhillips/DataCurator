@@ -151,14 +151,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditableTextSingleLine
                     placeholder="Min"
                     value={orig_min || ""}
-                    on_blur={(new_min, synchronous_force_update) =>
-                    {
-                        new_min = new_min.trim()
-                        synchronous_force_update(new_min)
-                        if (new_min !== orig_min) crud.update_item({ ...VAP, min: new_min })
-                    }}
-                    // It is superfluous using `EditableTextOnBlurType.conditional` here
-                    // as we effectively do the same check in the on_blur function above.
+                    modify_value_pre_on_blur={new_min => new_min.trim()}
+                    on_blur={new_min => crud.update_item({ ...VAP, min: new_min })}
                     on_blur_type={EditableTextOnBlurType.conditional}
                 />
                 <br />
@@ -174,14 +168,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                     disabled={is_boolean}
                     placeholder="Value"
                     value={is_boolean ? (orig_probability > 0.5 ? "True" : "False") : orig_value}
-                    on_blur={(new_value, synchronous_force_update) =>
-                    {
-                        new_value = new_value.trim()
-                        synchronous_force_update(new_value)
-                        if (new_value !== orig_value) crud.update_item({ ...VAP, value: new_value })
-                    }}
-                    // It is superfluous using `EditableTextOnBlurType.conditional` here
-                    // as we effectively do the same check in the on_blur function above.
+                    modify_value_pre_on_blur={value => value.trim()}
+                    on_blur={new_value => crud.update_item({ ...VAP, value: new_value })}
                     on_blur_type={EditableTextOnBlurType.conditional}
                 />
 
@@ -205,14 +193,8 @@ const get_summary = (args: GetSummaryArgs) => (VAP: StateValueAndPrediction, cru
                 <EditableTextSingleLine
                     placeholder="Max"
                     value={orig_max || ""}
-                    on_blur={(new_max, synchronous_force_update) =>
-                    {
-                        new_max = new_max.trim()
-                        synchronous_force_update(new_max)
-                        if (new_max !== orig_max) crud.update_item({ ...VAP, max: new_max })
-                    }}
-                    // It is superfluous using `EditableTextOnBlurType.conditional` here
-                    // as we effectively do the same check in the on_blur function above.
+                    modify_value_pre_on_blur={new_max => new_max.trim()}
+                    on_blur={new_max => crud.update_item({ ...VAP, max: new_max })}
                     on_blur_type={EditableTextOnBlurType.conditional}
                 />
                 <br />

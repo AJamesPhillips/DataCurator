@@ -25,10 +25,12 @@ export type EditableTextCommonOwnProps =
     style?: h.JSX.CSSProperties
     spellcheck?: boolean
 } & ({
+    modify_value_pre_on_blur?: undefined
     on_blur?: undefined
     on_blur_type?: undefined
 } | {
-    on_blur: (value: string, synchronous_force_update: (altered_value: string) => void) => void
+    modify_value_pre_on_blur?: (value: string) => string
+    on_blur: (value: string) => void
     on_blur_type: EditableTextOnBlurType
 })
 
@@ -150,25 +152,16 @@ function _EditableTextCommon (props: Props)
             new_value = custom_creation_context_replace_text(props.creation_context, new_value)
         }
 
-        // This function is called when we want to alter the value passed to on_blur
-        // and when this altered values is the same as the original value passed
-        // to this editable text component.  Without this function, the component
-        // will remain with the previous incorrect value being displayed as React/Preact
-        // will optimise out the call to re-render the component as the props won't
-        // have changed.
-        // E.g. in VAP form, the `min`, `max`, and `value`, text fields are
-        // instantiated with the value of `""`.  If the user then enters in some
-        // spaces i.e. `"   "` to the text field, the on_blur handler will be called
-        // which will then trim these back to `""` but without calling this
-        // `synchronous_force_update` function the text field would remain with
-        // the value of `"   "`
-        const synchronous_force_update = (altered_value: string) =>
+        if (props.modify_value_pre_on_blur)
         {
-            new_value = altered_value
+            new_value = props.modify_value_pre_on_blur(new_value)
         }
 
         const value_has_changed = new_value !== props.value
-        if (on_blur_type === EditableTextOnBlurType.always || value_has_changed) props.on_blur && props.on_blur(new_value, synchronous_force_update)
+        if (on_blur_type === EditableTextOnBlurType.always || value_has_changed)
+        {
+            props.on_blur && props.on_blur(new_value)
+        }
 
         set_value(new_value)
     }, [props.value, props.creation_context, on_blur_type, props.on_blur])
