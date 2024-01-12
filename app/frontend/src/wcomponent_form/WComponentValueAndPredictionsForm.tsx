@@ -54,7 +54,12 @@ function _WComponentValueAndPredictionsForm (props: Props)
     } = props
 
 
-    const [show_form, set_show_form] = useState(orig_values_and_prediction_sets.length > 0)
+    const initial_show_form = (
+        orig_values_and_prediction_sets.length > 0
+        // Show form if editing allowed and VAPs represent actions
+        || (editing_allowed && VAPs_represent === VAPsType.action)
+    )
+    const [show_form, set_show_form] = useState(initial_show_form)
 
     const units = wcomponent_is_statev2(wcomponent) && wcomponent.units
     const show_units = (props.editing_allowed && (VAPs_represent === VAPsType.number || !!units))
