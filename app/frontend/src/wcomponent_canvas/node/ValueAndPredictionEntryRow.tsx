@@ -95,11 +95,13 @@ function CounterfactualLink (props: CounterfactualLinkProps)
         color, // Is this colour doing anything?
         verticalAlign: "middle",
         fontWeight: "bold",
+        width: "20px",
     }
 
     return <span
         onPointerDown={e => e.stopImmediatePropagation()}
         onClick={e => e.stopImmediatePropagation()}
+        style={{ display: "inline-flex" }}
     >
         &nbsp;
 
