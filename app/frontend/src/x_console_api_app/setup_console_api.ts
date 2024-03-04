@@ -368,7 +368,7 @@ function seconds_to_string (elapsed_time: number)
 
 function get_selected_wcomponents_elapsed_minutes (as_text?: boolean): number | string
 {
-    const elapsed_minutes = get_selected_wcomponents().map(w => get_action_wcomponent_elapsed_minutes(w, false)).reduce((i, t) => i + t)
+    const elapsed_minutes = get_selected_wcomponents().map(w => get_action_wcomponent_elapsed_minutes(w, false)).reduce(((i, t) => i + t), 0)
     const elapsed_seconds = elapsed_minutes * 60
 
     return as_text ? seconds_to_string(elapsed_seconds) : round_seconds_to_minutes(elapsed_seconds)
