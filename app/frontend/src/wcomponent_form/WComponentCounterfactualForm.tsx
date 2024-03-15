@@ -174,7 +174,6 @@ function _WComponentCounterfactualForm (props: Props)
                 VAP_set: target_VAP_set,
                 VAPs_represent,
                 wcomponent: target_wcomponent,
-                sort: false,
             }).map(visual_VAP =>
             {
                 const { VAP_id, value_text } = visual_VAP

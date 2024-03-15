@@ -17,7 +17,6 @@ interface ConvertVAPSetToVAPVisualsDataArgs
     VAP_set: VAPSet
     VAPs_represent: VAPsType
     wcomponent: WComponent
-    sort?: boolean
 }
 export function convert_VAP_set_to_VAP_visuals (args: ConvertVAPSetToVAPVisualsDataArgs): VAPVisual[]
 {
@@ -46,8 +45,7 @@ export function convert_VAP_set_to_VAP_visuals (args: ConvertVAPSetToVAPVisualsD
 
 
     // TODO protect against unstable sort when percentage_height is the same
-    const should_sort = args.sort === undefined || args.sort
-    const sorted_data = should_sort ? sort_list(data, i => i.certainty, SortDirection.descending) : data
+    const sorted_data = sort_list(data, i => i.certainty, SortDirection.descending)
 
     // Will add entry for uncertain value last
     return add_uncertain_VAP_visual(total_certainties, sorted_data)
