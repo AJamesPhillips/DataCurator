@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"

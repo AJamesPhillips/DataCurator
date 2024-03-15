@@ -1,5 +1,5 @@
 import { Box, FormControl, FormLabel, Slider } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"

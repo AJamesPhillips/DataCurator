@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact"
+import { FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { is_defined } from "../shared/utils/is_defined"

@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 
 import "./UncertainDateTimeForm.scss"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"

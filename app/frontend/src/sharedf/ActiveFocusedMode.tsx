@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { IconButton, Tooltip } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
 import FilterTiltShift from "@mui/icons-material/FilterTiltShift"

@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"

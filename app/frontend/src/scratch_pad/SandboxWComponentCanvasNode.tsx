@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps, Provider } from "react-redux"
 
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"

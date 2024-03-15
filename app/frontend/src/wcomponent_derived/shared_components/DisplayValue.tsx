@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 
 import type { DerivedValueForUI } from "../interfaces/value"
 import "./DisplayValue.css"

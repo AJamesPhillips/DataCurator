@@ -1,5 +1,5 @@
 import Markdown from "markdown-to-jsx"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Button } from "../sharedf/Button"

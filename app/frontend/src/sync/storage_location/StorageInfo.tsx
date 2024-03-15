@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import PermDataSettingIcon from "@mui/icons-material/PermDataSetting"

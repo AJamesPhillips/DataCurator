@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"

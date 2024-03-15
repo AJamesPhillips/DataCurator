@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { IconButton, Tooltip } from "@mui/material"
 import { connect, ConnectedProps } from "react-redux"
 import FilterNoneIcon from "@mui/icons-material/FilterNone"

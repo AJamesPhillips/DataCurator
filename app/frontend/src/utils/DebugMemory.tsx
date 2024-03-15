@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from "preact"
+import { FunctionComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 

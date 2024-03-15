@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import AddIcon from "@mui/icons-material/Add"
 
 import "./AddNewActionButton.scss"

@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { ButtonGroup, IconButton, Tooltip } from "@mui/material"

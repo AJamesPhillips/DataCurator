@@ -1,5 +1,5 @@
 import { Button, ButtonGroup } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./CreateNewWComponent.css"

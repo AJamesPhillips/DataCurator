@@ -1,5 +1,5 @@
 import { Box, ButtonGroup, Button } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 
 import { connect, ConnectedProps } from "react-redux"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"

@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"

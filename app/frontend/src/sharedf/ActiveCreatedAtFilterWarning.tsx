@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@mui/material"
 import FilterIcon from "@mui/icons-material/Filter"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
