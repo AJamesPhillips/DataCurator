@@ -24,4 +24,6 @@ deploy/roles/env_all/tasks/users.yml
 app/server/state_backup
 app/server/config.json
 
+app/frontend/dist
+
 raw_data.ts

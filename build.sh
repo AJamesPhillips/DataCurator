@@ -1,22 +1,36 @@
+# To build a new version of the DataCurator app:
+#   1. We expect there to be the `data-curator-build` repo in the same directory as the `DataCurator` repo
+#   2. `cd` into root directory of this DataCurator repo
+#   3. Run `./build.sh`
+
 set -e
+echo "cd ../data-curator-build/"
 cd ../data-curator-build/
 
 set +e
-git rm -rf .
+# Remove the assets, app, sim directories so that we can replace them with the new build
+echo "rm -rf assets app sim"
+rm -rf assets app sim
+mkdir app
+mkdir sim
+# git rm -rf .
 set -e
 
-git clean -fxd
+# echo "git clean -fxd"
+# git clean -fxd
 cd -
 
+echo "cd app/frontend"
 cd app/frontend
+
+echo "npm run build"
 npm run build
-mv ../../../data-curator-build/index_landing_page.html ../../../data-curator-build/index.html
-mkdir ../../../data-curator-build/app
-mkdir ../../../data-curator-build/sim
-cp ../../../data-curator-build/index_application.html ../../../data-curator-build/app/index.html
-cp ../../../data-curator-build/index_application.html ../../../data-curator-build/sim/index.html
-
-echo "datacurator.org" > ../../../data-curator-build/CNAME
-touch ../../../data-curator-build/.nojekyll
-
 cd -
+
+echo "Moving files..."
+# mv ../data-curator-build/index_landing_page.html ../data-curator-build/index.html
+
+cp -r app/frontend/dist/* ../data-curator-build/
+cp ../data-curator-build/app/index.html ../data-curator-build/sim/index.html
+
+echo "Build completed"
