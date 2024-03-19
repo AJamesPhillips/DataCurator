@@ -13,7 +13,7 @@ import { run_number_to_significant_figures_test } from "./shared/format_number_t
 import { test_get_calculation_strs_from_text } from "./calculations/rich_text/get_calculation_strs_from_text"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
 import { test_get_angle } from "./canvas/connections/angles"
-import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils"
+import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils.test"
 import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_calc_ids_to_move_and_conflicts_functions } from "./knowledge_view/change_base/calc_ids_to_move_and_conflicts"
 import { test_cloneable_generator_factory } from "./utils/generators"
