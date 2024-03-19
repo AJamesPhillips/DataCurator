@@ -35,7 +35,6 @@ export interface DerivedValueForUI
 // for determining how it should be displayed
 export interface DerivedValidityForUI
 {
-    is_defined: boolean
     is_valid: boolean
     certainty: number
 }

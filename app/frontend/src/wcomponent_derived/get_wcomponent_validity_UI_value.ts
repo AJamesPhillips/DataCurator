@@ -1,5 +1,5 @@
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_validity_value } from "./get_wcomponent_validity_value"
+import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "./get_wcomponent_validity_value"
 import type { DerivedValueForUI } from "./interfaces/value"
 
 
@@ -14,12 +14,11 @@ export function get_wcomponent_validity_UI_value (props: GetWcomponentValidityUI
 {
     const { wcomponent, created_at_ms, sim_ms } = props
 
-    const { is_defined, is_valid, certainty } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms })
+    const { is_valid } = get_wcomponent_validity_value({ wcomponent, created_at_ms, sim_ms }) || default_wcomponent_validity_value()
 
     const values_string = is_valid ? "Valid" : "Invalid"
 
     return {
-        is_defined,
         values_string,
         counterfactual_applied: undefined,
         uncertain: undefined,

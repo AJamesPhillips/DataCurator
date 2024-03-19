@@ -7,7 +7,7 @@ import type { RootState } from "../State"
 import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
-import { get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
+import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
 import { derived_composed_wcomponents_by_id_reducer } from "./composed_wcomponents_by_id"
 
 
@@ -126,7 +126,7 @@ function conditionally_update_active_judgement_or_objective_ids (initial_state: 
         {
             if (!composed_visible_wc_id_map[judgement.id]) return
 
-            const { is_valid } = get_wcomponent_validity_value({ wcomponent: judgement, created_at_ms, sim_ms })
+            const { is_valid } = get_wcomponent_validity_value({ wcomponent: judgement, created_at_ms, sim_ms }) || default_wcomponent_validity_value()
             if (!is_valid) return
 
             active_judgement_or_objectives_by_id[judgement.id] = true

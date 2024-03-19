@@ -1,6 +1,6 @@
 import type { Prediction } from "../shared/uncertainty/interfaces"
 import { rescale } from "../shared/utils/bounded"
-import { get_wcomponent_validity_value } from "../wcomponent_derived/get_wcomponent_validity_value"
+import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../wcomponent_derived/get_wcomponent_validity_value"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
@@ -47,7 +47,7 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     // if (!is_editing && !is_selected && wcomponent_is_judgement_or_objective(wcomponent)) return false
 
 
-    const validity_certain = get_wcomponent_validity_value(args).certainty
+    const { certainty: validity_certain } = get_wcomponent_validity_value(args) || default_wcomponent_validity_value()
     // Do not show nodes if they are invalid
     const is_invalid_for_display = get_wcomponent_is_invalid_for_display({
         validity_certain, validity_filter: args.validity_filter,

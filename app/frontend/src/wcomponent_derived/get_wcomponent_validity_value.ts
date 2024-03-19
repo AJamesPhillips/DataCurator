@@ -8,8 +8,7 @@ import {
 
 
 
-const default_value = (): DerivedValidityForUI => ({
-    is_defined: false,
+export const default_wcomponent_validity_value = (): DerivedValidityForUI => ({
     is_valid: true,
     certainty: 1,
 })
@@ -21,11 +20,11 @@ interface GetWcomponentStateValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): DerivedValidityForUI
+export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs): DerivedValidityForUI | undefined
 {
     const { wcomponent, created_at_ms, sim_ms } = args
 
-    if (!wcomponent_has_validity_predictions(wcomponent)) return default_value()
+    if (!wcomponent_has_validity_predictions(wcomponent)) return undefined
 
     // TODO upgrade validities from simple predictions to VAP_sets
     // get_VAP_set_possible_values({
@@ -39,13 +38,12 @@ export function get_wcomponent_validity_value (args: GetWcomponentStateValueArgs
     // .values are sorted created_at ascending
     const active_validity = partition_and_prune_items_by_datetimes_and_versions({ items: wcomponent.validity, created_at_ms, sim_ms }).present_item
 
-    if (!active_validity) return default_value()
+    if (!active_validity) return undefined
 
     const valid = active_validity.probability > 0.5
     const certainty = calc_prediction_certainty(active_validity)
 
     return {
-        is_defined: true,
         is_valid: valid,
         certainty,
     }
