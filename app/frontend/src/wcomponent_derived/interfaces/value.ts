@@ -23,7 +23,6 @@ export interface CurrentValueAndProbability
 // what else / how it should be displayed
 export interface DerivedValueForUI
 {
-    is_defined: boolean
     values_string: string
     counterfactual_applied: boolean | undefined
     uncertain: boolean | undefined

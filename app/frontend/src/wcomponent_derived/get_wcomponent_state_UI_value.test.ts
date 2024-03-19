@@ -91,10 +91,6 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         description: "",
         values_and_prediction_sets: [],
     }
-    const wcomponent__type_boolean: WComponentNodeStateV2 = {
-        ...wcomponent__type_other,
-        subtype: "boolean",
-    }
     let display_value
 
 
@@ -111,6 +107,7 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
     const vap_p100c0: StateValueAndPrediction = { ...vap_p100, id: "VAP100c0", value: "A100c0", conviction: 0 }
 
     const empty: StateValueAndPrediction[] = []
+    const single_with_whitespace_string: StateValueAndPrediction[] = [{...vap_p100, value: "  "}]
     const single: StateValueAndPrediction[] = [vap_p100]
     const multiple: StateValueAndPrediction[] = [vap_p20, vap_p80]
     const multiple_with_1certain: StateValueAndPrediction[] = [vap_p100, vap_p0]
@@ -125,27 +122,22 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
     {
 
         display_value = helper_func__statev2_value(wcomponent__type_other, [])
-        test(display_value, {
-            values_string: "not defined",
-            is_defined: false,
-            counterfactual_applied: undefined,
-            uncertain: false,
-            derived__using_values_from_wcomponent_ids: undefined,
-        }, "No VAP (value and prediction) defined")
+        test(display_value, undefined, "No VAP (value and prediction) defined")
 
         display_value = helper_func__statev2_value(wcomponent__type_other, [empty])
+        test(display_value, undefined, "No value defined in VAP (value and prediction)")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [single_with_whitespace_string])
         test(display_value, {
             values_string: "not defined",
-            is_defined: false,
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "No value defined in VAP (value and prediction)")
+        }, "Single with certainty but whitespace string value")
 
         display_value = helper_func__statev2_value(wcomponent__type_other, [single])
         test(display_value, {
             values_string: "A100",
-            is_defined: true,
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
@@ -154,7 +146,6 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         display_value = helper_func__statev2_value(wcomponent__type_other, [multiple])
         test(display_value, {
             values_string: "A80, A20",
-            is_defined: true,
             counterfactual_applied: false,
             uncertain: true,
             derived__using_values_from_wcomponent_ids: undefined,
@@ -163,7 +154,14 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
         test(display_value, {
             values_string: "A100",
-            is_defined: true,
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "Multiple with one uncertain")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
+        test(display_value, {
+            values_string: "A100",
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
@@ -287,11 +285,37 @@ export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state
         display_value = helper_func__statev2_value(derived_composed_wcomponent, [[vap_p100]])
         test(display_value, {
             values_string: "A100",
-            is_defined: true,
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: ["abc123"],
         }, "Returns the id of the (state value) component whose VAP sets are present in this component")
+    })
+
+
+    describe("Getting UI string value of VAPs with percentages", () =>
+    {
+        const wcomponent__type_number: WComponentNodeStateV2 = {
+            ...wcomponent__type_other,
+            subtype: "number",
+        }
+
+        const vap_num33_prob50: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33", probability: 0.5, conviction: 1 }
+        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33_prob50]])
+        test(display_value, {
+            values_string: "33",
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "A valid number value string")
+
+        const vap_num33abc_prob50: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33abc", probability: 0.5, conviction: 1 }
+        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33abc_prob50]])
+        test(display_value, {
+            values_string: "NaN",
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "A number with invalid characters in value string")
     })
 
 

@@ -13,7 +13,7 @@ interface GetWcomponentStateUIValueArgs
     created_at_ms: number
     sim_ms: number
 }
-export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): DerivedValueForUI
+export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): DerivedValueForUI | undefined
 {
     const {
         most_probable_VAP_set_values,
@@ -40,9 +40,8 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
     //     derived__using_values_from_wcomponent_ids = args.wcomponent._derived__using_value_from_wcomponent_id
     // }
 
-    return {
+    return !is_defined ? undefined : {
         values_string,
-        is_defined,
         counterfactual_applied,
         uncertain: any_uncertainty,
         derived__using_values_from_wcomponent_ids: derived__using_value_from_wcomponent_ids,
@@ -54,7 +53,7 @@ export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueAr
 const max_items = 3
 function reduce_display_string_values (value_strings: string[])
 {
-    let values_string = value_strings.length ? value_strings.slice(0, max_items).join(", ") : "not defined"
+    let values_string = value_strings.slice(0, max_items).join(", ").trim() || "not defined"
     if (value_strings.length > max_items) values_string += `, (${value_strings.length - max_items} more)`
 
     return values_string
