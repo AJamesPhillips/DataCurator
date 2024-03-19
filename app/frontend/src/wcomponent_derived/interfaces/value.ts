@@ -12,7 +12,7 @@ export interface CurrentValueAndProbability
      */
     conviction: number
     /**
-     * `certainty` is probability * confidence
+     * `certainty` is  `probability * conviction`  aka  `probability * confidence`
      */
     certainty: number
 }

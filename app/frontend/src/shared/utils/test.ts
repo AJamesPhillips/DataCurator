@@ -48,7 +48,7 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
 export const test: Test = test_fn as any
 test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 {
-    console .log("skipping  " + description)
+    console .warn("skipping  " + description)
 }
 
 
@@ -82,7 +82,7 @@ describe.skip = (description: string, test_fn: () => void, run_immediately = tru
 {
     function skip_tests ()
     {
-        console .log("skipping  " + description)
+        console .warn("skipping  " + description)
     }
 
     if (run_immediately) skip_tests()
