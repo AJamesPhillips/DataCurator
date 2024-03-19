@@ -81,9 +81,14 @@ interface PredicateTargetValuePossibilityArgs
 }
 export function predicate_target_value_possibility (args: PredicateTargetValuePossibilityArgs)
 {
-    const selected = args.target_value_id_type === undefined ? undefined
-        : args.target_value_id_type === "value_string" ? args.value_text === args.target_value
-        : args.value_id === args.target_value
+    const {
+        target_value_id_type, target_value,
+        value_text, value_id,
+    } = args
+
+    let selected = undefined
+    if (target_value_id_type === "value_string") selected = target_value === value_text
+    else if (target_value_id_type === "id")      selected = target_value === value_id
 
     return selected
 }
