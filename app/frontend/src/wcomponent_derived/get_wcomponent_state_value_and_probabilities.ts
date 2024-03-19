@@ -44,24 +44,20 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
     // Defensively set to empty array
     const { values_and_prediction_sets = [] } = wcomponent
-    const counterfactual_VAP_sets = values_and_prediction_sets.map(VAP_set =>
-    {
-        return apply_counterfactuals_v2_to_VAP_set({
-            VAP_set,
-            VAP_set_id_to_counterfactual_v2_map,
-        })
+    const { present_item: VAP_set } = partition_and_prune_items_by_datetimes_and_versions({
+        items: values_and_prediction_sets, created_at_ms, sim_ms,
     })
 
-    const { present_item } = partition_and_prune_items_by_datetimes_and_versions({
-        items: counterfactual_VAP_sets, created_at_ms, sim_ms,
+    const counterfactual_VAP_set = VAP_set === undefined ? undefined : apply_counterfactuals_v2_to_VAP_set({
+        VAP_set,
+        VAP_set_id_to_counterfactual_v2_map,
     })
 
-
-    const { most_probable_VAP_set_values, any_uncertainty } = get_most_probable_VAP_set_values(present_item, VAPs_represent)
+    const { most_probable_VAP_set_values, any_uncertainty } = get_most_probable_VAP_set_values(counterfactual_VAP_set, VAPs_represent)
 
 
     let derived__using_value_from_wcomponent_ids: string[] | undefined = [
-        present_item?.active_counterfactual_v2_id,
+        counterfactual_VAP_set?.active_counterfactual_v2_id,
         // Should this live in this function or a higher level function? Perhaps
         // we should only be returning `present_item?.active_counterfactual_v2_id`
         // from this `get_wcomponent_state_value_and_probabilities` function?
@@ -76,7 +72,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
     return {
         most_probable_VAP_set_values,
         any_uncertainty,
-        counterfactual_applied: present_item?.has_any_counterfactual_applied,
+        counterfactual_applied: counterfactual_VAP_set?.has_any_counterfactual_applied,
         derived__using_value_from_wcomponent_ids,
     }
 }
@@ -104,13 +100,14 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
         const include = VAPs_represent === VAPsType.boolean || uncertain || VAP.probability !== 0
         if (include)
         {
-            most_probable_VAP_set_values.push({
+            const VAP_set_value: CurrentValueAndProbability = {
                 probability: VAP.probability,
                 conviction: VAP.conviction,
                 certainty,
                 parsed_value,
                 value_id: VAP.value_id,
-            })
+            }
+            most_probable_VAP_set_values.push(VAP_set_value)
         }
     })
 
