@@ -60,6 +60,7 @@ interface DescribeFn
 interface Describe extends DescribeFn
 {
     skip: (description: string, test_fn: () => void, run_immediately?: boolean) => () => void
+    immediate: (description: string, test_fn: () => void, run_immediately?: boolean) => () => void
 }
 
 
@@ -88,4 +89,18 @@ describe.skip = (description: string, test_fn: () => void, run_immediately = tru
     if (run_immediately) skip_tests()
 
     return skip_tests
+}
+
+describe.immediate = (description: string, test_fn: () => void, run_immediately = true) =>
+{
+    function run_tests ()
+    {
+        console .group(description)
+        test_fn()
+        console .groupEnd()
+    }
+
+    run_tests()
+
+    return run_tests
 }

@@ -31,7 +31,8 @@ export function convert_VAP_set_to_VAP_visuals (args: ConvertVAPSetToVAPVisualsD
     {
         const parsed_value = get_parsed_value_represented_by_a_VAP(VAP, args.VAPs_represent)
         const value_text = parsed_value_to_string(parsed_value, boolean_representation)
-        const certainty = VAP.probability * (shared_conviction !== undefined ? shared_conviction : VAP.conviction)
+        const conviction = shared_conviction ?? VAP.conviction
+        const certainty = VAP.probability * conviction
         total_certainties += certainty
 
         return {
