@@ -53,6 +53,7 @@ import { run_list_function_tests } from "./utils/list.test"
 import { run_get_default_formatting_function_tests } from "./wcomponent_form/calculations/get_default_formatting.test"
 import { run_get_wcomponent_status_in_knowledge_view_tests } from "./wcomponent_form/wcomponent_knowledge_view_form/get_wcomponent_status_in_knowledge_view.test"
 import { run_parse_value_tests } from "./wcomponent/value/parse_value.test"
+import { test_partition_and_prune_items_by_datetimes_and_versions } from "./wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
 
 
 
@@ -98,6 +99,7 @@ function run_all_tests ()
     test_partition_sorted_items_by_datetimes()
     test_sort_by_uncertain_event_datetimes()
     test_partition_items_by_created_at_datetime()
+    test_partition_and_prune_items_by_datetimes_and_versions()
     test_calc_new_counterfactual_state()
     test_calc_if_wcomponent_should_exclude_because_label_or_type()
     test_merge_routing_state()
