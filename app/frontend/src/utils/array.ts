@@ -33,4 +33,4 @@ export const test_array_functions = describe("array functions", () =>
 
     result = intersperse<string, number>(["a", "b", "c"], (e1, e2) => e1.charCodeAt(0) + e2.charCodeAt(0))
     test(result, ["a", 195, "b", 197, "c"], "intersperse with 3 elements should have interspersed values")
-}, false)
+})

@@ -19,10 +19,10 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
     const str_expected = stable_stringify(expected, stringify_options)
 
     const pass = str_got === str_expected
-    if (pass) console .log("pass  " + description)
+    if (pass) console .log(`pass:  ${description}`)
     else
     {
-        console.error(`fail: "${str_got}" !== "${str_expected}"  ${description}`)
+        console.error(`fail:  ${description} "${str_got}" !== "${str_expected}"`)
         try
         {
             if (got?.constructor === Object)
@@ -62,17 +62,17 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 
 interface DescribeFn
 {
-    (description: string, test_fn: () => void, run_immediately?: boolean): () => void
+    (description: string, test_fn: () => void): () => void
 }
 
 interface Describe extends DescribeFn
 {
-    skip: (description: string, test_fn: () => void, run_immediately?: boolean) => () => void
-    immediate: (description: string, test_fn: () => void, run_immediately?: boolean) => () => void
+    skip: (description: string, test_fn: () => void) => () => void
+    immediate: (description: string, test_fn: () => void) => () => void
 }
 
 
-const describe_fn: DescribeFn = (description: string, test_fn: () => void, run_immediately = true) =>
+const describe_fn: DescribeFn = (description: string, test_fn: () => void) =>
 {
     function run_tests ()
     {
@@ -81,25 +81,21 @@ const describe_fn: DescribeFn = (description: string, test_fn: () => void, run_i
         console .groupEnd()
     }
 
-    if (run_immediately) run_tests()
-
     return run_tests
 }
 
 export const describe: Describe = describe_fn as any
-describe.skip = (description: string, test_fn: () => void, run_immediately = true) =>
+describe.skip = (description: string, test_fn: () => void) =>
 {
     function skip_tests ()
     {
         console .warn("skipping  " + description)
     }
 
-    if (run_immediately) skip_tests()
-
     return skip_tests
 }
 
-describe.immediate = (description: string, test_fn: () => void, run_immediately = true) =>
+describe.immediate = (description: string, test_fn: () => void) =>
 {
     function run_tests ()
     {

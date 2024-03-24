@@ -137,4 +137,4 @@ export const test_calculate_new_zoom_xy = describe.skip("calculate_new_zoom_xy (
     result = calc({ x: 100, y: 100, zoom, new_zoom, pointer })
     test(result, { x: 100, y: 100 })
 
-}, false)
+})

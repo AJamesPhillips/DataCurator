@@ -200,4 +200,4 @@ export const test_get_composed_wcomponents_by_id = describe("get_composed_wcompo
         test(result_wcomponent_statev2?._derived__using_value_from_wcomponent_id, wcomponent_state_value.id, "The composed wcomponent should have _derived__using_value_from_wcomponent_id set")
     })
 
-}, false)
+})

@@ -14,4 +14,4 @@ export const run_make_calculation_safe_for_rich_text_tests = describe("make_calc
     result_safe_rich_text = make_calculation_safe_for_rich_text(calculation)
     test(result_safe_rich_text, expected_safe_rich_text, "Should escape *")
 
-}, false)
+})

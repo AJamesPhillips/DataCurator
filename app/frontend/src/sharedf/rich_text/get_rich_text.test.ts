@@ -298,4 +298,4 @@ export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
         test(result, "\n123\n", "Should replace calculation with string value")
     })
 
-}, false)
+})

@@ -257,4 +257,4 @@ export const test_handle_on_blur = describe("handle_on_blur", () =>
     // Note no seconds
     test(result?.getTime(), new Date("2021-04-25T07:37:00.000Z").getTime())
 
-}, false)
+})

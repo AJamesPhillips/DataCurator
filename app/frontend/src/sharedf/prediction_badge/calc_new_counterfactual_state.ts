@@ -232,4 +232,4 @@ export const test_calc_new_counterfactual_state = describe("calc_new_counterfact
     test(result.new_counterfactual_probability, undefined)
     test(result.new_counterfactual_conviction, undefined)
 
-}, false)
+})

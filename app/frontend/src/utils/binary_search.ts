@@ -90,4 +90,4 @@ export const test_binary_search_functions = describe("binary search functions", 
     result_nearest = find_nearest_index_in_sorted_list([1, 2, 3, 4, 5, 6, 7, 8, 9], i => i, 9.5)
     test(result_nearest, { index: 8.5, exact: false, bounds: "higher" })
 
-}, false)
+})

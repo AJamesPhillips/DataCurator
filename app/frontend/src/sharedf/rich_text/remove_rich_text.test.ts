@@ -34,4 +34,4 @@ export const run_remove_rich_text_tests = describe("remove_rich_text", () =>
     expected_result = "Italicised text"
     test(result, expected_result, "Should remove tags")
 
-}, false)
+})

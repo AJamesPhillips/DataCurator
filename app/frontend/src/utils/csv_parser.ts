@@ -114,4 +114,4 @@ export const test_csv_to_array = describe("csv_to_array", () =>
     test(csv_to_array(`"a"",""a"`), [[`a","a`]])
     test(csv_to_array(`""\n`), [[``], [``]])
 
-}, false)
+})

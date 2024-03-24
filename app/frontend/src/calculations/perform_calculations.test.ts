@@ -349,4 +349,4 @@ export const run_perform_calculations_test = describe("perform_calculations", ()
         test(calculation_result, expected_calculation_result, `Can run calculations using reserved word "Pi"`)
     })
 
-}, false)
+})

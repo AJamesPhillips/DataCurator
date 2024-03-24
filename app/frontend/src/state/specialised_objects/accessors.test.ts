@@ -143,4 +143,4 @@ export const run_specialised_objects_accessors_tests = describe("specialised_obj
 
     })
 
-}, false)
+})

@@ -99,4 +99,4 @@ export const test_prepare_new_VAP_set = describe("prepare_new_VAP_set", () =>
 
     test(result.entries.length, 2, "If there are only two unique possibilities, only return 2 VAPs")
 
-}, false)
+})

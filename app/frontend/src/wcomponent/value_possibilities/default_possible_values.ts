@@ -76,4 +76,4 @@ export const test_default_possible_values = describe("default_possible_values", 
     result = default_possible_values(VAPsType.number, [])
     test(result.length, 1, "If other and no value possibilities, it should create an empty value")
 
-}, false)
+})

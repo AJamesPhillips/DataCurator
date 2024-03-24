@@ -70,4 +70,4 @@ export const run_apply_units_from_component_tests = describe("apply_units_from_c
     prepared_units = apply_units_from_component(calculation_string, units, wcomponents_by_id)
     test(prepared_units, expected_prepared_units, "Defaults units to undefined when component can not be found, even if calculation has units given")
 
-}, false)
+})

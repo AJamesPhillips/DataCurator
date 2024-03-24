@@ -98,4 +98,4 @@ export const test_tidy_wcomponent = describe("tidy_wcomponent", () =>
         test(tidied._derived__using_value_from_wcomponent_id, undefined, "Should delete wcomponent._derived__using_value_from_wcomponent_id")
     })
 
-}, false)
+})

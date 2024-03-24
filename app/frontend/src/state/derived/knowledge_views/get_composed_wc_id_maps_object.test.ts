@@ -244,4 +244,4 @@ export const run_get_composed_wc_id_maps_object_tests = describe("get_composed_w
     })
 
 
-}, false)
+})

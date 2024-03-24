@@ -70,4 +70,4 @@ export const run_parse_value_tests = describe("parse_value", () =>
         test(is_string_valid_number(".3 e 2 %"), true, "fractional number with exponent with appended % and interspersed whitespace (valid)")
     })
 
-}, false)
+})

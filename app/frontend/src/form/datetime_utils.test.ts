@@ -18,4 +18,4 @@ export const test_correct_datetime_for_local_time_zone = describe("correct_datet
     // Not possible with native javscript so TODO: use a library like Luxon to handle this properly.
     test.skip(result && result.toISOString(), "2021-04-15T23:00:00.000Z", "")
 
-}, false)
+})

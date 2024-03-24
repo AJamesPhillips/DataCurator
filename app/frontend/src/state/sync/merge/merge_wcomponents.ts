@@ -270,4 +270,4 @@ export const test_merge_wcomponent = describe("merge_wcomponent", () =>
         test(merge.unresolvable_conflicted_fields, [])
     })
 
-}, false)
+})

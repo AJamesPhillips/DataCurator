@@ -123,4 +123,4 @@ export const test_calc_if_wcomponent_should_exclude_because_label_or_type = desc
     test(should_exclude, false)
     test(lacks_include, false)
 
-}, false)
+})

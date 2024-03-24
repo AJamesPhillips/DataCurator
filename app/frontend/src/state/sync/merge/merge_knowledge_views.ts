@@ -241,4 +241,4 @@ export const test_merge_knowledge_views = describe("merge knowledge view functio
     })
 
 
-}, false)
+})

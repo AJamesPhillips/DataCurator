@@ -72,4 +72,4 @@ asd1 ${id1}
 //     $$!
 // `)
 //     test(calculations, [], "Should not find calculations when inside code blocks")
-}, false)
+})

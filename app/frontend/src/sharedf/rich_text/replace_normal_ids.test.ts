@@ -100,7 +100,7 @@ export const run_replace_normal_ids_tests = describe("replace_normal_ids", () =>
         test(output_text, expected_output_text, "Should not replace with component title when depth is exceeded and not add link when render_links is false")
     })
 
-}, false)
+})
 
 
 
@@ -122,4 +122,4 @@ export const test_get_ids_from_text = describe("get_ids_from_text", () =>
     ids = get_double_at_mentioned_uuids_from_text(`asd @@${id1} asd name@example.com #label dfg @@${id2} sf`)
     test(ids, [id1, id2], `Should find uuid ids`)
 
-}, false)
+})

@@ -46,4 +46,4 @@ export const run_list_function_tests = describe("list functions", () =>
         test(insert_element_at_index(["A", "B", "C"], "D", 4), ["A", "B", "C", "D"], "insertion works at any positive index that is > list length")
     })
 
-}, false)
+})

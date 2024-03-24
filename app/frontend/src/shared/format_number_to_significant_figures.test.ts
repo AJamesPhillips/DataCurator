@@ -78,4 +78,4 @@ export const run_number_to_significant_figures_test = describe("run_number_to_si
         test(formatted_number, "1795.500", "17.955*100 to 7 sf, tests when floating point precision results in 1795.4999999999998")
     })
 
-}, false)
+})

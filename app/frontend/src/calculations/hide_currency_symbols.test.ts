@@ -41,4 +41,4 @@ export const run_currency_symbol_functions_tests = describe("currency symbols", 
         test(converted_result_units, expected_converted_result_units, "Copes with Simulation.JS changing capitalisation of unit words")
     })
 
-}, false)
+})

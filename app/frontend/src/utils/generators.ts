@@ -66,4 +66,4 @@ export const test_cloneable_generator_factory = describe("cloneable_generator_fa
 
     test(iter.next().value, 28, "should jump a third time on first branch")
 
-}, false)
+})

@@ -46,4 +46,4 @@ export const run_convert_percentages_tests = describe("convert_percentages", () 
     // result_calculation_string = convert_percentages(calculation_string)
     // test(result_calculation_string, expected_converted_calculation, "Convert numbers raised to a power percentage symbols")
 
-}, false)
+})

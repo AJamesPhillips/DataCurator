@@ -220,4 +220,4 @@ export const test_calc_ids_to_move_and_conflicts_functions = describe("calc_ids_
     test(result.wc_ids_to_move, new Set([wc_B.id, wc_C.id, wc_I.id, wc_G.id, wc_H.id]))
     test(Object.keys(result.wcomponents_move_conflicts), [wc_E.id, wc_F.id])
 
-}, false)
+})

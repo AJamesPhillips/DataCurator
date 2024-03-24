@@ -76,4 +76,4 @@ export const run_normalise_calculation_ids_tests = describe("normalise_calculati
     result_calculation_string = normalise_calculation_ids(calculation_string, [id1])
     test.skip(result_calculation_string, expected_converted_calculation, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Double @ reference uuids and their units are preserved in curly braces~~")
 
-}, false)
+})

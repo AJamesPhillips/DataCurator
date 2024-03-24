@@ -172,4 +172,4 @@ export const run_get_wcomponent_VAPs_represent_tests = describe("get_wcomponent_
         test(result_VAPs_represent, expected_VAPs_represent, `Should return undefined for WComponent.type of "causal_link"`)
     })
 
-}, false)
+})
