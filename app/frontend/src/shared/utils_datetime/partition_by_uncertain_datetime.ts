@@ -143,10 +143,6 @@ export const test_partition_sorted_items_by_datetimes = describe("partition_sort
     const date3 = new Date("2021-04-01 00:03")
     const date3_ms = date3.getTime()
 
-    const s_eternal1: Simple = { id: "10", datetime: {} } // created_at: date1
-    const s_eternal2: Simple = { id: "11", datetime: {} } // created_at: date2
-    const s1: Simple = { id: "20", datetime: { value: date1 } } // created_at: date1
-    const s2: Simple = { id: "30", datetime: { value: date2 } } // created_at: date1
 
     sorted_items = []
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
@@ -157,44 +153,87 @@ export const test_partition_sorted_items_by_datetimes = describe("partition_sort
     })
 
 
-    sorted_items = [s_eternal1, s_eternal2]
+    sorted_items = [
+        { id: "10", datetime: {} }, // eternal
+        { id: "11", datetime: {} }, // eternal
+    ]
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
-        past_items: [s_eternal2.id],
-        present_item: s_eternal1.id,
+        past_items: ["11"],
+        present_item: "10",
         future_items: [],
     }, "Can handle multiple eternal elements")
 
 
-    sorted_items = [s2, s1, s_eternal2]
+    sorted_items = [
+        { id: "30", datetime: { value: date2 } },
+        { id: "20", datetime: { value: date1 } },
+        { id: "10", datetime: {} },
+    ]
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
     test(result, {
         past_items: [],
-        present_item: s_eternal2.id,
-        future_items: [s2.id, s1.id],
-    })
+        present_item: "10",
+        future_items: ["30", "20"],
+    }, "Should partition eternal item as present if other items are in the future")
 
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
     test(result, {
-        past_items: [s_eternal2.id],
-        present_item: s1.id,
-        future_items: [s2.id],
-    })
+        past_items: ["10"],
+        present_item: "20",
+        future_items: ["30"],
+    }, "Should partition eternal item as past if other items are in the present")
 
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
     test(result, {
-        past_items: [s1.id, s_eternal2.id],
-        present_item: s2.id,
+        past_items: ["20", "10"],
+        present_item: "30",
         future_items: [],
-    })
+    }, "Should partition eternal item and other past items as past if other items are in the present")
 
     result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date3_ms })
     test(result, {
-        past_items: [s1.id, s_eternal2.id],
-        present_item: s2.id,
+        past_items: ["20", "10"],
+        present_item: "30",
         future_items: [],
     })
 
+    sorted_items = [{ id: "40", datetime: { min: date1 } }]
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
+    test(result, {
+        past_items: [],
+        present_item: "40",
+        future_items: [],
+    }, "Should find min datetime as present when sim_ms is equal to min datetime")
+
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date0_ms })
+    test(result, {
+        past_items: [],
+        present_item: undefined,
+        future_items: ["40"],
+    }, "Should find min datetime as future when sim_ms is before min datetime")
+
+
+    sorted_items = [{ id: "50", datetime: { max: date1 } }]
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date1_ms })
+    test(result, {
+        past_items: [],
+        present_item: "50",
+        future_items: [],
+    }, "Should find max datetime as present when sim_ms is equal to max datetime")
+
+    sorted_items = [
+        { id: "50", datetime: { max: date1 } },
+        { id: "60", datetime: { max: date1 } },
+    ]
+    result = helper_func__ids_partition_sorted_items_by_datetimes({ sorted_items, sim_ms: date2_ms })
+    test(result, {
+        past_items: ["60"],
+        present_item: "50", // should this be the required behaviour? todo: double check this makes sense then document in future detail
+        future_items: [],
+    }, "Should find max datetime as past when sim_ms is later than max datetime but when no other item is present, will use one as present item")
+
+    // See test_get_tense_of_uncertain_datetime for more tests regarding segmenting items by datetime
 })
 
 
