@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import { Box, IconButton } from "@mui/material"
 import FilterCenterFocusIcon from "@mui/icons-material/FilterCenterFocus"

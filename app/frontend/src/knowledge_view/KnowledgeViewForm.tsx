@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact"
+import { FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"

@@ -2,7 +2,7 @@ import "./shared/utils/monkey_patch"
 import "./index.scss"
 import App from "./App"
 
-import { h, render } from "preact"
+import { render } from "preact"
 import "preact/devtools"
 import { Provider } from "react-redux"
 

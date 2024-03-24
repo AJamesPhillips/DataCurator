@@ -1,7 +1,7 @@
 import "./shared/utils/monkey_patch"
 import "./index.scss"
 
-import { h, render } from "preact"
+import { render } from "preact"
 import "preact/devtools"
 
 import { LandingPage } from "./home/LandingPage"

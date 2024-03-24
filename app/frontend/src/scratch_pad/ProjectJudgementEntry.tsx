@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"

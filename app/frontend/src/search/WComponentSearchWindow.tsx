@@ -1,4 +1,4 @@
-import { h, FunctionalComponent } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
