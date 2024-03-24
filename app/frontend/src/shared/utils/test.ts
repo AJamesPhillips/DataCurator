@@ -14,8 +14,9 @@ interface Test extends TestFn
 
 const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true) =>
 {
-    const str_got = sort_items ? stable_stringify(got) : JSON.stringify(got)
-    const str_expected = sort_items ? stable_stringify(expected) : JSON.stringify(expected)
+    const stringify_options = { render_undefined: true, sort_items }
+    const str_got = stable_stringify(got, stringify_options)
+    const str_expected = stable_stringify(expected, stringify_options)
 
     const pass = str_got === str_expected
     if (pass) console .log("pass  " + description)
@@ -24,18 +25,25 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
         console.error(`fail: "${str_got}" !== "${str_expected}"  ${description}`)
         try
         {
-            if ((got as any)?.constructor === Object)
+            if (got?.constructor === Object)
             {
-                const keys = [...new Set([...Object.keys(got as any), ...Object.keys(expected as any)])]
+                const keys = [...new Set([...Object.keys(got), ...Object.keys(expected as any)])]
                 keys.sort()
                 keys.forEach(key =>
                 {
                     const got_value = (got as any)[key]
                     const expected_value = (expected as any)[key]
-                    const str_got_value = sort_items ? stable_stringify(got_value) : JSON.stringify(got_value)
-                    const str_expected_value = sort_items ? stable_stringify(expected_value) : JSON.stringify(expected_value)
-                    const pass = str_got_value === str_expected_value
-                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', expected: '${str_expected_value}'`)
+                    const str_got_value = stable_stringify(got_value, stringify_options)
+                    const str_expected_value = stable_stringify(expected_value, stringify_options)
+                    let pass = str_got_value === str_expected_value
+                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', but expected: '${str_expected_value}'`)
+                    else if (str_got_value === "undefined")
+                    {
+                        // check the keys were both present
+                        const key_in_got = key in (got as any)
+                        const key_in_expected = key in (expected as any)
+                        if (key_in_got !== key_in_expected) console.debug(`Test failure: key "${key}", got: ${key_in_got ? "present" : "not present"}, but expected: ${key_in_expected ? "present" : "not present"}`)
+                    }
                 })
             }
 

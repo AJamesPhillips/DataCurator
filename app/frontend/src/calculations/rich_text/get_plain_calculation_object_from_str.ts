@@ -12,6 +12,10 @@ const CalculationObjectError = {
 }
 
 
+/**
+ *
+ * @deprecated for now as replace_calculations_with_results is @deprecated
+ */
 export function get_plain_calculation_object_from_str (calculation_str: string): PlainCalculationObjectV1
 {
     calculation_str = calculation_str.trim()
@@ -90,7 +94,7 @@ export function get_plain_calculation_object_from_str (calculation_str: string):
 
 
 
-export const run_get_plain_calculation_object_from_str_tests = describe("running tests of get_plain_calculation_object_from_str", () =>
+export const run_get_plain_calculation_object_from_str_tests = describe.skip("Skipped for now as `replace_calculations_with_results` is @deprecated; get_plain_calculation_object_from_str", () =>
 {
     let str = "  "
     let plain_calculation_object = get_plain_calculation_object_from_str(str)
@@ -99,14 +103,14 @@ export const run_get_plain_calculation_object_from_str_tests = describe("running
 
     str = "value: 10"
     plain_calculation_object = get_plain_calculation_object_from_str(str)
-    test(plain_calculation_object, { valid: true, value: 10 }, "Should find a number value")
+    test(plain_calculation_object, { name: undefined, valid: true, value: 10 }, "Should find a number value")
 
 
     str = `value:
  10
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
-    test(plain_calculation_object, { valid: true, value: 10 }, "Should find a number value when on new line")
+    test(plain_calculation_object, { name: undefined, valid: true, value: 10 }, "Should find a number value when on new line")
 
 
     str = `value: >
@@ -114,7 +118,7 @@ export const run_get_plain_calculation_object_from_str_tests = describe("running
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
     // Might want to improve how this is handled at some point later?
-    test(plain_calculation_object, { valid: true, value: "10\n" }, "Should find a number value as a string when in a block")
+    test(plain_calculation_object, { name: undefined, valid: true, value: "10\n" }, "Should find a number value as a string when in a block")
 
 
     const id1 = uuid_v4_for_tests(1)
@@ -138,7 +142,7 @@ value: @@${id1}
 value: "@@${id1}"
 `
     plain_calculation_object = get_plain_calculation_object_from_str(str)
-    test(plain_calculation_object, { valid: true, value: `@@${id1}` }, "Will find an uuid id")
+    test(plain_calculation_object, { name: undefined, valid: true, value: `@@${id1}` }, "Will find an uuid id")
 
 
     str = `

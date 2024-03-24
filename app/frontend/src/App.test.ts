@@ -54,6 +54,7 @@ import { run_get_default_formatting_function_tests } from "./wcomponent_form/cal
 import { run_get_wcomponent_status_in_knowledge_view_tests } from "./wcomponent_form/wcomponent_knowledge_view_form/get_wcomponent_status_in_knowledge_view.test"
 import { run_parse_value_tests } from "./wcomponent/value/parse_value.test"
 import { test_partition_and_prune_items_by_datetimes_and_versions } from "./wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import { test_stable_stringify } from "./shared/utils/stable_stringify.test"
 
 
 
@@ -118,6 +119,7 @@ function run_all_tests ()
     test_get_wcomponent_state_value_and_probabilities()
     test_get_wcomponent_state_UI_value()
     test_get_composed_wcomponents_by_id()
+    test_stable_stringify()
 }
 
 

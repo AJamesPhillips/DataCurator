@@ -7,10 +7,14 @@ interface Options
     space?: string | number
     cycles?: boolean
     replacer?: () => {}
+    sort_items?: boolean
+    render_undefined?: boolean
 }
 
 export function stable_stringify (obj: any, opts: Options = {})
 {
+    const sort_items = opts.sort_items ?? false
+    const render_undefined = opts.render_undefined ?? false
     const space = typeof opts.space === "number" ? Array(opts.space + 1).join(" ") : (opts.space || "")
 
     const cycles = typeof opts.cycles === "boolean" ? opts.cycles : false
@@ -47,7 +51,7 @@ export function stable_stringify (obj: any, opts: Options = {})
 
         if (node === undefined)
         {
-            return undefined
+            return render_undefined ? "undefined" : undefined
         }
 
         if (typeof node !== "object" || node === null) {
@@ -77,7 +81,11 @@ export function stable_stringify (obj: any, opts: Options = {})
         }
 
 
-        const keys = Object.keys(node).sort(comparison_function_factory && comparison_function_factory(node))
+        let keys = Object.keys(node)
+        if (sort_items)
+        {
+            keys = keys.sort(comparison_function_factory && comparison_function_factory(node))
+        }
         const out: string[] = []
         keys.forEach(key =>
         {
