@@ -142,7 +142,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 placeholder="Units"
                 hide_label={true}
                 value={calc.units || ""}
-                on_blur={units => props.update_calculation({ ...calc, units: units ? units : undefined })}
+                on_blur={units => props.update_calculation({ ...calc, units: units || undefined })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />}
 

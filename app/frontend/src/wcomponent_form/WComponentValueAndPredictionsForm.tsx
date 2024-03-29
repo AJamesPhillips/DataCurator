@@ -1,5 +1,7 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
+import { Settings as SettingsIcon } from "@mui/icons-material"
+import { IconButton } from "@mui/material"
 
 import { useState } from "preact/hooks"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
@@ -30,6 +32,7 @@ const map_state = (state: RootState) =>
 {
     return {
         wcomponents_by_id: state.derived.composed_wcomponents_by_id,
+        presenting: state.display_options.consumption_formatting,
     }
 }
 
@@ -53,7 +56,6 @@ function _WComponentValueAndPredictionsForm (props: Props)
         orig_value_possibilities,
     } = props
 
-
     const initial_show_form = (
         orig_values_and_prediction_sets.length > 0
         // Show form if editing allowed and VAPs represent actions
@@ -62,8 +64,12 @@ function _WComponentValueAndPredictionsForm (props: Props)
     const [show_form, set_show_form] = useState(initial_show_form)
 
     const units = wcomponent_is_statev2(wcomponent) && wcomponent.units
-    const show_units = (props.editing_allowed && (VAPs_represent === VAPsType.number || !!units))
-        || (VAPs_represent === VAPsType.number && !!units)
+    const [show_options, set_show_options] = useState(!!units)
+
+    const show_units = (
+           (show_options &&    (VAPs_represent === VAPsType.number || !!units))
+        || (props.presenting && VAPs_represent === VAPsType.number && !!units)
+    )
 
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
     // only using it to get the CSS styles applied for `expansion_button`.
@@ -85,15 +91,26 @@ function _WComponentValueAndPredictionsForm (props: Props)
             <div className="expansion_button"/>
         </div>
 
-        {wcomponent_is_statev2(wcomponent) && show_units && <EditableTextSingleLine
-            style={{ padding: "10px 0px" }}
-            size="small"
-            placeholder="Units"
-            hide_label={false}
-            value={wcomponent.units || ""}
-            on_blur={units => props.upsert_wcomponent({ units: units ? units : undefined })}
-            on_blur_type={EditableTextOnBlurType.conditional}
-        />}
+        {wcomponent_is_statev2(wcomponent) && <div>
+            {props.editing_allowed && <IconButton
+                onClick={() => set_show_options(!show_options)}
+                size="small"
+                style={{ marginLeft: "auto", display: "flex" }}
+            >
+                <SettingsIcon />
+            </IconButton>}
+
+            {show_units && <EditableTextSingleLine
+                style={{ padding: "10px 0px" }}
+                size="small"
+                placeholder="Units"
+                hide_label={false}
+                disabled={!props.editing_allowed}
+                value={wcomponent.units || ""}
+                on_blur={units => props.upsert_wcomponent({ units: units || undefined })}
+                on_blur_type={EditableTextOnBlurType.conditional}
+            />}
+        </div>}
 
 
         {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
