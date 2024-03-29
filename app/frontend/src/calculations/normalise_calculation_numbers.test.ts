@@ -31,4 +31,9 @@ export const run_normalise_calculation_numbers_tests = describe("normalise_calcu
     result_calculation_string = normalise_calculation_numbers(calculation_string)
     test(result_calculation_string, expected_converted_calculation, "Thousands commas are removed from millions")
 
+    calculation_string = `1,200,300,400 10,200,300,400 100,200,300,400`
+    expected_converted_calculation = `1200300400 10200300400 100200300400`
+    result_calculation_string = normalise_calculation_numbers(calculation_string)
+    test(result_calculation_string, expected_converted_calculation, "Thousands commas are removed from billions")
+
 })

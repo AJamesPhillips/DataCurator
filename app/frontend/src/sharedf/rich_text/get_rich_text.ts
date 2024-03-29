@@ -7,7 +7,6 @@ import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcom
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
 import type { ReplaceNormalIdsInTextArgs, ReplaceFunctionIdsInTextArgs } from "./interfaces"
-import { replace_calculations_with_results } from "../../calculations/rich_text/replace_calculations_with_results"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -152,7 +151,6 @@ function _replace_ids_in_text (text: string, text_type: RichTextType, wcomponent
     }
 
     text = replace_function_ids_in_text(text, current_depth, args)
-    // text = replace_calculations_with_results(text, { ...args, created_at_ms, sim_ms })
     text = replace_normal_ids(text, current_depth, args)
 
     return text

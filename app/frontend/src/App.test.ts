@@ -1,7 +1,4 @@
 import { run_add_newlines_to_markdown_tests } from "./sharedf/rich_text/add_newlines_to_markdown"
-import { run_get_plain_calculation_object_from_str_tests } from "./calculations/rich_text/get_plain_calculation_object_from_str"
-import { run_parse_calculation_equations_tests } from "./calculations/rich_text/parse_calculation_equations.test"
-import { run_replace_calculations_with_results_tests } from "./calculations/rich_text/replace_calculations_with_results.test"
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
 import { run_replace_normal_ids_tests, test_get_ids_from_text } from "./sharedf/rich_text/replace_normal_ids.test"
 import { run_perform_calculations_test } from "./calculations/perform_calculations.test"
@@ -10,7 +7,6 @@ import { run_normalise_calculation_numbers_tests } from "./calculations/normalis
 import { run_number_to_string_test } from "./shared/format_number_to_string.test"
 import { run_convert_percentages_tests } from "./calculations/convert_percentages.test"
 import { run_number_to_significant_figures_test } from "./shared/format_number_to_significant_figures.test"
-import { test_get_calculation_strs_from_text } from "./calculations/rich_text/get_calculation_strs_from_text"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
 import { test_get_angle } from "./canvas/connections/angles"
 import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils.test"
@@ -62,12 +58,9 @@ function run_all_tests ()
 {
     run_get_rich_text_tests()
     run_remove_rich_text_tests()
-    run_replace_calculations_with_results_tests()
     run_replace_normal_ids_tests()
     test_get_ids_from_text()
-    run_get_plain_calculation_object_from_str_tests()
     run_add_newlines_to_markdown_tests()
-    run_parse_calculation_equations_tests()
     run_normalise_calculation_numbers_tests()
     run_normalise_calculation_ids_tests()
     run_apply_units_from_component_tests()
@@ -87,7 +80,6 @@ function run_all_tests ()
     run_get_wcomponent_status_in_knowledge_view_tests()
     run_parse_value_tests()
 
-    test_get_calculation_strs_from_text()
     test_calculate_new_zoom_xy()
     test_get_angle()
     test_correct_datetime_for_local_time_zone()
