@@ -9,6 +9,7 @@ import { RootState } from "../../state/State"
 import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
 import { Tooltip } from "@mui/material"
+import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"
 
 
 
@@ -77,7 +78,15 @@ type Props = ConnectedProps<typeof connector> & LinkToComponentOwnProps
 
 function _LinkToComponent (props: Props)
 {
-    const { uuid, title } = props
+    const { uuid, title: raw_component_title } = props
+
+    let component_description = "a different component"
+    if (raw_component_title?.trim())
+    {
+        const cleaned_component_title = remove_rich_text(raw_component_title.trim())
+        component_description = `'${cleaned_component_title}'`
+    }
+    const title = "Value derived from " + component_description
 
     return <Link
         key={uuid}
@@ -88,7 +97,7 @@ function _LinkToComponent (props: Props)
     >
         <AltRouteIcon
             className="material-icons"
-            title={"Value derived from " + (title ? `'${title}'` : "a different component")}
+            title={title}
             // fontSize="small"
             style={{
                 fill: ALTERNATIVE_VALUE_COLOR,

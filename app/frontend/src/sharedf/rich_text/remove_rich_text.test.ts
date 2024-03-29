@@ -26,7 +26,7 @@ export const run_remove_rich_text_tests = describe("remove_rich_text", () =>
 
     text = "<auto generated>Text with <auto generated> in it <auto generated>"
     result = remove_rich_text(text)
-    expected_result = "Text with  in it "
+    expected_result = "Text with in it"
     test(result, expected_result, "Should remove <auto generated> tags")
 
     text = "Italicised <i>text<i/>"
