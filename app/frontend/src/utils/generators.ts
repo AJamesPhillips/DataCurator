@@ -37,7 +37,7 @@ export function cloneable_generator_factory <R, A, B, C> (args: R, generator_fac
 
 
 
-export const test_cloneable_generator_factory = describe("cloneable_generator_factory", () =>
+export const test_cloneable_generator_factory = describe.delay("cloneable_generator_factory", () =>
 {
     function* jumpable_sequence (args: {start: number}): Generator<number, number, number | undefined> {
         let i = args.start

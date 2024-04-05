@@ -87,9 +87,9 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
     const VAPs_by_prob = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent)
 
     let any_uncertainty = false
-    const most_probable_VAP_set_values: CurrentValueAndProbability[] = []
+    let most_probable_VAP_set_values: CurrentValueAndProbability[] = []
 
-    VAPs_by_prob.forEach(VAP =>
+    for (const VAP of VAPs_by_prob)
     {
         const parsed_value = parse_VAP_value(VAP, VAPs_represent)
         const certainty = calc_prediction_certainty(VAP)
@@ -107,9 +107,22 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
                 parsed_value,
                 value_id: VAP.value_id,
             }
+
+            // If there is a 100% certainty then we can stop here and return the single VAP value
+            // TODO: handle the case where there is one VAP with 100% certainty along with other VAPS.
+            // If these other VAPS are all 0% certainty then there's no conflict, but if one or more
+            // of these other VAPS have >0% up to and including 100% certainty then this doesn't make
+            // any sense.
+            if (VAP.probability === 1 && VAP.conviction === 1)
+            {
+                any_uncertainty = false
+                most_probable_VAP_set_values = [VAP_set_value]
+                break
+            }
+
             most_probable_VAP_set_values.push(VAP_set_value)
         }
-    })
+    }
 
     return { most_probable_VAP_set_values, any_uncertainty }
 }

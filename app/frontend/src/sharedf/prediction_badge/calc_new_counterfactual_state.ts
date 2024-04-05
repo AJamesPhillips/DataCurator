@@ -49,7 +49,7 @@ export function calc_new_counterfactual_state (args: CalcNewCounterfactualStateA
 
 
 
-export const test_calc_new_counterfactual_state = describe("calc_new_counterfactual_state", () =>
+export const test_calc_new_counterfactual_state = describe.delay("calc_new_counterfactual_state", () =>
 {
     let probability: number
     let conviction: number

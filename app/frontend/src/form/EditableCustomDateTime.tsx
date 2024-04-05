@@ -238,7 +238,7 @@ function handle_on_blur (args: HandleOnBlurArgs): Date | undefined
 
 
 
-export const test_handle_on_blur = describe("handle_on_blur", () =>
+export const test_handle_on_blur = describe.delay("handle_on_blur", () =>
 {
     let invariant_value: Date | undefined
     let working_value: string

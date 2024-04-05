@@ -69,7 +69,7 @@ export function partition_items_by_created_at_datetime <U extends Base> (args: P
 
 
 
-export const test_partition_items_by_created_at_datetime = describe("partition_items_by_created_at_datetime", () =>
+export const test_partition_items_by_created_at_datetime = describe.delay("partition_items_by_created_at_datetime", () =>
 {
     interface Simple extends Base {}
 

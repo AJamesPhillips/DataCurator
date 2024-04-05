@@ -79,7 +79,7 @@ export function get_simple_possibilities_from_values (values: StateValueCore[], 
 
 
 
-export const test_get_possibilities_from_VAP_sets = describe("get_possibilities_from_VAP_sets", () =>
+export const test_get_possibilities_from_VAP_sets = describe.delay("get_possibilities_from_VAP_sets", () =>
 {
     const VAPs_represent = VAPsType.number
     const val_prob_id_123 = "val_prob_id_123"

@@ -115,7 +115,7 @@ function partition_sorted_items_by_datetimes <U extends HasUncertainDatetime> (a
 
 
 
-export const test_partition_sorted_items_by_datetimes = describe("partition_sorted_items_by_datetimes", () =>
+export const test_partition_sorted_items_by_datetimes = describe.delay("partition_sorted_items_by_datetimes", () =>
 {
 
     interface Simple extends HasUncertainDatetime { id: string }
@@ -238,7 +238,7 @@ export const test_partition_sorted_items_by_datetimes = describe("partition_sort
 
 
 
-export const test_sort_by_uncertain_event_datetimes = describe("sort_by_uncertain_event_datetimes", () =>
+export const test_sort_by_uncertain_event_datetimes = describe.delay("sort_by_uncertain_event_datetimes", () =>
 {
 
     interface Simple extends HasUncertainDatetime { id: string }

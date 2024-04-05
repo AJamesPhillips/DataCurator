@@ -4,7 +4,7 @@ import { get_default_result_display_type, get_default_significant_figures } from
 
 
 
-export const run_get_default_formatting_function_tests = describe("get default formatting function", () =>
+export const run_get_default_formatting_function_tests = describe.delay("get default formatting function", () =>
 {
     const test_case: {
         calc_value: string,

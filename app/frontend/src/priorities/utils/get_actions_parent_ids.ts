@@ -95,7 +95,7 @@ export function* get_actions_parent_ids (args: ActionsParentIdsArgs): Generator<
 
 
 
-export const test_get_actions_parent_ids = describe("get_actions_parent_ids", () =>
+export const test_get_actions_parent_ids = describe.delay("get_actions_parent_ids", () =>
 {
     function helper_func__make_goal (title: string, parent_goal_or_action_ids: string[] = [])
     {

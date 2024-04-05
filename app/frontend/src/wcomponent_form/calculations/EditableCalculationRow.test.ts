@@ -3,7 +3,7 @@ import { should_show_calc_value } from "./EditableCalculationRow"
 
 
 
-export const run_EditableCalculationRow_tests = describe("EditableCalculationRow support functions", () =>
+export const run_EditableCalculationRow_tests = describe.delay("EditableCalculationRow support functions", () =>
 {
     describe("should_show_calc_value", () =>
     {

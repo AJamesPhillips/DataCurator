@@ -2,7 +2,7 @@ import { stable_stringify } from "./stable_stringify"
 import { describe, test } from "./test"
 
 
-export const test_stable_stringify = describe("stable_stringify", () =>
+export const test_stable_stringify = describe.delay("stable_stringify", () =>
 {
     let result: string | undefined = ""
     result = stable_stringify({ a: 1, b: 2, c: 3 })

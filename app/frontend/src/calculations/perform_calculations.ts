@@ -1,4 +1,5 @@
 import { Model, ModelVariableConfig, SimulationError } from "simulation"
+
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { normalise_calculation_ids } from "./normalise_calculation_ids"

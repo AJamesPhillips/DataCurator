@@ -60,7 +60,7 @@ export function prune_items_by_created_at_and_versions <U extends Base & HasUnce
 
 
 
-export const test_partition_and_prune_items_by_datetimes_and_versions = describe("partition_and_prune_items_by_datetimes_and_versions", () =>
+export const test_partition_and_prune_items_by_datetimes_and_versions = describe.delay("partition_and_prune_items_by_datetimes_and_versions", () =>
 {
     const dt0 = new Date("2021-04-01 00:00")
     const dt1 = new Date("2021-04-01 00:01")

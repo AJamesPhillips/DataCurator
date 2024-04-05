@@ -16,7 +16,7 @@ import { VAPsType } from "./interfaces/VAPsType"
 
 
 
-export const run_get_wcomponent_VAPs_represent_tests = describe("get_wcomponent_VAPs_represent", () =>
+export const run_get_wcomponent_VAPs_represent_tests = describe.delay("get_wcomponent_VAPs_represent", () =>
 {
     const id1 = uuid_v4_for_tests(1)
     const id2 = uuid_v4_for_tests(2)

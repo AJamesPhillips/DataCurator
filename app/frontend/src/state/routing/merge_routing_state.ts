@@ -45,7 +45,7 @@ export function merge_routing_state (current_routing_state: RoutingState, new_ro
 
 
 
-export const test_merge_routing_state = describe("merge_routing_state", () =>
+export const test_merge_routing_state = describe.delay("merge_routing_state", () =>
 {
     const dt = new Date("2021-04-09 23:25:26")
     const dt2 = new Date("2022-01-01 01:01:01")

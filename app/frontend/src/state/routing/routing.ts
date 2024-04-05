@@ -178,7 +178,7 @@ function parse_int_or_undefined (val: string): number | undefined
 
 
 
-export const test_routing_state_to_string = describe("routing_state_to_string", () =>
+export const test_routing_state_to_string = describe.delay("routing_state_to_string", () =>
 {
     let state: RoutingState
     let result: string

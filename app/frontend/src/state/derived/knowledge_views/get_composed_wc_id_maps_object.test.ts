@@ -31,7 +31,7 @@ function test_helper__make_knowledge_view (kv_wc_entry: KnowledgeViewWComponentE
 
 
 
-export const run_get_composed_wc_id_maps_object_tests = describe("get_composed_wc_id_maps_object", () =>
+export const run_get_composed_wc_id_maps_object_tests = describe.delay("get_composed_wc_id_maps_object", () =>
 {
     const date1 = new Date("2023-03-22 15:15:00")
 

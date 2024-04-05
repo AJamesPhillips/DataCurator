@@ -54,7 +54,7 @@ export function calc_if_wcomponent_should_exclude_because_label_or_type (wcompon
 
 
 
-export const test_calc_if_wcomponent_should_exclude_because_label_or_type = describe("calc_if_wcomponent_should_exclude_because_label_or_type", () =>
+export const test_calc_if_wcomponent_should_exclude_because_label_or_type = describe.delay("calc_if_wcomponent_should_exclude_because_label_or_type", () =>
 {
     const wcomponent1 = prepare_new_contextless_wcomponent_object({
         id: "1", base_id: 1,

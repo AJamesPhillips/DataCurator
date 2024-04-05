@@ -9,7 +9,7 @@ import { replace_ids_in_text, get_title, ReplaceIdsArgs, RichTextType } from "./
 
 
 
-export const run_get_rich_text_tests = describe("run_get_rich_text_tests", () =>
+export const run_get_rich_text_tests = describe.delay("run_get_rich_text_tests", () =>
 {
     let result: string
 

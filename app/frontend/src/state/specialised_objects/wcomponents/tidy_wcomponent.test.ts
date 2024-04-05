@@ -10,7 +10,7 @@ import { tidy_wcomponent } from "./tidy_wcomponent"
 
 
 
-export const test_tidy_wcomponent = describe("tidy_wcomponent", () =>
+export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
 {
     const sort_list = false
 

@@ -3,7 +3,7 @@ import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for
 
 
 
-export const run_make_calculation_safe_for_rich_text_tests = describe("make_calculation_safe_for_rich_text", () =>
+export const run_make_calculation_safe_for_rich_text_tests = describe.delay("make_calculation_safe_for_rich_text", () =>
 {
     let calculation: string
     let result_safe_rich_text: string

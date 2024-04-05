@@ -68,7 +68,7 @@ export function csv_to_array (str_data: string)
 }
 
 
-export const test_csv_to_array = describe("csv_to_array", () =>
+export const test_csv_to_array = describe.delay("csv_to_array", () =>
 {
     test(csv_to_array(``), [[``]])
     test(csv_to_array(`,`), [[``, ``]])

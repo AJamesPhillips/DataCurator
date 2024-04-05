@@ -21,7 +21,7 @@ export function intersperse <T, R> (array: T[], func: (entry_before: T, entry_af
 }
 
 
-export const test_array_functions = describe("array functions", () =>
+export const test_array_functions = describe.delay("array functions", () =>
 {
     let result = intersperse<string, number>([], () => 0)
     test(result, [], "intersperse with no elements should be empty")

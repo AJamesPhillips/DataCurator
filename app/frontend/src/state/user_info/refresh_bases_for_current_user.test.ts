@@ -10,7 +10,7 @@ import type { UserInfoState } from "./state"
 
 
 
-export const test_refresh_bases_for_current_user = describe("refresh_bases_for_current_user", () =>
+export const test_refresh_bases_for_current_user = describe.delay("refresh_bases_for_current_user", () =>
 {
     const inserted_at = new Date()
     const updated_at = new Date()

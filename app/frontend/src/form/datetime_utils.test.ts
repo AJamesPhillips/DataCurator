@@ -2,7 +2,7 @@ import { describe, test } from "../shared/utils/test"
 import { correct_datetime_for_local_time_zone } from "./datetime_utils"
 
 
-export const test_correct_datetime_for_local_time_zone = describe("correct_datetime_for_local_time_zone", () =>
+export const test_correct_datetime_for_local_time_zone = describe.delay("correct_datetime_for_local_time_zone", () =>
 {
     let result: Date | undefined
 

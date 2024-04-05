@@ -11,7 +11,7 @@ import { perform_calculations } from "./perform_calculations"
 
 
 
-export const run_perform_calculations_test = describe("perform_calculations", () =>
+export const run_perform_calculations_test = describe.delay("perform_calculations", () =>
 {
     let calculations: PlainCalculationObject[]
     let wcomponents_by_id: WComponentsById

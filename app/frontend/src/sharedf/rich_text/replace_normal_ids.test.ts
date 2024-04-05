@@ -8,7 +8,7 @@ import { get_double_at_mentioned_uuids_from_text, replace_normal_ids } from "./r
 
 
 
-export const run_replace_normal_ids_tests = describe("replace_normal_ids", () =>
+export const run_replace_normal_ids_tests = describe.delay("replace_normal_ids", () =>
 {
     let input_text = ""
     let output_text = ""
@@ -104,7 +104,7 @@ export const run_replace_normal_ids_tests = describe("replace_normal_ids", () =>
 
 
 
-export const test_get_ids_from_text = describe("get_ids_from_text", () =>
+export const test_get_ids_from_text = describe.delay("get_ids_from_text", () =>
 {
     let ids: string[] = []
 

@@ -368,7 +368,7 @@ function factory_ids_to_nodes <T> (graph: Graph): (ids: string[]) => T[]
 
 
 
-export const test_graph_related_functions = describe("graph related functions", () =>
+export const test_graph_related_functions = describe.delay("graph related functions", () =>
 {
     interface I
     {

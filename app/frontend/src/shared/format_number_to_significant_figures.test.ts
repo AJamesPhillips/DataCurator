@@ -3,7 +3,7 @@ import { format_number_to_significant_figures } from "./format_number_to_signifi
 
 
 
-export const run_number_to_significant_figures_test = describe("run_number_to_significant_figures_test", () =>
+export const run_number_to_significant_figures_test = describe.delay("run_number_to_significant_figures_test", () =>
 {
     let formatted_number = ""
 

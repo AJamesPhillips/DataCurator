@@ -37,7 +37,7 @@ export function get_tense_of_uncertain_datetime (item: HasUncertainDatetime, sim
 
 
 
-export const test_get_tense_of_uncertain_datetime = describe("get_tense_of_uncertain_datetime", () =>
+export const test_get_tense_of_uncertain_datetime = describe.delay("get_tense_of_uncertain_datetime", () =>
 {
     let result: Tense
 

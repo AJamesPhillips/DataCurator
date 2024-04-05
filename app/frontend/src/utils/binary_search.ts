@@ -67,7 +67,7 @@ export function find_nearest_index_in_sorted_list <I> (sorted_list: I[], get_key
 
 
 
-export const test_binary_search_functions = describe("binary search functions", () =>
+export const test_binary_search_functions = describe.delay("binary search functions", () =>
 {
     let result = find_index_in_sorted_list([1, 2, 3, 4, 5, 6, 7, 8, 9], i => i, 3)
     test(result, 2)

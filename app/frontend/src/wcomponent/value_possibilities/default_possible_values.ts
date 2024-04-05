@@ -42,7 +42,7 @@ export function default_possible_values (VAPs_represent: VAPsType, simple_possib
 
 
 
-export const test_default_possible_values = describe("default_possible_values", () =>
+export const test_default_possible_values = describe.delay("default_possible_values", () =>
 {
     const simple_possibilities: SimpleValuePossibility[] = [
         {

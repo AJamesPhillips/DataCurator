@@ -6,7 +6,7 @@ import { TemporalValueCertainty, get_current_temporal_value_certainty_from_wcomp
 
 
 
-export const run_specialised_objects_accessors_tests = describe("specialised_objects accessors tests", () =>
+export const run_specialised_objects_accessors_tests = describe.delay("specialised_objects accessors tests", () =>
 {
     describe("get_current_temporal_value_certainty_from_wcomponent", () =>
     {

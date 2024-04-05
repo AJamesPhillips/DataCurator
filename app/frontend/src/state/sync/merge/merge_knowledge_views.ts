@@ -75,7 +75,7 @@ function get_custom_field_merger <U extends KnowledgeView, T extends keyof Knowl
 
 
 
-export const test_merge_knowledge_views = describe("merge knowledge view functions", () =>
+export const test_merge_knowledge_views = describe.delay("merge knowledge view functions", () =>
 {
     const dt1 = new Date("2021-01-01")
     // Either the modified_at values match (between attempted_update_value and the DB's initial value)

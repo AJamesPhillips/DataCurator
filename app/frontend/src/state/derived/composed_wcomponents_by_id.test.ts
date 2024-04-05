@@ -11,7 +11,7 @@ import { get_starting_state } from "../starting_state"
 
 
 
-export const test_get_composed_wcomponents_by_id = describe("get_composed_wcomponents_by_id", () =>
+export const test_get_composed_wcomponents_by_id = describe.delay("get_composed_wcomponents_by_id", () =>
 {
     const dt0 = new Date("2023-10-05")
     const dt1 = new Date("2023-10-06")

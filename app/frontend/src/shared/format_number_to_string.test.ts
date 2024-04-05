@@ -4,7 +4,7 @@ import { NUMBER_DISPLAY_TYPES } from "./types"
 
 
 
-export const run_number_to_string_test = describe("run_number_to_string_test", () =>
+export const run_number_to_string_test = describe.delay("run_number_to_string_test", () =>
 {
     let formatted_number = ""
 

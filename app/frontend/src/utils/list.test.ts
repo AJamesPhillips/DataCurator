@@ -3,7 +3,7 @@ import { index_is_in_bounds, insert_element_at_index, swap_elements } from "./li
 
 
 
-export const run_list_function_tests = describe("list functions", () =>
+export const run_list_function_tests = describe.delay("list functions", () =>
 {
     describe("index_is_in_bounds", () =>
     {

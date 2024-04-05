@@ -3,7 +3,7 @@ import { remove_rich_text } from "./remove_rich_text"
 
 
 
-export const run_remove_rich_text_tests = describe("remove_rich_text", () =>
+export const run_remove_rich_text_tests = describe.delay("remove_rich_text", () =>
 {
     let text: string
     let result: string

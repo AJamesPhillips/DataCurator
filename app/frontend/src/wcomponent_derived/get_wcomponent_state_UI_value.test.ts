@@ -10,7 +10,7 @@ import { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
 
 
 
-export const test_get_wcomponent_state_UI_value = describe("get_wcomponent_state_UI_value", () =>
+export const test_get_wcomponent_state_UI_value = describe.delay("get_wcomponent_state_UI_value", () =>
 {
     const dt0 = new Date("2021-05-01 00:00")
     const dt1 = new Date("2021-05-01 00:01")

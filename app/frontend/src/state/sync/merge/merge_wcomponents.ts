@@ -19,7 +19,7 @@ function get_custom_field_merger (field: keyof WComponent)
 
 
 
-export const test_merge_wcomponent = describe("merge_wcomponent", () =>
+export const test_merge_wcomponent = describe.delay("merge_wcomponent", () =>
 {
     const dt1 = new Date("2021-01-01")
     // Either the modified_at values match (between attempted_update_value and the DB's initial value)

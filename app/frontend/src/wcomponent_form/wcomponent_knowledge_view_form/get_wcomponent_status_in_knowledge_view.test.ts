@@ -32,7 +32,7 @@ function test_helper__make_knowledge_view (wc_id_map: KnowledgeViewWComponentIdE
 }
 
 
-export const run_get_wcomponent_status_in_knowledge_view_tests = describe("get_UI_data__wcomponent_add_or_for_knowledge_view", () =>
+export const run_get_wcomponent_status_in_knowledge_view_tests = describe.delay("get_UI_data__wcomponent_add_or_for_knowledge_view", () =>
 {
 
     describe("simple single knowledge view with no foundation", () =>

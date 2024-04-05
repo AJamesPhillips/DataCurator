@@ -154,7 +154,7 @@ export interface StateValueAndPrediction extends StateValueCore, PredictionBase
     author_id?: string
     // This is not out of 100, it is the portion of the total probability that this
     // value has
-    // Added this cause if you have 3 options of 0.3, 0.6 and 0.1 relative probability, and then
+    // Added this because if there are 3 options of 0.3, 0.6 and 0.1 relative probability, and then
     // one of the options drops to 0, it's a lot easier to just keep the other values, rather than
     // force the user to update the others to sum to 1.0 -- there may be a smarter logic / UI / UX
     // solution to this but for now we can use this solution.

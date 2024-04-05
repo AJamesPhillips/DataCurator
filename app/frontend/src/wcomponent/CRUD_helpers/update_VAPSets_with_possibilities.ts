@@ -50,7 +50,7 @@ export function update_VAPSets_with_possibilities (initial_values_and_prediction
 
 
 
-export const test_update_VAPSets_with_possibilities = describe("update_VAPSets_with_possibilities", () =>
+export const test_update_VAPSets_with_possibilities = describe.delay("update_VAPSets_with_possibilities", () =>
 {
     const val_prob_id_123 = "val_prob_id_123"
     const val_prob_id_456 = "val_prob_id_456"

@@ -146,7 +146,7 @@ function get_possible_wc_ids_to_move (args: GetPossibleWComponentIdsToMoveArgs)
 
 
 
-export const test_calc_ids_to_move_and_conflicts_functions = describe("calc_ids_to_move_and_conflicts", () =>
+export const test_calc_ids_to_move_and_conflicts_functions = describe.delay("calc_ids_to_move_and_conflicts", () =>
 {
     const base_id = 1
 

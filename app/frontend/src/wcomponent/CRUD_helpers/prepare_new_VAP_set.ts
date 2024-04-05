@@ -76,7 +76,7 @@ export function create_new_VAP_set_version (current_VAP_set: VAPSet, creation_co
 
 
 
-export const test_prepare_new_VAP_set = describe("prepare_new_VAP_set", () =>
+export const test_prepare_new_VAP_set = describe.delay("prepare_new_VAP_set", () =>
 {
 
     const VAP_sets: VAPSet[] = [

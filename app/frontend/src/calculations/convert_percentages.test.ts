@@ -4,7 +4,7 @@ import { convert_percentages } from "./convert_percentages"
 
 // This functionality definitely belongs inside the Simulation.js package
 // https://github.com/AJamesPhillips/DataCurator/issues/239
-export const run_convert_percentages_tests = describe("convert_percentages", () =>
+export const run_convert_percentages_tests = describe.delay("convert_percentages", () =>
 {
     let calculation_string = ""
     let expected_converted_calculation = ""
