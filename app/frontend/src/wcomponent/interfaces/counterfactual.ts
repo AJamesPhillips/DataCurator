@@ -29,7 +29,6 @@ export interface WComponentCounterfactualV2 extends WComponentNodeBase
 {
     type: "counterfactualv2"
     target_wcomponent_id?: string
-    // subtype: "existence" | "validity"
     target_VAP_set_id?: string
     target_VAP_id?: string
     // counterfactual_VAP_set?: CoreCounterfactualStateValueAndPredictionSetV2

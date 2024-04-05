@@ -11,7 +11,6 @@ import type {
     WComponentNodeStateV2,
     WComponentStateValue,
 } from "./state"
-import type { ExistencePredictions } from "../../shared/uncertainty/existence"
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 import type {
     WComponentBase,
@@ -57,7 +56,7 @@ export type WComponentNode = WComponentNodeEvent
 
 
 
-export type ConnectionTerminalAttributeType = "meta" | "validity" | "state" // | "existence"
+export type ConnectionTerminalAttributeType = "meta" | "validity" | "state"
 export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "state"]
 export type ConnectionTerminalDirectionType = "from" | "to"
 export const connection_terminal_directions: ConnectionTerminalDirectionType[] = ["from", "to"]
@@ -72,7 +71,7 @@ export interface ConnectionTerminalType
 export type ConnectionLineBehaviour = "curve" | "straight" // | "heirarchy"
 export const connection_line_behaviours: ConnectionLineBehaviour[] = ["curve", "straight"]//, "heirarchy"]
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
-export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<ExistencePredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
+export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
 {
     type: WComponentConnectionType
     from_id: string
@@ -249,12 +248,6 @@ export type WComponentCanHaveValidityPredictions = WComponent & Partial<Validity
 export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is WComponentCanHaveValidityPredictions
 {
     return !types_without_validity.has(wcomponent.type)
-}
-
-
-export function wcomponent_has_existence_predictions (wcomponent: WComponent): wcomponent is (WComponent & ExistencePredictions)
-{
-    return (wcomponent as ExistencePredictions).existence !== undefined
 }
 
 

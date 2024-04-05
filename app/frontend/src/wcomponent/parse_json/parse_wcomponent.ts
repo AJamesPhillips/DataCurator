@@ -2,7 +2,6 @@ import {
     clean_base_object_of_sync_meta_fields,
 } from "../../state/sync/supabase/clean_base_object_for_supabase"
 import type { Prediction } from "../../shared/uncertainty/interfaces"
-import { get_new_VAP_id } from "../../shared/utils/ids"
 import {
     WComponent,
     wcomponent_has_validity_predictions,
@@ -11,7 +10,6 @@ import {
     wcomponent_is_plain_connection,
     ConnectionTerminalAttributeType,
     wcomponent_is_process,
-    wcomponent_has_existence_predictions,
     wcomponent_is_action,
     wcomponent_is_goal,
 } from "../interfaces/SpecialisedObjects"
@@ -25,7 +23,6 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
     wcomponent = clean_base_object_of_sync_meta_fields(wcomponent) // defensive
 
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
-    wcomponent = upgrade_2021_05_19_existence_predictions(wcomponent)
     wcomponent = upgrade_2021_05_24_action(wcomponent)
     wcomponent = upgrade_2021_06_12_goal(wcomponent)
 
@@ -97,47 +94,6 @@ function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
     }
 
     return wcomponent_action as WComponent
-}
-
-
-// Upgrade valid as of 2021-05-19
-function upgrade_2021_05_19_existence_predictions (wcomponent: WComponent)
-{
-    if (!wcomponent_has_existence_predictions(wcomponent)) return wcomponent
-    wcomponent.existence = wcomponent.existence.map(parse_prediction)
-
-    if (wcomponent_has_VAP_sets(wcomponent)) return wcomponent
-
-    const values_and_prediction_sets = wcomponent.existence.map(e =>
-    {
-        const vap_set: StateValueAndPredictionsSet = {
-            id: e.id.replace("pr", "vps"),
-            created_at: e.created_at,
-            base_id: e.base_id,
-            custom_created_at: e.custom_created_at,
-            datetime: e.datetime || {},
-            entries: [
-                {
-                    id: get_new_VAP_id(),
-                    value: "",
-                    description: "",
-                    explanation: e.explanation,
-                    probability: e.probability,
-                    conviction: e.conviction,
-                }
-            ],
-        }
-
-        return vap_set
-    })
-
-    const upgraded_wcomponent = {
-        ...wcomponent,
-        existence: undefined,
-        values_and_prediction_sets,
-    }
-
-    return upgraded_wcomponent as WComponent
 }
 
 

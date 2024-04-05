@@ -27,7 +27,6 @@ import {
     wcomponent_is_judgement_or_objective,
     wcomponent_is_event,
     wcomponent_is_prioritisation,
-    wcomponent_has_existence_predictions,
     wcomponent_is_sub_state,
     wcomponent_has_objectives,
     wcomponent_is_action,
@@ -432,21 +431,6 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-
-
-        {wcomponent_has_existence_predictions(wcomponent) && wcomponent.existence.length && <div>
-            <p style={{ color: "red" }}>
-                <PredictionList
-                    item_descriptor="(Deprecated, please delete) Existence prediction"
-                    predictions={wcomponent_has_existence_predictions(wcomponent) ? wcomponent.existence : []}
-                    update_predictions={new_predictions => wrapped_upsert_wcomponent({
-                        existence: new_predictions.length ? new_predictions : undefined
-                    })}
-                />
-            </p>
-
-            <hr />
-        </div>}
 
         <br />
         <br />

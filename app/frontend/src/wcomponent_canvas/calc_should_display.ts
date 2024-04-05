@@ -155,8 +155,6 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
     })
     if (!to_node_validity_value) return false
 
-    // TODO add existence prediction
-
     const connection_certainty = Math.min(
         connection_validity_value.display_certainty,
         from_node_validity_value.display_certainty,

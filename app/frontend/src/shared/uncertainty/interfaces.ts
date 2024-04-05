@@ -134,3 +134,6 @@ export interface Prediction extends Base, PredictionBase, HasUncertainDatetime {
 // probability of the item in question.
 // Or as we have chosen so far to do, keep these two concepts seperate from each other
 // --- 2021-04-10
+// +++ 2024-04-05
+// Removing existence predictions for now.  See commmit message for more details.
+// --- 2024-04-05

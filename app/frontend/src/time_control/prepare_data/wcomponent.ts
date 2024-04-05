@@ -1,7 +1,6 @@
 import {
     WComponent,
     wcomponent_has_event_at,
-    wcomponent_has_existence_predictions,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -58,16 +57,6 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
         if (wcomponent_has_validity_predictions(wcomponent))
         {
             wcomponent.validity.forEach(({ created_at, custom_created_at, datetime }) =>
-            {
-                create_event(custom_created_at || created_at, "created")
-                create_events_for_temporal_uncertainty(datetime)
-            })
-        }
-
-
-        if (wcomponent_has_existence_predictions(wcomponent))
-        {
-            wcomponent.existence.forEach(({ created_at, custom_created_at, datetime }) =>
             {
                 create_event(custom_created_at || created_at, "created")
                 create_events_for_temporal_uncertainty(datetime)

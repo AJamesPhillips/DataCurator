@@ -13,7 +13,7 @@ import type { Prediction } from "./interfaces"
 // considering this alternative use case. e.g. for wc4.json it was capturing beliefs about
 // how likely it was that person A could effect a change in organisation B.
 //
-// See "Justification for not having single predictions" field below
+// See "Justification for not having single predictions"
 //
 // Not making optional, interfaces extending this can use Partial<ValidityPredictions>
 export interface ValidityPredictions
