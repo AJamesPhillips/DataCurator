@@ -13,6 +13,9 @@ interface GetWcomponentStateUIValueArgs
     created_at_ms: number
     sim_ms: number
 }
+// This function is called to populate the value shown under the component title
+// * the `get_probable_VAP_set_values_for_display` function which populates the values of the VAP set summary
+// * the `convert_VAP_set_to_VAP_visuals` function which gets the values to show in the component node state "table"
 export function get_wcomponent_state_UI_value (args: GetWcomponentStateUIValueArgs): DerivedValueForUI | undefined
 {
     const {

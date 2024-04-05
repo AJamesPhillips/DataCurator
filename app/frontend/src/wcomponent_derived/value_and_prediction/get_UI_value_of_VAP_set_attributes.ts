@@ -5,6 +5,9 @@ import { get_VAPs_ordered_by_prob } from "./probable_VAPs"
 
 
 
+// This function is called to populate the values of the VAP set summary
+// * the `get_wcomponent_state_UI_value` function which populates the value of the component shown under the component title
+// * the `convert_VAP_set_to_VAP_visuals` function which gets the values to show in the component node state "table"
 export function get_probable_VAP_set_values_for_display (VAP_set: StateValueAndPredictionsSet, VAPs_represent: VAPsType)
 {
     const VAPs = get_VAPs_ordered_by_prob(VAP_set.entries, VAPs_represent)

@@ -66,9 +66,9 @@ export interface WComponentStateValue extends WComponentNodeBase
     // message of commit aad33a87 (on 15 Aug 2023) for longer description of why
     // owner_wcomponent_id: string | undefined
 
-    // This should have probably been called target_attribute_wcomponent_id to
+    // This should have probably been called state_value_target_wcomponent_id to
     // make it clear this is the ID of the wcomponent that this StateValue is
-    // providing and alternative value for.
+    // providing an alternative value for.
     attribute_wcomponent_id: string | undefined
 }
 
