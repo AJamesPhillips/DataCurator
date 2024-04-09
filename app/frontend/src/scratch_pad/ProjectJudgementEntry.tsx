@@ -68,7 +68,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             />
         </div>
         <div style={{ flex: "1", textAlign: "right" }}>
-            {get_wcomponent_state_UI_value({ wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms }).values_string}
+            {get_wcomponent_state_UI_value({ wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })?.values_string}
         </div>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}

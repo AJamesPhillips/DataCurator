@@ -104,9 +104,6 @@ interface SchemaDimension
 
 
 
-// This used to extend TemporalUncertainty but this _has a_ datetime with TemporalUncertainty
-// it is _not_ that it _is an_ extension of TemporalUncertainty
-//
 // The values from Partial<PredictionBase> will be used as the default values for these fields
 // in all the entries.
 export interface StateValueAndPredictionsSet extends Base

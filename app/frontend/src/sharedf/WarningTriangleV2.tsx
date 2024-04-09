@@ -2,8 +2,14 @@ import { Typography } from "@mui/material"
 import WarningIcon from "@mui/icons-material/Warning"
 
 
+interface Props
+{
+    warning: string
+    always_display?: boolean
+    label?: string
+}
 
-export function WarningTriangleV2 (props: { warning: string, always_display?: boolean, label?: string })
+export function WarningTriangleV2 (props: Props)
 {
     const { warning, label = "", always_display = false } = props
     const display = (warning || always_display) ? "inline" : "none"
