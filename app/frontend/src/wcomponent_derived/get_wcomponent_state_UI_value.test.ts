@@ -103,174 +103,143 @@ export const test_get_wcomponent_state_UI_value = describe.delay("get_wcomponent
     const vap_p80: StateValueAndPrediction = { ...vap_p100, id: "VAP80", value: "A80", probability: 0.8 }
     const vap_p20: StateValueAndPrediction = { ...vap_p100, id: "VAP20", value: "A20", probability: 0.2 }
     const vap_p0: StateValueAndPrediction = { ...vap_p100, id: "VAP0", value: "A0", probability: 0 }
-    const vap_p100c50: StateValueAndPrediction = { ...vap_p100, id: "VAP100c50", value: "A100c50", conviction: 0.5 }
-    const vap_p100c0: StateValueAndPrediction = { ...vap_p100, id: "VAP100c0", value: "A100c0", conviction: 0 }
 
-    const empty: StateValueAndPrediction[] = []
-    const single_with_whitespace_string: StateValueAndPrediction[] = [{...vap_p100, value: "  "}]
-    const single: StateValueAndPrediction[] = [vap_p100]
-    const multiple: StateValueAndPrediction[] = [vap_p20, vap_p80]
-    const multiple_with_1certain: StateValueAndPrediction[] = [vap_p100, vap_p0]
-    const no_chance: StateValueAndPrediction[] = [vap_p0]
-
-
-    const uncertain_prob: StateValueAndPrediction[] = [vap_p20]
-    const uncertain_cn: StateValueAndPrediction[] = [vap_p100c50]
-    const certain_no_cn: StateValueAndPrediction[] = [vap_p100c0]
 
     describe("Basic tests of get_wcomponent_state_UI_value", () =>
     {
 
         display_value = helper_func__statev2_value(wcomponent__type_other, [])
-        test(display_value, undefined, "No VAP (value and prediction) defined")
+        test(display_value, undefined, "No VAP (value and prediction) sets should return undefined")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [empty])
-        test(display_value, undefined, "No value defined in VAP (value and prediction)")
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[]])
+        test(display_value, undefined, "No value defined in a VAP (value and prediction) set should return undefined")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [single_with_whitespace_string])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[{...vap_p100, value: "  "}]])
         test(display_value, {
             values_string: "not defined",
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "Single with certainty but whitespace string value")
+        }, "Single VAP with whitespace string value should be trimmed to nothing and then shown as 'not defined'")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [single])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]])
         test(display_value, {
             values_string: "A100",
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "Single with certainty")
+        }, "Single VAP with certainty")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p20, vap_p80]])
         test(display_value, {
             values_string: "A80, A20",
             counterfactual_applied: false,
             uncertain: true,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "Multiple with both uncertain")
+        }, "Multiple VAPs with both uncertain should result in both being shown, with the most probable first")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p0, vap_p100]])
         test(display_value, {
             values_string: "A100",
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "Multiple with one uncertain")
+        }, "Two VAPs with one 0% certain first, should only show the certain one")
 
-        display_value = helper_func__statev2_value(wcomponent__type_other, [multiple_with_1certain])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100, vap_p0]])
         test(display_value, {
             values_string: "A100",
             counterfactual_applied: false,
             uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "Multiple with one uncertain")
+        }, "Two VAPs with one 0% certain last, should only show the certain one")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p20, vap_p20, vap_p20, vap_p20]])
+        test(display_value, {
+            values_string: "A20, A20, A20, (1 more)",
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, `Shows "(1 more)" when there are more than 3 values`)
 
     })
 
 
-    describe.skip("TODO: implement these other tests", () =>
+    describe("number subtype", () =>
     {
-        // display_value = helper_func__statev2_value(wcomponent_other, [single, single])
-        // test(display_value, { value: "A100, A100", probability: undefined, conviction: undefined, type: "multiple" })
+        const wcomponent__type_number: WComponentNodeStateV2 = {
+            ...wcomponent__type_other,
+            subtype: "number",
+        }
 
-        // display_value = helper_func__statev2_value(wcomponent_other, [single, single, single])
-        // test(display_value, { value: "A100, A100, (1 more)", probability: undefined, conviction: undefined, type: "multiple" })
+        const vap_num33: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33", probability: 1, conviction: 1 }
+        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33]])
+        test(display_value, {
+            values_string: "33",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "A valid number value string")
 
-        // display_value = helper_func__statev2_value(wcomponent_other, [multiple, multiple])
-        // test(display_value, { value: "A80, A80, (2 more)", probability: undefined, conviction: undefined, type: "multiple" })
 
-        // // boolean
+        const vap_num33abc: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33abc", probability: 1, conviction: 1 }
+        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33abc]])
+        test(display_value, {
+            values_string: "NaN",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "A number with invalid characters in value string")
 
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [single])
-        // test(display_value, { value: "True", probability: 1, conviction: 1, type: "single" })
 
-        // // display_value = helper_func__statev2_value({ ...wcomponent__type_boolean, boolean_true_str: "Yes" }, [single])
-        // // test(display_value, { value: "Yes", probability: 1, conviction: 1, type: "single" })
-
-        // // no chance
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [no_chance])
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-
-        // // no chance boolean
-
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [no_chance])
-        // test(display_value, { value: "False", probability: 0, conviction: 1, type: "single" })
-
-        // // display_value = helper_func__statev2_value({ ...wcomponent__type_boolean, boolean_false_str: "No" }, [no_chance])
-        // // test(display_value, { value: "No", probability: 0, conviction: 1, type: "single" })
-
-        // // uncertainty for "boolean" subtype
-
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [uncertain_prob])
-        // test(display_value, { value: "False", probability: 0.2, conviction: 1, type: "single", modifier: "uncertain" })
-
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [uncertain_cn])
-        // test(display_value, { value: "True", probability: 1, conviction: 0.5, type: "single", modifier: "uncertain" })
-
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [certain_no_cn])
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-
-        // display_value = helper_func__statev2_value(wcomponent__type_boolean, [single, certain_no_cn])
-        // test(display_value, { value: "True", probability: 1, conviction: 1, type: "single" })
-
-        // // uncertainty for "other" subtype
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [uncertain_prob])
-        // test(display_value, { value: "A20", probability: 0.2, conviction: 1, type: "single", modifier: "uncertain" })
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [uncertain_cn])
-        // test(display_value, { value: "A100c50", probability: 1, conviction: 0.5, type: "single", modifier: "uncertain" })
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [certain_no_cn])
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [single, certain_no_cn])
-        // test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
-
-        // // counterfactuals
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [single], [[{ probability: 0 }]])
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single", modifier: "assumed" })
-
-        // // Single counterfactual with uncertainty
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p80, vap_p20]], [[{ probability: 0 }, {}]])
-        // test(display_value, { value: "A20", probability: 0.2, conviction: 1, type: "single", modifier: "assumed" })
-
-        // // Counterfactuals to reverse option possibilities
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100, vap_p0]], [[{ probability: 0 }, { probability: 1 }]])
-        // test(display_value, { value: vap_p0.value, probability: 1, conviction: 1, type: "single", modifier: "assumed" })
-
-        // // Counterfactuals to invalidate all options
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100, vap_p0]], [[{ probability: 0 }, { probability: 0 }]])
-        // // might change this to probability: 0, conviction: 1, but needs more thought/examples first
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single", modifier: "assumed" })
-
-        // // values before, at, after a datetime.min, datetime.value, datetime.max
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt2 })
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt1 })
-        // test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { min: dt0 })
-        // test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt2 })
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt1 })
-        // test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { value: dt0 })
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt2 })
-        // test(display_value, { value: "A100", probability: 1, conviction: 1, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt1 })
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
-        // display_value = helper_func__statev2_value(wcomponent_other, [[vap_p100]], undefined, { max: dt0 })
-        // test(display_value, { value: undefined, probability: undefined, conviction: undefined, type: "single" })
+        const vap_num33percent: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33%", probability: 1, conviction: 1 }
+        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33percent]])
+        test(display_value, {
+            // Currently this is parsed as 0.33 by `parse_string_as_number`
+            values_string: "0.33",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "A valid number percentage")
     })
 
+
+    describe("boolean subtype", () =>
+    {
+        const wcomponent__type_boolean: WComponentNodeStateV2 = { ...wcomponent__type_other, subtype: "boolean" }
+
+        display_value = helper_func__statev2_value(wcomponent__type_boolean, [[vap_p100]])
+        test(display_value, {
+            values_string: "True",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "100% confident boolean should render as True")
+
+        display_value = helper_func__statev2_value(wcomponent__type_boolean, [[{ ...vap_p100, probability: 0.51 }]])
+        test(display_value, {
+            values_string: "True",
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, ">50% confident boolean should render as True")
+
+        display_value = helper_func__statev2_value(wcomponent__type_boolean, [[{ ...vap_p100, probability: 0.50 }]])
+        test(display_value, {
+            values_string: "False",
+            counterfactual_applied: false,
+            uncertain: true,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "<=50% confident boolean should render as False")
+
+        display_value = helper_func__statev2_value(wcomponent__type_boolean, [[vap_p0]])
+        test(display_value, {
+            values_string: "False",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "0% confident boolean should render as False")
+    })
 
 
     describe("StateValue replacing VAPSets", () =>
@@ -292,31 +261,53 @@ export const test_get_wcomponent_state_UI_value = describe.delay("get_wcomponent
     })
 
 
-    describe("Getting UI string value of VAPs with percentages", () =>
+    describe("datetime", () =>
     {
-        const wcomponent__type_number: WComponentNodeStateV2 = {
-            ...wcomponent__type_other,
-            subtype: "number",
-        }
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { min: dt2 } })
+        test(display_value, undefined, "When datetime.min is in the future, no value should be shown")
 
-        const vap_num33_prob50: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33", probability: 0.5, conviction: 1 }
-        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33_prob50]])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { min: dt1 } })
         test(display_value, {
-            values_string: "33",
+            values_string: "A100",
             counterfactual_applied: false,
-            uncertain: true,
+            uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "A valid number value string")
+        }, "When datetime.min is the present sim datetime, a value should be shown")
 
-        const vap_num33abc_prob50: StateValueAndPrediction = { ...VAP_defaults, id: "VAP1", value: "33abc", probability: 0.5, conviction: 1 }
-        display_value = helper_func__statev2_value(wcomponent__type_number, [[vap_num33abc_prob50]])
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { max: dt1 } })
         test(display_value, {
-            values_string: "NaN",
+            values_string: "A100",
             counterfactual_applied: false,
-            uncertain: true,
+            uncertain: false,
             derived__using_values_from_wcomponent_ids: undefined,
-        }, "A number with invalid characters in value string")
+        }, "When datetime.max is the present sim datetime, a value should be shown")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { max: dt0 } })
+        test(display_value, {
+            values_string: "A100",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "When datetime.max is in the past, a value should still be shown because the 'max' represents the lastest time this change to state could have occured, and the state represents the most current value")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { value: dt2 } })
+        test(display_value, undefined, "When datetime.value is the future, no value should be shown")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { value: dt1 } })
+        test(display_value, {
+            values_string: "A100",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "When datetime.value is the present sim datetime, a value should be shown")
+
+        display_value = helper_func__statev2_value(wcomponent__type_other, [[vap_p100]], { datetime: { value: dt0 } })
+        test(display_value, {
+            values_string: "A100",
+            counterfactual_applied: false,
+            uncertain: false,
+            derived__using_values_from_wcomponent_ids: undefined,
+        }, "When datetime.value is the past, a value should still be shown, for the same reason as when datetime.max is in the past")
     })
-
 
 })
