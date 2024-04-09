@@ -205,7 +205,7 @@ function _WComponentForm (props: Props)
             onClick={() => props.update_chosen_base_id({ base_id: wcomponent.base_id })}
             title={`Click to change to base ${wcomponent.base_id}`}
         >
-            <WarningTriangle message="" />
+            <WarningTriangle />
             &nbsp;
             Is part of base "{props.base_for_wcomponent?.title}"
         </div>}

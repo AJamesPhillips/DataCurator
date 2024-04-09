@@ -1,10 +1,8 @@
-import { h } from "preact"
-
 
 
 interface OwnProps
 {
-    message: string
+    message?: string
     backgroundColor?: string
 }
 
