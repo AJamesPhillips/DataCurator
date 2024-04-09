@@ -203,14 +203,10 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     })
     const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
     const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
-    const wc_id_to_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
+    const wc_id_to_active_counterfactuals_v2_map = calculate_wc_id_to_counterfactuals_v2_map({
         wc_ids_by_type,
         wcomponents_by_id,
-    })
-    const wc_id_to_active_counterfactuals_v2_map = get_wc_id_to_counterfactuals_v2_map({
-        wc_ids_by_type,
-        wcomponents_by_id,
-        active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids,
+        active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids || [],
     })
     const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
     const wc_id_connections_map = get_wc_id_connections_map(wc_ids_by_type.any_link, wcomponents_by_id)
@@ -226,7 +222,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         wcomponent_nodes,
         wcomponent_connections,
         wcomponent_unfound_ids,
-        wc_id_to_counterfactuals_v2_map,
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         prioritisations,
@@ -268,22 +263,20 @@ const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(w
 
 
 
-interface GetWcIdCounterfactualsV2MapArgs
+interface CalculateWcIdCounterfactualsV2MapArgs
 {
     wc_ids_by_type: WComponentIdsByType
     wcomponents_by_id: WComponentsById
-    active_counterfactual_ids?: string[]
+    active_counterfactual_ids: string[]
 }
-function get_wc_id_to_counterfactuals_v2_map (args: GetWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
+function calculate_wc_id_to_counterfactuals_v2_map (args: CalculateWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
 {
     const map: WcIdToCounterfactualsV2Map = {}
-    const active_counterfactual_ids = args.active_counterfactual_ids
-        ? new Set(args.active_counterfactual_ids)
-        : false
+    const active_counterfactual_ids = new Set(args.active_counterfactual_ids)
 
     args.wc_ids_by_type.counterfactualv2.forEach(id =>
     {
-        if (active_counterfactual_ids && !active_counterfactual_ids.has(id)) return
+        if (!active_counterfactual_ids.has(id)) return
 
         const counterfactual_v2 = args.wcomponents_by_id[id]
         if (!wcomponent_is_counterfactual_v2(counterfactual_v2)) return

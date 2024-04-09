@@ -55,7 +55,6 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
     wcomponent_connections: WComponent[]
     wcomponent_unfound_ids: string[]
 
-    wc_id_to_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
     prioritisations: WComponentPrioritisation[]

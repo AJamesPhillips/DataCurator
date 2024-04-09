@@ -2,10 +2,9 @@ import type { RootState } from "../State"
 
 
 
-export function get_wc_id_to_counterfactuals_v2_map (state: RootState, active=true)
+export function get_wc_id_to_counterfactuals_v2_map (state: RootState)
 {
-    if (active) return state.derived.current_composed_knowledge_view?.wc_id_to_active_counterfactuals_v2_map
-    return state.derived.current_composed_knowledge_view?.wc_id_to_counterfactuals_v2_map
+    return state.derived.current_composed_knowledge_view?.wc_id_to_active_counterfactuals_v2_map
 }
 
 
