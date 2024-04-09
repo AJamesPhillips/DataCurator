@@ -11,7 +11,7 @@ import type { RootState } from "../../../state/State"
 
 interface OwnProps
 {
-    value?: string | undefined
+    value?: string | h.JSX.Element | undefined
     created_at?: Date
     datetime: TemporalUncertainty
     probability: string | h.JSX.Element
