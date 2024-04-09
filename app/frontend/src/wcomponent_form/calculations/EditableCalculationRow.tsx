@@ -85,7 +85,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const show_calc_value = editing || should_show_calc_value(calc.value)
 
 
-    const common_css: CSSProperties = { width: "100%", display: "flex" }
+    const common_css: CSSProperties = { display: "flex" }
 
 
     return <Box
