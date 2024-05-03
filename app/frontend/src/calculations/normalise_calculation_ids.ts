@@ -14,28 +14,28 @@ export function normalise_calculation_ids (equation: string, uuid_v4s: string[])
     converted_equation = convert_double_at_sign_uuidv4s_into_square_brackets(uuid_v4s, converted_equation)
 
 
-    // Now make all square bracket ids not findable by non_square_bracket_ids_regex
-    // (I can't figure out how to modify the non_square_bracket_ids_regex to achieve this)
-    // As some like the uuid will match on this:
-    //     [10000000-0000-4000-a000-000000000000]
-    //                         ^^^^
-    // And some like ids with spaces will match:
-    //     [ some id ]
-    //       ^^^^ ^^
-    let hidden_ids
-    ({ hidden_ids, converted_equation } = hide_all_square_bracket_ids(converted_equation));
+    // // Now make all square bracket ids not findable by non_square_bracket_ids_regex
+    // // (I can't figure out how to modify the non_square_bracket_ids_regex to achieve this)
+    // // As some like the uuid will match on this:
+    // //     [10000000-0000-4000-a000-000000000000]
+    // //                         ^^^^
+    // // And some like ids with spaces will match:
+    // //     [ some id ]
+    // //       ^^^^ ^^
+    // let hidden_ids
+    // ({ hidden_ids, converted_equation } = hide_all_square_bracket_ids(converted_equation));
 
-    // Also need to temporarily hide content in curly brackets which matches on:
-    //     {4 miles} / {6.4e3 meters}
-    //        ^^^^^           ^^^^^^
-    //
-    let hidden_curly_bracket_content
-    ({ hidden_curly_bracket_content, converted_equation } = hide_all_curly_bracket_content(converted_equation))
+    // // Also need to temporarily hide content in curly brackets which matches on:
+    // //     {4 miles} / {6.4e3 meters}
+    // //        ^^^^^           ^^^^^^
+    // //
+    // let hidden_curly_bracket_content
+    // ({ hidden_curly_bracket_content, converted_equation } = hide_all_curly_bracket_content(converted_equation))
 
-    converted_equation = wrap_all_non_square_bracket_ids_in_square_brackets(converted_equation)
+    // converted_equation = wrap_all_non_square_bracket_ids_in_square_brackets(converted_equation)
 
-    converted_equation = unhide_all_hidden_curly_bracket_content(hidden_curly_bracket_content, converted_equation)
-    converted_equation = unhide_all_hidden_ids(hidden_ids, converted_equation)
+    // converted_equation = unhide_all_hidden_curly_bracket_content(hidden_curly_bracket_content, converted_equation)
+    // converted_equation = unhide_all_hidden_ids(hidden_ids, converted_equation)
 
     return converted_equation
 }
