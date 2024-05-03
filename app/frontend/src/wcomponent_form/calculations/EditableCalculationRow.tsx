@@ -15,6 +15,7 @@ import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRo
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import { CSSProperties } from "preact/compat"
+import { EditableText } from "../../form/editable_text/EditableText"
 
 
 
@@ -129,7 +130,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
             {show_calc_value && <>
                 &nbsp;=&nbsp;
-                <EditableTextSingleLine
+                <EditableText
                     placeholder="Calculation"
                     hide_label={true}
                     value={editing ? calc.value : make_calculation_safe_for_rich_text(calc.value)}
