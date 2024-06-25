@@ -20,69 +20,72 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
 
 
-    calculations = []
-    wcomponents_by_id = {}
-    expected_calculation_result = []
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    test(calculation_result, expected_calculation_result, "No calculations should return no results")
+    describe("basic functionality", () =>
+    {
+        calculations = []
+        wcomponents_by_id = {}
+        expected_calculation_result = []
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        test(calculation_result, expected_calculation_result, "No calculations should return no results")
 
 
 
-    calculations = [
-        { id: 0, name: "A", value: `3` },
-        { id: 1, name: "B", value: `4` },
-        { id: 2, name: "C", value: `[A] + [B]` },
-    ]
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    expected_calculation_result = [
-        { value: 3, units: "" },
-        { value: 4, units: "" },
-        { value: 7, units: "" },
-    ]
-    test(calculation_result, expected_calculation_result, "3 simple calculations should return 3 results")
+        calculations = [
+            { id: 0, name: "A", value: `3` },
+            { id: 1, name: "B", value: `4` },
+            { id: 2, name: "C", value: `[A] + [B]` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 3, units: "" },
+            { value: 4, units: "" },
+            { value: 7, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "3 simple calculations should return 3 results")
 
 
 
-    calculations = [
-        { id: 0,  name: "A", value: `3 + 1` },
-        { id: 1,  name: "C", value: `[A] + [some_undeclared_variable]` },
-        { id: 2,  name: "D", value: `5 + 1` },
-    ]
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    expected_calculation_result = [
-        { value: 3 + 1, units: "" },
-        { value: undefined, error: "The primitive [some_undeclared_variable] could not be found.", units: "" },
-        { value: 5 + 1, units: "" },
-    ]
-    test(calculation_result, expected_calculation_result, "Failure to find a value should still perform other valid calculations")
+        calculations = [
+            { id: 0,  name: "A", value: `3 + 1` },
+            { id: 1,  name: "C", value: `[A] + [some_undeclared_variable]` },
+            { id: 2,  name: "D", value: `5 + 1` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 3 + 1, units: "" },
+            { value: undefined, error: "The primitive [some_undeclared_variable] could not be found.", units: "" },
+            { value: 5 + 1, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "Failure to find a value should still perform other valid calculations")
 
 
 
-    calculations = [
-        { id: 0,  name: "A", value: `1 + 1` },
-        { id: 1,  name: "A", value: `[A] * 2` },
-        { id: 2,  name: "A", value: `[A] * 2` },
-    ]
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    expected_calculation_result = [
-        { value: 1 + 1, units: "" },
-        { value: 4, units: "" },
-        { value: 8, units: "" },
-    ]
-    test(calculation_result, expected_calculation_result, "Can cope with self reference")
+        calculations = [
+            { id: 0,  name: "A", value: `1 + 1` },
+            { id: 1,  name: "A", value: `[A] * 2` },
+            { id: 2,  name: "A", value: `[A] * 2` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 1 + 1, units: "" },
+            { value: 4, units: "" },
+            { value: 8, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can cope with self reference")
 
 
 
-    calculations = [
-        { id: 0, name: " A ", value: `1 + 1` },
-        { id: 1, name: "B", value: `[ A ] * 2` },
-    ]
-    calculation_result = perform_calculations(calculations, wcomponents_by_id)
-    expected_calculation_result = [
-        { value: 1 + 1, units: "" },
-        { value: 4, units: "" },
-    ]
-    test(calculation_result, expected_calculation_result, "Can cope with references with spaces")
+        calculations = [
+            { id: 0, name: " A ", value: `1 + 1` },
+            { id: 1, name: "B", value: `[ A ] * 2` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 1 + 1, units: "" },
+            { value: 4, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can cope with references with spaces")
+    })
 
 
 
