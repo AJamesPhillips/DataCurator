@@ -14,6 +14,7 @@ import type {
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 import type {
     WComponentBase,
+    WComponentCalculations,
     WComponentConnectionType,
     WComponentNodeBase,
     WComponentType,
@@ -286,6 +287,16 @@ export function wcomponent_has_legitimate_non_empty_state_VAP_sets (wcomponent: 
     return wcomponent_has_VAP_sets(wcomponent) && wcomponent.values_and_prediction_sets.length > 0 && wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)
 }
 
+
+export function wcomponent_has_calculations (wcomponent: WComponent): wcomponent is (WComponentNodeBase & WComponentCalculations)
+{
+    return (wcomponent as Partial<WComponentCalculations>).calculations !== undefined
+}
+
+export function wcomponent_allowed_calculations (wcomponent: WComponent): wcomponent is (WComponentNodeBase & Partial<WComponentCalculations>)
+{
+    return wcomponent_is_statev2(wcomponent) || wcomponent_is_action(wcomponent)
+}
 
 // export interface JudgementView
 // {

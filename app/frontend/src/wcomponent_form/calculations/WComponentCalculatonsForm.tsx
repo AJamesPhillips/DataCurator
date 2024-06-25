@@ -3,7 +3,6 @@ import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { Box } from "@mui/material"
 
-import type { WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import type { RootState } from "../../state/State"
 import { perform_calculations } from "../../calculations/perform_calculations"
 import { EditableCalculationRow } from "./EditableCalculationRow"
@@ -13,13 +12,14 @@ import { PlainCalculationObject } from "../../calculations/interfaces"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { index_is_in_bounds, insert_element_at_index, swap_elements } from "../../utils/list"
 import { EditableCalculationRowCommands } from "./EditableCalculationRowOptions"
+import { WComponentCalculations } from "../../wcomponent/interfaces/wcomponent_base"
 
 
 
 interface OwnProps
 {
-    wcomponent: WComponentNodeStateV2
-    upsert_wcomponent: (partial_wcomponent: Partial<WComponentNodeStateV2>) => void
+    wcomponent: Partial<WComponentCalculations>
+    upsert_wcomponent: (partial_wcomponent: Partial<WComponentCalculations>) => void
 }
 
 

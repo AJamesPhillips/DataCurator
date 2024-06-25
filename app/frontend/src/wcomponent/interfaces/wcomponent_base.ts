@@ -1,6 +1,7 @@
 import type { Base } from "../../shared/interfaces/base"
 import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
+import { PlainCalculationObject } from "../../calculations/interfaces"
 
 
 
@@ -47,4 +48,10 @@ export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPred
 {
     type: WComponentNodeType
     // encompassed_by: string
+}
+
+
+export interface WComponentCalculations
+{
+    calculations: PlainCalculationObject[]
 }

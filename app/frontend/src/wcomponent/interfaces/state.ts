@@ -2,7 +2,7 @@ import { PlainCalculationObject } from "../../calculations/interfaces"
 import type { Base } from "../../shared/interfaces/base"
 import type { TemporalUncertainty, PredictionBase } from "../../shared/uncertainty/interfaces"
 import type { ValuePossibilitiesById } from "./possibility"
-import type { WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentCalculations, WComponentNodeBase } from "./wcomponent_base"
 
 
 
@@ -29,7 +29,7 @@ export interface HasValuePossibilities
 // of "actions".  Also see the function `get_wcomponent_VAPs_represent` for an
 // example of the relationship between VAPsType and WComponentStateV2SubType.
 export type WComponentStateV2SubType = "boolean" | "number" /*| "datetime"*/ | "other"
-export interface WComponentNodeStateV2 extends WComponentNodeBase
+export interface WComponentNodeStateV2 extends WComponentNodeBase, Partial<WComponentCalculations>
 {
     type: "statev2"
     subtype: WComponentStateV2SubType | undefined
@@ -43,7 +43,9 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase
     // It certainly belongs on this component though.
     // 2023-10-03  As only this component has `subtype` then I think only this
     // component can have calculations
-    calculations?: PlainCalculationObject[]
+    // 2024-05-03  Exploring adding calculations to action component to allow for
+    // simulations to be "self documenting".
+    // `calculations?: PlainCalculationObject[]` is add by `Partial<WComponentCalculations>`
     units?: string
 }
 

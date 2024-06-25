@@ -1,5 +1,5 @@
 import type { HasObjectives } from "./judgement"
-import type { WComponentNodeBase } from "./wcomponent_base"
+import type { WComponentCalculations, WComponentNodeBase } from "./wcomponent_base"
 
 
 
@@ -21,7 +21,7 @@ export const action_statuses: ActionStatusType[] = [
 export const action_statuses_set = new Set(action_statuses)
 
 
-export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
+export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives, Partial<WComponentCalculations>
 {
     type: "action"
     // +++ 2021-05-24
@@ -53,4 +53,11 @@ export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives
     reason_for_status: string
 
     depends_on_action_ids: string[]
+
+    // 2024-05-03  Exploring adding calculations to action component to allow for
+    // simulations to be "self documenting".
+    // I don't think it needs to have subtype or units as one action can have
+    // multiple calculations and assign outputs back to multiple other states
+    // with different subtypes and units.
+    // `calculations?: PlainCalculationObject[]` is add by `Partial<WComponentCalculations>`
 }

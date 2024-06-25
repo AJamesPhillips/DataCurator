@@ -1,7 +1,13 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WComponent, wcomponent_is_statev2, wcomponent_is_state_value, WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
+import {
+    WComponent,
+    wcomponent_allowed_calculations,
+    wcomponent_has_calculations,
+    wcomponent_is_state_value,
+    WComponentIsAllowedToHaveStateVAPSets,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
 import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
@@ -47,10 +53,9 @@ function _WComponentStateForm (props: Props)
     const orig_values_and_prediction_sets = wcomponent.values_and_prediction_sets
     const orig_value_possibilities = wcomponent.value_possibilities
 
-
     return <>
-        {wcomponent_is_statev2(wcomponent) &&
-        (editing_allowed || (wcomponent.calculations?.length || 0) > 0) &&
+        {((editing_allowed && wcomponent_allowed_calculations(wcomponent))
+        || (wcomponent_has_calculations(wcomponent) && wcomponent.calculations.length > 0)) &&
         <WComponentCalculatonsForm
             wcomponent={wcomponent}
             upsert_wcomponent={upsert_wcomponent}
