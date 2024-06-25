@@ -31,7 +31,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
     calculations = [
         { id: 0, name: "A", value: `3` },
         { id: 1, name: "B", value: `4` },
-        { id: 2, name: "C", value: `[A] + B` },
+        { id: 2, name: "C", value: `[A] + [B]` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -45,7 +45,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
     calculations = [
         { id: 0,  name: "A", value: `3 + 1` },
-        { id: 1,  name: "C", value: `A + some_undeclared_variable` },
+        { id: 1,  name: "C", value: `[A] + [some_undeclared_variable]` },
         { id: 2,  name: "D", value: `5 + 1` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
@@ -60,8 +60,8 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
     calculations = [
         { id: 0,  name: "A", value: `1 + 1` },
-        { id: 1,  name: "A", value: `A * 2` },
-        { id: 2,  name: "A", value: `A * 2` },
+        { id: 1,  name: "A", value: `[A] * 2` },
+        { id: 2,  name: "A", value: `[A] * 2` },
     ]
     calculation_result = perform_calculations(calculations, wcomponents_by_id)
     expected_calculation_result = [
@@ -294,7 +294,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{90 £ / year}`, units: "" },
             { id: 1, name: "B", value: `{10 £ / year}`, units: "" },
-            { id: 2, name: "C", value: `A+B`, units: "" },
+            { id: 2, name: "C", value: `[A]+[B]`, units: "" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -309,7 +309,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `90`, units: "£ / year" },
             { id: 1, name: "B", value: `10`, units: "£ / year" },
-            { id: 2, name: "C", value: `A+B`, units: "£ / year" },
+            { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
@@ -324,7 +324,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `90`, units: "£ / year" },
             { id: 1, name: "B", value: `10`, units: "$ / year" },
-            { id: 2, name: "C", value: `A+B`, units: "£ / year" },
+            { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
