@@ -27,6 +27,8 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
                 size={props.size}
                 inputRef={on_render as any}
                 spellcheck={props.spellcheck}
+                disabled={props.disabled_input}
+                title={props.title}
             />
             // <input type="text"
             //     label={props.placeholder}
@@ -37,7 +39,7 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
             //     onKeyDown={on_key_down}
             //     ref={on_render}
             // />
-    }, [props.placeholder, props.size, props.spellcheck])
+    }, [props.placeholder, props.size, props.spellcheck, props.disabled_input, props.title])
 
 
     return <EditableTextCommon {...props} component={component} />

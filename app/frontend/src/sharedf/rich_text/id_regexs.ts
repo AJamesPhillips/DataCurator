@@ -4,6 +4,7 @@
 export const old_ids_regex = /.*?(@@\w*\d+)/g
 const uuids_regex = /^([0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12})$/gi
 export const double_at_mentioned_uuids_regex = /.*?(@@[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12})/gi
+export const only_double_at_mentioned_uuids_regex = /\s*(@@[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12})\s*/gi
 
 export function is_valid_uuid (uuid: string)
 {

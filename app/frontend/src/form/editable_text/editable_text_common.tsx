@@ -14,6 +14,7 @@ import type { CreationContext } from "../../creation_context/interfaces"
 export type EditableTextCommonOwnProps =
 {
     disabled?: boolean
+    disabled_input?: boolean // related to `disabled` but only disables the input field, keeps styling
     placeholder: string
     value: string
     conditional_on_change?: (new_value: string) => void
@@ -24,6 +25,7 @@ export type EditableTextCommonOwnProps =
     hide_label?: boolean
     style?: h.JSX.CSSProperties
     spellcheck?: boolean
+    title?: string
 } & ({
     modify_value_pre_on_blur?: undefined
     on_blur?: undefined

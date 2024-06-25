@@ -9,7 +9,7 @@ import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_c
 import { format_number_to_string } from "../../shared/format_number_to_string"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
-import { double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
+import { double_at_mentioned_uuids_regex, only_double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
@@ -84,6 +84,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
 
     const show_calc_value = editing || should_show_calc_value(calc.value)
+    const show_units_from_target_wcomponent = !!calc.value.match(only_double_at_mentioned_uuids_regex)
 
 
     const common_css: CSSProperties = { display: "flex" }
@@ -142,7 +143,13 @@ export function EditableCalculationRow (props: CalculationRowProps)
             {editing && <EditableTextSingleLine
                 placeholder="Units"
                 hide_label={true}
-                value={calc.units || ""}
+                disabled_input={show_units_from_target_wcomponent}
+                title={show_units_from_target_wcomponent ? "Editing disabled: edit units of referenced component" : undefined}
+                value={(show_units_from_target_wcomponent ? result?.units : calc.units) || ""}
+                modify_value_pre_on_blur={value =>
+                {
+                    return show_units_from_target_wcomponent ? (result?.units || "") : value
+                }}
                 on_blur={units => props.update_calculation({ ...calc, units: units || undefined })}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />}
