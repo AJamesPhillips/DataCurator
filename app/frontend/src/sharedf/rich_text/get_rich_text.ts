@@ -84,6 +84,8 @@ function replace_value_in_text (args: ReplaceValueInTextArgs)
         sim_ms: args.sim_ms,
     })
 
+    if (!value) return text
+
     text = text.replace(/\$\{value\}/g, `${value.values_string}`)
     return text
 }
