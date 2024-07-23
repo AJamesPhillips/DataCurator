@@ -4,6 +4,7 @@ import { error_to_string, SyncError } from "./errors"
 import { supabase_load_data } from "../supabase/supabase_load_data"
 import { ensure_any_knowledge_view_displayed } from "../../routing/utils/ensure_any_knowledge_view_displayed"
 import type { StoreType } from "../../store"
+import { ensure_a_knowledge_view_is_in_existence } from "../../specialised_objects/ensure_a_knowledge_view_is_in_existence"
 
 
 
@@ -40,9 +41,10 @@ export function load_state (store: StoreType)
     {
         dispatch(ACTIONS.specialised_object.replace_all_specialised_objects({ specialised_objects }))
 
-        ensure_any_knowledge_view_displayed(store)
-
         dispatch(ACTIONS.sync.update_sync_status({ status: "LOADED", data_type: "specialised_objects" }))
+
+        ensure_a_knowledge_view_is_in_existence(store)
+        ensure_any_knowledge_view_displayed(store)
     })
     .catch((error: SyncError | Error) =>
     {
