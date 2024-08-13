@@ -21,6 +21,11 @@ import { user_info_reducer } from "./user_info/reducer"
 
 
 
+const ignore_actions_types_when_logging = new Set<string>([
+    "change_route",
+    "set_highlighted_wcomponent",
+])
+
 export const root_reducer: Reducer<RootState, any> = ((state: RootState, action: AnyAction) =>
 {
     const initial_state = state
@@ -45,7 +50,10 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
     state = derived_state_reducer(initial_state, state)
     state = derived_meta_wcomponents_state_reducer(initial_state, state)
 
-    // console .log(action.type, action)
+    // if (!ignore_actions_types_when_logging.has(action.type))
+    // {
+    //     console .log(action.type, action)
+    // }
 
     ;(window as any).debug_state = state
 

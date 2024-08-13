@@ -77,7 +77,10 @@ function calculate_new_selected_ids (remove_ids: boolean, state: RootState, ids:
     }
     else
     {
-        all_selected_ids = state.meta_wcomponents.selected_wcomponent_ids_list.concat(ids)
+        const existing_ids = state.meta_wcomponents.selected_wcomponent_ids_list
+        const existing_ids_set = new Set(existing_ids)
+        const new_ids = ids.filter(id => !existing_ids_set.has(id))
+        all_selected_ids = existing_ids.concat(new_ids)
     }
 
     return all_selected_ids
