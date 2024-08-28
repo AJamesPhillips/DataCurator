@@ -16,6 +16,7 @@ yarn-error.log*
 node_modules
 compiled_all
 build
+.tmp*
 
 # Can be removed if repo is private
 deploy/inventory_file
