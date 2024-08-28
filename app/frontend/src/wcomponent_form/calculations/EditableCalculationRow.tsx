@@ -9,7 +9,10 @@ import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_c
 import { format_number_to_string } from "../../shared/format_number_to_string"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
-import { double_at_mentioned_uuids_regex, only_double_at_mentioned_uuids_regex } from "../../sharedf/rich_text/id_regexs"
+import {
+    double_at_mentioned_uuids_regex_capture_surrounding,
+    only_double_at_mentioned_uuids_regex,
+} from "../../sharedf/rich_text/id_regexs"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
@@ -85,7 +88,6 @@ export function EditableCalculationRow (props: CalculationRowProps)
 
     const show_calc_value = editing || should_show_calc_value(calc.value)
     const show_units_from_target_wcomponent = !!calc.value.match(only_double_at_mentioned_uuids_regex)
-
 
     const common_css: CSSProperties = { display: "flex" }
 
@@ -222,9 +224,16 @@ export function values_different (value1: string, value2: number)
 
 
 
-const CALULATION_SIGNS = /.*[\^*\/+\-()].*/g
+const CALULATION_SIGNS = /.*[\^*\/+\-()><=].*/g
 export function should_show_calc_value (value: string): boolean
 {
-    value = value.replaceAll(double_at_mentioned_uuids_regex, "")
-    return !!value.match(CALULATION_SIGNS)
+    let value_without_uuids = ""
+    while (true)
+    {
+        value_without_uuids = value.replace(double_at_mentioned_uuids_regex_capture_surrounding, "$1$3")
+        if (value_without_uuids === value) break
+        value = value_without_uuids
+    }
+
+    return !!value_without_uuids.match(CALULATION_SIGNS)
 }
