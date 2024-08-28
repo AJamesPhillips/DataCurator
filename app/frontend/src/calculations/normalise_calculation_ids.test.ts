@@ -4,7 +4,7 @@ import { normalise_calculation_ids } from "./normalise_calculation_ids"
 
 
 
-export const run_normalise_calculation_ids_tests = describe("normalise_calculation_ids", () =>
+export const run_normalise_calculation_ids_tests = describe.delay("normalise_calculation_ids", () =>
 {
     const id1 = uuid_v4_for_tests(1)
     let calculation_string = ""
