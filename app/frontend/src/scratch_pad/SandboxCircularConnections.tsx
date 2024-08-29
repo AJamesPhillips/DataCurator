@@ -2,7 +2,7 @@ import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { ConnectableCanvasNode } from "../canvas/ConnectableCanvasNode"
-import { CanvasConnnection } from "../canvas/connections/CanvasConnnection"
+import { CanvasConnection } from "../canvas/connections/CanvasConnection"
 
 
 
@@ -50,7 +50,7 @@ export function SandboxCircularConnections ()
 
         <svg width={1300} height={1000} style={{ zIndex: 1000, position: "absolute" }}>
             {circular_links && <g>
-                <CanvasConnnection
+                <CanvasConnection
                     from_node_position={origin}
                     from_connection_type={{ direction: "from", attribute: "state" }}
                     to_node_position={node_2_position}
@@ -58,7 +58,7 @@ export function SandboxCircularConnections ()
                     circular_links={true}
                     should_animate={false}
                 />
-                <CanvasConnnection
+                <CanvasConnection
                     from_node_position={node_2_position}
                     from_connection_type={{ direction: "from", attribute: "state" }}
                     to_node_position={origin}
@@ -69,7 +69,7 @@ export function SandboxCircularConnections ()
             </g>}
 
             {non_circular_links && <g>
-                <CanvasConnnection
+                <CanvasConnection
                     from_node_position={origin}
                     from_connection_type={{ direction: "from", attribute: "state" }}
                     to_node_position={node_2_position}
@@ -77,7 +77,7 @@ export function SandboxCircularConnections ()
                     circular_links={false}
                     should_animate={false}
                 />
-                <CanvasConnnection
+                <CanvasConnection
                     from_node_position={node_2_position}
                     from_connection_type={{ direction: "from", attribute: "state" }}
                     to_node_position={origin}

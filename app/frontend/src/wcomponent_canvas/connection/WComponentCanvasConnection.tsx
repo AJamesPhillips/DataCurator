@@ -2,7 +2,7 @@ import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentCanvasConnection.scss"
-import { CanvasConnnection } from "../../canvas/connections/CanvasConnnection"
+import { CanvasConnection } from "../../canvas/connections/CanvasConnection"
 import { ConnectionEndType } from "../../canvas/connections/ConnectionEnd"
 import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import type {
@@ -224,7 +224,7 @@ function _WComponentCanvasConnection (props: Props)
     let line_behaviour: ConnectionLineBehaviour | undefined = undefined
     if (wcomponent_is_plain_connection(wcomponent)) line_behaviour = wcomponent.line_behaviour
 
-    return <CanvasConnnection
+    return <CanvasConnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
         from_wcomponent_type={from_wc?.type}

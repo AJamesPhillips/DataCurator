@@ -1,7 +1,7 @@
 import { h } from "preact"
 import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
 
-import "./CanvasConnnection.scss"
+import "./CanvasConnection.scss"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
@@ -35,7 +35,7 @@ interface OwnProps {
 
 
 
-export function CanvasConnnection (props: OwnProps)
+export function CanvasConnection (props: OwnProps)
 {
     const [hovered, set_hovered] = useState(false)
     const current_position = useRef<DArgsWithProgress | undefined>(undefined)
