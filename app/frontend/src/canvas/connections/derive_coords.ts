@@ -15,21 +15,21 @@ const minimum_line_bow = 30
 const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
 
 
-export interface WComponentConnectionData
+export interface ConnectionTerminus
 {
     position: KnowledgeViewWComponentEntry
-    type: WComponentType
-    connection_type: ConnectionTerminalType
+    wcomponent_type: WComponentType
+    connection_terminal_type: ConnectionTerminalType
 }
 
 export type DeriveConnectionCoordsArgs = (
     (
         {
-            from_node_data: WComponentConnectionData
-            to_node_data: WComponentConnectionData | undefined
+            from_node_data: ConnectionTerminus
+            to_node_data: ConnectionTerminus | undefined
         } | {
-            from_node_data: WComponentConnectionData | undefined
-            to_node_data: WComponentConnectionData
+            from_node_data: ConnectionTerminus | undefined
+            to_node_data: ConnectionTerminus
         }
     ) & {
         line_behaviour?: ConnectionLineBehaviour
@@ -63,14 +63,14 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
     {
         from_node_data = from_node_data!
         to_node_data = deep_clone(from_node_data)!
-        to_node_data.connection_type.direction = opposite_direction(from_node_data.connection_type.direction)
+        to_node_data.connection_terminal_type.direction = opposite_direction(from_node_data.connection_terminal_type.direction)
         to_node_data.position.left += (NODE_WIDTH + CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE)
     }
     else if (!from_node_data)
     {
         // to_node_data = to_node_data!
         from_node_data = deep_clone(to_node_data)!
-        from_node_data.connection_type.direction = opposite_direction(to_node_data.connection_type.direction)
+        from_node_data.connection_terminal_type.direction = opposite_direction(to_node_data.connection_terminal_type.direction)
         from_node_data.position.left -= (NODE_WIDTH + CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE)
     }
     else
@@ -96,8 +96,8 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
         {
             offset_line_start_y = 30
             offset_connection_start_y = 30
-            to_node_data.connection_type = { ...to_node_data.connection_type, direction: "from" }
-            from_node_data.connection_type = { ...from_node_data.connection_type, direction: "to" }
+            to_node_data.connection_terminal_type = { ...to_node_data.connection_terminal_type, direction: "from" }
+            from_node_data.connection_terminal_type = { ...from_node_data.connection_terminal_type, direction: "to" }
             invert_end_angle = true
         }
         else
@@ -105,20 +105,20 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
             circular_link_from_below_to = to_node_data.position.top < from_node_data.position.top
             if (circular_link_from_below_to)
             {
-                from_node_data.connection_type = { ...from_node_data.connection_type, direction: "to" }
+                from_node_data.connection_terminal_type = { ...from_node_data.connection_terminal_type, direction: "to" }
                 offset_line_start_y = 30
             }
             else
             {
-                to_node_data.connection_type = { ...to_node_data.connection_type, direction: "from" }
+                to_node_data.connection_terminal_type = { ...to_node_data.connection_terminal_type, direction: "from" }
                 offset_connection_start_y = 30
                 invert_end_angle = true
             }
         }
     }
 
-    const from_connector_position = get_connection_point(from_node_data.position, from_node_data.connection_type)
-    const to_connector_position = get_connection_point(to_node_data.position, to_node_data.connection_type)
+    const from_connector_position = get_connection_point(from_node_data.position, from_node_data.connection_terminal_type)
+    const to_connector_position = get_connection_point(to_node_data.position, to_node_data.connection_terminal_type)
 
     const line_start_x = from_connector_position.left
     const line_start_y = -from_connector_position.top + offset_line_start_y
@@ -197,9 +197,9 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
 interface BezierMiddleArgs
 {
     point1: Vector
-    point2: Vector
     relative_control_point1: Vector
     relative_control_point2: Vector
+    point2: Vector
 }
 export function bezier_middle (args: BezierMiddleArgs)
 {

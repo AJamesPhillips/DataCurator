@@ -40,6 +40,7 @@ import {
 import { factory_on_click } from "../canvas_common"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 import { useMemo } from "preact/hooks"
+import { ConnectionTerminus } from "../../canvas/connections/derive_coords"
 
 
 
@@ -183,13 +184,38 @@ function _WComponentCanvasConnection (props: Props)
         from_node_position, to_node_position, from_attribute, to_attribute
     } = get_connection_terminal_node_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
 
-    const { from_connection_type, to_connection_type } = useMemo(() =>
+    const { from_connection_terminal_type, to_connection_terminal_type } = useMemo(() =>
     {
-        const from_connection_type: ConnectionTerminalType = { direction: "from", attribute: from_attribute }
-        const to_connection_type: ConnectionTerminalType = { direction: "to", attribute: to_attribute }
+        const from_connection_terminal_type: ConnectionTerminalType = { direction: "from", attribute: from_attribute }
+        const to_connection_terminal_type: ConnectionTerminalType = { direction: "to", attribute: to_attribute }
 
-        return { from_connection_type, to_connection_type }
+        return { from_connection_terminal_type, to_connection_terminal_type }
     }, [from_attribute, to_attribute])
+
+
+    const from_wcomponent_type = from_wc?.type
+    const to_wcomponent_type = to_wc?.type
+
+    const { from_node_data, to_node_data } = useMemo(() =>
+    {
+        const from_node_data: ConnectionTerminus | undefined = (from_node_position && from_wcomponent_type) ? {
+            position: from_node_position,
+            wcomponent_type: from_wcomponent_type,
+            connection_terminal_type: from_connection_terminal_type,
+        } : undefined
+
+        const to_node_data: ConnectionTerminus | undefined = (to_node_position && to_wcomponent_type) ? {
+            position: to_node_position,
+            wcomponent_type: to_wcomponent_type,
+            connection_terminal_type: to_connection_terminal_type,
+        } : undefined
+
+        return { from_node_data, to_node_data }
+    }, [
+        JSON.stringify(from_node_position), JSON.stringify(to_node_position),
+        from_wcomponent_type, to_wcomponent_type,
+        from_connection_terminal_type, to_connection_terminal_type,
+    ])
 
 
     const validity_opacity = calc_display_opacity({
@@ -225,12 +251,8 @@ function _WComponentCanvasConnection (props: Props)
     if (wcomponent_is_plain_connection(wcomponent)) line_behaviour = wcomponent.line_behaviour
 
     return <CanvasConnection
-        from_node_position={from_node_position}
-        to_node_position={to_node_position}
-        from_wcomponent_type={from_wc?.type}
-        to_wcomponent_type={to_wc?.type}
-        from_connection_type={from_connection_type}
-        to_connection_type={to_connection_type}
+        from_node_data={from_node_data}
+        to_node_data={to_node_data}
         on_click={on_click}
         on_pointer_over_out={over => props.set_highlighted_wcomponent({ id, highlighted: over })}
         line_behaviour={line_behaviour}

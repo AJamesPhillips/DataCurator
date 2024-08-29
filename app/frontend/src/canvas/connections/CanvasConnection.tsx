@@ -2,22 +2,16 @@ import { h } from "preact"
 import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
 
 import "./CanvasConnection.scss"
-import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
-import { derive_connection_coords, DeriveConnectionCoordsArgs, WComponentConnectionData } from "./derive_coords"
+import { derive_connection_coords, DeriveConnectionCoordsArgs, ConnectionTerminus } from "./derive_coords"
 import { bounded } from "../../shared/utils/bounded"
-import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 
 
 
 interface OwnProps {
-    from_node_position: KnowledgeViewWComponentEntry | undefined
-    to_node_position: KnowledgeViewWComponentEntry | undefined
-    from_wcomponent_type: WComponentType | undefined
-    to_wcomponent_type: WComponentType | undefined
-    from_connection_type: ConnectionTerminalType
-    to_connection_type: ConnectionTerminalType
+    from_node_data: ConnectionTerminus | undefined
+    to_node_data: ConnectionTerminus | undefined
     hidden?: boolean
     line_behaviour?: ConnectionLineBehaviour
     circular_links?: boolean
@@ -44,16 +38,13 @@ export function CanvasConnection (props: OwnProps)
 
 
     const {
-        from_node_position, to_node_position,
-        from_wcomponent_type, to_wcomponent_type,
-        from_connection_type, to_connection_type,
+        from_node_data, to_node_data,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
         should_animate = true,
         connection_end_type = ConnectionEndType.positive,
     } = props
-    if (!from_node_position && !to_node_position) return null
-
+    if (!from_node_data && !to_node_data) return null
 
 
     let opacity = props.intensity ?? 1
@@ -92,18 +83,6 @@ export function CanvasConnection (props: OwnProps)
 
     const result = useMemo(() =>
     {
-        const from_node_data: WComponentConnectionData | undefined = (from_node_position && from_wcomponent_type) ? {
-            position: from_node_position,
-            type: from_wcomponent_type,
-            connection_type: from_connection_type,
-        } : undefined
-
-        const to_node_data: WComponentConnectionData | undefined = (to_node_position && to_wcomponent_type) ? {
-            position: to_node_position,
-            type: to_wcomponent_type,
-            connection_type: to_connection_type,
-        } : undefined
-
         const fudged_end_size = end_size / 10
 
         let derived_connection_coords_args: DeriveConnectionCoordsArgs
@@ -157,9 +136,7 @@ export function CanvasConnection (props: OwnProps)
 
         return { connection_end_x, connection_end_y, end_angle, target_position }
     }, [
-        from_node_position, to_node_position,
-        from_wcomponent_type, to_wcomponent_type,
-        from_connection_type, to_connection_type,
+        from_node_data, to_node_data,
         line_behaviour, circular_links, end_size, connection_end_type,
     ])
 

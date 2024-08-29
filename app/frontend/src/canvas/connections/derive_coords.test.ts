@@ -58,13 +58,13 @@ function test_helper__get_args (): DeriveConnectionCoordsArgs
     return {
         from_node_data: {
             position: { top: 0, left: 0 },
-            type: "statev2",
-            connection_type: { direction: "from", attribute: "state" },
+            wcomponent_type: "statev2",
+            connection_terminal_type: { direction: "from", attribute: "state" },
         },
         to_node_data: {
             position: { top: 0, left: NODE_WIDTH + 100 },
-            type: "statev2",
-            connection_type: { direction: "to", attribute: "state" },
+            wcomponent_type: "statev2",
+            connection_terminal_type: { direction: "to", attribute: "state" },
         },
         line_behaviour: "straight",
         circular_links: false,
