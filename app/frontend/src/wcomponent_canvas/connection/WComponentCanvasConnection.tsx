@@ -40,7 +40,7 @@ import {
 import { factory_on_click } from "../canvas_common"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 import { useMemo } from "preact/hooks"
-import { ConnectionTerminus } from "../../canvas/connections/derive_coords"
+import { ConnectionTerminus } from "../../canvas/connections/terminal"
 
 
 

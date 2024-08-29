@@ -46,7 +46,7 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
                 sim_ms: created_at_ms,
             })
 
-            replacement = value.values_string
+            replacement = value?.values_string || ""
         }
         else
         {

@@ -1,8 +1,8 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { ConnectableCanvasNode } from "../canvas/ConnectableCanvasNode"
 import { CanvasConnection } from "../canvas/connections/CanvasConnection"
+import { ConnectionTerminus } from "../canvas/connections/terminal"
 
 
 
@@ -28,6 +28,18 @@ export function SandboxCircularConnections ()
 
     const node_2_position = { left: x, top: y }
 
+    const connection_from_component: ConnectionTerminus = {
+        position: origin,
+        wcomponent_type: "statev2",
+        connection_terminal_type: { direction: "from", attribute: "state" },
+    }
+
+    const connection_to_component: ConnectionTerminus = {
+        position: origin,
+        wcomponent_type: "statev2",
+        connection_terminal_type: { direction: "to", attribute: "state" },
+    }
+
     return <div
         style={{ width: "100%", height: "100%" }}
         onMouseMove={e =>
@@ -51,18 +63,14 @@ export function SandboxCircularConnections ()
         <svg width={1300} height={1000} style={{ zIndex: 1000, position: "absolute" }}>
             {circular_links && <g>
                 <CanvasConnection
-                    from_node_position={origin}
-                    from_connection_type={{ direction: "from", attribute: "state" }}
-                    to_node_position={node_2_position}
-                    to_connection_type={{ direction: "to", attribute: "state" }}
+                    connection_from_component={connection_from_component}
+                    connection_to_component={{ ...connection_to_component, position: node_2_position }}
                     circular_links={true}
                     should_animate={false}
                 />
                 <CanvasConnection
-                    from_node_position={node_2_position}
-                    from_connection_type={{ direction: "from", attribute: "state" }}
-                    to_node_position={origin}
-                    to_connection_type={{ direction: "to", attribute: "state" }}
+                    connection_from_component={{ ...connection_from_component, position: node_2_position }}
+                    connection_to_component={connection_to_component}
                     circular_links={true}
                     should_animate={false}
                 />
@@ -70,18 +78,14 @@ export function SandboxCircularConnections ()
 
             {non_circular_links && <g>
                 <CanvasConnection
-                    from_node_position={origin}
-                    from_connection_type={{ direction: "from", attribute: "state" }}
-                    to_node_position={node_2_position}
-                    to_connection_type={{ direction: "to", attribute: "state" }}
+                    connection_from_component={connection_from_component}
+                    connection_to_component={{ ...connection_to_component, position: node_2_position }}
                     circular_links={false}
                     should_animate={false}
                 />
                 <CanvasConnection
-                    from_node_position={node_2_position}
-                    from_connection_type={{ direction: "from", attribute: "state" }}
-                    to_node_position={origin}
-                    to_connection_type={{ direction: "to", attribute: "state" }}
+                    connection_from_component={{ ...connection_from_component, position: node_2_position }}
+                    connection_to_component={connection_to_component}
                     circular_links={false}
                     should_animate={false}
                 />
