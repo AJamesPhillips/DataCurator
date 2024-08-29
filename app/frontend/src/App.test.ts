@@ -5,6 +5,7 @@ import { run_normalise_calculation_ids_tests } from "./calculations/normalise_ca
 import { run_normalise_calculation_numbers_tests } from "./calculations/normalise_calculation_numbers.test"
 import { run_perform_calculations_test } from "./calculations/perform_calculations.test"
 import { test_get_angle } from "./canvas/connections/angles"
+import { test_derive_connection_coords } from "./canvas/connections/derive_coords.test"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
 import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils.test"
@@ -26,6 +27,7 @@ import { run_replace_normal_ids_tests, test_get_ids_from_text } from "./sharedf/
 import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type.test"
 import { run_get_composed_wc_id_maps_object_tests } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
+import { test_knowledge_views_derived_reducer } from "./state/derived/knowledge_views/knowledge_views_derived_reducer.test"
 import { test_merge_routing_state } from "./state/routing/merge_routing_state"
 import { test_routing_state_to_string } from "./state/routing/routing"
 import { run_specialised_objects_accessors_tests } from "./state/specialised_objects/accessors.test"
@@ -83,6 +85,8 @@ function run_all_tests ()
     run_get_wcomponent_status_in_knowledge_view_tests()
     run_parse_value_tests()
 
+    test_derive_connection_coords()
+    test_knowledge_views_derived_reducer()
     test_calculate_new_zoom_xy()
     test_get_angle()
     test_correct_datetime_for_local_time_zone()

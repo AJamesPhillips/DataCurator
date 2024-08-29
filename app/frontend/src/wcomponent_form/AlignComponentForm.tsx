@@ -22,14 +22,20 @@ type OwnProps = {
 }
 
 
-const map_state = (state: RootState) =>
+const map_state = (state: RootState, props: OwnProps) =>
 {
     const kv = get_current_knowledge_view_from_state(state)
     const knowledge_view_id = kv?.id
 
+    const wcomponent_ids = props.wcomponent_ids || [props.wcomponent_id]
+    const wcomponent_node_present = !!wcomponent_ids.find(id => state.derived.wcomponent_ids_by_type.any_node.has(id))
+    const wcomponent_link_present = !!wcomponent_ids.find(id => state.derived.wcomponent_ids_by_type.any_link.has(id))
+
     return {
         knowledge_view_id,
         kv,
+        wcomponent_node_present,
+        wcomponent_link_present,
     }
 }
 
@@ -64,32 +70,44 @@ function _AlignComponentForm (props: Props)
 
     return <div>
         <h3>Align</h3>
-        <Button
-            disabled={!knowledge_view_id}
-            value="Snap to grid"
-            onClick={() =>
-            {
-                if (!knowledge_view_id) return
-                props.snap_to_grid_knowledge_view_entries({ wcomponent_ids: ids, knowledge_view_id })
-            }}
-            is_left={true}
-        />
-        &nbsp;
-        <ButtonSnapXToDatetime {...props} />
-        &nbsp;
-        <Button
-            disabled={!knowledge_view_id}
-            value="Bring here"
-            onClick={() =>
-            {
-                if (!knowledge_view_id) return
+        {props.wcomponent_node_present && <>
+            <Button
+                disabled={!knowledge_view_id}
+                value="Snap to grid"
+                onClick={() =>
+                {
+                    if (!knowledge_view_id) return
+                    props.snap_to_grid_knowledge_view_entries({ wcomponent_ids: ids, knowledge_view_id })
+                }}
+                is_left={true}
+            />
+            &nbsp;
+            <ButtonSnapXToDatetime {...props} />
+            &nbsp;
+            <Button
+                disabled={!knowledge_view_id}
+                value="Bring here"
+                onClick={() =>
+                {
+                    if (!knowledge_view_id) return
 
-                const state = get_store().getState()
-                const override_entry = get_middle_of_screen(state)
-                props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, override_entry })
-            }}
-            is_left={true}
-        />
+                    const state = get_store().getState()
+                    const override_entry = get_middle_of_screen(state)
+                    props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, override_entry })
+                }}
+                is_left={true}
+            />
+        </>}
+
+        {/* {props.wcomponent_node_present && props.wcomponent_link_present && <br/>}
+
+        {props.wcomponent_link_present && <>
+            {/ *
+                todo: implement some controls to cause links to update their
+                locations on the canvas so that other links can join to/from
+                them.
+            * /}
+        </>} */}
 
         <br />
 

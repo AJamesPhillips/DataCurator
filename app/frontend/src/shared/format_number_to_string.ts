@@ -1,5 +1,6 @@
 import { format_number_to_significant_figures } from "./format_number_to_significant_figures"
 import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "./types"
+import { round_to_max_significant_figures } from "./utils/number"
 
 
 
@@ -46,15 +47,6 @@ export function format_number_to_string (num: number, max_significant_figures: n
     formatted_number = formatted_number.replace("e+", "e").trim()
 
     return formatted_number
-}
-
-
-function round_to_max_significant_figures (num: number, max_significant_figures: number): number
-{
-    if (num === 0) return 0
-
-    const multiplier = Math.pow(10, max_significant_figures - Math.floor(Math.log10(Math.abs(num))) - 1)
-    return Math.round(num * multiplier) / multiplier
 }
 
 

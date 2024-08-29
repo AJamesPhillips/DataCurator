@@ -1,34 +1,83 @@
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionLineBehaviour, ConnectionTerminalDirectionType, ConnectionTerminalType, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_angle, rads } from "../../utils/angles"
 import { get_connection_point } from "./terminal"
 import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
 import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
+import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
+import { deep_clone } from "../../utils/object"
 
 
 
 const NODE_WIDTH_plus_fudge = NODE_WIDTH + 45
 const minimum_line_bow = 30
+const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
 
 
-interface DeriveCoordsArgs
+export interface WComponentConnectionData
 {
-    from_node_position: KnowledgeViewWComponentEntry
-    to_node_position: KnowledgeViewWComponentEntry
-    from_connection_type: ConnectionTerminalType
-    to_connection_type: ConnectionTerminalType
-    line_behaviour?: ConnectionLineBehaviour
-    circular_links?: boolean
-    end_size: number
-    connection_end_type: ConnectionEndType
+    position: KnowledgeViewWComponentEntry
+    type: WComponentType
+    connection_type: ConnectionTerminalType
 }
-export function derive_coords (args: DeriveCoordsArgs )
+
+export type DeriveConnectionCoordsArgs = (
+    (
+        {
+            from_node_data: WComponentConnectionData
+            to_node_data: WComponentConnectionData | undefined
+        } | {
+            from_node_data: WComponentConnectionData | undefined
+            to_node_data: WComponentConnectionData
+        }
+    ) & {
+        line_behaviour?: ConnectionLineBehaviour
+        circular_links?: boolean
+        end_size: number
+        connection_end_type: ConnectionEndType
+    }
+)
+
+export interface DeriveConnectionCoordsReturn
+{
+    x1: number
+    y1: number
+    xe2: number
+    ye2: number
+    xo2: number
+    yo2: number
+    relative_control_point1: Vector
+    relative_control_point2: Vector
+    end_angle: number
+}
+
+export function derive_connection_coords (args: DeriveConnectionCoordsArgs): DeriveConnectionCoordsReturn
 {
     let {
-        from_node_position, to_node_position, from_connection_type, to_connection_type,
+        from_node_data, to_node_data,
         line_behaviour, circular_links, end_size, connection_end_type,
     } = args
+
+    if (!to_node_data)
+    {
+        from_node_data = from_node_data!
+        to_node_data = deep_clone(from_node_data)!
+        to_node_data.connection_type.direction = opposite_direction(from_node_data.connection_type.direction)
+        to_node_data.position.left += (NODE_WIDTH + CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE)
+    }
+    else if (!from_node_data)
+    {
+        // to_node_data = to_node_data!
+        from_node_data = deep_clone(to_node_data)!
+        from_node_data.connection_type.direction = opposite_direction(to_node_data.connection_type.direction)
+        from_node_data.position.left -= (NODE_WIDTH + CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE)
+    }
+    else
+    {
+        from_node_data = from_node_data
+        to_node_data = to_node_data
+    }
 
     let y1_offset = 0
     let y2_offset = 0
@@ -39,37 +88,37 @@ export function derive_coords (args: DeriveCoordsArgs )
     let invert_end_angle = false
     if (circular_links)
     {
-        if (from_node_position.left < (to_node_position.left - NODE_WIDTH_plus_fudge))
+        if (from_node_data.position.left < (to_node_data.position.left - NODE_WIDTH_plus_fudge))
         {
 
         }
-        else if (to_node_position.left < (from_node_position.left - NODE_WIDTH_plus_fudge))
+        else if (to_node_data.position.left < (from_node_data.position.left - NODE_WIDTH_plus_fudge))
         {
             y1_offset = 30
             y2_offset = 30
-            to_connection_type = { ...to_connection_type, direction: "from" }
-            from_connection_type = { ...from_connection_type, direction: "to" }
+            to_node_data.connection_type = { ...to_node_data.connection_type, direction: "from" }
+            from_node_data.connection_type = { ...from_node_data.connection_type, direction: "to" }
             invert_end_angle = true
         }
         else
         {
-            circular_link_from_below_to = to_node_position.top < from_node_position.top
+            circular_link_from_below_to = to_node_data.position.top < from_node_data.position.top
             if (circular_link_from_below_to)
             {
-                from_connection_type = { ...from_connection_type, direction: "to" }
+                from_node_data.connection_type = { ...from_node_data.connection_type, direction: "to" }
                 y1_offset = 30
             }
             else
             {
-                to_connection_type = { ...to_connection_type, direction: "from" }
+                to_node_data.connection_type = { ...to_node_data.connection_type, direction: "from" }
                 y2_offset = 30
                 invert_end_angle = true
             }
         }
     }
 
-    const from_connector_position = get_connection_point(from_node_position, from_connection_type)
-    const to_connector_position = get_connection_point(to_node_position, to_connection_type)
+    const from_connector_position = get_connection_point(from_node_data.position, from_node_data.connection_type)
+    const to_connector_position = get_connection_point(to_node_data.position, to_node_data.connection_type)
 
     const x1 = from_connector_position.left
     const y1 = -from_connector_position.top + y1_offset
@@ -135,7 +184,11 @@ export function derive_coords (args: DeriveCoordsArgs )
 
 
     return {
-        x1, y1, xe2, ye2, xo2, yo2, relative_control_point1, relative_control_point2, end_angle
+        x1, y1,
+        xe2, ye2,
+        xo2, yo2,
+        relative_control_point1, relative_control_point2,
+        end_angle,
     }
 }
 
@@ -181,4 +234,11 @@ function average_point (point1: Vector, point2: Vector): Vector
         x: (point1.x + point2.x) / 2,
         y: (point1.y + point2.y) / 2,
     }
+}
+
+
+function opposite_direction (direction: ConnectionTerminalDirectionType): ConnectionTerminalDirectionType
+{
+    if (direction === "from") return "to"
+    return "from"
 }

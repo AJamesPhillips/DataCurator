@@ -5,14 +5,17 @@ import "./CanvasConnnection.scss"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import type { ConnectionLineBehaviour, ConnectionTerminalType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
-import { derive_coords } from "./derive_coords"
+import { derive_connection_coords, DeriveConnectionCoordsArgs, WComponentConnectionData } from "./derive_coords"
 import { bounded } from "../../shared/utils/bounded"
+import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 
 
 
 interface OwnProps {
     from_node_position: KnowledgeViewWComponentEntry | undefined
     to_node_position: KnowledgeViewWComponentEntry | undefined
+    from_wcomponent_type: WComponentType | undefined
+    to_wcomponent_type: WComponentType | undefined
     from_connection_type: ConnectionTerminalType
     to_connection_type: ConnectionTerminalType
     hidden?: boolean
@@ -41,13 +44,15 @@ export function CanvasConnnection (props: OwnProps)
 
 
     const {
-        from_node_position, to_node_position, from_connection_type, to_connection_type,
+        from_node_position, to_node_position,
+        from_wcomponent_type, to_wcomponent_type,
+        from_connection_type, to_connection_type,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
         should_animate = true,
         connection_end_type = ConnectionEndType.positive,
     } = props
-    if (!from_node_position || !to_node_position) return null
+    if (!from_node_position && !to_node_position) return null
 
 
 
@@ -85,8 +90,47 @@ export function CanvasConnnection (props: OwnProps)
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
 
-    const { xe2, ye2, end_angle, target_position } = useMemo(() =>
+    const result = useMemo(() =>
     {
+        const from_node_data: WComponentConnectionData | undefined = (from_node_position && from_wcomponent_type) ? {
+            position: from_node_position,
+            type: from_wcomponent_type,
+            connection_type: from_connection_type,
+        } : undefined
+
+        const to_node_data: WComponentConnectionData | undefined = (to_node_position && to_wcomponent_type) ? {
+            position: to_node_position,
+            type: to_wcomponent_type,
+            connection_type: to_connection_type,
+        } : undefined
+
+        const fudged_end_size = end_size / 10
+
+        let derived_connection_coords_args: DeriveConnectionCoordsArgs
+        if (!from_node_data)
+        {
+            if (!to_node_data) return null
+            derived_connection_coords_args = {
+                from_node_data,
+                to_node_data,
+                line_behaviour,
+                circular_links,
+                end_size: fudged_end_size,
+                connection_end_type,
+            }
+        }
+        else
+        {
+            derived_connection_coords_args = {
+                from_node_data,
+                to_node_data,
+                line_behaviour,
+                circular_links,
+                end_size: fudged_end_size,
+                connection_end_type,
+            }
+        }
+
         const {
             x1,
             y1,
@@ -97,10 +141,7 @@ export function CanvasConnnection (props: OwnProps)
             relative_control_point1,
             relative_control_point2,
             end_angle,
-        } = derive_coords({
-            from_node_position, to_node_position, from_connection_type, to_connection_type,
-            line_behaviour, circular_links, end_size: end_size / 10, connection_end_type,
-        })
+        } = derive_connection_coords(derived_connection_coords_args)
 
         const target_position: DArgsWithProgress = {
             x1,
@@ -116,9 +157,14 @@ export function CanvasConnnection (props: OwnProps)
 
         return { xe2, ye2, end_angle, target_position }
     }, [
-        from_node_position, to_node_position, from_connection_type, to_connection_type,
+        from_node_position, to_node_position,
+        from_wcomponent_type, to_wcomponent_type,
+        from_connection_type, to_connection_type,
         line_behaviour, circular_links, end_size, connection_end_type,
     ])
+
+    if (!result) return null
+    const { xe2, ye2, end_angle, target_position } = result
 
     const d_args = should_animate ? (current_position.current || target_position) : target_position
 

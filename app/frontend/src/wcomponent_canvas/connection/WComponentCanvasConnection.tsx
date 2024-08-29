@@ -114,6 +114,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         current_composed_knowledge_view: composed_kv,
         wcomponent,
+        from_wc,
+        to_wc,
         connection_effect,
         validity_value,
         is_current_item: state.routing.item_id === wcomponent_id,
@@ -146,6 +148,7 @@ function _WComponentCanvasConnection (props: Props)
 {
     const {
         id, current_composed_knowledge_view, wcomponent,
+        from_wc, to_wc,
         is_current_item, is_highlighted, is_selected,
         validity_value, connection_effect,
         shift_or_control_keys_are_down,
@@ -224,6 +227,8 @@ function _WComponentCanvasConnection (props: Props)
     return <CanvasConnnection
         from_node_position={from_node_position}
         to_node_position={to_node_position}
+        from_wcomponent_type={from_wc?.type}
+        to_wcomponent_type={to_wc?.type}
         from_connection_type={from_connection_type}
         to_connection_type={to_connection_type}
         on_click={on_click}

@@ -43,3 +43,11 @@ export type DeepPartial<T> = {
         ? Array<DeepPartial<I>>
         : DeepPartial<T[P]>
 }
+
+
+// Quick but fragile implementation
+// todo: add tests once this starts failing
+export function deep_clone <T extends any> (obj: T): T
+{
+    return JSON.parse(JSON.stringify(obj))
+}
