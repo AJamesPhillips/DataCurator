@@ -4,8 +4,9 @@ import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
 import "./CanvasConnection.scss"
 import type { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
-import { derive_connection_coords, DeriveConnectionCoordsArgs, ConnectionTerminus } from "./derive_coords"
+import { derive_connection_coords, DeriveConnectionCoordsArgs } from "./derive_coords"
 import { bounded } from "../../shared/utils/bounded"
+import { ConnectionTerminus } from "./terminal"
 
 
 

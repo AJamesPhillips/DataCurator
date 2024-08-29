@@ -1,12 +1,14 @@
 import type { h } from "preact"
 
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type {
-    ConnectionTerminalAttributeType,
-    ConnectionTerminalType,
+import {
+    wcomponent_type_is_plain_connection,
+    type ConnectionTerminalAttributeType,
+    type ConnectionTerminalType,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { CanvasPoint } from "../interfaces"
 import { NODE_WIDTH } from "../position_utils"
+import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 
 
 
@@ -49,11 +51,29 @@ export function get_top_left_for_terminal_type (type: ConnectionTerminalType, no
 }
 
 
-
-export function get_connection_point (objective_node_position: KnowledgeViewWComponentEntry, type: ConnectionTerminalType): CanvasPoint
+export interface ConnectionTerminus
 {
+    position: KnowledgeViewWComponentEntry
+    wcomponent_type: WComponentType
+    connection_terminal_type: ConnectionTerminalType
+}
+
+export function get_connection_point (connection_terminal: ConnectionTerminus): CanvasPoint
+{
+    const {
+        position: objective_node_position,
+        wcomponent_type,
+        connection_terminal_type: type,
+    } = connection_terminal
+
     const node_scale = objective_node_position.s || 1
     let { left, top } = get_top_left_for_terminal_type(type, node_scale)
+
+    const is_connection = wcomponent_type_is_plain_connection(wcomponent_type)
+    if (is_connection)
+    {
+        left = 0
+    }
 
     left += objective_node_position.left + connection_radius
     top += objective_node_position.top + connection_radius

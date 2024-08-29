@@ -1,12 +1,9 @@
-import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
-import type { ConnectionLineBehaviour, ConnectionTerminalDirectionType, ConnectionTerminalType, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_type_is_plain_connection, type ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_angle, rads } from "../../utils/angles"
-import { get_connection_point } from "./terminal"
+import { ConnectionTerminus, get_connection_point } from "./terminal"
 import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
 import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
-import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
-import { deep_clone } from "../../utils/object"
 import { CanvasPoint } from "../interfaces"
 
 
@@ -16,13 +13,6 @@ const OFFSET_Y_CONNECTION = 30
 const MINIMUM_LINE_BOW = 30
 const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
 
-
-export interface ConnectionTerminus
-{
-    position: KnowledgeViewWComponentEntry
-    wcomponent_type: WComponentType
-    connection_terminal_type: ConnectionTerminalType
-}
 
 export type DeriveConnectionCoordsArgs = (
     (
@@ -38,6 +28,7 @@ export type DeriveConnectionCoordsArgs = (
         circular_links?: boolean
         end_size: number
         connection_end_type: ConnectionEndType
+        console_warn?: (args: any[]) => void
     }
 )
 
@@ -56,12 +47,18 @@ export interface DeriveConnectionCoordsReturn
 
 export function derive_connection_coords (args: DeriveConnectionCoordsArgs): DeriveConnectionCoordsReturn
 {
+    if (args.end_size === 0)
+    {
+        ;(args.console_warn || console.warn)(`Invalid connection end_size "${args.end_size}", defaulting to 1`)
+        args.end_size = 1 // Maybe we should just default to something very small like 0.001, or allow 0?
+    }
+
     const {
         connection_from_component, connection_to_component,
         line_behaviour, circular_links, end_size, connection_end_type,
     } = args
 
-    if (!connection_to_component || !connection_from_component)
+    if (!connection_from_component || !connection_to_component)
     {
         return derive_connection_coords_when_missing_one_node(args)
     }
@@ -71,45 +68,63 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
     let x_control1_factor = 1
     let x_control2_factor = 1
 
+    const is_from_connection = wcomponent_type_is_plain_connection(connection_from_component.wcomponent_type)
+    const is_to_connection = wcomponent_type_is_plain_connection(connection_to_component.wcomponent_type)
+    let offset_y_connection = (is_from_connection || is_to_connection) ? 0 : OFFSET_Y_CONNECTION
+
     let circular_link_from_below_to: boolean | undefined = undefined
     let invert_end_angle = false
     if (circular_links)
     {
         if (connection_from_component.position.left < (connection_to_component.position.left - NODE_WIDTH_plus_fudge))
         {
+            // There's no overlap
+            //  [from]
+            //          [ to ]
 
         }
         else if (connection_to_component.position.left < (connection_from_component.position.left - NODE_WIDTH_plus_fudge))
         {
-            offset_line_start_y = OFFSET_Y_CONNECTION
-            offset_connection_start_y = OFFSET_Y_CONNECTION
+            // There's no overlap in the opposite direction
+            //  [ to ]
+            //          [from]
+            offset_line_start_y = offset_y_connection
+            offset_connection_start_y = offset_y_connection
             connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, direction: "from" }
             connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, direction: "to" }
             invert_end_angle = true
         }
         else
         {
+            // There's some kind of overlap, either of these to options
+            //  [from]          |     [ to ]
+            //     [ to ]       |        [from]
             circular_link_from_below_to = connection_to_component.position.top < connection_from_component.position.top
             if (circular_link_from_below_to)
             {
+                // `from` component vertical position is above `to` component
+                // [from]
+                // [ to ]
                 connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, direction: "to" }
-                offset_line_start_y = OFFSET_Y_CONNECTION
+                offset_line_start_y = offset_y_connection
             }
             else
             {
+                // `from` component vertical position is equal to or below `to` component
+                //  [ to ] [from]        |   [ to ]
+                //                       |   [from]
                 connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, direction: "from" }
-                offset_connection_start_y = OFFSET_Y_CONNECTION
+                offset_connection_start_y = offset_y_connection
                 invert_end_angle = true
             }
         }
     }
 
-    const from_connector_position = get_connection_point(connection_from_component.position, connection_from_component.connection_terminal_type)
-    const to_connector_position = get_connection_point(connection_to_component.position, connection_to_component.connection_terminal_type)
-
+    const from_connector_position = get_connection_point(connection_from_component)
     const line_start_x = from_connector_position.left
     const line_start_y = -from_connector_position.top + offset_line_start_y
 
+    const to_connector_position = get_connection_point(connection_to_component)
     const connection_end_x = to_connector_position.left
     const connection_end_y = -to_connector_position.top + offset_connection_start_y
 
@@ -179,24 +194,26 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
 function derive_connection_coords_when_missing_one_node (args: DeriveConnectionCoordsArgs): DeriveConnectionCoordsReturn
 {
     const {
-        connection_from_component, connection_to_component: connection_to_component,
+        connection_from_component, connection_to_component,
         line_behaviour, circular_links, end_size, connection_end_type,
     } = args
+
 
     let line_start_x = 0
     const relative_control_point1: Vector = { x: 0, y: 0 }
     const relative_control_point2 = relative_control_point1
 
+
     let connector_position: CanvasPoint
     if (!connection_from_component)
     {
         line_start_x = connection_to_component!.position.left - CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE
-        connector_position = get_connection_point(connection_to_component!.position, connection_to_component!.connection_terminal_type)
+        connector_position = get_connection_point(connection_to_component!)
     }
     else
     {
         line_start_x = connection_from_component.position.left + NODE_WIDTH
-        connector_position = get_connection_point(connection_from_component.position, connection_from_component.connection_terminal_type)
+        connector_position = get_connection_point(connection_from_component!)
     }
 
     const line_start_y = -connector_position.top

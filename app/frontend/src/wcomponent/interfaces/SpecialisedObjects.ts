@@ -186,6 +186,10 @@ export function wcomponent_is_plain_connection (wcomponent: WComponent | undefin
 {
     return wcomponent_is_causal_link(wcomponent) || wcomponent_is_relation_link(wcomponent)
 }
+export function wcomponent_type_is_plain_connection(wcomponent_type: WComponentType)
+{
+    return wcomponent_type === "causal_link" || wcomponent_type === "relation_link"
+}
 
 
 
