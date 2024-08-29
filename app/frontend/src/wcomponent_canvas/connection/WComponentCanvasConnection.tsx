@@ -196,21 +196,21 @@ function _WComponentCanvasConnection (props: Props)
     const from_wcomponent_type = from_wc?.type
     const to_wcomponent_type = to_wc?.type
 
-    const { from_node_data, to_node_data } = useMemo(() =>
+    const { connection_from_component, connection_to_component } = useMemo(() =>
     {
-        const from_node_data: ConnectionTerminus | undefined = (from_node_position && from_wcomponent_type) ? {
+        const connection_from_component: ConnectionTerminus | undefined = (from_node_position && from_wcomponent_type) ? {
             position: from_node_position,
             wcomponent_type: from_wcomponent_type,
             connection_terminal_type: from_connection_terminal_type,
         } : undefined
 
-        const to_node_data: ConnectionTerminus | undefined = (to_node_position && to_wcomponent_type) ? {
+        const connection_to_component: ConnectionTerminus | undefined = (to_node_position && to_wcomponent_type) ? {
             position: to_node_position,
             wcomponent_type: to_wcomponent_type,
             connection_terminal_type: to_connection_terminal_type,
         } : undefined
 
-        return { from_node_data, to_node_data }
+        return { connection_from_component, connection_to_component }
     }, [
         JSON.stringify(from_node_position), JSON.stringify(to_node_position),
         from_wcomponent_type, to_wcomponent_type,
@@ -251,8 +251,8 @@ function _WComponentCanvasConnection (props: Props)
     if (wcomponent_is_plain_connection(wcomponent)) line_behaviour = wcomponent.line_behaviour
 
     return <CanvasConnection
-        from_node_data={from_node_data}
-        to_node_data={to_node_data}
+        connection_from_component={connection_from_component}
+        connection_to_component={connection_to_component}
         on_click={on_click}
         on_pointer_over_out={over => props.set_highlighted_wcomponent({ id, highlighted: over })}
         line_behaviour={line_behaviour}

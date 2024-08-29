@@ -8,8 +8,8 @@ import { derive_connection_coords, DeriveConnectionCoordsArgs, DeriveConnectionC
 export const test_derive_connection_coords = describe("derive_connection_coords", () =>
 {
     let args = test_helper__get_args()
-    args.from_node_data!.position = { top: 0, left: 0 }
-    args.to_node_data!.position =   { top: 0, left: NODE_WIDTH + 100 }
+    args.connection_from_component!.position = { top: 0, left: 0 }
+    args.connection_to_component!.position =   { top: 0, left: NODE_WIDTH + 100 }
 
     let result = derive_connection_coords(args)
     test(test_helper__round_derived_connection_coords(result), {
@@ -23,8 +23,8 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
 
 
     args = test_helper__get_args()
-    args.from_node_data = undefined
-    args.to_node_data!.position = { top: 0, left: 0 }
+    args.connection_from_component = undefined
+    args.connection_to_component!.position = { top: 0, left: 0 }
     result = derive_connection_coords(args)
 
     test(test_helper__round_derived_connection_coords(result), {
@@ -38,8 +38,8 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
 
 
     args = test_helper__get_args()
-    args.from_node_data!.position = { top: 0, left: 0 }
-    args.to_node_data = undefined
+    args.connection_from_component!.position = { top: 0, left: 0 }
+    args.connection_to_component = undefined
     result = derive_connection_coords(args)
 
     test(test_helper__round_derived_connection_coords(result), {
@@ -56,12 +56,12 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
 function test_helper__get_args (): DeriveConnectionCoordsArgs
 {
     return {
-        from_node_data: {
+        connection_from_component: {
             position: { top: 0, left: 0 },
             wcomponent_type: "statev2",
             connection_terminal_type: { direction: "from", attribute: "state" },
         },
-        to_node_data: {
+        connection_to_component: {
             position: { top: 0, left: NODE_WIDTH + 100 },
             wcomponent_type: "statev2",
             connection_terminal_type: { direction: "to", attribute: "state" },

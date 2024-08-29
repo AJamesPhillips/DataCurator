@@ -10,8 +10,8 @@ import { bounded } from "../../shared/utils/bounded"
 
 
 interface OwnProps {
-    from_node_data: ConnectionTerminus | undefined
-    to_node_data: ConnectionTerminus | undefined
+    connection_from_component: ConnectionTerminus | undefined
+    connection_to_component: ConnectionTerminus | undefined
     hidden?: boolean
     line_behaviour?: ConnectionLineBehaviour
     circular_links?: boolean
@@ -38,13 +38,13 @@ export function CanvasConnection (props: OwnProps)
 
 
     const {
-        from_node_data, to_node_data,
+        connection_from_component, connection_to_component,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
         should_animate = true,
         connection_end_type = ConnectionEndType.positive,
     } = props
-    if (!from_node_data && !to_node_data) return null
+    if (!connection_from_component && !connection_to_component) return null
 
 
     let opacity = props.intensity ?? 1
@@ -86,12 +86,12 @@ export function CanvasConnection (props: OwnProps)
         const fudged_end_size = end_size / 10
 
         let derived_connection_coords_args: DeriveConnectionCoordsArgs
-        if (!from_node_data)
+        if (!connection_from_component)
         {
-            if (!to_node_data) return null
+            if (!connection_to_component) return null
             derived_connection_coords_args = {
-                from_node_data,
-                to_node_data,
+                connection_from_component,
+                connection_to_component,
                 line_behaviour,
                 circular_links,
                 end_size: fudged_end_size,
@@ -101,8 +101,8 @@ export function CanvasConnection (props: OwnProps)
         else
         {
             derived_connection_coords_args = {
-                from_node_data,
-                to_node_data,
+                connection_from_component,
+                connection_to_component,
                 line_behaviour,
                 circular_links,
                 end_size: fudged_end_size,
@@ -136,7 +136,7 @@ export function CanvasConnection (props: OwnProps)
 
         return { connection_end_x, connection_end_y, end_angle, target_position }
     }, [
-        from_node_data, to_node_data,
+        connection_from_component, connection_to_component,
         line_behaviour, circular_links, end_size, connection_end_type,
     ])
 
