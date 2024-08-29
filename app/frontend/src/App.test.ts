@@ -46,6 +46,7 @@ import { run_get_wcomponent_VAPs_represent_tests } from "./wcomponent/get_wcompo
 import { run_parse_value_tests } from "./wcomponent/value/parse_value.test"
 import { test_default_possible_values } from "./wcomponent/value_possibilities/default_possible_values"
 import { test_get_possibilities_from_VAP_sets } from "./wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
+import { test_calc_connection_wcomponent_should_display } from "./wcomponent_canvas/calc_should_display.test"
 import { test_get_wcomponent_state_UI_value } from "./wcomponent_derived/get_wcomponent_state_UI_value.test"
 import { test_get_wcomponent_state_value_and_probabilities } from "./wcomponent_derived/get_wcomponent_state_value_and_probabilities.test"
 import { test_partition_and_prune_items_by_datetimes_and_versions } from "./wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
@@ -85,6 +86,7 @@ function run_all_tests ()
     run_get_wcomponent_status_in_knowledge_view_tests()
     run_parse_value_tests()
 
+    test_calc_connection_wcomponent_should_display()
     test_derive_connection_coords()
     test_knowledge_views_derived_reducer()
     test_calculate_new_zoom_xy()

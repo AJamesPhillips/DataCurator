@@ -117,7 +117,7 @@ function get_certainty_for_wcomponent_event_at (args: GetCertaintyForWcomponentE
 
 
 
-interface CalculateConnectionCertaintyArgs
+export interface CalculateConnectionCertaintyArgs
 {
     wcomponent: WComponentConnection
     kv_entry: KnowledgeViewWComponentEntry | undefined
@@ -135,15 +135,16 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 {
     const { from_wc, from_wc__kv_entry, to_wc, to_wc__kv_entry } = args
 
+    const connection_validity_value = calc_wcomponent_should_display(args)
+    if (!connection_validity_value) return false
+
+
     // Allow connections to non-existant components as these components may exist in a different base
     if (!from_wc || !to_wc) return { display_certainty: 1 }
 
 
     if (!from_wc__kv_entry || !to_wc__kv_entry) return false
 
-
-    const connection_validity_value = calc_wcomponent_should_display(args)
-    if (!connection_validity_value) return false
 
     const from_node_validity_value = calc_wcomponent_should_display({
         ...args, wcomponent: from_wc, kv_entry: from_wc__kv_entry,
