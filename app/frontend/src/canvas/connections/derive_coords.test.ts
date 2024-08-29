@@ -13,11 +13,11 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
 
     let result = derive_connection_coords(args)
     test(test_helper__round_derived_connection_coords(result), {
-        x1: 250, y1: -77,
-        xe2: 350, ye2: -77,
-        xo2: 350, yo2: -77,
+        line_start_x: 250, line_start_y: -77,
         relative_control_point1: { x: 0, y: 0 },
         relative_control_point2: { x: 0, y: 0 },
+        line_end_x: 350, line_end_y: -77,
+        connection_end_x: 350, connection_end_y: -77,
         end_angle: 3.1,
     }, "straight line between two nodes")
 
@@ -28,11 +28,11 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
     result = derive_connection_coords(args)
 
     test(test_helper__round_derived_connection_coords(result), {
-        x1: -150, y1: -77,
-        xe2: 0, ye2: -77,
-        xo2: 0, yo2: -77,
+        line_start_x: -150, line_start_y: -77,
         relative_control_point1: { x: 0, y: 0 },
         relative_control_point2: { x: 0, y: 0 },
+        line_end_x: 0, line_end_y: -77,
+        connection_end_x: 0, connection_end_y: -77,
         end_angle: 3.1,
     }, "straight line to one node from nothing")
 
@@ -43,11 +43,11 @@ export const test_derive_connection_coords = describe("derive_connection_coords"
     result = derive_connection_coords(args)
 
     test(test_helper__round_derived_connection_coords(result), {
-        x1: 250, y1: -77,
-        xe2: 400, ye2: -77,
-        xo2: 400, yo2: -77,
+        line_start_x: 250, line_start_y: -77,
         relative_control_point1: { x: 0, y: 0 },
         relative_control_point2: { x: 0, y: 0 },
+        line_end_x: 400, line_end_y: -77,
+        connection_end_x: 400, connection_end_y: -77,
         end_angle: 3.1,
     }, "straight line from one node to nothing")
 })
@@ -77,12 +77,8 @@ function test_helper__get_args (): DeriveConnectionCoordsArgs
 function test_helper__round_derived_connection_coords (coords: DeriveConnectionCoordsReturn): DeriveConnectionCoordsReturn
 {
     return {
-        x1: round_to_max_significant_figures(coords.x1, 2),
-        y1: round_to_max_significant_figures(coords.y1, 2),
-        xe2: round_to_max_significant_figures(coords.xe2, 2),
-        ye2: round_to_max_significant_figures(coords.ye2, 2),
-        xo2: round_to_max_significant_figures(coords.xo2, 2),
-        yo2: round_to_max_significant_figures(coords.yo2, 2),
+        line_start_x: round_to_max_significant_figures(coords.line_start_x, 2),
+        line_start_y: round_to_max_significant_figures(coords.line_start_y, 2),
         relative_control_point1: {
             x: round_to_max_significant_figures(coords.relative_control_point1.x, 2),
             y: round_to_max_significant_figures(coords.relative_control_point1.y, 2),
@@ -91,6 +87,10 @@ function test_helper__round_derived_connection_coords (coords: DeriveConnectionC
             x: round_to_max_significant_figures(coords.relative_control_point2.x, 2),
             y: round_to_max_significant_figures(coords.relative_control_point2.y, 2),
         },
+        line_end_x: round_to_max_significant_figures(coords.line_end_x, 2),
+        line_end_y: round_to_max_significant_figures(coords.line_end_y, 2),
+        connection_end_x: round_to_max_significant_figures(coords.connection_end_x, 2),
+        connection_end_y: round_to_max_significant_figures(coords.connection_end_y, 2),
         end_angle: round_to_max_significant_figures(coords.end_angle, 2),
     }
 }

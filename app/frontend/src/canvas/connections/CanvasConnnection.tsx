@@ -132,30 +132,30 @@ export function CanvasConnnection (props: OwnProps)
         }
 
         const {
-            x1,
-            y1,
-            xe2,
-            ye2,
-            xo2,
-            yo2,
+            line_start_x,
+            line_start_y,
+            connection_end_x,
+            connection_end_y,
+            line_end_x,
+            line_end_y,
             relative_control_point1,
             relative_control_point2,
             end_angle,
         } = derive_connection_coords(derived_connection_coords_args)
 
         const target_position: DArgsWithProgress = {
-            x1,
-            y1,
+            line_start_x,
+            line_start_y,
             relative_control_point_x1: relative_control_point1.x,
             relative_control_point_y1: relative_control_point1.y,
             relative_control_point_x2: relative_control_point2.x,
             relative_control_point_y2: relative_control_point2.y,
-            x2: xo2,
-            y2: yo2,
+            line_end_x,
+            line_end_y,
             progress: 0,
         }
 
-        return { xe2, ye2, end_angle, target_position }
+        return { connection_end_x, connection_end_y, end_angle, target_position }
     }, [
         from_node_position, to_node_position,
         from_wcomponent_type, to_wcomponent_type,
@@ -164,7 +164,7 @@ export function CanvasConnnection (props: OwnProps)
     ])
 
     if (!result) return null
-    const { xe2, ye2, end_angle, target_position } = result
+    const { connection_end_x, connection_end_y, end_angle, target_position } = result
 
     const d_args = should_animate ? (current_position.current || target_position) : target_position
 
@@ -206,8 +206,8 @@ export function CanvasConnnection (props: OwnProps)
 
         <ConnectionEnd
             type={connection_end_type}
-            x={xe2}
-            y={ye2}
+            x={connection_end_x}
+            y={connection_end_y}
             end_angle={end_angle}
             opacity={opacity}
             blur={blur}
@@ -227,22 +227,22 @@ interface DArgsWithProgress extends DArgs
 
 interface DArgs
 {
-    x1: number
-    y1: number
+    line_start_x: number
+    line_start_y: number
     relative_control_point_x1: number
     relative_control_point_y1: number
     relative_control_point_x2: number
     relative_control_point_y2: number
-    x2: number
-    y2: number
+    line_end_x: number
+    line_end_y: number
 }
-function calc_d ({ x1, y1, relative_control_point_x1, relative_control_point_y1, relative_control_point_x2, relative_control_point_y2, x2, y2 }: DArgs)
+function calc_d ({ line_start_x, line_start_y, relative_control_point_x1, relative_control_point_y1, relative_control_point_x2, relative_control_point_y2, line_end_x, line_end_y }: DArgs)
 {
-    const cx1 = x1 + relative_control_point_x1
-    const cy1 = -y1 - relative_control_point_y1
-    const cx2 = x2 + relative_control_point_x2
-    const cy2 = -y2 - relative_control_point_y2
-    return `M ${x1} ${-y1} C ${cx1},${cy1}, ${cx2},${cy2}, ${x2},${-y2}`
+    const cx1 = line_start_x + relative_control_point_x1
+    const cy1 = -line_start_y - relative_control_point_y1
+    const cx2 = line_end_x + relative_control_point_x2
+    const cy2 = -line_end_y - relative_control_point_y2
+    return `M ${line_start_x} ${-line_start_y} C ${cx1},${cy1}, ${cx2},${cy2}, ${line_end_x},${-line_end_y}`
 }
 
 
@@ -270,14 +270,14 @@ function animate_to_target (path: SVGPathElement, path_background: SVGPathElemen
         target_position.progress = progress
 
         const intermediate: DArgs = {
-            x1: tween(current.x1, target_position.x1, progress),
-            y1: tween(current.y1, target_position.y1, progress),
+            line_start_x: tween(current.line_start_x, target_position.line_start_x, progress),
+            line_start_y: tween(current.line_start_y, target_position.line_start_y, progress),
             relative_control_point_x1: tween(current.relative_control_point_x1, target_position.relative_control_point_x1, progress),
             relative_control_point_y1: tween(current.relative_control_point_y1, target_position.relative_control_point_y1, progress),
             relative_control_point_x2: tween(current.relative_control_point_x2, target_position.relative_control_point_x2, progress),
             relative_control_point_y2: tween(current.relative_control_point_y2, target_position.relative_control_point_y2, progress),
-            x2: tween(current.x2, target_position.x2, progress),
-            y2: tween(current.y2, target_position.y2, progress),
+            line_end_x: tween(current.line_end_x, target_position.line_end_x, progress),
+            line_end_y: tween(current.line_end_y, target_position.line_end_y, progress),
         }
         const d = calc_d(intermediate)
         path.setAttribute("d", d)
