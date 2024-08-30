@@ -16,11 +16,13 @@ import {
     ActionBulkAddToKnowledgeView,
     ActionBulkEditKnowledgeViewEntries,
     ActionBulkRemoveFromKnowledgeView,
+    ActionBulkUpdateKnowledgeViewEntries,
     ActionChangeCurrentKnowledgeViewEntriesOrder,
     ActionSnapToGridKnowledgeViewEntries,
     is_bulk_add_to_knowledge_view,
     is_bulk_edit_knowledge_view_entries,
     is_bulk_remove_from_knowledge_view,
+    is_bulk_update_knowledge_view_entries,
     is_change_current_knowledge_view_entries_order,
     is_snap_to_grid_knowledge_view_entries,
 } from "./actions"
@@ -35,6 +37,10 @@ export const bulk_editing_knowledge_view_entries_reducer = (state: RootState, ac
         state = handle_bulk_edit_knowledge_view_entries(state, action)
     }
 
+    if (is_bulk_update_knowledge_view_entries(action))
+    {
+        state = handle_bulk_update_knowledge_view_entries(state, action)
+    }
 
     if (is_snap_to_grid_knowledge_view_entries(action))
     {
@@ -282,6 +288,32 @@ function handle_bulk_edit_knowledge_view_entries (state: RootState, action: Acti
     else
     {
         console.error("There should always be a current knowledge view if bulk editing position of world components")
+    }
+
+    return state
+}
+
+
+function handle_bulk_update_knowledge_view_entries (state: RootState, action: ActionBulkUpdateKnowledgeViewEntries)
+{
+    const { knowledge_view_id, changes } = action
+
+    const kv = state.specialised_objects.knowledge_views_by_id[knowledge_view_id]
+    if (kv)
+    {
+        const new_wc_id_map = { ...kv.wc_id_map }
+
+        changes.forEach(change =>
+        {
+            const existing_entry = kv.wc_id_map[change.wcomponent_id]
+            if (!existing_entry) return
+
+            const new_entry = { ...existing_entry, left: change.left, top: change.top }
+            new_wc_id_map[change.wcomponent_id] = new_entry
+        })
+
+        const new_kv: KnowledgeView = { ...kv, wc_id_map: new_wc_id_map }
+        state = handle_upsert_knowledge_view(state, new_kv)
     }
 
     return state

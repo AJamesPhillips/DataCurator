@@ -4,9 +4,9 @@ import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
 import "./CanvasConnection.scss"
 import type { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
-import { derive_connection_coords, DeriveConnectionCoordsArgs } from "./derive_coords"
 import { bounded } from "../../shared/utils/bounded"
 import { ConnectionTerminus } from "./terminal"
+import { process_connection_terminus_args } from "./process_connection_terminus_args"
 
 
 
@@ -84,44 +84,23 @@ export function CanvasConnection (props: OwnProps)
 
     const result = useMemo(() =>
     {
-        const fudged_end_size = end_size / 10
+        const derive_connection_coords = process_connection_terminus_args({
+            end_size,
+            connection_from_component,
+            connection_to_component,
+            line_behaviour,
+            circular_links,
+            connection_end_type,
+        })
 
-        let derived_connection_coords_args: DeriveConnectionCoordsArgs
-        if (!connection_from_component)
-        {
-            if (!connection_to_component) return null
-            derived_connection_coords_args = {
-                connection_from_component,
-                connection_to_component,
-                line_behaviour,
-                circular_links,
-                end_size: fudged_end_size,
-                connection_end_type,
-            }
-        }
-        else
-        {
-            derived_connection_coords_args = {
-                connection_from_component,
-                connection_to_component,
-                line_behaviour,
-                circular_links,
-                end_size: fudged_end_size,
-                connection_end_type,
-            }
-        }
+        if (!derive_connection_coords) return null
 
         const {
-            line_start_x,
-            line_start_y,
-            connection_end_x,
-            connection_end_y,
-            line_end_x,
-            line_end_y,
-            relative_control_point1,
-            relative_control_point2,
-            end_angle,
-        } = derive_connection_coords(derived_connection_coords_args)
+            line_start_x, line_start_y,
+            relative_control_point1, relative_control_point2,
+            line_end_x, line_end_y,
+            connection_end_x, connection_end_y, end_angle,
+        } = derive_connection_coords
 
         const target_position: DArgsWithProgress = {
             line_start_x,

@@ -53,7 +53,7 @@ export function get_top_left_for_terminal_type (type: ConnectionTerminalType, no
 
 export interface ConnectionTerminus
 {
-    position: KnowledgeViewWComponentEntry
+    kv_wc_entry: KnowledgeViewWComponentEntry
     wcomponent_type: WComponentType
     connection_terminal_type: ConnectionTerminalType
 }
@@ -61,22 +61,19 @@ export interface ConnectionTerminus
 export function get_connection_point (connection_terminal: ConnectionTerminus): CanvasPoint
 {
     const {
-        position: objective_node_position,
+        kv_wc_entry,
         wcomponent_type,
-        connection_terminal_type: type,
+        connection_terminal_type,
     } = connection_terminal
 
-    const node_scale = objective_node_position.s || 1
-    let { left, top } = get_top_left_for_terminal_type(type, node_scale)
+    const terminus_is_connection = wcomponent_type_is_plain_connection(wcomponent_type)
+    if (terminus_is_connection) return kv_wc_entry
 
-    const is_connection = wcomponent_type_is_plain_connection(wcomponent_type)
-    if (is_connection)
-    {
-        left = 0
-    }
+    const node_scale = kv_wc_entry.s || 1
+    let { left, top } = get_top_left_for_terminal_type(connection_terminal_type, node_scale)
 
-    left += objective_node_position.left + connection_radius
-    top += objective_node_position.top + connection_radius
+    left += kv_wc_entry.left + connection_radius
+    top += kv_wc_entry.top + connection_radius
 
     return { left, top }
 }

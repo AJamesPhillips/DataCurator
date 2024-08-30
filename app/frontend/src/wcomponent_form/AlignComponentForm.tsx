@@ -6,10 +6,17 @@ import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
 import {
     get_current_knowledge_view_from_state,
+    get_wcomponent_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
 import { ButtonSnapXToDatetime } from "./ButtonSnapXToDatetime"
+import { BulkUpdateChange } from "../state/specialised_objects/knowledge_views/bulk_edit/actions"
+import { wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
+import { get_connection_termini } from "../wcomponent_canvas/connection/connection_termini"
+import { bezier_middle } from "../canvas/connections/derive_coords"
+import { process_connection_terminus_args } from "../canvas/connections/process_connection_terminus_args"
+import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
 
 
 
@@ -43,6 +50,7 @@ const map_state = (state: RootState, props: OwnProps) =>
 const map_dispatch = {
     snap_to_grid_knowledge_view_entries: ACTIONS.specialised_object.snap_to_grid_knowledge_view_entries,
     bulk_add_to_knowledge_view: ACTIONS.specialised_object.bulk_add_to_knowledge_view,
+    bulk_update_knowledge_view_entries: ACTIONS.specialised_object.bulk_update_knowledge_view_entries,
     change_current_knowledge_view_entries_order: ACTIONS.specialised_object.change_current_knowledge_view_entries_order,
 }
 
@@ -54,8 +62,8 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _AlignComponentForm (props: Props)
 {
-    const { wcomponent_id, wcomponent_ids, knowledge_view_id, kv } = props
-    const ids: string[] = (wcomponent_id ? [wcomponent_id] : wcomponent_ids) || []
+    const { wcomponent_id, knowledge_view_id, kv } = props
+    const wcomponent_ids = props.wcomponent_ids || [props.wcomponent_id]
 
 
     const wcomponent_kv_wc_map_entry_index = (kv && wcomponent_id)
@@ -77,7 +85,7 @@ function _AlignComponentForm (props: Props)
                 onClick={() =>
                 {
                     if (!knowledge_view_id) return
-                    props.snap_to_grid_knowledge_view_entries({ wcomponent_ids: ids, knowledge_view_id })
+                    props.snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })
                 }}
                 is_left={true}
             />
@@ -93,21 +101,31 @@ function _AlignComponentForm (props: Props)
 
                     const state = get_store().getState()
                     const override_entry = get_middle_of_screen(state)
-                    props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids: ids, override_entry })
+                    props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids, override_entry })
                 }}
                 is_left={true}
             />
         </>}
 
-        {/* {props.wcomponent_node_present && props.wcomponent_link_present && <br/>}
+        {props.wcomponent_node_present && props.wcomponent_link_present && <br/>}
 
         {props.wcomponent_link_present && <>
-            {/ *
-                todo: implement some controls to cause links to update their
-                locations on the canvas so that other links can join to/from
-                them.
-            * /}
-        </>} */}
+            <Button
+                disabled={!knowledge_view_id}
+                value="Manually update link location"
+                onClick={() =>
+                {
+                    if (!knowledge_view_id) return
+
+                    const state = get_store().getState()
+                    const changes: BulkUpdateChange[] | undefined = calculate_middle_connection_curves(wcomponent_ids, state)
+                    if (!changes) return
+
+                    props.bulk_update_knowledge_view_entries({ knowledge_view_id, changes })
+                }}
+                is_left={true}
+            />
+        </>}
 
         <br />
 
@@ -117,7 +135,7 @@ function _AlignComponentForm (props: Props)
                 disabled={move_to_front_disabled}
                 onClick={() =>
                 {
-                    props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "front" })
+                    props.change_current_knowledge_view_entries_order({ wcomponent_ids, order: "front" })
                 }}
                 is_left={true}
             />
@@ -129,7 +147,7 @@ function _AlignComponentForm (props: Props)
                 disabled={move_to_back_disabled}
                 onClick={() =>
                 {
-                    props.change_current_knowledge_view_entries_order({ wcomponent_ids: ids, order: "back" })
+                    props.change_current_knowledge_view_entries_order({ wcomponent_ids, order: "back" })
                 }}
                 is_left={true}
             />
@@ -138,3 +156,49 @@ function _AlignComponentForm (props: Props)
 }
 
 export const AlignComponentForm = connector(_AlignComponentForm) as FunctionalComponent<OwnProps>
+
+
+
+function calculate_middle_connection_curves (wcomponent_ids: string[], state: RootState): BulkUpdateChange[] | undefined
+{
+    const composed_kv = state.derived.current_composed_knowledge_view
+    if (!composed_kv) return
+
+    return wcomponent_ids
+        .map(id => get_wcomponent_from_state(state, id))
+        .filter(wcomponent_is_plain_connection)
+        .map(wcomponent => {
+            const from_wc = get_wcomponent_from_state(state, wcomponent.from_id)
+            const to_wc = get_wcomponent_from_state(state, wcomponent.to_id)
+
+            const connection_termini = get_connection_termini({
+                wcomponent, from_wc, to_wc, current_composed_knowledge_view: composed_kv,
+            })
+
+            const result = process_connection_terminus_args({
+                ...connection_termini,
+                end_size: 1,
+                line_behaviour: wcomponent.line_behaviour,
+                circular_links: true,
+                connection_end_type: ConnectionEndType.positive,
+            })
+
+            if (!result) return undefined
+
+            const mid_point = bezier_middle({
+                point1: { x: result.line_start_x, y: result.line_start_y },
+                relative_control_point1: result.relative_control_point1,
+                relative_control_point2: result.relative_control_point2,
+                point2: { x: result.line_end_x, y: result.line_end_y },
+            })
+
+            const bulk_update: BulkUpdateChange = {
+                wcomponent_id: wcomponent.id,
+                left: mid_point.x,
+                top: -mid_point.y,
+            }
+
+            return bulk_update
+        })
+        .filter((change): change is BulkUpdateChange => !!change)
+}

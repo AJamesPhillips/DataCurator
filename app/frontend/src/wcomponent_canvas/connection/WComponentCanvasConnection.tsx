@@ -1,28 +1,21 @@
 import { FunctionalComponent } from "preact"
+import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import "./WComponentCanvasConnection.scss"
 import { CanvasConnection } from "../../canvas/connections/CanvasConnection"
 import { ConnectionEndType } from "../../canvas/connections/ConnectionEnd"
 import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
-import type {
-    KnowledgeViewWComponentIdEntryMap,
-    KnowledgeViewWComponentEntry,
-} from "../../shared/interfaces/knowledge_view"
 import { bounded } from "../../shared/utils/bounded"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import {
     WComponent,
     wcomponent_is_plain_connection,
     wcomponent_is_judgement_or_objective,
     wcomponent_can_render_connection,
-    WComponentConnection,
-    ConnectionTerminalType,
     wcomponent_is_causal_link,
     wcomponent_is_statev2,
     ConnectionLineBehaviour,
-    ConnectionTerminalAttributeType,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
     apply_counterfactuals_v2_to_VAP_set,
@@ -39,8 +32,7 @@ import {
 } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
-import { useMemo } from "preact/hooks"
-import { ConnectionTerminus } from "../../canvas/connections/terminal"
+import { get_connection_termini } from "./connection_termini"
 
 
 
@@ -180,42 +172,17 @@ function _WComponentCanvasConnection (props: Props)
     const on_click = factory_on_click({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
 
 
-    const {
-        from_node_position, to_node_position, from_attribute, to_attribute
-    } = get_connection_terminal_node_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
+    const connection_termini = get_connection_termini({
+        wcomponent,
+        from_wc,
+        to_wc,
+        current_composed_knowledge_view,
+    })
 
-    const { from_connection_terminal_type, to_connection_terminal_type } = useMemo(() =>
-    {
-        const from_connection_terminal_type: ConnectionTerminalType = { direction: "from", attribute: from_attribute }
-        const to_connection_terminal_type: ConnectionTerminalType = { direction: "to", attribute: to_attribute }
-
-        return { from_connection_terminal_type, to_connection_terminal_type }
-    }, [from_attribute, to_attribute])
-
-
-    const from_wcomponent_type = from_wc?.type
-    const to_wcomponent_type = to_wc?.type
-
-    const { connection_from_component, connection_to_component } = useMemo(() =>
-    {
-        const connection_from_component: ConnectionTerminus | undefined = (from_node_position && from_wcomponent_type) ? {
-            position: from_node_position,
-            wcomponent_type: from_wcomponent_type,
-            connection_terminal_type: from_connection_terminal_type,
-        } : undefined
-
-        const connection_to_component: ConnectionTerminus | undefined = (to_node_position && to_wcomponent_type) ? {
-            position: to_node_position,
-            wcomponent_type: to_wcomponent_type,
-            connection_terminal_type: to_connection_terminal_type,
-        } : undefined
-
-        return { connection_from_component, connection_to_component }
-    }, [
-        JSON.stringify(from_node_position), JSON.stringify(to_node_position),
-        from_wcomponent_type, to_wcomponent_type,
-        from_connection_terminal_type, to_connection_terminal_type,
-    ])
+    const { connection_from_component, connection_to_component } = useMemo(
+        () => connection_termini,
+        [JSON.stringify(connection_termini)]
+    )
 
 
     const validity_opacity = calc_display_opacity({
@@ -267,39 +234,6 @@ function _WComponentCanvasConnection (props: Props)
 }
 
 export const WComponentCanvasConnection = connector(_WComponentCanvasConnection) as FunctionalComponent<OwnProps>
-
-
-
-interface GetConnectionTerminalNodePositionsArgs
-{
-    wcomponent: WComponentConnection | WComponentJudgement
-    wc_id_map: KnowledgeViewWComponentIdEntryMap
-}
-function get_connection_terminal_node_positions ({ wcomponent, wc_id_map }: GetConnectionTerminalNodePositionsArgs)
-{
-    let from_node_position: KnowledgeViewWComponentEntry | undefined = undefined
-    let to_node_position: KnowledgeViewWComponentEntry | undefined = undefined
-    let from_attribute: ConnectionTerminalAttributeType | undefined = undefined
-    let to_attribute: ConnectionTerminalAttributeType | undefined = undefined
-
-    if (wcomponent_is_plain_connection(wcomponent))
-    {
-        from_node_position = wc_id_map[wcomponent.from_id]
-        to_node_position = wc_id_map[wcomponent.to_id]
-        from_attribute = wcomponent.from_type
-        to_attribute = wcomponent.to_type
-    }
-    else
-    {
-        from_node_position = wc_id_map[wcomponent.id]
-        to_node_position = wc_id_map[wcomponent.judgement_target_wcomponent_id]
-        from_attribute = "meta"
-        to_attribute = "meta"
-    }
-
-    return { from_node_position, to_node_position, from_attribute, to_attribute }
-}
-
 
 
 function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefined, state: RootState)

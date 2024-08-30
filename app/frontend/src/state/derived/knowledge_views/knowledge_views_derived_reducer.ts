@@ -13,7 +13,6 @@ import type {
     KnowledgeViewWComponentIdEntryMap,
     // PartialKnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/interfaces/knowledge_view"
-import { is_uuid_v4 } from "../../../shared/utils/ids"
 import { is_defined } from "../../../shared/utils/is_defined"
 import { SortDirection, sort_list } from "../../../shared/utils/sort"
 import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
@@ -28,6 +27,9 @@ import {
     wcomponent_is_prioritisation,
     wcomponent_is_plain_connection,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    WComponentConnection,
+    WComponentNode,
+    wcomponent_is_node,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
@@ -45,8 +47,9 @@ import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_rou
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { get_composed_wc_id_maps_object } from "./get_composed_wc_id_maps_object"
 import { get_available_filter_options } from "../../filter_context/utils"
-import { v_step } from "../../../canvas/position_utils"
 import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
+import { FilterContextFilters } from "../../filter_context/state"
+import { MetaWComponentsState } from "../../specialised_objects/meta_wcomponents/State"
 
 
 
@@ -73,8 +76,9 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
     const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
+    const selected_ids_changed = initial_state.meta_wcomponents.selected_wcomponent_ids_set !== state.meta_wcomponents.selected_wcomponent_ids_set
 
-    const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed
+    const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed || selected_ids_changed
 
     const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms
     const filters_changed = created_at_changed || initial_state.filter_context !== state.filter_context || one_or_more_wcomponents_changed
@@ -374,65 +378,16 @@ export function update_composed_knowledge_view_filters (state: RootState, curren
 
 
     const { wc_ids_by_type, composed_wc_id_map } = current_composed_knowledge_view
-    const wcomponents_nodes_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_node).filter(is_defined)
+    const wcomponents_nodes_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_node).filter(wcomponent_is_node)
     const wcomponents_links_on_kv = get_wcomponents_from_state(state, wc_ids_by_type.any_link).filter(wcomponent_is_plain_connection)
-    const wcomponents_on_kv = wcomponents_nodes_on_kv.concat(wcomponents_links_on_kv)
+    const wcomponents_on_kv = (wcomponents_nodes_on_kv as WComponent[]).concat(wcomponents_links_on_kv)
 
 
-    const wc_ids_to_exclude = new Set<string>()
+    let wc_ids_excluded_by_filters = new Set<string>()
     if (state.filter_context.apply_filter)
     {
-        const {
-            exclude_by_label_ids: exclude_by_label_ids_list,
-            include_by_label_ids: include_by_label_ids_list,
-            exclude_by_component_types: exclude_by_component_types_list,
-            include_by_component_types: include_by_component_types_list,
-        } = state.filter_context.filters
-
-        const exclude_by_label_ids = new Set(exclude_by_label_ids_list)
-        const include_by_label_ids = new Set(include_by_label_ids_list)
-        const exclude_by_component_types = new Set(exclude_by_component_types_list)
-        const include_by_component_types = new Set(include_by_component_types_list)
-
-        const args = {
-            exclude_by_label_ids,
-            include_by_label_ids,
-            include_by_label_ids_list,
-            exclude_by_component_types,
-            include_by_component_types,
-        }
-
-        wcomponents_nodes_on_kv.forEach(wcomponent =>
-        {
-            const { should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args)
-
-            if (should_exclude || lacks_include) wc_ids_to_exclude.add(wcomponent.id)
-        })
-
-        // This smells, should not be including this here as when it changes the filtered ids will be
-        // stale
-        const { selected_wcomponent_ids_set: selected_wc_ids } = state.meta_wcomponents
-
-        wcomponents_links_on_kv.forEach(wcomponent =>
-        {
-            const { from_id, to_id } = wcomponent
-            let should_exclude = !from_id || !to_id
-
-            should_exclude = should_exclude
-                || (!selected_wc_ids.has(from_id) && wc_ids_to_exclude.has(from_id))
-                || (!selected_wc_ids.has(to_id) && wc_ids_to_exclude.has(to_id))
-
-            // For connections we're only using the `should_exclude` and ignoring the `lacks_include` for now
-            // later we could put this under a flag so that connections also have to have a positive inclusion
-            // otherwise they will be excluded
-            should_exclude = should_exclude || calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args).should_exclude
-
-            if (should_exclude) wc_ids_to_exclude.add(wcomponent.id)
-        })
+        wc_ids_excluded_by_filters = calculate_wc_ids_to_exclude_based_on_filters(state.filter_context.filters, state.meta_wcomponents.selected_wcomponent_ids_set, wcomponents_nodes_on_kv, wcomponents_links_on_kv)
     }
-
-    const wc_ids_excluded_by_filters = new Set(wc_ids_to_exclude)
-
 
     const { created_at_ms } = state.routing.args
     let vap_set_number_excluded_by_created_at_datetime_filter = 0
@@ -480,6 +435,59 @@ export function update_composed_knowledge_view_filters (state: RootState, curren
             vap_set_number_excluded_by_created_at_datetime_filter,
         }
     }
+}
+
+
+// The selected_wc_ids might still smells. Make sure when it changes
+// the filtered ids will not be stale
+export function calculate_wc_ids_to_exclude_based_on_filters(filters: FilterContextFilters, selected_wc_ids: Set<string>, wcomponents_nodes_on_kv: WComponentNode[], wcomponents_links_on_kv: WComponentConnection[])
+{
+    const wc_ids_excluded_by_filters = new Set<string>()
+
+    const {
+        exclude_by_label_ids: exclude_by_label_ids_list,
+        include_by_label_ids: include_by_label_ids_list,
+        exclude_by_component_types: exclude_by_component_types_list,
+        include_by_component_types: include_by_component_types_list,
+    } = filters
+
+    const exclude_by_label_ids = new Set(exclude_by_label_ids_list)
+    const include_by_label_ids = new Set(include_by_label_ids_list)
+    const exclude_by_component_types = new Set(exclude_by_component_types_list)
+    const include_by_component_types = new Set(include_by_component_types_list)
+
+    const args = {
+        exclude_by_label_ids,
+        include_by_label_ids,
+        include_by_label_ids_list,
+        exclude_by_component_types,
+        include_by_component_types,
+    }
+
+    wcomponents_nodes_on_kv.forEach(wcomponent => {
+        const { should_exclude, lacks_include } = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args)
+
+        if (should_exclude || lacks_include) wc_ids_excluded_by_filters.add(wcomponent.id)
+    })
+
+    wcomponents_links_on_kv.forEach(wcomponent => {
+        const { from_id, to_id } = wcomponent
+        let should_exclude = false //!from_id || !to_id
+
+        should_exclude = should_exclude
+            || (!!from_id && !selected_wc_ids.has(from_id) && wc_ids_excluded_by_filters.has(from_id))
+            || (!!to_id && !selected_wc_ids.has(to_id) && wc_ids_excluded_by_filters.has(to_id))
+
+        const label_type_based_filter = calc_if_wcomponent_should_exclude_because_label_or_type(wcomponent, args)
+        // For connections we're only using the `should_exclude` and ignoring the `lacks_include` for now
+        // later we could put this under a flag so that connections also have to have a positive inclusion
+        // otherwise they will be excluded
+        should_exclude = should_exclude || label_type_based_filter.should_exclude
+
+        if (should_exclude) wc_ids_excluded_by_filters.add(wcomponent.id)
+    })
+
+    return wc_ids_excluded_by_filters
 }
 
 

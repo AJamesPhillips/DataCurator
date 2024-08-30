@@ -13,8 +13,8 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
     describe("connection between two nodes", () =>
     {
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
-        args.connection_to_component!.position =   { top: 0, left: NODE_WIDTH + 100 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry =   { top: 0, left: NODE_WIDTH + 100 }
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
@@ -29,8 +29,8 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
-        args.connection_to_component!.position =   { top: 0, left: NODE_WIDTH + 10 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry =   { top: 0, left: NODE_WIDTH + 10 }
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
@@ -45,8 +45,8 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
-        args.connection_to_component!.position =   { top: 0, left: NODE_WIDTH - 10 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry =   { top: 0, left: NODE_WIDTH - 10 }
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
@@ -61,8 +61,8 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
-        args.connection_to_component!.position =   { top: 0, left: -10 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry =   { top: 0, left: -10 }
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
@@ -77,8 +77,8 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
-        args.connection_to_component!.position =   { top: 0, left: -50 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry =   { top: 0, left: -50 }
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
@@ -118,7 +118,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
     {
         args = test_helper__get_args()
         args.connection_from_component = undefined
-        args.connection_to_component!.position = { top: 0, left: 0 }
+        args.connection_to_component!.kv_wc_entry = { top: 0, left: 0 }
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
             line_start_x: -150, line_start_y: -77,
@@ -131,7 +131,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
         args.connection_to_component = undefined
         result = derive_connection_coords(args)
 
@@ -149,9 +149,9 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
     describe("connection between a node and a connection", () =>
     {
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
         args.connection_to_component = {
-            position: { top: 0, left: -100 },
+            kv_wc_entry: { top: 0, left: -100 },
             wcomponent_type: "causal_link",
             connection_terminal_type: { direction: "to", attribute: "state" },
         }
@@ -159,18 +159,18 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
             line_start_x: 250, line_start_y: -77,
-            relative_control_point1: { x: 170, y: 0 },
-            relative_control_point2: { x: 170, y: 0 },
-            line_end_x: -85, line_end_y: -77,
-            connection_end_x: -94, connection_end_y: -77,
+            relative_control_point1: { x: 180, y: 0 },
+            relative_control_point2: { x: 180, y: 0 },
+            line_end_x: -91, line_end_y: 0,
+            connection_end_x: -100, connection_end_y: 0,
             end_angle: 0,
         }, "connect from one node to another connection")
 
 
         args = test_helper__get_args()
-        args.connection_from_component!.position = { top: 0, left: 0 }
+        args.connection_from_component!.kv_wc_entry = { top: 0, left: 0 }
         args.connection_to_component = {
-            position: { top: -200, left: -100 },
+            kv_wc_entry: { top: -200, left: -100 },
             wcomponent_type: "causal_link",
             connection_terminal_type: { direction: "to", attribute: "state" },
         }
@@ -178,10 +178,10 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
         test(test_helper__round_derived_connection_coords(result), {
             line_start_x: 0, line_start_y: -77,
-            relative_control_point1: { x: -47, y: 0 },
-            relative_control_point2: { x: -47, y: 0 },
-            line_end_x: -100, line_end_y: 120,
-            connection_end_x: -94, connection_end_y: 120,
+            relative_control_point1: { x: -50, y: 0 },
+            relative_control_point2: { x: -50, y: 0 },
+            line_end_x: -110, line_end_y: 200,
+            connection_end_x: -100, connection_end_y: 200,
             end_angle: 3.142,
         }, "connect from another connection to a node")
     })
@@ -193,12 +193,12 @@ function test_helper__get_args (): DeriveConnectionCoordsArgs
 {
     return {
         connection_from_component: {
-            position: { top: 0, left: 0 },
+            kv_wc_entry: { top: 0, left: 0 },
             wcomponent_type: "statev2",
             connection_terminal_type: { direction: "from", attribute: "state" },
         },
         connection_to_component: {
-            position: { top: 0, left: NODE_WIDTH + 100 },
+            kv_wc_entry: { top: 0, left: NODE_WIDTH + 100 },
             wcomponent_type: "statev2",
             connection_terminal_type: { direction: "to", attribute: "state" },
         },

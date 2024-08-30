@@ -21,7 +21,9 @@ export function stable_stringify (obj: any, opts: Options = {})
 
     const replacer = opts.replacer || ((key: string | number, value: any) =>
     {
-        return is_date(value) ? value.toISOString() : value
+        return is_date(value) ? value.toISOString() : (
+            value instanceof Set ? Array.from(value) : value
+        )
     })
 
     const comparison_function_factory = opts.comparison_function && function (node: any)

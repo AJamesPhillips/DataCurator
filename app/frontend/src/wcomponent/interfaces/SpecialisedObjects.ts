@@ -47,6 +47,7 @@ interface WComponentNodeProcessBase
 }
 
 
+// TODO expand this list and add a test to make it robust to additions / deletions / changes
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeStateV2
     | WComponentSubState
@@ -191,6 +192,22 @@ export function wcomponent_type_is_plain_connection(wcomponent_type: WComponentT
     return wcomponent_type === "causal_link" || wcomponent_type === "relation_link"
 }
 
+
+export function wcomponent_is_node (wcomponent: WComponent | undefined): wcomponent is WComponentNode
+{
+    return (
+        // TODO expand this list and add a test to make it robust to additions / deletions / changes
+        wcomponent_is_event(wcomponent) ||
+        wcomponent_is_statev2(wcomponent) ||
+        wcomponent_is_process(wcomponent) ||
+        wcomponent_is_action(wcomponent) ||
+        wcomponent_is_goal(wcomponent) ||
+        wcomponent_is_sub_state(wcomponent) ||
+        wcomponent_is_state_value(wcomponent) ||
+        wcomponent_is_counterfactual_v2(wcomponent) ||
+        wcomponent_is_prioritisation(wcomponent)
+    )
+}
 
 
 export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentJudgement

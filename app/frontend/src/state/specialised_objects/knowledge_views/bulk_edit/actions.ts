@@ -23,6 +23,31 @@ export const is_bulk_edit_knowledge_view_entries = (action: AnyAction): action i
 }
 
 
+export interface BulkUpdateChange
+{
+    wcomponent_id: string
+    left: number
+    top: number
+}
+interface BulkUpdateKnowledgeViewEntriesProps
+{
+    knowledge_view_id: string
+    changes: BulkUpdateChange[]
+}
+export interface ActionBulkUpdateKnowledgeViewEntries extends Action, BulkUpdateKnowledgeViewEntriesProps {}
+
+const bulk_update_knowledge_view_entries_type = "bulk_update_knowledge_view_entries"
+
+const bulk_update_knowledge_view_entries = (args: BulkUpdateKnowledgeViewEntriesProps): ActionBulkUpdateKnowledgeViewEntries =>
+{
+    return { type: bulk_update_knowledge_view_entries_type, ...args }
+}
+
+export const is_bulk_update_knowledge_view_entries = (action: AnyAction): action is ActionBulkUpdateKnowledgeViewEntries => {
+    return action.type === bulk_update_knowledge_view_entries_type
+}
+
+
 
 interface SnapToGridKnowledgeViewEntriesProps
 {
@@ -108,6 +133,7 @@ export const is_bulk_remove_from_knowledge_view = (action: AnyAction): action is
 
 export const bulk_editing_knowledge_view_entries_actions = {
     bulk_edit_knowledge_view_entries,
+    bulk_update_knowledge_view_entries,
     bulk_add_to_knowledge_view,
     bulk_remove_from_knowledge_view,
     snap_to_grid_knowledge_view_entries,

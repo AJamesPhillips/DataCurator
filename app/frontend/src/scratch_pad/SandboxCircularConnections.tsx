@@ -29,13 +29,13 @@ export function SandboxCircularConnections ()
     const node_2_position = { left: x, top: y }
 
     const connection_from_component: ConnectionTerminus = {
-        position: origin,
+        kv_wc_entry: origin,
         wcomponent_type: "statev2",
         connection_terminal_type: { direction: "from", attribute: "state" },
     }
 
     const connection_to_component: ConnectionTerminus = {
-        position: origin,
+        kv_wc_entry: origin,
         wcomponent_type: "statev2",
         connection_terminal_type: { direction: "to", attribute: "state" },
     }
@@ -64,12 +64,12 @@ export function SandboxCircularConnections ()
             {circular_links && <g>
                 <CanvasConnection
                     connection_from_component={connection_from_component}
-                    connection_to_component={{ ...connection_to_component, position: node_2_position }}
+                    connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
                     circular_links={true}
                     should_animate={false}
                 />
                 <CanvasConnection
-                    connection_from_component={{ ...connection_from_component, position: node_2_position }}
+                    connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
                     circular_links={true}
                     should_animate={false}
@@ -79,12 +79,12 @@ export function SandboxCircularConnections ()
             {non_circular_links && <g>
                 <CanvasConnection
                     connection_from_component={connection_from_component}
-                    connection_to_component={{ ...connection_to_component, position: node_2_position }}
+                    connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
                     circular_links={false}
                     should_animate={false}
                 />
                 <CanvasConnection
-                    connection_from_component={{ ...connection_from_component, position: node_2_position }}
+                    connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
                     circular_links={false}
                     should_animate={false}

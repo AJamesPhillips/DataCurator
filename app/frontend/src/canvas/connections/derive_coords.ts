@@ -5,6 +5,7 @@ import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
 import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
 import { CanvasPoint } from "../interfaces"
+import { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 
 
 
@@ -76,14 +77,14 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
     let invert_end_angle = false
     if (circular_links)
     {
-        if (connection_from_component.position.left < (connection_to_component.position.left - NODE_WIDTH_plus_fudge))
+        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_fudge))
         {
             // There's no overlap
             //  [from]
             //          [ to ]
 
         }
-        else if (connection_to_component.position.left < (connection_from_component.position.left - NODE_WIDTH_plus_fudge))
+        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_fudge))
         {
             // There's no overlap in the opposite direction
             //  [ to ]
@@ -99,7 +100,7 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
             // There's some kind of overlap, either of these to options
             //  [from]          |     [ to ]
             //     [ to ]       |        [from]
-            circular_link_from_below_to = connection_to_component.position.top < connection_from_component.position.top
+            circular_link_from_below_to = connection_to_component.kv_wc_entry.top < connection_from_component.kv_wc_entry.top
             if (circular_link_from_below_to)
             {
                 // `from` component vertical position is above `to` component
@@ -207,12 +208,12 @@ function derive_connection_coords_when_missing_one_node (args: DeriveConnectionC
     let connector_position: CanvasPoint
     if (!connection_from_component)
     {
-        line_start_x = connection_to_component!.position.left - CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE
+        line_start_x = connection_to_component!.kv_wc_entry.left - CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE
         connector_position = get_connection_point(connection_to_component!)
     }
     else
     {
-        line_start_x = connection_from_component.position.left + NODE_WIDTH
+        line_start_x = connection_from_component.kv_wc_entry.left + NODE_WIDTH
         connector_position = get_connection_point(connection_from_component!)
     }
 
@@ -263,7 +264,7 @@ interface BezierMiddleArgs
     relative_control_point2: Vector
     point2: Vector
 }
-export function bezier_middle (args: BezierMiddleArgs)
+export function bezier_middle (args: BezierMiddleArgs): Vector
 {
     const C1 = add_point(args.point1, args.relative_control_point1)
     const C2 = add_point(args.point2, args.relative_control_point2)
