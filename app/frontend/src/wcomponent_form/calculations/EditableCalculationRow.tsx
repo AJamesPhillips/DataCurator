@@ -1,25 +1,24 @@
+import { CSSProperties } from "preact/compat"
 import { useState } from "preact/hooks"
 import { Box, IconButton } from "@mui/material"
 import { Settings as SettingsIcon } from "@mui/icons-material"
 
-import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
-import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
-import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
+import { PlainCalculationObject, CalculationResult } from "../../calculations/interfaces"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
+import { EditableText } from "../../form/editable_text/EditableText"
+import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { format_number_to_string } from "../../shared/format_number_to_string"
-import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
-import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 import {
-    double_at_mentioned_uuids_regex_capture_surrounding,
     only_double_at_mentioned_uuids_regex,
+    double_at_mentioned_uuids_regex_capture_surrounding,
 } from "../../sharedf/rich_text/id_regexs"
+import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
-import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
-import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
-import { CSSProperties } from "preact/compat"
-import { EditableText } from "../../form/editable_text/EditableText"
-
+import { get_default_significant_figures, get_default_result_display_type } from "./get_default_formatting"
+import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
+import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
 
 
 export interface CalculationRowProps
@@ -89,8 +88,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const show_calc_value = editing || should_show_calc_value(calc.value)
     const show_units_from_target_wcomponent = !!calc.value.match(only_double_at_mentioned_uuids_regex)
 
-    const common_css: CSSProperties = { display: "flex" }
-
+    const { error_or_warning_message, common_css } = get_error_or_warning_message(result)
 
     return <Box
         p={1}
@@ -106,10 +104,10 @@ export function EditableCalculationRow (props: CalculationRowProps)
     >
         {<div style={{
             ...common_css,
-            maxHeight: result?.error ? 100 : 0,
+            maxHeight: error_or_warning_message.length ? 100 : 0,
             transition: "max-height 1s ease 0s",
         }}>
-            <WarningTriangleV2 warning={result?.error || ""} always_display={true} />
+            <WarningTriangleV2 warning={error_or_warning_message} always_display={true} />
         </div>}
 
         <div style={{ width: "100%", display: "flex" }}>
@@ -236,4 +234,31 @@ export function should_show_calc_value (value: string): boolean
     }
 
     return !!value_without_uuids.match(CALULATION_SIGNS)
+}
+
+
+
+function get_error_or_warning_message(result: CalculationResult | undefined)
+{
+    const common_css: CSSProperties = { display: "flex" }
+
+    let error_or_warning_message = ""
+
+    if (result?.error) {
+        // common_css.color = "red"
+        error_or_warning_message = `Error: ${result.error}`
+    }
+
+    if (result?.warning) {
+        if (!result.error) common_css.color = "lightgrey"
+        error_or_warning_message += `Warning: ${result.warning}`
+    }
+
+    // error_or_warning_message = replace_ids_in_text({
+    //     text: error_or_warning_message,
+    //     text_type: RichTextType.rich,
+    //     ...args,
+    // })
+
+    return { error_or_warning_message, common_css }
 }
