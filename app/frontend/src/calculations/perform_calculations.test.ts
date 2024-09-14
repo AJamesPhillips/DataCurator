@@ -13,17 +13,16 @@ import { perform_calculations } from "./perform_calculations"
 
 export const run_perform_calculations_test = describe.delay("perform_calculations", () =>
 {
-    let calculations: PlainCalculationObject[]
-    let wcomponents_by_id: WComponentsById
-    let calculation_result: CalculationResult[]
-    let expected_calculation_result: CalculationResult[]
+    let calculations: PlainCalculationObject[] = []
+    let calculation_result: CalculationResult[] = []
+    let expected_calculation_result: CalculationResult[] = []
 
 
 
     describe("basic functionality", () =>
     {
         calculations = []
-        wcomponents_by_id = {}
+        const wcomponents_by_id: WComponentsById = {}
         expected_calculation_result = []
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         test(calculation_result, expected_calculation_result, "No calculations should return no results")
@@ -104,7 +103,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             values_and_prediction_sets: [vap_set_1],
             units: "seconds"
         })
-        wcomponents_by_id = {
+        const wcomponents_by_id: WComponentsById = {
             [id1]: wcomponent_1,
         }
 
@@ -161,11 +160,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         test(vap_set_1.entries[1]!.value_id, VALUE_POSSIBILITY_IDS.boolean_false, "Test is setting the correct VAP set entry")
         vap_set_1.entries[1]!.probability = 1
 
-        wcomponents_by_id = {
+        const wcomponents_by_id: WComponentsById = {
             [id1]: prepare_new_contextless_wcomponent_object({
                 base_id,
                 id: id1,
                 type: "statev2",
+                subtype: "boolean",
                 values_and_prediction_sets: [vap_set_1]
             }),
         }
@@ -186,7 +186,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters} + {10 Centimeters}`, units: "Meters" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 2.10, units: "Meters" },
         ]
@@ -200,7 +200,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 2, units: "Meters" },
         ]
@@ -214,7 +214,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: undefined },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 2, units: "Meters" },
         ]
@@ -228,7 +228,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: "kg" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: undefined, units: "kg", error: "Wrong units generated for [A]. Expected Kg, and got Meters." },
         ]
@@ -242,7 +242,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `2`, units: "Unitless" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 2, units: "" },
         ]
@@ -253,7 +253,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: "Unitless" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: undefined, units: "", error: "Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation." },
         ]
@@ -267,7 +267,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: "1,200,300e4 / {4,001,000e3 km}", units: "1/km" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 3, units: "1/km" },
         ]
@@ -281,7 +281,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: "{7 Widgets/Years^2}*{10 Years}", units: "Widgets/Years" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 70, units: "Widgets/Years" },
         ]
@@ -299,7 +299,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `{10 £ / year}`, units: "" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 90, units: "£/(Year)" },
             { value: 10, units: "£/(Year)" },
@@ -314,7 +314,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `10`, units: "£ / year" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 90, units: "£ / year" },
             { value: 10, units: "£ / year" },
@@ -329,7 +329,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `10`, units: "$ / year" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 90, units: "£ / year" },
             { value: 10, units: "$ / year" },
@@ -345,11 +345,170 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `0.5 * (180 / Pi)` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        calculation_result = perform_calculations(calculations, {})
         expected_calculation_result = [
             { value: 28.6478897565412, units: "" },
         ]
         test(calculation_result, expected_calculation_result, `Can run calculations using reserved word "Pi"`)
+    })
+
+
+    describe("Defaults to 1 for missing or invalid or incomplete components", () =>
+    {
+        calculations = [
+            { id: 0, name: "A", value: `1 + @@${id1}` },
+        ]
+
+
+        describe("Missing component", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "", warning: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.` },
+            ]
+            calculation_result = perform_calculations(calculations, {})
+            test(calculation_result, expected_calculation_result, `Can run calculations using missing uuids.  Will default to 1 and provide a warning.`)
+        })
+
+
+        describe("Invalid component: action type", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "", warning: `The wcomponent @@${id1} is of type "action".  Defaulting to value of 1.` },
+            ]
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "action",
+                    values_and_prediction_sets: [],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using actions.  Will default to 1 and provide a warning.`)
+        })
+
+
+        describe("Invalid component: statev2 with subtype number but invalid number parsed to null", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "", warning: `The wcomponent @@${id1} has an invalid number "".  Defaulting to value of 1.` },
+            ]
+
+            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+            vap_set_1.entries[0]!.value = ""
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "statev2",
+                    subtype: "number",
+                    values_and_prediction_sets: [vap_set_1],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with invalid number of null.  Will default to 1 and provide a warning.`)
+        })
+
+
+        describe("Invalid component: statev2 with subtype number but invalid number parsed to NaN", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "", warning: `The wcomponent @@${id1} has an invalid number "some invalid number".  Defaulting to value of 1.` },
+            ]
+
+            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+            vap_set_1.entries[0]!.value = "some invalid number"
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "statev2",
+                    subtype: "number",
+                    values_and_prediction_sets: [vap_set_1],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with invalid number of NaN.  Will default to 1 and provide a warning.`)
+        })
+
+
+        describe("Incomplete component: statev2 type with no VAP sets", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "", warning: `The wcomponent @@${id1} is missing any value and prediction sets.  Defaulting to value of 1.` },
+            ]
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "statev2",
+                    values_and_prediction_sets: [],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with no VAPsets.  Will default to 1 and provide a warning.`)
+        })
+    })
+
+
+    describe("Coerces statev2 wcomponents with boolean subtype into 0 or 1", () =>
+    {
+        calculations = [
+            { id: 0, name: "A", value: `1 + @@${id1}` },
+        ]
+
+
+        describe("coerces true to 1", () =>
+        {
+            expected_calculation_result = [
+                { value: 2, units: "" },
+            ]
+
+            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+            test(vap_set_1.entries[0]!.value_id, VALUE_POSSIBILITY_IDS.boolean_true, "Test is setting the correct VAP set entry")
+            vap_set_1.entries[0]!.probability = 1
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "statev2",
+                    subtype: "boolean",
+                    values_and_prediction_sets: [vap_set_1],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 boolean subtypes.  Will coerce true to 1 and not provide a warning.`)
+        })
+
+
+        describe("coerces false to 0", () =>
+        {
+            expected_calculation_result = [
+                { value: 1, units: "" },
+            ]
+
+            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+            test(vap_set_1.entries[1]!.value_id, VALUE_POSSIBILITY_IDS.boolean_false, "Test is setting the correct VAP set entry")
+            vap_set_1.entries[1]!.probability = 1
+
+            const wcomponents_by_id: WComponentsById = {
+                [id1]: prepare_new_contextless_wcomponent_object({
+                    base_id,
+                    id: id1,
+                    type: "statev2",
+                    subtype: "boolean",
+                    values_and_prediction_sets: [vap_set_1],
+                }),
+            }
+            calculation_result = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 boolean subtypes.  Will coerce false to 0 and not provide a warning.`)
+        })
+
     })
 
 })

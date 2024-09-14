@@ -42,9 +42,10 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         if (units !== undefined) model_config.units = units
         const model_component = model.Variable(model_config)
 
-        prepare_other_components(model, model_component, values, uuid_v4s, wcomponents_by_id)
+        const warnings = prepare_other_components(model, model_component, values, uuid_v4s, wcomponents_by_id)
 
         const calculation_result = run_model(model, calculation.units, model_component)
+        if (warnings.length) calculation_result.warning = warnings.join(" ")
 
         // Store calculation value for use in future calculations
         values[calculation.name] = calculation_result
@@ -67,7 +68,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
 
 
 
-function prepare_other_components (model: Model, model_component: SimulationComponent, values: { [id: string]: CalculationResult }, uuids: string[], wcomponents_by_id: WComponentsById)
+function prepare_other_components (model: Model, model_component: SimulationComponent, values: { [id: string]: CalculationResult }, uuids: string[], wcomponents_by_id: WComponentsById): string[]
 {
     const other_components: { [id: string]: SimulationComponent } = {}
 
@@ -80,28 +81,63 @@ function prepare_other_components (model: Model, model_component: SimulationComp
     })
 
     const now_ms = new Date().getTime()
+    const warnings: string[] = []
 
-    uuids.forEach(uuid =>
+    const unsuccessfully_mapped_uuids: string[] = uuids.map(uuid =>
     {
         const wcomponent = wcomponents_by_id[uuid]
-        if (!wcomponent) return
+        if (!wcomponent)
+        {
+            warnings.push(`Could not find wcomponent with id: @@${uuid}.  Defaulting to value of 1.`)
+            return uuid
+        }
 
-        const VAP_sets = get_wcomponent_state_value_and_probabilities({
+        const { most_probable_VAP_set_values: VAP_sets, not_allowed_VAP_set_values } = get_wcomponent_state_value_and_probabilities({
             wcomponent,
             VAP_set_id_to_counterfactual_v2_map: {},
             created_at_ms: now_ms,
             sim_ms: now_ms,
-        }).most_probable_VAP_set_values
-        if (VAP_sets.length === 0) return
+        })
 
-        const value = VAP_sets[0]!.parsed_value
+        if (wcomponent.type === "action" || not_allowed_VAP_set_values)
+        {
+            warnings.push(`The wcomponent @@${uuid} is of type "${wcomponent.type}".  Defaulting to value of 1.`)
+            return uuid
+        }
 
-        if (value === undefined || value === null) return
+        if (VAP_sets.length === 0)
+        {
+            warnings.push(`The wcomponent @@${uuid} is missing any value and prediction sets.  Defaulting to value of 1.`)
+            return uuid
+        }
 
-        // Note that currently the value of boolean's is a string of "True" or "False"
-        if (typeof value === "boolean") return
+        let value = VAP_sets[0]!.parsed_value
+
+        if (value === null)
+        {
+            warnings.push(`The wcomponent @@${uuid} has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
+            return uuid
+        }
+
+        if (Number.isNaN(value))
+        {
+            warnings.push(`The wcomponent @@${uuid} has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
+            return uuid
+        }
+
+        // Note that the value of boolean's string of "True" or "False" has
+        // already been converted to a boolean
+        if (typeof value === "boolean") value = value ? 1 : 0
 
         const component = model.Variable({ name: uuid, value, units: "" })
+        other_components[uuid] = component
+
+        return ""
+    }).filter(uuid => uuid.length > 0)
+
+    unsuccessfully_mapped_uuids.forEach(uuid =>
+    {
+        const component = model.Variable({ name: uuid, value: 1, units: "" })
         other_components[uuid] = component
     })
 
@@ -109,6 +145,8 @@ function prepare_other_components (model: Model, model_component: SimulationComp
     {
         model.Link(other_component, model_component)
     })
+
+    return warnings
 }
 
 

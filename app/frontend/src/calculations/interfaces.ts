@@ -79,4 +79,5 @@ export interface CalculationResult
     value: number | undefined
     units: string
     error?: string
+    warning?: string
 }

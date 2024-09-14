@@ -27,6 +27,7 @@ interface GetWComponentStateValueAndProbabilitiesArgs
 interface GetWComponentStateValueAndProbabilitiesReturn
 {
     most_probable_VAP_set_values: CurrentValueAndProbability[]
+    not_allowed_VAP_set_values?: true
     any_uncertainty?: boolean
     counterfactual_applied?: boolean
     derived__using_value_from_wcomponent_ids?: string[]
@@ -36,7 +37,7 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
     const { wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms } = args
 
 
-    if (!wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [] }
+    if (!wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [], not_allowed_VAP_set_values: true }
 
     // todo should implement this fully?
     const wcomponents_by_id = {}
@@ -104,6 +105,7 @@ function get_most_probable_VAP_set_values (VAP_set: ComposedCounterfactualV2Stat
                 probability: VAP.probability,
                 conviction: VAP.conviction,
                 certainty,
+                original_value: VAP.value,
                 parsed_value,
                 value_id: VAP.value_id,
             }
