@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material"
-import { h } from "preact"
 import { useMemo } from "preact/hooks"
 
 import {
@@ -40,7 +39,6 @@ export function EditableTextSingleLine (props: EditableTextCommonOwnProps)
             //     ref={on_render}
             // />
     }, [props.placeholder, props.size, props.spellcheck, props.disabled_input, props.title])
-
 
     return <EditableTextCommon {...props} component={component} />
 }

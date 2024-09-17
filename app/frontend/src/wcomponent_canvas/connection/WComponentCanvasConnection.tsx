@@ -278,7 +278,11 @@ function calculate_effect (wcomponent: WComponent, from_wc: WComponent | undefin
                     {
                         connection_effect = value === true
                             ? wcomponent.effect_when_true
-                            : wcomponent.effect_when_false
+                            // Because we're thinking of deprecating the `effect_when_false` field
+                            // and replacing it all with the `effect_string` logic powered
+                            // by simulation.js (from InsightMaker) then we fallback
+                            // to using effect_when_true if effect_when_false is undefined
+                            : (wcomponent.effect_when_false ?? wcomponent.effect_when_true)
                     }
                     else
                     {

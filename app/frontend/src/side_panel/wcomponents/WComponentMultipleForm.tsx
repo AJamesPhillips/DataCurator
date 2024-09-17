@@ -15,7 +15,7 @@ import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
 import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { AlignComponentForm } from "../../wcomponent_form/AlignComponentForm"
-import { WComponent, wcomponent_is_causal_link } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_is_causal_link, WComponentCausalConnection } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkForm"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { wcomponent_type_options } from "../../wcomponent_form/type_options"
@@ -85,8 +85,10 @@ function _WComponentMultipleForm (props: Props)
 
     const label_ids_set = new Set<string>()
     const causal_link_wcomponent_ids: string[] = []
-    let effect_when_true: number | undefined = undefined
-    let effect_when_false: number | undefined = undefined
+    // We want to capture simulation.js/InsightMaker Flow "effects" so
+    // we need to move to string | undefined
+    let effect_string: string | undefined = undefined
+
     selected_wcomponents.forEach(wc =>
     {
         (wc.label_ids || []).forEach(id => label_ids_set.add(id))
@@ -94,8 +96,7 @@ function _WComponentMultipleForm (props: Props)
         if (wcomponent_is_causal_link(wc))
         {
             causal_link_wcomponent_ids.push(wc.id)
-            effect_when_true = wc.effect_when_true
-            effect_when_false = wc.effect_when_false
+            effect_string = effect_string || wc.effect_string
         }
     })
     const label_ids: string[] = Array.from(label_ids_set).sort()
@@ -149,16 +150,14 @@ function _WComponentMultipleForm (props: Props)
         {editing && causal_link_wcomponent_ids.length > 0 && <p>
             Causal Connection Values
             <BasicCausalLinkForm
-                show_primary_effect={true} // todo calculate these boolean flags appropriately
-                show_effect_when_false={true}
-                VAPs_represent_number={true}
-
-                effect_when_true={effect_when_true}
-                effect_when_false={effect_when_false}
+                effect_string={effect_string}
+                effect_when_true={undefined}
+                effect_when_false={undefined}
                 editing={editing}
-                change_effect={arg => bulk_edit_wcomponents({
+                wcomponents_by_id={wcomponents_by_id}
+                upsert_wcomponent={change => bulk_edit_wcomponents({
                     wcomponent_ids: causal_link_wcomponent_ids,
-                    change: arg,
+                    change,
                 })}
             />
         </p>}

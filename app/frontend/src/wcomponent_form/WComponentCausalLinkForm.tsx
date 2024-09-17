@@ -1,11 +1,9 @@
-import { h } from "preact"
-
-import { EditableNumber } from "../form/EditableNumber"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
-import { WComponent, WComponentCausalConnection, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { Button } from "../sharedf/Button"
+import { WComponent, WComponentCausalConnection, WComponentsById, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
+import { perform_calculations } from "../calculations/perform_calculations"
+import { PlainCalculationObject } from "../calculations/interfaces"
+import { Button } from "../sharedf/Button"
 
 
 
@@ -14,6 +12,7 @@ interface OwnProps
     wcomponent: WComponentCausalConnection
     from_wcomponent: WComponent | undefined
     editing: boolean
+    wcomponents_by_id: WComponentsById
     upsert_wcomponent: (partial_wcomponent: Partial<WComponentCausalConnection>) => void
 }
 
@@ -21,36 +20,17 @@ interface OwnProps
 
 export function WComponentCausalLinkForm (props: OwnProps)
 {
-    const {
-        wcomponent,
-        from_wcomponent,
-        editing,
-        upsert_wcomponent,
-    } = props
+    const { wcomponent } = props
 
-
-    const from_statev2 = wcomponent_is_statev2(from_wcomponent)
-    // Using an empty wcomponents_by_id for now as making causal connections from state_value should not be
-    // supported (for now) and I want to think more about this use case before implementing it
-    const wcomponents_by_id = {}
-    const VAPs_represent_number = get_wcomponent_VAPs_represent(from_wcomponent, wcomponents_by_id) === VAPsType.number
-
-
-    const show_primary_effect = editing || wcomponent.effect_when_true !== undefined
-
-    const show_effect_when_false = !VAPs_represent_number && editing
-        ? (from_wcomponent === undefined || from_statev2)
-        : from_statev2 && wcomponent.effect_when_false !== undefined
-
+    // const from_statev2 = wcomponent_is_statev2(from_wcomponent)
 
     return <BasicCausalLinkForm
-        show_primary_effect={show_primary_effect}
-        show_effect_when_false={show_effect_when_false}
-        VAPs_represent_number={VAPs_represent_number}
+        effect_string={wcomponent.effect_string}
         effect_when_true={wcomponent.effect_when_true}
         effect_when_false={wcomponent.effect_when_false}
-        editing={editing}
-        change_effect={upsert_wcomponent}
+        editing={props.editing}
+        wcomponents_by_id={props.wcomponents_by_id}
+        upsert_wcomponent={props.upsert_wcomponent}
     />
 }
 
@@ -58,13 +38,15 @@ export function WComponentCausalLinkForm (props: OwnProps)
 
 interface BasicCausalLinkFormProps
 {
-    show_primary_effect: boolean
-    show_effect_when_false: boolean
-    VAPs_represent_number: boolean
+    effect_string: string | undefined
+    // TODO: deprecate number from this.  It used to be number | undefined but
+    // because we want to capture simulation.js/InsightMaker Flow "effects" then
+    // we need to move to string | undefined
     effect_when_true: number | undefined
     effect_when_false: number | undefined
     editing: boolean
-    change_effect: (arg: { effect_when_true: number | undefined, effect_when_false: number | undefined }) => void
+    wcomponents_by_id: WComponentsById
+    upsert_wcomponent: (partial_wcomponent: Partial<WComponentCausalConnection> & { type?: undefined }) => void
 }
 
 
@@ -72,57 +54,93 @@ interface BasicCausalLinkFormProps
 export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
 {
     const {
-        show_primary_effect,
-        show_effect_when_false,
-        VAPs_represent_number,
+        effect_string,
         effect_when_true,
         effect_when_false,
         editing,
-        change_effect,
+        wcomponents_by_id,
+        upsert_wcomponent,
     } = props
 
+    const display_effect_string = editing || effect_string !== undefined
+    const display_effect_when_true = effect_when_true !== undefined
+    const display_effect_when_false = effect_when_false !== undefined
 
-    const primary_effect_description = VAPs_represent_number ? "Effect" : "Effect when true"
+    return <p style={{ display: "flex", flexDirection: "column" }} >
+        {display_effect_string && <div>
+            <span className="description_label">Effect</span> &nbsp;
+            <EditableTextSingleLine
+                placeholder=""
+                value={effect_string || ""}
+                editing_allowed={editing}
+                on_blur={effect_string =>
+                {
+                    const calculations: PlainCalculationObject[] = [
+                        {
+                            id: -1,
+                            name: "",
+                            value: effect_string,
+                        }
+                    ]
+                    const calculation_results = perform_calculations(calculations, wcomponents_by_id)
+                    const calculation_result = calculation_results[0]
+                    const effect = calculation_result?.value
 
-    return <p style={{ display: "flex" }} >
-        {show_primary_effect && <div style={{ flex: 1 }}>
-            <span className="description_label">{primary_effect_description}</span> &nbsp; <EditableNumber
-                placeholder="..."
+                    upsert_wcomponent({
+                        effect_string: effect_string || undefined,
+                        effect_when_true: effect,
+                    })
+                }}
+                on_blur_type={EditableTextOnBlurType.conditional}
+            />
+        </div>}
+        {display_effect_when_true && <div>
+            <span className="description_label">Effect value</span> &nbsp;
+            <span>{effect_when_true}</span>
+            {/* <EditableTextSingleLine
+                placeholder=""
                 value={effect_when_true}
-                editing_allowed={editing}
-                allow_undefined={true}
-                style={{ width: "100px" }}
-                // Remember to also send unchanged effect_when_false
-                on_blur={effect_when_true => change_effect({ effect_when_true, effect_when_false })}
-                on_blur_type={EditableTextOnBlurType.conditional}
-            />
+                editing_allowed={false}
+                style={{ maxWidth: "200px" }}
+                // on_blur={effect_when_true => upsert_wcomponent({ effect_when_true })}
+                // on_blur_type={EditableTextOnBlurType.conditional}
+            /> */}
         </div>}
-
-        {show_effect_when_false && <div style={{ flex: 1 }}>
-            <span className="description_label">Effect when false</span> &nbsp; <EditableNumber
-                placeholder="..."
+        {display_effect_when_false && <div>
+            <span className="description_label">Effect value when false</span> &nbsp;
+            <span>{effect_when_false}</span>
+                {/* &nbsp; <EditableTextSingleLine
+                placeholder=""
                 value={effect_when_false}
-                editing_allowed={editing}
-                allow_undefined={true}
-                style={{ width: "100px" }}
-                // Remember to also send unchanged effect_when_true
-                on_blur={effect_when_false => change_effect({ effect_when_false, effect_when_true })}
-                on_blur_type={EditableTextOnBlurType.conditional}
-            />
+                editing_allowed={false}
+                style={{ maxWidth: "200px" }}
+                // on_blur={effect_when_false => upsert_wcomponent({ effect_when_false })}
+                // on_blur_type={EditableTextOnBlurType.conditional}
+            /> */}
+            {editing && <>
+                &nbsp;
+                <span
+                    className="description_label"
+                    style={{ cursor: "pointer", color: "#F99" }}
+                    onClick={() => upsert_wcomponent({ effect_when_false: undefined })}
+                >
+                    Field deprecated (click to remove)
+                </span>
+            </>}
         </div>}
 
-        {/* flexGrow does not seem to work */}
-        {editing && show_effect_when_false && <div style={{ flex: 1, margin: "auto" }}>
+        {/* flexGrow does not seem to work
+        {editing && display_effect_when_false && <div style={{ flex: 1, margin: "auto" }}>
             <Button
                 value="Invert Effect"
                 onClick={() =>
                 {
-                    change_effect({
+                    upsert_wcomponent({
                         effect_when_true: effect_when_false,
                         effect_when_false: effect_when_true,
                     })
                 }}
             />
-        </div>}
+        </div>} */}
     </p>
 }

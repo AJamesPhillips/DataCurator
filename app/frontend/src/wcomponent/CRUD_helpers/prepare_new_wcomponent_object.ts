@@ -46,8 +46,9 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
         if (wcomponent_is_causal_link(link))
         {
             link = {
+                effect_string: "1",
                 effect_when_true: 1,
-                effect_when_false: -1,
+                effect_when_false: undefined,
                 values_and_prediction_sets: [],
                 ...link,
             }

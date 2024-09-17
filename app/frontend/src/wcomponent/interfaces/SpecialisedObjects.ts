@@ -87,6 +87,10 @@ export interface WComponentConnection extends WComponentBase, Partial<ValidityPr
 export interface WComponentCausalConnection extends WComponentConnection
 {
     type: "causal_link"
+    // We want to capture simulation.js/InsightMaker Flow "effects" so we
+    // we need use a string for this and then calculate the value to go into
+    // "effect_when_true" and "effect_when_false"
+    effect_string?: string
     effect_when_true?: number
     effect_when_false?: number
 }

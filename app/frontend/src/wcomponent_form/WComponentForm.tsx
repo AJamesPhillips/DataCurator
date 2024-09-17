@@ -372,6 +372,7 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             from_wcomponent={from_wcomponent}
             editing={editing_allowed}
+            wcomponents_by_id={wcomponents_by_id}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
