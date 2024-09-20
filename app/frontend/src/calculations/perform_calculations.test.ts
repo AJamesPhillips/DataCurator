@@ -363,7 +363,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Missing component", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.` },
+                { value: 2, units: "", error: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.` },
             ]
             calculation_result = perform_calculations(calculations, {})
             test(calculation_result, expected_calculation_result, `Can run calculations using missing uuids.  Will default to 1 and provide a warning.`)

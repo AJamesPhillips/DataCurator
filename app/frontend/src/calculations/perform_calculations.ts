@@ -42,10 +42,15 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         if (units !== undefined) model_config.units = units
         const model_component = model.Variable(model_config)
 
-        const warnings = prepare_other_components(model, model_component, values, uuid_v4s, wcomponents_by_id)
+        const {warnings, errors} = prepare_other_components({ model, model_component, values, uuids: uuid_v4s, wcomponents_by_id })
 
         const calculation_result = run_model(model, calculation.units, model_component)
         if (warnings.length) calculation_result.warning = warnings.join(" ")
+        if (errors.length)
+        {
+            if (calculation_result.error) errors.unshift(calculation_result.error)
+            calculation_result.error = errors.join("\n")
+        }
 
         // Store calculation value for use in future calculations
         values[calculation.name] = calculation_result
@@ -67,9 +72,25 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
 }
 
 
-
-function prepare_other_components (model: Model, model_component: SimulationComponent, values: { [id: string]: CalculationResult }, uuids: string[], wcomponents_by_id: WComponentsById): string[]
+interface PrepareOtherComponentsArgs
 {
+    model: Model
+    model_component: SimulationComponent
+    values: { [id: string]: CalculationResult }
+    uuids: string[]
+    wcomponents_by_id: WComponentsById
+}
+
+interface PrepareOtherComponentsReturn
+{
+    warnings: string[]
+    errors: string[]
+}
+
+function prepare_other_components (args: PrepareOtherComponentsArgs): PrepareOtherComponentsReturn
+{
+    const { model, model_component, values, uuids, wcomponents_by_id } = args
+
     const other_components: { [id: string]: SimulationComponent } = {}
 
     Object.entries(values).forEach(([name, calc_result]) =>
@@ -82,14 +103,14 @@ function prepare_other_components (model: Model, model_component: SimulationComp
 
     const now_ms = new Date().getTime()
     const warnings: string[] = []
+    const errors: string[] = []
 
     const unsuccessfully_mapped_uuids: string[] = uuids.map(uuid =>
     {
         const wcomponent = wcomponents_by_id[uuid]
         if (!wcomponent)
         {
-            // TODO make this into an error instead of a warning?
-            warnings.push(`Could not find wcomponent with id: @@${uuid}.  Defaulting to value of 1.`)
+            errors.push(`Could not find wcomponent with id: @@${uuid}.  Defaulting to value of 1.`)
             return uuid
         }
 
@@ -149,7 +170,7 @@ function prepare_other_components (model: Model, model_component: SimulationComp
         model.Link(other_component, model_component)
     })
 
-    return warnings
+    return { warnings, errors }
 }
 
 

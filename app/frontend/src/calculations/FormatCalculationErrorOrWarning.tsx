@@ -22,16 +22,12 @@ export function get_error_or_warning_message(result: CalculationResult | undefin
 
     if (result?.error) {
         error_or_warning_message = `Error: ${result.error}`
+        css.color = "black"
     }
 
     if (result?.warning) {
 
-        if (result.error)
-        {
-            error_or_warning_message += "\n----\n"
-            css.color = "black"
-        }
-
+        if (result.error) error_or_warning_message += "\n----\n"
         error_or_warning_message += `Warning: ${result.warning}`
     }
 
