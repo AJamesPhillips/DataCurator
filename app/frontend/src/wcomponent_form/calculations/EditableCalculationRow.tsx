@@ -19,7 +19,7 @@ import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRo
 import { get_default_significant_figures, get_default_result_display_type } from "./get_default_formatting"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
-import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/format_error_or_warning"
+import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/FormatCalculationErrorOrWarning"
 
 
 export interface CalculationRowProps

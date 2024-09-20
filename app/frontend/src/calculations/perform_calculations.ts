@@ -88,6 +88,7 @@ function prepare_other_components (model: Model, model_component: SimulationComp
         const wcomponent = wcomponents_by_id[uuid]
         if (!wcomponent)
         {
+            // TODO make this into an error instead of a warning?
             warnings.push(`Could not find wcomponent with id: @@${uuid}.  Defaulting to value of 1.`)
             return uuid
         }
@@ -132,6 +133,8 @@ function prepare_other_components (model: Model, model_component: SimulationComp
         const component = model.Variable({ name: uuid, value, units: "" })
         other_components[uuid] = component
 
+        // Return an empty string as type guard to ensure `string[]` by filtering
+        // out `undefined` is not working
         return ""
     }).filter(uuid => uuid.length > 0)
 

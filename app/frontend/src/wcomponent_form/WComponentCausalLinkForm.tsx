@@ -12,7 +12,7 @@ import {
     CalculationErrorOrWarningMessage,
     FormatCalculationErrorOrWarning,
     get_error_or_warning_message,
-} from "../calculations/format_error_or_warning"
+} from "../calculations/FormatCalculationErrorOrWarning"
 import { useEffect, useMemo, useState } from "preact/hooks"
 
 
@@ -85,15 +85,11 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
         ]
         const calculation_results = perform_calculations(calculations, wcomponents_by_id)
         const calculation_result = calculation_results[0]
+
         const effect = calculation_result?.value
+        if (effect !== undefined) upsert_wcomponent({ effect_when_true: effect })
 
         const error_or_warning = get_error_or_warning_message(calculation_result)
-        if (!error_or_warning.error_or_warning_message)
-        {
-            upsert_wcomponent({ effect_when_true: effect })
-            return undefined
-        }
-
         return error_or_warning
     }, [effect_string])
 

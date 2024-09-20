@@ -13,19 +13,24 @@ export interface CalculationErrorOrWarningMessage
 
 export function get_error_or_warning_message(result: CalculationResult | undefined, common_css: CSSProperties = { display: "flex" }): CalculationErrorOrWarningMessage
 {
-    const css: CSSProperties = { ...common_css }
+    const css: CSSProperties = {
+        ...common_css,
+        color: "lightgrey",
+    }
 
     let error_or_warning_message = ""
 
     if (result?.error) {
-        // css.color = "red"
         error_or_warning_message = `Error: ${result.error}`
     }
 
     if (result?.warning) {
 
-        if (result.error) error_or_warning_message += "\n----\n"
-        else css.color = "lightgrey"
+        if (result.error)
+        {
+            error_or_warning_message += "\n----\n"
+            css.color = "black"
+        }
 
         error_or_warning_message += `Warning: ${result.warning}`
     }
@@ -47,7 +52,8 @@ export function FormatCalculationErrorOrWarning (props: CalculationErrorOrWarnin
     return <div style={{
         ...css,
         maxHeight: error_or_warning_message.length ? 100 : 0,
-        transition: "max-height 1s ease 0s",
+        maxWidth: error_or_warning_message.length ? 100 : 0,
+        transition: "max-height 1s ease, max-width 1s ease, color 1s ease",
     }}>
         <WarningTriangleV2 warning={error_or_warning_message} always_display={true} />
     </div>
