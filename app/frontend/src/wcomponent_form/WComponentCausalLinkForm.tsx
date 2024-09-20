@@ -1,9 +1,19 @@
-import { WComponent, WComponentCausalConnection, WComponentsById, wcomponent_is_statev2 } from "../wcomponent/interfaces/SpecialisedObjects"
+import {
+    PartialWComponentWithoutType,
+    WComponent,
+    WComponentCausalConnection,
+    WComponentsById,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { perform_calculations } from "../calculations/perform_calculations"
 import { PlainCalculationObject } from "../calculations/interfaces"
-import { Button } from "../sharedf/Button"
+import {
+    CalculationErrorOrWarningMessage,
+    FormatCalculationErrorOrWarning,
+    get_error_or_warning_message,
+} from "../calculations/format_error_or_warning"
+import { useEffect, useMemo, useState } from "preact/hooks"
 
 
 
@@ -46,7 +56,7 @@ interface BasicCausalLinkFormProps
     effect_when_false: number | undefined
     editing: boolean
     wcomponents_by_id: WComponentsById
-    upsert_wcomponent: (partial_wcomponent: Partial<WComponentCausalConnection> & { type?: undefined }) => void
+    upsert_wcomponent: (partial_wcomponent: PartialWComponentWithoutType) => void
 }
 
 
@@ -62,37 +72,48 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
         upsert_wcomponent,
     } = props
 
+    const effect_calculaton_error_warning = useMemo<undefined | CalculationErrorOrWarningMessage>(() =>
+    {
+        if (!effect_string) return undefined
+
+        const calculations: PlainCalculationObject[] = [
+            {
+                id: -1,
+                name: "",
+                value: effect_string,
+            }
+        ]
+        const calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        const calculation_result = calculation_results[0]
+        const effect = calculation_result?.value
+
+        const error_or_warning = get_error_or_warning_message(calculation_result)
+        if (!error_or_warning.error_or_warning_message)
+        {
+            upsert_wcomponent({ effect_when_true: effect })
+            return undefined
+        }
+
+        return error_or_warning
+    }, [effect_string])
+
     const display_effect_string = editing || effect_string !== undefined
     const display_effect_when_true = effect_when_true !== undefined
     const display_effect_when_false = effect_when_false !== undefined
 
-    return <p style={{ display: "flex", flexDirection: "column" }} >
+    return <p style={{ display: "flex", flexDirection: "column" }}>
         {display_effect_string && <div>
             <span className="description_label">Effect</span> &nbsp;
-            <EditableTextSingleLine
-                placeholder=""
-                value={effect_string || ""}
-                editing_allowed={editing}
-                on_blur={effect_string =>
-                {
-                    const calculations: PlainCalculationObject[] = [
-                        {
-                            id: -1,
-                            name: "",
-                            value: effect_string,
-                        }
-                    ]
-                    const calculation_results = perform_calculations(calculations, wcomponents_by_id)
-                    const calculation_result = calculation_results[0]
-                    const effect = calculation_result?.value
-
-                    upsert_wcomponent({
-                        effect_string: effect_string || undefined,
-                        effect_when_true: effect,
-                    })
-                }}
-                on_blur_type={EditableTextOnBlurType.conditional}
-            />
+            <div style={{ display: "flex" }}>
+                {effect_calculaton_error_warning && <FormatCalculationErrorOrWarning {...effect_calculaton_error_warning} />}
+                <EditableTextSingleLine
+                    placeholder=""
+                    value={effect_string || ""}
+                    editing_allowed={editing}
+                    on_blur={effect_string => upsert_wcomponent({ effect_string })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
+                />
+            </div>
         </div>}
         {display_effect_when_true && <div>
             <span className="description_label">Effect value</span> &nbsp;

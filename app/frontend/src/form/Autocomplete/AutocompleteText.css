@@ -1,4 +1,13 @@
 
+.editable_field
+{
+    /*
+    Width 100% is so that the <EditableTextSingleLine /> in WComponentCausalLinkForm.tsx
+    takes the full width that's over the <FormatCalculationErrorOrWarning /> is displayed.
+    */
+    width: 100%;
+}
+
 .editable_field.autocomplete
 {
     position: relative;

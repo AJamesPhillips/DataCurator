@@ -19,6 +19,7 @@ import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRo
 import { get_default_significant_figures, get_default_result_display_type } from "./get_default_formatting"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
+import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/format_error_or_warning"
 
 
 export interface CalculationRowProps
@@ -88,7 +89,8 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const show_calc_value = editing || should_show_calc_value(calc.value)
     const show_units_from_target_wcomponent = !!calc.value.match(only_double_at_mentioned_uuids_regex)
 
-    const { error_or_warning_message, common_css } = get_error_or_warning_message(result)
+    const common_css: CSSProperties = { display: "flex" }
+    const error_or_warning = get_error_or_warning_message(result, common_css)
 
     return <Box
         p={1}
@@ -102,13 +104,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         style={{ display: "flex" }}
         className={"form_section " + (show_options ? "" : "hidden_border")}
     >
-        {<div style={{
-            ...common_css,
-            maxHeight: error_or_warning_message.length ? 100 : 0,
-            transition: "max-height 1s ease 0s",
-        }}>
-            <WarningTriangleV2 warning={error_or_warning_message} always_display={true} />
-        </div>}
+        <FormatCalculationErrorOrWarning {...error_or_warning} />
 
         <div style={{ width: "100%", display: "flex" }}>
             <EditableTextSingleLine
@@ -234,31 +230,4 @@ export function should_show_calc_value (value: string): boolean
     }
 
     return !!value_without_uuids.match(CALULATION_SIGNS)
-}
-
-
-
-function get_error_or_warning_message(result: CalculationResult | undefined)
-{
-    const common_css: CSSProperties = { display: "flex" }
-
-    let error_or_warning_message = ""
-
-    if (result?.error) {
-        // common_css.color = "red"
-        error_or_warning_message = `Error: ${result.error}`
-    }
-
-    if (result?.warning) {
-        if (!result.error) common_css.color = "lightgrey"
-        error_or_warning_message += `Warning: ${result.warning}`
-    }
-
-    // error_or_warning_message = replace_ids_in_text({
-    //     text: error_or_warning_message,
-    //     text_type: RichTextType.rich,
-    //     ...args,
-    // })
-
-    return { error_or_warning_message, common_css }
 }
