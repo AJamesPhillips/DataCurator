@@ -19,6 +19,7 @@ const TABLE_NAME = "wcomponents"
 type GetWComponentsArgs =
 {
     supabase: SupabaseClient
+    ids?: string[]
 } & ({
     base_id: number
     all_bases?: false
@@ -32,6 +33,7 @@ export function supabase_get_wcomponents (args: GetWComponentsArgs)
         ...args,
         table: TABLE_NAME,
         converter: wcomponent_supabase_to_app,
+        specific_ids: args.ids,
     })
 }
 

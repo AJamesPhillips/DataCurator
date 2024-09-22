@@ -1,5 +1,5 @@
 import type { WComponentNodeAction } from "./action"
-import type { Base } from "../../shared/interfaces/base"
+// import type { Base } from "../../shared/interfaces/base"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
 import type { HasObjectives, WComponentJudgement } from "./judgement"
