@@ -18,12 +18,12 @@ type GetItemsArgs<S, U> =
     base_id?: undefined
     all_bases: true
 })
-interface GetItemsReturn<U>
+export interface GetItemsReturn<V>
 {
     error: PostgrestError | undefined
-    items: U[]
+    value: V
 }
-export async function supabase_get_items <S extends { id: string, base_id: number }, U> (args: GetItemsArgs<S, U>): Promise<GetItemsReturn<U>>
+export async function supabase_get_items <S extends { id: string, base_id: number }, U> (args: GetItemsArgs<S, U>): Promise<GetItemsReturn<U[]>>
 {
     const offset = args.offset || 0
     // Arbitrarily limited max specific_ids to 100 to prevent errors with URLS being too long
@@ -66,9 +66,9 @@ export async function supabase_get_items <S extends { id: string, base_id: numbe
     if (!error && (items.length === MAX_ROWS || specific_ids_remaining_to_fetch))
     {
         const res2 = await supabase_get_items({ ...args, offset: offset + MAX_ROWS })
-        if (!res2.error) items = items.concat(res2.items)
+        if (!res2.error) items = items.concat(res2.value)
         else error = res2.error
     }
 
-    return { error, items }
+    return { error, value: items }
 }

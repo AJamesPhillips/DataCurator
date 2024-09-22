@@ -415,11 +415,11 @@ export function SandBoxSupabase ()
                 type="button"
                 onClick={async () =>
                 {
-                    const { error, items } = await supabase_get_knowledge_views({
+                    const { error, value: knowledge_views } = await supabase_get_knowledge_views({
                         supabase, base_id: current_base_id
                     })
                     set_postgrest_error(error || null) // change this to undefined at some point
-                    set_knowledge_views(items)
+                    set_knowledge_views(knowledge_views)
                 }}
                 value={`Get knowledge views for base ${current_base_id}`}
             />
@@ -427,11 +427,11 @@ export function SandBoxSupabase ()
                 type="button"
                 onClick={async () =>
                 {
-                    const { error, items } = await supabase_get_knowledge_views({
+                    const { error, value: knowledge_views } = await supabase_get_knowledge_views({
                         supabase, all_bases: true
                     })
                     set_postgrest_error(error || null) // change this to undefined at some point
-                    set_knowledge_views(items)
+                    set_knowledge_views(knowledge_views)
                 }}
                 value={`Get all knowledge views`}
             />

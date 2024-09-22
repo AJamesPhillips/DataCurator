@@ -57,7 +57,7 @@ export async function supabase_get_wcomponents_from_any_base (args: GetWComponen
 
     return {
         error: result.error,
-        wcomponents: result.items,
+        wcomponents: result.value,
     }
 }
 
