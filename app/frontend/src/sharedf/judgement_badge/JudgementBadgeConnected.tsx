@@ -43,6 +43,7 @@ const map_state = (state: RootState, own_props: OwnProps) => {
     const position = composed_kv?.composed_wc_id_map[own_props.judgement_or_objective_id]
 
     return {
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         judgement_wcomponent,
         target_wcomponent,
         VAP_set_id_to_counterfactual_v2_map,
@@ -65,7 +66,14 @@ function _JudgementBadgeConnected (props: Props)
 
     if (!judgement_wcomponent || !target_wcomponent) return null
 
-    const judgement_value = calculate_judgement_value({ judgement_wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
+    const judgement_value = calculate_judgement_value({
+        wcomponents_by_id: props.wcomponents_by_id,
+        judgement_wcomponent,
+        target_wcomponent,
+        VAP_set_id_to_counterfactual_v2_map,
+        created_at_ms,
+        sim_ms,
+    })
 
     return <JudgementBadge
         judgement={judgement_value}

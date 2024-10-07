@@ -53,6 +53,15 @@ const _ProjectJudgementEntry = (props: Props) =>
     } = props
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[target_wcomponent.id]?.VAP_sets
 
+    const judgement_value = calculate_judgement_value({
+        wcomponents_by_id,
+        judgement_wcomponent: judgement,
+        target_wcomponent,
+        VAP_set_id_to_counterfactual_v2_map,
+        created_at_ms,
+        sim_ms,
+    })
+
     return <div style={{ display: "flex", flexDirection: "row", flexBasis: "100", padding: "3px 5px", margin: 2, borderBottom: "thin solid #aaa" }}>
         <div
             style={{ flex: "5", cursor: "pointer" }}
@@ -68,7 +77,13 @@ const _ProjectJudgementEntry = (props: Props) =>
             />
         </div>
         <div style={{ flex: "1", textAlign: "right" }}>
-            {get_wcomponent_state_UI_value({ wcomponent: target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })?.values_string}
+            {get_wcomponent_state_UI_value({
+                wcomponents_by_id,
+                wcomponent: target_wcomponent,
+                VAP_set_id_to_counterfactual_v2_map,
+                created_at_ms,
+                sim_ms,
+            })?.values_string}
         </div>
         <div style={{ flex: "1" }}>
             &nbsp;{judgement.judgement_operator} {judgement.judgement_comparator_value}
@@ -83,7 +98,7 @@ const _ProjectJudgementEntry = (props: Props) =>
             })()}
         >
             <JudgementBadge
-                judgement={calculate_judgement_value({ judgement_wcomponent: judgement, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })}
+                judgement={judgement_value}
                 judgement_trend_manual={judgement.judgement_trend_manual}
                 size="medium"
             />

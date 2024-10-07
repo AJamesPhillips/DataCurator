@@ -54,7 +54,14 @@ export function get_title (args: GetFieldTextArgs): string
 
     if (text_type === RichTextType.raw) return title
 
-    const text = replace_value_in_text({ text: title, wcomponent, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const text = replace_value_in_text({
+        text: title,
+        wcomponents_by_id: args.wcomponents_by_id,
+        wcomponent,
+        wc_id_to_counterfactuals_map,
+        created_at_ms,
+        sim_ms,
+    })
 
     return replace_ids_in_text({ ...args, text, text_type })
 }
@@ -64,6 +71,7 @@ export function get_title (args: GetFieldTextArgs): string
 interface ReplaceValueInTextArgs
 {
     text: string
+    wcomponents_by_id: WComponentsById
     wcomponent: WComponent
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
@@ -78,6 +86,7 @@ function replace_value_in_text (args: ReplaceValueInTextArgs)
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map[wcomponent.id]?.VAP_sets
 
     const value = get_wcomponent_state_UI_value({
+        wcomponents_by_id: args.wcomponents_by_id,
         wcomponent,
         VAP_set_id_to_counterfactual_v2_map,
         created_at_ms: args.created_at_ms,
