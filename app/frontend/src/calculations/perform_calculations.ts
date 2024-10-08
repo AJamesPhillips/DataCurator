@@ -115,7 +115,6 @@ function prepare_other_components (args: PrepareOtherComponentsArgs): PrepareOth
         }
 
         const { most_probable_VAP_set_values: VAP_sets, not_allowed_VAP_set_values } = get_wcomponent_state_value_and_probabilities({
-            wcomponents_by_id,
             wcomponent,
             VAP_set_id_to_counterfactual_v2_map: {},
             created_at_ms: now_ms,

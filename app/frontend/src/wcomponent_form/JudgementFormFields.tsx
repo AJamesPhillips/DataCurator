@@ -37,7 +37,6 @@ const map_state = (state: RootState, { wcomponent }: OwnProps) =>
     const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_id)
 
     return {
-        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         target_wcomponent,
         VAP_set_id_to_counterfactual_v2_map,
         created_at_ms: state.routing.args.created_at_ms,
@@ -59,14 +58,7 @@ function _JudgementFormFields (props: Props)
     const { judgement_manual, judgement_trend_manual } = wcomponent
     const selected_option_id_for_manual = judgement_manual === undefined ? undefined : judgement_manual.toString()
 
-    const judgement = calculate_judgement_value({
-        wcomponents_by_id: props.wcomponents_by_id,
-        judgement_wcomponent: wcomponent,
-        target_wcomponent,
-        VAP_set_id_to_counterfactual_v2_map,
-        created_at_ms,
-        sim_ms,
-    })
+    const judgement = calculate_judgement_value({ judgement_wcomponent: wcomponent, target_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
 
 
     // Using an empty wcomponents_by_id for now as judgements on state_value should not be supported (for now)

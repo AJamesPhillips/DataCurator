@@ -76,11 +76,7 @@ export const test_get_wcomponent_state_UI_value = describe.delay("get_wcomponent
 
 
         return get_wcomponent_state_UI_value({
-            wcomponents_by_id: {},
-            wcomponent,
-            VAP_set_id_to_counterfactual_v2_map,
-            created_at_ms: dt1.getTime(),
-            sim_ms: dt1.getTime(),
+            wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms: dt1.getTime(), sim_ms: dt1.getTime(),
         })
     }
 

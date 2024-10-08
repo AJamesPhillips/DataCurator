@@ -40,7 +40,6 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
         {
             const created_at_ms = new Date().getTime()
             const value = get_wcomponent_state_UI_value({
-                wcomponents_by_id: kwargs.wcomponents_by_id,
                 wcomponent: referenced_wcomponent,
                 VAP_set_id_to_counterfactual_v2_map: {},
                 created_at_ms,

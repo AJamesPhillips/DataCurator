@@ -177,7 +177,7 @@ function _WComponentForm (props: Props)
     let has_VAP_sets = false
     if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
     {
-        UI_value = get_wcomponent_state_UI_value({ wcomponents_by_id, wcomponent: derived_composed_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
+        UI_value = get_wcomponent_state_UI_value({ wcomponent: derived_composed_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
         has_VAP_sets = (wcomponent.values_and_prediction_sets?.length || 0) > 0
     }
 

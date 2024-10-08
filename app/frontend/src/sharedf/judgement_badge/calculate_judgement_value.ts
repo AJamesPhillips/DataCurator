@@ -1,5 +1,5 @@
 import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
-import type { WComponent, WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import {
@@ -15,7 +15,6 @@ export type JudgementValue = boolean | undefined
 
 interface CalculateJudgementValueArgs
 {
-    wcomponents_by_id: WComponentsById
     judgement_wcomponent: WComponentJudgement
     target_wcomponent: WComponent | undefined
     VAP_set_id_to_counterfactual_v2_map: VAPSetIdToCounterfactualV2Map | undefined
@@ -32,7 +31,6 @@ export function calculate_judgement_value (args: CalculateJudgementValueArgs): J
     if (!target_wcomponent) return undefined
 
     const { most_probable_VAP_set_values } = get_wcomponent_state_value_and_probabilities({
-        wcomponents_by_id: args.wcomponents_by_id,
         wcomponent: target_wcomponent,
         VAP_set_id_to_counterfactual_v2_map,
         created_at_ms,

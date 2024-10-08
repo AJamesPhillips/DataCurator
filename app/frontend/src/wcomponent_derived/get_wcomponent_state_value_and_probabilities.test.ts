@@ -102,7 +102,6 @@ export const test_get_wcomponent_state_value_and_probabilities = describe.delay(
         const VAP_set_id_to_counterfactual_v2_map = helper_func__make_VAP_set_id_to_counterfactual_v2_map(apply_counterfactuals_v2, wcomponent.values_and_prediction_sets)
 
         return get_wcomponent_state_value_and_probabilities({
-            wcomponents_by_id: {},
             wcomponent,
             VAP_set_id_to_counterfactual_v2_map,
             created_at_ms: dt1.getTime(),
@@ -205,7 +204,6 @@ export const test_get_wcomponent_state_value_and_probabilities = describe.delay(
         ])
         let wcomponent: WComponentNodeStateV2 = { ...wcomponent__type_other, values_and_prediction_sets }
         display_value = get_wcomponent_state_value_and_probabilities({
-            wcomponents_by_id: {},
             wcomponent,
             VAP_set_id_to_counterfactual_v2_map: undefined,
             created_at_ms: dt1.getTime(),

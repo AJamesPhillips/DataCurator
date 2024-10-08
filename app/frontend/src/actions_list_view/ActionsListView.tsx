@@ -82,7 +82,6 @@ function _ActionsListViewContent (props: Props)
     actions.forEach(action =>
     {
         const attribute_values = get_wcomponent_state_value_and_probabilities({
-            wcomponents_by_id,
             wcomponent: action,
             VAP_set_id_to_counterfactual_v2_map: {},
             // MAYBE DO: allow the user to move back in time through the actions

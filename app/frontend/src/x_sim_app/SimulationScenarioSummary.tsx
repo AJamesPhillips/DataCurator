@@ -193,7 +193,6 @@ function get_attribute_initial_value (attribute_name: string, args: GetAttribute
     const wc_id_to_counterfactuals_map = composed_kv.wc_id_to_active_counterfactuals_v2_map
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map[attribute_wcomponent.id]?.VAP_sets
     const attribute_values = get_wcomponent_state_value_and_probabilities({
-        wcomponents_by_id,
         wcomponent: attribute_wcomponent,
         VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms
     })

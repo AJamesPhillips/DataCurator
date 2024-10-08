@@ -476,7 +476,6 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
     if (wcomponent_is_action(wcomponent))
     {
         const attribute_values = get_wcomponent_state_value_and_probabilities({
-            wcomponents_by_id: args.wcomponents_by_id,
             wcomponent,
             VAP_set_id_to_counterfactual_v2_map: {}, created_at_ms, sim_ms,
         })
