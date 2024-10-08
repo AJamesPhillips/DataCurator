@@ -7,8 +7,8 @@ import { run_perform_calculations_test } from "./calculations/perform_calculatio
 import { test_get_angle } from "./canvas/connections/angles"
 import { test_derive_connection_coords } from "./canvas/connections/derive_coords.test"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
-import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils.test"
+import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_calc_ids_to_move_and_conflicts_functions } from "./knowledge_view/change_base/calc_ids_to_move_and_conflicts"
 import { test_get_actions_parent_ids } from "./priorities/utils/get_actions_parent_ids"
 import { run_number_to_significant_figures_test } from "./shared/format_number_to_significant_figures.test"
@@ -17,13 +17,19 @@ import { test_graph_related_functions } from "./shared/utils/graph"
 import { test_stable_stringify } from "./shared/utils/stable_stringify.test"
 import { tests_stats } from "./shared/utils/test"
 import { test_get_tense_of_uncertain_datetime } from "./shared/utils_datetime/get_tense_of_uncertain_datetime"
-import { test_partition_sorted_items_by_datetimes, test_sort_by_uncertain_event_datetimes } from "./shared/utils_datetime/partition_by_uncertain_datetime"
+import {
+    test_partition_sorted_items_by_datetimes,
+    test_sort_by_uncertain_event_datetimes,
+} from "./shared/utils_datetime/partition_by_uncertain_datetime"
 import { test_partition_items_by_created_at_datetime } from "./shared/utils_datetime/utils_datetime"
 import { test_calc_new_counterfactual_state } from "./sharedf/prediction_badge/calc_new_counterfactual_state"
 import { test_add_newlines_to_markdown } from "./sharedf/rich_text/add_newlines_to_markdown"
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
-import { run_replace_normal_ids_tests, test_get_ids_from_text } from "./sharedf/rich_text/replace_normal_ids.test"
+import {
+    run_replace_normal_ids_tests,
+    test_get_ids_from_text,
+} from "./sharedf/rich_text/replace_normal_ids.test"
 import { test_derived_composed_wcomponents_by_id_reducer } from "./state/derived/derived_composed_wcomponents_by_id_reducer.test"
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type.test"
 import { run_get_composed_wc_id_maps_object_tests } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
@@ -62,50 +68,40 @@ function run_all_tests ()
 {
     tests_stats.reset()
 
-    run_get_rich_text_tests()
-    run_remove_rich_text_tests()
-    run_replace_normal_ids_tests()
-    test_get_ids_from_text()
-    test_add_newlines_to_markdown()
-    run_normalise_calculation_numbers_tests()
-    run_normalise_calculation_ids_tests()
     run_apply_units_from_component_tests()
-    run_perform_calculations_test()
-    run_number_to_significant_figures_test()
-    run_number_to_string_test()
     run_convert_percentages_tests()
     run_currency_symbol_functions_tests()
-    run_get_valid_calculation_name_id_tests()
-    run_make_calculation_safe_for_rich_text_tests()
-    run_get_wcomponent_VAPs_represent_tests()
-    run_specialised_objects_accessors_tests()
-    run_EditableCalculationRow_tests()
-    run_list_function_tests()
-    run_get_default_formatting_function_tests()
-    run_get_composed_wc_id_maps_object_tests()
-    run_get_wcomponent_status_in_knowledge_view_tests()
-    run_parse_value_tests()
-
-    test_calc_connection_wcomponent_should_display()
-    test_derive_connection_coords()
-    test_knowledge_views_derived_reducer()
-    test_calculate_new_zoom_xy()
+    run_normalise_calculation_ids_tests()
+    run_normalise_calculation_numbers_tests()
+    run_perform_calculations_test()
     test_get_angle()
+    test_derive_connection_coords()
+    test_calculate_new_zoom_xy()
     test_correct_datetime_for_local_time_zone()
     test_handle_on_blur()
     test_calc_ids_to_move_and_conflicts_functions()
-    test_cloneable_generator_factory()
     test_get_actions_parent_ids()
+    run_number_to_significant_figures_test()
+    run_number_to_string_test()
     test_graph_related_functions()
+    test_stable_stringify()
     test_get_tense_of_uncertain_datetime()
     test_partition_sorted_items_by_datetimes()
     test_sort_by_uncertain_event_datetimes()
     test_partition_items_by_created_at_datetime()
-    test_partition_and_prune_items_by_datetimes_and_versions()
     test_calc_new_counterfactual_state()
+    test_add_newlines_to_markdown()
+    run_get_rich_text_tests()
+    run_remove_rich_text_tests()
+    run_replace_normal_ids_tests()
+    test_get_ids_from_text()
+    test_derived_composed_wcomponents_by_id_reducer()
     test_calc_if_wcomponent_should_exclude_because_label_or_type()
+    run_get_composed_wc_id_maps_object_tests()
+    test_knowledge_views_derived_reducer()
     test_merge_routing_state()
     test_routing_state_to_string()
+    run_specialised_objects_accessors_tests()
     test_tidy_wcomponent()
     test_merge_knowledge_views()
     test_merge_wcomponent()
@@ -113,14 +109,23 @@ function run_all_tests ()
     test_array_functions()
     test_binary_search_functions()
     test_csv_to_array()
+    test_cloneable_generator_factory()
+    run_list_function_tests()
     test_prepare_new_VAP_set()
     test_update_VAPSets_with_possibilities()
+    run_get_wcomponent_VAPs_represent_tests()
+    run_parse_value_tests()
     test_default_possible_values()
     test_get_possibilities_from_VAP_sets()
-    test_get_wcomponent_state_value_and_probabilities()
+    test_calc_connection_wcomponent_should_display()
     test_get_wcomponent_state_UI_value()
-    test_derived_composed_wcomponents_by_id_reducer()
-    test_stable_stringify()
+    test_get_wcomponent_state_value_and_probabilities()
+    test_partition_and_prune_items_by_datetimes_and_versions()
+    run_EditableCalculationRow_tests()
+    run_get_default_formatting_function_tests()
+    run_get_valid_calculation_name_id_tests()
+    run_make_calculation_safe_for_rich_text_tests()
+    run_get_wcomponent_status_in_knowledge_view_tests()
 
     tests_stats.print()
 }
