@@ -81,7 +81,7 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
     }
     else
     {
-        _tests_stats.test_failed.push(description)
+        _tests_stats.test_failed.push(`${description} "${str_got}" !== "${str_expected}"`)
         console.error(`fail:  ${description} "${str_got}" !== "${str_expected}"`)
         try
         {

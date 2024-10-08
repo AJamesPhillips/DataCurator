@@ -39,7 +39,11 @@ export function get_wcomponent_state_value_and_probabilities (args: GetWComponen
 
     if (!wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent)) return { most_probable_VAP_set_values: [], not_allowed_VAP_set_values: true }
 
-    // todo should implement this fully?
+    // I'm not sure that we need to actually pass wcomponents_by_id into this function.
+    // This was implemented in commit 6f57b6c2 but then immediately reverted
+    // because wcomponents used are already passed through the `get_composed_wcomponents_by_id`
+    // function (which also adds the `_derived__using_value_from_wcomponent_id`
+    // field to the wcomponents).
     const wcomponents_by_id = {}
     const VAPs_represent = get_wcomponent_VAPs_represent(wcomponent, wcomponents_by_id)
 

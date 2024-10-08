@@ -31,6 +31,7 @@ import {
     test_get_ids_from_text,
 } from "./sharedf/rich_text/replace_normal_ids.test"
 import { test_derived_composed_wcomponents_by_id_reducer } from "./state/derived/derived_composed_wcomponents_by_id_reducer.test"
+import { test_get_composed_wcomponents_by_id } from "./state/derived/get_composed_wcomponents_by_id.test"
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type.test"
 import { run_get_composed_wc_id_maps_object_tests } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
 import { test_knowledge_views_derived_reducer } from "./state/derived/knowledge_views/knowledge_views_derived_reducer.test"
@@ -96,6 +97,7 @@ function run_all_tests ()
     run_replace_normal_ids_tests()
     test_get_ids_from_text()
     test_derived_composed_wcomponents_by_id_reducer()
+    test_get_composed_wcomponents_by_id()
     test_calc_if_wcomponent_should_exclude_because_label_or_type()
     run_get_composed_wc_id_maps_object_tests()
     test_knowledge_views_derived_reducer()
