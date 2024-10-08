@@ -8,7 +8,7 @@ import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
-import { derived_composed_wcomponents_by_id_reducer } from "./composed_wcomponents_by_id"
+import { derived_composed_wcomponents_by_id_reducer } from "./derived_composed_wcomponents_by_id_reducer"
 
 
 

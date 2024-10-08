@@ -24,7 +24,7 @@ import { test_add_newlines_to_markdown } from "./sharedf/rich_text/add_newlines_
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
 import { run_replace_normal_ids_tests, test_get_ids_from_text } from "./sharedf/rich_text/replace_normal_ids.test"
-import { test_get_composed_wcomponents_by_id } from "./state/derived/composed_wcomponents_by_id.test"
+import { test_derived_composed_wcomponents_by_id_reducer } from "./state/derived/derived_composed_wcomponents_by_id_reducer.test"
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type.test"
 import { run_get_composed_wc_id_maps_object_tests } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
 import { test_knowledge_views_derived_reducer } from "./state/derived/knowledge_views/knowledge_views_derived_reducer.test"
@@ -119,7 +119,7 @@ function run_all_tests ()
     test_get_possibilities_from_VAP_sets()
     test_get_wcomponent_state_value_and_probabilities()
     test_get_wcomponent_state_UI_value()
-    test_get_composed_wcomponents_by_id()
+    test_derived_composed_wcomponents_by_id_reducer()
     test_stable_stringify()
 
     tests_stats.print()
