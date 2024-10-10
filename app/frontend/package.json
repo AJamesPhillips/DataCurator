@@ -17,6 +17,7 @@
   },
   "scripts": {
     "start": "vite",
+    "prebuild": "sed -i '' -E \"s|<b>[0-9]{4}-[0-9]{2}-[0-9]{2}</b>|<b>$(date +%Y-%m-%d)</b>|g\" src/about/AboutSidePanel.tsx",
     "build": "tsc && vite build --base=./",
     "lint": "tsc --noEmit --watch",
     "old_lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
