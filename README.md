@@ -4,7 +4,7 @@
 A collaborative real time planning application for complex projects.  Integrates a subset of features from:
 
 * whiteboard applications like Miro
-* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) (not the simulation side yet)
+* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) from [Scott Fortmann-Roe](https://github.com/scottfr/) (Oct 2024 - calculations are now supported!)
 * micro note taking, hierarchical and knowledge hyper graphs like [Obsidian](https://obsidian.md/), [Workflowy](https://workflowy.com/a/), [Roam Research](https://roamresearch.com/), [TheBrain](https://www.thebrain.com/)
 * theory of change maps like [TOCO](https://www.theoryofchange.org/toco-software/)
 * Gantt chart like Microsoft project
