@@ -77,7 +77,8 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
     if (pass)
     {
         _tests_stats.test_passed += 1
-        console .log(`pass:  ${description}`)
+        const description_first_line = description.split("\n").filter(l => l.trim())[0]
+        console .log(`pass:  ${description_first_line}`)
     }
     else
     {

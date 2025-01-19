@@ -41,7 +41,8 @@ export function get_top_left_for_terminal_type (type: ConnectionTerminalType, no
 {
     const ordinal = attribute_type_to_ordinal[type.attribute]
 
-    // strange fudge needed for top offset
+    // TODO: describe what happens if this `top_offset_node_scale_fudge` is
+    // removed to give some idea of what it is doing.
     const top_offset_node_scale_fudge = node_scale ** 1.14
     const top_offset = (connection_top + (ordinal * connection_top_increment)) * top_offset_node_scale_fudge
 

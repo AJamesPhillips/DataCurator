@@ -90,8 +90,36 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             end_angle: 0,
         }, `two nodes not overlapping horizontally and far from each other in the other direction
                     [to]<-----[from]`)
-    })
 
+        describe("of different sizes", () =>
+        {
+            args = test_helper__get_args()
+            const node1_size = 2
+            const node1_width = NODE_WIDTH * node1_size
+            const node2_left = NODE_WIDTH + 110
+            const node2_size = 1
+            const node2_width = NODE_WIDTH * node2_size
+            args.connection_from_component!.kv_wc_entry = { top: 0, left: 0, s: node1_size }
+            args.connection_to_component!.kv_wc_entry =   { top: 0, left: node2_left }
+
+            result = derive_connection_coords(args)
+            test(test_helper__round_derived_connection_coords(result), {
+                line_start_x: node1_width, line_start_y: -160,
+                relative_control_point1: { x: 55, y: 0 },
+                relative_control_point2: { x: 55, y: 0 },
+                line_end_x: node2_left + node2_width + 10, line_end_y: -47,
+                connection_end_x: node2_left + node2_width, connection_end_y: -47,
+                // This end_angle of 0 seems wrong but the visual result is
+                // correct.
+                end_angle: 0,
+            }, `two nodes that if of same size would not overlap horizontally,
+                        [from]----->[to]
+                but one is bigger so they do overlap
+                        [F R O M]
+                             [to ]
+            `)
+        })
+    })
 
     args = test_helper__get_args()
     args.connection_to_component = args.connection_from_component

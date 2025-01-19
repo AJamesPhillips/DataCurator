@@ -9,7 +9,20 @@ import { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_
 
 
 
-const NODE_WIDTH_plus_fudge = NODE_WIDTH + 45
+// This MIN_NODE_HORIZONTAL_GAP is the minimum horizontal distance between two
+// nodes before theconnection line will move to the other side of the node.  So
+// for example:
+//  [from]
+//           [ to ]
+//        ^^^ if this distance is < MIN_NODE_HORIZONTAL_GAP then the line will
+// move to the other side of the node e.g.:
+//  [from]-----------╮
+//           [ to ]<-╯
+// but when there is more space then it will show as:
+//  [from]--╮
+//          ╰-->[ to ]
+const MIN_NODE_HORIZONTAL_GAP = 45
+const NODE_WIDTH_plus_min_gap = ({ s: size = 1 }: KnowledgeViewWComponentEntry) => (NODE_WIDTH * size) + MIN_NODE_HORIZONTAL_GAP
 const OFFSET_Y_CONNECTION = 30
 const MINIMUM_LINE_BOW = 30
 const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
@@ -77,14 +90,14 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
     let invert_end_angle = false
     if (circular_links)
     {
-        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_fudge))
+        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_from_component.kv_wc_entry)))
         {
             // There's no overlap
             //  [from]
             //          [ to ]
 
         }
-        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_fudge))
+        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_to_component.kv_wc_entry)))
         {
             // There's no overlap in the opposite direction
             //  [ to ]
