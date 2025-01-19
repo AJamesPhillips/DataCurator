@@ -5,7 +5,6 @@ import type { Vector } from "./utils"
 import { NODE_WIDTH } from "../position_utils"
 import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
 import { CanvasPoint } from "../interfaces"
-import { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 
 
 
@@ -22,7 +21,23 @@ import { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_
 //  [from]--╮
 //          ╰-->[ to ]
 const MIN_NODE_HORIZONTAL_GAP = 45
-const NODE_WIDTH_plus_min_gap = ({ s: size = 1 }: KnowledgeViewWComponentEntry) => (NODE_WIDTH * size) + MIN_NODE_HORIZONTAL_GAP
+const NODE_WIDTH_plus_min_gap = (connection_terminus: ConnectionTerminus) =>
+{
+    let node_width = 0
+    if (wcomponent_type_is_plain_connection(connection_terminus.wcomponent_type))
+    {
+        // no-op.  Leave the node_width as 0 because this is a connection so it
+        // is not a node, and doesn't have a "node width".
+        node_width = 0
+    }
+    else
+    {
+        const { s: size = 1 } = connection_terminus.kv_wc_entry
+        node_width = NODE_WIDTH * size
+    }
+
+    return node_width + MIN_NODE_HORIZONTAL_GAP
+}
 const OFFSET_Y_CONNECTION = 30
 const MINIMUM_LINE_BOW = 30
 const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
@@ -90,14 +105,14 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
     let invert_end_angle = false
     if (circular_links)
     {
-        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_from_component.kv_wc_entry)))
+        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_from_component)))
         {
             // There's no overlap
             //  [from]
             //          [ to ]
 
         }
-        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_to_component.kv_wc_entry)))
+        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_to_component)))
         {
             // There's no overlap in the opposite direction
             //  [ to ]

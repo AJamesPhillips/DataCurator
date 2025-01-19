@@ -192,7 +192,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_end_x: -91, line_end_y: 0,
             connection_end_x: -100, connection_end_y: 0,
             end_angle: 0,
-        }, "connect from one node to another connection")
+        }, "connect from one node to a second connection")
 
 
         args = test_helper__get_args()
@@ -211,7 +211,26 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_end_x: -110, line_end_y: 200,
             connection_end_x: -100, connection_end_y: 200,
             end_angle: 3.142,
-        }, "connect from another connection to a node")
+        }, "connect from one node to a second connection above and left")
+
+
+        args = test_helper__get_args()
+        args.connection_from_component = {
+            kv_wc_entry: { top: -200, left: -100 },
+            wcomponent_type: "causal_link",
+            connection_terminal_type: { direction: "from", attribute: "state" },
+        }
+        args.connection_to_component!.kv_wc_entry = { top: 0, left: 0 }
+        result = derive_connection_coords(args)
+
+        test(test_helper__round_derived_connection_coords(result), {
+            line_start_x: -100, line_start_y: 200,
+            relative_control_point1: { x: 50, y: 0 },
+            relative_control_point2: { x: -50, y: 0 },
+            line_end_x: -9, line_end_y: -77,
+            connection_end_x: 0, connection_end_y: -77,
+            end_angle: 3.142,
+        }, "connect from a second connection above and left to a node")
     })
 
 })
