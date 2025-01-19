@@ -343,6 +343,8 @@ function _WComponentForm (props: Props)
                     connection_terminal_type={wcomponent.from_type}
                     on_update_id={from_id => wrapped_upsert_wcomponent({ from_id })}
                     on_update_type={from_type => wrapped_upsert_wcomponent({ from_type })}
+                    // Connections can not connect to themselves
+                    exclude_ids={new Set([wcomponent.id])}
                 />
             </p>
 
@@ -353,6 +355,8 @@ function _WComponentForm (props: Props)
                     connection_terminal_type={wcomponent.to_type}
                     on_update_id={to_id => wrapped_upsert_wcomponent({ to_id })}
                     on_update_type={to_type => wrapped_upsert_wcomponent({ to_type })}
+                    // Connections can not connect to themselves
+                    exclude_ids={new Set([wcomponent.id])}
                 />
             </p>
 

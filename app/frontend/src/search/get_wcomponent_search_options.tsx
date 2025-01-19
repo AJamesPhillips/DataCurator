@@ -24,6 +24,7 @@ interface GetWcomponentSearchOptionsArgs
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
+    exclude_ids?: Set<string>
     // include_deleted?: boolean
 }
 
@@ -41,6 +42,7 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
 
     const options = wcomponents
         .filter(wcomponent_is_not_deleted)
+        .filter(wcomponent => !args.exclude_ids || !args.exclude_ids.has(wcomponent.id))
         .map(wcomponent => {
             const title = get_title({
                 wcomponent,

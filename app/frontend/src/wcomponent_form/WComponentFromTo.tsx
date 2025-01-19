@@ -23,6 +23,8 @@ interface OwnProps
 
     on_update_id: (id: string | undefined) => void
     on_update_type?: (type: ConnectionTerminalAttributeType | undefined) => void
+
+    exclude_ids: Set<string>
 }
 
 
@@ -69,6 +71,7 @@ function _WComponentFromTo (props: Props)
         wc_id_to_counterfactuals_map,
         created_at_ms: props.created_at_ms,
         sim_ms: props.sim_ms,
+        exclude_ids: props.exclude_ids,
     })
 
     const wcomponent_terminal_type_options: { id: ConnectionTerminalAttributeType, title: string }[] = [
