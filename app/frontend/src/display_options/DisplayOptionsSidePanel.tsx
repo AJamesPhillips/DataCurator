@@ -45,6 +45,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _DisplayOptionsSidePanel (props: Props)
 {
+    const validity_filter_description = validity_filter_descriptions[props.validity_filter]
 
     return <div className="side_panel">
         <p className="section">
@@ -70,8 +71,8 @@ function _DisplayOptionsSidePanel (props: Props)
             <br />
 
             <div className="description">
-                Show only nodes and connections with validity <br/><i>
-                certainty {validity_filter_descriptions[props.validity_filter]}</i> {description_of_certainty}.
+                {validity_filter_description.pre}<br/><i>
+                certainty {validity_filter_description.condition}</i> {description_of_certainty}.
             </div>
         </p>
 
@@ -223,11 +224,12 @@ const validity_filter_display_options: { id: ValidityFilterTypes, title: string 
     { id: "show_invalid", title: "Invalid" },
 ]
 
-const validity_filter_descriptions: { [type in ValidityFilterTypes]: string } = {
-    only_certain_valid: "100%",
-    only_maybe_valid: "> 50%",
-    maybe_invalid: "> 0%",
-    show_invalid: ">= 0%",
+const default_validity_pre_text = "Only show nodes and connections with validity"
+const validity_filter_descriptions: { [type in ValidityFilterTypes]: { pre: string, condition: string } } = {
+    only_certain_valid: { pre: default_validity_pre_text, condition: "100%"  },
+    only_maybe_valid:   { pre: default_validity_pre_text, condition: "> 50%" },
+    maybe_invalid:      { pre: default_validity_pre_text, condition: "> 0%"  },
+    show_invalid:       { pre: "Show all nodes and connections i.e. with validity",   condition: ">= 0%" },
 }
 
 
