@@ -8,8 +8,12 @@ interface OwnProps
 
 export function WarningTriangle (props: OwnProps)
 {
+    const warning_triangle = "\u26A0" // ⚠
+
     return <span
         style={{ backgroundColor: props.backgroundColor || "yellow", color: "black" }}
         title={props.message}
-    >{"\u26A0"}</span>
+    >
+        {warning_triangle}
+    </span>
 }

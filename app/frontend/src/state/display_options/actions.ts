@@ -210,6 +210,27 @@ export const is_set_or_toggle_show_large_grid = (action: AnyAction): action is A
 }
 
 
+// ++++++++++++++++++++++++++++++ Editing options ++++++++++++++++++++++++++++++
+// Probably should be moved to a different state as not only about display options
+interface SetOrToggleEnableSquareConnectionsArgs
+{
+    enable_square_connections: boolean | undefined
+}
+interface ActionSetOrToggleEnableSquareConnections extends Action, SetOrToggleEnableSquareConnectionsArgs {}
+
+const set_or_toggle_enable_square_connections_type = "set_or_toggle_enable_square_connections"
+
+const set_or_toggle_enable_square_connections = (enable_square_connections?: boolean): ActionSetOrToggleEnableSquareConnections =>
+{
+    return { type: set_or_toggle_enable_square_connections_type, enable_square_connections }
+}
+
+export const is_set_or_toggle_enable_square_connections = (action: AnyAction): action is ActionSetOrToggleEnableSquareConnections => {
+    return action.type === set_or_toggle_enable_square_connections_type
+}
+// ------------------------------ Editing options ------------------------------
+
+
 
 export const display_actions = {
     toggle_consumption_formatting,
@@ -223,4 +244,6 @@ export const display_actions = {
     set_or_toggle_circular_links,
     set_show_help_menu,
     set_or_toggle_show_large_grid,
+
+    set_or_toggle_enable_square_connections,
 }

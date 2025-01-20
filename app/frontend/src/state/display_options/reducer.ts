@@ -14,6 +14,7 @@ import {
     is_set_or_toggle_animate_connections,
     is_set_or_toggle_show_large_grid,
     is_set_or_toggle_circular_links,
+    is_set_or_toggle_enable_square_connections,
 } from "./actions"
 import { derive_validity_filter, derive_certainty_formatting } from "./util"
 
@@ -93,6 +94,16 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
         const show_large_grid = boolean_or_toggle(action.show_large_grid, state.display_options.show_large_grid)
         state = update_substate(state, "display_options", "show_large_grid", show_large_grid)
     }
+
+
+    // ++++++++++++++++++++++++++++ Editing options ++++++++++++++++++++++++++++
+    // Probably should be moved to a different state as not only about display options
+    if (is_set_or_toggle_enable_square_connections(action))
+    {
+        const enable_square_connections = boolean_or_toggle(action.enable_square_connections, state.display_options.enable_square_connections)
+        state = update_substate(state, "display_options", "enable_square_connections", enable_square_connections)
+    }
+    // ---------------------------- Editing options ----------------------------
 
 
     return state

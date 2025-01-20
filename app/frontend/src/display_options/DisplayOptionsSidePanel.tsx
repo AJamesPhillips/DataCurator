@@ -9,6 +9,7 @@ import { TimeResolutionOptions } from "./TimeResolutionOptions"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { shortcuts_map } from "../help_menu/shortcuts"
 import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
+import { ExperimentalFeatures } from "./ExperimentalFeatures"
 
 
 
@@ -188,6 +189,10 @@ function _DisplayOptionsSidePanel (props: Props)
             />
         </p>
 
+
+        <hr />
+
+        <ExperimentalFeatures />
 
         <hr />
 
