@@ -125,6 +125,7 @@ export function CanvasConnection (props: OwnProps)
             end_size={end_size}
             hovered={hovered}
             is_highlighted={is_highlighted}
+            line_behaviour={line_behaviour}
         />
     </g>
 }
@@ -149,6 +150,8 @@ interface CanvasConnectionVisualProps
     end_size: number
     hovered: boolean
     is_highlighted: boolean
+
+    line_behaviour: ConnectionLineBehaviour | undefined
 }
 function CanvasConnectionVisual(props: CanvasConnectionVisualProps)
 {
@@ -163,7 +166,7 @@ function CanvasConnectionVisual(props: CanvasConnectionVisualProps)
         )
     }, [props.target_connection_coords])
 
-    const d = calc_d(current_connection_coords)
+    const d = calc_d(current_connection_coords, props.line_behaviour)
 
     return <>
         <path
@@ -203,13 +206,29 @@ interface DArgs
     line_end_x: number
     line_end_y: number
 }
-function calc_d ({ line_start_x, line_start_y, relative_control_point1, relative_control_point2, line_end_x, line_end_y }: DArgs)
+// https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/d
+function calc_d ({ line_start_x, line_start_y, relative_control_point1, relative_control_point2, line_end_x, line_end_y }: DArgs, line_behaviour: ConnectionLineBehaviour | undefined)
 {
+    if (line_behaviour === ConnectionLineBehaviour.angular)
+    {
+        const half_height = (line_end_y - line_start_y) / 2
+
+        return `
+            M ${line_start_x} ${-line_start_y}
+            L ${line_start_x} ${-line_start_y - half_height}
+            L ${line_end_x} ${-line_start_y - half_height}
+            L ${line_end_x} ${-line_end_y}
+        `
+    }
+
     const cx1 = line_start_x + relative_control_point1.x
     const cy1 = -line_start_y - relative_control_point1.y
     const cx2 = line_end_x + relative_control_point2.x
     const cy2 = -line_end_y - relative_control_point2.y
-    return `M ${line_start_x} ${-line_start_y} C ${cx1},${cy1}, ${cx2},${cy2}, ${line_end_x},${-line_end_y}`
+    return `
+        M ${line_start_x} ${-line_start_y}
+        C ${cx1},${cy1}, ${cx2},${cy2}, ${line_end_x},${-line_end_y}
+    `
 }
 
 

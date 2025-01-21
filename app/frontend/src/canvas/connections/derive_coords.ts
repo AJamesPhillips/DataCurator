@@ -1,7 +1,7 @@
 import { get_angle, rads } from "../../utils/angles"
 import { wcomponent_type_is_plain_connection, ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { CanvasPoint } from "../interfaces"
-import { NODE_WIDTH } from "../position_utils"
+import { HALF_NODE_WIDTH, NODE_WIDTH } from "../position_utils"
 import { ConnectionEndType, BAR_THICKNESS, NOOP_THICKNESS } from "./ConnectionEnd"
 import { ConnectionTerminus, get_connection_point } from "./terminal"
 import { Vector } from "./utils"
@@ -85,7 +85,17 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
         return derive_connection_coords_when_missing_one_node(args)
     }
 
-    const { offset_line_start_y, offset_connection_start_y, invert_end_angle, circular_link_from_below_to } = relative_connection_positions({
+    if (line_behaviour === "angular") return derive_connection_coords_for_angular_line({
+        connection_from_component, connection_to_component,
+        end_size, connection_end_type,
+    })
+
+    const {
+        offset_line_start_y,
+        offset_connection_start_y,
+        invert_end_angle,
+        circular_link_from_below_to,
+    } = relative_connection_positions({
         circular_links,
         connection_from_component,
         connection_to_component,
@@ -300,6 +310,63 @@ function calculate_line_end_coords(args: CalculateLineEndCoordsArgs)
     const line_end_y = connection_end_y + Math.sin(end_angle) * minimum_end_connector_shape_size
 
     return { line_end_x, line_end_y }
+}
+
+
+
+interface DeriveConnectionCoordsForAngularArgs
+{
+    connection_from_component: ConnectionTerminus
+    connection_to_component: ConnectionTerminus
+    end_size: number
+    connection_end_type: ConnectionEndType
+}
+/**
+ * Partial implementation
+ */
+function derive_connection_coords_for_angular_line(args: DeriveConnectionCoordsForAngularArgs): ConnectionCoords | null
+{
+    const {
+        connection_from_component, connection_to_component,
+        end_size, connection_end_type,
+    } = args
+
+    // These are wrong as they will change depending on what content is in the
+    // node which also changes where it is in editing or presentation mode.
+    const NODE_HEIGHT_BELOW = 80
+    // This will change when there is an image added to the node
+    const NODE_HEIGHT_ABOVE = 0
+
+    const from = connection_from_component.kv_wc_entry
+    const to = connection_to_component.kv_wc_entry
+
+    let line_start_x = from.left
+    let line_start_y = -from.top
+    let line_end_x = to.left
+    let line_end_y = -to.top
+
+    if (!wcomponent_type_is_plain_connection(connection_from_component.wcomponent_type))
+    {
+        line_start_x += (HALF_NODE_WIDTH * (from.s || 1))
+        line_start_y -= (NODE_HEIGHT_BELOW * (from.s || 1))
+    }
+
+    if (!wcomponent_type_is_plain_connection(connection_to_component.wcomponent_type))
+    {
+        line_end_x += (HALF_NODE_WIDTH * (to.s || 1))
+        line_end_y += NODE_HEIGHT_ABOVE
+    }
+
+    const end_angle = 3.142 / 2
+
+    return {
+        line_start_x, line_start_y,
+        relative_control_point1: { x: 0, y: 0 },
+        relative_control_point2: { x: 0, y: 0 },
+        line_end_x, line_end_y,
+        connection_end_x: line_end_x, connection_end_y: line_end_y,
+        end_angle,
+    }
 }
 
 
