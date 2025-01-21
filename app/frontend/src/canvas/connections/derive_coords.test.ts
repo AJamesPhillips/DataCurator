@@ -6,8 +6,7 @@ import { ConnectionEndType } from "./ConnectionEnd"
 import { derive_connection_coords, DeriveConnectionCoordsArgs, ConnectionCoords } from "./derive_coords"
 
 
-export const test_derive_connection_coords = describe("derive_connection_coords", () =>
-    // export const test_derive_connection_coords = describe.delay("derive_connection_coords", () =>
+export const test_derive_connection_coords = describe.delay("derive_connection_coords", () =>
 {
     let args: DeriveConnectionCoordsArgs
     let result: ConnectionCoords | null
