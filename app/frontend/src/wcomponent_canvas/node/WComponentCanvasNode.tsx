@@ -7,7 +7,7 @@ import "./WComponentCanvasNode.scss"
 import {
     ConnectionTerminalType,
     connection_terminal_attributes,
-    connection_terminal_directions,
+    connection_terminal_sides,
     WComponent,
     WComponentsById,
     wcomponent_can_have_validity_predictions,
@@ -432,9 +432,9 @@ const terminals_with_label: Terminal[] = []
 
 connection_terminal_attributes.forEach(attribute =>
 {
-    connection_terminal_directions.forEach(direction =>
+    connection_terminal_sides.forEach(side =>
     {
-        const type = { attribute, direction }
+        const type = { attribute, side }
         const connection_style: h.JSX.CSSProperties = get_top_left_for_terminal_type(type)
         const label = type.attribute.slice(0, 1).toUpperCase()
 

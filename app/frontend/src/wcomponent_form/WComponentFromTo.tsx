@@ -24,7 +24,7 @@ interface OwnProps
     on_update_id: (id: string | undefined) => void
     on_update_type?: (type: ConnectionTerminalAttributeType | undefined) => void
 
-    exclude_ids: Set<string>
+    exclude_ids?: Set<string>
 }
 
 

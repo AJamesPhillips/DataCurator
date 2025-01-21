@@ -42,8 +42,8 @@ const angle_of_normal_to_connection_location: {[l in ConnectionTerminalLocationT
 }
 const angle_of_normal_to_connection_with_direction: {[l in ConnectionTerminalSideType]: number} =
 {
-    from: angle_of_normal_to_connection_location.right,
-    to: angle_of_normal_to_connection_location.left,
+    right: angle_of_normal_to_connection_location.right,
+    left: angle_of_normal_to_connection_location.left,
 }
 
 

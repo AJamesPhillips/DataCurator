@@ -3,6 +3,7 @@ import { useState } from "preact/hooks"
 import { ConnectableCanvasNode } from "../canvas/ConnectableCanvasNode"
 import { CanvasConnection } from "../canvas/connections/CanvasConnection"
 import { ConnectionTerminus } from "../canvas/connections/terminal"
+import { ConnectionLineBehaviour } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 
@@ -65,11 +66,13 @@ export function SandboxCircularConnections ()
                 <CanvasConnection
                     connection_from_component={connection_from_component}
                     connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
+                    line_behaviour={ConnectionLineBehaviour.curve}
                     circular_links={true}
                 />
                 <CanvasConnection
                     connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
+                    line_behaviour={ConnectionLineBehaviour.curve}
                     circular_links={true}
                 />
             </g>}
@@ -78,11 +81,13 @@ export function SandboxCircularConnections ()
                 <CanvasConnection
                     connection_from_component={connection_from_component}
                     connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
+                    line_behaviour={ConnectionLineBehaviour.curve}
                     circular_links={false}
                 />
                 <CanvasConnection
                     connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
+                    line_behaviour={ConnectionLineBehaviour.curve}
                     circular_links={false}
                 />
             </g>}
