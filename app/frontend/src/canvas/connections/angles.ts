@@ -1,4 +1,4 @@
-import type { ConnectionTerminalDirectionType } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionTerminalSideType } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { describe, test } from "../../shared/utils/test"
 import { get_angle, rads, normalise_angle_between_neg_Pi_and_Pi } from "../../utils/angles"
 import { bounded } from "../../shared/utils/bounded"
@@ -6,7 +6,7 @@ import type { ConnectionTerminalLocationType } from "../../wcomponent/interfaces
 
 
 
-export function get_angle_from_start_connector (connection_angle: number, direction: ConnectionTerminalDirectionType)
+export function get_angle_from_start_connector (connection_angle: number, direction: ConnectionTerminalSideType)
 {
     const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction]
 
@@ -19,7 +19,7 @@ export function get_angle_from_start_connector (connection_angle: number, direct
     })
 }
 
-export function get_angle_from_end_connector (connection_angle: number, direction: ConnectionTerminalDirectionType)
+export function get_angle_from_end_connector (connection_angle: number, direction: ConnectionTerminalSideType)
 {
     const angle_of_normal_to_connector_surface = angle_of_normal_to_connection_with_direction[direction]
 
@@ -40,7 +40,7 @@ const angle_of_normal_to_connection_location: {[l in ConnectionTerminalLocationT
     right: 0,
     bottom: -rads._90,
 }
-const angle_of_normal_to_connection_with_direction: {[l in ConnectionTerminalDirectionType]: number} =
+const angle_of_normal_to_connection_with_direction: {[l in ConnectionTerminalSideType]: number} =
 {
     from: angle_of_normal_to_connection_location.right,
     to: angle_of_normal_to_connection_location.left,
@@ -116,7 +116,7 @@ export const test_get_angle = describe.skip("get_angle (a lot of the tests are b
     coords.forEach(({ ex, ey }, index) =>
     {
         const angle = get_angle(cx, cy, ex, ey)
-        const start_angle = get_angle_from_start_connector(angle, "from").toFixed(2)
+        const start_angle = get_angle_from_start_connector(angle, "right").toFixed(2)
         test(start_angle, expected_start_angles[index])
     })
 
@@ -136,7 +136,7 @@ export const test_get_angle = describe.skip("get_angle (a lot of the tests are b
     coords.forEach(({ ex, ey }, index) =>
     {
         const angle = get_angle(cx, cy, ex, ey)
-        const end_angle_to_receiving_terminal = get_angle_from_end_connector(angle, "to").toFixed(2)
+        const end_angle_to_receiving_terminal = get_angle_from_end_connector(angle, "left").toFixed(2)
         test(end_angle_to_receiving_terminal, expected_end_angles_to_receiving[index])
     })
 

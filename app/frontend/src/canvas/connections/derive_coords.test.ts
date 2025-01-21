@@ -181,7 +181,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         args.connection_to_component = {
             kv_wc_entry: { top: 0, left: -100 },
             wcomponent_type: "causal_link",
-            connection_terminal_type: { direction: "to", attribute: "state" },
+            connection_terminal_type: { side: "left", attribute: "state" },
         }
 
         result = derive_connection_coords(args)
@@ -200,7 +200,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         args.connection_to_component = {
             kv_wc_entry: { top: -200, left: -100 },
             wcomponent_type: "causal_link",
-            connection_terminal_type: { direction: "to", attribute: "state" },
+            connection_terminal_type: { side: "left", attribute: "state" },
         }
         result = derive_connection_coords(args)
 
@@ -218,7 +218,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         args.connection_from_component = {
             kv_wc_entry: { top: -200, left: -100 },
             wcomponent_type: "causal_link",
-            connection_terminal_type: { direction: "from", attribute: "state" },
+            connection_terminal_type: { side: "right", attribute: "state" },
         }
         args.connection_to_component!.kv_wc_entry = { top: 0, left: 0 }
         result = derive_connection_coords(args)
@@ -242,12 +242,12 @@ function test_helper__get_args (): DeriveConnectionCoordsArgs
         connection_from_component: {
             kv_wc_entry: { top: 0, left: 0 },
             wcomponent_type: "statev2",
-            connection_terminal_type: { direction: "from", attribute: "state" },
+            connection_terminal_type: { side: "right", attribute: "state" },
         },
         connection_to_component: {
             kv_wc_entry: { top: 0, left: NODE_WIDTH + 100 },
             wcomponent_type: "statev2",
-            connection_terminal_type: { direction: "to", attribute: "state" },
+            connection_terminal_type: { side: "left", attribute: "state" },
         },
         line_behaviour: undefined,
         circular_links: true,

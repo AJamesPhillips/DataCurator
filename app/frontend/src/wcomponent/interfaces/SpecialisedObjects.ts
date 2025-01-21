@@ -61,12 +61,12 @@ export type WComponentNode = WComponentNodeEvent
 
 export type ConnectionTerminalAttributeType = "meta" | "validity" | "state"
 export const connection_terminal_attributes: ConnectionTerminalAttributeType[] = ["meta", "validity", "state"]
-export type ConnectionTerminalDirectionType = "from" | "to"
-export const connection_terminal_directions: ConnectionTerminalDirectionType[] = ["from", "to"]
+export type ConnectionTerminalSideType = "right" | "left"
+export const connection_terminal_directions: ConnectionTerminalSideType[] = ["right", "left"]
 export interface ConnectionTerminalType
 {
     attribute: ConnectionTerminalAttributeType
-    direction: ConnectionTerminalDirectionType
+    side: ConnectionTerminalSideType
 }
 
 

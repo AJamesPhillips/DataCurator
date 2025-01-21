@@ -31,13 +31,13 @@ export function SandboxCircularConnections ()
     const connection_from_component: ConnectionTerminus = {
         kv_wc_entry: origin,
         wcomponent_type: "statev2",
-        connection_terminal_type: { direction: "from", attribute: "state" },
+        connection_terminal_type: { side: "right", attribute: "state" },
     }
 
     const connection_to_component: ConnectionTerminus = {
         kv_wc_entry: origin,
         wcomponent_type: "statev2",
-        connection_terminal_type: { direction: "to", attribute: "state" },
+        connection_terminal_type: { side: "left", attribute: "state" },
     }
 
     return <div

@@ -1,10 +1,12 @@
 import type { Action, AnyAction } from "redux"
 
+import { ConnectionTerminalSideType } from "../../../../wcomponent/interfaces/SpecialisedObjects"
+
 
 
 interface SetFindAllCausalPathsWcomponentIdsProps
 {
-    direction: "from" | "to"
+    side: ConnectionTerminalSideType
     ids: string[]
 }
 export interface ActionSetFindAllCausalPathsWcomponentIds extends Action, SetFindAllCausalPathsWcomponentIdsProps {}

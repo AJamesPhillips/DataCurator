@@ -28,8 +28,8 @@ export function get_connection_termini (args: GetConnectionTerminiArgs)
     } = get_connection_terminal_node_positions({ wcomponent, wc_id_map: current_composed_knowledge_view.composed_wc_id_map })
 
 
-    const from_connection_terminal_type: ConnectionTerminalType = { direction: "from", attribute: from_attribute }
-    const to_connection_terminal_type: ConnectionTerminalType = { direction: "to", attribute: to_attribute }
+    const from_connection_terminal_type: ConnectionTerminalType = { side: "right", attribute: from_attribute }
+    const to_connection_terminal_type: ConnectionTerminalType = { side: "left", attribute: to_attribute }
 
 
     const from_wcomponent_type = from_wc?.type

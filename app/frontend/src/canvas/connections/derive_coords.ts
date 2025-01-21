@@ -1,11 +1,10 @@
-import { wcomponent_type_is_plain_connection, type ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_angle, rads } from "../../utils/angles"
-import { ConnectionTerminus, get_connection_point } from "./terminal"
-import type { Vector } from "./utils"
-import { NODE_WIDTH } from "../position_utils"
-import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
+import { wcomponent_type_is_plain_connection, ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { CanvasPoint } from "../interfaces"
-
+import { NODE_WIDTH } from "../position_utils"
+import { ConnectionEndType, BAR_THICKNESS, NOOP_THICKNESS } from "./ConnectionEnd"
+import { ConnectionTerminus, get_connection_point } from "./terminal"
+import { Vector } from "./utils"
 
 
 // This MIN_NODE_HORIZONTAL_GAP is the minimum horizontal distance between two
@@ -86,62 +85,11 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
         return derive_connection_coords_when_missing_one_node(args)
     }
 
-    let offset_line_start_y = 0
-    let offset_connection_start_y = 0
-    let x_control1_factor = 1
-    let x_control2_factor = 1
-
-    const is_from_connection = wcomponent_type_is_plain_connection(connection_from_component.wcomponent_type)
-    const is_to_connection = wcomponent_type_is_plain_connection(connection_to_component.wcomponent_type)
-    let offset_y_connection = (is_from_connection || is_to_connection) ? 0 : OFFSET_Y_CONNECTION
-
-    let circular_link_from_below_to: boolean | undefined = undefined
-    let invert_end_angle = false
-    if (circular_links)
-    {
-        if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_from_component)))
-        {
-            // There's no overlap
-            //  [from]
-            //          [ to ]
-
-        }
-        else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_to_component)))
-        {
-            // There's no overlap in the opposite direction
-            //  [ to ]
-            //          [from]
-            offset_line_start_y = offset_y_connection
-            offset_connection_start_y = offset_y_connection
-            connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, direction: "from" }
-            connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, direction: "to" }
-            invert_end_angle = true
-        }
-        else
-        {
-            // There's some kind of overlap, either of these to options
-            //  [from]          |     [ to ]
-            //     [ to ]       |        [from]
-            circular_link_from_below_to = connection_to_component.kv_wc_entry.top < connection_from_component.kv_wc_entry.top
-            if (circular_link_from_below_to)
-            {
-                // `from` component vertical position is above `to` component
-                // [from]
-                // [ to ]
-                connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, direction: "to" }
-                offset_line_start_y = offset_y_connection
-            }
-            else
-            {
-                // `from` component vertical position is equal to or below `to` component
-                //  [ to ] [from]        |   [ to ]
-                //                       |   [from]
-                connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, direction: "from" }
-                offset_connection_start_y = offset_y_connection
-                invert_end_angle = true
-            }
-        }
-    }
+    const { offset_line_start_y, offset_connection_start_y, invert_end_angle, circular_link_from_below_to } = relative_connection_positions({
+        circular_links,
+        connection_from_component,
+        connection_to_component,
+    })
 
     const from_connector_position = get_connection_point(connection_from_component)
     const line_start_x = from_connector_position.left
@@ -152,6 +100,8 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
     const connection_end_y = -to_connector_position.top + offset_connection_start_y
 
 
+    let x_control1_factor = 1
+    let x_control2_factor = 1
     if (circular_link_from_below_to !== undefined)
     {
         if (line_start_x < connection_end_x)
@@ -211,6 +161,77 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
         connection_end_x, connection_end_y,
         end_angle,
     }
+}
+
+
+interface RelativeConnectionPositionsArgs
+{
+    circular_links: boolean
+    connection_from_component: ConnectionTerminus
+    connection_to_component: ConnectionTerminus
+}
+function relative_connection_positions(args: RelativeConnectionPositionsArgs)
+{
+    const defaults = {
+        offset_line_start_y: 0,
+        offset_connection_start_y: 0,
+        invert_end_angle: false,
+        circular_link_from_below_to: undefined as boolean | undefined,
+    }
+
+    if (!args.circular_links) return defaults
+
+    const {
+        connection_from_component,
+        connection_to_component,
+    } = args
+
+
+    const is_from_connection = wcomponent_type_is_plain_connection(connection_from_component.wcomponent_type)
+    const is_to_connection = wcomponent_type_is_plain_connection(connection_to_component.wcomponent_type)
+    let offset_y_connection = (is_from_connection || is_to_connection) ? 0 : OFFSET_Y_CONNECTION
+
+
+    if (connection_from_component.kv_wc_entry.left < (connection_to_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_from_component))) {
+        // There's no overlap
+        //  [from]
+        //          [ to ]
+    }
+    else if (connection_to_component.kv_wc_entry.left < (connection_from_component.kv_wc_entry.left - NODE_WIDTH_plus_min_gap(connection_to_component))) {
+        // There's no overlap in the opposite direction
+        //  [ to ]
+        //          [from]
+        defaults.offset_line_start_y = offset_y_connection
+        defaults.offset_connection_start_y = offset_y_connection
+        connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, side: "right" }
+        connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, side: "left" }
+        defaults.invert_end_angle = true
+    }
+
+    else {
+        // There's some kind of overlap, either of these to options
+        //  [from]          |     [ to ]
+        //     [ to ]       |        [from]
+        defaults.circular_link_from_below_to = connection_to_component.kv_wc_entry.top < connection_from_component.kv_wc_entry.top
+        if (defaults.circular_link_from_below_to) {
+            // `from` component vertical position is above `to` component
+            // [from]
+            // [ to ]
+            connection_from_component.connection_terminal_type = { ...connection_from_component.connection_terminal_type, side: "left" }
+            defaults.offset_line_start_y = offset_y_connection
+        }
+
+        else {
+            // `from` component vertical position is equal to or below `to` component
+            //  [ to ] [from]        |   [ to ]
+            //                       |   [from]
+            connection_to_component.connection_terminal_type = { ...connection_to_component.connection_terminal_type, side: "right" }
+            defaults.offset_connection_start_y = offset_y_connection
+            defaults.invert_end_angle = true
+        }
+    }
+
+    return defaults
 }
 
 

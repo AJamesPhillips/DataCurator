@@ -2,7 +2,7 @@ import type { Store } from "redux"
 
 import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 import type { HasBaseId } from "../../../shared/interfaces/base"
-import type { ConnectionTerminalType, WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import type { ConnectionTerminalSideType, ConnectionTerminalType, WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentConnectionType } from "../../../wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../actions"
 import type { RootState } from "../../State"
@@ -43,43 +43,43 @@ export function create_links_on_connection_terminal_mouse_events__subscriber (st
             wcomponent_id: start_wcomponent_id,
         } = last_pointer_down_connection_terminal
         const start_attribute = start_terminal_type?.attribute || "state"
-        let start_direction = start_terminal_type?.direction
+        let start_side = start_terminal_type?.side
 
         let end_wcomponent_id: string
         let end_attribute: ConnectionTerminalType["attribute"] = "state"
-        let end_direction: ConnectionTerminalType["direction"] = (start_terminal_type?.direction || "from") === "from" ? "to" : "from"
+        let end_side: ConnectionTerminalSideType = (start_terminal_type?.side || "right") === "right" ? "left" : "right"
         if (is_pointerup_on_component(state.last_action))
         {
             end_wcomponent_id = state.last_action.wcomponent_id
             // Check if user has just clicked on a component, i.e. if start direction is undefined then
             // they must have just pointer down and pointer up on the same node
-            should_not_create_new_connection = start_wcomponent_id === end_wcomponent_id && start_terminal_type?.direction === undefined
+            should_not_create_new_connection = start_wcomponent_id === end_wcomponent_id && start_terminal_type?.side === undefined
         }
         else if (is_pointerup_on_connection_terminal(state.last_action))
         {
             end_wcomponent_id = state.last_action.wcomponent_id
             end_attribute = state.last_action.terminal_type.attribute
-            end_direction = state.last_action.terminal_type.direction
+            end_side = state.last_action.terminal_type.side
         }
         else return
 
-        should_not_create_new_connection = should_not_create_new_connection || (start_wcomponent_id === end_wcomponent_id && start_direction === end_direction)
+        should_not_create_new_connection = should_not_create_new_connection || (start_wcomponent_id === end_wcomponent_id && start_side === end_side)
 
         store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}))
 
         if (should_not_create_new_connection) return
 
 
-        // This prevents connecting "from" to a "from" or "to" to a "to"
-        // And it ensures start_direction has value if it does not have one yet, e.g. if the user
+        // This prevents connecting from and to the same side of a component
+        // And it ensures start_side has value if it does not have one yet, e.g. if the user
         // had pointer down on a component and pointer up on a terminal
-        start_direction = end_direction === "from" ? "to" : "from"
+        start_side = end_side === "right" ? "left" : "right"
 
-        const start_is_effector = start_direction === "from"
+        const start_is_effector = start_side === "right"
 
 
         const from_id: string = start_is_effector ? start_wcomponent_id : end_wcomponent_id
-        const to_id: string = start_is_effector ? end_wcomponent_id : start_wcomponent_id
+        const to_id: string   = start_is_effector ? end_wcomponent_id : start_wcomponent_id
 
         const from_type: ConnectionTerminalType["attribute"] = start_is_effector ? start_attribute : end_attribute
         const to_type: ConnectionTerminalType["attribute"] = start_is_effector ? end_attribute : start_attribute
