@@ -14,8 +14,7 @@ import { ButtonSnapXToDatetime } from "./ButtonSnapXToDatetime"
 import { BulkUpdateChange } from "../state/specialised_objects/knowledge_views/bulk_edit/actions"
 import { wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_connection_termini } from "../wcomponent_canvas/connection/connection_termini"
-import { bezier_middle } from "../canvas/connections/derive_coords"
-import { process_connection_terminus_args } from "../canvas/connections/process_connection_terminus_args"
+import { bezier_middle, derive_connection_coords } from "../canvas/connections/derive_coords"
 import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
 
 
@@ -175,7 +174,7 @@ function calculate_middle_connection_curves (wcomponent_ids: string[], state: Ro
                 wcomponent, from_wc, to_wc, current_composed_knowledge_view: composed_kv,
             })
 
-            const result = process_connection_terminus_args({
+            const result = derive_connection_coords({
                 ...connection_termini,
                 end_size: 1,
                 line_behaviour: wcomponent.line_behaviour,

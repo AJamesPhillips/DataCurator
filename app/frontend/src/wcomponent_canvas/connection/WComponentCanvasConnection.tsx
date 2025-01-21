@@ -169,7 +169,14 @@ function _WComponentCanvasConnection (props: Props)
     }
 
 
-    const on_click = factory_on_click({ wcomponent_id: id, clicked_wcomponent, clear_selected_wcomponents, shift_or_control_keys_are_down, change_route, is_current_item })
+    const on_click = factory_on_click({
+        wcomponent_id: id,
+        clicked_wcomponent,
+        clear_selected_wcomponents,
+        shift_or_control_keys_are_down,
+        change_route,
+        is_current_item,
+    })
 
 
     const connection_termini = get_connection_termini({

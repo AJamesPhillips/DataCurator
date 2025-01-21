@@ -2,13 +2,13 @@ import { round_to_max_significant_figures } from "../../shared/utils/number"
 import { describe, test } from "../../shared/utils/test"
 import { NODE_WIDTH } from "../position_utils"
 import { ConnectionEndType } from "./ConnectionEnd"
-import { derive_connection_coords, DeriveConnectionCoordsArgs, DeriveConnectionCoordsReturn } from "./derive_coords"
+import { derive_connection_coords, DeriveConnectionCoordsArgs, ConnectionCoords } from "./derive_coords"
 
 
 export const test_derive_connection_coords = describe.delay("derive_connection_coords", () =>
 {
     let args: DeriveConnectionCoordsArgs
-    let result: DeriveConnectionCoordsReturn
+    let result: ConnectionCoords | null
 
     describe("connection between two nodes", () =>
     {
@@ -257,8 +257,10 @@ function test_helper__get_args (): DeriveConnectionCoordsArgs
 }
 
 
-function test_helper__round_derived_connection_coords (coords: DeriveConnectionCoordsReturn): DeriveConnectionCoordsReturn
+function test_helper__round_derived_connection_coords (coords: ConnectionCoords | null): ConnectionCoords | null
 {
+    if (!coords) return null
+
     return {
         line_start_x: round_to_max_significant_figures(coords.line_start_x, 2),
         line_start_y: round_to_max_significant_figures(coords.line_start_y, 2),

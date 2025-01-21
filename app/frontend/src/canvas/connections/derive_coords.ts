@@ -43,25 +43,8 @@ const MINIMUM_LINE_BOW = 30
 const CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE = 150
 
 
-export type DeriveConnectionCoordsArgs = (
-    (
-        {
-            connection_from_component: ConnectionTerminus
-            connection_to_component: ConnectionTerminus | undefined
-        } | {
-            connection_from_component: ConnectionTerminus | undefined
-            connection_to_component: ConnectionTerminus
-        }
-    ) & {
-        line_behaviour?: ConnectionLineBehaviour
-        circular_links?: boolean
-        end_size: number
-        connection_end_type: ConnectionEndType
-        console_warn?: (args: any[]) => void
-    }
-)
 
-export interface DeriveConnectionCoordsReturn
+export interface ConnectionCoords
 {
     line_start_x: number
     line_start_y: number
@@ -74,7 +57,18 @@ export interface DeriveConnectionCoordsReturn
     end_angle: number
 }
 
-export function derive_connection_coords (args: DeriveConnectionCoordsArgs): DeriveConnectionCoordsReturn
+export interface DeriveConnectionCoordsArgs
+{
+    connection_from_component: ConnectionTerminus | undefined
+    connection_to_component: ConnectionTerminus | undefined
+    line_behaviour: ConnectionLineBehaviour | undefined
+    circular_links: boolean
+    end_size: number
+    connection_end_type: ConnectionEndType
+    console_warn?: (args: any[]) => void
+}
+
+export function derive_connection_coords (args: DeriveConnectionCoordsArgs): ConnectionCoords | null
 {
     if (args.end_size === 0)
     {
@@ -220,7 +214,7 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Der
 }
 
 
-function derive_connection_coords_when_missing_one_node (args: DeriveConnectionCoordsArgs): DeriveConnectionCoordsReturn
+function derive_connection_coords_when_missing_one_node (args: DeriveConnectionCoordsArgs): ConnectionCoords | null
 {
     const {
         connection_from_component, connection_to_component,
@@ -236,13 +230,14 @@ function derive_connection_coords_when_missing_one_node (args: DeriveConnectionC
     let connector_position: CanvasPoint
     if (!connection_from_component)
     {
-        line_start_x = connection_to_component!.kv_wc_entry.left - CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE
-        connector_position = get_connection_point(connection_to_component!)
+        if (!connection_to_component) return null
+        line_start_x = connection_to_component.kv_wc_entry.left - CONNECTION_LENGTH_WHEN_MISSING_ONE_NODE
+        connector_position = get_connection_point(connection_to_component)
     }
     else
     {
         line_start_x = connection_from_component.kv_wc_entry.left + NODE_WIDTH
-        connector_position = get_connection_point(connection_from_component!)
+        connector_position = get_connection_point(connection_from_component)
     }
 
     const line_start_y = -connector_position.top
@@ -273,7 +268,8 @@ interface CalculateLineEndCoordsArgs
 }
 function calculate_line_end_coords(args: CalculateLineEndCoordsArgs)
 {
-    const { connection_end_type, end_size, end_angle, connection_end_x, connection_end_y } = args
+    const { connection_end_type, end_angle, connection_end_x, connection_end_y } = args
+    const end_size = args.end_size / 10
 
     const minimum_end_connector_shape_size = connection_end_type === ConnectionEndType.negative
         ? (BAR_THICKNESS * end_size)
