@@ -8,12 +8,12 @@ import { RootState } from "../state/State"
 
 
 const map_state = (state: RootState) => ({
-    enable_square_connections: state.display_options.enable_square_connections,
+    enable_angular_connections: state.display_options.enable_angular_connections,
 })
 
 
 const map_dispatch = {
-    set_or_toggle_enable_square_connections: ACTIONS.display.set_or_toggle_enable_square_connections,
+    set_or_toggle_enable_angular_connections: ACTIONS.display.set_or_toggle_enable_angular_connections,
 }
 
 
@@ -29,7 +29,7 @@ function _ExperimentalFeatures(props: Props)
         <p className="section">
             <ExperimentalWarning /> <b>
                 {/* This is not a display option, it's an ability to edit data to be of this type  */}
-                Enable Square Connections&nbsp;
+                Enable Angular Connections&nbsp;
                 <span style={{ position: "relative", top: "-0.5em" }}>
                     ⌞
                     <span style={{ position: "relative", top: "0.8em", left: "-2px" }}>
@@ -38,8 +38,8 @@ function _ExperimentalFeatures(props: Props)
                 </span>
             </b>
             <EditableCheckbox
-                value={props.enable_square_connections}
-                on_change={props.set_or_toggle_enable_square_connections}
+                value={props.enable_angular_connections}
+                on_change={props.set_or_toggle_enable_angular_connections}
             />
         </p>
     </>

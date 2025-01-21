@@ -18,7 +18,7 @@ export function display_options_persist (state: RootState)
         "show_large_grid",
         "validity_filter",
         "certainty_formatting",
-        "enable_square_connections",
+        "enable_angular_connections",
     ], state.display_options)
 
     persist_state_object("display_options", to_persist)
@@ -50,7 +50,7 @@ export function display_options_starting_state (): DisplayOptionsState
         derived_validity_filter,
         derived_certainty_formatting,
 
-        enable_square_connections: false,
+        enable_angular_connections: false,
 
         ...obj,
     }

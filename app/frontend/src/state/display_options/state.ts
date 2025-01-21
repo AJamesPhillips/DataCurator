@@ -38,7 +38,7 @@ export interface DisplayOptionsState
 
     // Editing options, probably should be moved to a different state as not
     // only about display options
-    enable_square_connections: boolean
+    enable_angular_connections: boolean
 }
 
 
