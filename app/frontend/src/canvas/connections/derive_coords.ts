@@ -269,6 +269,7 @@ interface CalculateLineEndCoordsArgs
 function calculate_line_end_coords(args: CalculateLineEndCoordsArgs)
 {
     const { connection_end_type, end_angle, connection_end_x, connection_end_y } = args
+    // Some fudge which scales the end_size.  TODO: document this better.
     const end_size = args.end_size / 10
 
     const minimum_end_connector_shape_size = connection_end_type === ConnectionEndType.negative

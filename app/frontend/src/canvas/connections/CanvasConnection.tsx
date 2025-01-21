@@ -1,12 +1,12 @@
 import { h } from "preact"
-import { MutableRef, useMemo, useRef, useState } from "preact/hooks"
+import { useEffect, useMemo, useState } from "preact/hooks"
 
 import "./CanvasConnection.scss"
-import type { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
 import { bounded } from "../../shared/utils/bounded"
+import { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
+import { ConnectionCoords, derive_connection_coords } from "./derive_coords"
 import { ConnectionTerminus } from "./terminal"
-import { ConnectionCoords, derive_connection_coords, DeriveConnectionCoordsArgs } from "./derive_coords"
 import { Vector } from "./utils"
 
 
@@ -33,25 +33,22 @@ interface OwnProps {
 export function CanvasConnection (props: OwnProps)
 {
     const [hovered, set_hovered] = useState(false)
-    const current_connection_coords = useRef<ConnectionCoordsWithProgress | undefined>(undefined)
-    const path_background = useRef<SVGPathElement | undefined>(undefined)
-    const animate_to_target_timeout = useRef<NodeJS.Timeout | undefined>(undefined)
-
 
     const {
         connection_from_component, connection_to_component,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
         connection_end_type = ConnectionEndType.positive,
+        is_highlighted = false,
     } = props
 
     const thickness = hovered ? 2 : (props.thickness ?? 2)
     const end_size = bounded(thickness * 2.5, 10, 35)
 
 
-    const target_connection_coords: ConnectionCoordsWithProgress | null = useMemo(() =>
+    const target_connection_coords: ConnectionCoords | null = useMemo(() =>
     {
-        const connection_coords = derive_connection_coords({
+        return derive_connection_coords({
             connection_from_component,
             connection_to_component,
             line_behaviour,
@@ -59,12 +56,6 @@ export function CanvasConnection (props: OwnProps)
             end_size,
             connection_end_type
         })
-        if (!connection_coords) return null
-
-        return {
-            ...connection_coords,
-            progress: 0,
-        }
     }, [
         connection_from_component, connection_to_component,
         line_behaviour, circular_links, end_size, connection_end_type,
@@ -72,9 +63,7 @@ export function CanvasConnection (props: OwnProps)
 
     if (!target_connection_coords) return null
 
-
-    let opacity = props.intensity ?? 1
-
+    const opacity = props.intensity ?? 1
     // Disabled as not performant at the moment
     // if (opacity !== undefined)
     // {
@@ -102,68 +91,108 @@ export function CanvasConnection (props: OwnProps)
     const extra_line_classes = hovered ? " hovered "
         : (props.focused_mode
             ? "" // hide the background when in focused_mode
-            : (props.is_highlighted ? " highlighted " : ""))
+            : (is_highlighted ? " highlighted " : ""))
     const extra_background_classes = (props.on_click ? " mouseable " : "") + extra_line_classes
 
 
-    const d_args = (current_connection_coords.current || target_connection_coords)
-
+    const on_pointer_over = () =>
+    {
+        set_hovered(true)
+        on_pointer_over_out(true)
+    }
+    const on_pointer_out = () =>
+    {
+        set_hovered(false)
+        on_pointer_over_out(false)
+    }
 
     return <g
         className={"connection_container " + (props.extra_css_classes || "")}
         onPointerDown={props.on_click}
         style={{ display: props.hidden ? "none" : "" }}
     >
-        <path
-            className={"connection_line_background " + extra_background_classes}
-            d={calc_d(d_args)}
-            onPointerOver={() =>
-            {
-                set_hovered(true)
-                on_pointer_over_out(true)
-            }}
-            onPointerOut={() =>
-            {
-                set_hovered(false)
-                on_pointer_over_out(false)
-            }}
-            style={style_line_background}
-            ref={e => path_background.current = e || undefined}
-        />
-        <path
-            className={"connection_line " + extra_line_classes}
-            d={calc_d(d_args)}
-            ref={path =>
-            {
-                if (!path) return
-
-                if (animate_to_target_timeout.current) clearTimeout(animate_to_target_timeout.current)
-                const path_background_el = (hovered || props.is_highlighted) ? path_background.current : undefined
-                animate_to_target_timeout.current = animate_to_target(path, path_background_el, current_connection_coords, target_connection_coords)
-            }}
-            style={style_line}
-        />
-
-        <ConnectionEnd
-            type={connection_end_type}
-            x={target_connection_coords.connection_end_x}
-            y={target_connection_coords.connection_end_y}
-            end_angle={target_connection_coords.end_angle}
+        <CanvasConnectionVisual
+            target_connection_coords={target_connection_coords}
+            extra_background_classes={extra_background_classes}
+            on_pointer_over={on_pointer_over}
+            on_pointer_out={on_pointer_out}
+            style_line_background={style_line_background}
+            extra_line_classes={extra_line_classes}
+            style_line={style_line}
+            connection_end_type={connection_end_type}
             opacity={opacity}
             blur={blur}
-            size={end_size}
-            is_hovered={hovered}
-            is_highlighted={props.is_highlighted}
+            end_size={end_size}
+            hovered={hovered}
+            is_highlighted={is_highlighted}
         />
     </g>
 }
 
 
 
-interface ConnectionCoordsWithProgress extends ConnectionCoords
+interface CanvasConnectionVisualProps
 {
-    progress: number
+    target_connection_coords: ConnectionCoords
+
+    extra_background_classes: string
+    on_pointer_over: () => void
+    on_pointer_out: () => void
+    style_line_background: h.JSX.CSSProperties
+
+    extra_line_classes: string
+    style_line: h.JSX.CSSProperties
+
+    connection_end_type: ConnectionEndType
+    opacity: number
+    blur: number
+    end_size: number
+    hovered: boolean
+    is_highlighted: boolean
 }
+function CanvasConnectionVisual(props: CanvasConnectionVisualProps)
+{
+    const [current_connection_coords, set_current_connection_coords] = useState<ConnectionCoords>(props.target_connection_coords)
+
+    useEffect(() =>
+    {
+        return animate_to_target(
+            current_connection_coords,
+            props.target_connection_coords,
+            set_current_connection_coords
+        )
+    }, [props.target_connection_coords])
+
+    const d = calc_d(current_connection_coords)
+
+    return <>
+        <path
+            className={"connection_line_background " + props.extra_background_classes}
+            d={d}
+            onPointerOver={props.on_pointer_over}
+            onPointerOut={props.on_pointer_out}
+            style={props.style_line_background}
+        />
+        <path
+            className={"connection_line " + props.extra_line_classes}
+            d={d}
+            style={props.style_line}
+        />
+
+        <ConnectionEnd
+            type={props.connection_end_type}
+            x={current_connection_coords.connection_end_x}
+            y={current_connection_coords.connection_end_y}
+            end_angle={current_connection_coords.end_angle}
+            opacity={props.opacity}
+            blur={props.blur}
+            size={props.end_size}
+            is_hovered={props.hovered}
+            is_highlighted={props.is_highlighted}
+        />
+    </>
+}
+
 
 interface DArgs
 {
@@ -185,49 +214,47 @@ function calc_d ({ line_start_x, line_start_y, relative_control_point1, relative
 
 
 
-const step_ms = 30
-const animation_total_ms = 1 * 1000
-const progress_step = step_ms / animation_total_ms
-function animate_to_target (path: SVGPathElement, path_background: SVGPathElement | undefined, current_position: MutableRef<DArgs | undefined>, target_position: ConnectionCoordsWithProgress)
+const ANIMATION_TOTAL_MS = 1 * 1000
+function animate_to_target (current: ConnectionCoords, target: ConnectionCoords, set_current_connection_coords: (new_coords: ConnectionCoords) => void)
 {
-    if (current_position.current === undefined || current_position.current === target_position)
+    if (current === target) return
+
+    let start_time = performance.now()
+
+    function advance (time: DOMHighResTimeStamp)
     {
-        target_position.progress = 1
-        current_position.current = target_position
-        return
-    }
-    const current = current_position.current
+        if (start_time < 0) return // animation is cancelled or finished
 
+        let progress = (time - start_time) / ANIMATION_TOTAL_MS
+        progress = Math.min(progress, 1)
 
-    let timeout: NodeJS.Timeout | undefined = undefined
+        const intermediate: ConnectionCoords = {
+            line_start_x: tween(current.line_start_x, target.line_start_x, progress),
+            line_start_y: tween(current.line_start_y, target.line_start_y, progress),
+            relative_control_point1: tween_vector(current.relative_control_point1, target.relative_control_point1, progress),
+            relative_control_point2: tween_vector(current.relative_control_point2, target.relative_control_point2, progress),
+            line_end_x: tween(current.line_end_x, target.line_end_x, progress),
+            line_end_y: tween(current.line_end_y, target.line_end_y, progress),
 
-    function advance ()
-    {
-        let progress = target_position.progress + progress_step
-        progress = Math.min(progress, 1) // defensive
-        target_position.progress = progress
-
-        const intermediate: DArgs = {
-            line_start_x: tween(current.line_start_x, target_position.line_start_x, progress),
-            line_start_y: tween(current.line_start_y, target_position.line_start_y, progress),
-            relative_control_point1: tween_vector(current.relative_control_point1, target_position.relative_control_point1, progress),
-            relative_control_point2: tween_vector(current.relative_control_point2, target_position.relative_control_point2, progress),
-            line_end_x: tween(current.line_end_x, target_position.line_end_x, progress),
-            line_end_y: tween(current.line_end_y, target_position.line_end_y, progress),
+            connection_end_x: tween(current.connection_end_x, target.connection_end_x, progress),
+            connection_end_y: tween(current.connection_end_y, target.connection_end_y, progress),
+            end_angle: tween(current.end_angle, target.end_angle, progress),
         }
-        const d = calc_d(intermediate)
-        path.setAttribute("d", d)
-        path_background?.setAttribute("d", d)
 
         if (progress >= 1)
         {
-            if (timeout) clearTimeout(timeout)
-            current_position.current = target_position
+            start_time = -1
+            set_current_connection_coords(target)
+        }
+        else
+        {
+            set_current_connection_coords(intermediate)
+            requestAnimationFrame(advance)
         }
     }
+    requestAnimationFrame(advance)
 
-    timeout = setInterval(advance, step_ms)
-    return timeout
+    return () => start_time = -1
 }
 
 
