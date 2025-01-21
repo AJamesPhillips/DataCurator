@@ -17,8 +17,8 @@ The data is store in a Supabase account we operate.  In future we would like you
 
 ## Future improvements
 
-* [Provide single pages for components, like a wikipedia page](https://github.com/centerofci/DataCurator/discussions/178)
-  * For each component allow many [different data sets](https://github.com/centerofci/DataCurator/discussions/180), versions of these sets, published by different authors, to be associated with each
+* [Provide single pages for components, like a wikipedia page](https://github.com/AJamesPhillips/DataCurator/discussions/178)
+  * For each component allow many [different data sets](https://github.com/AJamesPhillips/DataCurator/discussions/180), versions of these sets, published by different authors, to be associated with each
 * Support simple calculations to derive data from other data sets
 * Use these data sets inside existing maps by providing a data field in the statev2 component
 * Support multiple attributes similar to Kumu, alternatively allow components within a parent view to be an addressable i.e. be like "public" class attributes in programming languages.
@@ -41,7 +41,7 @@ The data is store in a Supabase account we operate.  In future we would like you
 
 ## Setup (on Mac)
 
-    $ git clone git@github.com:centerofci/DataCurator.git
+    $ git clone git@github.com:AJamesPhillips/DataCurator.git
 
 ### Install frontend dependencies
 
@@ -69,10 +69,18 @@ DataCurator currently hosted on Github
 
 ## Build & deployment
 
-Currently broken as of 2023-09-05
+### Build
 
     ./build.sh
     cd ../data-curator-build
+
+### Test
+
+Set up a local host e.g. `python -m http.server` for manual testing
+In browser can also use `run_tests()` in console however 31 tests fail as of 2025-01-21 (they work in development but fail in built app).
+
+### Deploy (hosted using GitHub pages)
+
     git commit
     git push
 
