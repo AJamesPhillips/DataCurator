@@ -133,7 +133,7 @@ export function CanvasConnection (props: OwnProps)
     >
         <path
             className={"connection_line_background " + extra_background_classes}
-            d={calc_d(target_position)}
+            d={calc_d(d_args)}
             onPointerOver={() =>
             {
                 set_hovered(true)
