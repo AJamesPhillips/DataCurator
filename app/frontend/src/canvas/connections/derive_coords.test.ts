@@ -21,7 +21,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 50, y: 0 },
             relative_control_point2: { x: -50, y: 0 },
-            line_end_x: 340, line_end_y: -77,
+            line_end_x: 350, line_end_y: -77,
             connection_end_x: 350, connection_end_y: -77,
             end_angle: 3.142,
         }, `two nodes not overlapping horizontally
@@ -37,7 +37,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 130, y: 0 },
             relative_control_point2: { x: 130, y: 0 },
-            line_end_x: 520, line_end_y: -47,
+            line_end_x: 510, line_end_y: -47,
             connection_end_x: 510, connection_end_y: -47,
             end_angle: 0,
         }, `two nodes not overlapping horizontally but too close to each other:
@@ -53,7 +53,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 120, y: 0 },
             relative_control_point2: { x: 120, y: 0 },
-            line_end_x: 500, line_end_y: -47,
+            line_end_x: 490, line_end_y: -47,
             connection_end_x: 490, connection_end_y: -47,
             end_angle: 0,
         }, `two nodes overlapping horizontally
@@ -69,7 +69,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 30, y: 0 },
             relative_control_point2: { x: 30, y: 0 },
-            line_end_x: 250, line_end_y: -47,
+            line_end_x: 240, line_end_y: -47,
             connection_end_x: 240, connection_end_y: -47,
             end_angle: 0,
         }, `two nodes not overlapping horizontally but too close to each other in the other direction
@@ -85,7 +85,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 30, y: 0 },
             relative_control_point2: { x: 30, y: 0 },
-            line_end_x: 210, line_end_y: -47,
+            line_end_x: 200, line_end_y: -47,
             connection_end_x: 200, connection_end_y: -47,
             end_angle: 0,
         }, `two nodes not overlapping horizontally and far from each other in the other direction
@@ -107,7 +107,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
                 line_start_x: node1_width, line_start_y: -160,
                 relative_control_point1: { x: 55, y: 0 },
                 relative_control_point2: { x: 55, y: 0 },
-                line_end_x: node2_left + node2_width + 10, line_end_y: -47,
+                line_end_x: node2_left + node2_width, line_end_y: -47,
                 connection_end_x: node2_left + node2_width, connection_end_y: -47,
                 // This end_angle of 0 seems wrong but the visual result is
                 // correct.
@@ -128,7 +128,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         line_start_x: NODE_WIDTH, line_start_y: -77,
         relative_control_point1: { x: 30, y: 0 },
         relative_control_point2: { x: 30, y: 0 },
-        line_end_x: NODE_WIDTH + 10, line_end_y: -47,
+        line_end_x: NODE_WIDTH, line_end_y: -47,
         connection_end_x: NODE_WIDTH, connection_end_y: -47,
         end_angle: 0,
     }, "connection from a node back to itself")
@@ -152,7 +152,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: -150, line_start_y: -77,
             relative_control_point1: { x: 0, y: 0 },
             relative_control_point2: { x: 0, y: 0 },
-            line_end_x: -9, line_end_y: -77,
+            line_end_x: -0.9, line_end_y: -77,
             connection_end_x: 0, connection_end_y: -77,
             end_angle: 3.142,
         }, "straight line from nothing to one node")
@@ -167,7 +167,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: 250, line_start_y: -77,
             relative_control_point1: { x: 0, y: 0 },
             relative_control_point2: { x: 0, y: 0 },
-            line_end_x: 390, line_end_y: -77,
+            line_end_x: 400, line_end_y: -77,
             connection_end_x: 400, connection_end_y: -77,
             end_angle: 3.142,
         }, "straight line from one node to nothing")
@@ -186,10 +186,10 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
 
         result = derive_connection_coords(args)
         test(test_helper__round_derived_connection_coords(result), {
-            line_start_x: 250, line_start_y: -77,
-            relative_control_point1: { x: 180, y: 0 },
-            relative_control_point2: { x: 180, y: 0 },
-            line_end_x: -91, line_end_y: 0,
+            line_start_x: 0, line_start_y: -77,
+            relative_control_point1: { x: -50, y: 0 },
+            relative_control_point2: { x: 50, y: 0 },
+            line_end_x: -99, line_end_y: 0,
             connection_end_x: -100, connection_end_y: 0,
             end_angle: 0,
         }, "connect from one node to a second connection")
@@ -207,10 +207,10 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
         test(test_helper__round_derived_connection_coords(result), {
             line_start_x: 0, line_start_y: -77,
             relative_control_point1: { x: -50, y: 0 },
-            relative_control_point2: { x: -50, y: 0 },
-            line_end_x: -110, line_end_y: 200,
+            relative_control_point2: { x: 50, y: 0 },
+            line_end_x: -99, line_end_y: 200,
             connection_end_x: -100, connection_end_y: 200,
-            end_angle: 3.142,
+            end_angle: 0,
         }, "connect from one node to a second connection above and left")
 
 
@@ -227,7 +227,7 @@ export const test_derive_connection_coords = describe.delay("derive_connection_c
             line_start_x: -100, line_start_y: 200,
             relative_control_point1: { x: 50, y: 0 },
             relative_control_point2: { x: -50, y: 0 },
-            line_end_x: -9, line_end_y: -77,
+            line_end_x: -0.9, line_end_y: -77,
             connection_end_x: 0, connection_end_y: -77,
             end_angle: 3.142,
         }, "connect from a second connection above and left to a node")
