@@ -47,6 +47,8 @@ function _UserSigninRegisterForm (props: Props)
     const [user_needs_to_provide_email, set_user_needs_to_provide_email] = useState(false)
     const [user_needs_to_provide_password, set_user_needs_to_provide_password] = useState(false)
 
+    // console .log("UserSigninRegisterForm", form_state, email, password, supabase_session_error, user_needs_to_provide_email, user_needs_to_provide_password)
+
     function set_email (new_email: string)
     {
         _set_email(new_email)

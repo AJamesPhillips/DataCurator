@@ -21,6 +21,9 @@ export function ensure_a_knowledge_view_is_in_existence (store: StoreType)
         return
     }
 
+    // This is still buggy, as it may create a new knowledge view when (I think)
+    // the user's browser is forcibly refreshed to get a refreshed JWT token
+    // from supabase.
     const knowledge_view = get_new_knowledge_view_object({ title: "All", base_id }, state.creation_context)
     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
 }
