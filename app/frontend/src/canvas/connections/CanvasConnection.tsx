@@ -25,7 +25,6 @@ interface OwnProps {
     on_click?: (e: h.JSX.TargetedEvent<SVGGElement, PointerEvent>) => void
     on_pointer_over_out?: (over: boolean) => void
     extra_css_classes?: string
-    should_animate?: boolean
 }
 
 
@@ -42,7 +41,6 @@ export function CanvasConnection (props: OwnProps)
         connection_from_component, connection_to_component,
         line_behaviour, circular_links,
         on_pointer_over_out = () => {},
-        should_animate = true,
         connection_end_type = ConnectionEndType.positive,
     } = props
     if (!connection_from_component && !connection_to_component) return null
@@ -123,7 +121,7 @@ export function CanvasConnection (props: OwnProps)
     if (!result) return null
     const { connection_end_x, connection_end_y, end_angle, target_position } = result
 
-    const d_args = should_animate ? (current_position.current || target_position) : target_position
+    const d_args = (current_position.current || target_position)
 
 
     return <g
@@ -152,7 +150,7 @@ export function CanvasConnection (props: OwnProps)
             d={calc_d(d_args)}
             ref={path =>
             {
-                if (!path || !should_animate) return
+                if (!path) return
 
                 if (animate_to_target_timeout.current) clearTimeout(animate_to_target_timeout.current)
                 const path_background_el = (hovered || props.is_highlighted) ? path_background.current : undefined

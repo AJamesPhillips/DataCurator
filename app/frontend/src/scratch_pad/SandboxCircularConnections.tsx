@@ -66,13 +66,11 @@ export function SandboxCircularConnections ()
                     connection_from_component={connection_from_component}
                     connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
                     circular_links={true}
-                    should_animate={false}
                 />
                 <CanvasConnection
                     connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
                     circular_links={true}
-                    should_animate={false}
                 />
             </g>}
 
@@ -81,13 +79,11 @@ export function SandboxCircularConnections ()
                     connection_from_component={connection_from_component}
                     connection_to_component={{ ...connection_to_component, kv_wc_entry: node_2_position }}
                     circular_links={false}
-                    should_animate={false}
                 />
                 <CanvasConnection
                     connection_from_component={{ ...connection_from_component, kv_wc_entry: node_2_position }}
                     connection_to_component={connection_to_component}
                     circular_links={false}
-                    should_animate={false}
                 />
             </g>}
         </svg>
