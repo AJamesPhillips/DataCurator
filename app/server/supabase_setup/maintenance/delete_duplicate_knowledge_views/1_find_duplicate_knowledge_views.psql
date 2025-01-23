@@ -1,0 +1,19 @@
+
+-- Find all knowledge views which are empty and duplicated
+
+SELECT kvs.id, kvs.json->'wc_id_map', kvs.title, users.name
+FROM knowledge_views as kvs
+JOIN bases on bases.id = kvs.base_id
+JOIN users on users.id = bases.owner_user_id
+WHERE
+  (kvs.json->'wc_id_map')::jsonb = '{}'::jsonb
+  AND
+  (kvs.title = 'All' or kvs.title = '...')
+  AND
+  kvs.base_id IN (
+    SELECT base_id
+    FROM knowledge_views
+    GROUP BY base_id
+    HAVING COUNT(id) > 1
+  );
+;

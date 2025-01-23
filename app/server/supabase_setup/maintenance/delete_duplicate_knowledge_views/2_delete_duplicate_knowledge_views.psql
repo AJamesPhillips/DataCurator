@@ -1,0 +1,67 @@
+
+-- Delete duplicated knowledge views
+-- 1. open a transaction
+-- 2. find all the knowledge views to be deleted.
+-- 3. find all the bases_ids that will be effected
+-- 4. run a query to delete these knowledge views
+-- 5. for each base_id, check they still have at least one knowledge view remaining and if not then roll back the transaction
+-- 6. otherwise commit the transaction
+
+
+-- Open a transaction
+DO $$
+DECLARE
+    knowledge_view RECORD;
+    tmp_base_id INTEGER;
+    base_count INTEGER;
+BEGIN
+
+    -- ROLLBACK;
+    -- RAISE EXCEPTION 'testing 123';
+
+    -- Find all the knowledge views to be deleted
+    FOR knowledge_view IN
+        SELECT kvs.id, kvs.base_id
+        FROM knowledge_views as kvs
+        JOIN bases on bases.id = kvs.base_id
+        JOIN users on users.id = bases.owner_user_id
+        WHERE
+          (kvs.json->'wc_id_map')::jsonb = '{}'::jsonb
+          AND
+          (kvs.title = 'All' or kvs.title = '...')
+          AND
+          kvs.base_id IN (
+            SELECT kvs2.base_id
+            FROM knowledge_views kvs2
+            GROUP BY kvs2.base_id
+            HAVING COUNT(id) > 1
+          )
+    LOOP
+        -- ROLLBACK;
+        -- RAISE EXCEPTION 'knowledge_view.base_id is %', knowledge_view.base_id::text;
+
+        -- Find all the base_ids that will be affected
+        tmp_base_id := knowledge_view.base_id;
+
+        -- Delete the knowledge views
+        DELETE FROM knowledge_views kvs3 WHERE kvs3.id = knowledge_view.id;
+
+        -- Check if the base still has at least one knowledge view remaining
+        SELECT COUNT(*) INTO base_count
+        FROM knowledge_views kvs4
+        WHERE kvs4.base_id = tmp_base_id;
+
+        IF base_count = 0 THEN
+            -- Roll back the transaction if any base has no remaining knowledge views
+            ROLLBACK;
+            RAISE EXCEPTION 'Transaction rolled back because base % has no remaining knowledge views', tmp_base_id;
+        END IF;
+    END LOOP;
+
+    -- ROLLBACK;
+    -- RAISE EXCEPTION 'Transaction rolled back!';
+
+    -- Commit the transaction if all checks pass
+    COMMIT;
+    RAISE NOTICE 'Transaction committed successfully';
+END $$;
