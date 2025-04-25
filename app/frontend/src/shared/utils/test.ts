@@ -36,12 +36,12 @@ export const tests_stats = {
     {
         const stats = _tests_stats
 
-        console.log(`
+        console .log(`
 describe: ${stats.describe_run + stats.describe_skipped}
 tests: ${stats.test_run + stats.test_skipped}`)
 
     const skipped = stats.describe_skipped + stats.test_skipped
-    console.log(`%cskipped: ${skipped}`,
+    console .log(`%cskipped: ${skipped}`,
     `color:${skipped ? "tan" : "LightGrey"};font-weight:bold;`)
 
     if (stats.test_failed.length)
@@ -49,7 +49,7 @@ tests: ${stats.test_run + stats.test_skipped}`)
         console.error("failed: " + stats.test_failed.join("\nfailed: "))
     }
 
-    console.log(`%cpassed: ${stats.test_passed}${stats.test_failed.length ? `\nfailed: ${stats.test_failed.length}` : ""}
+    console .log(`%cpassed: ${stats.test_passed}${stats.test_failed.length ? `\nfailed: ${stats.test_failed.length}` : ""}
     `, `color:${stats.test_failed.length ? "red" : "green"};font-weight:bold;`)
     }
 }
@@ -122,35 +122,55 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
 }
 
 
+type TestDescriptionFn = (() => void) | (Promise<() => void>)
+
 interface DescribeFn
 {
-    (description: string, test_fn: () => void): () => void
+    (description: string, test_description_fn: TestDescriptionFn): Promise<(() => void) | (() => Promise<void>)>
 }
 
 interface Describe extends DescribeFn
 {
-    skip: (description: string, test_fn: () => void) => () => void
-    delay: (description: string, test_fn: () => void) => () => void
+    skip: (description: string, test_description_fn: TestDescriptionFn) => () => void
+    delay: (description: string, test_description_fn: TestDescriptionFn) => () => void
 }
 
 
-const describe_fn: DescribeFn = (description: string, test_fn: () => void) =>
+const describe_fn: DescribeFn = async (description: string, test_description_fn: TestDescriptionFn) =>
 {
-    function run_tests ()
-    {
-        _tests_stats.describe_run += 1
-        console .group(description)
-        test_fn()
-        console .groupEnd()
-    }
+    let run_tests
 
-    run_tests()
+    if (is_async_function(test_description_fn))
+    {
+        run_tests = async () =>
+        {
+            _tests_stats.describe_run += 1
+            console .group(description)
+            await (await test_description_fn)()
+            console .groupEnd()
+        }
+
+        await run_tests()
+    }
+    else
+    {
+        const test_description_fn1: () => void = test_description_fn
+        run_tests = () =>
+        {
+            _tests_stats.describe_run += 1
+            console .group(description)
+            test_description_fn1()
+            console .groupEnd()
+        }
+
+        run_tests()
+    }
 
     return run_tests
 }
 
 export const describe: Describe = describe_fn as any
-describe.skip = (description: string, test_fn: () => void) =>
+describe.skip = (description: string, test_description_fn: TestDescriptionFn) =>
 {
     function skip_tests ()
     {
@@ -161,15 +181,37 @@ describe.skip = (description: string, test_fn: () => void) =>
     return skip_tests
 }
 
-describe.delay = (description: string, test_fn: () => void) =>
+describe.delay = (description: string, test_description_fn: TestDescriptionFn) =>
 {
-    function run_tests ()
+    let run_tests
+
+    if (is_async_function(test_description_fn))
     {
-        _tests_stats.describe_run += 1
-        console .group(description)
-        test_fn()
-        console .groupEnd()
+        run_tests = async () =>
+        {
+            _tests_stats.describe_run += 1
+            console .group(description)
+            await (await test_description_fn)()
+            console .groupEnd()
+        }
+    }
+    else
+    {
+        const test_description_fn1: () => void = test_description_fn
+        run_tests = () =>
+        {
+            _tests_stats.describe_run += 1
+            console .group(description)
+            test_description_fn1()
+            console .groupEnd()
+        }
     }
 
     return run_tests
+}
+
+
+function is_async_function (func: TestDescriptionFn): func is Promise<() => void>
+{
+    return func.constructor.name === "AsyncFunction"
 }
