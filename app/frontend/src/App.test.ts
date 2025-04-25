@@ -25,6 +25,7 @@ import { test_partition_items_by_created_at_datetime } from "./shared/utils_date
 import { test_calc_new_counterfactual_state } from "./sharedf/prediction_badge/calc_new_counterfactual_state"
 import { test_add_newlines_to_markdown } from "./sharedf/rich_text/add_newlines_to_markdown"
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
+import { test_id_regexs } from "./sharedf/rich_text/id_regexs.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
 import {
     run_replace_normal_ids_tests,
@@ -128,6 +129,7 @@ function run_all_tests ()
     run_get_valid_calculation_name_id_tests()
     run_make_calculation_safe_for_rich_text_tests()
     run_get_wcomponent_status_in_knowledge_view_tests()
+    test_id_regexs()
 
     tests_stats.print()
 }
