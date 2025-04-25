@@ -8,7 +8,7 @@ import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
-import { get_double_at_mentioned_uuids_from_text } from "../../../sharedf/rich_text/replace_normal_ids"
+import { get_double_at_mentioned_uuids_from_text } from "../../../sharedf/rich_text/id_regexs"
 import { is_valid_uuid } from "../../../sharedf/rich_text/id_regexs"
 
 

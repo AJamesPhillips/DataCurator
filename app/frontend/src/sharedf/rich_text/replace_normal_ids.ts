@@ -1,4 +1,4 @@
-import { double_at_mentioned_uuids_regex } from "./id_regexs"
+import { get_double_at_mentioned_uuids_from_text } from "./id_regexs"
 import type { ReplaceNormalIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_id_error, format_wcomponent_link } from "./templates"
 
@@ -34,12 +34,4 @@ export function replace_normal_ids (text: string, current_depth: number, args: R
     })
 
     return text
-}
-
-
-
-export function get_double_at_mentioned_uuids_from_text (text: string): string[]
-{
-    const matches = [ ...text.matchAll(double_at_mentioned_uuids_regex) ] //, ...text.matchAll(old_ids_regex)]
-    return matches.map(entry => entry[1]!.slice(2))
 }
