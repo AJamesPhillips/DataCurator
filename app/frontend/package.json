@@ -49,6 +49,7 @@
     "yaml": "2.3.1"
   },
   "devDependencies": {
+    "@eslint/js": "9.24.0",
     "@preact/preset-vite": "2.5.0",
     "@testing-library/preact": "2.0.0",
     "@types/boom": "4.3.5",
@@ -56,17 +57,21 @@
     "@types/graphlib": "2.1.7",
     "@types/luxon": "1.26.3",
     "@types/uuid": "9.0.3",
-    "@typescript-eslint/eslint-plugin": "4.29.2",
-    "@typescript-eslint/parser": "4.29.2",
+    "@typescript-eslint/eslint-plugin": "8.29.1",
     "@web/test-runner": "0.10.0",
     "antlr4ts-cli": "0.5.0-alpha.4",
     "chai": "4.2.0",
-    "eslint": "7.32.0",
+    "eslint": "9.24.0",
+    "eslint-config-preact": "1.5.0",
     "eslint-plugin-react-hooks": "4.6.0",
     "eslint-plugin-react-refresh": "0.3.4",
     "sass": "1.69.5",
     "typescript": "5.2.2",
+    "typescript-eslint": "8.29.1",
     "vite": "4.3.9",
     "vitest": "0.32.0"
+  },
+  "eslintConfig": {
+      "extends": "preact"
   }
 }

@@ -28,3 +28,11 @@ Note: this does not currently work.  Instead:
 
 Builds the app for production to the `build/` folder.
 It correctly bundles Preact in production mode and optimizes the build for the best performance.
+
+
+# Dev
+
+## Visual Studio Code
+
+Install the following extensions:
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
