@@ -65,7 +65,8 @@ interface Test extends TestFn
 }
 
 
-const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true) =>
+const SORT_ITEMS_DEFAULT = true
+const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=SORT_ITEMS_DEFAULT) =>
 {
     _tests_stats.test_run += 1
 
@@ -82,40 +83,46 @@ const test_fn: TestFn = <T>(got: T, expected: T, description="", sort_items=true
     }
     else
     {
-        _tests_stats.test_failed.push(`${description} "${str_got}" !== "${str_expected}"`)
-        console.error(`fail:  ${description} "${str_got}" !== "${str_expected}"`)
-        try
-        {
-            if (got?.constructor === Object)
-            {
-                const keys = [...new Set([...Object.keys(got), ...Object.keys(expected as any)])]
-                keys.sort()
-                keys.forEach(key =>
-                {
-                    const got_value = (got as any)[key]
-                    const expected_value = (expected as any)[key]
-                    const str_got_value = stable_stringify(got_value, stringify_options)
-                    const str_expected_value = stable_stringify(expected_value, stringify_options)
-                    let pass = str_got_value === str_expected_value
-                    if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', but expected: '${str_expected_value}'`)
-                    else if (str_got_value === "undefined")
-                    {
-                        // check the keys were both present
-                        const key_in_got = key in (got as any)
-                        const key_in_expected = key in (expected as any)
-                        if (key_in_got !== key_in_expected) console.debug(`Test failure: key "${key}", got: ${key_in_got ? "present" : "not present"}, but expected: ${key_in_expected ? "present" : "not present"}`)
-                    }
-                })
-            }
-
-        } catch (e) {
-            console.debug("error in providing debugging for test failure", e)
-        }
+        const failure_description = `${description} "${str_got}" !== "${str_expected}"`
+        log_test_failure<T>(failure_description, got, expected, sort_items)
     }
 }
 
+
+function log_test_failure<T>(failure_description: string, got: T, expected: T, sort_items=SORT_ITEMS_DEFAULT) {
+    _tests_stats.test_failed.push(failure_description)
+    console.error(`fail:  ${failure_description}`)
+
+    const stringify_options = { render_undefined: true, sort_items }
+    try {
+        if (got?.constructor === Object) {
+            const keys = [...new Set([...Object.keys(got), ...Object.keys(expected as any)])]
+            keys.sort()
+            keys.forEach(key => {
+                const got_value = (got as any)[key]
+                const expected_value = (expected as any)[key]
+                const str_got_value = stable_stringify(got_value, stringify_options)
+                const str_expected_value = stable_stringify(expected_value, stringify_options)
+                let pass = str_got_value === str_expected_value
+                if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', but expected: '${str_expected_value}'`)
+                else if (str_got_value === "undefined") {
+                    // check the keys were both present
+                    const key_in_got = key in (got as any)
+                    const key_in_expected = key in (expected as any)
+                    if (key_in_got !== key_in_expected) console.debug(`Test failure: key "${key}", got: ${key_in_got ? "present" : "not present"}, but expected: ${key_in_expected ? "present" : "not present"}`)
+                }
+            })
+        }
+
+    }
+    catch (e) {
+        console.debug("error in providing debugging for test failure", e)
+    }
+}
+
+
 export const test: Test = test_fn as any
-test.skip = <T>(got: T, expected: T, description="", sort_items=true) =>
+test.skip = <T>(got: T, expected: T, description="", sort_items=SORT_ITEMS_DEFAULT) =>
 {
     _tests_stats.test_skipped += 1
     console .warn("skipping  " + description)
@@ -146,7 +153,14 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
         {
             _tests_stats.describe_run += 1
             console .group(description)
-            await (await test_description_fn)()
+            try
+            {
+                await (await test_description_fn)()
+            }
+            catch (e)
+            {
+                log_test_failure(`error in test: ${e}`, null, null)
+            }
             console .groupEnd()
         }
 
@@ -159,7 +173,14 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
         {
             _tests_stats.describe_run += 1
             console .group(description)
-            test_description_fn1()
+            try
+            {
+                test_description_fn1()
+            }
+            catch (e)
+            {
+                log_test_failure(`error in test: ${e}`, null, null)
+            }
             console .groupEnd()
         }
 
@@ -191,7 +212,14 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
         {
             _tests_stats.describe_run += 1
             console .group(description)
-            await (await test_description_fn)()
+            try
+            {
+                await (await test_description_fn)()
+            }
+            catch (e)
+            {
+                log_test_failure(`error in test: ${e}`, null, null)
+            }
             console .groupEnd()
         }
     }
@@ -202,7 +230,14 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
         {
             _tests_stats.describe_run += 1
             console .group(description)
-            test_description_fn1()
+            try
+            {
+                test_description_fn1()
+            }
+            catch (e)
+            {
+                log_test_failure(`error in test: ${e}`, null, null)
+            }
             console .groupEnd()
         }
     }
