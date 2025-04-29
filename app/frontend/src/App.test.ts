@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { run_apply_units_from_component_tests } from "./calculations/apply_units_from_component.test"
 import { run_convert_percentages_tests } from "./calculations/convert_percentages.test"
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
@@ -16,6 +17,7 @@ import { run_number_to_string_test } from "./shared/format_number_to_string.test
 import { test_graph_related_functions } from "./shared/utils/graph"
 import { test_stable_stringify } from "./shared/utils/stable_stringify.test"
 import { tests_stats } from "./shared/utils/test"
+import { test_async_test, test_sync_test } from "./shared/utils/test.test"
 import { test_get_tense_of_uncertain_datetime } from "./shared/utils_datetime/get_tense_of_uncertain_datetime"
 import {
     test_partition_sorted_items_by_datetimes,
@@ -68,6 +70,9 @@ import { run_get_wcomponent_status_in_knowledge_view_tests } from "./wcomponent_
 async function run_all_tests ()
 {
     tests_stats.reset()
+
+    ;(await test_sync_test)()
+    ;await ((await test_async_test)())
 
     ;(await run_apply_units_from_component_tests)()
     ;(await run_convert_percentages_tests)()
@@ -136,5 +141,6 @@ async function run_all_tests ()
 
 export function setup_tests_for_browser ()
 {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     (window as any).run_tests = run_all_tests
 }

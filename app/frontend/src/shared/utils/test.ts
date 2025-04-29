@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/await-thenable */
 import { stable_stringify } from "./stable_stringify"
 
 
@@ -95,20 +96,25 @@ function log_test_failure<T>(failure_description: string, got: T, expected: T, s
 
     const stringify_options = { render_undefined: true, sort_items }
     try {
-        if (got?.constructor === Object) {
-            const keys = [...new Set([...Object.keys(got), ...Object.keys(expected as any)])]
+        if (got?.constructor === Object && expected?.constructor === Object) {
+            const keys = [...new Set([...Object.keys(got), ...Object.keys(expected)])]
             keys.sort()
             keys.forEach(key => {
-                const got_value = (got as any)[key]
-                const expected_value = (expected as any)[key]
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const [got_as_any, expected_as_any]: [any, any] = [got, expected]
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                const got_value = got_as_any[key]
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                const expected_value = expected_as_any[key]
                 const str_got_value = stable_stringify(got_value, stringify_options)
                 const str_expected_value = stable_stringify(expected_value, stringify_options)
-                let pass = str_got_value === str_expected_value
+                const pass = str_got_value === str_expected_value
                 if (!pass) console.debug(`Test failure: different values for key "${key}", got: '${str_got_value}', but expected: '${str_expected_value}'`)
-                else if (str_got_value === "undefined") {
+                else if (str_got_value === "undefined")
+                {
                     // check the keys were both present
-                    const key_in_got = key in (got as any)
-                    const key_in_expected = key in (expected as any)
+                    const key_in_got = key in got_as_any
+                    const key_in_expected = key in expected_as_any
                     if (key_in_got !== key_in_expected) console.debug(`Test failure: key "${key}", got: ${key_in_got ? "present" : "not present"}, but expected: ${key_in_expected ? "present" : "not present"}`)
                 }
             })
@@ -121,6 +127,7 @@ function log_test_failure<T>(failure_description: string, got: T, expected: T, s
 }
 
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 export const test: Test = test_fn as any
 test.skip = <T>(got: T, expected: T, description="", sort_items=SORT_ITEMS_DEFAULT) =>
 {
@@ -129,10 +136,12 @@ test.skip = <T>(got: T, expected: T, description="", sort_items=SORT_ITEMS_DEFAU
 }
 
 
-type TestDescriptionFn = (() => void) | (Promise<() => void>)
+type TestDescriptionFn = (() => void) | (() => Promise<void>)
 
 interface DescribeFn
 {
+    (description: string, test_description_fn: () => void): () => void
+    (description: string, test_description_fn: () => Promise<void>): Promise<() => Promise<void>>
     (description: string, test_description_fn: TestDescriptionFn): Promise<(() => void) | (() => Promise<void>)>
 }
 
@@ -143,7 +152,8 @@ interface Describe extends DescribeFn
 }
 
 
-const describe_fn: DescribeFn = async (description: string, test_description_fn: TestDescriptionFn) =>
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const describe_fn: DescribeFn = (async (description: string, test_description_fn: TestDescriptionFn) =>
 {
     let run_tests
 
@@ -155,10 +165,11 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
             console .group(description)
             try
             {
-                await (await test_description_fn)()
+                await (test_description_fn())
             }
             catch (e)
             {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 log_test_failure(`error in test: ${e}`, null, null)
             }
             console .groupEnd()
@@ -168,6 +179,7 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
     }
     else
     {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         const test_description_fn1: () => void = test_description_fn
         run_tests = () =>
         {
@@ -179,6 +191,7 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
             }
             catch (e)
             {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 log_test_failure(`error in test: ${e}`, null, null)
             }
             console .groupEnd()
@@ -188,8 +201,10 @@ const describe_fn: DescribeFn = async (description: string, test_description_fn:
     }
 
     return run_tests
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+}) as any
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 export const describe: Describe = describe_fn as any
 describe.skip = (description: string, test_description_fn: TestDescriptionFn) =>
 {
@@ -214,10 +229,11 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
             console .group(description)
             try
             {
-                await (await test_description_fn)()
+                await (test_description_fn())
             }
             catch (e)
             {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 log_test_failure(`error in test: ${e}`, null, null)
             }
             console .groupEnd()
@@ -225,6 +241,7 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
     }
     else
     {
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         const test_description_fn1: () => void = test_description_fn
         run_tests = () =>
         {
@@ -236,6 +253,7 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
             }
             catch (e)
             {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 log_test_failure(`error in test: ${e}`, null, null)
             }
             console .groupEnd()
@@ -246,7 +264,7 @@ describe.delay = (description: string, test_description_fn: TestDescriptionFn) =
 }
 
 
-function is_async_function (func: TestDescriptionFn): func is Promise<() => void>
+function is_async_function (func: TestDescriptionFn): func is () => Promise<void>
 {
     return func.constructor.name === "AsyncFunction"
 }
