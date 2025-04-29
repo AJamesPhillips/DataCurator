@@ -1,17 +1,17 @@
+import type { Prediction } from "../../shared/uncertainty/interfaces"
 import {
     clean_base_object_of_sync_meta_fields,
 } from "../../state/sync/supabase/clean_base_object_for_supabase"
-import type { Prediction } from "../../shared/uncertainty/interfaces"
 import {
+    ConnectionTerminalAttributeType,
     WComponent,
+    wcomponent_has_event_at,
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
-    wcomponent_has_event_at,
-    wcomponent_is_plain_connection,
-    ConnectionTerminalAttributeType,
-    wcomponent_is_process,
     wcomponent_is_action,
     wcomponent_is_goal,
+    wcomponent_is_plain_connection,
+    wcomponent_is_process,
 } from "../interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet } from "../interfaces/state"
 import { parse_base_dates } from "./parse_dates"
@@ -38,6 +38,7 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
     if (wcomponent_has_VAP_sets(wcomponent))
     {
         const VAP_sets = wcomponent.values_and_prediction_sets
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         wcomponent.values_and_prediction_sets = VAP_sets && VAP_sets.map(parse_values_and_predictions_set)
     }
 
@@ -85,6 +86,7 @@ function upgrade_2021_05_31_connection_fromto_types (type?: string): ConnectionT
 // Upgrade valid as of 2021-05-19
 function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
 {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
     if (!wcomponent_is_process(wcomponent) || !(wcomponent as any).is_action) return wcomponent
 
     const wcomponent_action = {
@@ -102,6 +104,7 @@ function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent
 {
     if (wcomponent_is_action(wcomponent))
     {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         const depends_on_action_ids = wcomponent.depends_on_action_ids || []
         wcomponent = { ...wcomponent, depends_on_action_ids }
     }

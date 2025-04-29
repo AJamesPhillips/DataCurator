@@ -1,14 +1,14 @@
-import type { CreationContextState } from "../../state/creation_context/state"
 import type { HasBaseId } from "../../shared/interfaces/base"
-import { get_new_created_ats } from "../../shared/utils/datetime"
 import { date2str_auto } from "../../shared/utils/date_helpers"
+import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_wcomponent_id } from "../../shared/utils/ids"
+import type { CreationContextState } from "../../state/creation_context/state"
 import type { WComponentNodeAction } from "../interfaces/action"
 import type { WComponentNodeGoal } from "../interfaces/goal"
 import type { WComponentJudgement } from "../interfaces/judgement"
 import type { WComponentPrioritisation } from "../interfaces/priorities"
 import { WComponent, WComponentConnection, WComponentNode, wcomponent_is_causal_link } from "../interfaces/SpecialisedObjects"
-import type { WComponentNodeStateV2, WComponentStateValue } from "../interfaces/state"
+import type { WComponentNodeStateV2 } from "../interfaces/state"
 import type { WComponentBase } from "../interfaces/wcomponent_base"
 
 
@@ -147,6 +147,7 @@ export function prepare_new_wcomponent_object (partial_wcomponent: Partial<WComp
 function set_creation_context_label_ids(wcomponent: WComponent, creation_context: CreationContextState)
 {
     const cc = creation_context.creation_context
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const additional_labels = creation_context.use_creation_context && cc && cc.label_ids || []
     const existing_label_ids_list = (wcomponent.label_ids || [])
     const existing_label_ids = new Set(existing_label_ids_list)
