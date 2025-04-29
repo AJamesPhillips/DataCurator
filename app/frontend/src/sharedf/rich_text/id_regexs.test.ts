@@ -1,6 +1,6 @@
 import { describe, test } from "../../shared/utils/test"
+import { get_double_at_mentioned_uuids_from_text, get_uuids_from_text, is_valid_uuid, uuids_regex, uuids_regexes } from "./id_regexs"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
-import { get_double_at_mentioned_uuids_from_text, get_uuids_from_text, uuids_regex, uuids_regexes } from "./id_regexs"
 
 
 export const test_id_regexs = describe.delay("id_regexs", () =>
@@ -10,16 +10,27 @@ export const test_id_regexs = describe.delay("id_regexs", () =>
         let result = "77777777-7777-4777-8777-777777777777".match(uuids_regex)
         test(result !== null, true, "should match a valid uuid")
         test(result?.[0], "77777777-7777-4777-8777-777777777777", "should match a valid uuid")
-        result = "00000000-0000-0000-0000-00000000000".match(uuids_regex)
-        test(result === null, true, "should fail to match a valid uuid with leading space")
+        result = "77777777-7777-0777-0777-777777777777".match(uuids_regex)
+        test(result === null, true, "should fail to match a invalid uuid")
         result = " 77777777-7777-4777-8777-777777777777".match(uuids_regex)
         test(result === null, true, "should fail to match a valid uuid with leading space")
+        result = "77777777-7777-4777-8777-777777777777 ".match(uuids_regex)
+        test(result === null, true, "should fail to match a valid uuid with trailing space")
+
+        describe("is_valid_uuid", () =>
+        {
+            test(is_valid_uuid("77777777-7777-4777-8777-777777777777"), true, "should match a valid uuid")
+            test(is_valid_uuid("77777777-7777-0777-0777-777777777777"), false, "should fail to match a invalid uuid")
+            test(is_valid_uuid(" 77777777-7777-4777-8777-777777777777"), false, "should fail to match a valid uuid with leading space")
+            test(is_valid_uuid("77777777-7777-4777-8777-777777777777 "), false, "should fail to match a valid uuid with trailing space")
+            test(is_valid_uuid("77777777-7777-4777-8777-777777777777 ", true), true, "should match a valid uuid with trailing space if starts_with is true")
+        })
     })
 
     describe("uuids_regexes", () =>
     {
-        let result = `  77777777-7777-4777-8777-777777777777
-        00000000-0000-0000-0000-00000000000
+        const result = `  77777777-7777-4777-8777-777777777777
+        77777777-7777-0777-0777-777777777777
         11111111-1111-4111-8111-111111111111
         `.match(uuids_regexes)
         test(result !== null, true, "should match a string with valid uuids")
