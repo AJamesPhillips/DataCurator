@@ -1,14 +1,14 @@
-import { Model, ModelVariableConfig, SimulationError } from "simulation"
+import { Model, ModelVariableConfig, SimulationComponent, SimulationError } from "simulation"
 
-import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
-import { CalculationResult, PlainCalculationObject } from "./interfaces"
-import { normalise_calculation_ids } from "./normalise_calculation_ids"
-import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
 import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/id_regexs"
-import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
+import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
+import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
+import { apply_units_from_component } from "./apply_units_from_component"
 import { convert_percentages } from "./convert_percentages"
 import { hide_currency_symbols, unhide_currency_symbols } from "./hide_currency_symbols"
-import { apply_units_from_component } from "./apply_units_from_component"
+import { CalculationResult, PlainCalculationObject } from "./interfaces"
+import { normalise_calculation_ids } from "./normalise_calculation_ids"
+import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
 
 
 
@@ -38,8 +38,8 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         const model_config: ModelVariableConfig = {
             name: calculation.name,
             value: converted_calculation,
+            units,
         }
-        if (units !== undefined) model_config.units = units
         const model_component = model.Variable(model_config)
 
         const {warnings, errors} = prepare_other_components({ model, model_component, values, uuids: uuid_v4s, wcomponents_by_id })
@@ -183,7 +183,7 @@ function run_model (model: Model, initial_units: string | undefined, model_compo
 
     try {
         const calculation_result = model.simulate()
-        value = calculation_result!._data.data[0]![model_component!._node.id]
+        value = calculation_result._data.data[0]![model_component._node.id]
     }
     catch (e) {
         const err = e as SimulationError
