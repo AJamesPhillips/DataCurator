@@ -1,18 +1,18 @@
+import { Box } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { Box } from "@mui/material"
 
-import type { RootState } from "../../state/State"
-import { perform_calculations } from "../../calculations/perform_calculations"
-import { EditableCalculationRow } from "./EditableCalculationRow"
-import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
-import { Button } from "../../sharedf/Button"
 import { PlainCalculationObject } from "../../calculations/interfaces"
-import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
+import { perform_calculations } from "../../calculations/perform_calculations"
+import { Button } from "../../sharedf/Button"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
+import type { RootState } from "../../state/State"
 import { index_is_in_bounds, insert_element_at_index, swap_elements } from "../../utils/list"
-import { EditableCalculationRowCommands } from "./EditableCalculationRowOptions"
 import { WComponentCalculations } from "../../wcomponent/interfaces/wcomponent_base"
+import { EditableCalculationRow } from "./EditableCalculationRow"
+import { EditableCalculationRowCommands } from "./EditableCalculationRowOptions"
+import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 
 
 
@@ -52,6 +52,7 @@ function _WComponentCalculatonsForm (props: Props)
     // TODO remove this line.
     // We added calculation.id slightly later so for the 3-5 components that
     // have calculations without ids this line will ensure they all have one.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     calculations.forEach((calc, index) => calc.id = calc.id ?? index)
 
     const [show_form, set_show_form] = useState(calculations.length > 0)
@@ -145,6 +146,7 @@ function _WComponentCalculatonsForm (props: Props)
                             const modified_calculations = insert_element_at_index(calculations, new_calculation, index)
                             props.upsert_wcomponent({ calculations: modified_calculations })
                         }
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                         else if (command === "add_below")
                         {
                             const new_calculation = prepare_new_calculation(calculations)

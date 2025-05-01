@@ -1,25 +1,24 @@
+import { Settings as SettingsIcon } from "@mui/icons-material"
+import { Box, IconButton } from "@mui/material"
 import { CSSProperties } from "preact/compat"
 import { useState } from "preact/hooks"
-import { Box, IconButton } from "@mui/material"
-import { Settings as SettingsIcon } from "@mui/icons-material"
 
-import { PlainCalculationObject, CalculationResult } from "../../calculations/interfaces"
+import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/FormatCalculationErrorOrWarning"
+import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { format_number_to_string } from "../../shared/format_number_to_string"
 import {
-    only_double_at_mentioned_uuids_regex,
     double_at_mentioned_uuids_regex_capture_surrounding,
+    only_double_at_mentioned_uuids_regex,
 } from "../../sharedf/rich_text/id_regexs"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
-import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"
-import { get_default_significant_figures, get_default_result_display_type } from "./get_default_formatting"
+import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 import { make_calculation_safe_for_rich_text } from "./make_calculation_safe_for_rich_text"
-import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/FormatCalculationErrorOrWarning"
 
 
 export interface CalculationRowProps
@@ -218,10 +217,11 @@ export function values_different (value1: string, value2: number)
 
 
 
-const CALULATION_SIGNS = /.*[\^*\/+\-()><=].*/g
+const CALULATION_SIGNS = /.*[\^*/+\-()><=].*/g
 export function should_show_calc_value (value: string): boolean
 {
     let value_without_uuids = ""
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     while (true)
     {
         value_without_uuids = value.replace(double_at_mentioned_uuids_regex_capture_surrounding, "$1$3")

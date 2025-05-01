@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js"
 
 
 
-let supabase: SupabaseClient
+let supabase: SupabaseClient | undefined = undefined
 
 export function get_supabase ()
 {

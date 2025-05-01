@@ -1,12 +1,12 @@
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 import type {
-    WComponentsById,
     WComponent,
+    WComponentsById,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { get_default_wcomponent_title } from "./get_default_wcomponent_title"
-import type { ReplaceNormalIdsInTextArgs, ReplaceFunctionIdsInTextArgs } from "./interfaces"
+import type { ReplaceFunctionIdsInTextArgs, ReplaceNormalIdsInTextArgs } from "./interfaces"
 import { replace_function_ids_in_text } from "./replace_function_ids"
 import { replace_normal_ids } from "./replace_normal_ids"
 
@@ -71,7 +71,8 @@ interface ReplaceValueInTextArgs
 }
 function replace_value_in_text (args: ReplaceValueInTextArgs)
 {
-    let { text, wcomponent, wc_id_to_counterfactuals_map = {} } = args
+    let { text } = args
+    const { wcomponent, wc_id_to_counterfactuals_map = {} } = args
 
     if (!text.includes("${value}")) return text
 
