@@ -373,7 +373,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: action type", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent @@${id1} is of type "action".  Defaulting to value of 1.` },
+                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) is of type "action".  Defaulting to value of 1.` },
             ]
 
             const wcomponents_by_id: WComponentsById = {
@@ -392,7 +392,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: statev2 with subtype number but invalid number parsed to null", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent @@${id1} has an invalid number "".  Defaulting to value of 1.` },
+                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) has an invalid number "".  Defaulting to value of 1.` },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
@@ -415,7 +415,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: statev2 with subtype number but invalid number parsed to NaN", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent @@${id1} has an invalid number "some invalid number".  Defaulting to value of 1.` },
+                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) has an invalid number "some invalid number".  Defaulting to value of 1.` },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
@@ -438,7 +438,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Incomplete component: statev2 type with no VAP sets", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent @@${id1} is missing any value and prediction sets.  Defaulting to value of 1.` },
+                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) is missing any value and prediction sets.  Defaulting to value of 1.` },
             ]
 
             const wcomponents_by_id: WComponentsById = {

@@ -1,5 +1,6 @@
 import { Model, ModelVariableConfig, SimulationComponent, SimulationError } from "simulation"
 
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/id_regexs"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
@@ -121,15 +122,24 @@ function prepare_other_components (args: PrepareOtherComponentsArgs): PrepareOth
             sim_ms: now_ms,
         })
 
+        const wcomponent_title = get_title({
+            wcomponent,
+            wcomponents_by_id,
+            knowledge_views_by_id: {},
+            wc_id_to_counterfactuals_map: undefined,
+            created_at_ms: now_ms,
+            sim_ms: now_ms,
+        }) || "no title"
+
         if (wcomponent.type === "action" || not_allowed_VAP_set_values)
         {
-            warnings.push(`The wcomponent @@${uuid} is of type "${wcomponent.type}".  Defaulting to value of 1.`)
+            warnings.push(`The wcomponent "${wcomponent_title}" (@@${uuid}) is of type "${wcomponent.type}".  Defaulting to value of 1.`)
             return uuid
         }
 
         if (VAP_sets.length === 0)
         {
-            warnings.push(`The wcomponent @@${uuid} is missing any value and prediction sets.  Defaulting to value of 1.`)
+            warnings.push(`The wcomponent "${wcomponent_title}" (@@${uuid}) is missing any value and prediction sets.  Defaulting to value of 1.`)
             return uuid
         }
 
@@ -137,13 +147,13 @@ function prepare_other_components (args: PrepareOtherComponentsArgs): PrepareOth
 
         if (value === null)
         {
-            warnings.push(`The wcomponent @@${uuid} has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
+            warnings.push(`The wcomponent "${wcomponent_title}" (@@${uuid}) has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
             return uuid
         }
 
         if (Number.isNaN(value))
         {
-            warnings.push(`The wcomponent @@${uuid} has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
+            warnings.push(`The wcomponent "${wcomponent_title}" (@@${uuid}) has an invalid number "${VAP_sets[0]!.original_value}".  Defaulting to value of 1.`)
             return uuid
         }
 
