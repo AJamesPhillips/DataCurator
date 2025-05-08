@@ -1,7 +1,7 @@
-import { describe, test } from "../utils/test"
 import type { Base } from "../interfaces/base"
-import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
+import type { HasUncertainDatetime } from "../uncertainty/interfaces"
+import { describe, test } from "../utils/test"
 
 
 
@@ -71,6 +71,7 @@ export function partition_items_by_created_at_datetime <U extends Base> (args: P
 
 export const test_partition_items_by_created_at_datetime = describe.delay("partition_items_by_created_at_datetime", () =>
 {
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     interface Simple extends Base {}
 
     function helper_func__ids_partition_items_by_created_at_datetime (args: PartitionItemsByCreatedAtDatetimeArgs<Simple>): PartitionItemsByCreatedAtDatetimeReturn<string>

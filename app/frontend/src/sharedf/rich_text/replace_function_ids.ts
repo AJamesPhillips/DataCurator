@@ -1,7 +1,7 @@
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import { old_ids_and_functions_regex, uuids_and_functions_regex } from "./id_regexs"
 import type { ReplaceFunctionIdsInTextArgs } from "./interfaces"
-import { format_wcomponent_url, format_wcomponent_link } from "./templates"
+import { format_wcomponent_link, format_wcomponent_url } from "./templates"
 
 
 
@@ -57,7 +57,7 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
             else if (funktion === "description") replacement += referenced_wcomponent.description
         }
 
-        const replacer = new RegExp(`@@${id}\.${funktion}`, "g")
+        const replacer = new RegExp(`@@${id}.${funktion}`, "g")
         text = text.replace(replacer, replacement)
     })
 
