@@ -230,7 +230,7 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
 
     if (wcomponent_is_event(wcomponent))
     {
-        let { event_at = [] } = wcomponent
+        const { event_at = [] } = wcomponent
         // For now there is only one or 0 event_at predictions
         // event_at = partition_items_by_created_at_datetime({ items: event_at, created_at_ms }).current_items
         // event_at = sort_list(event_at, get_created_at_ms, SortDirection.descending)
@@ -282,6 +282,8 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
 export function wcomponent_has_single_statev2_datetime (wcomponent: HasVAPSetsAndMaybeValuePossibilities)
 {
 
+    // Document why and when `values_and_prediction_sets` might be undefined.
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     let VAP_sets = wcomponent.values_and_prediction_sets || []
     VAP_sets = group_versions_by_id(VAP_sets).latest
     const VAP_set = VAP_sets[0]

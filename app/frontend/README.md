@@ -1,6 +1,6 @@
-# New Project
+# DataCurator frontend
 
-> ✨ Bootstrapped with Create Snowpack App (CSA).
+
 
 ## Available Scripts
 
@@ -36,3 +36,12 @@ It correctly bundles Preact in production mode and optimizes the build for the b
 
 Install the following extensions:
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+## Performance
+
+MUI has had some performance issues.  See [this issue](https://github.com/AJamesPhillips/DataCurator/issues/214).
+
+
+# History
+
+Bootstrapped with Create Snowpack App (CSA).

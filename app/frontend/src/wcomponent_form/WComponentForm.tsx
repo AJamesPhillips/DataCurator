@@ -177,6 +177,10 @@ function _WComponentForm (props: Props)
     if (wcomponent_is_allowed_to_have_state_VAP_sets(wcomponent))
     {
         UI_value = get_wcomponent_state_UI_value({ wcomponent: derived_composed_wcomponent, VAP_set_id_to_counterfactual_v2_map, created_at_ms, sim_ms })
+        // TODO: document why this might be needed, i.e. how can we have a
+        // component that is allowed to have VAP sets but then have it not have
+        // any?
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         has_VAP_sets = (wcomponent.values_and_prediction_sets?.length || 0) > 0
     }
 

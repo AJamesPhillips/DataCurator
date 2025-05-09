@@ -7,6 +7,7 @@ import type { ChildrenRawData } from "../layout/interfaces"
 import { MainArea } from "../layout/MainArea"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
+import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import {
     WComponentCanvasConnection,
 } from "../wcomponent_canvas/connection/WComponentCanvasConnection"
@@ -25,7 +26,7 @@ const map_state = (state: RootState) =>
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
-    const { wcomponent_nodes, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
+    const { wc_ids_by_type, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
 
 
     const any_node_is_moving = state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0
@@ -36,7 +37,8 @@ const map_state = (state: RootState) =>
 
     return {
         ready,
-        wcomponent_nodes,
+        wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
+        wc_ids_by_type,
         wcomponent_connections,
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
@@ -87,15 +89,21 @@ function _KnowledgeGraphView (props: Props)
     />
 }
 
-export const KnowledgeGraphView = connector(_KnowledgeGraphView) as FunctionalComponent<{}>
+export const KnowledgeGraphView = connector(_KnowledgeGraphView) as FunctionalComponent
 
 
 
 const no_children: h.JSX.Element[] = []
 const get_children = (props: Props): ChildrenRawData =>
 {
-    const { ready, wcomponent_nodes = [], wcomponent_unfound_ids = [] } = props
+    const { ready, wc_ids_by_type, wcomponents_by_id, wcomponent_unfound_ids = [] } = props
     if (!ready) return no_children
+    if (!wc_ids_by_type) return no_children
+    const wcomponent_nodes: WComponent[] = []
+    wc_ids_by_type.any_node.forEach(id => {
+        const wc = wcomponents_by_id[id]
+        if (wc) wcomponent_nodes.push(wc)
+    })
     if (wcomponent_nodes.length === 0 && wcomponent_unfound_ids.length === 0) return no_children
 
 

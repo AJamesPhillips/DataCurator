@@ -13,25 +13,35 @@ import { default_wcomponent_validity_value, get_wcomponent_validity_value } from
 
 
 
-interface CalcWcomponentShouldDisplayArgs
+type CalcWcomponentShouldDisplayArgs =
 {
     wcomponent: WComponent
     kv_entry: KnowledgeViewWComponentEntry | undefined
     created_at_ms: number
     sim_ms: number
     validity_filter: ValidityFilterOption
-    selected_wcomponent_ids_set: Set<string>
     wc_ids_excluded_by_filters: Set<string>
 }
-export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | { display_certainty: number }
+&
+(
+    { selected_wcomponent_ids_set: Set<string> }
+    |
+    { is_selected: boolean }
+)
+export function calc_wcomponent_should_display (args: CalcWcomponentShouldDisplayArgs): false | number
 {
-    const { wcomponent, kv_entry, sim_ms, selected_wcomponent_ids_set, wc_ids_excluded_by_filters } = args
+    const { wcomponent, kv_entry, sim_ms, wc_ids_excluded_by_filters } = args
 
 
     if (!kv_entry || kv_entry.blocked) return false
 
+    let is_selected = "is_selected" in args ? args.is_selected : false
+    if ("selected_wcomponent_ids_set" in args)
+    {
+        is_selected = args.selected_wcomponent_ids_set.has(wcomponent.id)
+    }
 
-    if (selected_wcomponent_ids_set.has(wcomponent.id)) return { display_certainty: 1 }
+    if (is_selected) return 1
 
 
     if (wc_ids_excluded_by_filters.has(wcomponent.id)) return false
@@ -63,7 +73,7 @@ export function calc_wcomponent_should_display (args: CalcWcomponentShouldDispla
     }
 
 
-    return { display_certainty: certainty }
+    return certainty
 }
 
 
@@ -157,8 +167,8 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
     if (!to_node_validity_value) return false
 
     const connection_certainty = Math.min(
-        connection_validity_value.display_certainty,
-        from_node_validity_value.display_certainty,
+        connection_validity_value,
+        from_node_validity_value,
         // to_node_validity_value.display_certainty,
     )
 
@@ -198,7 +208,7 @@ export function calc_judgement_connection_wcomponent_should_display (args: Calcu
     if (!target_node_validity_value) return false
 
     const judgement_connection_certainty = Math.min(
-        judgement_connection_validity_value.display_certainty, target_node_validity_value.display_certainty
+        judgement_connection_validity_value, target_node_validity_value
     )
 
     return {

@@ -1,9 +1,9 @@
 import DescriptionIcon from "@mui/icons-material/Description"
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
+import { useEffect, useMemo, useState } from "preact/hooks"
 import { ConnectedProps, connect } from "react-redux"
 
-import { useEffect, useMemo, useState } from "preact/hooks"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
 import type { Position } from "../../canvas/interfaces"
@@ -20,9 +20,7 @@ import {
     get_current_temporal_value_certainty_from_wcomponent,
     is_on_current_knowledge_view,
 } from "../../state/specialised_objects/accessors"
-import {
-    start_moving_wcomponents,
-} from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
+import { start_moving_wcomponents } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
 import type { RootState } from "../../state/State"
 import {
     ConnectionTerminalType,
@@ -61,12 +59,13 @@ interface OwnProps
     is_on_canvas?: boolean
     always_show?: boolean
 }
+const DEFAULT_ALWAYS_SHOW = false
 
 
 
 const map_state = (state: RootState, own_props: OwnProps) =>
 {
-    const { id: wcomponent_id } = own_props
+    const { id: wcomponent_id, always_show = DEFAULT_ALWAYS_SHOW } = own_props
 
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
@@ -81,28 +80,49 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     )
 
     let have_judgements = false
+    let kv_entry = undefined
+    let wc_ids_excluded_by_filters = new Set<string>()
     if (current_composed_knowledge_view)
     {
         have_judgements = !!(current_composed_knowledge_view.active_judgement_or_objective_ids_by_target_id[wcomponent_id] || current_composed_knowledge_view.active_judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id])
+        kv_entry = current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
+        wc_ids_excluded_by_filters = current_composed_knowledge_view.filters.wc_ids_excluded_by_filters
     }
+
+    const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id)
+    const { created_at_ms, sim_ms } = state.routing.args
+
+    const validity_filter = state.display_options.derived_validity_filter
+
+    const validity_value = (always_show || !derived_composed_wcomponent)
+        ? 1
+        : calc_wcomponent_should_display({
+            wcomponent: derived_composed_wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
+            is_selected, wc_ids_excluded_by_filters,
+        })
 
 
     return {
         on_current_knowledge_view,
-        current_composed_knowledge_view,
+        // current_composed_knowledge_view,
+        kv_entry,
         derived_composed_wcomponent,
         kv_from_different_base,
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
-        composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
+        // composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         is_current_item: state.routing.item_id === wcomponent_id,
-        selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
+        is_selected,
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
+
+        // TODO: try to remove this from the state
+        selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
+
         shift_or_control_keys_are_down,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         is_editing: !state.display_options.consumption_formatting,
-        validity_filter: state.display_options.derived_validity_filter,
+        validity_value,
         certainty_formatting: state.display_options.derived_certainty_formatting,
         focused_mode: state.display_options.focused_mode,
         have_judgements,
@@ -132,25 +152,26 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentCanvasNode (props: Props)
 {
-    // const [node_is_draggable, set_node_is_draggable] = useState(false)
-
     const {
         id,
-        is_on_canvas = true, always_show = false,
+        is_on_canvas = true, always_show = DEFAULT_ALWAYS_SHOW,
         is_editing,
         derived_composed_wcomponent,
-        current_composed_knowledge_view: composed_kv,
+        kv_entry: kv_entry_maybe,
         kv_from_different_base,
         wc_id_to_counterfactuals_map,
-        composed_wcomponents_by_id, knowledge_views_by_id,
-        is_current_item, selected_wcomponent_ids_set, is_highlighted,
+        knowledge_views_by_id,
+        is_current_item, is_selected, is_highlighted,
+        selected_wcomponent_ids_set,
         shift_or_control_keys_are_down,
-        created_at_ms, sim_ms, validity_filter, certainty_formatting,
+        validity_value,
+        created_at_ms, sim_ms, certainty_formatting,
         clicked_wcomponent, clear_selected_wcomponents,
     } = props
+    const composed_wcomponents_by_id = {}
     const { change_route, set_highlighted_wcomponent } = props
 
-    if (!composed_kv) return <div>No current knowledge view</div>
+    // if (!composed_kv) return <div>No current knowledge view</div>
     // if (!wcomponent) return <div>Could not find component of id {id}</div>
 
 
@@ -161,7 +182,6 @@ function _WComponentCanvasNode (props: Props)
     }, [!!derived_composed_wcomponent])
 
 
-    const kv_entry_maybe = composed_kv.composed_wc_id_map[id]
     if (!kv_entry_maybe && !always_show) return <div>Could not find knowledge view entry for id {id}</div>
     // Provide a default kv_entry value for when this node is being in a different context e.g.
     // when prioritisation nodes are being rendered on the Priorities list
@@ -189,18 +209,12 @@ function _WComponentCanvasNode (props: Props)
     }, [props.node_is_moving])
 
 
-    const { wc_ids_excluded_by_filters } = composed_kv.filters
-    const validity_value = (always_show || !derived_composed_wcomponent) ? { display_certainty: 1 } : calc_wcomponent_should_display({
-        wcomponent: derived_composed_wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
-        selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
-    })
     if (!validity_value) return null
 
 
-    const is_selected = selected_wcomponent_ids_set.has(id)
     const validity_opacity = calc_display_opacity({
         is_editing,
-        certainty: validity_value.display_certainty,
+        certainty: validity_value,
         is_highlighted,
         connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
         is_selected,
@@ -242,7 +256,16 @@ function _WComponentCanvasNode (props: Props)
     ]
 
 
-    const title = !derived_composed_wcomponent ? "&lt;Not found&gt;" : get_title({ wcomponent: derived_composed_wcomponent, wcomponents_by_id: composed_wcomponents_by_id, knowledge_views_by_id, wc_id_to_counterfactuals_map, created_at_ms, sim_ms })
+    const title = !derived_composed_wcomponent
+        ? "&lt;Not found&gt;"
+        : get_title({
+            wcomponent: derived_composed_wcomponent,
+            wcomponents_by_id: composed_wcomponents_by_id,
+            knowledge_views_by_id,
+            wc_id_to_counterfactuals_map,
+            created_at_ms,
+            sim_ms,
+        })
 
 
     const show_all_details = is_editing //|| is_current_item
@@ -258,7 +281,11 @@ function _WComponentCanvasNode (props: Props)
 
     const glow = is_highlighted ? "orange" : ((is_selected || is_current_item) && "blue")
     const color = get_wcomponent_color({
-        wcomponent: derived_composed_wcomponent, wcomponents_by_id: composed_wcomponents_by_id, sim_ms, created_at_ms, display_time_marks: props.display_time_marks,
+        wcomponent: derived_composed_wcomponent,
+        wcomponents_by_id: composed_wcomponents_by_id,
+        sim_ms,
+        created_at_ms,
+        display_time_marks: props.display_time_marks,
     })
 
     const extra_css_class = (

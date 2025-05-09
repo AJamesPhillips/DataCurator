@@ -21,7 +21,6 @@ import { update_substate } from "../../../utils/update_state"
 import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
 import {
     WComponent,
-    wcomponent_can_render_connection,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_node,
@@ -29,7 +28,7 @@ import {
     wcomponent_is_prioritisation,
     WComponentConnection,
     WComponentNode,
-    WComponentsById,
+    WComponentsById
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
@@ -183,6 +182,7 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
             wc_ids_excluded_by_created_at_datetime_filter: new Set(),
             vap_set_number_excluded_by_created_at_datetime_filter: 0,
         },
+        wc_id_to_active_counterfactuals_v2_map: {},
     }
 
     const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, knowledge_views_by_id, true)
@@ -203,9 +203,11 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         if (wcomponent) wcomponents.push(wcomponent)
         else wcomponent_unfound_ids.push(id)
     })
-    const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
-    const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
+    // const wcomponent_nodes = wcomponents.filter(is_wcomponent_node)
+    // const wcomponent_connections = wcomponents.filter(wcomponent_can_render_connection)
+    const current_wc_id_to_active_counterfactuals_v2_map = current_composed_knowledge_view.wc_id_to_active_counterfactuals_v2_map
     const wc_id_to_active_counterfactuals_v2_map = calculate_wc_id_to_counterfactuals_v2_map({
+        current_wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
         wcomponents_by_id,
         active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids || [],
@@ -221,8 +223,8 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         composed_wc_id_map,
         composed_blocked_wc_id_map,
         overlapping_wc_ids,
-        wcomponent_nodes,
-        wcomponent_connections,
+        // wcomponent_nodes,
+        // wcomponent_connections,
         wcomponent_unfound_ids,
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
@@ -269,12 +271,17 @@ const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(w
 
 interface CalculateWcIdCounterfactualsV2MapArgs
 {
+    current_wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
     wcomponents_by_id: WComponentsById
     active_counterfactual_ids: string[]
 }
 function calculate_wc_id_to_counterfactuals_v2_map (args: CalculateWcIdCounterfactualsV2MapArgs): WcIdToCounterfactualsV2Map
 {
+    // Temporarily disable this functionality to try to improve performance of
+    // knowedge views with a large number of canvas nodes
+    return args.current_wc_id_to_active_counterfactuals_v2_map
+
     const map: WcIdToCounterfactualsV2Map = {}
     const active_counterfactual_ids = new Set(args.active_counterfactual_ids)
 

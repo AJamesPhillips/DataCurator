@@ -7,7 +7,7 @@ import type { TimeResolution } from "../shared/utils/datetime"
 import { sort_list, SortDirection } from "../shared/utils/sort"
 import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
 import type { RootState } from "../state/State"
-import { WComponent, wcomponent_has_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { WComponent, wcomponent_has_VAP_sets, wcomponent_is_plain_connection, WComponentConnection } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ConnectedValueAndPredictionSetSummary } from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import "./KnowledgeTimeView.scss"
@@ -26,17 +26,28 @@ const map_state = (state: RootState) =>
     const { created_at_ms, sim_ms } = state.routing.args
 
 
-    let wcomponent_nodes: WComponent[] = []
+    const wcomponent_nodes: WComponent[] = []
+    const wcomponent_connections: WComponentConnection[] = []
 
     if (current_composed_knowledge_view)
     {
-        wcomponent_nodes = current_composed_knowledge_view.wcomponent_nodes
+        current_composed_knowledge_view.wc_ids_by_type.any_node.forEach((wc_id: string) =>
+        {
+            const wcomponent = state.specialised_objects.wcomponents_by_id[wc_id]
+            if (wcomponent) wcomponent_nodes.push(wcomponent)
+        })
+
+        current_composed_knowledge_view.wc_ids_by_type.any_link.forEach((wc_id: string) =>
+        {
+            const wcomponent = state.specialised_objects.wcomponents_by_id[wc_id]
+            if (wcomponent_is_plain_connection(wcomponent)) wcomponent_connections.push(wcomponent)
+        })
     }
 
     return {
         ready,
         wcomponent_nodes,
-        wcomponent_connections: current_composed_knowledge_view && current_composed_knowledge_view.wcomponent_connections,
+        wcomponent_connections,
         presenting: state.display_options.consumption_formatting,
         selected_wcomponent_ids_to_ordinal_position_map,
         created_at_ms,
@@ -49,15 +60,18 @@ type Props = ConnectedProps<typeof connector>
 
 class DateRange {
     _ms(ms: number, convert: boolean=true): any {
-        const operator = (convert) ? "/" : "*"
+        const operator = (convert)
+            ? (arg1: number, arg2: number) => arg1 / arg2
+            : (arg1: number, arg2: number) => arg1 * arg2
+
         return {
             milliseconds: ms,
-            get seconds() { return eval(`${ms} ${operator} 1000`) },
-            get minutes() { return eval(`${this.seconds} ${operator} 60`) },
-            get hours() { return eval(`${this.minutes} ${operator} 60`) },
-            get days() { return eval(`${this.hours} ${operator} 24`) },
-            get months() { return eval(`${this.days} ${operator} 365 / 12`) },
-            get years() { return eval(`${this.days} ${operator} 365`) },
+            get seconds() { return operator(ms, 1000) },
+            get minutes() { return operator(this.seconds, 60) },
+            get hours() { return operator(this.minutes, 60) },
+            get days() { return operator(this.hours, 24) },
+            get months() { return operator(this.days, 365 / 12) },
+            get years() { return operator(this.days, 365) },
             // get weeks() { return eval(`${this.days} ${operator} 7`) },
         }
     }

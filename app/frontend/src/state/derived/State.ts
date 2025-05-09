@@ -6,7 +6,7 @@ import type {
 } from "../../shared/interfaces/knowledge_view"
 import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
 import type {
-    WComponent, WComponentsById,
+    WComponentsById
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
@@ -51,8 +51,8 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
     composed_blocked_wc_id_map: KnowledgeViewWComponentIdEntryMap
 
     overlapping_wc_ids: OverlappingWcIdMap
-    wcomponent_nodes: WComponent[]
-    wcomponent_connections: WComponent[]
+    // wcomponent_nodes: WComponent[]
+    // wcomponent_connections: WComponent[]
     wcomponent_unfound_ids: string[]
 
     wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
