@@ -11,7 +11,7 @@ interface FactoryOnPointerDownArgs
     change_route: (routing_params: ActionChangeRouteArgs) => void
     clicked_wcomponent: (args: { id: string }) => void
     is_current_item: boolean
-    clear_selected_wcomponents: (args: {}) => void
+    clear_selected_wcomponents: () => void
 }
 export function factory_on_click (args: FactoryOnPointerDownArgs)
 {
@@ -41,7 +41,7 @@ export function factory_on_click (args: FactoryOnPointerDownArgs)
             if (is_current_item)
             {
                 change_route({ route: "wcomponents", sub_route: null, item_id: null })
-                clear_selected_wcomponents({})
+                clear_selected_wcomponents()
             }
             else
             {

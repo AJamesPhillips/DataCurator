@@ -6,9 +6,21 @@ import { get_store } from "../../../store"
 
 
 
-export function start_moving_wcomponents (wcomponent_ids_to_move: Set<string>, start_position: Position)
+export function start_moving_wcomponents (wcomponent_id: string, start_position: Position)
 {
     const store = get_store()
+
+    const state = store.getState()
+    const { selected_wcomponent_ids_set } = state.meta_wcomponents
+
+    let wcomponent_ids_to_move = new Set(selected_wcomponent_ids_set)
+    if (!wcomponent_ids_to_move.has(wcomponent_id))
+    {
+        wcomponent_ids_to_move = new Set([wcomponent_id])
+        // Deselect the other components and select only this component
+        const clicked_wcomponent = ACTIONS.meta_wcomponents.clicked_wcomponent({ id: wcomponent_id})
+        store.dispatch(clicked_wcomponent)
+    }
 
     const set_wcomponent_ids_to_move_action = ACTIONS.meta_wcomponents.set_wcomponent_ids_to_move({ wcomponent_ids_to_move })
     store.dispatch(set_wcomponent_ids_to_move_action)

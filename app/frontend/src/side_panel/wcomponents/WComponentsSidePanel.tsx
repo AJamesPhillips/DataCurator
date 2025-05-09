@@ -15,8 +15,6 @@ import { WComponentMultipleForm } from "./WComponentMultipleForm"
 
 
 
-interface OwnProps {}
-
 const map_state = (state: RootState) =>
 {
     const { ready_for_reading } = state.sync
@@ -47,7 +45,7 @@ const map_dispatch = {
 
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -107,7 +105,7 @@ function _WComponentsSidePanel (props: Props)
 
                 <Button
                     value={`Clear selection`}
-                    onClick={() => props.clear_selected_wcomponents({})}
+                    onClick={() => props.clear_selected_wcomponents()}
                     is_left={true}
                 />
             </div>
@@ -147,7 +145,7 @@ function _WComponentsSidePanel (props: Props)
 }
 
 
-export const WComponentsSidePanel = connector(_WComponentsSidePanel) as FunctionComponent<OwnProps>
+export const WComponentsSidePanel = connector(_WComponentsSidePanel) as FunctionComponent
 
 
 

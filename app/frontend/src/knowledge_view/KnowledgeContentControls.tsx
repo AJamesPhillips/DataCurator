@@ -27,7 +27,12 @@ function _KnowledgeContentControls (props: Props)
     if (!current_composed_knowledge_view) return <div/>
     const { composed_wc_id_map } = current_composed_knowledge_view
 
-
+    // TODO this is a good candidate to move into the derived reducer, and add a
+    // test to ensure that `created_events` and `sim_events` objects are
+    // memoized such that they don't change unless the data changes.  Here the
+    // use of useMemo is not sufficient as `created_events` and `sim_events`
+    // will likely have the same values but different references, causing
+    // unnecessary re-renders of `ContentControls`.
     const { created_events, sim_events } = useMemo(() =>
     {
         const wcomponents_on_kv = Object.keys(composed_wc_id_map)
@@ -44,4 +49,4 @@ function _KnowledgeContentControls (props: Props)
     />
 }
 
-export const KnowledgeContentControls = connector(_KnowledgeContentControls) as FunctionalComponent<{}>
+export const KnowledgeContentControls = connector(_KnowledgeContentControls) as FunctionalComponent

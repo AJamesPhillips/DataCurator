@@ -115,9 +115,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_selected,
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
 
-        // TODO: try to remove this from the state
-        selected_wcomponent_ids_set: state.meta_wcomponents.selected_wcomponent_ids_set,
-
         shift_or_control_keys_are_down,
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
@@ -162,7 +159,6 @@ function _WComponentCanvasNode (props: Props)
         wc_id_to_counterfactuals_map,
         knowledge_views_by_id,
         is_current_item, is_selected, is_highlighted,
-        selected_wcomponent_ids_set,
         shift_or_control_keys_are_down,
         validity_value,
         created_at_ms, sim_ms, certainty_formatting,
@@ -240,14 +236,7 @@ function _WComponentCanvasNode (props: Props)
             show_move_handle={is_on_canvas && is_editing && is_highlighted}
             user_requested_node_move={(position: Position) =>
             {
-                let wcomponent_ids_to_move = new Set(selected_wcomponent_ids_set)
-                if (!wcomponent_ids_to_move.has(id))
-                {
-                    wcomponent_ids_to_move = new Set([id])
-                    // Deselects the other components and selects only this component
-                    props.clicked_wcomponent({ id })
-                }
-                start_moving_wcomponents(wcomponent_ids_to_move, position)
+                start_moving_wcomponents(id, position)
             }}
             wcomponent_id={id}
             wcomponent_current_kv_entry={kv_entry}

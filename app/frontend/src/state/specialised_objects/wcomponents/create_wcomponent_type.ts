@@ -62,7 +62,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
 
 
     store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view, add_to_top }))
-    store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents({}))
+    store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents())
     store.dispatch(ACTIONS.routing.change_route({
         route: "wcomponents",
         item_id: wcomponent.id,
@@ -170,7 +170,7 @@ function set_state_value_fields (wcomponent: WComponent, state: RootState): WCom
                 attribute_wcomponent_id = selected_wcomponent.id
 
 
-                if (!value_possibilities || !Object.keys(value_possibilities))
+                if (!value_possibilities || !Object.keys(value_possibilities).length)
                 {
                     const VAPs_represent = get_wcomponent_VAPs_represent(attribute_wcomponent, wcomponents_by_id)
                     const possible_values = get_possibilities_from_VAP_sets(VAPs_represent, attribute_wcomponent.value_possibilities, attribute_wcomponent.values_and_prediction_sets || [])

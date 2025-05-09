@@ -24,13 +24,14 @@ export const is_clicked_wcomponent = (action: AnyAction): action is ActionClicke
 
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ActionClearSelectedWComponents extends Action {}
 
 const clear_selected_wcomponents_type = "clear_selected_wcomponents"
 
-const clear_selected_wcomponents = (args: {}): ActionClearSelectedWComponents =>
+const clear_selected_wcomponents = (): ActionClearSelectedWComponents =>
 {
-    return { type: clear_selected_wcomponents_type, ...args }
+    return { type: clear_selected_wcomponents_type }
 }
 
 export const is_clear_selected_wcomponents = (action: AnyAction): action is ActionClearSelectedWComponents => {
@@ -111,14 +112,14 @@ export const is_pointerdown_on_component = (action: AnyAction): action is Action
 
 
 
-interface ClearPointerUpDownOnConnectionTerminalProps {}
-interface ActionClearPointerUpDownOnConnectionTerminal extends Action, ClearPointerUpDownOnConnectionTerminalProps {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+interface ActionClearPointerUpDownOnConnectionTerminal extends Action {}
 
 const clear_pointerupdown_on_connection_terminal_type = "clear_pointerupdown_on_connection_terminal"
 
-const clear_pointerupdown_on_connection_terminal = (args: ClearPointerUpDownOnConnectionTerminalProps): ActionClearPointerUpDownOnConnectionTerminal =>
+const clear_pointerupdown_on_connection_terminal = (): ActionClearPointerUpDownOnConnectionTerminal =>
 {
-    return { type: clear_pointerupdown_on_connection_terminal_type, ...args }
+    return { type: clear_pointerupdown_on_connection_terminal_type }
 }
 
 export const is_clear_pointerupdown_on_connection_terminal = (action: AnyAction): action is ActionClearPointerUpDownOnConnectionTerminal => {

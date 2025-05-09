@@ -28,7 +28,7 @@ export function create_links_on_connection_terminal_mouse_events__subscriber (st
 
         if (state.global_keys.last_key === "Escape" || state.display_options.consumption_formatting)
         {
-            store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}))
+            store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal())
             return
         }
 
@@ -65,7 +65,7 @@ export function create_links_on_connection_terminal_mouse_events__subscriber (st
 
         should_not_create_new_connection = should_not_create_new_connection || (start_wcomponent_id === end_wcomponent_id && start_side === end_side)
 
-        store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}))
+        store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal())
 
         if (should_not_create_new_connection) return
 
@@ -104,7 +104,7 @@ export function clear_last_pointer_down_connection_terminal (store: Store<RootSt
         const { last_pointer_down_connection_terminal } = state.meta_wcomponents
         if (!last_pointer_down_connection_terminal) return
 
-        store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal({}))
+        store.dispatch(ACTIONS.meta_wcomponents.clear_pointerupdown_on_connection_terminal())
     }
 
 
