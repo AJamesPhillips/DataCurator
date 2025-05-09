@@ -1,7 +1,6 @@
-import { resolve } from "path"
 
-import { defineConfig } from "vite"
 import preact from "@preact/preset-vite"
+import { defineConfig } from "vite"
 
 
 // https://vitejs.dev/config/
@@ -9,11 +8,6 @@ export default defineConfig({
   plugins: [preact()],
   build: {
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, "index.html"),
-        app: resolve(__dirname, "app/index.html"),
-        // sim: resolve(__dirname, "app/index.html"),
-      },
       output: {
         manualChunks: {
           "common_libraries": [

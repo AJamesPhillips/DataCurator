@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import SyncIcon from "@mui/icons-material/Sync"
-import type { ApiError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser } from "@supabase/supabase-js"
+import type { AuthError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser, User } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
 import { v4 as uuid_v4 } from "uuid"
 
@@ -48,16 +49,17 @@ supabase.auth.onAuthStateChange(() =>
 })
 
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
 ;(window as any).supabase = supabase
 
 
 
 export function SandBoxSupabase ()
 {
-    const [user, set_user] = useState(supabase.auth.user())
+    const [user, set_user] = useState<User | null>(null)
     const [email, set_email] = useState("")
     const [password, set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<AuthError | null>(null)
 
     const [waiting_user_registration_email, set_waiting_user_registration_email] = useState(false)
     const [waiting_password_reset_email, set_waiting_password_reset_email] = useState(false)
@@ -99,14 +101,17 @@ export function SandBoxSupabase ()
     useEffect(() => {
         const subscriber = async () =>
         {
-            const new_user = supabase.auth.user()
+            const { data: { user }, error: error_getting_user } = await supabase.auth.getUser()
             // console .log("sub called, ", user, " and now user is ", new_user)
-            set_user(new_user)
-            set_email(new_user?.email || email)
+            set_user(user)
+            set_email(user?.email || email)
+
+            set_supabase_session_error(error_getting_user)
+            if (error_getting_user) return
 
             // Will need to do something smarter... we do not want to get all the users
             // everytime someone loads the app!  :{}
-            const { data, error } = await supabase.from<SupabaseUser>("users").select("*")
+            const { data, error } = await supabase.from("users").select<"users", SupabaseUser>()
             set_postgrest_error(error)
             const map: SupabaseUsersById = {}
             ;(data || []).forEach(pu => map[pu.id] = pu)
@@ -119,7 +124,7 @@ export function SandBoxSupabase ()
         // synchronously or at least very quickly and before this view fires.
         subscriber()
 
-        supabase_auth_state_change.subscribers.push(subscriber)
+        supabase_auth_state_change.subscribers.push(() => { subscriber() })
 
         const unsubscribe = () =>
         {
@@ -135,9 +140,10 @@ export function SandBoxSupabase ()
     async function register ()
     {
         set_async_request_in_progress(true)
-        const { user: new_user, error } = await supabase.auth.signUp({ email, password })
+        const { data: { user }, error } = await supabase.auth.signUp({ email, password })
         set_async_request_in_progress(false)
 
+        set_user(user)
         set_supabase_session_error(error)
         set_waiting_user_registration_email(true)
     }
@@ -146,18 +152,18 @@ export function SandBoxSupabase ()
     async function sign_in ()
     {
         set_async_request_in_progress(true)
-        const { user, error } = await supabase.auth.signIn({ email, password })
+        const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password })
         set_async_request_in_progress(false)
 
-        set_supabase_session_error(error)
         set_user(user)
+        set_supabase_session_error(error)
     }
 
 
     async function forgot_password ()
     {
         set_async_request_in_progress(true)
-        const { data, error } = await supabase.auth.api.resetPasswordForEmail(email)
+        const { error } = await supabase.auth.resetPasswordForEmail(email)
         set_async_request_in_progress(false)
 
         set_supabase_session_error(error)
@@ -170,12 +176,12 @@ export function SandBoxSupabase ()
         // There should always be an email and password given on password update
         const email = user?.email
         set_async_request_in_progress(true)
-        const result = await supabase.auth.update({ email, password, /* data: {} */ })
+        const { data, error } = await supabase.auth.updateUser({ email, password, /* data: {} */ })
         set_async_request_in_progress(false)
 
-        set_supabase_session_error(result.error)
-        set_user(result.user)
-        set_updating_password(!!result.error)
+        set_supabase_session_error(error)
+        set_user(data.user)
+        set_updating_password(!!error)
         is_supabase_recovery_email = false
     }
 
@@ -187,8 +193,11 @@ export function SandBoxSupabase ()
         set_async_request_in_progress(false)
 
         set_supabase_session_error(error)
-        set_user(supabase.auth.user())
+
+        const { data: { user }, error: error_getting_user } = await supabase.auth.getUser()
+        set_user(user)
         set_password("")
+        set_supabase_session_error(error_getting_user)
     }
 
 
@@ -381,7 +390,7 @@ export function SandBoxSupabase ()
                 {access_controls.map(ac => <div>
                     <AccessControlEntry
                         access_control={ac}
-                        base_id={current_base_id} users_by_id={users_by_id} current_user_id={user?.id}
+                        base_id={current_base_id} users_by_id={users_by_id} current_user_id={user.id}
                         is_owner={is_owner}
                         on_update={res => on_update_access_control({ base_id: current_base_id, res, set_postgrest_error, set_access_controls })} />
                 </div>)}
@@ -451,7 +460,7 @@ export function SandBoxSupabase ()
                 <b>id</b>: {kv.id} &nbsp;
                 <b>title</b>: {kv.title} &nbsp;
                 <b>description</b>: {kv.description} &nbsp;
-                <b>wc_id_map ids</b>: {JSON.stringify(Object.keys(kv.wc_id_map || {}))} &nbsp;
+                <b>wc_id_map ids</b>: {JSON.stringify(Object.keys(kv.wc_id_map))} &nbsp;
                 <b>json</b>: {JSON.stringify({ ...kv, base_id: undefined, id: undefined, title: undefined, description: undefined })} &nbsp;
                 <hr />
             </div>)}
@@ -495,10 +504,13 @@ function Username (props: UsernameProps)
     {
         set_is_saving(true)
         const { id } = user
-        const { data, error } = await supabase.from<SupabaseUser>("users").upsert({ id, name }).eq("id", id)
+        const { data, error } = await supabase.from("users")
+            .upsert({ id, name })
+            .eq("id", id)
+            .select<"users", SupabaseUser>()
 
         set_postgrest_error(error)
-        set_username((data && data[0]?.name) || "" )
+        set_username(data && data[0]?.name || "")
         set_is_saving(false)
     }
 
@@ -509,7 +521,7 @@ function Username (props: UsernameProps)
             disabled={is_saving}
             onKeyUp={e => set_username(e.currentTarget.value)}
             onChange={e => set_username(e.currentTarget.value)}
-            onBlur={async e =>
+            onBlur={e =>
             {
                 set_username(e.currentTarget.value)
                 update_username(e.currentTarget.value)
@@ -556,8 +568,8 @@ async function get_an_owned_base (user_id: string)
 {
     const supabase = get_supabase()
     const { data: knowledge_bases, error } = await supabase
-        .from<SupabaseKnowledgeBase>("bases")
-        .select("*")
+        .from("bases")
+        .select<"bases", SupabaseKnowledgeBase>()
         .eq("owner_user_id", user_id)
         .order("inserted_at", { ascending: true })
 
@@ -646,11 +658,11 @@ async function create_knowledge_views (args: CreateKnowledgeViewArgs)
     const a_knowledge_view = default_data.knowledge_views[0]!
 
     const { data, error } = await supabase
-        .from<SupabaseReadKnowledgeView>("knowledge_views")
-        .insert(knowledge_view_app_to_supabase(a_knowledge_view, args.base_id))
+        .from("knowledge_views")
+        .insert([knowledge_view_app_to_supabase(a_knowledge_view, args.base_id)])
+        .select<"knowledge_views", SupabaseReadKnowledgeView>()
 
     args.set_postgrest_error(error)
-
     const knowledge_views: KnowledgeView[] = (data || []).map(knowledge_view_supabase_to_app)
     args.set_knowledge_views(knowledge_views)
 }
@@ -680,14 +692,15 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     // .eq("id", db_kv.id)
 
     let error: PostgrestError | null = result.error
-    if (result.status === 404) error = { message: "Not Found", details: "", hint: "", code: "404" }
+    if (result.status === 404) error = { message: "Not Found", details: "", hint: "", code: "404", name: "" }
 
     set_postgrest_error(error)
     if (error) return
 
-    const new_supabase_kv: SupabaseReadKnowledgeView = result.data as any
-    // type guard
-    if (!new_supabase_kv) return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const new_supabase_kv: SupabaseReadKnowledgeView = result.data
+    // // type guard
+    // if (!new_supabase_kv) return
     const new_kv = knowledge_view_supabase_to_app(new_supabase_kv)
 
     const updated_knowledge_views = replace_element(current_knowledge_views, new_kv, kv => kv.id === knowledge_view.id)
