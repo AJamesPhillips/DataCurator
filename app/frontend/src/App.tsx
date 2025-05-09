@@ -43,7 +43,7 @@ import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 
 
 declare module "@mui/styles/defaultTheme" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface DefaultTheme extends Theme {}
 }
 
@@ -68,7 +68,7 @@ function App(props: Props)
     useEffect(() =>
     {
         if (props.network_functional) return
-        setTimeout(() => check_and_handle_connection_and_session(get_store()), 1000)
+        setTimeout(() => { check_and_handle_connection_and_session(get_store()) }, 1000)
     }, [props.network_functional, props.network_function_last_checked])
 
     return <StyledEngineProvider injectFirst>
@@ -79,7 +79,7 @@ function App(props: Props)
     </StyledEngineProvider>
 }
 
-export default connector(App) as FunctionalComponent<{}>
+export default connector(App) as FunctionalComponent
 
 
 

@@ -4,6 +4,7 @@ import { ACTIONS } from "../../state/actions"
 import type { StoreType } from "../../state/store"
 import { save_and_optionally_signout } from "../../state/user_info/signout"
 import { get_supabase } from "../../supabase/get_supabase"
+import { logger } from "../../utils/logger"
 import { register_window_on_focus_listener } from "../../utils/window_on_focus_listener"
 
 
@@ -19,7 +20,7 @@ export function register_window_focus_session_check (store: StoreType)
     registered = true
 
 
-    register_window_on_focus_listener(() => check_and_handle_connection_and_session(store))
+    register_window_on_focus_listener(() => { check_and_handle_connection_and_session(store) })
 }
 
 
@@ -54,8 +55,9 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
 
     try
     {
-        const response = await supabase.auth.update({})
-        if (response.error?.message === "Not logged in." || (response.error as any)?.status === 401)
+        console.log("On window focus event, checking connection and session with supabase.auth.getSession()")
+        const response = await supabase.auth.getSession()
+        if (response.error?.message === "Not logged in." || response.error?.status === 401)
         {
             // Can get response:
             //   * { error: {message: 'Not logged in.', other fields ...?}, other fields ...?}
@@ -70,6 +72,7 @@ async function check_connection_and_session (store: StoreType, supabase: Supabas
         }
         else if (response.error)
         {
+            // eslint-disable-next-line no-debugger
             debugger // temporary addition whilst we develop this in parallel with other work, will remove later
             console .log("Unexpected error whilst check_connection_and_session", response.error)
             return CheckConnectionAndSessionResult.unexpected_error
@@ -98,7 +101,7 @@ function handle_connection_and_session_check_result (result: CheckConnectionAndS
     else if (result === CheckConnectionAndSessionResult.not_signed_in)
     {
         // TODO research how to attempt to refresh the session and iff that fails, only then call signout
-        console .log("User not logged in.  Reloading page.")
+        logger.info("User not logged in.  Reloading page.")
         window.location.reload()
         return
     }
@@ -109,13 +112,14 @@ function handle_connection_and_session_check_result (result: CheckConnectionAndS
     }
 
     let network_functional = true
-    if (result === CheckConnectionAndSessionResult.no_network_connection)
+    switch(result)
     {
-        network_functional = false
-    }
-    else if (result === CheckConnectionAndSessionResult.success)
-    {
-        // no op
+        case CheckConnectionAndSessionResult.no_network_connection:
+            network_functional = false
+            break
+        case CheckConnectionAndSessionResult.success:
+            // no op
+            break
     }
 
     store.dispatch(ACTIONS.sync.update_network_status({ network_functional, last_checked: new Date() }))

@@ -14,6 +14,7 @@ export function user_info_subscribers (store: StoreType)
 
     const starting_state = store.getState()
     const { users_by_id, bases_by_id } = starting_state.user_info
+    //debugger
     if (!users_by_id) get_users(store)
     if (!bases_by_id) refresh_bases_for_current_user(store)
 
@@ -48,14 +49,18 @@ export function user_info_subscribers (store: StoreType)
 
 
     const supabase = get_supabase()
-    supabase.auth.onAuthStateChange(() =>
+    // debugger
+    supabase.auth.onAuthStateChange(async (args) =>
     {
         const current_user = store.getState().user_info.user
-        const user = supabase.auth.user() || undefined
+        console.log("about to call supabase.auth.getUser(), args: ", args)
+        debugger
+        const user = (await supabase.auth.getUser()).data.user || undefined
         // Have to compare user by id as the object is changed on each call to `supabase.auth.user()`
         const diff_user = current_user?.id !== user?.id
         // console .log("supabase auth state change.  Diff user? ", diff_user, "current_user", current_user, "new user", user)
 
+        debugger
         if (diff_user) store.dispatch(ACTIONS.user_info.set_user({ user }))
     })
 }
@@ -64,8 +69,10 @@ export function user_info_subscribers (store: StoreType)
 
 async function get_users (store: StoreType)
 {
+    //debugger
     const supabase = get_supabase()
-    const { data, error } = await supabase.from<SupabaseUser>("users").select("*")
+    const { data, error } = await supabase.from("users").select<"users", SupabaseUser>()
+    if (error) console.error("Error getting users", error)
     // set_postgrest_error(error)
 
     if (data) store.dispatch(ACTIONS.user_info.set_users({ users: data }))

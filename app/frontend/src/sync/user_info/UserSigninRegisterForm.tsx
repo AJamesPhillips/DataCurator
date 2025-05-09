@@ -1,10 +1,10 @@
-import type { ApiError } from "@supabase/supabase-js"
+/* eslint-disable @typescript-eslint/no-misused-promises */
+import type { AuthError } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../../state/actions"
-import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
 import "../common.scss"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
@@ -12,21 +12,13 @@ import "./UserSigninRegisterForm.scss"
 
 
 
-interface OwnProps {}
-
-
-const map_state = (state: RootState) =>
-{
-    return {}
-}
-
 const map_dispatch = {
     set_user: ACTIONS.user_info.set_user,
 }
 
 
-const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+const connector = connect(null, map_dispatch)
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -42,7 +34,7 @@ function _UserSigninRegisterForm (props: Props)
     const [form_state, set_form_state] = useState<SigninRegisterFormState>("initial")
     const [email, _set_email] = useState("")
     const [password, _set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<AuthError | null>(null)
 
     const [user_needs_to_provide_email, set_user_needs_to_provide_email] = useState(false)
     const [user_needs_to_provide_password, set_user_needs_to_provide_password] = useState(false)
@@ -71,10 +63,13 @@ function _UserSigninRegisterForm (props: Props)
             return
         }
 
-        const { user: new_user, error } = await supabase.auth.signUp(
-            { email, password },
-            { redirectTo: "https://datacurator.org/app/" }
-            // { redirectTo: "http://localhost:8080/app/" }
+        const { error } = await supabase.auth.signUp(
+            {
+                email,
+                password,
+                // options: { emailRedirectTo: "http://localhost:8080/app/" }
+                options: { emailRedirectTo: "https://datacurator.org/app/" }
+            },
         )
 
         set_supabase_session_error(error)
@@ -91,8 +86,7 @@ function _UserSigninRegisterForm (props: Props)
             return
         }
 
-        const { user, error } = await supabase.auth.signIn({ email, password })
-
+        const { data: { user }, error } = await supabase.auth.signInWithPassword({ email, password })
         set_supabase_session_error(error)
         set_user({ user: user || undefined })
     }
@@ -107,7 +101,7 @@ function _UserSigninRegisterForm (props: Props)
             return
         }
 
-        const { data, error } = await supabase.auth.api.resetPasswordForEmail(email)
+        const { error } = await supabase.auth.resetPasswordForEmail(email)
 
         set_supabase_session_error(error)
         if (!error) set_form_state("reset_password")
@@ -167,4 +161,4 @@ function _UserSigninRegisterForm (props: Props)
     </div>
 }
 
-export const UserSigninRegisterForm = connector(_UserSigninRegisterForm) as FunctionalComponent<OwnProps>
+export const UserSigninRegisterForm = connector(_UserSigninRegisterForm) as FunctionalComponent

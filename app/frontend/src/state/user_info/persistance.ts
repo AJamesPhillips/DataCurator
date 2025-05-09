@@ -27,7 +27,7 @@ interface UserInfoStartingStateArgs
     load_state_from_storage: boolean
     storage_location: number | undefined
 }
-export function user_info_starting_state (args: UserInfoStartingStateArgs): UserInfoState
+export async function user_info_starting_state (args: UserInfoStartingStateArgs): Promise<UserInfoState>
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
     // const user_name = ensure_user_name("")
@@ -38,10 +38,13 @@ export function user_info_starting_state (args: UserInfoStartingStateArgs): User
     const chosen_base_id = args.storage_location !== undefined ? args.storage_location : obj.chosen_base_id
 
 
-    const user: User | undefined = args.load_state_from_storage
-        ? (get_supabase().auth.user() || undefined)
-        : local_user
+    let user: User | undefined = local_user
 
+    if (args.load_state_from_storage)
+    {
+        const { data: { user: supabase_user } } = await get_supabase().auth.getUser()
+        user = supabase_user || undefined
+    }
 
     const state: UserInfoState = {
         has_signed_in_at_least_once: false,

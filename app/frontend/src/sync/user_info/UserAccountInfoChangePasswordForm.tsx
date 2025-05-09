@@ -1,7 +1,7 @@
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
-import type { ApiError } from "@supabase/supabase-js"
-import { FunctionalComponent } from "preact"
+import type { AuthError } from "@supabase/supabase-js"
+import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -49,7 +49,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
     } = props
 
     const [password, set_password] = useState("")
-    const [supabase_session_error, set_supabase_session_error] = useState<ApiError | null>(null)
+    const [supabase_session_error, set_supabase_session_error] = useState<AuthError | null>(null)
 
     if (!user) return null
 
@@ -60,12 +60,12 @@ function _UserAccountInfoChangePasswordForm (props: Props)
 
         // There should always be an email and password given on password update
         const email = user?.email
-        const result = await supabase.auth.update({ email, password, /* data: {} */ })
+        const result = await supabase.auth.updateUser({ email, password, /* data: {} */ })
         set_supabase_session_error(result.error)
 
         if (!result.error)
         {
-            set_user({ user: result.user || undefined })
+            set_user({ user: result.data.user })
             set_need_to_handle_password_recovery(false)
             on_close()
         }
@@ -82,9 +82,9 @@ function _UserAccountInfoChangePasswordForm (props: Props)
                     inputProps={{
                         type: "password",
                     }}
-                    onBlur={(e:any) => set_password(e.currentTarget.value)}
-                    onChange={(e:any) => set_password(e.currentTarget.value)}
-                    onKeyUp={(e:any) => set_password(e.currentTarget.value)}
+                    onBlur={(e: h.JSX.TargetedFocusEvent<HTMLInputElement>) => set_password(e.currentTarget.value)}
+                    onChange={(e: h.JSX.TargetedEvent<HTMLInputElement>) => set_password(e.currentTarget.value)}
+                    onKeyUp={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) => set_password(e.currentTarget.value)}
                     label="password"
                     size="small"
                     value={password}
@@ -95,7 +95,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
             <Box className={classes.update_button_container}>
                 <Button
                     className={classes.update_button}
-                    disabled={!(user?.email) || !password}
+                    disabled={!user.email || !password}
                     onClick={update_password}
                     variant="contained"
                 >
@@ -121,7 +121,7 @@ function _UserAccountInfoChangePasswordForm (props: Props)
     </FormGroup>
 }
 
-const use_styles = makeStyles(theme => ({
+const use_styles = makeStyles(() => ({
     root: {
         display:"flex",
         justifyContent: "flex-start", alignContent: "center",

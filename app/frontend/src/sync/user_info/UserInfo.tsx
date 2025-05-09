@@ -92,4 +92,4 @@ function _UserInfo (props: Props)
     </div>)
 }
 
-export const UserInfo = connector(_UserInfo) as FunctionalComponent<{}>
+export const UserInfo = connector(_UserInfo) as FunctionalComponent

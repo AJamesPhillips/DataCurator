@@ -21,6 +21,7 @@ import { selector_editable_bases } from "./selector"
 
 export const user_info_reducer = (state: RootState, action: AnyAction): RootState =>
 {
+    console.log("user_info_reducer", action.type, action)
 
     if (is_set_user(action))
     {

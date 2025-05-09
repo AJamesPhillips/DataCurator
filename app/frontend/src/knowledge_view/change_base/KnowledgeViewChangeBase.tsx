@@ -8,6 +8,7 @@ import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import { Button } from "../../sharedf/Button"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
+import { logger } from "../../utils/logger"
 import { set_union } from "../../utils/set"
 import { calc_ids_to_move_and_conflicts, WComponentMoveBaseConflicts } from "./calc_ids_to_move_and_conflicts"
 import { SelectBaseToMoveTo } from "./SelectBaseToMoveTo"
@@ -171,5 +172,9 @@ async function move_ids_to_new_base (ids: string[], from_base_id: number, base_i
     // This can be improved on to improve user experience.  e.g. we could navigate to the new base
     // or if we want to keep on this base, we could clear the data and refetch it to get the correct
     // list of which wcomponents and knowledge views remain
-    if (!result.error) setTimeout(() => document.location.reload(), RELOAD_PAGE_DELAY_IN_SECONDS * 1000)
+    if (!result.error)
+    {
+        logger.debug("Reloading page after moving ids to new base")
+        setTimeout(() => document.location.reload(), RELOAD_PAGE_DELAY_IN_SECONDS * 1000)
+    }
 }

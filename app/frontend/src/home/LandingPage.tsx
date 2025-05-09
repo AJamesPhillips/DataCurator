@@ -10,6 +10,7 @@ import {
     Typography,
 } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
+import { useEffect, useState } from "preact/hooks"
 import { get_persisted_state_object } from "../state/persistence/persistence_utils"
 import type { UserInfoState } from "../state/user_info/state"
 import { get_supabase } from "../supabase/get_supabase"
@@ -19,7 +20,7 @@ import "./LandingPage.scss"
 
 
 declare module "@mui/styles/defaultTheme" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface DefaultTheme extends Theme {}
 }
 
@@ -29,8 +30,14 @@ export function LandingPage()
 {
     const supabase = get_supabase()
     const { has_signed_in_at_least_once } = get_persisted_state_object<UserInfoState>("user_info")
-    const session = supabase.auth.session()
-    const action_text = (session || has_signed_in_at_least_once) ? "Go to app" : "Get Started"
+    const [has_session, set_has_session] = useState(false)
+    useEffect(() => { (async () => {
+        console.log("LandingPage supabase.auth.getUser()")
+        const { data: { user }, error } = await supabase.auth.getUser()
+        set_has_session(!!user)
+        if (error) console.error("Error getting user session", error)
+    })() }, [])
+    const action_text = (has_session || has_signed_in_at_least_once) ? "Go to app" : "Get Started"
 
     const classes = use_styles()
 

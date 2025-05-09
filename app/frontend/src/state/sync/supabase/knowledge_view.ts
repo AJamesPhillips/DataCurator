@@ -100,7 +100,7 @@ async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeView
 {
     const item = knowledge_view_app_to_supabase(args.knowledge_view)
 
-    const result = await args.supabase.rpc("update_knowledge_view", { item })
+    const result = await args.supabase.rpc<"update_knowledge_view", SupabaseReadKnowledgeView>("update_knowledge_view", { item })
     if (result.status === 401)
     {
         return { status: result.status, error: { message: "JWT expired" }, item: undefined }
@@ -111,7 +111,11 @@ async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeView
     let error: PostgrestError | Error | undefined = result.error || undefined
     try
     {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
         let new_supabase_item: SupabaseReadKnowledgeView = result.data as any
+        // TODO: document this pattern of use here.  Is `result.error!.details`
+        // actually an instance of `SupabaseReadKnowledgeView`?
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         if (result.status === 409) new_supabase_item = JSON.parse(result.error!.details)
         new_item = knowledge_view_supabase_to_app(new_supabase_item)
     }
