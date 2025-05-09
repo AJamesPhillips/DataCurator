@@ -11,6 +11,13 @@ A collaborative real time planning application for complex projects.  Integrates
 
 Find out more at [DataCurator.org](https://datacurator.org/), view [an example map](https://datacurator.org/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12) or [sign up](https://datacurator.org/)
 
+## Features
+
+### Deprecated features
+* Counterfactuals have been deprecated in favour of "state value"s which are more
+flexible and allow for a wider range of use cases.  They're functionality will
+be removed in future versions.
+
 ### Data storage
 
 The data is store in a Supabase account we operate.  In future we would like you to be able to more easily host your own data in [Solid pods](https://solidproject.org/about) or something equivalent.

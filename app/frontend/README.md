@@ -1,7 +1,5 @@
 # DataCurator frontend
 
-
-
 ## Available Scripts
 
 ### npm start
@@ -41,6 +39,11 @@ Install the following extensions:
 
 MUI has had some performance issues.  See [this issue](https://github.com/AJamesPhillips/DataCurator/issues/214).
 
+The general strategy is to move as much logic as possible into the derived state
+reducer(s) and make them properly memoized.  Secondly, for other actions of the
+components, then use functions which access the state directly, rather than
+passing the state as props: aiming to only pass the state to the components
+which they need to render / allow the user to perform actions.
 
 # History
 
