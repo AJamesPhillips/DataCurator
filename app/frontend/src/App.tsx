@@ -1,44 +1,44 @@
-import { FunctionalComponent} from "preact"
-import { useEffect } from "preact/hooks"
-import { connect, ConnectedProps } from "react-redux"
-import clsx from "clsx"
 import {
     AppBar,
     Box,
     CssBaseline,
     Drawer,
-    ThemeProvider,
-    Theme,
     StyledEngineProvider,
+    Theme,
+    ThemeProvider,
     Toolbar,
     Typography,
 } from "@mui/material"
+import clsx from "clsx"
+import { FunctionalComponent } from "preact"
+import { useEffect } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
 import makeStyles from "@mui/styles/makeStyles"
 
 import "./App.scss"
-import { MainAreaRouter } from "./layout/MainAreaRouter"
-import { AppMenuItemsContainer } from "./layout/AppMenuItemsContainer"
-import { SidePanel } from "./side_panel/SidePanel"
-import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
-import { DefaultTheme } from "./ui_themes/material_default"
-import { ViewOptions } from "./views/ViewOptions"
-import { StorageInfo } from "./sync/storage_location/StorageInfo"
-import { UserInfo } from "./sync/user_info/UserInfo"
-import { SyncInfo } from "./sync/SyncInfo"
+import { setup_tests_for_browser } from "./App.test"
+import { date_to_string } from "./form/datetime_utils"
 import { HelpMenu } from "./help_menu/HelpMenu"
+import { AppMenuItemsContainer } from "./layout/AppMenuItemsContainer"
+import { MainAreaRouter } from "./layout/MainAreaRouter"
+import { Modal } from "./modal/Modal"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
 import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
-import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
-import type { RootState } from "./state/State"
-import { Modal } from "./modal/Modal"
-import { get_store } from "./state/store"
-import { check_and_handle_connection_and_session } from "./sync/user_info/window_focus_session_check"
-import { date_to_string } from "./form/datetime_utils"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
+import { SidePanel } from "./side_panel/SidePanel"
+import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
 import { SIDE_PANEL_WIDTH } from "./side_panel/width"
-import { setup_tests_for_browser } from "./App.test"
+import type { RootState } from "./state/State"
+import { get_store } from "./state/store"
+import { StorageInfo } from "./sync/storage_location/StorageInfo"
+import { SyncInfo } from "./sync/SyncInfo"
+import { UserInfo } from "./sync/user_info/UserInfo"
+import { check_and_handle_connection_and_session } from "./sync/user_info/window_focus_session_check"
+import { DefaultTheme } from "./ui_themes/material_default"
+import { ViewOptions } from "./views/ViewOptions"
+import { ViewsBreadcrumb } from "./views/ViewsBreadcrumb"
 
 
 

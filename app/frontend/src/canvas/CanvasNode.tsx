@@ -1,4 +1,4 @@
-import { Component, ComponentChildren, h } from "preact"
+import { ComponentChildren, h } from "preact"
 
 import type { NodePositionAndDimensions } from "./interfaces"
 

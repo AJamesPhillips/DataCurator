@@ -11,45 +11,43 @@ import type {
     KnowledgeView,
     KnowledgeViewsById,
     KnowledgeViewWComponentIdEntryMap,
-    // PartialKnowledgeViewWComponentIdEntryMap,
 } from "../../../shared/interfaces/knowledge_view"
 import { is_defined } from "../../../shared/utils/is_defined"
-import { SortDirection, sort_list } from "../../../shared/utils/sort"
+import { sort_list, SortDirection } from "../../../shared/utils/sort"
 import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
 import { set_union } from "../../../utils/set"
 import { update_substate } from "../../../utils/update_state"
 import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
 import {
-    wcomponent_can_render_connection,
-    WComponentsById,
     WComponent,
-    wcomponent_is_counterfactual_v2,
-    wcomponent_is_prioritisation,
-    wcomponent_is_plain_connection,
+    wcomponent_can_render_connection,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_is_counterfactual_v2,
+    wcomponent_is_node,
+    wcomponent_is_plain_connection,
+    wcomponent_is_prioritisation,
     WComponentConnection,
     WComponentNode,
-    wcomponent_is_node,
+    WComponentsById,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
 import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
-import { get_wcomponent_ids_by_type } from "../get_wcomponent_ids_by_type"
-import type { ComposedKnowledgeView, WComponentIdsByType } from "../State"
-import type { RootState } from "../../State"
+import { FilterContextFilters } from "../../filter_context/state"
+import { get_available_filter_options } from "../../filter_context/utils"
 import {
     get_nested_knowledge_view_ids,
-    sort_nested_knowledge_map_ids_by_priority_then_title,
     get_wcomponents_from_state,
+    sort_nested_knowledge_map_ids_by_priority_then_title,
 } from "../../specialised_objects/accessors"
-import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
-import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
+import type { RootState } from "../../State"
 import { selector_chosen_base_id } from "../../user_info/selector"
+import { get_wcomponent_ids_by_type } from "../get_wcomponent_ids_by_type"
+import type { ComposedKnowledgeView, WComponentIdsByType } from "../State"
+import { calc_if_wcomponent_should_exclude_because_label_or_type } from "./calc_if_wcomponent_should_exclude_because_label_or_type"
 import { get_composed_wc_id_maps_object } from "./get_composed_wc_id_maps_object"
-import { get_available_filter_options } from "../../filter_context/utils"
-import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
-import { FilterContextFilters } from "../../filter_context/state"
-import { MetaWComponentsState } from "../../specialised_objects/meta_wcomponents/State"
+import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_routing"
 
 
 

@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import { WComponent, wcomponent_has_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"

@@ -1,8 +1,8 @@
 import { get_angle, rads } from "../../utils/angles"
-import { wcomponent_type_is_plain_connection, ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { ConnectionLineBehaviour, wcomponent_type_is_plain_connection } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { CanvasPoint } from "../interfaces"
 import { HALF_NODE_WIDTH, NODE_WIDTH } from "../position_utils"
-import { ConnectionEndType, BAR_THICKNESS, NOOP_THICKNESS } from "./ConnectionEnd"
+import { BAR_THICKNESS, ConnectionEndType, NOOP_THICKNESS } from "./ConnectionEnd"
 import { ConnectionTerminus, get_connection_point } from "./terminal"
 import { Vector } from "./utils"
 

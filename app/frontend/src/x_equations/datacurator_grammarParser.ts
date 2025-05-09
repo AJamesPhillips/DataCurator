@@ -3,21 +3,17 @@
 
 import { ATN } from "antlr4ts/atn/ATN";
 import { ATNDeserializer } from "antlr4ts/atn/ATNDeserializer";
+import { ParserATNSimulator } from "antlr4ts/atn/ParserATNSimulator";
 import { FailedPredicateException } from "antlr4ts/FailedPredicateException";
-import { NotNull } from "antlr4ts/Decorators";
 import { NoViableAltException } from "antlr4ts/NoViableAltException";
-import { Override } from "antlr4ts/Decorators";
 import { Parser } from "antlr4ts/Parser";
 import { ParserRuleContext } from "antlr4ts/ParserRuleContext";
-import { ParserATNSimulator } from "antlr4ts/atn/ParserATNSimulator";
-import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
-import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 import { RecognitionException } from "antlr4ts/RecognitionException";
 import { RuleContext } from "antlr4ts/RuleContext";
 //import { RuleVersion } from "antlr4ts/RuleVersion";
-import { TerminalNode } from "antlr4ts/tree/TerminalNode";
 import { Token } from "antlr4ts/Token";
 import { TokenStream } from "antlr4ts/TokenStream";
+import { TerminalNode } from "antlr4ts/tree/TerminalNode";
 import { Vocabulary } from "antlr4ts/Vocabulary";
 import { VocabularyImpl } from "antlr4ts/VocabularyImpl";
 
@@ -56,13 +52,13 @@ export class datacurator_grammarParser extends Parser {
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
-		undefined, "'('", "')'", "','", "'^'", "'*'", "'/'", "'+'", "'-'", undefined, 
+		undefined, "'('", "')'", "','", "'^'", "'*'", "'/'", "'+'", "'-'", undefined,
 		undefined, undefined, "'log'",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
-		undefined, undefined, undefined, undefined, "POW", "MUL", "DIV", "ADD", 
-		"SUB", "NUMBER", "CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF", 
-		"ID_REF_12CHAR", "ID_REF_8CHAR", "ID_REF_4CHAR", "ID_REF_3CHAR", "ID_REF_CHAR", 
+		undefined, undefined, undefined, undefined, "POW", "MUL", "DIV", "ADD",
+		"SUB", "NUMBER", "CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF",
+		"ID_REF_12CHAR", "ID_REF_8CHAR", "ID_REF_4CHAR", "ID_REF_3CHAR", "ID_REF_CHAR",
 		"WHITESPACE",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(datacurator_grammarParser._LITERAL_NAMES, datacurator_grammarParser._SYMBOLIC_NAMES, []);
@@ -920,5 +916,3 @@ export class SubexpressionContext extends ParserRuleContext {
 		}
 	}
 }
-
-

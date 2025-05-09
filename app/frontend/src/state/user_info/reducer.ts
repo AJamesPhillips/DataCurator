@@ -9,11 +9,11 @@ import { update_substate } from "../../utils/update_state"
 import { pub_sub } from "../pub_sub/pub_sub"
 import type { RootState } from "../State"
 import {
-    is_set_user,
     is_set_need_to_handle_password_recovery,
+    is_set_user,
+    is_set_users,
     is_update_bases,
     is_update_chosen_base_id,
-    is_set_users,
 } from "./actions"
 import { selector_editable_bases } from "./selector"
 

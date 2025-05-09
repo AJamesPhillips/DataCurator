@@ -1,13 +1,13 @@
 import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 import { useMemo } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
+import { Box } from "@mui/material"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { AutocompleteText } from "./AutocompleteText"
 import type { AutocompleteOption } from "./interfaces"
 import { SelectedOption } from "./SelectedOption"
-import { Box } from "@mui/material"
 
 
 

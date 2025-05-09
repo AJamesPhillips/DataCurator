@@ -1,24 +1,24 @@
 import { h } from "preact"
 
 import { EditablePercentage } from "../../form/EditablePercentage"
+import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
 import { EditableText } from "../../form/editable_text/EditableText"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
+import { set_VAP_probabilities } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
-    StateValueAndPredictionsSet as VAPSet,
     StateValueAndPrediction,
+    StateValueAndPredictionsSet as VAPSet,
 } from "../../wcomponent/interfaces/state"
 import {
     get_probable_VAP_set_values_for_display,
-    get_VAP_set_probable_percentages_for_display,
     get_VAP_set_conviction,
+    get_VAP_set_probable_percentages_for_display,
 } from "../../wcomponent_derived/value_and_prediction/get_UI_value_of_VAP_set_attributes"
-import { PredictionSummary } from "./to_deprecate/PredictionSummary"
 import { UncertainDateTimeForm } from "../uncertain_datetime/UncertainDateTimeForm"
 import { ValueAndPredictions } from "./ValueAndPredictions"
-import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import { set_VAP_probabilities } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
-import type { ListItemCRUD, ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
-import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
+import { PredictionSummary } from "./to_deprecate/PredictionSummary"
 
 
 

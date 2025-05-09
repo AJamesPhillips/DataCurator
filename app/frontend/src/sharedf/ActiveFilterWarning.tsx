@@ -1,7 +1,7 @@
-import { FunctionalComponent } from "preact"
-import { IconButton, Tooltip } from "@mui/material"
-import { connect, ConnectedProps } from "react-redux"
 import FilterNoneIcon from "@mui/icons-material/FilterNone"
+import { IconButton, Tooltip } from "@mui/material"
+import { FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"

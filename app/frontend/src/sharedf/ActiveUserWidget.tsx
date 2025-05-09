@@ -1,4 +1,5 @@
-import { h } from "preact"
+import PeopleIcon from "@mui/icons-material/People"
+import PersonIcon from "@mui/icons-material/Person"
 import {
     Avatar,
     Badge,
@@ -16,8 +17,6 @@ import {
 } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
 import withStyles from "@mui/styles/withStyles"
-import PersonIcon from "@mui/icons-material/Person"
-import PeopleIcon from "@mui/icons-material/People"
 import { useState } from "preact/hooks"
 
 

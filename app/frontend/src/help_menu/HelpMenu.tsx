@@ -1,15 +1,15 @@
-import { h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-import { useState } from "preact/hooks"
-import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material"
+import { h } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-import "./HelpMenu.scss"
 import { Modal } from "../modal/Modal"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { shortcuts_list } from "./shortcuts"
+import "./HelpMenu.scss"
 import { ShortcutCommand } from "./ShortcutCommand"
+import { shortcuts_list } from "./shortcuts"
 
 
 

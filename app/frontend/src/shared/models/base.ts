@@ -42,4 +42,3 @@ export function from_pojo<U extends BaseModel>(instance: U): U {
 export function has_temp_id(model: BaseModel): boolean {
     return model.uuid.startsWith("-")
 }
-

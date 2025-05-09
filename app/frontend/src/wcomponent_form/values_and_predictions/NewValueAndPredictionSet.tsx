@@ -1,20 +1,19 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../../form/Autocomplete/interfaces"
 import type { ListItemCRUDRequiredU } from "../../form/editable_list/EditableListEntry"
+import { sentence_case } from "../../shared/utils/sentence_case"
+import { Button } from "../../sharedf/Button"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { Button } from "../../sharedf/Button"
+import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
 import {
     get_details2_for_single_VAP_set,
     get_details_for_single_VAP_set,
     get_summary_for_single_VAP_set,
 } from "./common"
-import { SimplifiedUncertainDatetimeForm } from "../uncertain_datetime/SimplifiedUncertainDatetimeForm"
-import { sentence_case } from "../../shared/utils/sentence_case"
 import { update_VAP_set_VAP_probabilities } from "./update_VAP_set_VAP_probabilities"
 
 

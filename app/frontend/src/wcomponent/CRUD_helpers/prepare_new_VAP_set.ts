@@ -1,16 +1,16 @@
-import type { CreationContextState } from "../../state/creation_context/state"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_value_and_prediction_set_id } from "../../shared/utils/ids"
 import { describe, test } from "../../shared/utils/test"
+import type { CreationContextState } from "../../state/creation_context/state"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type {
     StateValueAndPrediction,
     StateValueAndPredictionsSet as VAPSet,
 } from "../interfaces/state"
-import { prepare_new_VAP, set_VAP_probabilities } from "./prepare_new_VAP"
 import { get_possibilities_from_VAP_sets } from "../value_possibilities/get_possibilities_from_VAP_sets"
-import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
+import { prepare_new_VAP, set_VAP_probabilities } from "./prepare_new_VAP"
 
 
 

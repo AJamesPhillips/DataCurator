@@ -1,16 +1,16 @@
+import SaveIcon from "@mui/icons-material/Save"
+import SyncProblemIcon from "@mui/icons-material/SyncProblem"
 import { Button, Typography } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import SaveIcon from "@mui/icons-material/Save"
-import SyncProblemIcon from "@mui/icons-material/SyncProblem"
 
-import { sentence_case } from "../shared/utils/sentence_case"
-import type { RootState } from "../state/State"
-import { save_state } from "../state/sync/utils/save_state"
-import { ACTIONS } from "../state/actions"
-import { get_store } from "../state/store"
 import { is_defined } from "../shared/utils/is_defined"
+import { sentence_case } from "../shared/utils/sentence_case"
+import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+import { get_store } from "../state/store"
+import { save_state } from "../state/sync/utils/save_state"
 
 
 

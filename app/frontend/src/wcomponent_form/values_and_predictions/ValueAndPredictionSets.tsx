@@ -1,6 +1,9 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { RootState } from "../../state/State"
+import { ACTIONS } from "../../state/actions"
+import { selector_chosen_base_id } from "../../state/user_info/selector"
 import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
@@ -10,9 +13,6 @@ import type {
 import {
     partition_and_prune_items_by_datetimes_and_versions,
 } from "../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
-import { ACTIONS } from "../../state/actions"
-import type { RootState } from "../../state/State"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ValueAndPredictionSetsComponent } from "./ValueAndPredictionSetsComponent"
 import { handle_update_VAP_sets } from "./handle_update_VAP_sets"
 

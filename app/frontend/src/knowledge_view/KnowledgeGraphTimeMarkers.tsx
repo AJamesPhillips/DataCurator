@@ -1,17 +1,17 @@
-import { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
+import { FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
-import "./KnowledgeGraphTimeMarkers.scss"
+import { useMemo } from "preact/hooks"
+import { SCALE_BY } from "../canvas/zoom_utils"
+import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
+import { bounded } from "../shared/utils/bounded"
+import { date2str } from "../shared/utils/date_helpers"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { SCALE_BY } from "../canvas/zoom_utils"
-import { bounded } from "../shared/utils/bounded"
-import { useMemo } from "preact/hooks"
-import { date2str } from "../shared/utils/date_helpers"
-import { time_scale_days_to_ms_pixels_fudge_factor } from "../shared/constants"
 import { default_time_origin_parameters } from "./datetime_line"
+import "./KnowledgeGraphTimeMarkers.scss"
 
 
 

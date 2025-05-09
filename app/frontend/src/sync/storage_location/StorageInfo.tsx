@@ -1,17 +1,17 @@
+import PermDataSettingIcon from "@mui/icons-material/PermDataSetting"
 import { Button, Typography } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import PermDataSettingIcon from "@mui/icons-material/PermDataSetting"
 
-import "./StorageInfo.scss"
+import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
-import { SelectStorage } from "./SelectStorage"
 import {
     selector_chosen_base_name,
     selector_needs_to_create_a_base,
 } from "../../state/user_info/selector"
-import { ACTIONS } from "../../state/actions"
+import { SelectStorage } from "./SelectStorage"
+import "./StorageInfo.scss"
 
 
 

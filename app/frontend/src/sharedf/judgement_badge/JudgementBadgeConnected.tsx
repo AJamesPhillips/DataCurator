@@ -1,19 +1,19 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import {
-    WComponent,
-    wcomponent_is_judgement_or_objective,
-} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
+import {
+    WComponent,
+    wcomponent_is_judgement_or_objective,
+} from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { calculate_judgement_value } from "./calculate_judgement_value"
 import { JudgementBadge } from "./JudgementBadge"
-import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 
 
 

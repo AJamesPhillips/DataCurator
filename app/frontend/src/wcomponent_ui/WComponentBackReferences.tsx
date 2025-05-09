@@ -5,6 +5,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { Button } from "../sharedf/Button"
 import { Link } from "../sharedf/Link"
 
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import {
@@ -18,7 +19,6 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_state_value,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 

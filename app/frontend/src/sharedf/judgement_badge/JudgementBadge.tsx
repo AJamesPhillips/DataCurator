@@ -1,18 +1,17 @@
-import { h } from "preact"
-import TrendingUpIcon from "@mui/icons-material/TrendingUp"
-import TrendingFlatIcon from "@mui/icons-material/TrendingFlat"
 import TrendingDownIcon from "@mui/icons-material/TrendingDown"
+import TrendingFlatIcon from "@mui/icons-material/TrendingFlat"
+import TrendingUpIcon from "@mui/icons-material/TrendingUp"
 import { QuestionMarkIcon } from "../../sharedf/icons/QuestionMarkIcon"
 
-import "./JudgementBadge.scss"
-import type { JudgementValue } from "./calculate_judgement_value"
-import { Link } from "../Link"
 import type { CanvasPoint } from "../../canvas/interfaces"
+import { ACTIONS } from "../../state/actions"
 import { lefttop_to_xy } from "../../state/display_options/display"
 import type { RoutingStateArgs } from "../../state/routing/interfaces"
-import type { JudgementTrend } from "../../wcomponent/interfaces/judgement"
 import { get_store } from "../../state/store"
-import { ACTIONS } from "../../state/actions"
+import type { JudgementTrend } from "../../wcomponent/interfaces/judgement"
+import { Link } from "../Link"
+import "./JudgementBadge.scss"
+import type { JudgementValue } from "./calculate_judgement_value"
 
 
 

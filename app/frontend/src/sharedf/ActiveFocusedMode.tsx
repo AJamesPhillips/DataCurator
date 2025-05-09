@@ -1,12 +1,12 @@
-import { FunctionalComponent } from "preact"
+import FilterTiltShift from "@mui/icons-material/FilterTiltShift"
 import { IconButton, Tooltip } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
-import FilterTiltShift from "@mui/icons-material/FilterTiltShift"
+import { FunctionalComponent } from "preact"
 
-import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
-import { active_warning_styles } from "./active_warning_common"
 import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+import { active_warning_styles } from "./active_warning_common"
 
 
 

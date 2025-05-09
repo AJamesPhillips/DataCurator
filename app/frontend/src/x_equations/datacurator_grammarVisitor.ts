@@ -3,18 +3,7 @@
 
 import { ParseTreeVisitor } from "antlr4ts/tree/ParseTreeVisitor";
 
-import { NumberContext } from "./datacurator_grammarParser";
-import { IDRefContext } from "./datacurator_grammarParser";
-import { ParenthesesContext } from "./datacurator_grammarParser";
-import { FunctionsWith2ArgsContext } from "./datacurator_grammarParser";
-import { FunctionsWithArgsContext } from "./datacurator_grammarParser";
-import { ConstantsContext } from "./datacurator_grammarParser";
-import { PowerContext } from "./datacurator_grammarParser";
-import { MultiplicationOrDivisionContext } from "./datacurator_grammarParser";
-import { AdditionOrSubtractionContext } from "./datacurator_grammarParser";
-import { EquationContext } from "./datacurator_grammarParser";
-import { ExpressionContext } from "./datacurator_grammarParser";
-import { SubexpressionContext } from "./datacurator_grammarParser";
+import { AdditionOrSubtractionContext, ConstantsContext, EquationContext, ExpressionContext, FunctionsWith2ArgsContext, FunctionsWithArgsContext, IDRefContext, MultiplicationOrDivisionContext, NumberContext, ParenthesesContext, PowerContext, SubexpressionContext } from "./datacurator_grammarParser";
 
 
 /**
@@ -118,4 +107,3 @@ export interface datacurator_grammarVisitor<Result> extends ParseTreeVisitor<Res
 	 */
 	visitSubexpression?: (ctx: SubexpressionContext) => Result;
 }
-

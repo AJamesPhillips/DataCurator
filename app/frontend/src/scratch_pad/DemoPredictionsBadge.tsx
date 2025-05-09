@@ -1,8 +1,7 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
-import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
 import { ProbablitySelection } from "../probability/ProbabililtySelection"
+import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
 
 
 

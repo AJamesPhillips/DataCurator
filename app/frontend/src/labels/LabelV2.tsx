@@ -1,14 +1,14 @@
+import Markdown from "markdown-to-jsx"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import Markdown from "markdown-to-jsx"
 
-import "./LabelV2.css"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
-import type { RootState } from "../state/State"
+import { COLOURS } from "../canvas/display"
 import { color_to_opposite, color_to_string } from "../sharedf/color"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { MARKDOWN_OPTIONS } from "../sharedf/rich_text/RichMarkDown"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
-import { COLOURS } from "../canvas/display"
+import type { RootState } from "../state/State"
+import "./LabelV2.css"
 
 
 

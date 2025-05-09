@@ -1,18 +1,16 @@
-import { h } from "preact"
 import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
 import { shortcuts_map } from "../help_menu/shortcuts"
 
 import { Button } from "../sharedf/Button"
 import {
-    conditionally_expand_selected_components,
     conditionally_decrease_selected_components,
+    conditionally_expand_selected_components,
     conditionally_select_all_components,
     conditionally_select_forward_causal_components,
-    conditionally_select_source_causal_components,
     conditionally_select_interconnections,
+    conditionally_select_source_causal_components,
 } from "../state/specialised_objects/meta_wcomponents/selecting/helpers"
 import { get_store } from "../state/store"
-import { FindAllCausalPaths } from "./FindAllCausalPaths"
 
 
 

@@ -1,9 +1,9 @@
 import type { AnyAction } from "redux"
 
 import { update_substate } from "../../utils/update_state"
+import { get_is_on_actions_list_view } from "../actions_list_view/accessors"
 import type { RootState } from "../State"
 import { is_set_apply_filter, is_set_filters } from "./actions"
-import { get_is_on_actions_list_view } from "../actions_list_view/accessors"
 
 
 

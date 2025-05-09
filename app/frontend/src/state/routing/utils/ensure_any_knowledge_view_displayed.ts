@@ -4,11 +4,11 @@ import {
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../../actions"
 import { get_actually_display_time_sliders } from "../../controls/accessors"
-import type { ComposedKnowledgeView } from "../../derived/State"
 import {
     update_composed_knowledge_view_filters,
     update_current_composed_knowledge_view_state,
 } from "../../derived/knowledge_views/knowledge_views_derived_reducer"
+import type { ComposedKnowledgeView } from "../../derived/State"
 import type { RootState } from "../../State"
 import type { StoreType } from "../../store"
 import { selector_chosen_base } from "../../user_info/selector"

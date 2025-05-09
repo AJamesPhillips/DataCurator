@@ -1,16 +1,16 @@
+import type { PostgrestError } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import type { PostgrestError } from "@supabase/supabase-js"
 
-import { StorageOption } from "./StorageOption"
+import { sort_list, SortDirection } from "../../shared/utils/sort"
+import { SyncButton } from "../../sharedf/SyncButton"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
-import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { refresh_bases_for_current_user } from "../../state/user_info/refresh_bases_for_current_user"
-import { SyncButton } from "../../sharedf/SyncButton"
 import type { AsyncState } from "../../utils/async_state"
 import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
+import { StorageOption } from "./StorageOption"
 
 
 

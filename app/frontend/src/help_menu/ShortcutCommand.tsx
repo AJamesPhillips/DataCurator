@@ -1,8 +1,7 @@
-import { h } from "preact"
 import { Box, Typography } from "@mui/material"
 
-import { ActionCommands, ShortcutProps } from "./shortcuts"
 import { intersperse } from "../utils/array"
+import { ActionCommands, ShortcutProps } from "./shortcuts"
 
 
 export function PlainShortcutKeys (props: { shortcut: string[] })

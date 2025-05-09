@@ -1,26 +1,26 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./PrioritiesListView.scss"
+import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
 import { MainArea } from "../layout/MainArea"
-import { wcomponent_has_objectives } from "../wcomponent/interfaces/SpecialisedObjects"
+import { sort_list, SortDirection } from "../shared/utils/sort"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
+import { Button } from "../sharedf/Button"
+import { SIDE_PANEL_WIDTH } from "../side_panel/width"
+import { ACTIONS } from "../state/actions"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import type { RootState } from "../state/State"
+import { selector_chosen_base_id } from "../state/user_info/selector"
+import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
 import type {
     PrioritisedGoalOrActionAttributes,
     WComponentPrioritisation,
 } from "../wcomponent/interfaces/priorities"
-import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
-import { Prioritisation } from "./Prioritisation"
-import { ACTIONS } from "../state/actions"
+import { wcomponent_has_objectives } from "../wcomponent/interfaces/SpecialisedObjects"
+import "./PrioritiesListView.scss"
 import { PrioritisableGoal } from "./PrioritisableGoal"
-import { SortDirection, sort_list } from "../shared/utils/sort"
-import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import { selector_chosen_base_id } from "../state/user_info/selector"
-import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
-import { SIDE_PANEL_WIDTH } from "../side_panel/width"
-import { Button } from "../sharedf/Button"
-import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
+import { Prioritisation } from "./Prioritisation"
 
 
 

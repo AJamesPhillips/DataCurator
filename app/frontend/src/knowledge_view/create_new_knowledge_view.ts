@@ -1,14 +1,14 @@
 import type { Store } from "redux"
 
+import type { HasBaseId } from "../shared/interfaces/base"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
-import { get_new_knowledge_view_id } from "../shared/utils/ids"
 import { get_new_created_ats } from "../shared/utils/datetime"
-import type { CreationContextState } from "../state/creation_context/state"
-import { get_store } from "../state/store"
+import { get_new_knowledge_view_id } from "../shared/utils/ids"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
+import type { CreationContextState } from "../state/creation_context/state"
+import { get_store } from "../state/store"
 import { selector_chosen_base_id } from "../state/user_info/selector"
-import type { HasBaseId } from "../shared/interfaces/base"
 
 
 

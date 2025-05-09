@@ -1,11 +1,11 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
+import { BaseFormEditSharing } from "../../access_controls/BaseFormEditSharing"
 import type { RootState } from "../../state/State"
 import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
+import "../common.scss"
 import { BaseFormEditFields } from "./BaseFormEditFields"
-import { BaseFormEditSharing } from "../../access_controls/BaseFormEditSharing"
 
 
 

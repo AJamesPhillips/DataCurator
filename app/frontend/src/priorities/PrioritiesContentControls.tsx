@@ -10,7 +10,6 @@ import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
 import { ACTIONS } from "../state/actions"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { TimeSlider } from "../time_control/TimeSlider"
 
 
 

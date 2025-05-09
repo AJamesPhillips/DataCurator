@@ -8,8 +8,8 @@ import {
 } from "../../wcomponent/CRUD_helpers/update_possibilities_with_VAPSets"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
-    StateValueAndPredictionsSet,
     HasVAPSetsAndMaybeValuePossibilities,
+    StateValueAndPredictionsSet,
 } from "../../wcomponent/interfaces/state"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"

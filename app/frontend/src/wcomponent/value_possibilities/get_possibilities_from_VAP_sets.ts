@@ -1,16 +1,16 @@
 import { describe, test } from "../../shared/utils/test"
+import { prepare_new_VAP } from "../CRUD_helpers/prepare_new_VAP"
+import type {
+    SimpleValuePossibility,
+    ValuePossibilitiesById,
+    ValuePossibility,
+} from "../interfaces/possibility"
+import type { StateValueCore, StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
+import { VAPsType } from "../interfaces/VAPsType"
+import { default_possible_values } from "./default_possible_values"
 import {
     ensure_possible_values_have_ids,
 } from "./ensure_possible_values_have_ids"
-import { prepare_new_VAP } from "../CRUD_helpers/prepare_new_VAP"
-import type {
-    ValuePossibilitiesById,
-    SimpleValuePossibility,
-    ValuePossibility,
-} from "../interfaces/possibility"
-import type { StateValueAndPredictionsSet as VAPSet, StateValueCore } from "../interfaces/state"
-import { VAPsType } from "../interfaces/VAPsType"
-import { default_possible_values } from "./default_possible_values"
 
 
 

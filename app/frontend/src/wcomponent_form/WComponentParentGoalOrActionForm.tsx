@@ -1,7 +1,7 @@
+import { FormControl, FormLabel } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { FormControl, FormLabel } from "@mui/material"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"

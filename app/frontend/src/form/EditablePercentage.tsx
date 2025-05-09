@@ -1,10 +1,9 @@
-import { h } from "preact"
 
-import "./Editable.css"
 import { bounded } from "../shared/utils/bounded"
-import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 import { ratio_to_percentage_string } from "../sharedf/percentages"
+import "./Editable.css"
 import { EditableTextOnBlurType } from "./editable_text/editable_text_common"
+import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 
 
 

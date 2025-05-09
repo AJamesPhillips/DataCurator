@@ -1,6 +1,6 @@
-import { h } from "preact"
 import SyncIcon from "@mui/icons-material/Sync"
 import SyncProblemIcon from "@mui/icons-material/SyncProblem"
+import { h } from "preact"
 
 import type { AsyncState } from "../utils/async_state"
 

@@ -1,14 +1,14 @@
-import { h } from "preact"
 import { Card, CardContent, CardMedia } from "@mui/material"
+import { h } from "preact"
 
-import "./ConnectableCanvasNode.scss"
-import { CanvasNode } from "./CanvasNode"
-import "./display_colors.scss"
-import type { CanvasPoint } from "./interfaces"
 import type {
     ConnectionTerminalType,
 } from "../wcomponent/interfaces/SpecialisedObjects"
+import { CanvasNode } from "./CanvasNode"
+import "./ConnectableCanvasNode.scss"
 import { connection_radius, Terminal } from "./connections/terminal"
+import "./display_colors.scss"
+import type { CanvasPoint } from "./interfaces"
 
 
 

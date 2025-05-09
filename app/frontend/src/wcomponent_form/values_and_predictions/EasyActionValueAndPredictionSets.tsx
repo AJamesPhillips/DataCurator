@@ -1,18 +1,18 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import { sort_by_uncertain_event_datetimes } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
+import { Button } from "../../sharedf/Button"
+import { ACTIONS } from "../../state/actions"
+import type { RootState } from "../../state/State"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
     StateValueAndPredictionsSet,
 } from "../../wcomponent/interfaces/state"
-import { ACTIONS } from "../../state/actions"
-import type { RootState } from "../../state/State"
-import { Button } from "../../sharedf/Button"
-import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
-import { sort_by_uncertain_event_datetimes } from "../../shared/utils_datetime/partition_by_uncertain_datetime"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
+import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
 import { handle_update_VAP_sets, set_action_VAP_set_state } from "./handle_update_VAP_sets"
 
 

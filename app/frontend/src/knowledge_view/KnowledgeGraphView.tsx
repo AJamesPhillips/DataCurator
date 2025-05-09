@@ -1,17 +1,17 @@
 import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps, useStore } from "react-redux"
+import { connect, ConnectedProps } from "react-redux"
 
+import { useEffect, useState } from "preact/hooks"
+import { Canvas } from "../canvas/Canvas"
 import type { ChildrenRawData } from "../layout/interfaces"
+import { MainArea } from "../layout/MainArea"
+import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
 import {
     WComponentCanvasConnection,
 } from "../wcomponent_canvas/connection/WComponentCanvasConnection"
 import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import { Canvas } from "../canvas/Canvas"
-import { MainArea } from "../layout/MainArea"
 import { KnowledgeGraphTimeMarkers } from "./KnowledgeGraphTimeMarkers"
-import { useEffect, useState } from "preact/hooks"
-import { pub_sub } from "../state/pub_sub/pub_sub"
 // import { WComponentCanvasNodeDebugCanvasPointerPosition } from "../debug/WComponentCanvasNodeDebugCanvasPointerPosition"
 
 

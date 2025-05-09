@@ -1,5 +1,5 @@
-import { Box, Button, Menu, MenuItem as MaterialMenuItem } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
+import { Button, MenuItem as MaterialMenuItem, Menu } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"

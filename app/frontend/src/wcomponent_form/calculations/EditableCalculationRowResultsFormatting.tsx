@@ -1,10 +1,10 @@
-import { EditableNumber } from "../../form/EditableNumber"
-import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { PlainCalculationObject } from "../../calculations/interfaces"
-import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
 import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
 import { AutocompleteOption } from "../../form/Autocomplete/interfaces"
+import { EditableNumber } from "../../form/EditableNumber"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { format_number_to_string } from "../../shared/format_number_to_string"
+import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
 
 
 

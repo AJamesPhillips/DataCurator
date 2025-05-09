@@ -3,19 +3,19 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import type { HasObjectives, WComponentJudgement } from "../wcomponent/interfaces/judgement"
-import {
-    WComponent,
-    wcomponent_is_judgement_or_objective,
-} from "../wcomponent/interfaces/SpecialisedObjects"
 import { ACTIONS } from "../state/actions"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponents_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { set_union } from "../utils/set"
-import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
+import type { HasObjectives, WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import {
+    WComponent,
+    wcomponent_is_judgement_or_objective,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 

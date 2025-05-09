@@ -10,20 +10,20 @@ import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowl
 import { Button } from "../../sharedf/Button"
 import { ColorPicker } from "../../sharedf/ColorPicker"
 import { ACTIONS } from "../../state/actions"
+import { get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
+import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import { get_middle_of_screen } from "../../state/display_options/display"
 import {
-    get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
+    get_current_knowledge_view_from_state,
 } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { ExploreButtonHandle } from "../../wcomponent_canvas/node/ExploreButtonHandle"
 import { WComponentBackReferences } from "../../wcomponent_ui/WComponentBackReferences"
 import { AlignComponentForm } from "../AlignComponentForm"
 import { default_frame_color } from "./default_frame_color"
+import { get_wcomponent_status_in_knowledge_view } from "./get_wcomponent_status_in_knowledge_view"
 import { WComponentPresenceInOtherKVs } from "./WComponentPresenceInOtherKVs"
-import { WComponentStatusInKnowledgeView, get_wcomponent_status_in_knowledge_view } from "./get_wcomponent_status_in_knowledge_view"
-import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
-import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
 
 
 

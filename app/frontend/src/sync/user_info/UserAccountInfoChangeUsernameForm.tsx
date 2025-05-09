@@ -1,18 +1,18 @@
-import { FunctionalComponent, h } from "preact"
-import { useEffect, useState } from "preact/hooks"
-import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
 import type { PostgrestError } from "@supabase/supabase-js"
+import { FunctionalComponent, h } from "preact"
+import { useEffect, useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
-import type { RootState } from "../../state/State"
-import { get_supabase } from "../../supabase/get_supabase"
-import { DisplaySupabasePostgrestError } from "./DisplaySupabaseErrors"
-import { selector_need_to_set_user_name } from "../../state/user_info/selector"
-import type { SupabaseUser } from "../../supabase/interfaces"
 import { pub_sub } from "../../state/pub_sub/pub_sub"
+import type { RootState } from "../../state/State"
+import { selector_need_to_set_user_name } from "../../state/user_info/selector"
+import { get_supabase } from "../../supabase/get_supabase"
+import type { SupabaseUser } from "../../supabase/interfaces"
 import type { AsyncState } from "../../utils/async_state"
+import "../common.scss"
+import { DisplaySupabasePostgrestError } from "./DisplaySupabaseErrors"
 
 
 

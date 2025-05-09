@@ -5,7 +5,7 @@ import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/pre
 import { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 import { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { VAP_visual_false_id } from "../../wcomponent_derived/value_and_prediction/utils_to_convert_VAP_set_to_visuals"
-import { replace_ids_in_text, get_title, ReplaceIdsArgs, RichTextType } from "./get_rich_text"
+import { get_title, replace_ids_in_text, ReplaceIdsArgs, RichTextType } from "./get_rich_text"
 
 
 

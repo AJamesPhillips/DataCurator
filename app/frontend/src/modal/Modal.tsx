@@ -1,8 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./Modal.css"
 import type { RootState } from "../state/State"
+import "./Modal.css"
 
 
 

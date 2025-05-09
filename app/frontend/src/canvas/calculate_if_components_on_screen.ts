@@ -1,5 +1,5 @@
 import { get_actually_display_time_sliders } from "../state/controls/accessors"
-import { get_screen_width, TOP_HEADER_FUDGE, get_visible_screen_height } from "../state/display_options/display"
+import { get_screen_width, get_visible_screen_height, TOP_HEADER_FUDGE } from "../state/display_options/display"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { SCALE_BY } from "./zoom_utils"

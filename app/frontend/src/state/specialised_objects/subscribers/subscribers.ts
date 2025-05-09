@@ -1,11 +1,11 @@
+import type { StoreType } from "../../store"
+import { cancel_selected_wcomponents_on_right_click } from "./cancel_selected_wcomponents_on_right_click"
 import {
-    create_links_on_connection_terminal_mouse_events__subscriber,
     clear_last_pointer_down_connection_terminal,
+    create_links_on_connection_terminal_mouse_events__subscriber,
 } from "./create_links_on_connection_terminal_mouse_events"
 import { create_wcomponent_on_double_tap } from "./create_wcomponent_on_double_tap"
 import { create_wcomponent_on_keyboard } from "./create_wcomponent_on_keyboard"
-import { cancel_selected_wcomponents_on_right_click } from "./cancel_selected_wcomponents_on_right_click"
-import type { StoreType } from "../../store"
 
 
 

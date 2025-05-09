@@ -3,12 +3,9 @@
 
 import { ATN } from "antlr4ts/atn/ATN";
 import { ATNDeserializer } from "antlr4ts/atn/ATNDeserializer";
+import { LexerATNSimulator } from "antlr4ts/atn/LexerATNSimulator";
 import { CharStream } from "antlr4ts/CharStream";
 import { Lexer } from "antlr4ts/Lexer";
-import { LexerATNSimulator } from "antlr4ts/atn/LexerATNSimulator";
-import { NotNull } from "antlr4ts/Decorators";
-import { Override } from "antlr4ts/Decorators";
-import { RuleContext } from "antlr4ts/RuleContext";
 import { Vocabulary } from "antlr4ts/Vocabulary";
 import { VocabularyImpl } from "antlr4ts/VocabularyImpl";
 
@@ -47,19 +44,19 @@ export class datacurator_grammarLexer extends Lexer {
 	];
 
 	public static readonly ruleNames: string[] = [
-		"T__0", "T__1", "T__2", "POW", "MUL", "DIV", "ADD", "SUB", "DIGIT", "NUMBER", 
-		"CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF", "ID_REF_12CHAR", 
+		"T__0", "T__1", "T__2", "POW", "MUL", "DIV", "ADD", "SUB", "DIGIT", "NUMBER",
+		"CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF", "ID_REF_12CHAR",
 		"ID_REF_8CHAR", "ID_REF_4CHAR", "ID_REF_3CHAR", "ID_REF_CHAR", "WHITESPACE",
 	];
 
 	private static readonly _LITERAL_NAMES: Array<string | undefined> = [
-		undefined, "'('", "')'", "','", "'^'", "'*'", "'/'", "'+'", "'-'", undefined, 
+		undefined, "'('", "')'", "','", "'^'", "'*'", "'/'", "'+'", "'-'", undefined,
 		undefined, undefined, "'log'",
 	];
 	private static readonly _SYMBOLIC_NAMES: Array<string | undefined> = [
-		undefined, undefined, undefined, undefined, "POW", "MUL", "DIV", "ADD", 
-		"SUB", "NUMBER", "CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF", 
-		"ID_REF_12CHAR", "ID_REF_8CHAR", "ID_REF_4CHAR", "ID_REF_3CHAR", "ID_REF_CHAR", 
+		undefined, undefined, undefined, undefined, "POW", "MUL", "DIV", "ADD",
+		"SUB", "NUMBER", "CONSTANTS", "ARG_FUNKTION", "ARG2_FUNKTION", "ID_REF",
+		"ID_REF_12CHAR", "ID_REF_8CHAR", "ID_REF_4CHAR", "ID_REF_3CHAR", "ID_REF_CHAR",
 		"WHITESPACE",
 	];
 	public static readonly VOCABULARY: Vocabulary = new VocabularyImpl(datacurator_grammarLexer._LITERAL_NAMES, datacurator_grammarLexer._SYMBOLIC_NAMES, []);
@@ -171,4 +168,3 @@ export class datacurator_grammarLexer extends Lexer {
 	}
 
 }
-

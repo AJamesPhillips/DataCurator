@@ -4,14 +4,8 @@ import { prepare_new_contextless_wcomponent_object } from "./CRUD_helpers/prepar
 import { get_wcomponent_VAPs_represent } from "./get_wcomponent_VAPs_represent"
 import {
     WComponent,
-    wcomponent_is_allowed_to_have_state_VAP_sets,
-    wcomponent_is_statev2,
-    wcomponent_is_action,
-    wcomponent_is_causal_link,
-    WComponentsById,
-    wcomponent_is_state_value,
+    WComponentsById
 } from "./interfaces/SpecialisedObjects"
-import type { WComponentStateV2SubType } from "./interfaces/state"
 import { VAPsType } from "./interfaces/VAPsType"
 
 

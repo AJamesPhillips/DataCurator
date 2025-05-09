@@ -1,18 +1,18 @@
+import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 
-import "./BaseFormEditSharing.scss"
-import type { SupabaseAccessControl, SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"
-import { AccessControlEntry } from "./AccessControlEntry"
-import { get_access_controls_for_base } from "../supabase/access_controls"
-import type { AsyncState } from "../utils/async_state"
-import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabaseErrors"
-import type { RootState } from "../state/State"
-import { AddAccessControlEntry } from "./AddAccessControl"
 import { SyncButton } from "../sharedf/SyncButton"
 import { pub_sub } from "../state/pub_sub/pub_sub"
+import type { RootState } from "../state/State"
+import { get_access_controls_for_base } from "../supabase/access_controls"
+import type { SupabaseAccessControl, SupabaseKnowledgeBaseWithAccess } from "../supabase/interfaces"
+import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabaseErrors"
+import type { AsyncState } from "../utils/async_state"
+import { AccessControlEntry } from "./AccessControlEntry"
+import { AddAccessControlEntry } from "./AddAccessControl"
+import "./BaseFormEditSharing.scss"
 
 
 

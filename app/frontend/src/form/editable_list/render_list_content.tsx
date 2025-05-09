@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import { EditableListEntry, EditableListEntryItemProps, ListItemCRUDRequiredU } from "./EditableListEntry"
 import type { ExpandableListContentProps } from "./interfaces"

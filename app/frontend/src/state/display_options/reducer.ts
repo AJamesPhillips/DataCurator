@@ -3,20 +3,20 @@ import type { AnyAction } from "redux"
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import {
-    is_set_time_resolution,
-    is_set_validity_filter,
     is_set_certainty_formatting,
-    is_toggle_consumption_formatting,
     is_set_display_by_simulated_time,
-    is_set_or_toggle_focused_mode,
-    is_set_show_help_menu,
     is_set_display_time_marks,
     is_set_or_toggle_animate_connections,
-    is_set_or_toggle_show_large_grid,
     is_set_or_toggle_circular_links,
     is_set_or_toggle_enable_angular_connections,
+    is_set_or_toggle_focused_mode,
+    is_set_or_toggle_show_large_grid,
+    is_set_show_help_menu,
+    is_set_time_resolution,
+    is_set_validity_filter,
+    is_toggle_consumption_formatting,
 } from "./actions"
-import { derive_validity_filter, derive_certainty_formatting } from "./util"
+import { derive_certainty_formatting, derive_validity_filter } from "./util"
 
 
 

@@ -1,16 +1,15 @@
-import { h } from "preact"
 
-import type { KnowledgeView, KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
 import { EditableNumber } from "../form/EditableNumber"
-import { DEFAULT_DATETIME_LINE_CONFIG } from "./datetime_line"
+import type { DatetimeLineConfig } from "../shared/interfaces/datetime_lines"
+import type { KnowledgeView, KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
+import { Button } from "../sharedf/Button"
 import {
     get_composed_datetime_lines_config,
     get_foundational_knowledge_views,
 } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
-import { Button } from "../sharedf/Button"
-import type { DatetimeLineConfig } from "../shared/interfaces/datetime_lines"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { DEFAULT_DATETIME_LINE_CONFIG } from "./datetime_line"
 
 
 

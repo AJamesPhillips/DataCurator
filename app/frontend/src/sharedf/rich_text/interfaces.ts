@@ -1,5 +1,5 @@
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
-import type { WComponentsById, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent, WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

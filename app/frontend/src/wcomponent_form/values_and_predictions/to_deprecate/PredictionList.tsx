@@ -1,26 +1,26 @@
-import { h, FunctionalComponent } from "preact"
+import { FunctionalComponent, h } from "preact"
 import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { Prediction } from "../../../shared/uncertainty/interfaces"
-import { get_new_prediction_id } from "../../../shared/utils/ids"
-import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 import type {
     EditableListEntryItemProps,
     ListItemCRUD,
     ListItemCRUDRequiredC,
     ListItemCRUDRequiredU,
 } from "../../../form/editable_list/EditableListEntry"
-import type { RootState } from "../../../state/State"
-import { get_items_descriptor, ExpandableList } from "../../../form/editable_list/ExpandableList"
+import { ExpandableList, get_items_descriptor } from "../../../form/editable_list/ExpandableList"
 import { ListHeaderAddButton } from "../../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
+import type { Prediction } from "../../../shared/uncertainty/interfaces"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../../shared/utils/datetime"
+import { get_new_prediction_id } from "../../../shared/utils/ids"
 import type { CreationContextState } from "../../../state/creation_context/state"
-import { partition_and_prune_items_by_datetimes_and_versions } from "../../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
-import { remove_element, replace_element } from "../../../utils/list"
+import type { RootState } from "../../../state/State"
 import { selector_chosen_base_id } from "../../../state/user_info/selector"
+import { remove_element, replace_element } from "../../../utils/list"
+import { partition_and_prune_items_by_datetimes_and_versions } from "../../../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
+import { PredictionViewDetails, PredictionViewSummary } from "./PredictionView"
 
 
 

@@ -1,6 +1,6 @@
 import { describe, test } from "../../shared/utils/test"
-import { get_double_at_mentioned_uuids_from_text, get_uuids_from_text, is_valid_uuid, uuids_regex, uuids_regexes } from "./id_regexs"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
+import { get_double_at_mentioned_uuids_from_text, get_uuids_from_text, is_valid_uuid, uuids_regex, uuids_regexes } from "./id_regexs"
 
 
 export const test_id_regexs = describe.delay("id_regexs", () =>

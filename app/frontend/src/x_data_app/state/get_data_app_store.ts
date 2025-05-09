@@ -1,4 +1,4 @@
-import { createStore, Action, Store } from "redux"
+import { Action, createStore, Store } from "redux"
 
 import { root_reducer } from "./reducer"
 import { get_starting_state } from "./starting_state"

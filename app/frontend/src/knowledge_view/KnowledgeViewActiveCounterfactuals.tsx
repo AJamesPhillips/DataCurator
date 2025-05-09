@@ -3,14 +3,14 @@ import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
-import { is_defined } from "../shared/utils/is_defined"
-import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
-import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
-import { get_foundational_knowledge_views } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
-import type { RootState } from "../state/State"
-import { Button } from "../sharedf/Button"
 import type { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
+import { is_defined } from "../shared/utils/is_defined"
+import { Button } from "../sharedf/Button"
+import { get_title, RichTextType } from "../sharedf/rich_text/get_rich_text"
 import { get_composed_wc_id_maps_object } from "../state/derived/knowledge_views/get_composed_wc_id_maps_object"
+import { get_foundational_knowledge_views } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
+import { get_knowledge_view_from_state } from "../state/specialised_objects/accessors"
+import type { RootState } from "../state/State"
 
 
 

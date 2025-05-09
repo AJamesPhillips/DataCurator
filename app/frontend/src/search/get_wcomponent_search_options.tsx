@@ -3,6 +3,7 @@ import { h } from "preact"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
 import { JudgementBadgeConnected } from "../sharedf/judgement_badge/JudgementBadgeConnected"
+import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 import {
     WComponent,
     WComponentsById,
@@ -11,7 +12,6 @@ import {
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WcIdToCounterfactualsV2Map } from "../wcomponent_derived/interfaces/counterfactual"
-import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 

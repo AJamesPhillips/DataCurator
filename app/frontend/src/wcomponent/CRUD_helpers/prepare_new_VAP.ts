@@ -1,7 +1,7 @@
+import { get_new_VAP_id } from "../../shared/utils/ids"
 import type {
     StateValueAndPrediction,
 } from "../interfaces/state"
-import { get_new_VAP_id } from "../../shared/utils/ids"
 import { VAPsType } from "../interfaces/VAPsType"
 
 

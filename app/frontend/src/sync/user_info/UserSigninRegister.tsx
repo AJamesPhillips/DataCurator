@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import { Modal } from "../../modal/Modal"
 import { UserSigninRegisterForm } from "./UserSigninRegisterForm"

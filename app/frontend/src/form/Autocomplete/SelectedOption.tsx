@@ -1,10 +1,10 @@
-import { h } from "preact"
-import { ButtonGroup, IconButton, Tooltip, Typography } from "@mui/material"
 import ClearIcon from "@mui/icons-material/Clear"
+import { ButtonGroup, IconButton, Tooltip, Typography } from "@mui/material"
+import { h } from "preact"
 
 import { Button } from "../../sharedf/Button"
-import type { AutocompleteOption } from "./interfaces"
 import { color_to_opposite, color_to_string } from "../../sharedf/color"
+import type { AutocompleteOption } from "./interfaces"
 
 
 

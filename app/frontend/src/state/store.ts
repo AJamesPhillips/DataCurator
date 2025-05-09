@@ -1,4 +1,4 @@
-import { createStore, Action, Store, AnyAction } from "redux"
+import { Action, AnyAction, createStore, Store } from "redux"
 import { register_window_focus_session_check } from "../sync/user_info/window_focus_session_check"
 import { register_window_title_updater_subscriber } from "../window_title/register_window_title_updater_subscriber"
 import { controls_subscribers } from "./controls/subscribers"

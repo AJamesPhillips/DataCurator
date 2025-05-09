@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { RootState } from "../state/State"
 import "./Editable.css"
 import "./EditableNumber.css"
-import type { RootState } from "../state/State"
 import { EditableTextSingleLine } from "./editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "./editable_text/editable_text_common"
 

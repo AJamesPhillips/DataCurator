@@ -1,15 +1,15 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./WComponentJudgements.css"
-import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../../state/State"
+import { useMemo } from "preact/hooks"
 import { JudgementBadgeConnected } from "../../sharedf/judgement_badge/JudgementBadgeConnected"
-import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import { JudgementBadgeSimple } from "../../sharedf/judgement_badge/JudgementBadgeSimple"
 import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
-import { useMemo } from "preact/hooks"
+import "./WComponentJudgements.css"
 
 
 

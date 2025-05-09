@@ -1,14 +1,14 @@
 import { SortDirection, sort_list } from "../../shared/utils/sort"
-import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import { get_parsed_value_represented_by_a_VAP } from "../../wcomponent/value/parse_value"
 import type { VAPVisual } from "../interfaces/value"
 import { get_boolean_representation, parsed_value_to_string } from "../value/parsed_value_presentation"
 import {
     add_uncertain_VAP_visual,
     ensure_VAP_set_entries_consistent_with_representing_type,
 } from "./utils_to_convert_VAP_set_to_visuals"
-import { get_parsed_value_represented_by_a_VAP } from "../../wcomponent/value/parse_value"
 
 
 

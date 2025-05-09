@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { date2str_auto, get_today_date } from "../../shared/utils/date_helpers"
 import { Button } from "../../sharedf/Button"

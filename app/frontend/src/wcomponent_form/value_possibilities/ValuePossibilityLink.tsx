@@ -1,15 +1,14 @@
-import { h } from "preact"
-import { useMemo } from "preact/hooks"
 import LinkOffIcon from "@mui/icons-material/LinkOff"
+import { useMemo } from "preact/hooks"
 
-import "./ValuePossibilityLink.css"
-import type { StateValueAndPrediction as VAP } from "../../wcomponent/interfaces/state"
 import { AddLinkIcon } from "../../sharedf/icons/AddLinkIcon"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import { LinkWorkingIcon } from "../../sharedf/icons/LinkWorkingIcon"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import type { StateValueAndPrediction as VAP } from "../../wcomponent/interfaces/state"
 import {
     get_value_possibilities_by_value,
 } from "../../wcomponent/value_possibilities/get_value_possibilities_by_value"
+import "./ValuePossibilityLink.css"
 
 
 

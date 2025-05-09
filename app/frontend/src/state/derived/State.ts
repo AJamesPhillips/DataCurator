@@ -1,16 +1,16 @@
+import type { ComposedDatetimeLineConfig } from "../../shared/interfaces/datetime_lines"
 import type {
     KnowledgeView,
     KnowledgeViewTreeSortType,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
+import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
 import type {
     WComponent, WComponentsById,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
-import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
-import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import type { OverlappingWcIdMap } from "../../wcomponent_derived/interfaces/canvas"
-import type { ComposedDatetimeLineConfig } from "../../shared/interfaces/datetime_lines"
+import type { WcIdToCounterfactualsV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
 import { DerivedAvailableFilterOptions } from "../filter_context/utils"
 
 

@@ -1,20 +1,20 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 
-import "./LandingPage.scss"
 import {
     Box,
     Button,
     Container,
-    ThemeProvider,
-    Theme,
     StyledEngineProvider,
+    Theme,
+    ThemeProvider,
     Typography,
 } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
-import { DefaultTheme } from "../ui_themes/material_default"
-import { get_supabase } from "../supabase/get_supabase"
 import { get_persisted_state_object } from "../state/persistence/persistence_utils"
 import type { UserInfoState } from "../state/user_info/state"
+import { get_supabase } from "../supabase/get_supabase"
+import { DefaultTheme } from "../ui_themes/material_default"
+import "./LandingPage.scss"
 
 
 

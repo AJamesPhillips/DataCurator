@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { grid_small_step, h_step, round_coordinate_small_step, v_step } from "../canvas/position_utils"

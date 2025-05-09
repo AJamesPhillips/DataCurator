@@ -1,3 +1,6 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
+import RefreshIcon from "@mui/icons-material/Refresh"
+import WarningIcon from "@mui/icons-material/Warning"
 import Accordion from "@mui/material/Accordion"
 import AccordionDetails from "@mui/material/AccordionDetails"
 import AccordionSummary from "@mui/material/AccordionSummary"
@@ -9,16 +12,13 @@ import FormLabel from "@mui/material/FormLabel"
 import Radio from "@mui/material/Radio"
 import RadioGroup from "@mui/material/RadioGroup"
 import Typography from "@mui/material/Typography"
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import RefreshIcon from "@mui/icons-material/Refresh"
-import WarningIcon from "@mui/icons-material/Warning"
 
 import { useState } from "preact/hooks"
 import { AutocompleteProps, AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 
+import { yellow } from "@mui/material/colors"
 import { Modal } from "../modal/Modal"
 import type { SearchFields, SearchType } from "../state/search/state"
-import { yellow } from "@mui/material/colors"
 
 
 

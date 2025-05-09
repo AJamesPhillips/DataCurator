@@ -1,16 +1,16 @@
+import { Box } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box } from "@mui/material"
 
-import "./KnowledgeTimeView.scss"
-import type { RootState } from "../state/State"
-import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 import { MainArea } from "../layout/MainArea"
-import { SortDirection, sort_list } from "../shared/utils/sort"
-import { WComponent, wcomponent_has_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
-import { ConnectedValueAndPredictionSetSummary } from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary"
 import type { TimeResolution } from "../shared/utils/datetime"
+import { sort_list, SortDirection } from "../shared/utils/sort"
+import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
+import type { RootState } from "../state/State"
+import { WComponent, wcomponent_has_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { ConnectedValueAndPredictionSetSummary } from "../wcomponent_canvas/node/ConnectedValueAndPredictionSetSummary"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
+import "./KnowledgeTimeView.scss"
 
 
 

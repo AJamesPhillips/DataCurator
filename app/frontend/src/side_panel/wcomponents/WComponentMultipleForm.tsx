@@ -1,28 +1,28 @@
 import { FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { ACTIONS } from "../../state/actions"
-import type { RootState } from "../../state/State"
+import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
+import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
+import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import { EditablePosition } from "../../form/EditablePosition"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
+import { LabelsEditor } from "../../labels/LabelsEditor"
+import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
+import { is_defined } from "../../shared/utils/is_defined"
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import { ACTIONS } from "../../state/actions"
+import { get_middle_of_screen } from "../../state/display_options/display"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponents_from_ids,
 } from "../../state/specialised_objects/accessors"
-import { LabelsEditor } from "../../labels/LabelsEditor"
-import { is_defined } from "../../shared/utils/is_defined"
-import { ConfirmatoryDeleteButton } from "../../form/ConfirmatoryDeleteButton"
-import type { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
-import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
-import { AlignComponentForm } from "../../wcomponent_form/AlignComponentForm"
-import { WComponent, wcomponent_is_causal_link, WComponentCausalConnection } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkForm"
-import { AutocompleteText } from "../../form/Autocomplete/AutocompleteText"
-import { wcomponent_type_options } from "../../wcomponent_form/type_options"
-import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
-import { get_middle_of_screen } from "../../state/display_options/display"
+import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
+import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import { WComponent, wcomponent_is_causal_link } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { AlignComponentForm } from "../../wcomponent_form/AlignComponentForm"
+import { wcomponent_type_options } from "../../wcomponent_form/type_options"
+import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkForm"
 
 
 

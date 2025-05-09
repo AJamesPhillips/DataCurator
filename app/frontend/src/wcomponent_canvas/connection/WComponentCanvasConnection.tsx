@@ -2,37 +2,37 @@ import { FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./WComponentCanvasConnection.scss"
 import { CanvasConnection } from "../../canvas/connections/CanvasConnection"
 import { ConnectionEndType } from "../../canvas/connections/ConnectionEnd"
-import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { bounded } from "../../shared/utils/bounded"
-import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import { ACTIONS } from "../../state/actions"
+import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
+import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import {
+    ConnectionLineBehaviour,
     WComponent,
-    wcomponent_is_plain_connection,
-    wcomponent_is_judgement_or_objective,
     wcomponent_can_render_connection,
     wcomponent_is_causal_link,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_plain_connection,
     wcomponent_is_statev2,
-    ConnectionLineBehaviour,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import {
     apply_counterfactuals_v2_to_VAP_set,
 } from "../../wcomponent_derived/value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
+import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
-import { ACTIONS } from "../../state/actions"
-import { get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
 import {
     calc_connection_wcomponent_should_display,
-    calc_judgement_connection_wcomponent_should_display,
     calc_display_opacity,
+    calc_judgement_connection_wcomponent_should_display,
 } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
-import { get_VAP_set_id_to_counterfactual_v2_map } from "../../state/derived/accessor"
 import { get_connection_termini } from "./connection_termini"
+import "./WComponentCanvasConnection.scss"
 
 
 

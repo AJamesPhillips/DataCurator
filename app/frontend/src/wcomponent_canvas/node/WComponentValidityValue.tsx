@@ -1,12 +1,12 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { RootState } from "../../state/State"
 import type {
     WComponent,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../../state/State"
-import { DisplayValue } from "../../wcomponent_derived/shared_components/DisplayValue"
 import { get_wcomponent_validity_UI_value } from "../../wcomponent_derived/get_wcomponent_validity_UI_value"
+import { DisplayValue } from "../../wcomponent_derived/shared_components/DisplayValue"
 
 
 

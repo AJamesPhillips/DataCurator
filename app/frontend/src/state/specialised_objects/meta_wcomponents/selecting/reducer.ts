@@ -4,14 +4,14 @@ import { toggle_item_in_list } from "../../../../utils/list"
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
 import {
-    is_clicked_wcomponent,
-    is_clear_selected_wcomponents,
-    is_pointerdown_on_connection_terminal,
-    is_clear_pointerupdown_on_connection_terminal,
-    is_set_selected_wcomponents,
     ActionSetSelectedWcomponents,
-    is_set_wcomponent_ids_to_move,
+    is_clear_pointerupdown_on_connection_terminal,
+    is_clear_selected_wcomponents,
+    is_clicked_wcomponent,
     is_pointerdown_on_component,
+    is_pointerdown_on_connection_terminal,
+    is_set_selected_wcomponents,
+    is_set_wcomponent_ids_to_move,
 } from "./actions"
 
 

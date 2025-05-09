@@ -2,8 +2,8 @@ import { TemporalUncertainty } from "../shared/uncertainty/interfaces"
 import { describe, test } from "../shared/utils/test"
 import {
     StateValueAndPrediction,
-    WComponentNodeStateV2,
     StateValueAndPredictionsSet,
+    WComponentNodeStateV2,
 } from "../wcomponent/interfaces/state"
 import { get_wcomponent_state_UI_value } from "./get_wcomponent_state_UI_value"
 import { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"

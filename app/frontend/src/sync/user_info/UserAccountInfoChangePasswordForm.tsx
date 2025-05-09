@@ -1,14 +1,14 @@
-import { FunctionalComponent } from "preact"
-import { useState } from "preact/hooks"
-import { connect, ConnectedProps } from "react-redux"
 import { Box, Button, FormControl, FormGroup, TextField } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
 import type { ApiError } from "@supabase/supabase-js"
+import { FunctionalComponent } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { get_supabase } from "../../supabase/get_supabase"
+import "../common.scss"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 
 

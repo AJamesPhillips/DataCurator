@@ -1,8 +1,8 @@
 import { describe, test } from "../../shared/utils/test"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type { StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
-import { prepare_new_VAP } from "./prepare_new_VAP"
 import { get_value_possibilities_by_value } from "../value_possibilities/get_value_possibilities_by_value"
+import { prepare_new_VAP } from "./prepare_new_VAP"
 
 
 

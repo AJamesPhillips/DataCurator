@@ -1,9 +1,9 @@
 // import { DateTime } from "luxon"
 
+import { uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
 import type { TemporalUncertainty } from "../shared/uncertainty/interfaces"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import type { TimeResolution } from "../shared/utils/datetime"
-import { uncertain_datetime_is_eternal } from "../shared/uncertainty/datetime"
 
 
 

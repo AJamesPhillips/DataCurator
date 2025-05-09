@@ -1,13 +1,13 @@
 import { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { sort_list, SortDirection } from "../../shared/utils/sort"
 import {
-    partition_items_by_created_at_datetime,
     get_created_at_ms,
+    partition_items_by_created_at_datetime,
 } from "../../shared/utils_datetime/utils_datetime"
 import {
+    WComponent,
     wcomponent_is_state_value,
     wcomponent_is_statev2,
-    WComponent,
     WComponentsById,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"

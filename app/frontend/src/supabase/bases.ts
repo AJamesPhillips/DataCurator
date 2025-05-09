@@ -1,9 +1,9 @@
 import { get_supabase } from "./get_supabase"
 import type {
-    SupabaseKnowledgeBase,
+    DBSupabaseKnowledgeBaseWithAccess,
     JoinedAccessControlsPartial,
-    SupabaseKnowledgeBaseWithAccess,
-    DBSupabaseKnowledgeBaseWithAccess
+    SupabaseKnowledgeBase,
+    SupabaseKnowledgeBaseWithAccess
 } from "./interfaces"
 
 

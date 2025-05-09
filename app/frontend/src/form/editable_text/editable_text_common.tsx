@@ -1,13 +1,13 @@
 import { FunctionalComponent, h } from "preact"
-import { Ref, useEffect, useMemo, useRef, useState } from "preact/hooks"
+import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 
-import "../Editable.css"
+import { connect, ConnectedProps } from "react-redux"
+import type { CreationContext } from "../../creation_context/interfaces"
+import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
-import { connect, ConnectedProps } from "react-redux"
-import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
+import "../Editable.css"
 import { ConditionalWComponentSearchWindow, OnFocusSetSelection } from "./ConditionalWComponentSearchWindow"
-import type { CreationContext } from "../../creation_context/interfaces"
 
 
 

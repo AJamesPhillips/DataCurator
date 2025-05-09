@@ -1,34 +1,34 @@
+import Box from "@mui/material/Box"
 import { h } from "preact"
 import { useState } from "preact/hooks"
-import Box from "@mui/material/Box"
 
 import {
-    EditableListEntryItemProps,
     EditableListEntry,
-    ListItemCRUDRequiredCUD,
+    EditableListEntryItemProps,
     ListItemCRUDRequiredCU,
+    ListItemCRUDRequiredCUD,
 } from "../../form/editable_list/EditableListEntry"
-import { get_items_descriptor, ExpandableList } from "../../form/editable_list/ExpandableList"
+import { ExpandableList, get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import type { ExpandableListContentProps } from "../../form/editable_list/interfaces"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
+import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import type { CreationContextState } from "../../state/creation_context/state"
+import { remove_element, replace_element } from "../../utils/list"
+import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { Tense } from "../../wcomponent/interfaces/datetime"
-import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
 import type {
     StateValueAndPredictionsSet as VAPSet,
 } from "../../wcomponent/interfaces/state"
-import { replace_element, remove_element } from "../../utils/list"
+import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import {
-    get_summary_for_single_VAP_set,
-    get_details_for_single_VAP_set,
     get_details2_for_single_VAP_set,
+    get_details_for_single_VAP_set,
+    get_summary_for_single_VAP_set,
 } from "./common"
 import { new_value_and_prediction_set__jsx_factory } from "./NewValueAndPredictionSet"
 import { ValueAndPredictionSetOlderVersions } from "./ValueAndPredictionSetOlderVersions"
-import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
-import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 
 
 

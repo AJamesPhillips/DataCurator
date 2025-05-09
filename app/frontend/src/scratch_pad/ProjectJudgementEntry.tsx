@@ -1,17 +1,17 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
 import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
-import { get_wcomponent_state_UI_value } from "../wcomponent_derived/get_wcomponent_state_UI_value"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
-import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { get_title } from "../sharedf/rich_text/get_rich_text"
-import { format_wcomponent_url } from "../sharedf/rich_text/templates"
 import { RichMarkDown } from "../sharedf/rich_text/RichMarkDown"
+import { format_wcomponent_url } from "../sharedf/rich_text/templates"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import { lefttop_to_xy } from "../state/display_options/display"
 import type { RootState } from "../state/State"
+import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import { get_wcomponent_state_UI_value } from "../wcomponent_derived/get_wcomponent_state_UI_value"
 
 
 

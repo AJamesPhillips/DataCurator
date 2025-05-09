@@ -1,16 +1,16 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../../state/State"
-import { core_calculate_judgement_value } from "./calculate_judgement_value"
-import { JudgementBadge } from "./JudgementBadge"
 import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../../state/specialised_objects/accessors"
+import type { RootState } from "../../state/State"
+import { wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
+import { core_calculate_judgement_value } from "./calculate_judgement_value"
+import { JudgementBadge } from "./JudgementBadge"
 
 
 

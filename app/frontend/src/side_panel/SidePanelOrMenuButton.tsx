@@ -1,8 +1,8 @@
-import { FunctionalComponent } from "preact"
-import { IconButton } from "@mui/material"
-import { connect, ConnectedProps } from "react-redux"
 import CloseIcon from "@mui/icons-material/Close"
 import MenuIcon from "@mui/icons-material/Menu"
+import { IconButton } from "@mui/material"
+import { FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"

@@ -1,6 +1,6 @@
 
 // https://stackoverflow.com/a/64522938/539490
-export{}
+export { }
 declare global {
     interface Array<T> {
         first (): T | undefined

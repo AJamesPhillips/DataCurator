@@ -1,17 +1,16 @@
-import { h } from "preact"
 
+import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
+import { ExpandableList, ExpandedListStates } from "../form/editable_list/ExpandableList"
 import { ExpandableListWithAddButton } from "../form/editable_list/ExpandableListWithAddButton"
 import { factory_render_list_content } from "../form/editable_list/render_list_content"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
-import { Link } from "../sharedf/Link"
-import { create_new_knowledge_view } from "./create_new_knowledge_view"
-import { optional_view_type } from "../views/optional_view_type"
-import type { ViewType } from "../state/routing/interfaces"
-import { ExpandableList, ExpandedListStates } from "../form/editable_list/ExpandableList"
 import { sentence_case } from "../shared/utils/sentence_case"
-import type { KnowledgeViewListProps } from "./interfaces"
+import { Link } from "../sharedf/Link"
+import type { ViewType } from "../state/routing/interfaces"
+import { optional_view_type } from "../views/optional_view_type"
 import { factory_get_kv_details, make_default_kv_title } from "./common"
-import type { ListItemCRUD } from "../form/editable_list/EditableListEntry"
+import { create_new_knowledge_view } from "./create_new_knowledge_view"
+import type { KnowledgeViewListProps } from "./interfaces"
 
 
 

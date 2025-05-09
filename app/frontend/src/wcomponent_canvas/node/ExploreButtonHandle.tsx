@@ -1,30 +1,30 @@
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
+import SearchIcon from "@mui/icons-material/Search"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Store } from "redux"
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
-import SearchIcon from "@mui/icons-material/Search"
 
-import "./Handles.scss"
 import {
     get_new_knowledge_view_object,
     navigate_to_knowledge_view_or_kvwcomponent,
 } from "../../knowledge_view/create_new_knowledge_view"
-import { get_today_str } from "../../shared/utils/date_helpers"
+import type { HasBaseId } from "../../shared/interfaces/base"
 import type {
-    KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
     KnowledgeViewWComponentEntry,
+    KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
+import { get_today_str } from "../../shared/utils/date_helpers"
+import { AddSearchIcon } from "../../sharedf/icons/AddSearchIcon"
+import { get_title, RichTextType } from "../../sharedf/rich_text/get_rich_text"
+import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"
 import { ACTIONS } from "../../state/actions"
 import { get_overlapping_wcomponent_ids, get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import { get_middle_of_screen } from "../../state/display_options/display"
 import { get_current_composed_knowledge_view_from_state, get_wcomponent_from_state } from "../../state/specialised_objects/accessors"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
-import type { HasBaseId } from "../../shared/interfaces/base"
-import { get_middle_of_screen } from "../../state/display_options/display"
-import { AddSearchIcon } from "../../sharedf/icons/AddSearchIcon"
-import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
-import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"
+import "./Handles.scss"
 
 
 

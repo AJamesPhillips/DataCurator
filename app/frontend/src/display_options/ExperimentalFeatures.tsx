@@ -1,7 +1,7 @@
 import { FunctionComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { WarningTriangleV2 } from "../sharedf/WarningTriangleV2"
-import { connect, ConnectedProps } from "react-redux"
 import { ACTIONS } from "../state/actions"
 import { RootState } from "../state/State"
 

@@ -1,7 +1,6 @@
-import { update_substate } from "../../utils/update_state"
+    import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import { get_composed_wcomponents_by_id } from "./get_composed_wcomponents_by_id"
-import { get_knowledge_view_given_routing } from "./knowledge_views/get_knowledge_view_given_routing"
 
 
 

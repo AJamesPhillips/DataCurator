@@ -1,6 +1,6 @@
-import { describe, test } from "./utils/test"
 import { format_number_to_string } from "./format_number_to_string"
 import { NUMBER_DISPLAY_TYPES } from "./types"
+import { describe, test } from "./utils/test"
 
 
 

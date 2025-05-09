@@ -1,19 +1,18 @@
 import { h } from "preact"
-import { Box } from "@mui/material"
 
-import "./ValueAndPredictionSetSummary.scss"
-import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
+import { Link } from "../../sharedf/Link"
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
-import { WComponentJudgements } from "./WComponentJudgements"
 import type {
     CounterfactualV2StateValueAndPredictionSetInfo,
     TargetVAPIdCounterfactualInfoEntry,
     TargetVAPIdCounterfactualInfoMap,
 } from "../../wcomponent/interfaces/counterfactual"
-import { ExploreButtonHandle } from "./ExploreButtonHandle"
-import { Link } from "../../sharedf/Link"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
-import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
+import { ExploreButtonHandle } from "./ExploreButtonHandle"
+import "./ValueAndPredictionSetSummary.scss"
+import { WComponentJudgements } from "./WComponentJudgements"
 
 
 

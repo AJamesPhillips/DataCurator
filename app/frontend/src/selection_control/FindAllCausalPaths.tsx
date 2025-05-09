@@ -4,7 +4,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import { make_graph } from "../shared/utils/graph"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"

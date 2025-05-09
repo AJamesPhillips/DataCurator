@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"

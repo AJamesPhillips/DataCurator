@@ -1,9 +1,8 @@
-import { Button, Typography } from "@mui/material"
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"
+import { Button, Typography } from "@mui/material"
 import type { AuthUser as SupabaseAuthUser } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
-import { useRef } from "preact/hooks"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../../state/State"

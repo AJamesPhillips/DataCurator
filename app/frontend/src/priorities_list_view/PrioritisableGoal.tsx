@@ -1,13 +1,13 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableNumber } from "../form/EditableNumber"
-import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import type { PrioritisedGoalOrActionAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import type { WComponentHasObjectives } from "../wcomponent/interfaces/judgement"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import type { PrioritisedGoalOrActionAttributes, WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 
 
 

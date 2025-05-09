@@ -1,9 +1,8 @@
-import { h } from "preact"
 
-import "./PredictionBadge.css"
-import { PredictionsBadgeConvictionMask } from "./PredictionBadgeConvictionMask"
 import { bounded } from "../../shared/utils/bounded"
 import { calc_new_counterfactual_state } from "./calc_new_counterfactual_state"
+import "./PredictionBadge.css"
+import { PredictionsBadgeConvictionMask } from "./PredictionBadgeConvictionMask"
 
 
 

@@ -1,5 +1,4 @@
 import type { Base } from "../interfaces/base"
-import type { WComponentCounterfactualV2 } from "../../wcomponent/interfaces/counterfactual"
 
 
 

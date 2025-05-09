@@ -1,10 +1,10 @@
 import {
     WComponent,
-    wcomponent_is_allowed_to_have_state_VAP_sets,
-    wcomponent_is_statev2,
     wcomponent_is_action,
-    WComponentsById,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_state_value,
+    wcomponent_is_statev2,
+    WComponentsById,
 } from "./interfaces/SpecialisedObjects"
 import type { WComponentStateV2SubType } from "./interfaces/state"
 import { VAPsType } from "./interfaces/VAPsType"

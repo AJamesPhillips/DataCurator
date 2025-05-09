@@ -1,8 +1,8 @@
 import { h } from "preact"
 
+import { Box } from "@mui/material"
 import "./MainArea.scss"
 import { MainContentControls } from "./MainContentControls"
-import { Box } from "@mui/material"
 
 
 

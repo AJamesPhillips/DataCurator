@@ -1,19 +1,19 @@
+import { useMemo } from "preact/hooks"
+import {
+    CalculationErrorOrWarningMessage,
+    FormatCalculationErrorOrWarning,
+    get_error_or_warning_message,
+} from "../calculations/FormatCalculationErrorOrWarning"
+import { PlainCalculationObject } from "../calculations/interfaces"
+import { perform_calculations } from "../calculations/perform_calculations"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import {
     PartialWComponentWithoutType,
     WComponent,
     WComponentCausalConnection,
     WComponentsById,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
-import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
-import { perform_calculations } from "../calculations/perform_calculations"
-import { PlainCalculationObject } from "../calculations/interfaces"
-import {
-    CalculationErrorOrWarningMessage,
-    FormatCalculationErrorOrWarning,
-    get_error_or_warning_message,
-} from "../calculations/FormatCalculationErrorOrWarning"
-import { useEffect, useMemo, useState } from "preact/hooks"
 
 
 

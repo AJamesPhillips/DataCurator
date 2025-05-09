@@ -2,17 +2,17 @@ import { FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+import { ACTIONS } from "../state/actions"
+import { get_actually_display_time_sliders } from "../state/controls/accessors"
 import {
     get_current_composed_knowledge_view_from_state,
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { ACTIONS } from "../state/actions"
-import type { PositionAndZoom } from "./interfaces"
 import { calculate_if_components_on_screen } from "./calculate_if_components_on_screen"
 import {
     calculate_all_display_combinations_of_spatial_temporal_position_to_move_to,
 } from "./calculate_spatial_temporal_position_to_move_to"
-import { get_actually_display_time_sliders } from "../state/controls/accessors"
+import type { PositionAndZoom } from "./interfaces"
 import { MoveToItemButton } from "./MoveToItemButton"
 
 

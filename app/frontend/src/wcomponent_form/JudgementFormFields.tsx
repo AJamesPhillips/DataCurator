@@ -5,21 +5,21 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../shared/utils/sentence_case"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
+import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
+import { get_VAP_set_id_to_counterfactual_v2_map } from "../state/derived/accessor"
+import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
+import type { RootState } from "../state/State"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import {
     judgement_operators,
     judgement_trends,
     WComponentJudgement,
 } from "../wcomponent/interfaces/judgement"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { get_VAP_set_id_to_counterfactual_v2_map } from "../state/derived/accessor"
-import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
-import type { RootState } from "../state/State"
-import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
-import { JudgementBadge } from "../sharedf/judgement_badge/JudgementBadge"
-import { WComponentFromTo } from "./WComponentFromTo"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { get_boolean_representation } from "../wcomponent_derived/value/parsed_value_presentation"
+import { WComponentFromTo } from "./WComponentFromTo"
 
 
 

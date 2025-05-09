@@ -1,7 +1,7 @@
+import type { PostgrestResponse } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import type { PostgrestResponse } from "@supabase/supabase-js"
 
 import { ConfirmatoryButton } from "../../form/ConfirmatoryButton"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"

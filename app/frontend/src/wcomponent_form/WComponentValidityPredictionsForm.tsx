@@ -1,15 +1,15 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import {
-    WComponent,
-    WComponentCanHaveValidityPredictions,
-    wcomponent_is_plain_connection,
-} from "../wcomponent/interfaces/SpecialisedObjects"
+import { useState } from "preact/hooks"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
+import {
+    WComponent,
+    wcomponent_is_plain_connection,
+    WComponentCanHaveValidityPredictions,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
-import { useState } from "preact/hooks"
 
 
 

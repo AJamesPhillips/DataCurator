@@ -1,14 +1,14 @@
 import type { Store } from "redux"
 
-import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 import type { HasBaseId } from "../../../shared/interfaces/base"
 import type { ConnectionTerminalSideType, ConnectionTerminalType, WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentConnectionType } from "../../../wcomponent/interfaces/wcomponent_base"
 import { ACTIONS } from "../../actions"
+import { pub_sub } from "../../pub_sub/pub_sub"
 import type { RootState } from "../../State"
 import { selector_chosen_base_id } from "../../user_info/selector"
 import { is_pointerup_on_component, is_pointerup_on_connection_terminal } from "../meta_wcomponents/selecting/actions"
-import { pub_sub } from "../../pub_sub/pub_sub"
+import { create_wcomponent } from "../wcomponents/create_wcomponent_type"
 
 
 

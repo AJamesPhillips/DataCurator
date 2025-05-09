@@ -1,6 +1,6 @@
+import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 import type { StateValueAndPrediction as VAP } from "../interfaces/state"
 import { VAPsType } from "../interfaces/VAPsType"
-import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 
 
 

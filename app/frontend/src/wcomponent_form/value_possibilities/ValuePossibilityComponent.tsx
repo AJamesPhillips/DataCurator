@@ -1,13 +1,13 @@
-import { useEffect, useState } from "preact/hooks"
-import { Box, IconButton, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
+import { Box, IconButton, Typography } from "@mui/material"
+import { useEffect, useState } from "preact/hooks"
 
 import "../../form/editable_list/EditableListEntry.css"
-import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
+import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
+import type { ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import { VALUE_POSSIBILITY_IDS_to_text } from "../../wcomponent/value/parse_value"
-import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 
 
 

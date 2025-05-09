@@ -1,7 +1,7 @@
 import type { AnyAction } from "redux"
 
 import { is_defined } from "../../../../shared/utils/is_defined"
-import type { WComponent, WComponentCommon } from "../../../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponent } from "../../../../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../../../State"
 import {
     get_wcomponents_from_state,

@@ -1,6 +1,6 @@
 import type { Action, AnyAction } from "redux"
 
-import type { SyncDataType, SYNC_STATUS } from "./state"
+import type { SYNC_STATUS, SyncDataType } from "./state"
 
 
 

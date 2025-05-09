@@ -5,18 +5,18 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../form/datetime_utils"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { is_defined } from "../shared/utils/is_defined"
-import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../wcomponent/interfaces/substate"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
+import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import type { RootState } from "../state/State"
+import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
+import { make_valid_selector, WComponentSubState, WComponentSubStateSelector } from "../wcomponent/interfaces/substate"
 import {
     convert_VAP_sets_to_visual_sub_state_value_possibilities,
     SimpleValuePossibilityWithSelected,
 } from "../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
-import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import {
     prune_items_by_created_at_and_versions_and_sort_by_datetimes,
 } from "../wcomponent_derived/value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"

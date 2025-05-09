@@ -2,15 +2,15 @@ import { Button, ButtonGroup } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./CreateNewWComponent.css"
 import { Button as FrontendButton } from "../../sharedf/Button"
-import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
-import { create_wcomponent } from "../../state/specialised_objects/wcomponents/create_wcomponent_type"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
 import { ACTIONS } from "../../state/actions"
-import { WComponentType, wcomponent_types } from "../../wcomponent/interfaces/wcomponent_base"
+import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { create_wcomponent } from "../../state/specialised_objects/wcomponents/create_wcomponent_type"
+import type { RootState } from "../../state/State"
+import { selector_chosen_base_id } from "../../state/user_info/selector"
+import { wcomponent_types, WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
+import "./CreateNewWComponent.css"
 
 
 

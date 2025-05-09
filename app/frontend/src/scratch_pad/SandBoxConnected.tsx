@@ -2,8 +2,6 @@ import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import type { RootState } from "../state/State"

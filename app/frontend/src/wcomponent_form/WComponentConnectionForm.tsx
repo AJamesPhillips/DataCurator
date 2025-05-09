@@ -1,13 +1,12 @@
-import { h } from "preact"
 
-import {
-    ConnectionLineBehaviour,
-    connection_line_behaviours,
-    WComponentConnection,
-} from "../wcomponent/interfaces/SpecialisedObjects"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { sentence_case } from "../shared/utils/sentence_case"
+import {
+    connection_line_behaviours,
+    ConnectionLineBehaviour,
+    WComponentConnection,
+} from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 

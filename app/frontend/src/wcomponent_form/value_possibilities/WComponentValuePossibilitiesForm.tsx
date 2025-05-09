@@ -1,22 +1,21 @@
-import { useState } from "preact/hooks"
 import { Box } from "@mui/material"
+import { useState } from "preact/hooks"
 
 import "../../form/editable_list/EditableListEntry.css"
-import { Button } from "../../sharedf/Button"
 import { get_items_by_id } from "../../shared/utils/get_items"
-import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import type { ValuePossibilitiesById, ValuePossibility } from "../../wcomponent/interfaces/possibility"
-import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
+import { Button } from "../../sharedf/Button"
+import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import {
     prepare_new_value_possibility,
 } from "../../wcomponent/CRUD_helpers/prepare_new_value_possibility"
-import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
+import { WComponent, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import type { ValuePossibilitiesById, ValuePossibility } from "../../wcomponent/interfaces/possibility"
 import type { StateValueAndPredictionsSet as VAPSet } from "../../wcomponent/interfaces/state"
 import {
     get_possibilities_from_VAP_sets,
 } from "../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
-import { WComponent, wcomponent_is_statev2 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
+import { ValuePossibilityComponent } from "./ValuePossibilityComponent"
 
 
 

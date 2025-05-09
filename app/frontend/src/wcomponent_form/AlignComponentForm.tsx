@@ -1,6 +1,8 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
+import { bezier_middle, derive_connection_coords } from "../canvas/connections/derive_coords"
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
@@ -8,14 +10,12 @@ import {
     get_current_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../state/specialised_objects/accessors"
+import { BulkUpdateChange } from "../state/specialised_objects/knowledge_views/bulk_edit/actions"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
-import { ButtonSnapXToDatetime } from "./ButtonSnapXToDatetime"
-import { BulkUpdateChange } from "../state/specialised_objects/knowledge_views/bulk_edit/actions"
 import { wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_connection_termini } from "../wcomponent_canvas/connection/connection_termini"
-import { bezier_middle, derive_connection_coords } from "../canvas/connections/derive_coords"
-import { ConnectionEndType } from "../canvas/connections/ConnectionEnd"
+import { ButtonSnapXToDatetime } from "./ButtonSnapXToDatetime"
 
 
 

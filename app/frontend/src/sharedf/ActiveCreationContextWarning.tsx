@@ -1,11 +1,11 @@
-import { FunctionalComponent } from "preact"
 import { IconButton, Tooltip } from "@mui/material"
+import { FunctionalComponent } from "preact"
 
 import PhotoFilterIcon from "@mui/icons-material/PhotoFilter"
-import type { RootState } from "../state/State"
 import { connect, ConnectedProps } from "react-redux"
-import { active_warning_styles } from "./active_warning_common"
 import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+import { active_warning_styles } from "./active_warning_common"
 
 
 

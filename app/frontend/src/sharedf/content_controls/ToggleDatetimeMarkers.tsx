@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Button } from "@mui/material"
+import { Box, Button, ButtonGroup } from "@mui/material"
 import { FunctionalComponent } from "preact"
 
 import { connect, ConnectedProps } from "react-redux"

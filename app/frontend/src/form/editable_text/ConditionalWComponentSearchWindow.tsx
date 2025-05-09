@@ -1,8 +1,7 @@
-import { h } from "preact"
 import { useRef } from "preact/hooks"
 
-import "../Editable.css"
 import { WComponentSearchWindow } from "../../search/WComponentSearchWindow"
+import "../Editable.css"
 
 
 

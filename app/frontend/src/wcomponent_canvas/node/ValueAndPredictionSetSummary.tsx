@@ -1,18 +1,17 @@
-import { h } from "preact"
-import { useState } from "preact/hooks"
 import { Box } from "@mui/material"
+import { useState } from "preact/hooks"
 
-import "./ValueAndPredictionSetSummary.scss"
-import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
-import {
-    convert_VAP_set_to_VAP_visuals,
-} from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import type {
     ComposedCounterfactualV2StateValueAndPredictionSet,
     TargetVAPIdCounterfactualInfoMap,
 } from "../../wcomponent/interfaces/counterfactual"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import {
+    convert_VAP_set_to_VAP_visuals,
+} from "../../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { ValueAndPredictionEntryRow } from "./ValueAndPredictionEntryRow"
+import "./ValueAndPredictionSetSummary.scss"
 
 
 

@@ -1,7 +1,7 @@
 import { describe, test } from "../../shared/utils/test"
 import { action_statuses } from "../interfaces/action"
-import { VAPsType } from "../interfaces/VAPsType"
 import type { SimpleValuePossibility } from "../interfaces/possibility"
+import { VAPsType } from "../interfaces/VAPsType"
 import {
     ORDERED_ACTION_VALUE_POSSIBILITY_ID,
     VALUE_POSSIBILITY_IDS,

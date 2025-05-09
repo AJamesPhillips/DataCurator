@@ -1,5 +1,4 @@
-import type { WComponentNodeStateV2, StateValueAndPrediction } from "../state"
-import type { WComponentConnection } from "../SpecialisedObjects"
+import type { StateValueAndPrediction, WComponentNodeStateV2 } from "../state"
 
 
 function test_num_over_time__test_case ()

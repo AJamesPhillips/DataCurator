@@ -1,25 +1,24 @@
+import type {
+    KnowledgeView,
+    KnowledgeViewTreeSortType,
+    KnowledgeViewsById,
+} from "../../shared/interfaces/knowledge_view"
+import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
+import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
+import { SortDirection, sort_list } from "../../shared/utils/sort"
+import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import {
     WComponent,
     WComponentsById,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_is_event,
-    wcomponent_is_statev2,
-    wcomponent_is_sub_state,
     wcomponent_is_allowed_to_have_state_VAP_sets,
+    wcomponent_is_event,
+    wcomponent_is_sub_state
 } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type {
-    KnowledgeView,
-    KnowledgeViewsById,
-    KnowledgeViewTreeSortType,
-} from "../../shared/interfaces/knowledge_view"
+import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
+import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
 import type { RootState } from "../State"
 import type { NestedKnowledgeViewIds, NestedKnowledgeViewIdsMap } from "../derived/State"
-import { SortDirection, sort_list } from "../../shared/utils/sort"
-import type { Prediction, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
-import { get_created_at_datetime, get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
-import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
-import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
-import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
 
 
 

@@ -1,16 +1,16 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import "../common.scss"
+import { useState } from "preact/hooks"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
-import { useState } from "preact/hooks"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { create_a_base } from "../../supabase/bases"
+import type { SupabaseKnowledgeBase } from "../../supabase/interfaces"
 import type { AsyncState } from "../../utils/async_state"
+import "../common.scss"
 import { AvailableBases } from "./AvailableBases"
 import { BaseForm } from "./BaseForm"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
-import type { SupabaseKnowledgeBase } from "../../supabase/interfaces"
 
 
 

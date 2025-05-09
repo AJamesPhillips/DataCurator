@@ -1,17 +1,17 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_new_created_ats } from "../shared/utils/datetime"
-import type { EventAt } from "../wcomponent/interfaces/event"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../state/State"
-import { selector_chosen_base_id } from "../state/user_info/selector"
-import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditablePercentage } from "../form/EditablePercentage"
 import type { Prediction } from "../shared/uncertainty/interfaces"
-import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
+import { get_new_created_ats } from "../shared/utils/datetime"
 import { Button } from "../sharedf/Button"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { PredictionBadge } from "../sharedf/prediction_badge/PredictionBadge"
+import type { RootState } from "../state/State"
+import { selector_chosen_base_id } from "../state/user_info/selector"
+import type { EventAt } from "../wcomponent/interfaces/event"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
 
 
 

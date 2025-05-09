@@ -1,11 +1,8 @@
 import { FunctionalComponent } from "preact"
-import { useState, useRef, useMemo } from "preact/hooks"
+import { useMemo, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import "./ActionsListView.scss"
-import { AddNewActionButton } from "./AddNewActionButton"
-import { PrioritisableAction } from "./PrioritisableAction"
-import { CanvasPointerEvent, CanvasPoint } from "../canvas/interfaces"
+import { CanvasPoint, CanvasPointerEvent } from "../canvas/interfaces"
 import { MainArea } from "../layout/MainArea"
 import { Base } from "../shared/interfaces/base"
 import { sort_list, SortDirection } from "../shared/utils/sort"
@@ -20,6 +17,9 @@ import { WComponentNodeAction } from "../wcomponent/interfaces/action"
 import { wcomponent_is_action } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../wcomponent/value/parse_value"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
+import "./ActionsListView.scss"
+import { AddNewActionButton } from "./AddNewActionButton"
+import { PrioritisableAction } from "./PrioritisableAction"
 
 
 

@@ -1,17 +1,17 @@
-import { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-import { Box, ButtonGroup, IconButton, Slider } from "@mui/material"
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
+import { Box, ButtonGroup, IconButton, Slider } from "@mui/material"
+import { FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
-import "./time_slider.scss"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
+import { date2str_auto } from "../shared/utils/date_helpers"
+import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import type { TimeSliderEvent } from "./interfaces"
 import { NowButton } from "./NowButton"
-import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
-import { date2str_auto } from "../shared/utils/date_helpers"
+import "./time_slider.scss"
 
 
 

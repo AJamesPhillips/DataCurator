@@ -2,15 +2,13 @@ import { Button, ButtonGroup } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { get_current_composed_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
-import { selector_chosen_base_id } from "../../state/user_info/selector"
-import { ACTIONS } from "../../state/actions"
 import { useMemo, useState } from "preact/hooks"
-import { get_store } from "../../state/store"
-import { wcomponent_is_not_deleted, WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { sort_list, SortDirection } from "../../shared/utils/sort"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
-import { SortDirection, sort_list } from "../../shared/utils/sort"
+import { ACTIONS } from "../../state/actions"
+import type { RootState } from "../../state/State"
+import { get_store } from "../../state/store"
+import { WComponent, wcomponent_is_not_deleted } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

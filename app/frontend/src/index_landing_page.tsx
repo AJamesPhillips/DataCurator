@@ -1,5 +1,5 @@
-import "./shared/utils/monkey_patch"
 import "./index.scss"
+import "./shared/utils/monkey_patch"
 
 import { render } from "preact"
 import "preact/devtools"

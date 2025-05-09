@@ -1,14 +1,14 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
-import { parse_knowledge_view } from "../../../wcomponent/parse_json/parse_knowledge_view"
+import { is_defined } from "../../../shared/utils/is_defined"
 import type { SupabaseReadKnowledgeView, SupabaseWriteKnowledgeView } from "../../../supabase/interfaces"
+import { WComponent, wcomponent_is_not_deleted } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { parse_knowledge_view } from "../../../wcomponent/parse_json/parse_knowledge_view"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
 import type { UpsertItemReturn } from "./interface"
 import { app_item_to_supabase, supabase_item_to_app } from "./item_convertion"
-import { wcomponent_is_not_deleted, WComponent } from "../../../wcomponent/interfaces/SpecialisedObjects"
-import { is_defined } from "../../../shared/utils/is_defined"
 
 
 

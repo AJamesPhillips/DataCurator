@@ -1,6 +1,5 @@
-import { PlainCalculationObject } from "../../calculations/interfaces"
 import type { Base } from "../../shared/interfaces/base"
-import type { TemporalUncertainty, PredictionBase } from "../../shared/uncertainty/interfaces"
+import type { PredictionBase, TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import type { ValuePossibilitiesById } from "./possibility"
 import type { WComponentCalculations, WComponentNodeBase } from "./wcomponent_base"
 

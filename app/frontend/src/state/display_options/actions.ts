@@ -1,7 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
 import type { TimeResolution } from "../../shared/utils/datetime"
-import type { ValidityFilterTypes, CertaintyFormattingTypes } from "./state"
+import type { CertaintyFormattingTypes, ValidityFilterTypes } from "./state"
 
 
 

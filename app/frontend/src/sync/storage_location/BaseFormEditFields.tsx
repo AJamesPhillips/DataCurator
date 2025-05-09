@@ -1,13 +1,13 @@
+import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
-import type { PostgrestError, User as SupabaseAuthUser } from "@supabase/supabase-js"
 
-import "../common.scss"
-import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
-import { modify_base } from "../../supabase/bases"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
-import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
 import { SelectKnowledgeView } from "../../knowledge_view/SelectKnowledgeView"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
+import { modify_base } from "../../supabase/bases"
+import type { SupabaseKnowledgeBaseWithAccess } from "../../supabase/interfaces"
+import "../common.scss"
+import { DisplaySupabasePostgrestError } from "../user_info/DisplaySupabaseErrors"
 
 
 

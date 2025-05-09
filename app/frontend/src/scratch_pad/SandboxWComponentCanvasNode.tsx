@@ -1,18 +1,18 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps, Provider } from "react-redux"
 
-import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
-import type { CreationContextState } from "../state/creation_context/state"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
-import type { WComponentNodeStateV2 } from "../wcomponent/interfaces/state"
 import { ACTIONS } from "../state/actions"
+import type { CreationContextState } from "../state/creation_context/state"
 import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_set"
+import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentNodeStateV2 } from "../wcomponent/interfaces/state"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { WComponentCanvasNode } from "../wcomponent_canvas/node/WComponentCanvasNode"
 
 
 

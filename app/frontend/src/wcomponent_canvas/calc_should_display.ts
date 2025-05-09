@@ -1,15 +1,15 @@
+import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
 import type { Prediction } from "../shared/uncertainty/interfaces"
 import { rescale } from "../shared/utils/bounded"
-import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../wcomponent_derived/get_wcomponent_validity_value"
+import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
+import type { CertaintyFormattingOption, ValidityFilterOption } from "../state/display_options/state"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
     WComponentConnection,
     wcomponent_has_event_at,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import type { ValidityFilterOption, CertaintyFormattingOption } from "../state/display_options/state"
-import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
+import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../wcomponent_derived/get_wcomponent_validity_value"
 
 
 

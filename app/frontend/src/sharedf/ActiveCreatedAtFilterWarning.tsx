@@ -1,12 +1,12 @@
-import { IconButton, Tooltip } from "@mui/material"
 import FilterIcon from "@mui/icons-material/Filter"
+import { IconButton, Tooltip } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
+import { ACTIONS } from "../state/actions"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { active_warning_styles } from "./active_warning_common"
-import { ACTIONS } from "../state/actions"
 
 
 

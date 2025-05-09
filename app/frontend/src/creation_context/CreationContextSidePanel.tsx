@@ -1,9 +1,9 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { EditableText } from "../form/editable_text/EditableText"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { EditableText } from "../form/editable_text/EditableText"
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"

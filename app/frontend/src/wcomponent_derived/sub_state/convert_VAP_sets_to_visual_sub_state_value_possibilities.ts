@@ -1,15 +1,15 @@
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import type { SimpleValuePossibility } from "../../wcomponent/interfaces/possibility"
+import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type {
     HasVAPSetsAndMaybeValuePossibilities,
-    StateValueAndPredictionsSet as VAPSet,
     StateValueCore,
+    StateValueAndPredictionsSet as VAPSet,
 } from "../../wcomponent/interfaces/state"
 import type { WComponentSubStateSelector } from "../../wcomponent/interfaces/substate"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import {
     get_simple_possibilities_from_values,
 } from "../../wcomponent/value_possibilities/get_possibilities_from_VAP_sets"
-import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { convert_VAP_set_to_VAP_visuals } from "../value_and_prediction/convert_VAP_set_to_VAP_visuals"
 
 

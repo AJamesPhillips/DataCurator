@@ -1,8 +1,6 @@
-import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { GenericData } from "./generic_data/GenericData"
-import { Spaces } from "./spaces/Spaces"
 
 
 

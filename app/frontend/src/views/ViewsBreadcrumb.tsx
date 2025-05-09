@@ -1,14 +1,14 @@
+import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@mui/material"
 
 import { AutocompleteText, OPTION_NONE_ID } from "../form/Autocomplete/AutocompleteText"
+import type { Color } from "../shared/interfaces/color"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
-import type { Color } from "../shared/interfaces/color"
 
 
 

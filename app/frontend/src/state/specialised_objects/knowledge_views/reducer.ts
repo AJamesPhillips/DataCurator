@@ -4,7 +4,7 @@ import type { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../share
 import { update_subsubstate } from "../../../utils/update_state"
 import type { RootState } from "../../State"
 import { is_update_specialised_object_sync_info } from "../../sync/actions"
-import {get_knowledge_view_from_state } from "../accessors"
+import { get_knowledge_view_from_state } from "../accessors"
 import { is_upsert_wcomponent } from "../wcomponents/actions"
 import {
     is_upsert_knowledge_view,

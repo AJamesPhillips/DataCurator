@@ -1,7 +1,7 @@
 import { CSSProperties } from "preact/compat"
 
-import { CalculationResult } from "./interfaces"
 import { WarningTriangleV2 } from "../sharedf/WarningTriangleV2"
+import { CalculationResult } from "./interfaces"
 
 
 

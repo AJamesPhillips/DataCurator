@@ -7,19 +7,16 @@ import { calculate_canvas_x_for_datetime, default_time_origin_parameters } from 
 import { KnowledgeGraphTimeMarkers } from "../knowledge_view/KnowledgeGraphTimeMarkers"
 import { MainArea } from "../layout/MainArea"
 import { get_uncertain_datetime } from "../shared/uncertainty/datetime"
-import { SortDirection, sort_list } from "../shared/utils/sort"
+import { sort_list, SortDirection } from "../shared/utils/sort"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import type { WComponentPrioritisation } from "../wcomponent/interfaces/priorities"
-import { WComponentActionsListModal } from "./WComponentActionsListModal"
+import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { DailyActionNode } from "./DailyActionNode"
 import { PrioritisationEntryNode } from "./PrioritisationEntryNode"
-import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_inclusive_date_strs } from "../shared/utils/date_helpers"
-import { set_union } from "../utils/set"
-import { get_actions_parent_ids, prepare_args_for_actions_parent_ids } from "./utils/get_actions_parent_ids"
 import { get_action_active_date_strs } from "./utils/get_action_active_date_ranges"
-import type { WComponentNodeAction } from "../wcomponent/interfaces/action"
+import { get_actions_parent_ids, prepare_args_for_actions_parent_ids } from "./utils/get_actions_parent_ids"
+import { WComponentActionsListModal } from "./WComponentActionsListModal"
 
 
 

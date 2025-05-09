@@ -1,10 +1,10 @@
 import { FunctionalComponent } from "preact"
 
-import "./UncertainDateTimeForm.scss"
+import { connect, ConnectedProps } from "react-redux"
 import { EditableCustomDateTime } from "../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import type { RootState } from "../../state/State"
-import { connect, ConnectedProps } from "react-redux"
+import "./UncertainDateTimeForm.scss"
 
 
 

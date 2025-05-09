@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import { LabelV2 } from "./LabelV2"
 

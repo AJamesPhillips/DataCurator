@@ -1,7 +1,7 @@
-import type { Base } from "../../shared/interfaces/base"
-import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
-import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 import { PlainCalculationObject } from "../../calculations/interfaces"
+import type { Base } from "../../shared/interfaces/base"
+import type { ValidityPredictions } from "../../shared/uncertainty/validity"
+import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
 
 
 

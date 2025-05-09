@@ -3,8 +3,8 @@ import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
 import type { ComposedKnowledgeView } from "../state/derived/State"
 import {
     get_screen_width,
-    lefttop_to_xy,
     get_visible_screen_height,
+    lefttop_to_xy,
 } from "../state/display_options/display"
 import type { WComponent, WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { PositionAndZoom } from "./interfaces"

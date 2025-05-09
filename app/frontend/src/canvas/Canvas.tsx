@@ -5,13 +5,13 @@ import { connect, ConnectedProps } from "react-redux"
 import type { Dispatch } from "redux"
 
 import { ACTIONS } from "../state/actions"
+import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
 import { pub_sub } from "../state/pub_sub/pub_sub"
 import type { RootState } from "../state/State"
-import { grid_small_step, h_step, v_step } from "./position_utils"
-import { bound_zoom, SCALE_BY, calculate_new_zoom, calculate_new_zoom_xy } from "./zoom_utils"
-import { SelectionBox } from "./SelectionBox"
-import type { CanvasAreaSelectEvent } from "../state/canvas/pub_sub"
 import { client_to_canvas, client_to_canvas_x, client_to_canvas_y } from "./canvas_utils"
+import { grid_small_step, h_step, v_step } from "./position_utils"
+import { SelectionBox } from "./SelectionBox"
+import { bound_zoom, calculate_new_zoom, calculate_new_zoom_xy, SCALE_BY } from "./zoom_utils"
 
 
 

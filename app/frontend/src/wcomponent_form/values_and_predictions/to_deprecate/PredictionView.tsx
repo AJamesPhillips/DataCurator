@@ -1,4 +1,3 @@
-import { h } from "preact"
 
 import { EditablePercentage } from "../../../form/EditablePercentage"
 import { EditableText } from "../../../form/editable_text/EditableText"

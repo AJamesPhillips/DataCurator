@@ -2,14 +2,14 @@ import type { AnyAction } from "redux"
 
 import { round_canvas_point } from "../../../../canvas/position_utils"
 import type {
-    KnowledgeViewWComponentIdEntryMap,
     KnowledgeView,
     KnowledgeViewWComponentEntry,
+    KnowledgeViewWComponentIdEntryMap,
 } from "../../../../shared/interfaces/knowledge_view"
 import type { RootState } from "../../../State"
 import {
-    get_current_knowledge_view_from_state,
     get_current_composed_knowledge_view_from_state,
+    get_current_knowledge_view_from_state,
 } from "../../accessors"
 import { handle_upsert_knowledge_view } from "../utils"
 import {

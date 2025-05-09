@@ -1,8 +1,8 @@
-import type { ConnectionTerminalSideType } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { describe, test } from "../../shared/utils/test"
-import { get_angle, rads, normalise_angle_between_neg_Pi_and_Pi } from "../../utils/angles"
 import { bounded } from "../../shared/utils/bounded"
+import { describe, test } from "../../shared/utils/test"
+import { get_angle, normalise_angle_between_neg_Pi_and_Pi, rads } from "../../utils/angles"
 import type { ConnectionTerminalLocationType } from "../../wcomponent/interfaces/connection"
+import type { ConnectionTerminalSideType } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
 

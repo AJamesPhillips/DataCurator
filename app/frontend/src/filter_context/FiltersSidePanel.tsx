@@ -3,14 +3,14 @@ import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { MultiAutocompleteText } from "../form/Autocomplete/MultiAutocompleteText"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { LabelsEditor } from "../labels/LabelsEditor"
 import { ACTIONS } from "../state/actions"
+import { get_is_on_actions_list_view } from "../state/actions_list_view/accessors"
 import type { RootState } from "../state/State"
 import { wcomponent_type_to_text } from "../wcomponent_derived/wcomponent_type_to_text"
-import { get_is_on_actions_list_view } from "../state/actions_list_view/accessors"
-import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 
 
 

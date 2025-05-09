@@ -1,19 +1,19 @@
+import { is_defined } from "../shared/utils/is_defined"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
+import { WComponent, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import type {
     ComposedCounterfactualV2StateValueAndPredictionSet,
 } from "../wcomponent/interfaces/counterfactual"
+import { parse_VAP_value } from "../wcomponent/value/parse_value"
+import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
+import type { CurrentValueAndProbability } from "./interfaces/value"
 import { calc_prediction_certainty, calc_prediction_is_uncertain } from "./prediction_uncertainty"
+import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
 import {
     partition_and_prune_items_by_datetimes_and_versions,
 } from "./value_and_prediction/partition_and_prune_items_by_datetimes_and_versions"
-import { WComponent, wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { get_VAPs_ordered_by_prob } from "./value_and_prediction/probable_VAPs"
-import { apply_counterfactuals_v2_to_VAP_set } from "./value_and_prediction/apply_counterfactuals_v2_to_VAP_set"
-import type { CurrentValueAndProbability } from "./interfaces/value"
-import { parse_VAP_value } from "../wcomponent/value/parse_value"
-import type { VAPSetIdToCounterfactualV2Map } from "./interfaces/counterfactual"
-import { is_defined } from "../shared/utils/is_defined"
 
 
 

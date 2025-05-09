@@ -1,9 +1,7 @@
-import { KnowledgeView, KnowledgeViewWComponentEntry, KnowledgeViewWComponentIdEntryMap, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
+import { KnowledgeView, KnowledgeViewWComponentIdEntryMap, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
 import { describe, test } from "../../shared/utils/test"
 import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
 import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
-import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
-import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import {
     WComponentStatusInKnowledgeView,
     get_wcomponent_status_in_knowledge_view,

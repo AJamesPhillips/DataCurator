@@ -1,9 +1,12 @@
 import type { WComponentNodeAction } from "./action"
 // import type { Base } from "../../shared/interfaces/base"
+import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
+import type { ValidityPredictions } from "../../shared/uncertainty/validity"
+import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
 import type { HasObjectives, WComponentJudgement } from "./judgement"
-import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
+import type { WComponentPrioritisation } from "./priorities"
 import type {
     HasValuePossibilities,
     HasVAPSetsAndMaybeValuePossibilities,
@@ -11,7 +14,7 @@ import type {
     WComponentNodeStateV2,
     WComponentStateValue,
 } from "./state"
-import type { ValidityPredictions } from "../../shared/uncertainty/validity"
+import type { WComponentSubState } from "./substate"
 import type {
     WComponentBase,
     WComponentCalculations,
@@ -19,9 +22,6 @@ import type {
     WComponentNodeBase,
     WComponentType,
 } from "./wcomponent_base"
-import type { WComponentPrioritisation } from "./priorities"
-import type { WComponentCounterfactualV2 } from "./counterfactual"
-import type { WComponentSubState } from "./substate"
 
 
 

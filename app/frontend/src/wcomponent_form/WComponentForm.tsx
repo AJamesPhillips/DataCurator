@@ -1,70 +1,69 @@
-import { FunctionComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-import { useEffect, useRef, useState } from "preact/hooks"
 import { Box, FormControl, FormLabel } from "@mui/material"
+import { FunctionComponent } from "preact"
+import { useEffect, useRef, useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { ConfirmatoryDeleteButton } from "../form/ConfirmatoryDeleteButton"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { EditableText } from "../form/editable_text/EditableText"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { EditableText } from "../form/editable_text/EditableText"
 import { LabelsEditor } from "../labels/LabelsEditor"
-import {
-    prepare_new_contextless_wcomponent_object,
-} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
-import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
-import {
-    get_wcomponent_state_UI_value,
-} from "../wcomponent_derived/get_wcomponent_state_UI_value"
-import {
-    WComponent,
-    wcomponent_is_plain_connection,
-    wcomponent_can_have_validity_predictions,
-    wcomponent_is_allowed_to_have_state_VAP_sets,
-    wcomponent_is_statev2,
-    wcomponent_is_counterfactual_v2,
-    wcomponent_is_causal_link,
-    wcomponent_is_judgement_or_objective,
-    wcomponent_is_event,
-    wcomponent_is_prioritisation,
-    wcomponent_is_sub_state,
-    wcomponent_has_objectives,
-    wcomponent_is_action,
-    wcomponent_is_goal,
-    wcomponent_is_state_value,
-    wcomponent_is_not_deleted,
-    wcomponent_is_deleted,
-} from "../wcomponent/interfaces/SpecialisedObjects"
-import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
+import { Button } from "../sharedf/Button"
 import { ColorPicker } from "../sharedf/ColorPicker"
+import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
+import { get_title, RichTextType } from "../sharedf/rich_text/get_rich_text"
+import { WarningTriangle } from "../sharedf/WarningTriangle"
 import { ACTIONS } from "../state/actions"
 import { get_wc_id_to_counterfactuals_v2_map } from "../state/derived/accessor"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
+import { selector_chosen_base_id } from "../state/user_info/selector"
+import { get_updated_wcomponent } from "../wcomponent/CRUD_helpers/get_updated_wcomponent"
+import {
+    prepare_new_contextless_wcomponent_object,
+} from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
+import {
+    WComponent,
+    wcomponent_can_have_validity_predictions,
+    wcomponent_has_objectives,
+    wcomponent_is_action,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
+    wcomponent_is_causal_link,
+    wcomponent_is_counterfactual_v2,
+    wcomponent_is_deleted,
+    wcomponent_is_event,
+    wcomponent_is_goal,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_not_deleted,
+    wcomponent_is_plain_connection,
+    wcomponent_is_prioritisation,
+    wcomponent_is_state_value,
+    wcomponent_is_statev2,
+    wcomponent_is_sub_state,
+} from "../wcomponent/interfaces/SpecialisedObjects"
+import {
+    get_wcomponent_state_UI_value,
+} from "../wcomponent_derived/get_wcomponent_state_UI_value"
+import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
-import { PredictionList } from "./values_and_predictions/to_deprecate/PredictionList"
-import { WComponentFromTo } from "./WComponentFromTo"
 import { ChosenObjectivesFormFields } from "./ChosenObjectivesFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
+import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
+import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
+import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
-import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
+import { WComponentFromTo } from "./WComponentFromTo"
 import { WComponentImageForm } from "./WComponentImageForm"
-import { Button } from "../sharedf/Button"
-import { selector_chosen_base_id } from "../state/user_info/selector"
-import { WComponentSubStateForm } from "./WComponentSubStateForm"
-import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
-import { WComponentConnectionForm } from "./WComponentConnectionForm"
-import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
-import { WarningTriangle } from "../sharedf/WarningTriangle"
-import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
-import { WComponentStateValueForm } from "./WComponentStateValueForm"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
-import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
 import { WComponentStateForm } from "./WComponentStateForm"
+import { WComponentStateValueForm } from "./WComponentStateValueForm"
+import { WComponentSubStateForm } from "./WComponentSubStateForm"
+import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
 
 
 

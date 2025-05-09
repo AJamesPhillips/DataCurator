@@ -1,14 +1,14 @@
-import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-import { useState } from "preact/hooks"
 import Markdown from "markdown-to-jsx"
+import { FunctionalComponent, h } from "preact"
+import { useState } from "preact/hooks"
+import { connect, ConnectedProps } from "react-redux"
 
-import "./PrioritisationEntryNode.scss"
-import { ACTIONS } from "../state/actions"
 import { CanvasNode } from "../canvas/CanvasNode"
-import type { RootState } from "../state/State"
 import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { MARKDOWN_OPTIONS } from "../sharedf/rich_text/RichMarkDown"
+import { ACTIONS } from "../state/actions"
+import type { RootState } from "../state/State"
+import "./PrioritisationEntryNode.scss"
 
 
 

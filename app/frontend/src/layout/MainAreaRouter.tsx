@@ -1,12 +1,12 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { ActionsListView } from "../actions_list_view/ActionsListView"
 import { KnowledgeGraphView } from "../knowledge_view/KnowledgeGraphView"
+import { KnowledgeTimeView } from "../knowledge_view/KnowledgeTimeView"
+import { PrioritiesView } from "../priorities/PrioritiesView"
 import { PrioritiesListView } from "../priorities_list_view/PrioritiesListView"
 import type { RootState } from "../state/State"
-import { PrioritiesView } from "../priorities/PrioritiesView"
-import { KnowledgeTimeView } from "../knowledge_view/KnowledgeTimeView"
-import { ActionsListView } from "../actions_list_view/ActionsListView"
 
 
 

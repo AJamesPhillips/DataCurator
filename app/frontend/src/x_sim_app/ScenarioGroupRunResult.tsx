@@ -1,11 +1,10 @@
-import { h } from "preact"
 
+import { useMemo } from "preact/hooks"
+import { round_number } from "../canvas/position_utils"
 import { date2str_auto } from "../shared/utils/date_helpers"
 import type { ScenarioGroupRunResult } from "./scenario_run_results"
 import "./ScenarioGroupRunResult.scss"
 import type { SimulationResult_BeerGame } from "./simulators"
-import { useMemo } from "preact/hooks"
-import { round_number } from "../canvas/position_utils"
 
 
 interface Props

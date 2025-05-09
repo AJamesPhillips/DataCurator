@@ -1,16 +1,14 @@
+import EditIcon from "@mui/icons-material/Edit"
+import PresentToAllIcon from "@mui/icons-material/PresentToAll"
+import { ButtonGroup, IconButton, Tooltip } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
-import { ButtonGroup, IconButton, Tooltip } from "@mui/material"
-import EditIcon from "@mui/icons-material/Edit"
-import PresentToAllIcon from "@mui/icons-material/PresentToAll"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
 import { selector_current_user_access_level } from "../state/user_info/selector"
-import { Modal } from "../modal/Modal"
-import { Button } from "../sharedf/Button"
+import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
 
 
 

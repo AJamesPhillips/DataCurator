@@ -1,12 +1,11 @@
 import type { User } from "@supabase/supabase-js"
 
 import { pick } from "../../shared/utils/pick"
+import { get_supabase } from "../../supabase/get_supabase"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
-import type { UserInfoState } from "./state"
-import { random_animal } from "../../utils/list_of_animals"
-import { get_supabase } from "../../supabase/get_supabase"
 import { local_user } from "../sync/local/data"
+import type { UserInfoState } from "./state"
 
 
 

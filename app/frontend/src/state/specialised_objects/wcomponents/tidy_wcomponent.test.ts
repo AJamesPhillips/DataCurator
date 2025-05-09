@@ -4,7 +4,7 @@ import { prepare_new_VAP_set } from "../../../wcomponent/CRUD_helpers/prepare_ne
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../../../wcomponent/interfaces/VAPsType"
-import { WComponentNodeStateV2, StateValueAndPrediction } from "../../../wcomponent/interfaces/state"
+import { StateValueAndPrediction, WComponentNodeStateV2 } from "../../../wcomponent/interfaces/state"
 import { CreationContextState } from "../../creation_context/state"
 import { tidy_wcomponent } from "./tidy_wcomponent"
 

@@ -1,10 +1,10 @@
 import { h } from "preact"
 import { useEffect, useMemo, useState } from "preact/hooks"
 
-import "./CanvasConnection.scss"
 import { bounded } from "../../shared/utils/bounded"
 import { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { ConnectionEndType, ConnectionEnd } from "./ConnectionEnd"
+import "./CanvasConnection.scss"
+import { ConnectionEnd, ConnectionEndType } from "./ConnectionEnd"
 import { ConnectionCoords, derive_connection_coords } from "./derive_coords"
 import { ConnectionTerminus } from "./terminal"
 import { Vector } from "./utils"

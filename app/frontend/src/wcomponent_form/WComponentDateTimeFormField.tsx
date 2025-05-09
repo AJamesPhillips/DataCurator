@@ -2,8 +2,8 @@ import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { HasUncertainDatetime } from "../shared/uncertainty/interfaces"
-import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { RootState } from "../state/State"
+import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
 
 

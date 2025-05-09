@@ -1,11 +1,11 @@
 import { h } from "preact"
 
+import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ratio_to_percentage_string } from "../../sharedf/percentages"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import type { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
-import { get_VAPs_ordered_by_prob } from "./probable_VAPs"
 import { is_string_valid_number } from "../../wcomponent/value/parse_value"
-import { WarningTriangle } from "../../sharedf/WarningTriangle"
+import { get_VAPs_ordered_by_prob } from "./probable_VAPs"
 
 
 

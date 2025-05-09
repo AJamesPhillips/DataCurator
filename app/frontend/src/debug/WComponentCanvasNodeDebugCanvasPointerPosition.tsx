@@ -1,4 +1,3 @@
-import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { CanvasNode } from "../canvas/CanvasNode"
 import type { CanvasPoint } from "../canvas/interfaces"

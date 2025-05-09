@@ -6,16 +6,7 @@ import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import { uncertain_date_to_string } from "../form/datetime_utils"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
-import {
-    convert_VAP_set_to_VAP_visuals,
-} from "../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 import { is_defined } from "../shared/utils/is_defined"
-import type {
-    WComponentCounterfactualV2,
-} from "../wcomponent/interfaces/counterfactual"
-import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
@@ -25,6 +16,15 @@ import {
 } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { toggle_item_in_list } from "../utils/list"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
+import type {
+    WComponentCounterfactualV2,
+} from "../wcomponent/interfaces/counterfactual"
+import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../wcomponent/interfaces/SpecialisedObjects"
+import type { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
+import {
+    convert_VAP_set_to_VAP_visuals,
+} from "../wcomponent_derived/value_and_prediction/convert_VAP_set_to_VAP_visuals"
 
 
 

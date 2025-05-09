@@ -1,15 +1,15 @@
 import { FunctionalComponent } from "preact"
 
-import type { DerivedValueForUI } from "../interfaces/value"
-import "./DisplayValue.css"
+import { Tooltip } from "@mui/material"
+import { ConnectedProps, connect } from "react-redux"
 import { Link } from "../../sharedf/Link"
 import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
-import { ConnectedProps, connect } from "react-redux"
-import { RootState } from "../../state/State"
 import { RichTextType, get_title } from "../../sharedf/rich_text/get_rich_text"
-import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
-import { Tooltip } from "@mui/material"
 import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"
+import { RootState } from "../../state/State"
+import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
+import type { DerivedValueForUI } from "../interfaces/value"
+import "./DisplayValue.css"
 
 
 

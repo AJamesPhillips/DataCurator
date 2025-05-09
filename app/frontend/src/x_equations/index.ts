@@ -5,12 +5,12 @@ import { test } from "../shared/utils/test"
 import { datacurator_grammarLexer } from "./datacurator_grammarLexer"
 import {
     AdditionOrSubtractionContext,
+    ConstantsContext,
     datacurator_grammarParser,
     EquationContext,
     ExpressionContext,
     FunctionsWith2ArgsContext,
     FunctionsWithArgsContext,
-    ConstantsContext,
     IDRefContext,
     MultiplicationOrDivisionContext,
     NumberContext,

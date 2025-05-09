@@ -1,11 +1,11 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentSubState } from "../../wcomponent/interfaces/substate"
-import type { RootState } from "../../state/State"
 import { LockClockIcon } from "../../sharedf/icons/LockClockIcon"
 import { ReducedPossibilitiesIcon } from "../../sharedf/icons/ReducedPossibilitiesIcon"
+import type { RootState } from "../../state/State"
+import { wcomponent_is_allowed_to_have_state_VAP_sets } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentSubState } from "../../wcomponent/interfaces/substate"
 import { convert_VAP_sets_to_visual_sub_state_value_possibilities } from "../../wcomponent_derived/sub_state/convert_VAP_sets_to_visual_sub_state_value_possibilities"
 
 

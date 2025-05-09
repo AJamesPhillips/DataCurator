@@ -1,12 +1,12 @@
+import FilterCenterFocusIcon from "@mui/icons-material/FilterCenterFocus"
+import { Box, IconButton } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
-import { Box, IconButton } from "@mui/material"
-import FilterCenterFocusIcon from "@mui/icons-material/FilterCenterFocus"
 
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
-import { optional_view_type } from "../views/optional_view_type"
 import type { RootState } from "../state/State"
+import { optional_view_type } from "../views/optional_view_type"
 import type { PositionAndZoom } from "./interfaces"
 
 

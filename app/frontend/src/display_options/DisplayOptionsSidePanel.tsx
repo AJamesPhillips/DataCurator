@@ -2,14 +2,14 @@ import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import { ACTIONS } from "../state/actions"
-import type { ValidityFilterTypes, CertaintyFormattingTypes } from "../state/display_options/state"
-import type { RootState } from "../state/State"
-import { TimeResolutionOptions } from "./TimeResolutionOptions"
 import { EditableCheckbox } from "../form/EditableCheckbox"
-import { shortcuts_map } from "../help_menu/shortcuts"
 import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
+import { shortcuts_map } from "../help_menu/shortcuts"
+import { ACTIONS } from "../state/actions"
+import type { CertaintyFormattingTypes, ValidityFilterTypes } from "../state/display_options/state"
+import type { RootState } from "../state/State"
 import { ExperimentalFeatures } from "./ExperimentalFeatures"
+import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
 
 

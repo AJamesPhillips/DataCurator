@@ -1,7 +1,7 @@
-import { describe, test } from "../../../shared/utils/test"
-import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/interfaces/knowledge_view"
-import { FieldMergerReturn, get_default_field_merger, MergeDataCoreArgs, MergeDataReturn, merge_base_object } from "./merge_data"
 import { get_new_knowledge_view_object } from "../../../knowledge_view/create_new_knowledge_view"
+import type { KnowledgeView, KnowledgeViewWComponentIdEntryMap } from "../../../shared/interfaces/knowledge_view"
+import { describe, test } from "../../../shared/utils/test"
+import { FieldMergerReturn, get_default_field_merger, merge_base_object, MergeDataCoreArgs, MergeDataReturn } from "./merge_data"
 
 
 

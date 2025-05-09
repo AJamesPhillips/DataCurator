@@ -1,10 +1,8 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./ValueAndPredictions.css"
+import { connect, ConnectedProps } from "react-redux"
 import { EditableNumber } from "../../form/EditableNumber"
 import { EditablePercentage } from "../../form/EditablePercentage"
-import { EditableText } from "../../form/editable_text/EditableText"
-import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import type {
     EditableListEntryItemProps,
     ListItemCRUDRequiredU,
@@ -13,18 +11,20 @@ import { get_items_descriptor } from "../../form/editable_list/ExpandableList"
 import { ListHeader } from "../../form/editable_list/ListHeader"
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { factory_render_list_content } from "../../form/editable_list/render_list_content"
-import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
-import { prepare_new_VAP } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
-import { PredictionBadge } from "../../sharedf/prediction_badge/PredictionBadge"
-import { connect, ConnectedProps } from "react-redux"
-import type { RootState } from "../../state/State"
-import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
-import { remove_element, replace_element } from "../../utils/list"
-import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
-import { ValuePossibilityLink } from "../value_possibilities/ValuePossibilityLink"
+import { EditableText } from "../../form/editable_text/EditableText"
+import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
+import { PredictionBadge } from "../../sharedf/prediction_badge/PredictionBadge"
+import type { RootState } from "../../state/State"
+import { remove_element, replace_element } from "../../utils/list"
+import { prepare_new_VAP } from "../../wcomponent/CRUD_helpers/prepare_new_VAP"
+import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
+import type { ValuePossibilitiesById } from "../../wcomponent/interfaces/possibility"
+import type { StateValueAndPrediction } from "../../wcomponent/interfaces/state"
 import { is_string_valid_number } from "../../wcomponent/value/parse_value"
+import { ValuePossibilityLink } from "../value_possibilities/ValuePossibilityLink"
+import "./ValueAndPredictions.css"
 
 
 

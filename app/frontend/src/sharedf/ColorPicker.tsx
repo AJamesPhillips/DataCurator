@@ -1,12 +1,11 @@
-import { h } from "preact"
 import { useEffect, useState } from "preact/hooks"
 
-import "./ColorPicker.css"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableNumber } from "../form/EditableNumber"
 import type { Color } from "../shared/interfaces/color"
 import { bounded } from "../shared/utils/bounded"
 import { color_to_string } from "./color"
-import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import "./ColorPicker.css"
 
 
 

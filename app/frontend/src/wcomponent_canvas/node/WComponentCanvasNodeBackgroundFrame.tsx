@@ -1,16 +1,16 @@
 import { FunctionalComponent, h } from "preact"
 
-import "./WComponentCanvasNodeBackgroundFrame.scss"
-import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
 import { useEffect, useMemo, useState } from "preact/hooks"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
-import { color_to_string, darker_color } from "../../sharedf/color"
-import { default_frame_color } from "../../wcomponent_form/wcomponent_knowledge_view_form/default_frame_color"
+import { connect, ConnectedProps } from "react-redux"
 import { grid_small_step, round_coordinate_small_step } from "../../canvas/position_utils"
+import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
+import { color_to_string, darker_color } from "../../sharedf/color"
 import type { RootState } from "../../state/State"
 import { ACTIONS } from "../../state/actions"
-import { connect, ConnectedProps } from "react-redux"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
 import { get_current_knowledge_view_from_state } from "../../state/specialised_objects/accessors"
+import { default_frame_color } from "../../wcomponent_form/wcomponent_knowledge_view_form/default_frame_color"
+import "./WComponentCanvasNodeBackgroundFrame.scss"
 
 
 

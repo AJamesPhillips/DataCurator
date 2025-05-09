@@ -1,4 +1,4 @@
-import { Select, MenuItem } from "@mui/material"
+import { MenuItem, Select } from "@mui/material"
 
 import { sentence_case } from "../shared/utils/sentence_case"
 import type { ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"

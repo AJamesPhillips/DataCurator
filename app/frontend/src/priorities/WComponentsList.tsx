@@ -2,9 +2,9 @@ import { FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { is_defined } from "../shared/utils/is_defined"
+import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { get_title } from "../sharedf/rich_text/get_rich_text"
 
 
 interface OwnProps

@@ -3,7 +3,7 @@ import { describe, test } from "../../shared/utils/test"
 import { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { HALF_NODE_WIDTH, NODE_WIDTH } from "../position_utils"
 import { ConnectionEndType } from "./ConnectionEnd"
-import { derive_connection_coords, DeriveConnectionCoordsArgs, ConnectionCoords } from "./derive_coords"
+import { ConnectionCoords, derive_connection_coords, DeriveConnectionCoordsArgs } from "./derive_coords"
 
 
 export const test_derive_connection_coords = describe.delay("derive_connection_coords", () =>

@@ -1,8 +1,8 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import type { RootState } from "../state/State"
+import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import { ProjectJudgementEntry } from "./ProjectJudgementEntry"
 
 

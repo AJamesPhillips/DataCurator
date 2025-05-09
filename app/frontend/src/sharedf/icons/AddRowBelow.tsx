@@ -1,4 +1,4 @@
-import { CommonIconOwnProps, CommonIcon } from "./common_icon"
+import { CommonIcon, CommonIconOwnProps } from "./common_icon"
 
 
 

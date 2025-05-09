@@ -1,4 +1,4 @@
-import type { ValidityFilterOption, ValidityFilterTypes, CertaintyFormattingOption, CertaintyFormattingTypes } from "./state"
+import type { CertaintyFormattingOption, CertaintyFormattingTypes, ValidityFilterOption, ValidityFilterTypes } from "./state"
 
 
 

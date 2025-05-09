@@ -1,18 +1,17 @@
-import { h } from "preact"
 import { useMemo, useState } from "preact/hooks"
 
 import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"
 import type { ComposedKnowledgeView } from "../state/derived/State"
 import { calculate_composed_knowledge_view } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
+import { upsert_entry } from "../utils/list"
 import type { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
 import { ScenarioGroupRunResultComponent } from "./ScenarioGroupRunResult"
+import "./SimulationScenarioSummary.scss"
 import type { ScenarioGroupRunArgs, ScenarioGroupRunResult } from "./scenario_run_results"
 import type { Simulation } from "./simulations"
 import { BeerGameArgs, SimulationResult_BeerGame, beer_game_simulator } from "./simulators"
-import "./SimulationScenarioSummary.scss"
-import { upsert_entry } from "../utils/list"
 
 
 

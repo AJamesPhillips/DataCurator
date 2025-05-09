@@ -2,8 +2,8 @@ import { TextField } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { RootState } from "../state/State"
+import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
 interface OwnProps

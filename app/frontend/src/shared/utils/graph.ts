@@ -1,5 +1,5 @@
-import { Graph } from "graphlib"
 import * as GraphLib from "graphlib"
+import { Graph } from "graphlib"
 const alg = (((GraphLib as any).default as typeof GraphLib) || GraphLib).alg
 
 import { describe, test } from "./test"

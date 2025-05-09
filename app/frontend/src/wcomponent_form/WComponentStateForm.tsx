@@ -1,6 +1,9 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import type { RootState } from "../state/State"
+import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
+import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
 import {
     WComponent,
     wcomponent_allowed_calculations,
@@ -8,11 +11,8 @@ import {
     wcomponent_is_state_value,
     WComponentIsAllowedToHaveStateVAPSets,
 } from "../wcomponent/interfaces/SpecialisedObjects"
-import type { RootState } from "../state/State"
-import { get_wcomponent_VAPs_represent } from "../wcomponent/get_wcomponent_VAPs_represent"
-import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
-import { update_VAPSets_with_possibilities } from "../wcomponent/CRUD_helpers/update_VAPSets_with_possibilities"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { WComponentValuePossibilitiesForm } from "./value_possibilities/WComponentValuePossibilitiesForm"
 import { WComponentValueAndPredictionsForm } from "./WComponentValueAndPredictionsForm"
 

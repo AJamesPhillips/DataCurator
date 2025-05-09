@@ -2,11 +2,11 @@ import { FunctionalComponent } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+import { is_defined } from "../shared/utils/is_defined"
+import { ContentControls } from "../sharedf/content_controls/ContentControls"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
 import { get_wcomponent_time_slider_data } from "../time_control/prepare_data/wcomponent"
-import { ContentControls } from "../sharedf/content_controls/ContentControls"
-import { is_defined } from "../shared/utils/is_defined"
 
 
 

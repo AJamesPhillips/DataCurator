@@ -1,14 +1,14 @@
-import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { is_defined } from "../../shared/utils/is_defined"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
-import { knowledge_views_derived_reducer } from "./knowledge_views/knowledge_views_derived_reducer"
-import type { RootState } from "../State"
-import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
-import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
+import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
+import { get_wcomponents_from_state } from "../specialised_objects/accessors"
+import type { RootState } from "../State"
 import { derived_composed_wcomponents_by_id_reducer } from "./derived_composed_wcomponents_by_id_reducer"
+import { get_wcomponent_ids_by_type } from "./get_wcomponent_ids_by_type"
+import { knowledge_views_derived_reducer } from "./knowledge_views/knowledge_views_derived_reducer"
 
 
 

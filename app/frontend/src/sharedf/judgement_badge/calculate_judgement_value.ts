@@ -1,12 +1,12 @@
+import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import { VAPsType } from "../../wcomponent/interfaces/VAPsType"
 import {
     get_wcomponent_state_value_and_probabilities,
 } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
-import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 import type { VAPSetIdToCounterfactualV2Map } from "../../wcomponent_derived/interfaces/counterfactual"
+import type { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 
 
 

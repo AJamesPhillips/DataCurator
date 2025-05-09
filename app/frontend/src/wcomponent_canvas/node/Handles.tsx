@@ -1,11 +1,11 @@
 import { h } from "preact"
 
-import "./Handles.scss"
-import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
-import { OverlappingNodesHandle } from "./OverlappingNodesHandle"
+import { client_to_canvas_x, client_to_canvas_y } from "../../canvas/canvas_utils"
 import type { Position } from "../../canvas/interfaces"
 import { get_store } from "../../state/store"
-import { client_to_canvas_x, client_to_canvas_y } from "../../canvas/canvas_utils"
+import { ExploreButtonHandle, ExploreButtonHandleOwnProps } from "./ExploreButtonHandle"
+import "./Handles.scss"
+import { OverlappingNodesHandle } from "./OverlappingNodesHandle"
 
 
 

@@ -6,9 +6,9 @@ import {
     type ConnectionTerminalAttributeType,
     type ConnectionTerminalType,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
+import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 import type { CanvasPoint } from "../interfaces"
 import { NODE_WIDTH } from "../position_utils"
-import { WComponentType } from "../../wcomponent/interfaces/wcomponent_base"
 
 
 

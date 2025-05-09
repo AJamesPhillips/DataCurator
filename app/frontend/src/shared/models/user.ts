@@ -1,8 +1,8 @@
+import type { BaseDbFields } from "./base"
 import {
     BaseModel,
     from_pojo as base_from_pojo,
 } from "./base"
-import type { BaseDbFields } from "./base"
 
 export interface UserDbFields extends BaseDbFields {
     email: string

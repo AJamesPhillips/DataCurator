@@ -1,57 +1,57 @@
+import DescriptionIcon from "@mui/icons-material/Description"
 import Markdown from "markdown-to-jsx"
 import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-import DescriptionIcon from "@mui/icons-material/Description"
+import { ConnectedProps, connect } from "react-redux"
 
-import "./WComponentCanvasNode.scss"
-import {
-    ConnectionTerminalType,
-    connection_terminal_attributes,
-    connection_terminal_sides,
-    WComponent,
-    WComponentsById,
-    wcomponent_can_have_validity_predictions,
-    wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_has_objectives,
-    wcomponent_has_validity_predictions,
-    wcomponent_is_action,
-    wcomponent_is_judgement_or_objective,
-    wcomponent_is_sub_state,
-    wcomponent_is_allowed_to_have_state_VAP_sets,
-} from "../../wcomponent/interfaces/SpecialisedObjects"
+import { useEffect, useMemo, useState } from "preact/hooks"
 import { ConnectableCanvasNode } from "../../canvas/ConnectableCanvasNode"
 import { Terminal, get_top_left_for_terminal_type } from "../../canvas/connections/terminal"
 import type { Position } from "../../canvas/interfaces"
 import { LabelsListV2 } from "../../labels/LabelsListV2"
 import type { KnowledgeViewWComponentEntry } from "../../shared/interfaces/knowledge_view"
+import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { get_title } from "../../sharedf/rich_text/get_rich_text"
-import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
 import { MARKDOWN_OPTIONS } from "../../sharedf/rich_text/RichMarkDown"
 import { WarningTriangle } from "../../sharedf/WarningTriangle"
 import { ACTIONS } from "../../state/actions"
-import {
-    is_on_current_knowledge_view,
-    get_current_temporal_value_certainty_from_wcomponent,
-} from "../../state/specialised_objects/accessors"
-import type { RootState } from "../../state/State"
-import { calc_wcomponent_should_display, calc_display_opacity } from "../calc_should_display"
-import { factory_on_click } from "../canvas_common"
-import { WComponentJudgements } from "./WComponentJudgements"
-import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
-import { WComponentValidityValue } from "./WComponentValidityValue"
-import { Handles } from "./Handles"
-import { NodeSubStateSummary } from "./NodeSubStateSummary"
 import { get_wc_id_to_counterfactuals_v2_map } from "../../state/derived/accessor"
-import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
-import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
+import { pub_sub } from "../../state/pub_sub/pub_sub"
+import {
+    get_current_temporal_value_certainty_from_wcomponent,
+    is_on_current_knowledge_view,
+} from "../../state/specialised_objects/accessors"
 import {
     start_moving_wcomponents,
 } from "../../state/specialised_objects/wcomponents/bulk_edit/start_moving_wcomponents"
-import { useEffect, useMemo, useState } from "preact/hooks"
-import { pub_sub } from "../../state/pub_sub/pub_sub"
-import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
-import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
+import type { RootState } from "../../state/State"
+import {
+    ConnectionTerminalType,
+    WComponent,
+    WComponentsById,
+    connection_terminal_attributes,
+    connection_terminal_sides,
+    wcomponent_can_have_validity_predictions,
+    wcomponent_has_legitimate_non_empty_state_VAP_sets,
+    wcomponent_has_objectives,
+    wcomponent_has_validity_predictions,
+    wcomponent_is_action,
+    wcomponent_is_allowed_to_have_state_VAP_sets,
+    wcomponent_is_judgement_or_objective,
+    wcomponent_is_sub_state,
+} from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
+import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
+import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_type_to_text"
+import { calc_display_opacity, calc_wcomponent_should_display } from "../calc_should_display"
+import { factory_on_click } from "../canvas_common"
+import { Handles } from "./Handles"
+import { NodeSubStateSummary } from "./NodeSubStateSummary"
+import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
+import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
+import "./WComponentCanvasNode.scss"
+import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
+import { WComponentJudgements } from "./WComponentJudgements"
+import { WComponentValidityValue } from "./WComponentValidityValue"
 
 
 

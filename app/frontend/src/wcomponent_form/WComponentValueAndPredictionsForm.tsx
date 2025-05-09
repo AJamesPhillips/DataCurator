@@ -1,19 +1,18 @@
-import { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 import { Settings as SettingsIcon } from "@mui/icons-material"
 import { IconButton } from "@mui/material"
+import { FunctionalComponent } from "preact"
+import { connect, ConnectedProps } from "react-redux"
 
 import { useState } from "preact/hooks"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
-import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
-import { WarningTriangleV2 } from "../sharedf/WarningTriangleV2"
-import { RootState } from "../state/State"
-import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
-import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
-import { wcomponent_is_statev2, WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
-import { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
+import { RootState } from "../state/State"
+import { wcomponent_is_statev2, WComponentIsAllowedToHaveStateVAPSets } from "../wcomponent/interfaces/SpecialisedObjects"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { ValuePossibilitiesById } from "../wcomponent/interfaces/possibility"
+import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
+import { EasyActionValueAndPredictionSets } from "./values_and_predictions/EasyActionValueAndPredictionSets"
+import { ValueAndPredictionSets } from "./values_and_predictions/ValueAndPredictionSets"
 
 
 
