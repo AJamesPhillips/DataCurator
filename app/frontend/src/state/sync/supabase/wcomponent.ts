@@ -159,7 +159,10 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): 
     let error: PostgrestError | Error | undefined = result.error || undefined
     try
     {
-        let new_supabase_item: SupabaseReadWComponent = result.data as any
+        let new_supabase_item = result.data as SupabaseReadWComponent
+        // When the status code is 409 then `result.error!.details` is an
+        // instance of `SupabaseReadWComponent`
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         if (result.status === 409) new_supabase_item = JSON.parse(result.error!.details)
         new_item = wcomponent_supabase_to_app(new_supabase_item)
     }

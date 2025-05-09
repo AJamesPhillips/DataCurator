@@ -50,10 +50,10 @@ export const factory_root_reducer: (initial_state: RootState) => Reducer<RootSta
     state = derived_state_reducer(prev_state, state)
     state = derived_meta_wcomponents_state_reducer(prev_state, state)
 
-    // if (!ignore_actions_types_when_logging.has(action.type))
-    // {
-    //     console .log(action.type, action)
-    // }
+    if (!ignore_actions_types_when_logging.has(action.type as string))
+    {
+        console .log(action.type, action)
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ;(window as any).debug_state = state

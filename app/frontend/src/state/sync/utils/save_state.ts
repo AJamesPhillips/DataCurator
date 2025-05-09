@@ -1,5 +1,6 @@
 import type { Base } from "../../../shared/interfaces/base"
 import { get_supabase } from "../../../supabase/get_supabase"
+import { logger } from "../../../utils/logger"
 import { ACTIONS } from "../../actions"
 import { get_knowledge_view_from_state, get_wcomponent_from_state } from "../../specialised_objects/accessors"
 import type { StoreType } from "../../store"
@@ -25,8 +26,9 @@ export async function save_state (store: StoreType, is_manual_save = false)
 
     if (!state.sync.ready_for_writing)
     {
-        console.error(`Inconsistent state violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
-        return Promise.reject()
+        const error = new Error(`Inconsistent state violation.  Save state called whilst state.sync.status: "${state.sync.specialised_objects.status}", ready_for_writing: ${state.sync.ready_for_writing}`)
+        logger.error(error)
+        return Promise.reject(error)
     }
 
 
@@ -44,8 +46,9 @@ export async function save_state (store: StoreType, is_manual_save = false)
             console .log(`No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
             return Promise.resolve()
         }
-        console.error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
-        return Promise.reject()
+        const error = new Error(`Inconsistent state violation.  No ids need to be saved: "${wc_ids}", "${kv_ids}"`)
+        logger.error(error)
+        return Promise.reject(error)
     }
 
     store.dispatch(ACTIONS.sync.update_sync_status({ status: "SAVING", data_type: "specialised_objects" }))
@@ -83,7 +86,7 @@ export async function save_state (store: StoreType, is_manual_save = false)
     }
     catch (err)
     {
-        console.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err}`)
+        logger.error(`Got error saving ${next_id_to_save.object_type} ${next_id_to_save.id}.  Error: ${err instanceof Error ? err.message : err}`)
         store.dispatch(ACTIONS.sync.update_sync_status({
             status: "FAILED", data_type: "specialised_objects", error_message: `${err}`, attempt: global_attempts,
         }))
@@ -223,7 +226,7 @@ function pre_upsert_check <U extends Base> (id: string, store: StoreType, object
     if (!initial_item)
     {
         store.dispatch(ACTIONS.sync.debug_refresh_all_specialised_object_ids_pending_save())
-        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" but no item for id: "${id}".  Updating all specialised_object_ids_pending_save.`)
+        const error = Promise.reject(new Error(`Inconsistent state violation.  save_"${object_type}" but no item for id: "${id}".  Updating all specialised_object_ids_pending_save.`))
         return { error, initial_item: undefined }
     }
 
@@ -243,7 +246,7 @@ function post_upsert_check <U extends Base> (id: string, store: StoreType, objec
     if (!create_successful && !update_successful && response.status !== 409)
     {
         const error_string = error_to_string(response.error)
-        const error = Promise.reject(`save_"${object_type}" got "${response.status}" error: "${error_string}"`)
+        const error = Promise.reject(new Error(`save_"${object_type}" got "${response.status}" error: "${error_string}"`))
 
         return { error, create_successful, update_successful, latest_source_of_truth_value: undefined }
     }
@@ -252,7 +255,7 @@ function post_upsert_check <U extends Base> (id: string, store: StoreType, objec
     const latest_source_of_truth_value = response.item
     if (!latest_source_of_truth_value)
     {
-        const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth_value item.  Error: "${JSON.stringify(response.error)}".`)
+        const error = Promise.reject(new Error(`Inconsistent state violation.  save_"${object_type}" got "${response.status}" but no latest_source_of_truth_value item.  Error: "${JSON.stringify(response.error)}".`))
 
         return { error, create_successful, update_successful, latest_source_of_truth_value }
     }
@@ -286,7 +289,7 @@ function check_merge_args <U extends Base> (args: CheckMergeArgsArgs<U>): CheckM
     {
         if (initial_item.modified_at)
         {
-            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth_value "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`)
+            const error = Promise.reject(new Error(`Inconsistent state violation.  save_"${object_type}" found no last_source_of_truth_value "${object_type}" for id: "${initial_item.id}" but "${object_type}" had a modified_at already set`))
             return { error, merge_args: undefined }
         }
         else
@@ -298,7 +301,7 @@ function check_merge_args <U extends Base> (args: CheckMergeArgsArgs<U>): CheckM
     {
         if (!current_value)
         {
-            const error = Promise.reject(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth_value but no current_value for id "${initial_item.id}".`)
+            const error = Promise.reject(new Error(`Inconsistent state violation.  save_"${object_type}" found "${object_type}" last_source_of_truth_value but no current_value for id "${initial_item.id}".`))
             return { error, merge_args: undefined }
         }
 
@@ -373,7 +376,7 @@ export function retryable_save (args: AttemptSaveArgs)
     }
     else
     {
-        console.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
+        logger.error(`Returning from save_state.  storage_type "${storage_type}" unsupported.`)
         return Promise.reject()
     }
 
@@ -386,7 +389,7 @@ export function retryable_save (args: AttemptSaveArgs)
         if (attempt >= max_attempts)
         {
             error_message = `Stopping after ${attempt} attempts at resaving: ${error_message}`
-            console.error(error_message)
+            logger.error(error_message)
 
             const action = ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects", error_message, attempt: 0 })
             dispatch(action)
@@ -396,7 +399,7 @@ export function retryable_save (args: AttemptSaveArgs)
         else
         {
             error_message = `Retrying attempt ${attempt}; ${error_message}`
-            console.error(error_message)
+            logger.error(error_message)
 
             const action = ACTIONS.sync.update_sync_status({ status: "FAILED", data_type: "specialised_objects", error_message, attempt })
             dispatch(action)

@@ -113,8 +113,8 @@ async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeView
     {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let new_supabase_item: SupabaseReadKnowledgeView = result.data as any
-        // TODO: document this pattern of use here.  Is `result.error!.details`
-        // actually an instance of `SupabaseReadKnowledgeView`?
+        // When the status code is 409 then `result.error!.details` is an
+        // instance of `SupabaseReadKnowledgeView`
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         if (result.status === 409) new_supabase_item = JSON.parse(result.error!.details)
         new_item = knowledge_view_supabase_to_app(new_supabase_item)

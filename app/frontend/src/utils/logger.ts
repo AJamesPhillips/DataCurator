@@ -30,7 +30,7 @@ export const logger = {
         if (LOG_LEVEL > LOG_LEVELS.warn) return
         console.warn(msg)
     },
-    error: (msg: string) =>
+    error: (msg: string | Error) =>
     {
         console.error(msg)
     },

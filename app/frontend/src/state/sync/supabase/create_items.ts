@@ -18,11 +18,12 @@ export async function supabase_create_item <SWrite extends { id: string }, SRead
     const item_to_insert = args.converter_app_to_supabase(args.item)
 
     const result = await args.supabase
-        .from<SWrite>(args.table)
+        .from(args.table)
         .insert(item_to_insert)
         .eq("id", item_to_insert.id as any)
+        .select<"", SRead>()
 
-    const items: U[] = ((result.data || []) as SRead[]).map(args.converter_supabase_to_app)
+    const items: U[] = (result.data || []).map(args.converter_supabase_to_app)
     const item = items[0]
 
     return { status: result.status, item, error: result.error || undefined }
