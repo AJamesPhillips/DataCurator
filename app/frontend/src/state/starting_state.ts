@@ -15,12 +15,11 @@ import { user_info_starting_state } from "./user_info/persistance"
 
 
 
-// 2023-10-06, I think `load_state_from_storage` should be renamed `use_production_db`
-export function get_starting_state (load_state_from_storage: boolean): RootState
+export function get_starting_state (): RootState
 {
     const routing = get_routing_starting_state()
     const { storage_location } = routing.args
-    const user_info = user_info_starting_state({ load_state_from_storage, storage_location })
+    const user_info = user_info_starting_state({ storage_location })
 
     const starting_state: RootState = {
         controls: controls_starting_state({ storage_location }),

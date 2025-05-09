@@ -7,7 +7,7 @@ import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponen
 const local_raw_data = { wcomponents_by_id: {}, knowledge_views_by_id: {} }
 
 
-export const local_user: User | undefined = {} as any
+export const local_user: User | undefined = undefined
 
 
 const { wcomponents_by_id, knowledge_views_by_id } = local_raw_data

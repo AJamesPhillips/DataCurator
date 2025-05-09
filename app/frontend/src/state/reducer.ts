@@ -1,5 +1,4 @@
-import type { Reducer } from "preact/hooks"
-import type { AnyAction } from "redux"
+import type { AnyAction, Reducer } from "redux"
 
 import { controls_reducer } from "./controls/reducer"
 import { creation_context_reducer } from "./creation_context/reducer"
@@ -26,9 +25,10 @@ const ignore_actions_types_when_logging = new Set<string>([
     "set_highlighted_wcomponent",
 ])
 
-export const root_reducer: Reducer<RootState, any> = ((state: RootState, action: AnyAction) =>
+export const factory_root_reducer: (initial_state: RootState) => Reducer<RootState, AnyAction> = (initial_state: RootState) => ((state: RootState | undefined, action: AnyAction) =>
 {
-    const initial_state = state
+    state = state || initial_state
+    const prev_state = state
 
     state = display_reducer(state, action)
     state = sync_reducer(state, action)
@@ -47,14 +47,15 @@ export const root_reducer: Reducer<RootState, any> = ((state: RootState, action:
 
     state = { ...state, last_action: action }
 
-    state = derived_state_reducer(initial_state, state)
-    state = derived_meta_wcomponents_state_reducer(initial_state, state)
+    state = derived_state_reducer(prev_state, state)
+    state = derived_meta_wcomponents_state_reducer(prev_state, state)
 
     // if (!ignore_actions_types_when_logging.has(action.type))
     // {
     //     console .log(action.type, action)
     // }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ;(window as any).debug_state = state
 
     return state

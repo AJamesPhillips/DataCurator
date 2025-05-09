@@ -111,7 +111,7 @@ async function supabase_update_knowledge_view (args: SupabaseUpsertKnowledgeView
     let error: PostgrestError | Error | undefined = result.error || undefined
     try
     {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         let new_supabase_item: SupabaseReadKnowledgeView = result.data as any
         // TODO: document this pattern of use here.  Is `result.error!.details`
         // actually an instance of `SupabaseReadKnowledgeView`?

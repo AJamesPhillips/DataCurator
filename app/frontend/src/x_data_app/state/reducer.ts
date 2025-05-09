@@ -1,11 +1,10 @@
-import type { Reducer } from "preact/hooks"
-import type { AnyAction } from "redux"
+import type { AnyAction, Reducer } from "redux"
 
 import type { DataAppRootState } from "./State"
 
 
 
-export const root_reducer: Reducer<DataAppRootState, any> = (state: DataAppRootState, action: AnyAction) =>
+export const factory_root_reducer = (initial_state: DataAppRootState): Reducer<DataAppRootState, any> => (state: DataAppRootState | undefined, action: AnyAction) =>
 {
-    return state
+    return state || initial_state
 }

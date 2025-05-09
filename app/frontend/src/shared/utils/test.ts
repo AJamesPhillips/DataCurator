@@ -100,7 +100,6 @@ function log_test_failure<T>(failure_description: string, got: T, expected: T, s
             const keys = [...new Set([...Object.keys(got), ...Object.keys(expected)])]
             keys.sort()
             keys.forEach(key => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const [got_as_any, expected_as_any]: [any, any] = [got, expected]
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 const got_value = got_as_any[key]
@@ -127,7 +126,7 @@ function log_test_failure<T>(failure_description: string, got: T, expected: T, s
 }
 
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const test: Test = test_fn as any
 test.skip = <T>(got: T, expected: T, description="", sort_items=SORT_ITEMS_DEFAULT) =>
 {
@@ -201,10 +200,9 @@ const describe_fn: DescribeFn = (async (description: string, test_description_fn
     }
 
     return run_tests
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 }) as any
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const describe: Describe = describe_fn as any
 describe.skip = (description: string, test_description_fn: TestDescriptionFn) =>
 {

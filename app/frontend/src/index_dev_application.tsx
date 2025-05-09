@@ -7,6 +7,7 @@ import { Provider } from "react-redux"
 
 import { DemoPredictionsBadge } from "./scratch_pad/DemoPredictionsBadge"
 import { DemoProjectDashboard } from "./scratch_pad/DemoProjectDashboard"
+import { DemoSupabaseAuthHang } from "./scratch_pad/DemoSupabaseAuthHang"
 import { DemoPredictionsGraph } from "./scratch_pad/PredictionsGraph"
 import { SandBox } from "./scratch_pad/SandBox"
 import { SandboxCircularConnections } from "./scratch_pad/SandboxCircularConnections"
@@ -48,6 +49,7 @@ const map_request_to_app: {[index: string]: () => JSX.Element} = {
     },
     "sandbox/supabase": () => <SandBoxSupabase />,
     "sandbox": () => <SandBox />,
+    "demo/supabase-auth-hang": () => <DemoSupabaseAuthHang />,
     "sim": () => <SimHome />,
     "data": () =>
     {

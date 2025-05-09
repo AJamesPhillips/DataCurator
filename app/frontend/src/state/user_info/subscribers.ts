@@ -13,10 +13,9 @@ export function user_info_subscribers (store: StoreType)
     if (!store.load_state_from_storage) return
 
     const starting_state = store.getState()
-    const { users_by_id, bases_by_id } = starting_state.user_info
-    //debugger
+    const { users_by_id } = starting_state.user_info
+
     if (!users_by_id) get_users(store)
-    if (!bases_by_id) refresh_bases_for_current_user(store)
 
 
     pub_sub.user.sub("changed_user", () =>
@@ -48,20 +47,27 @@ export function user_info_subscribers (store: StoreType)
     })
 
 
+    let first_time = true
     const supabase = get_supabase()
-    // debugger
-    supabase.auth.onAuthStateChange(async (args) =>
+    supabase.auth.onAuthStateChange(() =>
     {
-        const current_user = store.getState().user_info.user
-        console.log("about to call supabase.auth.getUser(), args: ", args)
-        debugger
-        const user = (await supabase.auth.getUser()).data.user || undefined
-        // Have to compare user by id as the object is changed on each call to `supabase.auth.user()`
-        const diff_user = current_user?.id !== user?.id
-        // console .log("supabase auth state change.  Diff user? ", diff_user, "current_user", current_user, "new user", user)
+        // This is work around to avoid this bug: https://github.com/supabase/supabase-js/issues/1401#issuecomment-2845918876
+        setTimeout(async () =>
+        {
+            const current_user = store.getState().user_info.user
 
-        debugger
-        if (diff_user) store.dispatch(ACTIONS.user_info.set_user({ user }))
+            const get_user = await supabase.auth.getUser()
+
+            const user = (get_user).data.user || undefined
+
+            // Have to compare user by id as the object is changed on each call to `supabase.auth.user()`
+            const diff_user = current_user?.id !== user?.id
+            // console .log("supabase auth state change.  Diff user? ", diff_user, "current_user", current_user, "new user", user)
+
+            if (diff_user) store.dispatch(ACTIONS.user_info.set_user({ user }))
+            else if (first_time) refresh_bases_for_current_user(store)
+            first_time = false
+        }, 0)
     })
 }
 
@@ -69,7 +75,6 @@ export function user_info_subscribers (store: StoreType)
 
 async function get_users (store: StoreType)
 {
-    //debugger
     const supabase = get_supabase()
     const { data, error } = await supabase.from("users").select<"users", SupabaseUser>()
     if (error) console.error("Error getting users", error)

@@ -49,7 +49,7 @@ export function selector_chosen_base_name (state: RootState)
     const base = selector_chosen_base(state)
     const chosen_base_id = selector_chosen_base_id(state)
 
-    return base ? base.title : (chosen_base_id === undefined ? "Not set" : `Store: ${chosen_base_id}`)
+    return base ? base.title : (chosen_base_id === undefined ? "Not set" : `Unknown Store: ${chosen_base_id}`)
 }
 
 

@@ -4,15 +4,15 @@ import { get_composed_wcomponents_by_id } from "./get_composed_wcomponents_by_id
 
 
 
-export function derived_composed_wcomponents_by_id_reducer (initial_state: RootState, state: RootState)
+export function derived_composed_wcomponents_by_id_reducer (prev_state: RootState, state: RootState)
 {
-    const wcomponents_by_id_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
+    const wcomponents_by_id_changed = prev_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
     // const initial_kv = get_knowledge_view_given_routing(initial_state)
     // const current_kv = get_knowledge_view_given_routing(state)
     // const kv_wc_id_map_changed = initial_kv?.wc_id_map !== current_kv?.wc_id_map
 
-    const initial_composed_visible_wc_id_map = initial_state.derived.current_composed_knowledge_view?.composed_visible_wc_id_map
+    const initial_composed_visible_wc_id_map = prev_state.derived.current_composed_knowledge_view?.composed_visible_wc_id_map
     const current_composed_visible_wc_id_map = state.derived.current_composed_knowledge_view?.composed_visible_wc_id_map
     const composed_visible_wc_id_map_changed = initial_composed_visible_wc_id_map !== current_composed_visible_wc_id_map
 

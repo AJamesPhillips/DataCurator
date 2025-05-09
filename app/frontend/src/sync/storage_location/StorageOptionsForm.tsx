@@ -98,7 +98,7 @@ function _StorageOptionsForm (props: Props)
             /><br />
             <input
                 type="button"
-                disabled={!create_base || !(new_base_title.trim()) || base_creation_state === "in_progress"}
+                disabled={!(new_base_title.trim()) || base_creation_state === "in_progress"}
                 onClick={create_base}
                 value="Create new base"
             /> &nbsp;
@@ -110,7 +110,7 @@ function _StorageOptionsForm (props: Props)
                 onClick={() =>
                 {
                     update_chosen_base_id({ base_id: newly_created_base.id })
-                    on_close && on_close()
+                    if (on_close) on_close()
                 }}
                 value="Select new base"
             />}

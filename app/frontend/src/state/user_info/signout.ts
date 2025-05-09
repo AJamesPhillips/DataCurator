@@ -27,8 +27,7 @@ export async function save_and_optionally_signout (signout: boolean)
     {
         if (signout)
         {
-            debugger
-            console.log("Signing out with supabase.auth.signOut()")
+            logger.debug("Signing out with supabase.auth.signOut()")
             const { error } = await supabase.auth.signOut()
             localStorage.clear()
         }

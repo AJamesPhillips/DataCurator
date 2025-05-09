@@ -1,7 +1,6 @@
 import type { User } from "@supabase/supabase-js"
 
 import { pick } from "../../shared/utils/pick"
-import { get_supabase } from "../../supabase/get_supabase"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import { local_user } from "../sync/local/data"
@@ -24,10 +23,9 @@ export function user_info_persist (state: RootState)
 
 interface UserInfoStartingStateArgs
 {
-    load_state_from_storage: boolean
     storage_location: number | undefined
 }
-export async function user_info_starting_state (args: UserInfoStartingStateArgs): Promise<UserInfoState>
+export function user_info_starting_state (args: UserInfoStartingStateArgs): UserInfoState
 {
     const obj = get_persisted_state_object<UserInfoState>("user_info")
     // const user_name = ensure_user_name("")
@@ -38,13 +36,7 @@ export async function user_info_starting_state (args: UserInfoStartingStateArgs)
     const chosen_base_id = args.storage_location !== undefined ? args.storage_location : obj.chosen_base_id
 
 
-    let user: User | undefined = local_user
-
-    if (args.load_state_from_storage)
-    {
-        const { data: { user: supabase_user } } = await get_supabase().auth.getUser()
-        user = supabase_user || undefined
-    }
+    const user: User | undefined = local_user
 
     const state: UserInfoState = {
         has_signed_in_at_least_once: false,

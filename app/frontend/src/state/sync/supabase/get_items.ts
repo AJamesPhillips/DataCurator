@@ -56,7 +56,7 @@ export async function supabase_get_items <S extends { id: string, base_id: numbe
 
     const res1 = await query
     let error = res1.error || undefined
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     let items = (res1.data || []).map((v: any) => args.converter(v))
 
     // You may have a knowledge view with one or more ids you can not access, however

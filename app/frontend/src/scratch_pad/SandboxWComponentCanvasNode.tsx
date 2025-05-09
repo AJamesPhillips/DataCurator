@@ -102,7 +102,7 @@ export function SandboxWComponentCanvasNode ()
 {
     const { wcomponents, wc11, kv10 } = sandbox_code()
 
-    let override_preloaded_state: RootState = get_starting_state(false)
+    let override_preloaded_state: RootState = get_starting_state()
 
     override_preloaded_state = {
         ...override_preloaded_state,

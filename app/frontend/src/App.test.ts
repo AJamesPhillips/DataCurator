@@ -141,6 +141,6 @@ async function run_all_tests ()
 
 export function setup_tests_for_browser ()
 {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     (window as any).run_tests = run_all_tests
 }

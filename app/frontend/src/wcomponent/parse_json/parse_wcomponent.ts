@@ -86,7 +86,7 @@ function upgrade_2021_05_31_connection_fromto_types (type?: string): ConnectionT
 // Upgrade valid as of 2021-05-19
 function upgrade_2021_05_19_process_actions (wcomponent: WComponent)
 {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (!wcomponent_is_process(wcomponent) || !(wcomponent as any).is_action) return wcomponent
 
     const wcomponent_action = {

@@ -6,7 +6,7 @@ import { controls_subscribers } from "./controls/subscribers"
 import { display_options_subscribers } from "./display_options/subscribers"
 import { record_keyupdown_activity } from "./global_keys/record_keyupdown_activity"
 import { persist_relevant_state } from "./persistence/persistence"
-import { root_reducer } from "./reducer"
+import { factory_root_reducer } from "./reducer"
 import { periodically_change_display_at_created_datetime } from "./routing/datetime/display_at_created"
 import { factory_location_hash } from "./routing/factory_location_hash"
 import routing_subscribers from "./routing/subscribers"
@@ -24,7 +24,7 @@ import { user_info_subscribers } from "./user_info/subscribers"
 
 
 export type StoreType = Store<RootState, AnyAction> & { load_state_from_storage: boolean }
-let cached_store: StoreType
+let cached_store: StoreType | undefined = undefined
 
 interface ConfigStoreArgs
 {
@@ -44,12 +44,14 @@ export function get_store (args: ConfigStoreArgs = {}): StoreType
 
 
     const preloaded_state: RootState = {
-        ...get_starting_state(load_state_from_storage),
+        ...get_starting_state(),
         ...override_preloaded_state,
     }
-    const store = createStore<RootState, Action, {}, {}>(root_reducer as any, preloaded_state) as any as StoreType
+    const root_reducer = factory_root_reducer(preloaded_state)
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    const store = createStore<RootState, Action, {}, {}>(root_reducer, preloaded_state) as StoreType
     store.load_state_from_storage = load_state_from_storage
-    cached_store = store as any
+    cached_store = store
 
 
     const save = () =>

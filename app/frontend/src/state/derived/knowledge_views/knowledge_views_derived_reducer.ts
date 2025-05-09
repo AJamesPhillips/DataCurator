@@ -51,17 +51,17 @@ import { get_knowledge_view_given_routing } from "./get_knowledge_view_given_rou
 
 
 
-export const knowledge_views_derived_reducer = (initial_state: RootState, state: RootState): RootState =>
+export const knowledge_views_derived_reducer = (prev_state: RootState, state: RootState): RootState =>
 {
 
-    const one_or_more_knowledge_views_changed = initial_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id
+    const one_or_more_knowledge_views_changed = prev_state.specialised_objects.knowledge_views_by_id !== state.specialised_objects.knowledge_views_by_id
     if (one_or_more_knowledge_views_changed)
     {
         state = update_derived_knowledge_view_state(state)
     }
 
 
-    const initial_kv = get_knowledge_view_given_routing(initial_state)
+    const initial_kv = get_knowledge_view_given_routing(prev_state)
     const current_kv = get_knowledge_view_given_routing(state)
     const kv_object_id_changed = initial_kv?.id !== current_kv?.id
     if (kv_object_id_changed)
@@ -72,16 +72,16 @@ export const knowledge_views_derived_reducer = (initial_state: RootState, state:
 
     const kv_object_changed = initial_kv !== current_kv
 
-    const one_or_more_wcomponents_changed = initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
+    const one_or_more_wcomponents_changed = prev_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id
 
-    const selected_ids_changed = initial_state.meta_wcomponents.selected_wcomponent_ids_set !== state.meta_wcomponents.selected_wcomponent_ids_set
+    const selected_ids_changed = prev_state.meta_wcomponents.selected_wcomponent_ids_set !== state.meta_wcomponents.selected_wcomponent_ids_set
 
     const composed_kv_needs_update = kv_object_changed || one_or_more_wcomponents_changed || selected_ids_changed
 
-    const created_at_changed = initial_state.routing.args.created_at_ms !== state.routing.args.created_at_ms
-    const filters_changed = created_at_changed || initial_state.filter_context !== state.filter_context || one_or_more_wcomponents_changed
+    const created_at_changed = prev_state.routing.args.created_at_ms !== state.routing.args.created_at_ms
+    const filters_changed = created_at_changed || prev_state.filter_context !== state.filter_context || one_or_more_wcomponents_changed
 
-    const display_time_marks_changed = initial_state.display_options.display_time_marks !== state.display_options.display_time_marks
+    const display_time_marks_changed = prev_state.display_options.display_time_marks !== state.display_options.display_time_marks
     const ephemeral_overrides_might_have_changed = created_at_changed || display_time_marks_changed
 
 
@@ -233,7 +233,9 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     }
 
     // do not need to delete these properties this but helps reduce confusion when debugging
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete (updated_composed_knowledge_view as any).wc_id_map
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete (updated_composed_knowledge_view as any).datetime_line_config
 
     return updated_composed_knowledge_view
@@ -472,6 +474,7 @@ export function calculate_wc_ids_to_exclude_based_on_filters(filters: FilterCont
         const { from_id, to_id } = wcomponent
         let should_exclude = false //!from_id || !to_id
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         should_exclude = should_exclude
             || (!!from_id && !selected_wc_ids.has(from_id) && wc_ids_excluded_by_filters.has(from_id))
             || (!!to_id && !selected_wc_ids.has(to_id) && wc_ids_excluded_by_filters.has(to_id))
@@ -580,6 +583,7 @@ function add_ephemeral_overrides_to_wc_id_map (state: RootState, current_compose
             new_map[wcomponent_id] = { ...existing_entry, left }
         })
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return !changed ? current_composed_knowledge_view : {
         ...current_composed_knowledge_view,
         composed_wc_id_map: new_map,

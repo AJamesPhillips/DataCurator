@@ -30,7 +30,7 @@ const _ProjectDashboard = (props: Props) =>
 
     const ids_in_kv = Object.keys(knowledge_view.wc_id_map)
     const judgements: WComponentJudgement[] = ids_in_kv.filter(id => props.judgements.has(id))
-        .map(id => props.wcomponents_by_id[id] as WComponentJudgement)
+        .map(id => props.wcomponents_by_id[id] as WComponentJudgement | undefined)
         .filter(wc => !!wc)
         .sort((j1, j2) => j1.judgement_target_wcomponent_id < j2.judgement_target_wcomponent_id ? -1 : (
             j1.judgement_target_wcomponent_id > j2.judgement_target_wcomponent_id ? 1 : 0

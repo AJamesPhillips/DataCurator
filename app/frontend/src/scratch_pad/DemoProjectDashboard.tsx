@@ -3,7 +3,7 @@ import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
-import { ProjectDashboard } from "./ProjectDashboard"
+// import { ProjectDashboard } from "./ProjectDashboard"
 
 
 
@@ -37,10 +37,10 @@ const _DemoProjectDashboard = (props: Props) =>
 
         {selected_knowledge_view && <div>
             <hr />
-            <ProjectDashboard knowledge_view_id={selected_knowledge_view} />
+            {/* <ProjectDashboard knowledge_view_id={selected_knowledge_view} /> */}
         </div>}
 
     </div>
 }
 
-export const DemoProjectDashboard = connector(_DemoProjectDashboard) as FunctionalComponent<{}>
+export const DemoProjectDashboard = connector(_DemoProjectDashboard) as FunctionalComponent

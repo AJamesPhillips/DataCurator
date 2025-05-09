@@ -6,7 +6,7 @@ import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet, WComponentNodeStateV2, WComponentStateValue } from "../../wcomponent/interfaces/state"
 import type { RootState } from "../State"
 import { ACTIONS } from "../actions"
-import { root_reducer } from "../reducer"
+import { factory_root_reducer } from "../reducer"
 import { get_starting_state } from "../starting_state"
 
 
@@ -59,7 +59,7 @@ export const test_derived_composed_wcomponents_by_id_reducer = describe.delay("d
         created_at_datetime?: Date,
     )
     {
-        let state_ = get_starting_state(false)
+        let state_ = get_starting_state()
 
         const knowledge_view = get_new_knowledge_view_object({
             base_id: -1,
@@ -67,6 +67,7 @@ export const test_derived_composed_wcomponents_by_id_reducer = describe.delay("d
             title: "Test KV",
             sort_type: "priority",
         }, {})
+        const root_reducer = factory_root_reducer(state_)
         state_ = root_reducer(state_, ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
         state_ = root_reducer(state_, ACTIONS.routing.change_route({
             args: { view: "knowledge", subview_id: knowledge_view.id },

@@ -27,7 +27,10 @@ export default tseslint.config(
             "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_$" }],
             "@typescript-eslint/restrict-template-expressions": "off",
             "@typescript-eslint/switch-exhaustiveness-check": "warn",
-            "@typescript-eslint/no-floating-promises": "off"
+            "@typescript-eslint/no-floating-promises": "off",
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-base-to-string": "off",
+            "@typescript-eslint/no-misused-promises": "off"
         },
     },
 )

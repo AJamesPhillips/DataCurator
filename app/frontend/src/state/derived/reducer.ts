@@ -12,10 +12,10 @@ import { knowledge_views_derived_reducer } from "./knowledge_views/knowledge_vie
 
 
 
-export function derived_state_reducer (initial_state: RootState, state: RootState)
+export function derived_state_reducer (prev_state: RootState, state: RootState)
 {
 
-    if (initial_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id)
+    if (prev_state.specialised_objects.wcomponents_by_id !== state.specialised_objects.wcomponents_by_id)
     {
         const ids = Object.keys(state.specialised_objects.wcomponents_by_id)
         const wcomponent_ids_by_type = get_wcomponent_ids_by_type(state.specialised_objects.wcomponents_by_id, ids)
@@ -36,11 +36,11 @@ export function derived_state_reducer (initial_state: RootState, state: RootStat
     }
 
 
-    state = knowledge_views_derived_reducer(initial_state, state)
+    state = knowledge_views_derived_reducer(prev_state, state)
     // IMPORTANT: derived_composed_wcomponents_by_id_reducer MUST go after knowledge_views_derived_reducer as it
     // uses the `state.derived.current_composed_knowledge_view.composed_wc_id_map` value
-    state = derived_composed_wcomponents_by_id_reducer(initial_state, state)
-    state = conditionally_update_active_judgement_or_objective_ids(initial_state, state)
+    state = derived_composed_wcomponents_by_id_reducer(prev_state, state)
+    state = conditionally_update_active_judgement_or_objective_ids(prev_state, state)
 
 
     return state
@@ -96,17 +96,17 @@ function update_judgement_or_objective_ids_by_goal_or_action_id (goals_and_actio
 
 
 
-function conditionally_update_active_judgement_or_objective_ids (initial_state: RootState, state: RootState): RootState
+function conditionally_update_active_judgement_or_objective_ids (prev_state: RootState, state: RootState): RootState
 {
     let { current_composed_knowledge_view } = state.derived
 
-    const kv_id_changed = initial_state.derived.current_composed_knowledge_view?.id !== current_composed_knowledge_view?.id
+    const kv_id_changed = prev_state.derived.current_composed_knowledge_view?.id !== current_composed_knowledge_view?.id
 
-    const judgement_or_objective_ids_by_target_id_changed = initial_state.derived.judgement_or_objective_ids_by_target_id !== state.derived.judgement_or_objective_ids_by_target_id
+    const judgement_or_objective_ids_by_target_id_changed = prev_state.derived.judgement_or_objective_ids_by_target_id !== state.derived.judgement_or_objective_ids_by_target_id
 
     const { created_at_ms, sim_ms } = state.routing.args
-    const created_at_ms_changed = initial_state.routing.args.created_at_ms !== created_at_ms
-    const sim_ms_changed = initial_state.routing.args.sim_ms !== sim_ms
+    const created_at_ms_changed = prev_state.routing.args.created_at_ms !== created_at_ms
+    const sim_ms_changed = prev_state.routing.args.sim_ms !== sim_ms
 
 
     // todo: we should update when the order of elements in current_composed_knowledge_view
