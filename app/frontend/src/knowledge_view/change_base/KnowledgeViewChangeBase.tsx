@@ -1,4 +1,4 @@
-import type { PostgrestResponse } from "@supabase/supabase-js"
+import type { PostgrestSingleResponse } from "@supabase/supabase-js"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
@@ -45,7 +45,7 @@ function _KnowledgeViewChangeBase (props: Props)
 
     const [base_id_to_move_to, set_base_id_to_move_to] = useState<number | undefined>(undefined)
 
-    const [result, set_result] = useState<PostgrestResponse<{}> | undefined>(undefined)
+    const [result, set_result] = useState<PostgrestSingleResponse<number> | undefined>(undefined)
 
 
     if (chosen_base_id === undefined) return <div>
@@ -161,7 +161,7 @@ export const KnowledgeViewChangeBase = connector(_KnowledgeViewChangeBase) as Fu
 
 
 const RELOAD_PAGE_DELAY_IN_SECONDS = 2
-async function move_ids_to_new_base (ids: string[], from_base_id: number, base_id_to_move_to: number, set_result: (result: PostgrestResponse<{}>) => void)
+async function move_ids_to_new_base (ids: string[], from_base_id: number, base_id_to_move_to: number, set_result: (result: PostgrestSingleResponse<number>) => void)
 {
     const supabase = get_supabase()
     const result = await supabase.rpc("move_ids_to_new_base", { ids, from_base_id, to_base_id: base_id_to_move_to })

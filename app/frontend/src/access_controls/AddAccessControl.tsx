@@ -2,7 +2,7 @@ import type { PostgrestError } from "@supabase/supabase-js"
 import { useState } from "preact/hooks"
 
 import { get_supabase } from "../supabase/get_supabase"
-import type { ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"
+import type { DB_ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"
 import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabaseErrors"
 import type { AsyncState } from "../utils/async_state"
 import { SelectAccessLevelDropDown } from "./SelectAccessLevel"
@@ -17,7 +17,7 @@ interface AddAccessControlEntryProps
 export function AddAccessControlEntry (props: AddAccessControlEntryProps)
 {
     const [email_or_uid, set_email_or_uid] = useState("")
-    const [access_level, set_access_level] = useState<ACCESS_CONTROL_LEVEL>("editor")
+    const [access_level, set_access_level] = useState<DB_ACCESS_CONTROL_LEVEL>("editor")
     const [adding_status, set_adding_status] = useState<AsyncState>("initial")
     const adding = adding_status === "in_progress"
     const added = adding_status === "success"

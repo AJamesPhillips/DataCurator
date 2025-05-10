@@ -1,7 +1,7 @@
 
 
 
-export function pub_sub_factory <map extends Object> (middleware: { [K in keyof map]?: (message: map[K]) => ({ continue: boolean, message: map[K] }) } = {})
+export function pub_sub_factory <map extends object> (middleware: { [K in keyof map]?: (message: map[K]) => ({ continue: boolean, message: map[K] }) } = {})
 {
     const all_subscribers: { [K in keyof map]?: ((message: map[K]) => void)[] } = {}
 

@@ -22,7 +22,7 @@ export function app_item_to_supabase <U extends Base & CommonFields> (item: U, b
 
     const supabase_item: SupabaseWriteItem<U> = {
         id: item.id,
-        modified_at: (item.modified_at ? item.modified_at.toISOString() : undefined) as any,
+        modified_at: (item.modified_at?.toISOString() || undefined) as any,
         // Only used for creating the component, ignored for update due to custom function that
         // has to check modified_at datetime and also base_id of actual item in DB rather than what
         // is claimed here.
@@ -39,7 +39,8 @@ export function app_item_to_supabase <U extends Base & CommonFields> (item: U, b
 
 export function supabase_item_to_app <U> (item: SupabaseReadItem<U>): U
 {
-    let { json, id, base_id, modified_at } = item
+    let { json } = item
+    const { id, base_id, modified_at } = item
     // Append `Z` for datetime value from server as it does not get stored with timezone and javascript's local
     // Date will parse it incorrectly.
     const modified_at_date = modified_at ? new Date(modified_at + "Z") : undefined

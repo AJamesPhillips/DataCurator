@@ -38,7 +38,8 @@ export function get_multiple_items_by_id <I extends { id: string, title?: string
 type IDsByType = { [t in WComponentType]: Set<string> }
 export function get_item_ids_by_type <I extends { id: string, type: WComponentType }> (items: I[]): IDsByType
 {
-    const map: { [t in WComponentType]: Set<string> } = {} as any
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const map: IDsByType = {} as any
     wcomponent_types.forEach(t => map[t] = new Set())
 
     items.forEach(item => map[item.type].add(item.id))

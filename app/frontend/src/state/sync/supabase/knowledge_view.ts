@@ -72,7 +72,10 @@ export async function supabase_get_knowledge_views_from_other_bases (args: GetKn
 
 interface SupabaseUpsertKnowledgeViewArgs
 {
-    supabase: SupabaseClient
+    // We do not yet use the type `SupabaseClient<Database>` because it is not
+    // yet working correctly.  For example it incorrectly restricts the
+    // KnowledgeView type from being used for a json field type.
+    supabase: SupabaseClient//<Database>
     knowledge_view: KnowledgeView
 }
 type SupabaseUpsertKnowledgeViewReturn = Promise<UpsertItemReturn<KnowledgeView>>

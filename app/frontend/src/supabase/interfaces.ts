@@ -26,7 +26,7 @@ export interface SupabaseKnowledgeBase
     owner_user_id: string
     public_read: boolean
     title: string
-    default_knowledge_view_id?: string
+    default_knowledge_view_id?: string | null
 }
 export interface JoinedAccessControlsPartial
 {
@@ -51,15 +51,19 @@ export type SupabaseKnowledgeBaseWithAccessById = { [id: string]: SupabaseKnowle
 
 // ++++++++++++++++ public.access_controls ++++++++++++++++
 
-export type ACCESS_CONTROL_LEVEL = "owner" | "editor" | "viewer" | "none"
+// The database only stores one of three access levels: "editor", "viewer" or "none"
+// but we use the "owner" level only in the application code.
+export type DB_ACCESS_CONTROL_LEVEL = "editor" | "viewer" | "none"
+export type ACCESS_CONTROL_LEVEL = "owner" | DB_ACCESS_CONTROL_LEVEL
 export interface DBSupabaseAccessControl
 {
     base_id: number
     user_id: string
-    access_level: ACCESS_CONTROL_LEVEL
+    access_level: DB_ACCESS_CONTROL_LEVEL
 }
-export interface SupabaseAccessControl extends DBSupabaseAccessControl
+export interface SupabaseAccessControl extends Omit<DBSupabaseAccessControl, "access_level">
 {
+    access_level: ACCESS_CONTROL_LEVEL
     inserted_at: Date
     updated_at: Date
 }
@@ -71,6 +75,7 @@ export interface SupabaseAccessControl extends DBSupabaseAccessControl
 export interface SupabaseWriteItem<I>
 {
     id: string
+    short_id?: string
     modified_at?: string
     base_id: number
     json: I
@@ -88,7 +93,9 @@ export interface SupabaseReadItem<I> extends SupabaseWriteItem<I>
 }
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SupabaseWriteKnowledgeView extends SupabaseWriteItem<KnowledgeView> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SupabaseReadKnowledgeView extends SupabaseReadItem<KnowledgeView> {}
 
 export interface SupabaseWriteWComponent extends SupabaseWriteItem<WComponent> {

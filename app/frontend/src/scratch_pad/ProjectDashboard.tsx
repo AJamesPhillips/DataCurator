@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import type { RootState } from "../state/State"
 import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
+import { wcomponent_is_judgement_or_objective } from "../wcomponent/interfaces/SpecialisedObjects"
 import { ProjectJudgementEntry } from "./ProjectJudgementEntry"
 
 
@@ -31,7 +32,7 @@ const _ProjectDashboard = (props: Props) =>
     const ids_in_kv = Object.keys(knowledge_view.wc_id_map)
     const judgements: WComponentJudgement[] = ids_in_kv.filter(id => props.judgements.has(id))
         .map(id => props.wcomponents_by_id[id] as WComponentJudgement | undefined)
-        .filter(wc => !!wc)
+        .filter(wcomponent_is_judgement_or_objective)
         .sort((j1, j2) => j1.judgement_target_wcomponent_id < j2.judgement_target_wcomponent_id ? -1 : (
             j1.judgement_target_wcomponent_id > j2.judgement_target_wcomponent_id ? 1 : 0
         ))

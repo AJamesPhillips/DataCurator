@@ -65,13 +65,14 @@ function _UserAccountInfoChangeUsernameForm (props: Props)
         set_save_state("in_progress")
 
         const { data, error } = await supabase
-            .from<SupabaseUser>("users")
-            .upsert({ id: user_id, name: username })
+            .from("users")
+            .upsert<SupabaseUser>({ id: user_id, name: username })
             .eq("id", user_id)
+            .select<"users", SupabaseUser>()
 
         set_postgrest_error(error)
         const actual_set_username = (data && data[0]?.name) ?? undefined
-        if (actual_set_username) pub_sub.user.pub("stale_users_by_id", false)
+        if (actual_set_username) pub_sub.user.pub("stale_users_by_id", true)
         set_save_state(error ? "error" : "success")
     }
 

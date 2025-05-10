@@ -70,7 +70,7 @@ export function BaseFormEditFields (props: OwnProps)
 
 
         Default view &nbsp; <SelectKnowledgeView
-            selected_option_id={modified_base.default_knowledge_view_id}
+            selected_option_id={modified_base.default_knowledge_view_id ?? undefined}
             on_change={default_knowledge_view_id =>
             {
                 set_modified_base({ ...modified_base, default_knowledge_view_id })
@@ -84,7 +84,7 @@ export function BaseFormEditFields (props: OwnProps)
         <div>
             {have_pending_edits && valid_edits && <input
                 type="button"
-                disabled={!have_pending_edits || !valid_edits}
+                disabled={!valid_edits}
                 onClick={async () =>
                 {
                     const res = await modify_base(modified_base)

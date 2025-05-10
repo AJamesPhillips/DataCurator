@@ -1,7 +1,7 @@
 import type { PostgrestResponse } from "@supabase/supabase-js"
 
 import { update_access_control } from "../supabase/access_controls"
-import type { ACCESS_CONTROL_LEVEL, SupabaseAccessControl, SupabaseUsersById } from "../supabase/interfaces"
+import type { DB_ACCESS_CONTROL_LEVEL, SupabaseAccessControl, SupabaseUsersById } from "../supabase/interfaces"
 import { get_user_name_for_display } from "../supabase/users"
 import { SelectAccessLevelDropDown } from "./SelectAccessLevel"
 
@@ -23,7 +23,10 @@ export function AccessControlEntry (props: AccessControlEntryProps)
     const { access_control, base_id, users_by_id, current_user_id, is_owner, on_update } = props
     const { user_id: other_user_id, access_level: current_level } = access_control
 
-    const update = (grant: ACCESS_CONTROL_LEVEL) => update_access_control({
+    // Type guard
+    if (current_level === "owner") return null
+
+    const update = (grant: DB_ACCESS_CONTROL_LEVEL) => update_access_control({
         base_id, other_user_id, grant,
     }).then(on_update)
 
@@ -39,9 +42,6 @@ export function AccessControlEntry (props: AccessControlEntryProps)
                 on_change={update}
             />
         </td>
-            {/* <SelectAccessLevel level="editor" current_level={current_level} on_click={update} /></td>
-        <td><SelectAccessLevel level="viewer" current_level={current_level} on_click={update} /></td>
-        <td><SelectAccessLevel level="none" current_level={current_level} on_click={update} /></td> */}
         <br />
     </tr>
 }

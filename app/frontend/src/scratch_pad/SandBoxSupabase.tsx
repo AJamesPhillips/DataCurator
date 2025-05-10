@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import SyncIcon from "@mui/icons-material/Sync"
-import type { AuthError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser, User } from "@supabase/supabase-js"
+import type { AuthError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser, SupabaseClient, User } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
 import { v4 as uuid_v4 } from "uuid"
 
@@ -40,7 +40,10 @@ import "./SandBox.scss"
 let is_supabase_recovery_email = document.location.hash.includes("type=recovery")
 
 
-const supabase = get_supabase()
+// We do not yet use the type `SupabaseClient<Database>` because it is not
+// yet working correctly.  For example it incorrectly restricts the
+// KnowledgeView type from being used for a json field type.
+const supabase = get_supabase() as SupabaseClient
 const supabase_auth_state_change: { subscribers: (() => void)[] } = { subscribers: [] }
 supabase.auth.onAuthStateChange(() =>
 {
@@ -684,7 +687,7 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     const db_kv = knowledge_view_app_to_supabase(modified_kv)
 
     const result = await supabase
-    .rpc("update_knowledge_view", { item: db_kv })
+    .rpc<"update_knowledge_view", SupabaseReadKnowledgeView>("update_knowledge_view", { item: db_kv })
 
     // const result = await supabase
     // .from<SupabaseKnowledgeView>("knowledge_views")
@@ -698,9 +701,7 @@ async function modify_knowledge_view (args: ModifyKnowledgeViewArgs)
     if (error) return
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const new_supabase_kv: SupabaseReadKnowledgeView = result.data
-    // // type guard
-    // if (!new_supabase_kv) return
+    const new_supabase_kv: SupabaseReadKnowledgeView = result.data as any
     const new_kv = knowledge_view_supabase_to_app(new_supabase_kv)
 
     const updated_knowledge_views = replace_element(current_knowledge_views, new_kv, kv => kv.id === knowledge_view.id)

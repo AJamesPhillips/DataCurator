@@ -11,7 +11,7 @@ import type { RootState } from "../state/State"
 
 interface OwnProps {
     placeholder?: string
-    selected_option_id?: string | undefined
+    selected_option_id?: string
     allowed_ids?: Set<string>
     exclude_ids?: Set<string>
     on_change: (knowledge_view_id: string | undefined) => void
@@ -54,7 +54,7 @@ function _SelectKnowledgeView (props: Props)
             while (entry)
             {
                 subtitle = " / " + entry.title + subtitle
-                entry = nested_knowledge_view_ids_map[entry?.parent_id || ""]
+                entry = nested_knowledge_view_ids_map[entry.parent_id || ""]
             }
 
             return { id, title, subtitle }

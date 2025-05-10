@@ -1,6 +1,5 @@
 import { get_supabase } from "./get_supabase"
 import type {
-    DBSupabaseKnowledgeBaseWithAccess,
     JoinedAccessControlsPartial,
     SupabaseKnowledgeBase,
     SupabaseKnowledgeBaseWithAccess
@@ -11,7 +10,7 @@ import type {
 export async function get_all_bases (user_id?: string)
 {
     const supabase = get_supabase()
-    const res = await supabase.from<DBSupabaseKnowledgeBaseWithAccess>("bases")
+    const res = await supabase.from("bases")
         .select("*, access_controls(access_level,user_id)")
         .order("inserted_at", { ascending: true })
 
@@ -31,8 +30,9 @@ export async function create_a_base (args: { owner_user_id: string, title?: stri
 
     const supabase = get_supabase()
     const res = await supabase
-        .from<SupabaseKnowledgeBase>("bases")
+        .from("bases")
         .insert({ owner_user_id, title })
+        .select()
 
     const base = res.data && res.data[0] || undefined
 
@@ -62,7 +62,8 @@ function santise_base (base: SupabaseKnowledgeBase): SupabaseKnowledgeBase
 
 function base_supabase_to_app (base: SupabaseKnowledgeBase, access_controls: JoinedAccessControlsPartial[] | undefined, user_id?: string): SupabaseKnowledgeBaseWithAccess
 {
-    let { inserted_at, updated_at, owner_user_id, public_read } = base
+    let { inserted_at, updated_at } = base
+    const { owner_user_id, public_read } = base
     inserted_at = new Date(inserted_at)
     updated_at = new Date(updated_at)
 
@@ -81,7 +82,7 @@ export async function modify_base (base: SupabaseKnowledgeBase)
 
     const supabase = get_supabase()
     const res = await supabase
-        .from<SupabaseKnowledgeBase>("bases")
+        .from("bases")
         .update(santised_base)
         .eq("id", santised_base.id)
 

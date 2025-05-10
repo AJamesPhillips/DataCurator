@@ -1,13 +1,15 @@
 import { FunctionalComponent, h } from "preact"
+import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { useEffect, useState } from "preact/hooks"
 import { Canvas } from "../canvas/Canvas"
 import type { ChildrenRawData } from "../layout/interfaces"
 import { MainArea } from "../layout/MainArea"
 import { pub_sub } from "../state/pub_sub/pub_sub"
+import { get_wcomponents_from_state } from "../state/specialised_objects/accessors"
 import type { RootState } from "../state/State"
-import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
+import { get_store } from "../state/store"
+import { WComponent, wcomponent_is_plain_connection } from "../wcomponent/interfaces/SpecialisedObjects"
 import {
     WComponentCanvasConnection,
 } from "../wcomponent_canvas/connection/WComponentCanvasConnection"
@@ -26,7 +28,7 @@ const map_state = (state: RootState) =>
     if (ready && !current_composed_knowledge_view) console .log(`No current_composed_knowledge_view`)
 
 
-    const { wc_ids_by_type, wcomponent_connections, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
+    const { wc_ids_by_type, wcomponent_unfound_ids } = current_composed_knowledge_view || {}
 
 
     const any_node_is_moving = state.meta_wcomponents.wcomponent_ids_to_move_set.size > 0
@@ -39,7 +41,6 @@ const map_state = (state: RootState) =>
         ready,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         wc_ids_by_type,
-        wcomponent_connections,
         wcomponent_unfound_ids,
         presenting: state.display_options.consumption_formatting,
         show_large_grid: state.display_options.show_large_grid,
@@ -128,8 +129,11 @@ const get_children = (props: Props): ChildrenRawData =>
 
 
 
-const get_svg_upper_children = ({ wcomponent_connections = [] }: Props) =>
+const get_svg_upper_children = ({ wc_ids_by_type }: Props) =>
 {
+    const state = get_store().getState()
+    const wcomponent_connections = get_wcomponents_from_state(state, wc_ids_by_type?.any_link)
+        .filter(wcomponent_is_plain_connection)
     return wcomponent_connections.map(({ id }) => <WComponentCanvasConnection key={id} id={id} />)
 }
 

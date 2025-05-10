@@ -25,7 +25,8 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     goal: true,
     prioritisation: true,
 }
-export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as any).sort()
+export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as WComponentType[])
+    .sort()
     .filter((type: WComponentType) => type !== "multidimensional_state")
 
 
