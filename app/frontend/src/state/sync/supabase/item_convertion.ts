@@ -11,18 +11,23 @@ interface CommonFields
 
 export function app_item_to_supabase <U extends Base & CommonFields> (item: U, base_id?: number): SupabaseWriteItem<U>
 {
+    // TODO document why item.base_id might be undefined and or updte types / date in database
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     base_id = item.base_id ?? base_id
 
+    // Document if this is a typeguard / sanity check or if this is actually doing something important?
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (base_id === undefined) throw new Error("Must provide base_id for app_item_to_supabase")
 
     const json = clean_base_object_of_sync_meta_fields(item)
-    // base_id is first classed as a DB field, deleting it means we don't need to sync it between
-    // this field and json.base_id
+    // Because base_id is stored a DB field we delete it from the json to stop
+    // the data being duplicated or causing confusion.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete (json as any).base_id
 
     const supabase_item: SupabaseWriteItem<U> = {
         id: item.id,
-        modified_at: (item.modified_at?.toISOString() || undefined) as any,
+        modified_at: (item.modified_at ? item.modified_at.toISOString() : undefined),
         // Only used for creating the component, ignored for update due to custom function that
         // has to check modified_at datetime and also base_id of actual item in DB rather than what
         // is claimed here.
@@ -47,6 +52,7 @@ export function supabase_item_to_app <U> (item: SupabaseReadItem<U>): U
 
     // base_id was previously being duplicated in the json field.  Delete it here as well before using
     // the actual base_id value from the database field.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     delete (json as any).base_id
 
     // Ensure all the fields that are edited in the db are set correctly in the json data.

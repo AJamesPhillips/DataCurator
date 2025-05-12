@@ -20,7 +20,7 @@ export async function supabase_create_item <SWrite extends { id: string }, SRead
     const result = await args.supabase
         .from(args.table)
         .insert(item_to_insert)
-        .eq("id", item_to_insert.id as any)
+        .eq("id", item_to_insert.id)
         .select<"", SRead>()
 
     const items: U[] = (result.data || []).map(args.converter_supabase_to_app)
