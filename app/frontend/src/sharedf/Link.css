@@ -10,6 +10,12 @@ a.link
   width: 100%; */
 }
 
+a.link.normal
+{
+  text-decoration: revert;
+  color: revert;
+}
+
 a.link.selected
 {
   background-color: rgba(150, 150, 240, 0.2);

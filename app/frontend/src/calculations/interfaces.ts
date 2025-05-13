@@ -67,7 +67,11 @@ export interface PlainCalculationObject
     // unique across time, but at any one time it should be unique.
     id: number
     name: string
-    value: string  // strings might be an @@<uuid v4>
+    /**
+     * Before being calculated, might be an @@<uuid v4> that will be deferenced
+     * to give a value.
+     */
+    value: string
     units?: string
     result_sig_figs?: number
     result_display_type?: NumberDisplayType
@@ -78,6 +82,11 @@ export interface CalculationResult
 {
     value: number | undefined
     units: string
+    /**
+     * Strings must be a @@<uuid v4>.  This is the component which the value was
+     * dereferenced from.  Currently only one value is allowed.
+     */
+    source_wcomponent_id?: string
     error?: string
     warning?: string
 }

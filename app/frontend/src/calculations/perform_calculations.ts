@@ -46,6 +46,7 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
         const {warnings, errors} = prepare_other_components({ model, model_component, values, uuids: uuid_v4s, wcomponents_by_id })
 
         const calculation_result = run_model(model, calculation.units, model_component)
+        if (uuid_v4s.length === 1) calculation_result.source_wcomponent_id = uuid_v4s[0]
         if (warnings.length) calculation_result.warning = warnings.join(" ")
         if (errors.length)
         {

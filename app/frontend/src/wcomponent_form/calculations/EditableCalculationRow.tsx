@@ -9,6 +9,7 @@ import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_c
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { format_number_to_string } from "../../shared/format_number_to_string"
+import { Link } from "../../sharedf/Link"
 import {
     double_at_mentioned_uuids_regex_capture_surrounding,
     only_double_at_mentioned_uuids_regex,
@@ -60,9 +61,17 @@ export function EditableCalculationRow (props: CalculationRowProps)
     if (result !== undefined && result.value !== undefined) // && values_different(calc.value, result.value))
     {
         const result_string = format_number_to_string(result.value, temp_result_sig_figs ?? default_significant_figures, result_display_type)
+        const { source_wcomponent_id } = result
 
         output_element = <div>
-            &nbsp;=&nbsp;{result_string}
+            &nbsp;=&nbsp;<Link
+                disabled={source_wcomponent_id === undefined}
+                route={"wcomponents"}
+                sub_route={undefined}
+                item_id={source_wcomponent_id}
+                args={undefined}
+                extra_class_name="normal"
+            >{result_string}
             {result.units && <span
                 style={{ fontSize: "14px" }}
             >
@@ -73,6 +82,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
             >
                 &nbsp;<RichMarkDown text={calc.result_description} />
             </span>}
+            </Link>
             {/* {editing && <IconButton
                 onClick={() => set_show_options(!show_options)}
                 size="small"

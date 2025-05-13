@@ -24,6 +24,7 @@ interface OwnProps
     extra_class_name?: string
     extra_css_style?: h.JSX.CSSProperties
     children?: ComponentChildren
+    disabled?: boolean
 }
 
 
@@ -69,10 +70,15 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _Link (props: Props)
 {
+    const { children = "Link" } = props
+
     const [clicked, set_clicked] = useState(false)
     const remove_clicked_class = useRef<NodeJS.Timeout | undefined>(undefined)
 
-    if (clicked && !remove_clicked_class!.current)
+    if (props.disabled) return children
+
+
+    if (clicked && !remove_clicked_class.current)
     {
         remove_clicked_class.current = setTimeout(() => {
 
@@ -118,7 +124,7 @@ function _Link (props: Props)
         className={class_name}
         style={props.extra_css_style}
     >
-        {props.children || "Link"}
+        {children}
     </a>
 }
 

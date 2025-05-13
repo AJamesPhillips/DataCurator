@@ -114,7 +114,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 12.3, units: "seconds" },
+            { value: 12.3, units: "seconds", source_wcomponent_id: id1 },
         ]
         test(calculation_result, expected_calculation_result, "Can access a wcomponent's value and overrides any units given in calculation with wcomponent's units")
 
@@ -125,9 +125,20 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 123, units: "meters" },
+            { value: 123, units: "meters", source_wcomponent_id: id1 },
         ]
         test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation and uses units given, overriding components units")
+
+
+
+        calculations = [
+            { id: 0, name: "A", value: `@@${id1} * @@${id1}`, units: "meters" },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 151.29, units: "meters" },
+        ]
+        test(calculation_result, expected_calculation_result, "Can reference same wcomponent values in a calculation but then will not give a reference to the original wcomponent i.e. wcomponent_id will be undefined")
 
 
 
@@ -136,7 +147,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 12.3, units: "meters" },
+            { value: 12.3, units: "meters", source_wcomponent_id: id1 },
         ]
         test.skip(calculation_result, expected_calculation_result, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Calculations can reference wcomponent values and assign units~~")
 
@@ -147,7 +158,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: undefined, units: "meters", error: "Object function not used on object" },
+            { value: undefined, units: "meters", source_wcomponent_id: id1, error: "Object function not used on object" },
         ]
         test(calculation_result, expected_calculation_result, `Can not currently access the ".value" of a component in an equation`)
     })
@@ -174,7 +185,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         ]
         calculation_result = perform_calculations(calculations, wcomponents_by_id)
         expected_calculation_result = [
-            { value: 10, units: "" },
+            { value: 10, units: "", source_wcomponent_id: id1 },
         ]
         test(calculation_result, expected_calculation_result, "Can use wcomponent boolean values")
     })
@@ -363,7 +374,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Missing component", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", error: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.` },
+                {
+                    value: 2,
+                    units: "",
+                    source_wcomponent_id: id1,
+                    error: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.`,
+                },
             ]
             calculation_result = perform_calculations(calculations, {})
             test(calculation_result, expected_calculation_result, `Can run calculations using missing uuids.  Will default to 1 and provide a warning.`)
@@ -373,7 +389,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: action type", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) is of type "action".  Defaulting to value of 1.` },
+                {
+                    value: 2,
+                    units: "",
+                    source_wcomponent_id: id1,
+                    warning: `The wcomponent "no title" (@@${id1}) is of type "action".  Defaulting to value of 1.`,
+                },
             ]
 
             const wcomponents_by_id: WComponentsById = {
@@ -392,7 +413,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: statev2 with subtype number but invalid number parsed to null", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) has an invalid number "".  Defaulting to value of 1.` },
+                {
+                    value: 2,
+                    units: "",
+                    source_wcomponent_id: id1,
+                    warning: `The wcomponent "no title" (@@${id1}) has an invalid number "".  Defaulting to value of 1.`,
+                },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
@@ -415,7 +441,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Invalid component: statev2 with subtype number but invalid number parsed to NaN", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) has an invalid number "some invalid number".  Defaulting to value of 1.` },
+                {
+                    value: 2,
+                    units: "",
+                    source_wcomponent_id: id1,
+                    warning: `The wcomponent "no title" (@@${id1}) has an invalid number "some invalid number".  Defaulting to value of 1.`,
+                },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
@@ -438,7 +469,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("Incomplete component: statev2 type with no VAP sets", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "", warning: `The wcomponent "no title" (@@${id1}) is missing any value and prediction sets.  Defaulting to value of 1.` },
+                {
+                    value: 2,
+                    units: "",
+                    source_wcomponent_id: id1,
+                    warning: `The wcomponent "no title" (@@${id1}) is missing any value and prediction sets.  Defaulting to value of 1.`,
+                },
             ]
 
             const wcomponents_by_id: WComponentsById = {
@@ -465,7 +501,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("coerces true to 1", () =>
         {
             expected_calculation_result = [
-                { value: 2, units: "" },
+                { value: 2, units: "", source_wcomponent_id: id1, },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
@@ -489,7 +525,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         describe("coerces false to 0", () =>
         {
             expected_calculation_result = [
-                { value: 1, units: "" },
+                { value: 1, units: "", source_wcomponent_id: id1, },
             ]
 
             vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})

@@ -19,7 +19,7 @@ interface OwnProps
 
 
 
-const map_state = (state: RootState, { }: OwnProps) =>
+const map_state = (state: RootState) =>
 {
     return {
         ready: state.sync.ready_for_reading,
@@ -73,7 +73,7 @@ function _LabelsEditor (props: Props)
     return (
         <MultiAutocompleteText
             placeholder="Add Label"
-            selected_option_ids={label_ids || []}
+            selected_option_ids={label_ids}
             options={wcomponent_id_options}
             allow_none={true}
             on_change={labels_ids =>
