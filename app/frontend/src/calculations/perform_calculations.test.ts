@@ -88,6 +88,24 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
 
 
+    describe("formatting functionality", () =>
+    {
+        const wcomponents_by_id: WComponentsById = {}
+        expected_calculation_result = []
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+
+        calculations = [
+            { id: 0, name: "A", value: `3,000,100.200` },
+        ]
+        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_result = [
+            { value: 3000100.2, units: "" },
+        ]
+        test(calculation_result, expected_calculation_result, "Should be able to ignore commas")
+    })
+
+
+
     const id1 = uuid_v4_for_tests(1)
     const base_id = 0
     let vap_set_1: StateValueAndPredictionsSet

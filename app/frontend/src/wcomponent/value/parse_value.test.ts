@@ -52,6 +52,11 @@ export const run_parse_value_tests = describe.delay("parse_value", () =>
             parsed_VAP_value = helper_func__parse_VAP_value(".3 e 2 %")
             test(parsed_VAP_value, 0.3, "Should parse fractional number with exponent with appended % and interspersed whitespace")
 
+            parsed_VAP_value = helper_func__parse_VAP_value("3,000.200")
+            test(parsed_VAP_value, 3000.2, "Should parse numbers with commas as thousands separators")
+
+            parsed_VAP_value = helper_func__parse_VAP_value("3,000.200%")
+            test(parsed_VAP_value, 30.002, "Should parse numbers with commas as thousands separators and percentage sign")
         })
     })
 
@@ -69,6 +74,9 @@ export const run_parse_value_tests = describe.delay("parse_value", () =>
         test(is_string_valid_number("123%%"), false, "number with appended % and further invalid characters")
         test(is_string_valid_number("1e-3%"), true, "negative exponent number with appended % (valid)")
         test(is_string_valid_number(".3 e 2 %"), true, "fractional number with exponent with appended % and interspersed whitespace (valid)")
+        test(is_string_valid_number("3,000.200%"), true, "numbers with commas as thousands separators are allowed")
+        test(is_string_valid_number("3,00.2"), false, "numbers with commas not at every 1000 are not allowed")
+        test(is_string_valid_number("3,00"), false, "numbers with commas not at every 1000 are not allowed")
     })
 
 })

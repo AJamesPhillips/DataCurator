@@ -79,9 +79,22 @@ function parse_string_as_number (num_str: string): number | null
     // Allow empty strings to be return null instead of NaN.  NaN is resereved for invalid numbers
     if (num_str === "") return null
 
-    const matches = num_str.match(/^(-?[0-9]*\.?[0-9]*)\s*(?:(e)\s*(-?[0-9]+))?\s*(\%)?$/)
+    // Handle thousands separators
+    const num_str_parts = num_str.split(",")
+    for(let i = 1; i < num_str_parts.length; ++i)
+    {
+        let part = num_str_parts[i] || ""
+        part = part.split(/[^\d]/)[0] || ""
+        if (part.length !== 3) return Number.NaN
+    }
+    num_str = num_str_parts.join("")
+
+
+    const matches = num_str.match(/^(-?[0-9]*\.?[0-9]*)\s*(?:(e)\s*(-?[0-9]+))?\s*(%)?$/)
     let value = NaN
-    do
+
+    let processing = true
+    while(processing)
     {
         if (!matches) break
         const [, num, exponent_sign, exponent, percentage] = matches
@@ -90,7 +103,8 @@ function parse_string_as_number (num_str: string): number | null
         if (Number.isNaN(value)) break
         if (exponent_sign && exponent) value = value * 10 ** parseInt(exponent)
         if (percentage) value = value / 100
-    } while (false)
+        processing = false
+    }
 
     return value
 }
