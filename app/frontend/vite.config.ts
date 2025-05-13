@@ -1,3 +1,4 @@
+import { resolve } from "path"
 
 import preact from "@preact/preset-vite"
 import { defineConfig } from "vite"
@@ -8,6 +9,21 @@ export default defineConfig({
   plugins: [preact()],
   build: {
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, "index.html"),
+        // This option allows us to specify where the entry point is for the
+        // application, so that when the app is built it is not configured to
+        // look for the assets at
+        // `https://datacurator.org/app/assets/index-4f26b23b.js` but rather at
+        // `../assets/index-4f26b23b.js` i.e.
+        // `https://datacurator.org/assets/index-4f26b23b.js` so that it will
+        // reuse the assets from the landing page app.
+        app: resolve(__dirname, "app/index.html"),
+        // We don't configure for the sim app because in the build.sh script we
+        // just copy the app/index.html file over to the sim directory
+        // i.e. sim/index.html
+        // sim: resolve(__dirname, "app/index.html"),
+      },
       output: {
         manualChunks: {
           "common_libraries": [
