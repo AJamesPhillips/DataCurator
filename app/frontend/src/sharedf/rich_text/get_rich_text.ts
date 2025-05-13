@@ -1,4 +1,5 @@
 import type { KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
+import { get_store } from "../../state/store"
 import type {
     WComponent,
     WComponentsById,
@@ -22,17 +23,21 @@ export enum RichTextType
     rich,
 }
 
-export interface ReplaceIdsArgs
+export interface StoreConnectedReplaceIdsArgs
 {
     text_type: RichTextType
+    depth_limit?: number
+    current_depth?: number
+    root_url?: string
+}
+
+export interface ReplaceIdsArgs extends StoreConnectedReplaceIdsArgs
+{
     wcomponents_by_id: WComponentsById
     knowledge_views_by_id: KnowledgeViewsById
     wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined
     created_at_ms: number
     sim_ms: number
-    depth_limit?: number
-    current_depth?: number
-    root_url?: string
 }
 
 
@@ -115,6 +120,33 @@ export function replace_ids_in_text (args: ReplaceIdsInTextArgs): string
     return replaced_text
 }
 
+
+interface StoreConnectedReplaceIdsInTextArgs extends StoreConnectedReplaceIdsArgs
+{
+    text: string
+}
+export function store_connected_replace_ids_in_text (args: StoreConnectedReplaceIdsInTextArgs): string
+{
+    const store = get_store()
+    const state = store.getState()
+    const {
+        composed_wcomponents_by_id: wcomponents_by_id,
+    } = state.derived
+    const { knowledge_views_by_id } = state.specialised_objects
+    const { created_at_ms, sim_ms } = state.routing.args
+    // Planning to deprecate this in the future so not implementing now with
+    // `get_wc_id_to_counterfactuals_v2_map`
+    const wc_id_to_counterfactuals_map = {}
+
+    return replace_ids_in_text({
+        ...args,
+        wcomponents_by_id,
+        knowledge_views_by_id,
+        wc_id_to_counterfactuals_map,
+        created_at_ms,
+        sim_ms,
+    })
+}
 
 
 function _replace_ids_in_text (text: string, text_type: RichTextType, wcomponents_by_id: WComponentsById, knowledge_views_by_id: KnowledgeViewsById, depth_limit: number, current_depth: number, root_url: string, wc_id_to_counterfactuals_map: WcIdToCounterfactualsV2Map | undefined, created_at_ms: number, sim_ms: number)
