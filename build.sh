@@ -31,6 +31,7 @@ echo "Moving files..."
 # mv ../data-curator-build/index_landing_page.html ../data-curator-build/index.html
 
 cp -r app/frontend/dist/* ../data-curator-build/
-cp ../data-curator-build/app/index.html ../data-curator-build/sim/index.html
+cp ../data-curator-build/index.html ../data-curator-build/app/index.html
+cp ../data-curator-build/index.html ../data-curator-build/sim/index.html
 
 echo "Build completed"

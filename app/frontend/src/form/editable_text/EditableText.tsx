@@ -26,7 +26,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onChange={on_change}
                 onBlur={on_blur}
                 onKeyDown={on_key_down}
-                inputRef={on_render as any}
+                inputRef={on_render}
                 spellcheck={props.spellcheck}
             />
             // return <textarea

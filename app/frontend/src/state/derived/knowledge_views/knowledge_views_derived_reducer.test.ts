@@ -11,7 +11,7 @@ export const test_knowledge_views_derived_reducer = describe.delay("knowledge_vi
 {
     describe("calculate_wc_ids_to_exclude_based_on_filters", () =>
     {
-        let filters: FilterContextFilters = {
+        const filters: FilterContextFilters = {
             exclude_by_label_ids: [],
             include_by_label_ids: [],
             exclude_by_component_types: [],
@@ -19,7 +19,7 @@ export const test_knowledge_views_derived_reducer = describe.delay("knowledge_vi
             filter_by_current_knowledge_view: false,
             filter_by_text: "",
         }
-        let selected_wc_ids = new Set<string>()
+        const selected_wc_ids = new Set<string>()
 
         const node1 = prepare_new_contextless_wcomponent_object({
             id: "node1",

@@ -98,7 +98,7 @@ function _EditableTextCommon (props: Props)
     if (editing_allowed === false || (!props.conditional_on_change && !props.on_blur) || disabled || (presenting && editing_allowed === undefined))
     {
         const class_name = (disabled ? "disabled" : "")
-        const have_value = props.value !== undefined
+        const have_value = !!props.value
 
         return <div className={class_name}>
             {have_value && !props.hide_label && <span className="description_label">{props.placeholder}&nbsp;</span>}
@@ -142,7 +142,7 @@ function _EditableTextCommon (props: Props)
             new_value = custom_creation_context_replace_text(props.creation_context, new_value)
         }
 
-        if (new_value !== props.value) props.conditional_on_change && props.conditional_on_change(new_value)
+        if (new_value !== props.value && props.conditional_on_change) props.conditional_on_change(new_value)
         set_value(new_value)
     }, [props.value, props.creation_context, props.conditional_on_change])
 
@@ -162,7 +162,7 @@ function _EditableTextCommon (props: Props)
         const value_has_changed = new_value !== props.value
         if (on_blur_type === EditableTextOnBlurType.always || value_has_changed)
         {
-            props.on_blur && props.on_blur(new_value)
+            if (props.on_blur) props.on_blur(new_value)
         }
 
         set_value(new_value)
@@ -221,6 +221,7 @@ function _EditableTextCommon (props: Props)
     }, [])
 
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [_, force_refreshing_render] = useState({}) // todo refactor this component to remove this quick hack
     const refocus_after_search_window = useMemo(() => (on_focus_set_selection: OnFocusSetSelection) =>
     {
@@ -312,10 +313,7 @@ function handle_text_field_focus (args: HandleTextFieldFocusArgs)
 function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement | undefined, wrapped_conditional_on_change: (new_value: string) => void, wrapped_on_blur: (new_value: string) => void)
 {
     const is_editing_this_specific_text = document.activeElement === el
-
     if (!is_editing_this_specific_text) return
-    if (!el) return // type guard
-
 
     handle_ctrl_k_link_insert(e, el, wrapped_conditional_on_change)
 
@@ -416,7 +414,7 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
 
 function custom_creation_context_replace_text (creation_context: CreationContext | undefined, new_value: string): string
 {
-    if (creation_context?.replace_text_target && creation_context?.replace_text_replacement)
+    if (creation_context && creation_context.replace_text_target && creation_context.replace_text_replacement)
     {
         new_value = new_value.replaceAll(creation_context.replace_text_target, creation_context.replace_text_replacement)
     }
