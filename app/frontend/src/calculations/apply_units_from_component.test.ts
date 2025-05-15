@@ -10,7 +10,7 @@ export const run_apply_units_from_component_tests = describe.delay("apply_units_
 {
     let units: string
     let calculation_string: string
-    let wcomponents_by_id: WComponentsById
+    let wcomponents_by_id: WComponentsById = {}
     let prepared_units: string | undefined
     let expected_prepared_units: string | undefined
 

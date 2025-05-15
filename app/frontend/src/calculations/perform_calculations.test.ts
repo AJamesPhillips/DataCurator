@@ -14,8 +14,8 @@ import { perform_calculations } from "./perform_calculations"
 export const run_perform_calculations_test = describe.delay("perform_calculations", () =>
 {
     let calculations: PlainCalculationObject[] = []
-    let calculation_result: CalculationResult[] = []
-    let expected_calculation_result: CalculationResult[] = []
+    let calculation_results: CalculationResult[] = []
+    let expected_calculation_results: CalculationResult[] = []
 
 
 
@@ -23,9 +23,9 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
     {
         calculations = []
         const wcomponents_by_id: WComponentsById = {}
-        expected_calculation_result = []
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        test(calculation_result, expected_calculation_result, "No calculations should return no results")
+        expected_calculation_results = []
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        test(calculation_results, expected_calculation_results, "No calculations should return no results")
 
 
 
@@ -34,13 +34,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `4` },
             { id: 2, name: "C", value: `[A] + [B]` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 3, units: "" },
             { value: 4, units: "" },
             { value: 7, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, "3 simple calculations should return 3 results")
+        test(calculation_results, expected_calculation_results, "3 simple calculations should return 3 results")
 
 
 
@@ -49,13 +49,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1,  name: "C", value: `[A] + [some_undeclared_variable]` },
             { id: 2,  name: "D", value: `5 + 1` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 3 + 1, units: "" },
             { value: undefined, error: "The primitive [some_undeclared_variable] could not be found.", units: "" },
             { value: 5 + 1, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, "Failure to find a value should still perform other valid calculations")
+        test(calculation_results, expected_calculation_results, "Failure to find a value should still perform other valid calculations")
 
 
 
@@ -64,13 +64,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1,  name: "A", value: `[A] * 2` },
             { id: 2,  name: "A", value: `[A] * 2` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 1 + 1, units: "" },
             { value: 4, units: "" },
             { value: 8, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, "Can cope with self reference")
+        test(calculation_results, expected_calculation_results, "Can cope with self reference")
 
 
 
@@ -78,12 +78,12 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 0, name: " A ", value: `1 + 1` },
             { id: 1, name: "B", value: `[ A ] * 2` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 1 + 1, units: "" },
             { value: 4, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, "Can cope with references with spaces")
+        test(calculation_results, expected_calculation_results, "Can cope with references with spaces")
     })
 
 
@@ -91,17 +91,17 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
     describe("formatting functionality", () =>
     {
         const wcomponents_by_id: WComponentsById = {}
-        expected_calculation_result = []
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = []
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
 
         calculations = [
             { id: 0, name: "A", value: `3,000,100.200` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 3000100.2, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, "Should be able to ignore commas")
+        test(calculation_results, expected_calculation_results, "Should be able to ignore commas")
     })
 
 
@@ -130,55 +130,55 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `@@${id1}`, units: "meters" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 12.3, units: "seconds", source_wcomponent_id: id1 },
         ]
-        test(calculation_result, expected_calculation_result, "Can access a wcomponent's value and overrides any units given in calculation with wcomponent's units")
+        test(calculation_results, expected_calculation_results, "Can access a wcomponent's value and overrides any units given in calculation with wcomponent's units")
 
 
 
         calculations = [
             { id: 0, name: "A", value: `@@${id1} * 10`, units: "meters" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 123, units: "meters", source_wcomponent_id: id1 },
         ]
-        test(calculation_result, expected_calculation_result, "Can reference wcomponent values in a calculation and uses units given, overriding components units")
+        test(calculation_results, expected_calculation_results, "Can reference wcomponent values in a calculation and uses units given, overriding components units")
 
 
 
         calculations = [
             { id: 0, name: "A", value: `@@${id1} * @@${id1}`, units: "meters" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 151.29, units: "meters" },
         ]
-        test(calculation_result, expected_calculation_result, "Can reference same wcomponent values in a calculation but then will not give a reference to the original wcomponent i.e. wcomponent_id will be undefined")
+        test(calculation_results, expected_calculation_results, "Can reference same wcomponent values in a calculation but then will not give a reference to the original wcomponent i.e. wcomponent_id will be undefined")
 
 
 
         calculations = [
             { id: 0, name: "A", value: `{@@${id1} meters}` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 12.3, units: "meters", source_wcomponent_id: id1 },
         ]
-        test.skip(calculation_result, expected_calculation_result, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Calculations can reference wcomponent values and assign units~~")
+        test.skip(calculation_results, expected_calculation_results, "Skipping because Simulation.JS does not allow referencing and setting units: ~~Calculations can reference wcomponent values and assign units~~")
 
 
 
         calculations = [
             { id: 0, name: "A", value: `@@${id1}.value`, units: "meters" },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: undefined, units: "meters", source_wcomponent_id: id1, error: "Object function not used on object" },
         ]
-        test(calculation_result, expected_calculation_result, `Can not currently access the ".value" of a component in an equation`)
+        test(calculation_results, expected_calculation_results, `Can not currently access the ".value" of a component in an equation`)
     })
 
 
@@ -201,11 +201,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `IfThenElse(@@${id1}, 15, 10)` },
         ]
-        calculation_result = perform_calculations(calculations, wcomponents_by_id)
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, wcomponents_by_id)
+        expected_calculation_results = [
             { value: 10, units: "", source_wcomponent_id: id1 },
         ]
-        test(calculation_result, expected_calculation_result, "Can use wcomponent boolean values")
+        test(calculation_results, expected_calculation_results, "Can use wcomponent boolean values")
     })
 
 
@@ -215,11 +215,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters} + {10 Centimeters}`, units: "Meters" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 2.10, units: "Meters" },
         ]
-        test(calculation_result, expected_calculation_result, "Computes correct value and includes units in result")
+        test(calculation_results, expected_calculation_results, "Computes correct value and includes units in result")
     })
 
 
@@ -229,11 +229,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}` },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 2, units: "Meters" },
         ]
-        test(calculation_result, expected_calculation_result, "Computes correct units")
+        test(calculation_results, expected_calculation_results, "Computes correct units")
     })
 
 
@@ -243,11 +243,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: undefined },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 2, units: "Meters" },
         ]
-        test(calculation_result, expected_calculation_result, "Computes correct units")
+        test(calculation_results, expected_calculation_results, "Computes correct units")
     })
 
 
@@ -257,11 +257,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: "kg" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: undefined, units: "kg", error: "Wrong units generated for [A]. Expected Kg, and got Meters." },
         ]
-        test(calculation_result, expected_calculation_result, "Computes correct units")
+        test(calculation_results, expected_calculation_results, "Computes correct units")
     })
 
 
@@ -271,22 +271,22 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `2`, units: "Unitless" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 2, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, `Computes correct units of "" when "Unitless" is specified`)
+        test(calculation_results, expected_calculation_results, `Computes correct units of "" when "Unitless" is specified`)
 
 
 
         calculations = [
             { id: 0, name: "A", value: `{2 Meters}`, units: "Unitless" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: undefined, units: "", error: "Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation." },
         ]
-        test(calculation_result, expected_calculation_result, `Computes correct units of "" when "Unitless" is specified as the units even though it conflicts with units given in calculation`)
+        test(calculation_results, expected_calculation_results, `Computes correct units of "" when "Unitless" is specified as the units even though it conflicts with units given in calculation`)
     })
 
 
@@ -296,11 +296,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: "1,200,300e4 / {4,001,000e3 km}", units: "1/km" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 3, units: "1/km" },
         ]
-        test(calculation_result, expected_calculation_result, "Can compute numbers with thousands commas")
+        test(calculation_results, expected_calculation_results, "Can compute numbers with thousands commas")
     })
 
 
@@ -310,11 +310,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: "{7 Widgets/Years^2}*{10 Years}", units: "Widgets/Years" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 70, units: "Widgets/Years" },
         ]
-        test(calculation_result, expected_calculation_result, "Widgets/Years^2  *  Years")
+        test(calculation_results, expected_calculation_results, "Widgets/Years^2  *  Years")
     })
 
 
@@ -328,13 +328,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `{10 £ / year}`, units: "" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 90, units: "£/(Year)" },
             { value: 10, units: "£/(Year)" },
             { value: 100, units: "£/(Year)" },
         ]
-        test(calculation_result, expected_calculation_result, "Handles currency symbols specified inside curly braces")
+        test(calculation_results, expected_calculation_results, "Handles currency symbols specified inside curly braces")
 
 
 
@@ -343,13 +343,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `10`, units: "£ / year" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 90, units: "£ / year" },
             { value: 10, units: "£ / year" },
             { value: 100, units: "£ / year" },
         ]
-        test(calculation_result, expected_calculation_result, "Handles currency symbols specified inside units field, and preserves them precisely")
+        test(calculation_results, expected_calculation_results, "Handles currency symbols specified inside units field, and preserves them precisely")
 
 
 
@@ -358,13 +358,13 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { id: 1, name: "B", value: `10`, units: "$ / year" },
             { id: 2, name: "C", value: `[A]+[B]`, units: "£ / year" },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 90, units: "£ / year" },
             { value: 10, units: "$ / year" },
             { value: undefined, units: "£ / year", error: "Incompatible units for the addition of £/(Year) and $/(Year)." },
         ]
-        test(calculation_result, expected_calculation_result, "Correctly formats currency symbols in error messages")
+        test(calculation_results, expected_calculation_results, "Correctly formats currency symbols in error messages")
     })
 
 
@@ -374,11 +374,11 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
         calculations = [
             { id: 0, name: "A", value: `0.5 * (180 / Pi)` },
         ]
-        calculation_result = perform_calculations(calculations, {})
-        expected_calculation_result = [
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
             { value: 28.6478897565412, units: "" },
         ]
-        test(calculation_result, expected_calculation_result, `Can run calculations using reserved word "Pi"`)
+        test(calculation_results, expected_calculation_results, `Can run calculations using reserved word "Pi"`)
     })
 
 
@@ -391,7 +391,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
         describe("Missing component", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 {
                     value: 2,
                     units: "",
@@ -399,14 +399,14 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     error: `Could not find wcomponent with id: @@${id1}.  Defaulting to value of 1.`,
                 },
             ]
-            calculation_result = perform_calculations(calculations, {})
-            test(calculation_result, expected_calculation_result, `Can run calculations using missing uuids.  Will default to 1 and provide a warning.`)
+            calculation_results = perform_calculations(calculations, {})
+            test(calculation_results, expected_calculation_results, `Can run calculations using missing uuids.  Will default to 1 and provide a warning.`)
         })
 
 
         describe("Invalid component: action type", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 {
                     value: 2,
                     units: "",
@@ -423,14 +423,14 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using actions.  Will default to 1 and provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using actions.  Will default to 1 and provide a warning.`)
         })
 
 
         describe("Invalid component: statev2 with subtype number but invalid number parsed to null", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 {
                     value: 2,
                     units: "",
@@ -451,14 +451,14 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [vap_set_1],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with invalid number of null.  Will default to 1 and provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using statev2 with invalid number of null.  Will default to 1 and provide a warning.`)
         })
 
 
         describe("Invalid component: statev2 with subtype number but invalid number parsed to NaN", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 {
                     value: 2,
                     units: "",
@@ -479,14 +479,14 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [vap_set_1],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with invalid number of NaN.  Will default to 1 and provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using statev2 with invalid number of NaN.  Will default to 1 and provide a warning.`)
         })
 
 
         describe("Incomplete component: statev2 type with no VAP sets", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 {
                     value: 2,
                     units: "",
@@ -503,8 +503,8 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 with no VAPsets.  Will default to 1 and provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using statev2 with no VAPsets.  Will default to 1 and provide a warning.`)
         })
     })
 
@@ -518,7 +518,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
         describe("coerces true to 1", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 { value: 2, units: "", source_wcomponent_id: id1, },
             ]
 
@@ -535,14 +535,14 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [vap_set_1],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 boolean subtypes.  Will coerce true to 1 and not provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using statev2 boolean subtypes.  Will coerce true to 1 and not provide a warning.`)
         })
 
 
         describe("coerces false to 0", () =>
         {
-            expected_calculation_result = [
+            expected_calculation_results = [
                 { value: 1, units: "", source_wcomponent_id: id1, },
             ]
 
@@ -559,8 +559,8 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                     values_and_prediction_sets: [vap_set_1],
                 }),
             }
-            calculation_result = perform_calculations(calculations, wcomponents_by_id)
-            test(calculation_result, expected_calculation_result, `Can run calculations using statev2 boolean subtypes.  Will coerce false to 0 and not provide a warning.`)
+            calculation_results = perform_calculations(calculations, wcomponents_by_id)
+            test(calculation_results, expected_calculation_results, `Can run calculations using statev2 boolean subtypes.  Will coerce false to 0 and not provide a warning.`)
         })
 
     })
