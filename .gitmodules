@@ -13,3 +13,6 @@
 [submodule "deploy/roles/lets_encrypt"]
 	path = deploy/roles/lets_encrypt
 	url = git@github.com:thefinn93/ansible-letsencrypt.git
+[submodule "app/frontend/lib/datacurator-core"]
+	path = app/frontend/lib/datacurator-core
+	url = git@github.com:AJamesPhillips/datacurator-core.git
