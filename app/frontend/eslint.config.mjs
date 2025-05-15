@@ -1,5 +1,3 @@
-// @ts-check
-
 import eslint from "@eslint/js"
 import tseslint from "typescript-eslint"
 
@@ -33,5 +31,9 @@ export default tseslint.config(
             "@typescript-eslint/no-misused-promises": "off",
             "no-constant-condition": "off"
         },
+        ignores: [
+            "scripts/*.js",
+            "eslint.config.mjs"
+        ],
     },
 )

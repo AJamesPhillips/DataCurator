@@ -35,5 +35,9 @@
     "noUncheckedIndexedAccess": true
   },
   "include": ["src", "types"],
+  "exclude": [
+    "scripts",
+    "eslint.config.mjs"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
