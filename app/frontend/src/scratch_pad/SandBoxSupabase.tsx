@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import SyncIcon from "@mui/icons-material/Sync"
 import type { AuthError, PostgrestError, PostgrestResponse, User as SupabaseAuthUser, SupabaseClient, User } from "@supabase/supabase-js"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
 import { useEffect, useState } from "preact/hooks"
 import { v4 as uuid_v4 } from "uuid"
 
@@ -16,7 +17,6 @@ import {
 } from "../state/sync/supabase/knowledge_view"
 import { get_access_controls_for_base } from "../supabase/access_controls"
 import { create_a_base, get_all_bases, modify_base } from "../supabase/bases"
-import { get_supabase } from "../supabase/get_supabase"
 import type {
     SupabaseAccessControl,
     SupabaseKnowledgeBase,

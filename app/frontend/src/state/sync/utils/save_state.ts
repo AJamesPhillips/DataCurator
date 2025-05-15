@@ -1,5 +1,6 @@
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import type { Base } from "../../../shared/interfaces/base"
-import { get_supabase } from "../../../supabase/get_supabase"
 import { logger } from "../../../utils/logger"
 import { ACTIONS } from "../../actions"
 import { get_knowledge_view_from_state, get_wcomponent_from_state } from "../../specialised_objects/accessors"

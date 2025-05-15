@@ -1,5 +1,4 @@
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
-
 import {
     Box,
     Button,
@@ -10,10 +9,11 @@ import {
     Typography,
 } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
 import { useEffect, useState } from "preact/hooks"
+
 import { get_persisted_state_object } from "../state/persistence/persistence_utils"
 import type { UserInfoState } from "../state/user_info/state"
-import { get_supabase } from "../supabase/get_supabase"
 import { DefaultTheme } from "../ui_themes/material_default"
 import "./LandingPage.scss"
 

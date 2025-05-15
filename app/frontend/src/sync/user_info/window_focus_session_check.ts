@@ -1,9 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
 
 import { ACTIONS } from "../../state/actions"
 import type { StoreType } from "../../state/store"
 import { save_and_optionally_signout } from "../../state/user_info/signout"
-import { get_supabase } from "../../supabase/get_supabase"
 import { logger } from "../../utils/logger"
 import { register_window_on_focus_listener } from "../../utils/window_on_focus_listener"
 

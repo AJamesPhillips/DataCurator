@@ -7,6 +7,11 @@ import { defineConfig } from "vite"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [preact()],
+  resolve: {
+    alias: {
+      "datacurator-core": resolve(__dirname, "lib/datacurator-core/src"),
+    }
+  },
   build: {
     rollupOptions: {
       input: {

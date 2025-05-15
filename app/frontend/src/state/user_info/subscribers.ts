@@ -1,4 +1,5 @@
-import { get_supabase } from "../../supabase/get_supabase"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import type { SupabaseUser } from "../../supabase/interfaces"
 import { ACTIONS } from "../actions"
 import { pub_sub } from "../pub_sub/pub_sub"

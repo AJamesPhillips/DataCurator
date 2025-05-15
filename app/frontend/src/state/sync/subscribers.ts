@@ -1,4 +1,5 @@
-import { get_supabase } from "../../supabase/get_supabase"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import { min_throttle } from "../../utils/throttle"
 import { ACTIONS } from "../actions"
 import { pub_sub } from "../pub_sub/pub_sub"
@@ -62,7 +63,7 @@ function subscribe_search_for_requested_wcomponents_in_any_base (store: StoreTyp
     // Could do this more efficiently with a pubsub from the reducer
     // handling `is_request_searching_for_wcomponents_by_id_in_any_base`
     // but will not as premature optimisation
-    store.subscribe(async () =>
+    store.subscribe(() =>
     {
         const state = store.getState()
         if (!state.sync.ready_for_reading) return

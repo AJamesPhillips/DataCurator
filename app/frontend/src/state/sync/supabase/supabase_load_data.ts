@@ -1,4 +1,5 @@
-import { get_supabase } from "../../../supabase/get_supabase"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import type { SpecialisedObjectsFromToServer } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { local_data } from "../local/data"
 import { supabase_get_knowledge_views, supabase_get_knowledge_views_from_other_bases } from "./knowledge_view"

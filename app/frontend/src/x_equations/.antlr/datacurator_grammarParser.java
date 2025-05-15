@@ -1,4 +1,4 @@
-// Generated from /Users/ajp/projects/DataCurator/app/frontend/src/x_equations/datacurator_grammar.g4 by ANTLR 4.9.2
+// Generated from /Users/ajp/projects/DataCurator/app/frontend/src/x_equations/datacurator_grammar.g4 by ANTLR 4.13.1
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
+@SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
 public class datacurator_grammarParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.9.2", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -93,6 +93,7 @@ public class datacurator_grammarParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
+	@SuppressWarnings("CheckReturnValue")
 	public static class EquationContext extends ParserRuleContext {
 		public TerminalNode EOF() { return getToken(datacurator_grammarParser.EOF, 0); }
 		public List<ExpressionContext> expression() {
@@ -105,6 +106,14 @@ public class datacurator_grammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_equation; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterEquation(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitEquation(this);
+		}
 	}
 
 	public final EquationContext equation() throws RecognitionException {
@@ -117,7 +126,7 @@ public class datacurator_grammarParser extends Parser {
 			setState(9);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << NUMBER) | (1L << CONSTANTS) | (1L << ARG_FUNKTION) | (1L << ARG2_FUNKTION) | (1L << ID_REF))) != 0)) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & 15874L) != 0)) {
 				{
 				{
 				setState(6);
@@ -143,6 +152,7 @@ public class datacurator_grammarParser extends Parser {
 		return _localctx;
 	}
 
+	@SuppressWarnings("CheckReturnValue")
 	public static class ExpressionContext extends ParserRuleContext {
 		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -154,10 +164,20 @@ public class datacurator_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class NumberContext extends ExpressionContext {
 		public TerminalNode NUMBER() { return getToken(datacurator_grammarParser.NUMBER, 0); }
 		public NumberContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterNumber(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitNumber(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class FunctionsWith2ArgsContext extends ExpressionContext {
 		public Token arg_funktion;
 		public ExpressionContext arg1;
@@ -170,7 +190,16 @@ public class datacurator_grammarParser extends Parser {
 			return getRuleContext(ExpressionContext.class,i);
 		}
 		public FunctionsWith2ArgsContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterFunctionsWith2Args(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitFunctionsWith2Args(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class FunctionsWithArgsContext extends ExpressionContext {
 		public Token arg_funktion;
 		public ExpressionContext arg1;
@@ -179,7 +208,16 @@ public class datacurator_grammarParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public FunctionsWithArgsContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterFunctionsWithArgs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitFunctionsWithArgs(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class AdditionOrSubtractionContext extends ExpressionContext {
 		public ExpressionContext left;
 		public Token ADD;
@@ -206,12 +244,30 @@ public class datacurator_grammarParser extends Parser {
 			return getToken(datacurator_grammarParser.SUB, i);
 		}
 		public AdditionOrSubtractionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterAdditionOrSubtraction(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitAdditionOrSubtraction(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class ConstantsContext extends ExpressionContext {
 		public Token constants;
 		public TerminalNode CONSTANTS() { return getToken(datacurator_grammarParser.CONSTANTS, 0); }
 		public ConstantsContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterConstants(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitConstants(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class MultiplicationOrDivisionContext extends ExpressionContext {
 		public ExpressionContext left;
 		public Token MUL;
@@ -238,18 +294,45 @@ public class datacurator_grammarParser extends Parser {
 			return getToken(datacurator_grammarParser.DIV, i);
 		}
 		public MultiplicationOrDivisionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterMultiplicationOrDivision(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitMultiplicationOrDivision(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class IDRefContext extends ExpressionContext {
 		public TerminalNode ID_REF() { return getToken(datacurator_grammarParser.ID_REF, 0); }
 		public IDRefContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterIDRef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitIDRef(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class ParenthesesContext extends ExpressionContext {
 		public ExpressionContext inner;
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public ParenthesesContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterParentheses(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitParentheses(this);
+		}
 	}
+	@SuppressWarnings("CheckReturnValue")
 	public static class PowerContext extends ExpressionContext {
 		public ExpressionContext left;
 		public Token operator;
@@ -262,6 +345,14 @@ public class datacurator_grammarParser extends Parser {
 		}
 		public TerminalNode POW() { return getToken(datacurator_grammarParser.POW, 0); }
 		public PowerContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterPower(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitPower(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -490,6 +581,7 @@ public class datacurator_grammarParser extends Parser {
 		return _localctx;
 	}
 
+	@SuppressWarnings("CheckReturnValue")
 	public static class SubexpressionContext extends ParserRuleContext {
 		public TerminalNode NUMBER() { return getToken(datacurator_grammarParser.NUMBER, 0); }
 		public TerminalNode ID_REF() { return getToken(datacurator_grammarParser.ID_REF, 0); }
@@ -500,6 +592,14 @@ public class datacurator_grammarParser extends Parser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_subexpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).enterSubexpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof datacurator_grammarListener ) ((datacurator_grammarListener)listener).exitSubexpression(this);
+		}
 	}
 
 	public final SubexpressionContext subexpression() throws RecognitionException {
@@ -563,25 +663,48 @@ public class datacurator_grammarParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\25B\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\3\2\7\2\n\n\2\f\2\16\2\r\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\3\5\3%\n\3\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\6\3-\n\3\r\3\16\3.\3\3\3\3\3\3\6\3\64\n\3\r\3\16"+
-		"\3\65\7\38\n\3\f\3\16\3;\13\3\3\4\3\4\3\4\5\4@\n\4\3\4\2\3\4\5\2\4\6\2"+
-		"\4\3\2\7\b\3\2\t\n\2K\2\13\3\2\2\2\4$\3\2\2\2\6?\3\2\2\2\b\n\5\4\3\2\t"+
-		"\b\3\2\2\2\n\r\3\2\2\2\13\t\3\2\2\2\13\f\3\2\2\2\f\16\3\2\2\2\r\13\3\2"+
-		"\2\2\16\17\7\2\2\3\17\3\3\2\2\2\20\21\b\3\1\2\21%\7\13\2\2\22%\7\17\2"+
-		"\2\23\24\7\3\2\2\24\25\5\4\3\2\25\26\7\4\2\2\26%\3\2\2\2\27\30\7\16\2"+
-		"\2\30\31\7\3\2\2\31\32\5\4\3\2\32\33\7\5\2\2\33\34\5\4\3\2\34\35\7\4\2"+
-		"\2\35%\3\2\2\2\36\37\7\r\2\2\37 \7\3\2\2 !\5\4\3\2!\"\7\4\2\2\"%\3\2\2"+
-		"\2#%\7\f\2\2$\20\3\2\2\2$\22\3\2\2\2$\23\3\2\2\2$\27\3\2\2\2$\36\3\2\2"+
-		"\2$#\3\2\2\2%9\3\2\2\2&\'\f\5\2\2\'(\7\6\2\2(8\5\4\3\6),\f\4\2\2*+\t\2"+
-		"\2\2+-\5\6\4\2,*\3\2\2\2-.\3\2\2\2.,\3\2\2\2./\3\2\2\2/8\3\2\2\2\60\63"+
-		"\f\3\2\2\61\62\t\3\2\2\62\64\5\6\4\2\63\61\3\2\2\2\64\65\3\2\2\2\65\63"+
-		"\3\2\2\2\65\66\3\2\2\2\668\3\2\2\2\67&\3\2\2\2\67)\3\2\2\2\67\60\3\2\2"+
-		"\28;\3\2\2\29\67\3\2\2\29:\3\2\2\2:\5\3\2\2\2;9\3\2\2\2<@\7\13\2\2=@\7"+
-		"\17\2\2>@\5\4\3\2?<\3\2\2\2?=\3\2\2\2?>\3\2\2\2@\7\3\2\2\2\t\13$.\65\67"+
-		"9?";
+		"\u0004\u0001\u0013@\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0002\u0007\u0002\u0001\u0000\u0005\u0000\b\b\u0000\n\u0000\f\u0000\u000b"+
+		"\t\u0000\u0001\u0000\u0001\u0000\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0003\u0001#\b"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0001"+
+		"\u0001\u0004\u0001+\b\u0001\u000b\u0001\f\u0001,\u0001\u0001\u0001\u0001"+
+		"\u0001\u0001\u0004\u00012\b\u0001\u000b\u0001\f\u00013\u0005\u00016\b"+
+		"\u0001\n\u0001\f\u00019\t\u0001\u0001\u0002\u0001\u0002\u0001\u0002\u0003"+
+		"\u0002>\b\u0002\u0001\u0002\u0000\u0001\u0002\u0003\u0000\u0002\u0004"+
+		"\u0000\u0002\u0001\u0000\u0005\u0006\u0001\u0000\u0007\bI\u0000\t\u0001"+
+		"\u0000\u0000\u0000\u0002\"\u0001\u0000\u0000\u0000\u0004=\u0001\u0000"+
+		"\u0000\u0000\u0006\b\u0003\u0002\u0001\u0000\u0007\u0006\u0001\u0000\u0000"+
+		"\u0000\b\u000b\u0001\u0000\u0000\u0000\t\u0007\u0001\u0000\u0000\u0000"+
+		"\t\n\u0001\u0000\u0000\u0000\n\f\u0001\u0000\u0000\u0000\u000b\t\u0001"+
+		"\u0000\u0000\u0000\f\r\u0005\u0000\u0000\u0001\r\u0001\u0001\u0000\u0000"+
+		"\u0000\u000e\u000f\u0006\u0001\uffff\uffff\u0000\u000f#\u0005\t\u0000"+
+		"\u0000\u0010#\u0005\r\u0000\u0000\u0011\u0012\u0005\u0001\u0000\u0000"+
+		"\u0012\u0013\u0003\u0002\u0001\u0000\u0013\u0014\u0005\u0002\u0000\u0000"+
+		"\u0014#\u0001\u0000\u0000\u0000\u0015\u0016\u0005\f\u0000\u0000\u0016"+
+		"\u0017\u0005\u0001\u0000\u0000\u0017\u0018\u0003\u0002\u0001\u0000\u0018"+
+		"\u0019\u0005\u0003\u0000\u0000\u0019\u001a\u0003\u0002\u0001\u0000\u001a"+
+		"\u001b\u0005\u0002\u0000\u0000\u001b#\u0001\u0000\u0000\u0000\u001c\u001d"+
+		"\u0005\u000b\u0000\u0000\u001d\u001e\u0005\u0001\u0000\u0000\u001e\u001f"+
+		"\u0003\u0002\u0001\u0000\u001f \u0005\u0002\u0000\u0000 #\u0001\u0000"+
+		"\u0000\u0000!#\u0005\n\u0000\u0000\"\u000e\u0001\u0000\u0000\u0000\"\u0010"+
+		"\u0001\u0000\u0000\u0000\"\u0011\u0001\u0000\u0000\u0000\"\u0015\u0001"+
+		"\u0000\u0000\u0000\"\u001c\u0001\u0000\u0000\u0000\"!\u0001\u0000\u0000"+
+		"\u0000#7\u0001\u0000\u0000\u0000$%\n\u0003\u0000\u0000%&\u0005\u0004\u0000"+
+		"\u0000&6\u0003\u0002\u0001\u0004\'*\n\u0002\u0000\u0000()\u0007\u0000"+
+		"\u0000\u0000)+\u0003\u0004\u0002\u0000*(\u0001\u0000\u0000\u0000+,\u0001"+
+		"\u0000\u0000\u0000,*\u0001\u0000\u0000\u0000,-\u0001\u0000\u0000\u0000"+
+		"-6\u0001\u0000\u0000\u0000.1\n\u0001\u0000\u0000/0\u0007\u0001\u0000\u0000"+
+		"02\u0003\u0004\u0002\u00001/\u0001\u0000\u0000\u000023\u0001\u0000\u0000"+
+		"\u000031\u0001\u0000\u0000\u000034\u0001\u0000\u0000\u000046\u0001\u0000"+
+		"\u0000\u00005$\u0001\u0000\u0000\u00005\'\u0001\u0000\u0000\u00005.\u0001"+
+		"\u0000\u0000\u000069\u0001\u0000\u0000\u000075\u0001\u0000\u0000\u0000"+
+		"78\u0001\u0000\u0000\u00008\u0003\u0001\u0000\u0000\u000097\u0001\u0000"+
+		"\u0000\u0000:>\u0005\t\u0000\u0000;>\u0005\r\u0000\u0000<>\u0003\u0002"+
+		"\u0001\u0000=:\u0001\u0000\u0000\u0000=;\u0001\u0000\u0000\u0000=<\u0001"+
+		"\u0000\u0000\u0000>\u0005\u0001\u0000\u0000\u0000\u0007\t\",357=";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

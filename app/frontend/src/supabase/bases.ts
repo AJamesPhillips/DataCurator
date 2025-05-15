@@ -1,4 +1,5 @@
-import { get_supabase } from "./get_supabase"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import type {
     JoinedAccessControlsPartial,
     SupabaseKnowledgeBase,

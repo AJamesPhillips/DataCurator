@@ -1,4 +1,5 @@
-import { get_supabase } from "../../supabase/get_supabase"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
+
 import { logger } from "../../utils/logger"
 import { get_store } from "../store"
 import { conditionally_save_state } from "../sync/utils/conditionally_save_state"

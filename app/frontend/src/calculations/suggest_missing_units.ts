@@ -451,7 +451,7 @@ export function suggest_missing_units (missing_units_strings: MissingUnitsString
 
 export function extract_units (units: string, remove_known: boolean, custom_units: CustomUnit[]): Set<string>
 {
-    const unit_parts = units
+    const unit_parts: string[] = units
         .toLowerCase()
         .replace(/[()]/g, " ")
         .split(/[*/]/g)
@@ -489,7 +489,7 @@ export function extract_units (units: string, remove_known: boolean, custom_unit
             }
             return part
         })
-        .filter(part => part !== undefined)
+        .filter((part): part is string => part !== undefined)
 
     return new Set(unit_parts)
 }

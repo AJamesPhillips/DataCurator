@@ -1,7 +1,7 @@
 import type { PostgrestError } from "@supabase/supabase-js"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
 import { useState } from "preact/hooks"
 
-import { get_supabase } from "../supabase/get_supabase"
 import type { DB_ACCESS_CONTROL_LEVEL } from "../supabase/interfaces"
 import { DisplaySupabasePostgrestError } from "../sync/user_info/DisplaySupabaseErrors"
 import type { AsyncState } from "../utils/async_state"

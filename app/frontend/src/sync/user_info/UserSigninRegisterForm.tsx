@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { AuthError } from "@supabase/supabase-js"
+import { get_supabase } from "datacurator-core/supabase/get_supabase"
 import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../../state/actions"
-import { get_supabase } from "../../supabase/get_supabase"
 import "../common.scss"
 import { DisplaySupabaseSessionError } from "./DisplaySupabaseErrors"
 import "./UserSigninRegisterForm.scss"
