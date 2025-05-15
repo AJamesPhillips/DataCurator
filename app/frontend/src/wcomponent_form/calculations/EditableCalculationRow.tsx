@@ -145,19 +145,29 @@ export function EditableCalculationRow (props: CalculationRowProps)
                 />
                 &nbsp;
             </>}
-            {editing && <EditableTextSingleLine
-                placeholder="Units"
-                hide_label={true}
-                disabled_input={show_units_from_target_wcomponent}
-                title={show_units_from_target_wcomponent ? "Editing disabled: edit units of referenced component" : undefined}
-                value={(show_units_from_target_wcomponent ? result?.units : calc.units) || ""}
-                modify_value_pre_on_blur={value =>
-                {
-                    return show_units_from_target_wcomponent ? (result?.units || "") : value
-                }}
-                on_blur={units => props.update_calculation({ ...calc, units: units || undefined })}
-                on_blur_type={EditableTextOnBlurType.conditional}
-            />}
+            {editing && <div>
+                <EditableTextSingleLine
+                    placeholder="Units"
+                    hide_label={true}
+                    disabled_input={show_units_from_target_wcomponent}
+                    title={show_units_from_target_wcomponent ? "Editing disabled: edit units of referenced component" : undefined}
+                    value={(show_units_from_target_wcomponent ? result?.units : (calc.units)) || ""}
+                    modify_value_pre_on_blur={value =>
+                    {
+                        return show_units_from_target_wcomponent ? (result?.units || "") : value
+                    }}
+                    on_blur={units => props.update_calculation({ ...calc, units: units || undefined })}
+                    on_blur_type={EditableTextOnBlurType.conditional}
+                />
+                {!show_units_from_target_wcomponent && result?.units && (result.units !== calc.units) && <span
+                    style={{ fontSize: "10px", color: "#9b8465", cursor: "pointer" }}
+                    onClick={() => {
+                        props.update_calculation({ ...calc, units: result.units })
+                    }}
+                >
+                    Suggestion:&nbsp;{result.units}
+                </span>}
+            </div>}
 
             {!editing && output_element}
         </div>
