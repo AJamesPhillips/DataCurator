@@ -4,7 +4,8 @@ import { run_convert_percentages_tests } from "./calculations/convert_percentage
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 import { run_normalise_calculation_ids_tests } from "./calculations/normalise_calculation_ids.test"
 import { run_normalise_calculation_numbers_tests } from "./calculations/normalise_calculation_numbers.test"
-import { run_perform_calculations_test } from "./calculations/perform_calculations.test"
+import { run_perform_calculations_test, test_error_is_units_error } from "./calculations/perform_calculations.test"
+import { test_extract_units, test_suggest_missing_units } from "./calculations/suggest_missing_units.test"
 import { test_get_angle } from "./canvas/connections/angles"
 import { test_derive_connection_coords } from "./canvas/connections/derive_coords.test"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
@@ -80,6 +81,7 @@ async function run_all_tests ()
     ;(await run_normalise_calculation_ids_tests)()
     ;(await run_normalise_calculation_numbers_tests)()
     ;(await run_perform_calculations_test)()
+    ;(await test_error_is_units_error)()
     ;(await test_get_angle)()
     ;(await test_derive_connection_coords)()
     ;(await test_calculate_new_zoom_xy)()
@@ -134,6 +136,8 @@ async function run_all_tests ()
     ;(await run_get_wcomponent_status_in_knowledge_view_tests)()
     ;(await test_id_regexs)()
     ;(await test_get_ids_from_text)()
+    ;(await test_extract_units())
+    ;(await test_suggest_missing_units())
 
     tests_stats.print()
 }

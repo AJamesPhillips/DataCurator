@@ -25,16 +25,19 @@ export const currency_symbol_string_map =
     "₼": "CURRENCY_AZERBAIJAN_MANAT",
     "₽": "CURRENCY_RUSSIA_RUBLE",
     "﷼": "CURRENCY_RIAL",
-    "B/.": "CURRENCY_PANAMA_BALBOA",
+    // "B/.": "CURRENCY_PANAMA_BALBOA",
     "ƒ": "CURRENCY_GUILDER",
     "Kč": "CURRENCY_CZECH_REPUBLIC_KORUNA",
-    "S/.": "CURRENCY_PERU_SOL",
+    // "S/.": "CURRENCY_PERU_SOL",
     "zł": "CURRENCY_POLAND_ZLOTY",
     "ден": "CURRENCY_MACEDONIA_DENAR",
-    "Дин.": "CURRENCY_SERBIA_DINAR",
+    // "Дин.": "CURRENCY_SERBIA_DINAR",
+    "Дин": "CURRENCY_SERBIA_DINAR",
     "лв": "CURRENCY_LEV_TENGE_SOM",
     "₺": "CURRENCY_TURKEY_LIRA",
 }
+
+export const hidden_currency_string_set = new Set(Object.values(currency_symbol_string_map).map(str => str.toLowerCase()))
 
 
 // This functionality definitely belongs inside the Simulation.js package

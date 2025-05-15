@@ -66,6 +66,8 @@ declare module "simulation" {
 
         findStocks(selector: (model_item: {_node: SimulationNode, model: {_graph: object, settings: object, p: () => object } }) => void): SimulationComponent[]
         getId(model_id: string): SimulationComponent | null
+
+        set customUnits(custom_units: CustomUnit[]): void
     }
 
     export interface SimulationError
@@ -126,5 +128,12 @@ declare module "simulation" {
         periods: number
         resume(): void
         setValue(primitive: Primitive, value: number): void
+    }
+
+    interface CustomUnit
+    {
+        name: string
+        scale: number
+        target: string
     }
 }

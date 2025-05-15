@@ -1,4 +1,6 @@
+import { CustomUnit } from "simulation"
 import { YAMLParseError } from "yaml"
+
 import { NumberDisplayType } from "../shared/types"
 import { ReplaceNormalIdsInTextArgs } from "../sharedf/rich_text/interfaces"
 
@@ -89,4 +91,5 @@ export interface CalculationResult
     source_wcomponent_id?: string
     error?: string
     warning?: string
+    suggested_custom_units?: CustomUnit[]
 }

@@ -1,13 +1,16 @@
+import { CustomUnit } from "simulation"
+
 import { describe, test } from "../shared/utils/test"
 import { uuid_v4_for_tests } from "../utils/uuid_v4_for_tests"
 import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
-import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { StateValueAndPredictionsSet } from "../wcomponent/interfaces/state"
+import { VAPsType } from "../wcomponent/interfaces/VAPsType"
 import { VALUE_POSSIBILITY_IDS } from "../wcomponent/value/parse_value"
+import { MissingUnitsStrings } from "./interface"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
-import { perform_calculations } from "./perform_calculations"
+import { error_is_units_error, perform_calculations } from "./perform_calculations"
 
 
 
@@ -16,6 +19,8 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
     let calculations: PlainCalculationObject[] = []
     let calculation_results: CalculationResult[] = []
     let expected_calculation_results: CalculationResult[] = []
+    let calculation_result: CalculationResult | undefined
+    let expected_calculation_result: CalculationResult
 
 
 
@@ -262,6 +267,85 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
             { value: undefined, units: "kg", error: "Wrong units generated for [A]. Expected Kg, and got Meters." },
         ]
         test(calculation_results, expected_calculation_results, "Computes correct units")
+    })
+
+
+
+    describe("Handling custom and missing puralisation of units", () =>
+    {
+        calculations = [
+            { id: 0, name: "number of days per person", value: `1`, units: "days / person" },
+            { id: 1, name: "number of seconds per person", value: `[number of days per person]`, units: "seconds / person" },
+        ]
+        calculation_results = perform_calculations(calculations, {})
+        expected_calculation_results = [
+            { value: 1, units: "days / person"},
+            { value: 86400, units: "seconds / person"},
+        ]
+        test(calculation_results, expected_calculation_results, "Forces conversion of units")
+
+
+        calculations = [
+            { id: 0, name: "trades people", value: `180,000`, units: "people" },
+            { id: 1, name: "people days per home", value: `30`, units: "people * days / home" },
+            { id: 2, name: "days per year", value: `250`, units: "days / year" },
+            { id: 3, name: "", value: `([trades people] * [days per year]) / [people days per home]`, units: "Home / Year" },
+        ]
+        calculation_results = perform_calculations(calculations, {}).slice(-1)
+        expected_calculation_results = [
+            { value: 1.5e6, units: "Home / Year"},
+        ]
+        test(calculation_results, expected_calculation_results, "Computes correct units")
+
+
+        calculations = [
+            { id: 0, name: "trades people", value: `180,000`, units: "people" },
+            { id: 1, name: "people days per home", value: `30`, units: "people * days / home" },
+            { id: 2, name: "days per year", value: `250`, units: "days / year" },
+            { id: 3, name: "", value: `([trades people] * [days per year]) / [people days per home]`, units: "Homes / Year" },
+        ]
+
+        let custom_units: CustomUnit[] = []
+        calculation_result = perform_calculations(calculations, {}, custom_units).pop()
+        expected_calculation_result = {
+            error: "Wrong units generated for [New Variable]. Expected Homes/(Year), and got Home/(Seconds).",
+            units: "Homes / Year",
+            suggested_custom_units: [
+                { name: "home", scale: 1, target: "homes" },
+            ],
+            value: undefined,
+        }
+        test(calculation_result, expected_calculation_result, "Will fail to handle custom units when not given")
+
+        custom_units = [{ name: "Homes", scale: 1, target: "Home" }]
+        calculation_result = perform_calculations(calculations, {}, custom_units).pop()
+        expected_calculation_result = { value: 1.5e6, units: "Homes / Year"}
+        test(calculation_result, expected_calculation_result, "Can set custom units in either order, test 1")
+
+        custom_units = [{ name: "Home", scale: 1, target: "Homes" }]
+        calculation_result = perform_calculations(calculations, {}, custom_units).pop()
+        expected_calculation_result = { value: 1.5e6, units: "Homes / Year"}
+        test(calculation_result, expected_calculation_result, "Can set custom units in either order, test 2")
+
+        custom_units = [{ name: "HoMe", scale: 1, target: "hOmEs" }]
+        calculation_result = perform_calculations(calculations, {}, custom_units).pop()
+        expected_calculation_result = { value: 1.5e6, units: "Homes / Year"}
+        test(calculation_result, expected_calculation_result, "Can set custom units with mixed case")
+
+
+        calculations = [
+            { id: 0, name: "trades people", value: `180,000`, units: "people" },
+            { id: 1, name: "people days per home", value: `30`, units: "people * days / home" },
+            { id: 2, name: "days per year", value: `250`, units: "days / year" },
+            { id: 3, name: "", value: `([trades people] * [days per year]) / [people days per home]`, units: "UK Dwellings / Year" },
+        ]
+        custom_units = [
+            { name: "home", scale: 1, target: "homes" },
+            { name: "UK Dwellings", scale: 1, target: "homes" },
+        ]
+        calculation_result = perform_calculations(calculations, {}, custom_units).pop()
+        expected_calculation_result = { value: 1.5e6, units: "UK Dwellings / Year"}
+        test(calculation_result, expected_calculation_result, "Can handle custom units with spaces in them")
     })
 
 
@@ -565,4 +649,27 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
     })
 
+})
+
+
+export const test_error_is_units_error = describe.delay("error_is_units_error", () =>
+{
+    let error = new Error("Wrong units generated for [New Variable]. Expected Homes/(Year), and got Home/(Seconds).")
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    let result = error_is_units_error(error as any)
+    let expected: MissingUnitsStrings = {
+        expected_units: "Homes/(Year)",
+        actual_units: "Home/(Seconds)",
+    }
+    test(result, expected, "Handles units error correctly")
+
+
+    error = new Error("Wrong units generated for [A]. Expected no units and got Meters. Either specify units for the primitive or adjust the equation.")
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    result = error_is_units_error(error as any)
+    expected = {
+        expected_units: "",
+        actual_units: "Meters",
+    }
+    test(result, expected, "Handles unitless error correctly")
 })

@@ -1,4 +1,4 @@
-import { Model, ModelVariableConfig, SimulationComponent, SimulationError } from "simulation"
+import { CustomUnit, Model, ModelVariableConfig, SimulationComponent, SimulationError } from "simulation"
 
 import { get_title } from "../sharedf/rich_text/get_rich_text"
 import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/id_regexs"
@@ -7,13 +7,15 @@ import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_deri
 import { apply_units_from_component } from "./apply_units_from_component"
 import { convert_percentages } from "./convert_percentages"
 import { hide_currency_symbols, unhide_currency_symbols } from "./hide_currency_symbols"
+import { MissingUnitsStrings } from "./interface"
 import { CalculationResult, PlainCalculationObject } from "./interfaces"
 import { normalise_calculation_ids } from "./normalise_calculation_ids"
 import { normalise_calculation_numbers } from "./normalise_calculation_numbers"
+import { suggest_missing_units } from "./suggest_missing_units"
 
 
 
-export function perform_calculations (calculations: PlainCalculationObject[], wcomponents_by_id: WComponentsById)
+export function perform_calculations (calculations: PlainCalculationObject[], wcomponents_by_id: WComponentsById, custom_units?: CustomUnit[])
 {
     const values: { [id: string]: CalculationResult } = {}
 
@@ -24,6 +26,8 @@ export function perform_calculations (calculations: PlainCalculationObject[], wc
             timeLength: 1,
             timeUnits: "Years"
         })
+
+        if (custom_units) model.customUnits = custom_units
 
         const uuid_v4s = get_double_at_mentioned_uuids_from_text(calculation.value)
         let converted_calculation = normalise_calculation_numbers(calculation.value)
@@ -189,6 +193,7 @@ function prepare_other_components (args: PrepareOtherComponentsArgs): PrepareOth
 function run_model (model: Model, initial_units: string | undefined, model_component: SimulationComponent, retrying_with_units = false): CalculationResult
 {
     let value: number | undefined = undefined
+    let units_error: false | MissingUnitsStrings = false
     let error = ""
     let units = model_component._node.getAttribute("Units")
 
@@ -198,12 +203,12 @@ function run_model (model: Model, initial_units: string | undefined, model_compo
     }
     catch (e) {
         const err = e as SimulationError
-        const units_error = (typeof err.message === "string") && err.message.startsWith("Wrong units generated for") && err.message.match(/and got (.+?)\.(?:$| Either)/)
+        units_error = error_is_units_error(err)
         // If no units were initially specified and the error is about wrong
         // units then try to recompute using the units the model expects
         if (!initial_units && units_error && !retrying_with_units)
         {
-            units = units_error[1]!
+            units = units_error.actual_units
             model_component.units = units
             const second_attempt = run_model(model, initial_units, model_component, true)
             ;({ value, units } = second_attempt)
@@ -219,7 +224,35 @@ function run_model (model: Model, initial_units: string | undefined, model_compo
 
     const calculation_result: CalculationResult = { value, error, units }
     if (!calculation_result.error) delete calculation_result.error
+    if (units_error)
+    {
+        const { suggested_custom_units } = suggest_missing_units(units_error, [])
+        if (suggested_custom_units.length > 0)
+        {
+            calculation_result.suggested_custom_units = suggested_custom_units
+        }
+    }
     if (calculation_result.units === "Unitless") calculation_result.units = ""
 
     return calculation_result
+}
+
+
+export function error_is_units_error (err: SimulationError): false | MissingUnitsStrings
+{
+    const units_error = (
+        (typeof err.message === "string")
+        && err.message.startsWith("Wrong units generated for")
+        && (err.message.match(/Expected (.+?),? and got (.+?)\.(?:$| Either)/) || false)
+    )
+
+    if (!units_error) return false
+
+    let expected_units = units_error[1]!
+    if (expected_units === "no units") expected_units = ""
+
+    return {
+        expected_units,
+        actual_units: units_error[2]!,
+    }
 }
