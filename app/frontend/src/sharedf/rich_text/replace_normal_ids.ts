@@ -1,4 +1,4 @@
-import { get_double_at_mentioned_uuids_from_text } from "datacurator-core/sharedf/rich_text/id_regexs"
+import { get_double_at_mentioned_uuids_from_text } from "datacurator-core/utils/id_regexs"
 
 import type { ReplaceNormalIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_id_error, format_wcomponent_link } from "./templates"

@@ -1,8 +1,9 @@
 import { date2str_auto } from "datacurator-core/utils/date_helpers"
 
+import { get_new_id } from "datacurator-core/utils/ids"
+
 import type { HasBaseId } from "../../shared/interfaces/base"
 import { get_new_created_ats } from "../../shared/utils/datetime"
-import { get_new_wcomponent_id } from "../../shared/utils/ids"
 import type { CreationContextState } from "../../state/creation_context/state"
 import type { WComponentNodeAction } from "../interfaces/action"
 import type { WComponentNodeGoal } from "../interfaces/goal"
@@ -17,7 +18,7 @@ import type { WComponentBase } from "../interfaces/wcomponent_base"
 export function prepare_new_contextless_wcomponent_object (partial_wcomponent: Partial<WComponent> & HasBaseId)
 {
     const base: WComponentBase = {
-        id: get_new_wcomponent_id(),
+        id: get_new_id(),
         created_at: new Date(),
         base_id: partial_wcomponent.base_id,
         title: "",

@@ -1,7 +1,8 @@
+import { get_new_value_and_prediction_set_id } from "datacurator-core/utils/ids"
 import { describe, test } from "datacurator-core/utils/test"
+
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_new_created_ats } from "../../shared/utils/datetime"
-import { get_new_value_and_prediction_set_id } from "../../shared/utils/ids"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type {

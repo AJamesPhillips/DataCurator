@@ -6,7 +6,7 @@ import { useState } from "preact/hooks"
 import {
     double_at_mentioned_uuids_regex_capture_surrounding,
     only_double_at_mentioned_uuids_regex,
-} from "datacurator-core/sharedf/rich_text/id_regexs"
+} from "datacurator-core/utils/id_regexs"
 
 import {
     FormatCalculationErrorOrWarning,

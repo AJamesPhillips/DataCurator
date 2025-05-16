@@ -1,7 +1,7 @@
 import {
     old_ids_and_functions_regex,
     uuids_and_functions_regex,
-} from "datacurator-core/sharedf/rich_text/id_regexs"
+} from "datacurator-core/utils/id_regexs"
 
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
 import type { ReplaceFunctionIdsInTextArgs } from "./interfaces"

@@ -1,9 +1,10 @@
 import type { Store } from "redux"
 
+import { get_new_id } from "datacurator-core/utils/ids"
+
 import type { HasBaseId } from "../shared/interfaces/base"
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { get_new_created_ats } from "../shared/utils/datetime"
-import { get_new_knowledge_view_id } from "../shared/utils/ids"
 import type { RootState } from "../state/State"
 import { ACTIONS } from "../state/actions"
 import { get_store } from "../state/store"
@@ -14,7 +15,7 @@ import { selector_chosen_base_id } from "../state/user_info/selector"
 export function get_new_knowledge_view_object (args: Partial<KnowledgeView> & HasBaseId)
 {
     const knowledge_view: KnowledgeView = {
-        id: get_new_knowledge_view_id(),
+        id: get_new_id(),
         ...get_new_created_ats(),
         title: "",
         description: "",

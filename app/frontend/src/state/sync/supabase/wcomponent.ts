@@ -3,7 +3,7 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js"
 import {
     get_double_at_mentioned_uuids_from_text,
     is_valid_uuid,
-} from "datacurator-core/sharedf/rich_text/id_regexs"
+} from "datacurator-core/utils/id_regexs"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"

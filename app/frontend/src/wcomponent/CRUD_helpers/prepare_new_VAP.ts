@@ -1,4 +1,5 @@
-import { get_new_VAP_id } from "../../shared/utils/ids"
+import { get_new_VAP_id } from "datacurator-core/utils/ids"
+
 import type {
     StateValueAndPrediction,
 } from "../interfaces/state"

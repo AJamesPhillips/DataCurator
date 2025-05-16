@@ -1,4 +1,5 @@
-import { is_uuid_v4 } from "../../../../shared/utils/ids"
+import { is_valid_uuid } from "datacurator-core/utils/id_regexs"
+
 import { update_substate } from "../../../../utils/update_state"
 import type { RootState } from "../../../State"
 import { update_derived_selected_wcomponent_ids } from "./reducer"
@@ -23,7 +24,7 @@ function handle_route_changed (prev_state: RootState, state: RootState)
 
     if (prev_state.routing.item_id !== state.routing.item_id || ready_changed)
     {
-        if (state.routing.item_id && is_uuid_v4(state.routing.item_id))
+        if (state.routing.item_id && is_valid_uuid(state.routing.item_id))
         {
             const selected_wcomponent_ids_list = [ state.routing.item_id ]
             state = update_substate(state, "meta_wcomponents", "selected_wcomponent_ids_list", selected_wcomponent_ids_list)

@@ -2,6 +2,8 @@ import { FunctionalComponent, h } from "preact"
 import { useMemo, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+import { get_new_prediction_id } from "datacurator-core/utils/ids"
+
 import type {
     EditableListEntryItemProps,
     ListItemCRUD,
@@ -14,7 +16,6 @@ import { NewItemForm } from "../../../form/editable_list/NewItemForm"
 import { factory_render_list_content } from "../../../form/editable_list/render_list_content"
 import type { Prediction } from "../../../shared/uncertainty/interfaces"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../../shared/utils/datetime"
-import { get_new_prediction_id } from "../../../shared/utils/ids"
 import type { RootState } from "../../../state/State"
 import { selector_chosen_base_id } from "../../../state/user_info/selector"
 import { remove_element, replace_element } from "../../../utils/list"
