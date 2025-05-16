@@ -353,7 +353,7 @@ function _KnowledgeTimeView (props: Props)
     return <MainArea main_content={(content) ? content : <Box />} />
 }
 
-export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent<{}>
+export const KnowledgeTimeView = connector(_KnowledgeTimeView) as FunctionalComponent
 
 const no_svg_upper_children: h.JSX.Element[] = []
 const get_svg_upper_children = ({ wcomponent_connections }: Props) =>

@@ -39,4 +39,4 @@ function _WComponentActionsListModal (props: Props)
     />
 }
 
-export const WComponentActionsListModal = connector(_WComponentActionsListModal) as FunctionalComponent<{}>
+export const WComponentActionsListModal = connector(_WComponentActionsListModal) as FunctionalComponent

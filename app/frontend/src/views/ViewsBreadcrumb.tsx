@@ -131,7 +131,7 @@ function _ViewsBreadcrumb (props: Props)
     </Breadcrumbs>
 }
 
-export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent<{}>
+export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent
 
 
 

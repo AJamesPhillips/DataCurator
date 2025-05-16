@@ -84,4 +84,4 @@ function _PrioritiesContentControls (props: Props)
     </div>
 }
 
-export const PrioritiesContentControls = connector(_PrioritiesContentControls) as FunctionalComponent<{}>
+export const PrioritiesContentControls = connector(_PrioritiesContentControls) as FunctionalComponent

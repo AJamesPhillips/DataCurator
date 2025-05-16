@@ -26,4 +26,4 @@ function _MainContentControls (props: Props)
 }
 
 
-export const MainContentControls = connector(_MainContentControls) as FunctionalComponent<{}>
+export const MainContentControls = connector(_MainContentControls) as FunctionalComponent

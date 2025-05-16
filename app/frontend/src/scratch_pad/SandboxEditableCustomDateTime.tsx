@@ -30,7 +30,7 @@ function _SandboxEditableCustomDateTime (props: Props)
 
     useEffect(() =>
     {
-        if (!props.editing) props.toggle_consumption_formatting({})
+        if (!props.editing) props.toggle_consumption_formatting()
     }, [])
 
     return <div>
@@ -54,4 +54,4 @@ function _SandboxEditableCustomDateTime (props: Props)
 }
 
 
-export const SandboxEditableCustomDateTime = connector(_SandboxEditableCustomDateTime) as FunctionalComponent<{}>
+export const SandboxEditableCustomDateTime = connector(_SandboxEditableCustomDateTime) as FunctionalComponent

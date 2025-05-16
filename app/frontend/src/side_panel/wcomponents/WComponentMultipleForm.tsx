@@ -26,8 +26,6 @@ import { BasicCausalLinkForm } from "../../wcomponent_form/WComponentCausalLinkF
 
 
 
-interface OwnProps {}
-
 const map_state = (state: RootState) =>
 {
     const kv = get_current_composed_knowledge_view_from_state(state)
@@ -56,7 +54,7 @@ const map_dispatch = {
 
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -263,7 +261,7 @@ function _WComponentMultipleForm (props: Props)
 }
 
 
-export const WComponentMultipleForm = connector(_WComponentMultipleForm) as FunctionComponent<OwnProps>
+export const WComponentMultipleForm = connector(_WComponentMultipleForm) as FunctionComponent
 
 
 

@@ -10,8 +10,6 @@ import { active_warning_styles } from "./active_warning_common"
 
 
 
-interface OwnProps {}
-
 const map_state = (state: RootState) =>
 {
     const {
@@ -31,7 +29,7 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 function _ActiveCreatedAtFilterWarning (props: Props)
 {
@@ -60,4 +58,4 @@ function _ActiveCreatedAtFilterWarning (props: Props)
     )
 }
 
-export const ActiveCreatedAtFilterWarning = connector(_ActiveCreatedAtFilterWarning) as FunctionalComponent<OwnProps>
+export const ActiveCreatedAtFilterWarning = connector(_ActiveCreatedAtFilterWarning) as FunctionalComponent

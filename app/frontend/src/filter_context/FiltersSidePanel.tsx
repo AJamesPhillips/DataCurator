@@ -195,4 +195,4 @@ function _FiltersSidePanel (props: Props)
     </div>
 }
 
-export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent<{}>
+export const FiltersSidePanel = connector(_FiltersSidePanel) as FunctionalComponent

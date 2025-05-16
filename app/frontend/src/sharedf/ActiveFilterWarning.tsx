@@ -42,4 +42,4 @@ function _ActiveFilterWarning (props: Props)
     </Tooltip>
 }
 
-export const ActiveFilterWarning = connector(_ActiveFilterWarning) as FunctionalComponent<{}>
+export const ActiveFilterWarning = connector(_ActiveFilterWarning) as FunctionalComponent

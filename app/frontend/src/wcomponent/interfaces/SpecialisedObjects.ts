@@ -41,6 +41,7 @@ export interface WComponentNodeProcess extends WComponentNodeBase, WComponentNod
 {
     type: "process"
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface WComponentNodeProcessBase
 {
     // active: ProcessActiveStatus[]
@@ -255,7 +256,7 @@ export function wcomponent_can_render_connection (wcomponent: WComponent): wcomp
 
 export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
 {
-    return (wcomponent as EventAt).event_at !== undefined
+    return (wcomponent as Partial<EventAt>).event_at !== undefined
 }
 
 
@@ -271,7 +272,7 @@ export function wcomponent_is_not_deleted (wcomponent: WComponent | undefined)
 
 export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
 {
-    const { validity } = wcomponent as ValidityPredictions
+    const { validity } = wcomponent as Partial<ValidityPredictions>
     return validity !== undefined && validity.length > 0
 }
 const types_without_validity = new Set<WComponentType>([
@@ -358,7 +359,7 @@ export function wcomponent_allowed_calculations (wcomponent: WComponent): wcompo
 // }
 
 
-type PlanID = string
+// type PlanID = string
 // interface Plan
 // {
 //     id: PlanID
@@ -382,7 +383,7 @@ type PlanID = string
 // }
 
 
-type ActionID = string
+// type ActionID = string
 // interface Action
 // {
 //     id: ActionID
@@ -408,4 +409,4 @@ const _specialised_objects_from_to_server_expected_keys: {[K in SpecialisedObjec
     knowledge_views: true,
 }
 // Used on the server
-export const specialised_objects_from_to_server_expected_keys: (SpecialisedObjectsFromToServerKeys)[] = Object.keys(_specialised_objects_from_to_server_expected_keys) as any
+export const specialised_objects_from_to_server_expected_keys = Object.keys(_specialised_objects_from_to_server_expected_keys) as SpecialisedObjectsFromToServerKeys[]

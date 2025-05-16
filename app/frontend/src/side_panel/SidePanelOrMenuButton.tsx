@@ -38,4 +38,4 @@ function _SidePanelOrMenuButton (props: Props)
     </IconButton>
 }
 
-export const SidePanelOrMenuButton = connector(_SidePanelOrMenuButton) as FunctionalComponent<{}>
+export const SidePanelOrMenuButton = connector(_SidePanelOrMenuButton) as FunctionalComponent

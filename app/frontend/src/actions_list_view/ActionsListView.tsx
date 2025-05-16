@@ -23,7 +23,7 @@ import { PrioritisableAction } from "./PrioritisableAction"
 
 
 
-export function ActionsListView (props: {})
+export function ActionsListView ()
 {
     return <MainArea
         main_content={<ActionsListViewContent />}
@@ -224,7 +224,7 @@ function _ActionsListViewContent (props: Props)
     </div>
 }
 
-const ActionsListViewContent = connector(_ActionsListViewContent) as FunctionalComponent<{}>
+const ActionsListViewContent = connector(_ActionsListViewContent) as FunctionalComponent
 
 
 

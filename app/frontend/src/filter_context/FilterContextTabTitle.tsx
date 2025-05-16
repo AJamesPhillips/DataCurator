@@ -41,4 +41,4 @@ function _FilterContextTabTitle (props: Props)
     </div>
 }
 
-export const FilterContextTabTitle = connector(_FilterContextTabTitle) as FunctionalComponent<{}>
+export const FilterContextTabTitle = connector(_FilterContextTabTitle) as FunctionalComponent

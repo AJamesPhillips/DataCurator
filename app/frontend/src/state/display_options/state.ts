@@ -48,4 +48,4 @@ const _time_resolution_types: {[P in TimeResolution]: true} = {
     hour: true,
     day: true,
 }
-export const time_resolution_types: TimeResolution[] = Object.keys(_time_resolution_types) as any
+export const time_resolution_types = Object.keys(_time_resolution_types) as TimeResolution[]

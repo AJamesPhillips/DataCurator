@@ -142,7 +142,7 @@ function _PrioritiesView (props: Props)
     />
 }
 
-export const PrioritiesView = connector(_PrioritiesView) as FunctionalComponent<{}>
+export const PrioritiesView = connector(_PrioritiesView) as FunctionalComponent
 
 
 

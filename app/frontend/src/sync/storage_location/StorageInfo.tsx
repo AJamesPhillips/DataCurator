@@ -67,4 +67,4 @@ function _StorageInfo (props: Props)
     )
 }
 
-export const StorageInfo = connector(_StorageInfo) as FunctionalComponent<{}>
+export const StorageInfo = connector(_StorageInfo) as FunctionalComponent

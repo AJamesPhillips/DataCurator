@@ -10,7 +10,6 @@ import { active_warning_styles } from "./active_warning_common"
 
 
 
-interface OwnProps {}
 const map_state = (state: RootState) => ({
     focused_mode: state.display_options.focused_mode,
 })
@@ -20,7 +19,7 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 function _ActiveFocusedMode (props: Props)
 {
@@ -44,7 +43,7 @@ function _ActiveFocusedMode (props: Props)
     </Tooltip>
 }
 
-export const ActiveFocusedMode = connector(_ActiveFocusedMode) as FunctionalComponent<OwnProps>
+export const ActiveFocusedMode = connector(_ActiveFocusedMode) as FunctionalComponent
 
 
 

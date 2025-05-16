@@ -90,7 +90,7 @@ function _SyncInfo (props: Props)
     </Typography>
 }
 
-export const SyncInfo = connector(_SyncInfo) as FunctionalComponent<{}>
+export const SyncInfo = connector(_SyncInfo) as FunctionalComponent
 
 
 

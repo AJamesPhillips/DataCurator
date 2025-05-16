@@ -6,16 +6,14 @@ import type { CertaintyFormattingTypes, ValidityFilterTypes } from "./state"
 
 
 
-interface ActionToggleConsumptionFormatting extends Action {}
-
 const toggle_consumption_formatting_type = "toggle_consumption_formatting"
 
-const toggle_consumption_formatting = (args: {}): ActionToggleConsumptionFormatting =>
+const toggle_consumption_formatting = (): Action =>
 {
-    return { type: toggle_consumption_formatting_type, ...args }
+    return { type: toggle_consumption_formatting_type }
 }
 
-export const is_toggle_consumption_formatting = (action: AnyAction): action is ActionToggleConsumptionFormatting => {
+export const is_toggle_consumption_formatting = (action: AnyAction): action is Action => {
     return action.type === toggle_consumption_formatting_type
 }
 

@@ -188,7 +188,7 @@ function _PrioritiesListViewContent (props: Props)
     </div>
 }
 
-const PrioritiesListViewContent = connector(_PrioritiesListViewContent) as FunctionalComponent<{}>
+const PrioritiesListViewContent = connector(_PrioritiesListViewContent) as FunctionalComponent
 
 
 

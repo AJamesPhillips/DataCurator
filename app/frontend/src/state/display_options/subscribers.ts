@@ -45,7 +45,7 @@ function toggle_consumption_formatting_on_key_press (store: StoreType)
         if (e.ctrl_key && e.key === "e")
         {
             e.event.preventDefault()
-            store.dispatch(ACTIONS.display.toggle_consumption_formatting({}))
+            store.dispatch(ACTIONS.display.toggle_consumption_formatting())
         }
 
         else if (e.shift_key && e.key === "?")

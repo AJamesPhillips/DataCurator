@@ -48,4 +48,4 @@ function _SandBoxConnected (props: Props)
     </div>
 }
 
-export const SandBoxConnected = connector(_SandBoxConnected) as FunctionalComponent<{}>
+export const SandBoxConnected = connector(_SandBoxConnected) as FunctionalComponent

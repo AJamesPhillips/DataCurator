@@ -38,7 +38,7 @@ function _CreateNewWComponent (props: Props)
     } = props
 
     if (!editing) return <div class="create_new_wcomponent">
-        <FrontendButton onClick={() => props.toggle_consumption_formatting({})}>
+        <FrontendButton onClick={() => props.toggle_consumption_formatting()}>
             Swap to editing
         </FrontendButton>
     </div>
@@ -72,7 +72,7 @@ function _CreateNewWComponent (props: Props)
     </div>
 }
 
-export const CreateNewWComponent = connector(_CreateNewWComponent) as FunctionalComponent<{}>
+export const CreateNewWComponent = connector(_CreateNewWComponent) as FunctionalComponent
 
 
 

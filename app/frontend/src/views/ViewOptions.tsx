@@ -107,4 +107,4 @@ function _ViewOptions (props: Props)
     )
 }
 
-export const ViewOptions = connector(_ViewOptions) as FunctionalComponent<{}>
+export const ViewOptions = connector(_ViewOptions) as FunctionalComponent

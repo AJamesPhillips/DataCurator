@@ -85,7 +85,7 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
         return derive_connection_coords_when_missing_one_node(args)
     }
 
-    if (line_behaviour === "angular") return derive_connection_coords_for_angular_line({
+    if (line_behaviour === ConnectionLineBehaviour.angular) return derive_connection_coords_for_angular_line({
         connection_from_component, connection_to_component,
         end_size, connection_end_type,
     })
@@ -133,7 +133,7 @@ export function derive_connection_coords (args: DeriveConnectionCoordsArgs): Con
     const angle = get_angle(line_start_x, line_start_y, connection_end_x, connection_end_y)
     let end_angle = angle + rads._180
 
-    if (line_behaviour === undefined || line_behaviour === "curve")
+    if (line_behaviour === undefined || line_behaviour === ConnectionLineBehaviour.curve)
     {
         const xc = (connection_end_x - line_start_x) / 2
         const min_xc = Math.max(Math.abs(xc), MINIMUM_LINE_BOW) * (Math.sign(xc) || -1)
@@ -249,7 +249,7 @@ function derive_connection_coords_when_missing_one_node (args: DeriveConnectionC
 {
     const {
         connection_from_component, connection_to_component,
-        line_behaviour, circular_links, end_size, connection_end_type,
+        end_size, connection_end_type,
     } = args
 
 
@@ -328,7 +328,6 @@ function derive_connection_coords_for_angular_line(args: DeriveConnectionCoordsF
 {
     const {
         connection_from_component, connection_to_component,
-        end_size, connection_end_type,
     } = args
 
     // These are wrong as they will change depending on what content is in the

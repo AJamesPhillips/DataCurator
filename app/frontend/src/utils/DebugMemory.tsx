@@ -6,16 +6,13 @@ import { ACTIONS } from "../state/actions"
 
 
 
-interface OwnProps {}
-
-
 const map_dispatch = {
     noop: () => ({ type: "noop" }),
-    toggle_consumption_formatting: () => ACTIONS.display.toggle_consumption_formatting({}),
+    toggle_consumption_formatting: () => ACTIONS.display.toggle_consumption_formatting(),
 }
 
 const connector = connect(null, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -40,7 +37,7 @@ function _DebugMemory (props: Props)
     </div>
 }
 
-export const DebugMemory = connector(_DebugMemory) as FunctionComponent<OwnProps>
+export const DebugMemory = connector(_DebugMemory) as FunctionComponent
 
 
 

@@ -31,4 +31,4 @@ function _SearchSidePanel (props: Props)
     />
 }
 
-export const SearchSidePanel = connector(_SearchSidePanel) as FunctionalComponent<{}>
+export const SearchSidePanel = connector(_SearchSidePanel) as FunctionalComponent

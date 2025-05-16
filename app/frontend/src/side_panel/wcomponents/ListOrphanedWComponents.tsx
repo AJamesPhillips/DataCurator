@@ -83,4 +83,4 @@ function _ListOrphanedWComponents (props: Props)
     </div>
 }
 
-export const ListOrphanedWComponents = connector(_ListOrphanedWComponents) as FunctionalComponent<{}>
+export const ListOrphanedWComponents = connector(_ListOrphanedWComponents) as FunctionalComponent

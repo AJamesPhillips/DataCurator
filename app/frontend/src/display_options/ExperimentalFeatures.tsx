@@ -45,12 +45,12 @@ function _ExperimentalFeatures(props: Props)
     </>
 }
 
-export const ExperimentalFeatures = connector(_ExperimentalFeatures) as FunctionComponent<{}>
+export const ExperimentalFeatures = connector(_ExperimentalFeatures) as FunctionComponent
 
 
 function ExperimentalWarning (props: { show_label?: boolean })
 {
-    const msg = "Experimental feature.  Maybe changed or removed."
+    const msg = "Experimental feature.  May be changed or removed."
 
     return <WarningTriangleV2 warning={msg} label={props.show_label ? msg : ""} />
 }

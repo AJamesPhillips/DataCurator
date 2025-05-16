@@ -10,9 +10,6 @@ import type { RootState } from "../state/State"
 
 
 
-interface OwnProps {}
-
-
 const map_state = (state: RootState) =>
 {
     const { view } = state.routing.args
@@ -23,7 +20,7 @@ const map_state = (state: RootState) =>
 
 
 const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 function _MainAreaRouter (props: Props)
@@ -44,4 +41,4 @@ function _MainAreaRouter (props: Props)
     return el
 }
 
-export const MainAreaRouter = connector(_MainAreaRouter) as FunctionalComponent<OwnProps>
+export const MainAreaRouter = connector(_MainAreaRouter) as FunctionalComponent
