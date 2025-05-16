@@ -1,8 +1,6 @@
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
+
 import { date2str_auto } from "./date_helpers"
-
-
-
-export type TimeResolution = "second" | "minute" | "hour" | "day"
 
 
 

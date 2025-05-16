@@ -1,5 +1,9 @@
+import {
+    old_ids_and_functions_regex,
+    uuids_and_functions_regex,
+} from "datacurator-core/sharedf/rich_text/id_regexs"
+
 import { get_wcomponent_state_UI_value } from "../../wcomponent_derived/get_wcomponent_state_UI_value"
-import { old_ids_and_functions_regex, uuids_and_functions_regex } from "./id_regexs"
 import type { ReplaceFunctionIdsInTextArgs } from "./interfaces"
 import { format_wcomponent_link, format_wcomponent_url } from "./templates"
 
@@ -54,6 +58,7 @@ export function replace_function_ids_in_text (text: string, current_depth: numbe
             replacement = render_links ? format_wcomponent_link(root_url, id) : ""
 
             if (funktion === "title") replacement = get_title(referenced_wcomponent)
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             else if (funktion === "description") replacement += referenced_wcomponent.description
         }
 

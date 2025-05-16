@@ -2,8 +2,9 @@ import { Box } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
+
 import { MainArea } from "../layout/MainArea"
-import type { TimeResolution } from "../shared/utils/datetime"
 import { sort_list, SortDirection } from "../shared/utils/sort"
 import { get_created_at_ms, get_sim_datetime } from "../shared/utils_datetime/utils_datetime"
 import type { RootState } from "../state/State"

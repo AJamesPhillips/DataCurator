@@ -2,7 +2,8 @@ import {
     curly_bracket_content_regex,
     non_square_bracket_ids_regex,
     square_bracket_ids_regex,
-} from "../sharedf/rich_text/id_regexs"
+} from "datacurator-core/sharedf/rich_text/id_regexs"
+
 import { SIMULATION_JS_RESERVED_WORDS } from "./reserved_words"
 
 

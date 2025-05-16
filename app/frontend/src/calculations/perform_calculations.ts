@@ -1,7 +1,8 @@
 import { CustomUnit, Model, ModelVariableConfig, SimulationComponent, SimulationError } from "simulation"
 
+import { get_double_at_mentioned_uuids_from_text } from "datacurator-core/sharedf/rich_text/id_regexs"
+
 import { get_title } from "../sharedf/rich_text/get_rich_text"
-import { get_double_at_mentioned_uuids_from_text } from "../sharedf/rich_text/id_regexs"
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { get_wcomponent_state_value_and_probabilities } from "../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
 import { apply_units_from_component } from "./apply_units_from_component"

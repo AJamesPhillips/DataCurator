@@ -1,4 +1,5 @@
-import { double_at_mentioned_uuids_regex } from "../sharedf/rich_text/id_regexs"
+import { double_at_mentioned_uuids_regex } from "datacurator-core/sharedf/rich_text/id_regexs"
+
 import { WComponentsById } from "../wcomponent/interfaces/SpecialisedObjects"
 import { WComponentNodeStateV2 } from "../wcomponent/interfaces/state"
 

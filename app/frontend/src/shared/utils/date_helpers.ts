@@ -1,4 +1,4 @@
-import type { TimeResolution } from "./datetime"
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
 
 
 

@@ -1,4 +1,4 @@
-import type { TimeResolution } from "../../shared/utils/datetime"
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
 // import type { Certainty } from "../../shared/uncertainty/quantified_language"
 
 

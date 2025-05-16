@@ -1,8 +1,8 @@
 import AddIcon from "@mui/icons-material/Add"
 import { FunctionalComponent } from "preact"
-
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
+
 import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
 import { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"

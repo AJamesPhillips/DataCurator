@@ -214,7 +214,7 @@ function _DisplayOptionsSidePanel (props: Props)
     </div>
 }
 
-export const DisplayOptionsSidePanel = connector(_DisplayOptionsSidePanel) as FunctionalComponent<{}>
+export const DisplayOptionsSidePanel = connector(_DisplayOptionsSidePanel) as FunctionalComponent
 
 
 

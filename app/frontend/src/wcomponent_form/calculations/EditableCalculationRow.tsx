@@ -3,17 +3,21 @@ import { Box, IconButton } from "@mui/material"
 import { CSSProperties } from "preact/compat"
 import { useState } from "preact/hooks"
 
-import { FormatCalculationErrorOrWarning, get_error_or_warning_message } from "../../calculations/FormatCalculationErrorOrWarning"
+import {
+    double_at_mentioned_uuids_regex_capture_surrounding,
+    only_double_at_mentioned_uuids_regex,
+} from "datacurator-core/sharedf/rich_text/id_regexs"
+
+import {
+    FormatCalculationErrorOrWarning,
+    get_error_or_warning_message,
+} from "../../calculations/FormatCalculationErrorOrWarning"
 import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
 import { EditableText } from "../../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../../form/editable_text/EditableTextSingleLine"
 import { format_number_to_string } from "../../shared/format_number_to_string"
 import { Link } from "../../sharedf/Link"
-import {
-    double_at_mentioned_uuids_regex_capture_surrounding,
-    only_double_at_mentioned_uuids_regex,
-} from "../../sharedf/rich_text/id_regexs"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import { EditableCalculationRowCommands, EditableCalculationRowOptions } from "./EditableCalculationRowOptions"
 import { EditableCalculationRowResultsFormatting } from "./EditableCalculationRowResultsFormatting"

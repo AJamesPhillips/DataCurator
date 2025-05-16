@@ -1,6 +1,7 @@
 import type { Action, AnyAction } from "redux"
 
-import type { TimeResolution } from "../../shared/utils/datetime"
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
+
 import type { CertaintyFormattingTypes, ValidityFilterTypes } from "./state"
 
 
