@@ -99,7 +99,7 @@ export function distance_of_time_in_words (from_date: Date, to_date: Date, optio
 
 function round_to_nearest(value: number, rounding_to_nearest: number): number {
 
-    let rounded_value = (rounding_to_nearest * Math.round(value / rounding_to_nearest));
+    const rounded_value = (rounding_to_nearest * Math.round(value / rounding_to_nearest));
     if (rounded_value === 0) {
         return 0;
     }
@@ -165,11 +165,11 @@ export function distance_of_time_in_hms (from_date: Date, to_date: Date) {
             extra_year = 1;
         }
 
-        let rounded_years = round_to_nearest(years % 30 + extra_year, round_s / A_YEAR);
+        const rounded_years = round_to_nearest(years % 30 + extra_year, round_s / A_YEAR);
 
         // assemble output
 
-        let output: string[] = [];
+        const output: string[] = [];
         if (rounded_years) {
             output.push(`${rounded_years}yr`);
         }
@@ -244,7 +244,7 @@ const month_to_3text: {[month: number]: string} = {
 // https://stackoverflow.com/a/23593278/539490
 export function date2str (date: Date, format: string)
 {
-    const z: any = {
+    const z = {
         M: date.getMonth() + 1,
         d: date.getDate(),
         h: date.getHours(),
@@ -257,7 +257,8 @@ export function date2str (date: Date, format: string)
     })
 
     format = format.replace(/(M+|d+|h+|m+|s+)/g, function (v) {
-        return ((v.length > 1 ? "0" : "") + z[v.slice(-1)]).slice(-2)
+        const last_char = v.slice(-1) as keyof typeof z
+        return ((v.length > 1 ? "0" : "") + z[last_char]).slice(-2)
     })
 
     return format.replace(/(y+)/g, function(v) {
