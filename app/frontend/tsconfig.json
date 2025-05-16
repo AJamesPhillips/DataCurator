@@ -34,7 +34,11 @@
     "strictNullChecks": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["src", "types"],
+  "include": [
+    "src",
+    "types",
+    "lib/datacurator-core/types"
+  ],
   "exclude": [
     "scripts",
     "eslint.config.mjs"
