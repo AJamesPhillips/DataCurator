@@ -39,6 +39,7 @@ export interface AutocompleteProps <E extends AutocompleteOption = AutocompleteO
 
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface OwnProps <E extends AutocompleteOption> extends AutocompleteProps <E> {}
 
 
@@ -67,7 +68,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 {
 
     const prepared_targets = useRef<(Fuzzysort.Prepared | undefined)[]>([])
-    const flexsearch_index = useRef<Index<{}>>(((FlexSearch as any).Index as typeof FlexSearch.create)())
+    const flexsearch_index = useRef<Index<object>>(((FlexSearch as any).Index as typeof FlexSearch.create)())
     const internal_options = useRef<InternalAutocompleteOption[]>([])
     useEffect(() =>
     {
@@ -129,7 +130,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         })
 
         set_internal_options_to_display(result.internal_options)
-        props.set_search_type_used && props.set_search_type_used(result.search_type_used)
+        if (props.set_search_type_used) props.set_search_type_used(result.search_type_used)
         flush_temp_value_str()
 
     }, [
@@ -152,8 +153,8 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         return (id: string | undefined) =>
         {
-            id && moused_over_options.current.add(id)
-            props.on_mouse_over_option && props.on_mouse_over_option(id)
+            if (id) moused_over_options.current.add(id)
+            if (props.on_mouse_over_option) props.on_mouse_over_option(id)
         }
     }, [props.on_mouse_over_option])
 
@@ -161,8 +162,8 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     {
         return (id: string | undefined) =>
         {
-            id && moused_over_options.current.delete(id)
-            props.on_mouse_leave_option && props.on_mouse_leave_option(id)
+            if (id) moused_over_options.current.delete(id)
+            if (props.on_mouse_leave_option) props.on_mouse_leave_option(id)
         }
     }, [props.on_mouse_leave_option])
 
@@ -175,7 +176,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     }
 
 
-    const handle_key_down = async (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[]) =>
+    const handle_key_down = (e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>, displayed_options: InternalAutocompleteOption[]) =>
     {
         e.stopImmediatePropagation() // stops things like `?` and `ctrl + e` from firing
 
@@ -189,7 +190,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
         if (is_enter || is_escape)
         {
-            if (is_enter && highlighted_option_index !== undefined)
+            if (is_enter)
             {
                 const selected_option = displayed_options[highlighted_option_index]
                 if (selected_option) conditional_on_change(selected_option.id)
@@ -211,7 +212,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
     const set_to_not_editing = () =>
     {
         set_editing_options(false)
-        !props.retain_invalid_search_term_on_blur && set_temp_value_str(get_selected_option_title_str())
+        if (!props.retain_invalid_search_term_on_blur) set_temp_value_str(get_selected_option_title_str())
         set_highlighted_option_index(0)
     }
 
@@ -242,7 +243,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         const original_id = props.selected_option_id
         if (original_id === id)
         {
-            props.on_choose_same && props.on_choose_same(id)
+            if (props.on_choose_same) props.on_choose_same(id)
         }
         else
         {
@@ -263,7 +264,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
         <TextField
             variant="standard"
             disabled={props.editing_allowed !== undefined ? !props.editing_allowed : props.presenting}
-            ref={((el: HTMLDivElement) =>
+            ref={(el: HTMLDivElement | null) =>
             {
                 if (!el) return
                 const input_el = el.getElementsByTagName("input")[0]
@@ -271,7 +272,7 @@ function _AutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
                 if (!editing_options) setTimeout(() => input_el.blur(), 0)
                 else setTimeout(() => input_el.focus(), 0)
-            }) as any}
+            }}
             // type="text"
             placeholder={props.placeholder}
             value={temp_value_str || (editing_options ? "" : "-")}
