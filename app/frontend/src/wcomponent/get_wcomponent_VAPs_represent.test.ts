@@ -1,4 +1,4 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { uuid_v4_for_tests } from "../utils/uuid_v4_for_tests"
 import { prepare_new_contextless_wcomponent_object } from "./CRUD_helpers/prepare_new_wcomponent_object"
 import { get_wcomponent_VAPs_represent } from "./get_wcomponent_VAPs_represent"
@@ -10,7 +10,7 @@ import { VAPsType } from "./interfaces/VAPsType"
 
 
 
-export const run_get_wcomponent_VAPs_represent_tests = describe.delay("get_wcomponent_VAPs_represent", () =>
+export const test_get_wcomponent_VAPs_represent = describe.delay("get_wcomponent_VAPs_represent", () =>
 {
     const id1 = uuid_v4_for_tests(1)
     const id2 = uuid_v4_for_tests(2)

@@ -1,11 +1,11 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { ParsedValue } from "../../wcomponent_derived/interfaces/value"
 import { VAPsType } from "../interfaces/VAPsType"
 import { is_string_valid_number, parse_VAP_value } from "./parse_value"
 
 
 
-export const run_parse_value_tests = describe.delay("parse_value", () =>
+export const test_parse_value = describe.delay("parse_value", () =>
 {
 
     describe("parse_VAP_value", () =>

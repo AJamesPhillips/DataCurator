@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type { StateValueAndPredictionsSet as VAPSet } from "../interfaces/state"
 import { get_value_possibilities_by_value } from "../value_possibilities/get_value_possibilities_by_value"

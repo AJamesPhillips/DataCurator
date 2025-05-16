@@ -1,7 +1,7 @@
 import { CharStreams, CommonTokenStream } from "antlr4ts"
 import { AbstractParseTreeVisitor, TerminalNode } from "antlr4ts/tree"
 
-import { test } from "../shared/utils/test"
+import { test } from "datacurator-core/utils/test"
 import { datacurator_grammarLexer } from "./datacurator_grammarLexer"
 import {
     AdditionOrSubtractionContext,

@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { CreationContextState } from "../../state/creation_context/state"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -8,7 +8,7 @@ import { replace_normal_ids } from "./replace_normal_ids"
 
 
 
-export const run_replace_normal_ids_tests = describe.delay("replace_normal_ids", () =>
+export const test_replace_normal_ids = describe.delay("replace_normal_ids", () =>
 {
     let input_text = ""
     let output_text = ""

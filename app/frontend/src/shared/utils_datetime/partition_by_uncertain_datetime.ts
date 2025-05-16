@@ -1,8 +1,8 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { Tense } from "../../wcomponent/interfaces/datetime"
 import { uncertain_datetime_is_eternal } from "../uncertainty/datetime"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
 import { SortDirection, sort_list } from "../utils/sort"
-import { describe, test } from "../utils/test"
 import { get_tense_of_uncertain_datetime } from "./get_tense_of_uncertain_datetime"
 
 

@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponent, WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
@@ -6,7 +6,7 @@ import { TemporalValueCertainty, get_current_temporal_value_certainty_from_wcomp
 
 
 
-export const run_specialised_objects_accessors_tests = describe.delay("specialised_objects accessors tests", () =>
+export const test_specialised_objects_accessors = describe.delay("specialised_objects accessors tests", () =>
 {
     describe("get_current_temporal_value_certainty_from_wcomponent", () =>
     {

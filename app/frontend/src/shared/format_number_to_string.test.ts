@@ -1,10 +1,10 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { format_number_to_string } from "./format_number_to_string"
 import { NUMBER_DISPLAY_TYPES } from "./types"
-import { describe, test } from "./utils/test"
 
 
 
-export const run_number_to_string_test = describe.delay("run_number_to_string_test", () =>
+export const test_number_to_string = describe.delay("run_number_to_string", () =>
 {
     let formatted_number = ""
 

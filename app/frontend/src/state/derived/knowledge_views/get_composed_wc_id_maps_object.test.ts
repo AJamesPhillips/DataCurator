@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { KnowledgeView, KnowledgeViewWComponentEntry } from "../../../shared/interfaces/knowledge_view"
-import { describe, test } from "../../../shared/utils/test"
 import { uuid_v4_for_tests } from "../../../utils/uuid_v4_for_tests"
 import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "./get_composed_wc_id_maps_object"
 
@@ -31,17 +31,16 @@ function test_helper__make_knowledge_view (kv_wc_entry: KnowledgeViewWComponentE
 
 
 
-export const run_get_composed_wc_id_maps_object_tests = describe.delay("get_composed_wc_id_maps_object", () =>
+export const test_get_composed_wc_id_maps_object = describe.delay("get_composed_wc_id_maps_object", () =>
 {
     const date1 = new Date("2023-03-22 15:15:00")
 
     let result: ComposedWcIdMapsObject
-    let expected_result: ComposedWcIdMapsObject
 
 
     // Test get_composed_wc_id_maps_object handles no data
     result = get_composed_wc_id_maps_object([], {})
-    expected_result =
+    const expected_result: ComposedWcIdMapsObject =
     {
         composed_wc_id_map: {},
         composed_blocked_wc_id_map: {},

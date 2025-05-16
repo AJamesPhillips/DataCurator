@@ -1,9 +1,9 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { index_is_in_bounds, insert_element_at_index, swap_elements } from "./list"
 
 
 
-export const run_list_function_tests = describe.delay("list functions", () =>
+export const test_list_function = describe.delay("list functions", () =>
 {
     describe("index_is_in_bounds", () =>
     {

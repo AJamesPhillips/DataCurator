@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { CustomUnit } from "simulation"
-import { describe, test } from "../shared/utils/test"
 import { extract_units, suggest_missing_units } from "./suggest_missing_units"
 
 

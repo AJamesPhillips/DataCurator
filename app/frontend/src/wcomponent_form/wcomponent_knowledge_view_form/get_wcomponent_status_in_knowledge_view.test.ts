@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { KnowledgeView, KnowledgeViewWComponentIdEntryMap, KnowledgeViewsById } from "../../shared/interfaces/knowledge_view"
-import { describe, test } from "../../shared/utils/test"
 import { ComposedWcIdMapsObject, get_composed_wc_id_maps_object } from "../../state/derived/knowledge_views/get_composed_wc_id_maps_object"
 import { get_foundational_knowledge_views } from "../../state/derived/knowledge_views/knowledge_views_derived_reducer"
 import {
@@ -30,7 +30,7 @@ function test_helper__make_knowledge_view (wc_id_map: KnowledgeViewWComponentIdE
 }
 
 
-export const run_get_wcomponent_status_in_knowledge_view_tests = describe.delay("get_UI_data__wcomponent_add_or_for_knowledge_view", () =>
+export const test_get_wcomponent_status_in_knowledge_view = describe.delay("get_UI_data__wcomponent_add_or_for_knowledge_view", () =>
 {
 
     describe("simple single knowledge view with no foundation", () =>

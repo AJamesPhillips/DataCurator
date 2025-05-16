@@ -1,10 +1,10 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { currency_symbol_string_map, hide_currency_symbols, unhide_currency_symbols } from "./hide_currency_symbols"
 
 
 // This functionality definitely belongs inside the Simulation.js package
 // https://github.com/AJamesPhillips/DataCurator/issues/239
-export const run_currency_symbol_functions_tests = describe.delay("currency symbols", () =>
+export const test_currency_symbol_functions = describe.delay("currency symbols", () =>
 {
     const symbols_string = Object.keys(currency_symbol_string_map).join("")
     const currency_string = Object.values(currency_symbol_string_map).join("")

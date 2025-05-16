@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { round_to_max_significant_figures } from "../../shared/utils/number"
-import { describe, test } from "../../shared/utils/test"
 import { ConnectionLineBehaviour } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { HALF_NODE_WIDTH, NODE_WIDTH } from "../position_utils"
 import { ConnectionEndType } from "./ConnectionEnd"

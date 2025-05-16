@@ -1,6 +1,6 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { Tense } from "../../wcomponent/interfaces/datetime"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
-import { describe, test } from "../utils/test"
 
 
 

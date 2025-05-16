@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { TemporalUncertainty } from "../shared/uncertainty/interfaces"
-import { describe, test } from "../shared/utils/test"
 import {
     StateValueAndPrediction,
     StateValueAndPredictionsSet,

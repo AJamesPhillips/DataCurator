@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { bounded } from "../shared/utils/bounded"
-import { describe, test } from "../shared/utils/test"
 
 
 

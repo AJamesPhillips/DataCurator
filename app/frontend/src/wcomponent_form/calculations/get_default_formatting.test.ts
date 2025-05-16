@@ -1,10 +1,10 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { NUMBER_DISPLAY_TYPES, NumberDisplayType } from "../../shared/types"
-import { describe, test } from "../../shared/utils/test"
 import { get_default_result_display_type, get_default_significant_figures } from "./get_default_formatting"
 
 
 
-export const run_get_default_formatting_function_tests = describe.delay("get default formatting function", () =>
+export const test_get_default_formatting_function = describe.delay("get default formatting function", () =>
 {
     const test_case: {
         calc_value: string,

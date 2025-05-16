@@ -1,4 +1,4 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { correct_datetime_for_local_time_zone } from "./datetime_utils"
 
 

@@ -1,9 +1,9 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { should_show_calc_value } from "./EditableCalculationRow"
 
 
 
-export const run_EditableCalculationRow_tests = describe.delay("EditableCalculationRow support functions", () =>
+export const test_EditableCalculationRow = describe.delay("EditableCalculationRow support functions", () =>
 {
     describe("should_show_calc_value", () =>
     {

@@ -1,9 +1,9 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { format_number_to_significant_figures } from "./format_number_to_significant_figures"
-import { describe, test } from "./utils/test"
 
 
 
-export const run_number_to_significant_figures_test = describe.delay("run_number_to_significant_figures_test", () =>
+export const test_number_to_significant_figures = describe.delay("run_number_to_significant_figures", () =>
 {
     let formatted_number = ""
 

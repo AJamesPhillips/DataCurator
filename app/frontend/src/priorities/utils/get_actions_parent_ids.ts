@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { cloneable_generator_factory } from "../../utils/generators"
 import { random_int } from "../../utils/random"
 import { prepare_new_contextless_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"

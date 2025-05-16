@@ -1,5 +1,5 @@
+import { describe, test } from "datacurator-core/utils/test"
 import { stable_stringify } from "./stable_stringify"
-import { describe, test } from "./test"
 
 
 export const test_stable_stringify = describe.delay("stable_stringify", () =>

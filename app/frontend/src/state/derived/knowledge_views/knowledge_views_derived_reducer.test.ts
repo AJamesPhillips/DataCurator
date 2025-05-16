@@ -1,4 +1,4 @@
-import { describe, test } from "../../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { prepare_new_contextless_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentConnection, WComponentNode } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { WComponentNodeStateV2 } from "../../../wcomponent/interfaces/state"

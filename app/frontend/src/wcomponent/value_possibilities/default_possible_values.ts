@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { action_statuses } from "../interfaces/action"
 import type { SimpleValuePossibility } from "../interfaces/possibility"
 import { VAPsType } from "../interfaces/VAPsType"

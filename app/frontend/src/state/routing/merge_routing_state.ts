@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import type { ActionChangeRouteArgs } from "./actions"
 import { get_datetime_or_ms } from "./datetime/routing_datetime"
 import type {

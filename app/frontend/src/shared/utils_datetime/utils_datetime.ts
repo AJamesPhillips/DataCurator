@@ -1,7 +1,7 @@
+import { describe, test } from "datacurator-core/utils/test"
 import type { Base } from "../interfaces/base"
 import { get_uncertain_datetime } from "../uncertainty/datetime"
 import type { HasUncertainDatetime } from "../uncertainty/interfaces"
-import { describe, test } from "../utils/test"
 
 
 

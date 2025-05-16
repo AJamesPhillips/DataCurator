@@ -1,10 +1,10 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { uuid_v4_for_tests } from "../utils/uuid_v4_for_tests"
 import { normalise_calculation_ids } from "./normalise_calculation_ids"
 
 
 
-export const run_normalise_calculation_ids_tests = describe.delay("normalise_calculation_ids", () =>
+export const test_normalise_calculation_ids = describe.delay("normalise_calculation_ids", () =>
 {
     const id1 = uuid_v4_for_tests(1)
     let calculation_string = ""

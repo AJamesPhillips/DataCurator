@@ -1,10 +1,10 @@
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { convert_percentages } from "./convert_percentages"
 
 
 // This functionality definitely belongs inside the Simulation.js package
 // https://github.com/AJamesPhillips/DataCurator/issues/239
-export const run_convert_percentages_tests = describe.delay("convert_percentages", () =>
+export const test_convert_percentages = describe.delay("convert_percentages", () =>
 {
     let calculation_string = ""
     let expected_converted_calculation = ""

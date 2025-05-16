@@ -1,6 +1,6 @@
 import { CustomUnit } from "simulation"
 
-import { describe, test } from "../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { uuid_v4_for_tests } from "../utils/uuid_v4_for_tests"
 import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { prepare_new_contextless_wcomponent_object } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -14,7 +14,7 @@ import { error_is_units_error, perform_calculations } from "./perform_calculatio
 
 
 
-export const run_perform_calculations_test = describe.delay("perform_calculations", () =>
+export const test_perform_calculations = describe.delay("perform_calculations", () =>
 {
     let calculations: PlainCalculationObject[] = []
     let calculation_results: CalculationResult[] = []

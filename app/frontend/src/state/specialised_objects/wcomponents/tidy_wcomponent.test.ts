@@ -1,4 +1,4 @@
-import { describe, test } from "../../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { prepare_new_VAP } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import { prepare_new_VAP_set } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"

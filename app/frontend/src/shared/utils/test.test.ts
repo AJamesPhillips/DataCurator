@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/await-thenable */
-import { describe, test } from "./test"
+import { describe, test } from "datacurator-core/utils/test"
 
 export const test_sync_test = describe.delay("test sync", () => {
     test(true, true, "should handle sync")

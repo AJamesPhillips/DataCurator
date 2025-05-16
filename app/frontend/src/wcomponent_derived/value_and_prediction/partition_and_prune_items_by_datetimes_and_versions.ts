@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 
 import type { Base } from "../../shared/interfaces/base"
 import type { HasUncertainDatetime } from "../../shared/uncertainty/interfaces"

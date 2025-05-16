@@ -1,9 +1,9 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { get_valid_calculation_name_id } from "./get_valid_calculation_name_id"
 
 
 
-export const run_get_valid_calculation_name_id_tests = describe.delay("get_valid_calculation_name_id", () =>
+export const test_get_valid_calculation_name_id = describe.delay("get_valid_calculation_name_id", () =>
 {
     let candidate_name_id: string | undefined
     let existing_calculation_name_ids: string[]

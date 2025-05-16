@@ -1,4 +1,4 @@
-import { describe, test } from "../../shared/utils/test"
+import { describe, test } from "datacurator-core/utils/test"
 import { CreationContextState } from "../../state/creation_context/state"
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
@@ -9,7 +9,7 @@ import { get_title, replace_ids_in_text, ReplaceIdsArgs, RichTextType } from "./
 
 
 
-export const run_get_rich_text_tests = describe.delay("run_get_rich_text_tests", () =>
+export const test_get_rich_text = describe.delay("run_get_rich_text", () =>
 {
     let result: string
 
@@ -289,12 +289,12 @@ export const run_get_rich_text_tests = describe.delay("run_get_rich_text_tests",
         }
 
 
-        let text = `
+        const text = `
     $$!
     value: 123
     $$!
     `
-        let result = replace_ids_in_text({ ...args, text })
+        const result = replace_ids_in_text({ ...args, text })
         test(result, "\n123\n", "Should replace calculation with string value")
     })
 
