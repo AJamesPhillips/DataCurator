@@ -1,5 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/await-thenable */
-import { run_apply_units_from_component_tests } from "./calculations/apply_units_from_component.test"
+// Explored https://github.com/kvendrik/jest-lite to run the tests but this
+// doesn't look like it is being maintained any more.
+
+import { run_all_tests as run_all_core_tests } from "datacurator-core/tests"
+
+import { test_apply_units_from_component } from "./calculations/apply_units_from_component.test"
 import { run_convert_percentages_tests } from "./calculations/convert_percentages.test"
 import { run_currency_symbol_functions_tests } from "./calculations/hide_currency_symbols.test"
 import { run_normalise_calculation_ids_tests } from "./calculations/normalise_calculation_ids.test"
@@ -28,7 +34,6 @@ import { test_partition_items_by_created_at_datetime } from "./shared/utils_date
 import { test_calc_new_counterfactual_state } from "./sharedf/prediction_badge/calc_new_counterfactual_state"
 import { test_add_newlines_to_markdown } from "./sharedf/rich_text/add_newlines_to_markdown"
 import { run_get_rich_text_tests } from "./sharedf/rich_text/get_rich_text.test"
-import { test_get_ids_from_text, test_id_regexs } from "./sharedf/rich_text/id_regexs.test"
 import { run_remove_rich_text_tests } from "./sharedf/rich_text/remove_rich_text.test"
 import {
     run_replace_normal_ids_tests,
@@ -72,10 +77,12 @@ async function run_all_tests ()
 {
     tests_stats.reset()
 
+    ;await ((await run_all_core_tests)())
+
     ;(await test_sync_test)()
     ;await ((await test_async_test)())
 
-    ;(await run_apply_units_from_component_tests)()
+    ;(await test_apply_units_from_component)()
     ;(await run_convert_percentages_tests)()
     ;(await run_currency_symbol_functions_tests)()
     ;(await run_normalise_calculation_ids_tests)()
@@ -134,8 +141,6 @@ async function run_all_tests ()
     ;(await run_get_valid_calculation_name_id_tests)()
     ;(await run_make_calculation_safe_for_rich_text_tests)()
     ;(await run_get_wcomponent_status_in_knowledge_view_tests)()
-    ;(await test_id_regexs)()
-    ;(await test_get_ids_from_text)()
     ;(await test_extract_units())
     ;(await test_suggest_missing_units())
 

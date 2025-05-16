@@ -6,7 +6,7 @@ import { apply_units_from_component } from "./apply_units_from_component"
 
 
 
-export const run_apply_units_from_component_tests = describe.delay("apply_units_from_component", () =>
+export const test_apply_units_from_component = describe.delay("apply_units_from_component", () =>
 {
     let units: string
     let calculation_string: string
