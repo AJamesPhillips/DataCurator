@@ -24,7 +24,6 @@ import { AppMenuItemsContainer } from "./layout/AppMenuItemsContainer"
 import { MainAreaRouter } from "./layout/MainAreaRouter"
 import { Modal } from "./modal/Modal"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
-import { ActiveCreationContextWarning } from "./sharedf/ActiveCreationContextWarning"
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
 import { SidePanel } from "./side_panel/SidePanel"
@@ -116,7 +115,6 @@ function StyledApp (props: Props)
                         <Box className={`${classes.toolbar_item}`}>
                             <ActiveCreatedAtFilterWarning />
                             <ActiveFilterWarning />
-                            <ActiveCreationContextWarning />
                         </Box>
                         <Box className={`${classes.toolbar_item}`}><ActiveUserWidget /></Box>
                         <Box className={`${classes.toolbar_item}`}><SyncInfo /></Box>

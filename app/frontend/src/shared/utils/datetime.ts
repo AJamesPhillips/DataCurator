@@ -20,7 +20,10 @@ export function floor_datetime_to_resolution (date: Date, time_resolution: TimeR
 }
 
 
-
+/**
+ * @deprecated can be replaced simply with `new Date()` now that we have
+ * removed the creation context
+ */
 export function get_new_created_ats()
 {
     const created_at = new Date()

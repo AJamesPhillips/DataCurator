@@ -6,10 +6,7 @@ import type { KnowledgeViewListCoreProps } from "./interfaces"
 
 
 
-interface OwnProps extends KnowledgeViewListCoreProps { }
-
-
-export function KnowledgeViewListsSet (props: OwnProps)
+export function KnowledgeViewListsSet (props: KnowledgeViewListCoreProps)
 {
     const { priority, normal, hidden, archived, errored } = useMemo(() =>
     {

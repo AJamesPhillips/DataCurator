@@ -21,7 +21,6 @@ const map_state = (state: RootState) =>
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         knowledge_views: state.derived.knowledge_views,
         nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
-        creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
         current_view: state.routing.args.view,
         current_subview_id: state.routing.args.subview_id,
@@ -73,4 +72,4 @@ function _KnowledgeViewForm (props: Props)
 }
 
 
-export const KnowledgeViewForm = connector(_KnowledgeViewForm) as FunctionalComponent<{}>
+export const KnowledgeViewForm = connector(_KnowledgeViewForm) as FunctionalComponent

@@ -1,7 +1,6 @@
 import type { AnyAction } from "redux"
 
 import type { ControlsState } from "./controls/state"
-import type { CreationContextState } from "./creation_context/state"
 import type { DerivedState } from "./derived/State"
 import type { DisplayOptionsState } from "./display_options/state"
 import type { FilterContextState } from "./filter_context/state"
@@ -23,7 +22,6 @@ export interface RootStateCore
 export interface RootState extends RootStateCore
 {
     controls: ControlsState
-    creation_context: CreationContextState
     derived: DerivedState
     display_options: DisplayOptionsState
     filter_context: FilterContextState

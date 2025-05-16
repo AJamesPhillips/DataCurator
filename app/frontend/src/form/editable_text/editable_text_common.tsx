@@ -2,7 +2,6 @@ import { FunctionalComponent, h } from "preact"
 import { useEffect, useMemo, useRef, useState } from "preact/hooks"
 
 import { connect, ConnectedProps } from "react-redux"
-import type { CreationContext } from "../../creation_context/interfaces"
 import { RichMarkDown } from "../../sharedf/rich_text/RichMarkDown"
 import type { RootState } from "../../state/State"
 import { get_store } from "../../state/store"
@@ -63,8 +62,6 @@ type OwnProps = EditableTextCommonOwnProps &
 
 const map_state = (state: RootState) => ({
     presenting: state.display_options.consumption_formatting,
-    use_creation_context: state.creation_context.use_creation_context,
-    creation_context: state.creation_context.creation_context,
 })
 
 
@@ -137,23 +134,13 @@ function _EditableTextCommon (props: Props)
 
     const wrapped_conditional_on_change = useMemo(() => (new_value: string) =>
     {
-        if (props.use_creation_context)
-        {
-            new_value = custom_creation_context_replace_text(props.creation_context, new_value)
-        }
-
         if (new_value !== props.value && props.conditional_on_change) props.conditional_on_change(new_value)
         set_value(new_value)
-    }, [props.value, props.creation_context, props.conditional_on_change])
+    }, [props.value, props.conditional_on_change])
 
 
     const wrapped_on_blur = useMemo(() => (new_value: string) =>
     {
-        if (props.use_creation_context)
-        {
-            new_value = custom_creation_context_replace_text(props.creation_context, new_value)
-        }
-
         if (props.modify_value_pre_on_blur)
         {
             new_value = props.modify_value_pre_on_blur(new_value)
@@ -166,7 +153,7 @@ function _EditableTextCommon (props: Props)
         }
 
         set_value(new_value)
-    }, [props.value, props.creation_context, on_blur_type, props.on_blur])
+    }, [props.value, on_blur_type, props.on_blur])
 
 
 
@@ -408,16 +395,4 @@ function get_id_insertion_point ({ selectionStart, value }: { selectionStart: nu
     }
 
     return undefined
-}
-
-
-
-function custom_creation_context_replace_text (creation_context: CreationContext | undefined, new_value: string): string
-{
-    if (creation_context && creation_context.replace_text_target && creation_context.replace_text_replacement)
-    {
-        new_value = new_value.replaceAll(creation_context.replace_text_target, creation_context.replace_text_replacement)
-    }
-
-    return new_value
 }

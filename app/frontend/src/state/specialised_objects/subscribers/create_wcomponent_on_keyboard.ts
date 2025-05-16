@@ -25,7 +25,6 @@ export function create_wcomponent_on_keyboard (store: Store<RootState>)
 
     //     create_wcomponent({
     //         wcomponent: { type: "state" },
-    //         creation_context: state.creation_context,
     //         add_to_knowledge_view,
     //         store,
     //     })

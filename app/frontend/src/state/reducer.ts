@@ -1,7 +1,6 @@
 import type { AnyAction, Reducer } from "redux"
 
 import { controls_reducer } from "./controls/reducer"
-import { creation_context_reducer } from "./creation_context/reducer"
 import { derived_state_reducer } from "./derived/reducer"
 import { display_reducer } from "./display_options/reducer"
 import { filter_context_reducer } from "./filter_context/reducer"
@@ -39,7 +38,6 @@ export const factory_root_reducer: (initial_state: RootState) => Reducer<RootSta
     state = specialised_objects_reducer(state, action)
     state = meta_wcomponents_reducer(state, action)
     state = controls_reducer(state, action)
-    state = creation_context_reducer(state, action)
     state = filter_context_reducer(state, action)
     state = user_info_reducer(state, action)
     state = view_priorities_reducer(state, action)

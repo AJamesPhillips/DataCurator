@@ -1,5 +1,5 @@
 import { describe, test } from "datacurator-core/utils/test"
-import { CreationContextState } from "../../state/creation_context/state"
+
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -18,13 +18,8 @@ export const test_replace_normal_ids = describe.delay("replace_normal_ids", () =
     const id1 = uuid_v4_for_tests(1)
     const id9 = uuid_v4_for_tests(9)
 
-    const creation_context: CreationContextState = {
-        use_creation_context: false,
-        creation_context: { label_ids: [] },
-    }
-
     const wcomponents_by_id: WComponentsById = {
-        [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `Title 1` }, creation_context),
+        [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `Title 1` }),
         // [id9]: undefined, // id9 not added on purpose
     }
 

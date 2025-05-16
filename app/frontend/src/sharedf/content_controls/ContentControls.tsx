@@ -14,7 +14,6 @@ import type { RootState } from "../../state/State"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { TimeSlider } from "../../time_control/TimeSlider"
 import { invert_disabled_appearance } from "../../ui_themes/invert_disabled"
-import { ActiveCreationContextWarning } from "../ActiveCreationContextWarning"
 import { ActiveFilterWarning } from "../ActiveFilterWarning"
 import { ActiveFocusedMode } from "../ActiveFocusedMode"
 import "./ContentControls.scss"
@@ -115,7 +114,6 @@ function _ContentControls (props: Props)
                     <ActiveFocusedMode />
                     <ActiveCreatedAtFilterWarning />
                     <ActiveFilterWarning />
-                    <ActiveCreationContextWarning />
                 </Box>
 
                 <ToggleDatetimeMarkers />

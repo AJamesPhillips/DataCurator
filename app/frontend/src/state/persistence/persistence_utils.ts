@@ -2,7 +2,6 @@
 
 type SupportedPersistenceKeys = (
     "display_options"
-    | "creation_context"
     | "filter_context"
     | "controls"
     | "search"

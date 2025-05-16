@@ -10,16 +10,12 @@ import { KnowledgeViewListsSet } from "./KnowledgeViewListsSet"
 
 
 
-interface OwnProps {}
-
-
 const map_state = (state: RootState) => ({
     ready: state.sync.ready_for_reading,
     knowledge_views: state.derived.knowledge_views,
     nested_knowledge_view_ids: state.derived.nested_knowledge_view_ids,
     knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
-    creation_context: state.creation_context,
     current_view: state.routing.args.view,
     current_subview_id: state.routing.args.subview_id,
     editing: !state.display_options.consumption_formatting,
@@ -33,7 +29,7 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -68,4 +64,4 @@ function _TopLevelKnowledgeViewListsSet (props: Props)
     />
 }
 
-export const TopLevelKnowledgeViewListsSet = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent<OwnProps>
+export const TopLevelKnowledgeViewListsSet = connector(_TopLevelKnowledgeViewListsSet) as FunctionComponent

@@ -1,6 +1,7 @@
 
 import { get_today_str } from "datacurator-core/utils/date_helpers"
 import { useMemo } from "preact/hooks"
+
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
@@ -48,7 +49,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     const nested_kv = nested_knowledge_view_ids.map[knowledge_view.id]
     const children = (nested_kv?.child_ids || []).map(id => props.knowledge_views_by_id[id])
         .filter(is_defined)
-    const has_wcomponent = !!props.wcomponents_by_id[knowledge_view?.id || ""]
+    const has_wcomponent = !!props.wcomponents_by_id[knowledge_view.id || ""]
 
 
     const kv_from_different_base = knowledge_view.base_id !== props.chosen_base_id
@@ -93,7 +94,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 value={knowledge_view.title}
                 on_blur={new_title => {
                     const default_title = make_default_kv_title()
-                    crud.update_item({ ...knowledge_view, title: new_title ?? default_title })
+                    crud.update_item({ ...knowledge_view, title: new_title || default_title })
                 }}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />

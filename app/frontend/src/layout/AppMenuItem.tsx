@@ -2,7 +2,6 @@ import { MenuItem as MaterialMenuItem } from "@mui/material"
 import { ComponentChildren, FunctionComponent, h } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
-import { CreationContextTabTitle } from "../creation_context/CreationContextTabTitle"
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
 import { Link } from "../sharedf/Link"
 import { ACTIONS } from "../state/actions"
@@ -20,9 +19,7 @@ interface OwnProps
 
 function get_title (id: ROUTE_TYPES)
 {
-
     if (id === "filter") return <FilterContextTabTitle />
-    else if (id === "creation_context") return <CreationContextTabTitle />
     else return route_to_text(id)
 }
 

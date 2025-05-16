@@ -12,10 +12,6 @@ import { route_to_text } from "./route_to_text"
 
 
 
-interface OwnProps { }
-
-
-
 const map_state = (state: RootState) => ({
     route: state.routing.route,
     editing: !state.display_options.consumption_formatting,
@@ -27,7 +23,7 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 const hide_routes = new Set<ROUTE_TYPES>([
@@ -55,9 +51,8 @@ function _AppMenuItemsContainer (props: Props)
     {
         const hide_routes = new Set<ROUTE_TYPES>([
             "about",
-            "creation_context",
         ])
-        routes = routes.filter(r => !hide_routes.has(r) || (props.editing && r === "creation_context"))
+        routes = routes.filter(r => !hide_routes.has(r))
     }
 
 
@@ -108,4 +103,4 @@ function _AppMenuItemsContainer (props: Props)
     )
 }
 
-export const AppMenuItemsContainer = connector(_AppMenuItemsContainer) as FunctionalComponent<OwnProps>
+export const AppMenuItemsContainer = connector(_AppMenuItemsContainer) as FunctionalComponent

@@ -1,8 +1,4 @@
-import { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
-
 import type { HasUncertainDatetime } from "../shared/uncertainty/interfaces"
-import type { RootState } from "../state/State"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { UncertainDateTimeForm } from "./uncertain_datetime/UncertainDateTimeForm"
 
@@ -15,19 +11,9 @@ interface OwnProps
 }
 
 
-
-const map_state = (state: RootState) => ({
-    creation_context_state: state.creation_context,
-})
-
-const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
-
-
-
-function _WComponentDateTimeFormField (props: Props)
+export function WComponentDateTimeFormField (props: OwnProps)
 {
-    const { wcomponent, creation_context_state, upsert_wcomponent } = props
+    const { wcomponent, upsert_wcomponent } = props
     const datetime = wcomponent.datetime || {}
 
 
@@ -38,5 +24,3 @@ function _WComponentDateTimeFormField (props: Props)
         />
     </p>
 }
-
-export const WComponentDateTimeFormField = connector(_WComponentDateTimeFormField) as FunctionalComponent<OwnProps>

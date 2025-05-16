@@ -2,7 +2,6 @@ import { FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AboutSidePanel } from "../about/AboutSidePanel"
-import { CreationContextSidePanel } from "../creation_context/CreationContextSidePanel"
 import { DisplayOptionsSidePanel } from "../display_options/DisplayOptionsSidePanel"
 import { FiltersSidePanel } from "../filter_context/FiltersSidePanel"
 import { ViewsSidePanel } from "../knowledge_view/ViewsSidePanel"
@@ -14,15 +13,12 @@ import { WComponentsSidePanel } from "./wcomponents/WComponentsSidePanel"
 
 
 
-interface OwnProps {}
-
-
 const map_state = (state: RootState) => ({
     route: state.routing.route,
 })
 
 const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -36,8 +32,6 @@ function _SidePanel (props: Props)
 
         {props.route === "display" && <DisplayOptionsSidePanel />}
 
-        {props.route === "creation_context" && <CreationContextSidePanel />}
-
         {props.route === "views" && <ViewsSidePanel />}
 
         {props.route === "wcomponents" && <WComponentsSidePanel />}
@@ -49,4 +43,4 @@ function _SidePanel (props: Props)
 }
 
 
-export const SidePanel = connector(_SidePanel) as FunctionComponent<OwnProps>
+export const SidePanel = connector(_SidePanel) as FunctionComponent

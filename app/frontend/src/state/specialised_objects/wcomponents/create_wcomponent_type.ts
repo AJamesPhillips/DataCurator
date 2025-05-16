@@ -42,9 +42,8 @@ export function create_wcomponent (args: CreateWComponentArgs)
 {
     const store = args.store || get_store()
     const state = store.getState()
-    const creation_context = state.creation_context
 
-    let wcomponent = prepare_new_wcomponent_object(args.wcomponent, creation_context)
+    let wcomponent = prepare_new_wcomponent_object(args.wcomponent)
     wcomponent = set_judgement_or_objective_target(wcomponent, state)
     wcomponent = set_parent_goal_or_action_ids(wcomponent, state)
     wcomponent = set_state_value_fields(wcomponent, state)

@@ -1,11 +1,11 @@
 import { describe, test } from "datacurator-core/utils/test"
+
 import { prepare_new_VAP } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP"
 import { prepare_new_VAP_set } from "../../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { prepare_new_wcomponent_object } from "../../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { WComponentsById } from "../../../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../../../wcomponent/interfaces/VAPsType"
 import { StateValueAndPrediction, WComponentNodeStateV2 } from "../../../wcomponent/interfaces/state"
-import { CreationContextState } from "../../creation_context/state"
 import { tidy_wcomponent } from "./tidy_wcomponent"
 
 
@@ -17,10 +17,6 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
     const dt1 = new Date("2021-05-12")
     const dt2 = new Date("2021-05-13")
 
-    const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
-        label_ids: [],
-    } }
-
     let wcomponent: WComponentNodeStateV2
     let VAPs: StateValueAndPrediction[]
     let tidied: WComponentNodeStateV2
@@ -30,7 +26,7 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
     const base_id = -1
 
     // Should sort VAP sets by ascending created_at
-    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
+    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), id: "vps2", created_at: dt2, custom_created_at: undefined },
         { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), id: "vps1", created_at: dt1, custom_created_at: undefined },
@@ -41,7 +37,7 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
 
 
 
-    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
+    wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }) as WComponentNodeStateV2
     VAPs = [
         { ...prepare_new_VAP(), id: "VAP1", relative_probability: 5 },
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },
@@ -97,5 +93,4 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
         test(error_message.length > 0, true, "Should log an error to the console when wcomponent with _derived__using_value_from_wcomponent_id is tidied before attempting to be saved")
         test(tidied._derived__using_value_from_wcomponent_id, undefined, "Should delete wcomponent._derived__using_value_from_wcomponent_id")
     })
-
 })

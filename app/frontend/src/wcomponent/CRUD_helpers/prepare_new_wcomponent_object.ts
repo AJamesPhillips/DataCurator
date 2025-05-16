@@ -3,8 +3,6 @@ import { date2str_auto } from "datacurator-core/utils/date_helpers"
 import { get_new_id } from "datacurator-core/utils/ids"
 
 import type { HasBaseId } from "../../shared/interfaces/base"
-import { get_new_created_ats } from "../../shared/utils/datetime"
-import type { CreationContextState } from "../../state/creation_context/state"
 import type { WComponentNodeAction } from "../interfaces/action"
 import type { WComponentNodeGoal } from "../interfaces/goal"
 import type { WComponentJudgement } from "../interfaces/judgement"
@@ -131,29 +129,11 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
 }
 
 
-
-export function prepare_new_wcomponent_object (partial_wcomponent: Partial<WComponent> & HasBaseId, creation_context: CreationContextState)
+/**
+ * @deprecated can be replaced with prepare_new_contextless_wcomponent_object now that we have
+ * removed the creation context
+ */
+export function prepare_new_wcomponent_object (partial_wcomponent: Partial<WComponent> & HasBaseId)
 {
-    let wcomponent: WComponent = {
-        ...prepare_new_contextless_wcomponent_object(partial_wcomponent),
-        ...get_new_created_ats(),
-    }
-
-    wcomponent = set_creation_context_label_ids(wcomponent, creation_context)
-
-    return wcomponent
-}
-
-
-
-function set_creation_context_label_ids(wcomponent: WComponent, creation_context: CreationContextState)
-{
-    const cc = creation_context.creation_context
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const additional_labels = creation_context.use_creation_context && cc && cc.label_ids || []
-    const existing_label_ids_list = (wcomponent.label_ids || [])
-    const existing_label_ids = new Set(existing_label_ids_list)
-    additional_labels.forEach(id => existing_label_ids.has(id) ? "" : existing_label_ids_list.push(id))
-
-    return { ...wcomponent, label_ids: existing_label_ids_list }
+    return prepare_new_contextless_wcomponent_object(partial_wcomponent)
 }

@@ -1,8 +1,6 @@
 import { TextField } from "@mui/material"
-import { FunctionalComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
+import { h } from "preact"
 
-import { RootState } from "../state/State"
 import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -12,14 +10,7 @@ interface OwnProps
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
-const map_state = (state: RootState) => ({
-    creation_context_state: state.creation_context,
-})
-
-const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
-
-export function _WComponentImageForm(props: Props)
+export function WComponentImageForm(props: OwnProps)
 {
     const { wcomponent, upsert_wcomponent } = props
     const summary_image = wcomponent.summary_image || undefined
@@ -29,8 +20,9 @@ export function _WComponentImageForm(props: Props)
         <TextField
             fullWidth={true}
             label="Summary Image URL"
-            onChange={(e: any) => {
-                let url = (e.target?.value) ? e.target?.value : null
+            onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                const url: string | undefined = e.target?.value ?? undefined
                 if (url !== undefined) {
                     upsert_wcomponent({ summary_image: url })
                 }
@@ -40,5 +32,3 @@ export function _WComponentImageForm(props: Props)
         />
     )
 }
-
-export const WComponentImageForm = connector(_WComponentImageForm) as FunctionalComponent<OwnProps>

@@ -1,5 +1,4 @@
 import { controls_actions } from "./controls/actions"
-import { creation_context_actions } from "./creation_context/actions"
 import { display_actions } from "./display_options/actions"
 import { filter_context_actions } from "./filter_context/actions"
 import { global_keys_actions } from "./global_keys/actions"
@@ -17,7 +16,6 @@ import { user_info_actions } from "./user_info/actions"
 
 export const ACTIONS = {
     controls: controls_actions,
-    creation_context: creation_context_actions,
     filter_context: filter_context_actions,
     display: display_actions,
     sync: sync_actions,

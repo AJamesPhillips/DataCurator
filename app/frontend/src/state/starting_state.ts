@@ -1,5 +1,4 @@
 import { controls_starting_state } from "./controls/persistance"
-import { creation_context_starting_state } from "./creation_context/persistance"
 import { get_derived_starting_state } from "./derived/starting_state"
 import { display_options_starting_state } from "./display_options/persistance"
 import { filter_context_starting_state } from "./filter_context/persistance"
@@ -23,7 +22,6 @@ export function get_starting_state (): RootState
 
     const starting_state: RootState = {
         controls: controls_starting_state({ storage_location }),
-        creation_context: creation_context_starting_state(),
         filter_context: filter_context_starting_state(),
         specialised_objects: get_specialised_objects_starting_state(),
         last_action: undefined,

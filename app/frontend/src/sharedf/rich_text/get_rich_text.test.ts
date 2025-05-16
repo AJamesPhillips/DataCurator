@@ -1,5 +1,5 @@
 import { describe, test } from "datacurator-core/utils/test"
-import { CreationContextState } from "../../state/creation_context/state"
+
 import { uuid_v4_for_tests } from "../../utils/uuid_v4_for_tests"
 import { prepare_new_wcomponent_object } from "../../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import { StateValueAndPredictionsSet, WComponentNodeStateV2 } from "../../wcomponent/interfaces/state"
@@ -23,15 +23,10 @@ export const test_get_rich_text = describe.delay("run_get_rich_text", () =>
         const dt = new Date("2021-05-12")
         const ms = dt.getTime()
 
-        const creation_context: CreationContextState = {
-            use_creation_context: false,
-            creation_context: { label_ids: [] },
-        }
-
         const wcomponents_by_id = {
-            [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `@@${id3} was told @@${id2} is here` }, creation_context),
-            [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }, creation_context),
-            [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }, creation_context),
+            [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `@@${id3} was told @@${id2} is here` }),
+            [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }),
+            [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }),
         }
         const knowledge_views_by_id = {}
 
@@ -73,10 +68,6 @@ export const test_get_rich_text = describe.delay("run_get_rich_text", () =>
         const dt = new Date("2021-05-12")
         const ms = dt.getTime()
 
-        const creation_context: CreationContextState = { use_creation_context: false, creation_context: {
-            label_ids: [],
-        } }
-
         const get_statev2 = (args: { id: string, title: string }) =>
         {
             const VAP_set: StateValueAndPredictionsSet = {
@@ -100,7 +91,7 @@ export const test_get_rich_text = describe.delay("run_get_rich_text", () =>
                 type: "statev2",
                 subtype: "boolean",
                 values_and_prediction_sets: [VAP_set]
-            }, creation_context) as WComponentNodeStateV2
+            }) as WComponentNodeStateV2
         }
 
         const id1 = uuid_v4_for_tests(1)
@@ -266,15 +257,10 @@ export const test_get_rich_text = describe.delay("run_get_rich_text", () =>
         const dt = new Date("2023-08-14")
         const ms = dt.getTime()
 
-        const creation_context: CreationContextState = {
-            use_creation_context: false,
-            creation_context: { label_ids: [] },
-        }
-
         const wcomponents_by_id = {
-            [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `UK Homes` }, creation_context),
-            // [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }, creation_context),
-            // [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }, creation_context),
+            [id1]: prepare_new_wcomponent_object({ base_id: -1, id: id1, title: `UK Homes` }),
+            // [id2]: prepare_new_wcomponent_object({ base_id: -1, id: id2, title: "Person A" }),
+            // [id3]: prepare_new_wcomponent_object({ base_id: -1, id: id3, title: "Person B" }),
         }
 
         const knowledge_views_by_id = {}
