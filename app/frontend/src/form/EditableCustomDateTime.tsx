@@ -1,16 +1,17 @@
 import { TextField } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
+import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
+import { TimeResolution } from "datacurator-core/interfaces/datetime"
+import { date2str, get_today_str } from "datacurator-core/utils/date_helpers"
+import { correct_datetime_for_local_time_zone, date_to_string, valid_date } from "datacurator-core/utils/datetime"
 import { describe, test } from "datacurator-core/utils/test"
-import { useEffect, useRef, useState } from "preact/hooks"
-import { date2str, get_today_str } from "../shared/utils/date_helpers"
-import type { TimeResolution } from "../shared/utils/datetime"
+
 import { Button } from "../sharedf/Button"
 import type { RootState } from "../state/State"
 import { find_parent_element_by_class } from "../utils/html"
 import "./Editable.css"
-import { correct_datetime_for_local_time_zone, date_to_string, valid_date } from "./datetime_utils"
 
 
 
@@ -89,7 +90,7 @@ function _EditableCustomDateTime (props: Props)
             label={title}
             value={display_value}
             onFocus={() => set_editing(true)}
-            inputRef={((r: HTMLInputElement | null) =>
+            inputRef={(r: HTMLInputElement | null) =>
             {
                 if (!r) return
                 el_ref.current = r
@@ -102,7 +103,7 @@ function _EditableCustomDateTime (props: Props)
                 r.value = new_working_value
 
                 r.setSelectionRange(0, r.value.length)
-            }) as any}
+            }}
 
             // Can not use onKeyPress as `Escape` key is never captured & reported by this method
             onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) =>

@@ -1,7 +1,8 @@
 import { FunctionalComponent, h } from "preact"
-
 import { connect, ConnectedProps } from "react-redux"
-import { uncertain_date_to_string } from "../../../form/datetime_utils"
+
+import { uncertain_date_to_string } from "datacurator-core/utils/datetime"
+
 import { EditableCustomDateTime } from "../../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../../shared/uncertainty/interfaces"
 import type { RootState } from "../../../state/State"

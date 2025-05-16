@@ -9,16 +9,16 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material"
+import makeStyles from "@mui/styles/makeStyles"
 import clsx from "clsx"
 import { FunctionalComponent } from "preact"
 import { useEffect } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import makeStyles from "@mui/styles/makeStyles"
+import { date_to_string } from "datacurator-core/utils/datetime"
 
 import "./App.scss"
 import { setup_tests_for_browser } from "./App.test"
-import { date_to_string } from "./form/datetime_utils"
 import { HelpMenu } from "./help_menu/HelpMenu"
 import { AppMenuItemsContainer } from "./layout/AppMenuItemsContainer"
 import { MainAreaRouter } from "./layout/MainAreaRouter"

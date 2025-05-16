@@ -1,8 +1,8 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { date2str } from "datacurator-core/utils/date_helpers"
 import { Modal } from "../modal/Modal"
-import { date2str } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { WComponentsList } from "./WComponentsList"

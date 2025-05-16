@@ -1,5 +1,5 @@
+import { date2str } from "datacurator-core/utils/date_helpers"
 import { describe, test } from "datacurator-core/utils/test"
-import { date2str } from "../../shared/utils/date_helpers"
 import { routing_arg_datetime_strings_to_datetime } from "./datetime/routing_datetime"
 import {
     ALLOWED_ROUTE_ARGS,

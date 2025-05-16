@@ -4,6 +4,7 @@ import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 import type { Store } from "redux"
 
+import { get_today_str } from "datacurator-core/utils/date_helpers"
 import {
     get_new_knowledge_view_object,
     navigate_to_knowledge_view_or_kvwcomponent,
@@ -14,7 +15,6 @@ import type {
     KnowledgeViewWComponentEntry,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
-import { get_today_str } from "../../shared/utils/date_helpers"
 import { AddSearchIcon } from "../../sharedf/icons/AddSearchIcon"
 import { get_title, RichTextType } from "../../sharedf/rich_text/get_rich_text"
 import { remove_rich_text } from "../../sharedf/rich_text/remove_rich_text"

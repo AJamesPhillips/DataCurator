@@ -4,8 +4,9 @@ import { Box, ButtonGroup, IconButton, Slider } from "@mui/material"
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { date2str_auto } from "datacurator-core/utils/date_helpers"
+
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { date2str_auto } from "../shared/utils/date_helpers"
 import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"

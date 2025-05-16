@@ -1,8 +1,8 @@
+import { get_today_str } from "datacurator-core/utils/date_helpers"
 import { FunctionalComponent } from "preact"
 import { useEffect, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { get_today_str } from "../shared/utils/date_helpers"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 

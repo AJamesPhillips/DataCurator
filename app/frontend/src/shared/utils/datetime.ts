@@ -1,6 +1,5 @@
 import { TimeResolution } from "datacurator-core/interfaces/datetime"
-
-import { date2str_auto } from "./date_helpers"
+import { date2str_auto } from "datacurator-core/utils/date_helpers"
 
 
 

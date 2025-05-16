@@ -15,7 +15,6 @@ import { test_extract_units, test_suggest_missing_units } from "./calculations/s
 import { test_get_angle } from "./canvas/connections/angles"
 import { test_derive_connection_coords } from "./canvas/connections/derive_coords.test"
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
-import { test_correct_datetime_for_local_time_zone } from "./form/datetime_utils.test"
 import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_calc_ids_to_move_and_conflicts_functions } from "./knowledge_view/change_base/calc_ids_to_move_and_conflicts"
 import { test_get_actions_parent_ids } from "./priorities/utils/get_actions_parent_ids"
@@ -91,7 +90,6 @@ async function run_all_tests ()
     ;(await test_get_angle)()
     ;(await test_derive_connection_coords)()
     ;(await test_calculate_new_zoom_xy)()
-    ;(await test_correct_datetime_for_local_time_zone)()
     ;(await test_handle_on_blur)()
     ;(await test_calc_ids_to_move_and_conflicts_functions)()
     ;(await test_get_actions_parent_ids)()

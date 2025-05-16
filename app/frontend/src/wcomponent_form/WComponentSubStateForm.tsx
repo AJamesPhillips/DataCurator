@@ -1,8 +1,9 @@
 import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
+import { uncertain_date_to_string } from "datacurator-core/utils/datetime"
+
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
-import { uncertain_date_to_string } from "../form/datetime_utils"
 import { get_wcomponent_search_options } from "../search/get_wcomponent_search_options"
 import { is_defined } from "../shared/utils/is_defined"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"

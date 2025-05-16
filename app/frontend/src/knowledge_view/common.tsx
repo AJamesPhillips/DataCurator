@@ -1,4 +1,5 @@
 
+import { get_today_str } from "datacurator-core/utils/date_helpers"
 import { useMemo } from "preact/hooks"
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { ListItemCRUDRequiredU } from "../form/editable_list/EditableListEntry"
@@ -6,7 +7,6 @@ import { EditableTextOnBlurType } from "../form/editable_text/editable_text_comm
 import { EditableText } from "../form/editable_text/EditableText"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { KnowledgeView, knowledge_view_tree_sort_types } from "../shared/interfaces/knowledge_view"
-import { get_today_str } from "../shared/utils/date_helpers"
 import { is_defined } from "../shared/utils/is_defined"
 import { ExternalLinkIcon } from "../sharedf/icons/ExternalLinkIcon"
 import { Link } from "../sharedf/Link"
