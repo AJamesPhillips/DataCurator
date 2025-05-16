@@ -7,6 +7,7 @@ import type { Color } from "../shared/interfaces/color"
 import { is_defined } from "../shared/utils/is_defined"
 import { ACTIONS } from "../state/actions"
 import type { NestedKnowledgeViewIdsEntry } from "../state/derived/State"
+import { experimental_features } from "../state/display_options/persistance"
 import type { ViewType } from "../state/routing/interfaces"
 import type { RootState } from "../state/State"
 
@@ -134,13 +135,23 @@ function _ViewsBreadcrumb (props: Props)
 export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponent
 
 
-
+const state = experimental_features.get_state()
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
-    { id: "priorities", title: "Priorities" },
-    { id: "priorities_list", title: "Priorities list" },
-    { id: "actions_list", title: "Actions list" },
 ]
+if (state.enable_prioritisation_views)
+{
+    view_options.push(
+        { id: "priorities", title: "Priorities" },
+        { id: "priorities_list", title: "Priorities list" },
+    )
+}
+if (state.enable_action_kanban_view)
+{
+    view_options.push(
+        { id: "actions_list", title: "Actions list" },
+    )
+}
 
 
 
