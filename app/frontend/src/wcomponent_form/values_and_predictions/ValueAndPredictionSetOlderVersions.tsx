@@ -32,7 +32,6 @@ interface OwnProps extends ListItemCRUDRequiredU<VAPSet>
 const map_state = (state: RootState) =>
 {
     return {
-        creation_context: state.creation_context,
         editing: !state.display_options.consumption_formatting,
     }
 }
@@ -55,9 +54,9 @@ function _ValueAndPredictionSetOlderVersions (props: Props)
 
     const make_new_version = useMemo(() => () =>
     {
-        const new_versioned_VAP_set = create_new_VAP_set_version(props.current_VAP_set, props.creation_context)
+        const new_versioned_VAP_set = create_new_VAP_set_version(props.current_VAP_set)
         create_item(new_versioned_VAP_set)
-    }, [props.current_VAP_set, props.creation_context, create_item])
+    }, [props.current_VAP_set, create_item])
 
 
     const content = useMemo(() => factory_render_list_content(

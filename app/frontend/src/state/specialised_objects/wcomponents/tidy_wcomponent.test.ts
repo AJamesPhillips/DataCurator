@@ -25,15 +25,15 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
     let VAPs: StateValueAndPrediction[]
     let tidied: WComponentNodeStateV2
     let tidied_VAPs: StateValueAndPrediction[]
-    let wcomponents_by_id: WComponentsById = {}
+    const wcomponents_by_id: WComponentsById = {}
 
     const base_id = -1
 
     // Should sort VAP sets by ascending created_at
     wcomponent = prepare_new_wcomponent_object({ base_id, type: "statev2", subtype: "other" }, creation_context) as WComponentNodeStateV2
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps2", created_at: dt2, custom_created_at: undefined },
-        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), id: "vps1", created_at: dt1, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), id: "vps2", created_at: dt2, custom_created_at: undefined },
+        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), id: "vps1", created_at: dt1, custom_created_at: undefined },
     ]
     tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
 
@@ -47,7 +47,7 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0 },
     ]
     wcomponent.values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), entries: VAPs },
+        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), entries: VAPs },
     ]
     tidied = tidy_wcomponent(wcomponent, wcomponents_by_id) as WComponentNodeStateV2
 
@@ -68,8 +68,8 @@ export const test_tidy_wcomponent = describe.delay("tidy_wcomponent", () =>
         { ...prepare_new_VAP(), id: "VAP1", relative_probability: 5, probability: 0 },
         { ...prepare_new_VAP(), id: "VAP2", relative_probability: 0, probability: 1 },
     ]
-    let values_and_prediction_sets = [
-        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id, creation_context), entries: VAPs },
+    const values_and_prediction_sets = [
+        { ...prepare_new_VAP_set(VAPsType.undefined, {}, [], base_id), entries: VAPs },
     ]
     wcomponent = { ...wcomponent, subtype: "boolean", values_and_prediction_sets }
 

@@ -1,39 +1,17 @@
-    import type { Action, AnyAction } from "redux"
+import type { Action, AnyAction } from "redux"
 
 
-
-interface ActionToggleUseCreationContext extends Action {}
 
 const toggle_use_creation_context_type = "toggle_use_creation_context"
 
-const toggle_use_creation_context = (): ActionToggleUseCreationContext =>
+const toggle_use_creation_context = (): Action =>
 {
     return { type: toggle_use_creation_context_type }
 }
 
-export const is_toggle_use_creation_context = (action: AnyAction): action is ActionToggleUseCreationContext => {
+export const is_toggle_use_creation_context = (action: AnyAction): action is Action => {
     return action.type === toggle_use_creation_context_type
 }
-
-
-
-interface SetCustomCreatedAtArgs
-{
-    custom_created_at: Date | undefined
-}
-interface ActionSetCustomCreatedAt extends Action, SetCustomCreatedAtArgs {}
-
-const set_custom_created_at_type = "set_custom_created_at"
-
-const set_custom_created_at = (args: SetCustomCreatedAtArgs): ActionSetCustomCreatedAt =>
-{
-    return { type: set_custom_created_at_type, ...args }
-}
-
-export const is_set_custom_created_at = (action: AnyAction): action is ActionSetCustomCreatedAt => {
-    return action.type === set_custom_created_at_type
-}
-
 
 
 interface SetLabelIdsArgs
@@ -77,7 +55,6 @@ export const is_set_replace_text = (action: AnyAction): action is ActionSetRepla
 
 export const creation_context_actions = {
     toggle_use_creation_context,
-    set_custom_created_at,
     set_label_ids,
     set_replace_text,
 }

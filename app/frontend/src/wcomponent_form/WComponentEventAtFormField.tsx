@@ -24,7 +24,6 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    creation_context_state: state.creation_context,
     editing: !state.display_options.consumption_formatting,
     base_id: selector_chosen_base_id(state),
 })
@@ -36,7 +35,7 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _WComponentEventAtFormField (props: Props)
 {
-    const { wcomponent, creation_context_state, upsert_wcomponent, base_id } = props
+    const { wcomponent, upsert_wcomponent, base_id } = props
     const event_at = wcomponent.event_at && wcomponent.event_at[0]
 
 
@@ -51,7 +50,7 @@ function _WComponentEventAtFormField (props: Props)
                 id: "",
                 base_id: base_id || -1, // base id should be present but default to -1 just in case
                 explanation: "",
-                ...(event_at || { ...get_new_created_ats(creation_context_state) }),
+                ...(event_at || { ...get_new_created_ats() }),
                 ...partial_event_at_prediction,
             }]
         }

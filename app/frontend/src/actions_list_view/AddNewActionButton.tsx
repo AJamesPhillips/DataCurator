@@ -6,7 +6,6 @@ import { connect, ConnectedProps } from "react-redux"
 import { get_next_available_wc_map_position } from "../knowledge_view/utils/next_wc_map_position"
 import { KnowledgeViewWComponentIdEntryMap } from "../shared/interfaces/knowledge_view"
 import { Button } from "../sharedf/Button"
-import { CreationContextState } from "../state/creation_context/state"
 import { get_current_composed_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { create_wcomponent } from "../state/specialised_objects/wcomponents/create_wcomponent_type"
 import type { RootState } from "../state/State"
@@ -31,7 +30,6 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    creation_context: state.creation_context,
     composed_knowledge_view: get_current_composed_knowledge_view_from_state(state),
     wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
     base_id: selector_chosen_base_id(state),
@@ -45,7 +43,7 @@ function _AddNewActionButton (props: Props)
 {
     const {
         most_recent_action_id, composed_knowledge_view, wcomponents_by_id,
-        base_id, list_type, creation_context
+        base_id, list_type
     } = props
 
     if (!composed_knowledge_view) return null
@@ -58,7 +56,6 @@ function _AddNewActionButton (props: Props)
         most_recent_action_id,
         wcomponents_by_id,
         list_type,
-        creation_context,
         knowledge_view_id,
     }), [
         base_id,
@@ -66,7 +63,6 @@ function _AddNewActionButton (props: Props)
         most_recent_action_id,
         wcomponents_by_id,
         list_type,
-        creation_context,
         knowledge_view_id,
     ])
 
@@ -93,7 +89,6 @@ interface MakeHandleClickArgs
     most_recent_action_id: string
     wcomponents_by_id: WComponentsById
     list_type: ListTypeType
-    creation_context: CreationContextState
     knowledge_view_id: string
 }
 
@@ -105,7 +100,6 @@ function make_handle_click (args: MakeHandleClickArgs)
         most_recent_action_id,
         wcomponents_by_id,
         list_type,
-        creation_context,
         knowledge_view_id,
     } = args
 
@@ -128,7 +122,6 @@ function make_handle_click (args: MakeHandleClickArgs)
                 existing_value_possibilities: undefined,
                 orig_values_and_prediction_sets: [],
                 base_id,
-                creation_context,
                 action_value_possibility_id: ACTION_VALUE_POSSIBILITY_ID.action_in_progress,
             })
 
@@ -149,7 +142,6 @@ function make_handle_click (args: MakeHandleClickArgs)
                 existing_value_possibilities: undefined,
                 orig_values_and_prediction_sets: values_and_prediction_sets,
                 base_id,
-                creation_context,
                 action_value_possibility_id: ACTION_VALUE_POSSIBILITY_ID.action_completed,
             })
         }

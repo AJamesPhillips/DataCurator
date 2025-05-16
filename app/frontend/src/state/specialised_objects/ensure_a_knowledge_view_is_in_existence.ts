@@ -28,6 +28,6 @@ export function ensure_a_knowledge_view_is_in_existence (store: StoreType)
     // being incorrectly cleared (as this is a good defensive move to avoid a
     // user signing out and back in with a different user and keeping the old
     // content in `state.derived.knowledge_views`).
-    const knowledge_view = get_new_knowledge_view_object({ title: "All", base_id }, state.creation_context)
+    const knowledge_view = get_new_knowledge_view_object({ title: "All", base_id })
     store.dispatch(ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
 }

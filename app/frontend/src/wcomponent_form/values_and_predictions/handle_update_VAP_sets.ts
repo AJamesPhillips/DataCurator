@@ -1,6 +1,5 @@
 import { get_uncertain_datetime } from "../../shared/uncertainty/datetime"
 import { get_created_at_ms } from "../../shared/utils_datetime/utils_datetime"
-import type { CreationContextState } from "../../state/creation_context/state"
 import type { ActionChangeRouteArgs } from "../../state/routing/actions"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import {
@@ -22,17 +21,16 @@ interface SetActionVAPSetStateArgs
     existing_value_possibilities: ValuePossibilitiesById | undefined
     orig_values_and_prediction_sets: StateValueAndPredictionsSet[]
     base_id: number
-    creation_context: CreationContextState
     action_value_possibility_id: ACTION_VALUE_POSSIBILITY_ID
 }
 export function set_action_VAP_set_state (args: SetActionVAPSetStateArgs)
 {
     const {
         existing_value_possibilities, orig_values_and_prediction_sets, base_id,
-        creation_context, action_value_possibility_id,
+        action_value_possibility_id,
     } = args
 
-    const new_VAP_set = prepare_new_VAP_set(VAPsType.action, existing_value_possibilities, orig_values_and_prediction_sets, base_id, creation_context)
+    const new_VAP_set = prepare_new_VAP_set(VAPsType.action, existing_value_possibilities, orig_values_and_prediction_sets, base_id)
 
     const entries = update_VAP_set_VAP_probabilities(new_VAP_set, action_value_possibility_id)
     new_VAP_set.entries = entries

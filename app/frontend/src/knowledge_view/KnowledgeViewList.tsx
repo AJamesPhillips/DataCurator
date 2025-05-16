@@ -71,7 +71,6 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
                     parent_knowledge_view_id,
                     sort_type,
                 },
-                creation_context: props.creation_context,
             })
         }}
         content={render_list_content}

@@ -66,7 +66,7 @@ export const test_derived_composed_wcomponents_by_id_reducer = describe.delay("d
             id: id3,
             title: "Test KV",
             sort_type: "priority",
-        }, {})
+        })
         const root_reducer = factory_root_reducer(state_)
         state_ = root_reducer(state_, ACTIONS.specialised_object.upsert_knowledge_view({ knowledge_view }))
         state_ = root_reducer(state_, ACTIONS.routing.change_route({

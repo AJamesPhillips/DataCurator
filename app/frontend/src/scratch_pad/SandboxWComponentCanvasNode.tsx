@@ -3,7 +3,6 @@ import { connect, ConnectedProps, Provider } from "react-redux"
 
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { ACTIONS } from "../state/actions"
-import type { CreationContextState } from "../state/creation_context/state"
 import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
@@ -20,12 +19,7 @@ function sandbox_code ()
 {
     const created_at = new Date("2021-01-01")
 
-    const creation_context: CreationContextState = { use_creation_context: true, creation_context: {
-        custom_created_at: created_at, label_ids: [],
-    } }
-
-
-    const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
+    const VAP_set1 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1)
     VAP_set1.entries[0]!.value = "thing"
     VAP_set1.entries[0]!.probability = 0.6
     VAP_set1.shared_entry_values = { conviction: 0.4 }
@@ -62,7 +56,7 @@ function sandbox_code ()
     }
 
 
-    const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1, creation_context)
+    const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1)
     VAP_set2.entries[0]!.probability = 0
     const wc14: WComponentNodeStateV2 = {
         ...wc11,

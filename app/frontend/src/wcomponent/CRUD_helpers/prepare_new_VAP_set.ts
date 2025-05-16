@@ -2,7 +2,6 @@ import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { get_new_created_ats } from "../../shared/utils/datetime"
 import { get_new_value_and_prediction_set_id } from "../../shared/utils/ids"
 import { describe, test } from "../../shared/utils/test"
-import type { CreationContextState } from "../../state/creation_context/state"
 import { VAPsType } from "../interfaces/VAPsType"
 import type { ValuePossibilitiesById } from "../interfaces/possibility"
 import type {
@@ -14,10 +13,9 @@ import { prepare_new_VAP, set_VAP_probabilities } from "./prepare_new_VAP"
 
 
 
-export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number, creation_context: CreationContextState): VAPSet
+export function prepare_new_VAP_set (VAPs_represent: VAPsType, existing_value_possibilities: ValuePossibilitiesById | undefined, existing_VAP_sets: VAPSet[], base_id: number): VAPSet
 {
-    const dates = get_new_created_ats(creation_context)
-    // const now = new Date(get_created_at_ms(dates))
+    const dates = get_new_created_ats()
 
     const entries_with_probabilities = prepare_new_VAP_set_entries(VAPs_represent, existing_value_possibilities, existing_VAP_sets)
 
@@ -59,11 +57,11 @@ function prepare_new_VAP_set_entries (VAPs_represent: VAPsType, existing_value_p
 
 
 
-export function create_new_VAP_set_version (current_VAP_set: VAPSet, creation_context: CreationContextState)
+export function create_new_VAP_set_version (current_VAP_set: VAPSet)
 {
     const clone: VAPSet = {
         ...current_VAP_set,
-        ...get_new_created_ats(creation_context),
+        ...get_new_created_ats(),
         entries: current_VAP_set.entries.map(e => ({ ...e, explanation: "" })),
         shared_entry_values: {
             ...current_VAP_set.shared_entry_values,
@@ -80,11 +78,11 @@ export const test_prepare_new_VAP_set = describe.delay("prepare_new_VAP_set", ()
 {
 
     const VAP_sets: VAPSet[] = [
-        { ...prepare_new_VAP_set(VAPsType.other, undefined, [], 1, {}), entries: [
+        { ...prepare_new_VAP_set(VAPsType.other, undefined, [], 1), entries: [
             { ...prepare_new_VAP(), value_id: "1", value: "a" },
             { ...prepare_new_VAP(), value_id: "2", value: "b" },
         ] },
-        { ...prepare_new_VAP_set(VAPsType.other, undefined, [], 1, {}), entries: [
+        { ...prepare_new_VAP_set(VAPsType.other, undefined, [], 1), entries: [
             { ...prepare_new_VAP(), value_id: "1", value: "a" },
             { ...prepare_new_VAP(), value_id: "2", value: "b" },
         ] }
@@ -95,7 +93,7 @@ export const test_prepare_new_VAP_set = describe.delay("prepare_new_VAP_set", ()
         "2": { id: "2", value: "b", description: "", order: 1 },
     }
 
-    let result = prepare_new_VAP_set(VAPsType.other, value_possibilities, VAP_sets, 1, {})
+    const result = prepare_new_VAP_set(VAPsType.other, value_possibilities, VAP_sets, 1)
 
     test(result.entries.length, 2, "If there are only two unique possibilities, only return 2 VAPs")
 

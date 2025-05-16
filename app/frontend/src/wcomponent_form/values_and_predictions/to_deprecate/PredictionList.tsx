@@ -15,7 +15,6 @@ import { factory_render_list_content } from "../../../form/editable_list/render_
 import type { Prediction } from "../../../shared/uncertainty/interfaces"
 import { floor_datetime_to_resolution, get_new_created_ats } from "../../../shared/utils/datetime"
 import { get_new_prediction_id } from "../../../shared/utils/ids"
-import type { CreationContextState } from "../../../state/creation_context/state"
 import type { RootState } from "../../../state/State"
 import { selector_chosen_base_id } from "../../../state/user_info/selector"
 import { remove_element, replace_element } from "../../../utils/list"
@@ -34,7 +33,6 @@ interface OwnProps {
 const map_state = (state: RootState) => ({
     created_at_ms: state.routing.args.created_at_ms,
     sim_ms: state.routing.args.sim_ms,
-    creation_context: state.creation_context,
     editing: !state.display_options.consumption_formatting,
     base_id: selector_chosen_base_id(state),
 })
@@ -105,7 +103,7 @@ function _PredictionList (props: Props)
     return <div>
         {editing && <ListHeaderAddButton
             new_item_descriptor={item_descriptor}
-            on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id, props.creation_context))}
+            on_pointer_down_new_list_entry={() => set_new_item(prepare_new_item(base_id))}
         />}
 
         <NewItemForm
@@ -185,10 +183,10 @@ function factory_get_details (editing: boolean)
 }
 
 
-function prepare_new_item (base_id: number, creation_context: CreationContextState): Prediction
+function prepare_new_item (base_id: number): Prediction
 {
-    const created_ats = get_new_created_ats(creation_context)
-    const custom_now = floor_datetime_to_resolution(created_ats.custom_created_at || created_ats.created_at, "day")
+    const created_ats = get_new_created_ats()
+    const custom_now = floor_datetime_to_resolution(created_ats.created_at, "day")
 
     return {
         id: get_new_prediction_id(),

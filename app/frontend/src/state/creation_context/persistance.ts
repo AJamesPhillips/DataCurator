@@ -1,3 +1,4 @@
+import { CreationContext } from "../../creation_context/interfaces"
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
 import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
@@ -20,14 +21,11 @@ export function creation_context_persist (state: RootState)
 export function creation_context_starting_state (): CreationContextState
 {
     const obj = get_persisted_state_object<CreationContextState>("creation_context")
+    const default_creation_context: CreationContext = { label_ids: [] }
     const {
-        use_creation_context = false,
-        creation_context = { custom_created_at: undefined, label_ids: [] },
+        use_creation_context=false,
+        creation_context=default_creation_context,
     } = obj
-
-    let { custom_created_at } = creation_context
-    custom_created_at = custom_created_at && new Date(custom_created_at)
-    creation_context.custom_created_at = custom_created_at
 
     const state: CreationContextState = {
         use_creation_context,

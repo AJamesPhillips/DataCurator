@@ -1,4 +1,3 @@
-import type { CreationContextState } from "../../state/creation_context/state"
 import { date2str_auto } from "./date_helpers"
 
 
@@ -25,20 +24,9 @@ export function floor_datetime_to_resolution (date: Date, time_resolution: TimeR
 
 
 
-interface GetCreatedAtsReturn
-{
-    created_at: Date
-    custom_created_at: Date | undefined
-}
-export function get_new_created_ats (creation_context_state?: CreationContextState): GetCreatedAtsReturn
+export function get_new_created_ats()
 {
     const created_at = new Date()
-    let custom_created_at: Date | undefined = undefined
-    if (creation_context_state)
-    {
-        const { use_creation_context, creation_context: cc } = creation_context_state
-        custom_created_at = use_creation_context ? (cc && cc.custom_created_at) : undefined
-    }
 
-    return { created_at, custom_created_at }
+    return { created_at, custom_created_at: undefined }
 }

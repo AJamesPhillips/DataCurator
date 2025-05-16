@@ -115,7 +115,7 @@ function get_possible_wc_ids_to_move (args: GetPossibleWComponentIdsToMoveArgs)
     const kv_ids_to_move = new Set(args.knowledge_views_to_move.map(kv => kv.id))
 
 
-    let wc_ids_to_move = new Set<string>()
+    const wc_ids_to_move = new Set<string>()
     const wcomponents_move_conflicts: WComponentMoveBaseConflicts = {}
 
     args.knowledge_views_to_move.forEach(kv => Object.entries(kv.wc_id_map).forEach(([wc_id, kv_entry]) =>

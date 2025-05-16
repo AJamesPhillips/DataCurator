@@ -99,6 +99,7 @@ function _ExploreButtonHandle (props: Props)
         : click_outcome === ClickOutComes.disabled__current_but_no_parent ? "No parent to navigate up to"
         : click_outcome === ClickOutComes.navigate_to_kv ? "Navigate to knowledge view"
         : click_outcome === ClickOutComes.create_then_navigate ? "Create then navigate to knowledge view"
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         : click_outcome === ClickOutComes.disabled__need_component_to_create_then_navigate ? "Error: could not find the component to create a new knowledge view for"
         : "Unknown error"
 
@@ -197,6 +198,5 @@ function prepare_wcomponent_knowledge_view (props: Props, store: Store<RootState
     }
 
 
-    const { creation_context } = state
-    return get_new_knowledge_view_object(partial_knowledge_view_wcomponent, creation_context)
+    return get_new_knowledge_view_object(partial_knowledge_view_wcomponent)
 }

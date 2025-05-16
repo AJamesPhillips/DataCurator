@@ -116,7 +116,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
     let vap_set_1: StateValueAndPredictionsSet
     describe("Can use wcomponent values", () =>
     {
-        vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+        vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id)
         vap_set_1.entries[0]!.value = "12.3"
         const wcomponent_1 = prepare_new_contextless_wcomponent_object({
             base_id,
@@ -190,7 +190,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
 
     describe("Can use wcomponent boolean values", () =>
     {
-        vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+        vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id)
         test(vap_set_1.entries[1]!.value_id, VALUE_POSSIBILITY_IDS.boolean_false, "Test is setting the correct VAP set entry")
         vap_set_1.entries[1]!.probability = 1
 
@@ -523,7 +523,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                 },
             ]
 
-            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id)
             vap_set_1.entries[0]!.value = ""
 
             const wcomponents_by_id: WComponentsById = {
@@ -551,7 +551,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                 },
             ]
 
-            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id, {})
+            vap_set_1 = prepare_new_VAP_set(VAPsType.number, undefined, [], base_id)
             vap_set_1.entries[0]!.value = "some invalid number"
 
             const wcomponents_by_id: WComponentsById = {
@@ -606,7 +606,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                 { value: 2, units: "", source_wcomponent_id: id1, },
             ]
 
-            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id)
             test(vap_set_1.entries[0]!.value_id, VALUE_POSSIBILITY_IDS.boolean_true, "Test is setting the correct VAP set entry")
             vap_set_1.entries[0]!.probability = 1
 
@@ -630,7 +630,7 @@ export const run_perform_calculations_test = describe.delay("perform_calculation
                 { value: 1, units: "", source_wcomponent_id: id1, },
             ]
 
-            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id, {})
+            vap_set_1 = prepare_new_VAP_set(VAPsType.boolean, undefined, [], base_id)
             test(vap_set_1.entries[1]!.value_id, VALUE_POSSIBILITY_IDS.boolean_false, "Test is setting the correct VAP set entry")
             vap_set_1.entries[1]!.probability = 1
 

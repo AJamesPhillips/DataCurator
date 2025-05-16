@@ -134,7 +134,7 @@ export function prepare_new_wcomponent_object (partial_wcomponent: Partial<WComp
 {
     let wcomponent: WComponent = {
         ...prepare_new_contextless_wcomponent_object(partial_wcomponent),
-        ...get_new_created_ats(creation_context),
+        ...get_new_created_ats(),
     }
 
     wcomponent = set_creation_context_label_ids(wcomponent, creation_context)

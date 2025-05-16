@@ -33,7 +33,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     return {
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
-        creation_context: state.creation_context,
         editing: own_props.editing_allowed ?? (!state.display_options.consumption_formatting),
         current_created_at_ms: state.routing.args.created_at_ms,
     }
@@ -55,7 +54,7 @@ function _EasyActionValueAndPredictionSets (props: Props)
         existing_value_possibilities, values_and_prediction_sets: orig_values_and_prediction_sets,
         VAPs_represent, base_id,
         editing,
-        current_created_at_ms, sim_ms, creation_context,
+        current_created_at_ms, sim_ms,
         update_VAPSets_and_value_possibilities, change_route,
     } = props
 
@@ -84,7 +83,6 @@ function _EasyActionValueAndPredictionSets (props: Props)
             existing_value_possibilities,
             orig_values_and_prediction_sets,
             base_id,
-            creation_context,
             action_value_possibility_id,
         })
 

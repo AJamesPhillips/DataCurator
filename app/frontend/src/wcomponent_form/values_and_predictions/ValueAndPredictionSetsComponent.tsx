@@ -13,7 +13,6 @@ import type { ExpandableListContentProps } from "../../form/editable_list/interf
 import { ListHeaderAddButton } from "../../form/editable_list/ListHeaderAddButton"
 import { NewItemForm } from "../../form/editable_list/NewItemForm"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
-import type { CreationContextState } from "../../state/creation_context/state"
 import { remove_element, replace_element } from "../../utils/list"
 import { prepare_new_VAP_set } from "../../wcomponent/CRUD_helpers/prepare_new_VAP_set"
 import { Tense } from "../../wcomponent/interfaces/datetime"
@@ -49,7 +48,6 @@ interface OwnProps
     previous_versions_by_id: {[id: string]: VAPSet[]}
 
     base_id: number
-    creation_context: CreationContextState
     editing: boolean
 }
 
@@ -141,7 +139,7 @@ export function ValueAndPredictionSetsComponent (props: OwnProps)
             new_item_descriptor={item_descriptor}
             on_pointer_down_new_list_entry={() =>
             {
-                const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, all_VAP_sets, props.base_id, props.creation_context)
+                const new_VAP_set = prepare_new_VAP_set(VAPs_represent, existing_value_possibilities, all_VAP_sets, props.base_id)
                 set_new_item(new_VAP_set)
             }}
         />}
@@ -209,7 +207,7 @@ function validate_VAP_sets_for_VAPs_represent (VAP_sets: VAPSet[], VAPs_represen
 */
 
 
-function count_and_versions (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: {}[]}, editing: boolean)
+function count_and_versions (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: object[]}, editing: boolean)
 {
     if (!editing) return title
 
@@ -226,7 +224,7 @@ function count_and_versions (title: string, all_latest: {id: string}[], previous
     // return `${title} (${all_latest.length} +${previous_version_count} older)`
 }
 
-function count_and_versions_title (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: {}[]})
+function count_and_versions_title (title: string, all_latest: {id: string}[], previous_versions_by_id: {[id: string]: object[]})
 {
     let previous_version_count = 0
     all_latest.forEach(({ id }) => previous_version_count += ((previous_versions_by_id[id] || []).length))
