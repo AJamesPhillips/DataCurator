@@ -209,28 +209,6 @@ export const is_set_or_toggle_show_large_grid = (action: AnyAction): action is A
 }
 
 
-// ++++++++++++++++++++++++++++++ Editing options ++++++++++++++++++++++++++++++
-// Probably should be moved to a different state as not only about display options
-interface SetOrToggleEnableAngularConnectionsArgs
-{
-    enable_angular_connections: boolean | undefined
-}
-interface ActionSetOrToggleEnableAngularConnections extends Action, SetOrToggleEnableAngularConnectionsArgs {}
-
-const set_or_toggle_enable_angular_connections_type = "set_or_toggle_enable_angular_connections"
-
-const set_or_toggle_enable_angular_connections = (enable_angular_connections?: boolean): ActionSetOrToggleEnableAngularConnections =>
-{
-    return { type: set_or_toggle_enable_angular_connections_type, enable_angular_connections }
-}
-
-export const is_set_or_toggle_enable_angular_connections = (action: AnyAction): action is ActionSetOrToggleEnableAngularConnections => {
-    return action.type === set_or_toggle_enable_angular_connections_type
-}
-// ------------------------------ Editing options ------------------------------
-
-
-
 export const display_actions = {
     toggle_consumption_formatting,
     set_or_toggle_focused_mode,
@@ -243,6 +221,4 @@ export const display_actions = {
     set_or_toggle_circular_links,
     set_show_help_menu,
     set_or_toggle_show_large_grid,
-
-    set_or_toggle_enable_angular_connections,
 }

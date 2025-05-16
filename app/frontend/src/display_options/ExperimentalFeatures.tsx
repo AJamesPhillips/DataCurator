@@ -1,28 +1,13 @@
-import { FunctionComponent } from "preact"
-import { connect, ConnectedProps } from "react-redux"
 import { EditableCheckbox } from "../form/EditableCheckbox"
 import { WarningTriangleV2 } from "../sharedf/WarningTriangleV2"
-import { ACTIONS } from "../state/actions"
-import { RootState } from "../state/State"
+import { experimental_features } from "../state/display_options/persistance"
 
 
 
-const map_state = (state: RootState) => ({
-    enable_angular_connections: state.display_options.enable_angular_connections,
-})
-
-
-const map_dispatch = {
-    set_or_toggle_enable_angular_connections: ACTIONS.display.set_or_toggle_enable_angular_connections,
-}
-
-
-const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector>
-
-
-function _ExperimentalFeatures(props: Props)
+export function ExperimentalFeatures()
 {
+    const state = experimental_features.get_state()
+
     return <>
         <b><ExperimentalWarning show_label={true} /></b>
 
@@ -38,19 +23,22 @@ function _ExperimentalFeatures(props: Props)
                 </span>
             </b>
             <EditableCheckbox
-                value={props.enable_angular_connections}
-                on_change={props.set_or_toggle_enable_angular_connections}
+                value={state.enable_angular_connections}
+                on_change={value =>
+                {
+                    experimental_features.set_state_and_reload_page({
+                        enable_angular_connections: value,
+                    })
+                }}
             />
         </p>
     </>
 }
 
-export const ExperimentalFeatures = connector(_ExperimentalFeatures) as FunctionComponent
-
 
 function ExperimentalWarning (props: { show_label?: boolean })
 {
-    const msg = "Experimental feature.  May be changed or removed."
+    const msg = "Experimental feature.  May be changed or removed in the future.  Toggling an experimental feature on or off will reload the page."
 
     return <WarningTriangleV2 warning={msg} label={props.show_label ? msg : ""} />
 }

@@ -7,6 +7,8 @@ type SupportedPersistenceKeys = (
     | "search"
     | "sync"
     | "user_info"
+
+    | "experimental_features"
 )
 
 
@@ -21,6 +23,7 @@ export function get_persisted_state_object <O> (key: SupportedPersistenceKeys): 
 {
     try
     {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return JSON.parse(localStorage.getItem("persisted_" + key) || "{}")
     }
     catch (e)

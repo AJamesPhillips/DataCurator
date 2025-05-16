@@ -15,13 +15,15 @@ export function WarningTriangleV2 (props: Props)
     const display = (warning || always_display) ? "inline" : "none"
 
     return <Typography
-        noWrap
+        // We want it to wrap for the ExperimentalFeatures -> ExperimentalWarning
+        // component, otherwise the message does not fit in the page.
+        // noWrap
         variant="caption"
         title={warning}
         aria-label={warning}
         style={{ display }}
     >
         <WarningIcon />
-        <span style={{ position: "relative", top: -7 }}>{label}</span>
+        <span style={{ position: "relative", top: -7, wordBreak: "" }}>{label}</span>
     </Typography>
 }

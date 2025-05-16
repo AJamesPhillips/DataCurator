@@ -18,7 +18,6 @@ export function display_options_persist (state: RootState)
         "show_large_grid",
         "validity_filter",
         "certainty_formatting",
-        "enable_angular_connections",
     ], state.display_options)
 
     persist_state_object("display_options", to_persist)
@@ -50,10 +49,32 @@ export function display_options_starting_state (): DisplayOptionsState
         derived_validity_filter,
         derived_certainty_formatting,
 
-        enable_angular_connections: false,
-
         ...obj,
     }
 
     return state
+}
+
+
+interface ExperimentalFeaturesState
+{
+    enable_angular_connections: boolean
+}
+const get_experimental_features_state = (): ExperimentalFeaturesState =>
+{
+    const obj = get_persisted_state_object<ExperimentalFeaturesState>("experimental_features")
+    return {
+        enable_angular_connections: obj.enable_angular_connections || false,
+    }
+}
+export const experimental_features = {
+    get_state: get_experimental_features_state,
+    set_state_and_reload_page: (state: Partial<ExperimentalFeaturesState>) =>
+    {
+        const current_state = get_experimental_features_state()
+        const new_state = { ...current_state, ...state }
+        persist_state_object("experimental_features", new_state)
+        // reload the page to apply the changes
+        document.location.reload()
+    }
 }

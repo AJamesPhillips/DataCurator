@@ -2,6 +2,7 @@
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import { sentence_case } from "../shared/utils/sentence_case"
+import { experimental_features } from "../state/display_options/persistance"
 import {
     connection_line_behaviours,
     ConnectionLineBehaviour,
@@ -46,4 +47,8 @@ export function WComponentConnectionForm (props: OwnProps)
 }
 
 
-const options: AutocompleteOption[] = connection_line_behaviours.map(id => ({ id, title: sentence_case(id) }))
+const state = experimental_features.get_state()
+const options: AutocompleteOption[] = connection_line_behaviours
+    .map(id => ({ id, title: sentence_case(id) }))
+    // Prevent user from selecting angular connections if the experimental feature is not enabled
+    .filter(o => o.id !== ConnectionLineBehaviour.angular || state.enable_angular_connections)

@@ -35,10 +35,6 @@ export interface DisplayOptionsState
     certainty_formatting: CertaintyFormattingTypes
     derived_validity_filter: ValidityFilterOption
     derived_certainty_formatting: CertaintyFormattingOption
-
-    // Editing options, probably should be moved to a different state as not
-    // only about display options
-    enable_angular_connections: boolean
 }
 
 
