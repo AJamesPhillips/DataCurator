@@ -21,6 +21,8 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
         ...knowledge_view,
         ...parse_base_dates(knowledge_view),
         wc_id_map,
+        // TODO: document why and when `knowledge_view.sort_type` might be undefined
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         sort_type: knowledge_view.sort_type || "normal",
     }
 
@@ -104,8 +106,12 @@ function upgrade_2021_11_19_knowledge_view (knowledge_view: KnowledgeView): Know
     const new_wc_id_map = { ...wc_id_map }
     Object.values(new_wc_id_map).forEach(entry =>
     {
+        // `entry.blocked` used to be referred to as `entry.deleted`.  This code
+        // migrates the old data schema to the new schema.
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if ((entry as any).deleted)
         {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             delete (entry as any).deleted
             entry.blocked = true
         }
