@@ -6,8 +6,10 @@ import {
 } from "datacurator-core/utils/id_regexs"
 
 import type { KnowledgeView } from "../../../shared/interfaces/knowledge_view"
+import { is_defined } from "../../../shared/utils/is_defined"
 import type { SupabaseReadWComponent, SupabaseWriteWComponent } from "../../../supabase/interfaces"
 import { WComponent, wcomponent_is_action, wcomponent_is_state_value } from "../../../wcomponent/interfaces/SpecialisedObjects"
+import { wcomponent_types_set } from "../../../wcomponent/interfaces/wcomponent_base"
 import { parse_wcomponent } from "../../../wcomponent/parse_json/parse_wcomponent"
 import { supabase_create_item } from "./create_items"
 import { supabase_get_items } from "./get_items"
@@ -30,14 +32,21 @@ type GetWComponentsArgs =
     base_id?: undefined
     all_bases: true
 })
-export function supabase_get_wcomponents (args: GetWComponentsArgs)
+export async function supabase_get_wcomponents (args: GetWComponentsArgs)
 {
-    return supabase_get_items<SupabaseReadWComponent, WComponent>({
+    const result = await supabase_get_items<SupabaseReadWComponent, WComponent | undefined>({
         ...args,
         table: TABLE_NAME,
         converter: wcomponent_supabase_to_app,
         specific_ids: args.ids,
     })
+
+    const wcomponents: WComponent[] = result.value.filter(is_defined)
+
+    return {
+        error: result.error,
+        wcomponents,
+    }
 }
 
 
@@ -49,7 +58,7 @@ type GetWComponentsFromAnyBaseArgs =
 }
 export async function supabase_get_wcomponents_from_any_base (args: GetWComponentsFromAnyBaseArgs)
 {
-    const result = await supabase_get_items<SupabaseReadWComponent, WComponent>({
+    const result = await supabase_get_items<SupabaseReadWComponent, WComponent | undefined>({
         supabase: args.supabase,
         all_bases: true,
         base_id: undefined,
@@ -58,9 +67,11 @@ export async function supabase_get_wcomponents_from_any_base (args: GetWComponen
         converter: wcomponent_supabase_to_app,
     })
 
+    const wcomponents: WComponent[] = result.value.filter(is_defined)
+
     return {
         error: result.error,
-        wcomponents: result.value,
+        wcomponents,
     }
 }
 
@@ -137,13 +148,15 @@ export async function supabase_upsert_wcomponent (args: SupabaseUpsertWComponent
 
 async function supabase_create_wcomponent (args: SupabaseUpsertWComponentArgs): SupabaseUpsertWComponentReturn
 {
-    return supabase_create_item({
+    const result = await supabase_create_item({
         supabase: args.supabase,
         table: TABLE_NAME,
         item: args.wcomponent,
         converter_app_to_supabase: wcomponent_app_to_supabase,
         converter_supabase_to_app: wcomponent_supabase_to_app,
     })
+
+    return result
 }
 
 
@@ -182,20 +195,33 @@ async function supabase_update_wcomponent (args: SupabaseUpsertWComponentArgs): 
 
 
 
-function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWriteWComponent
+// Exported only to allow for testing
+export function wcomponent_app_to_supabase (item: WComponent, base_id?: number): SupabaseWriteWComponent
 {
     return {
         ...app_item_to_supabase(item, base_id),
         type: item.type,
+        // TODO document why this is needed
         attribute_id: wcomponent_is_state_value(item) ? item.attribute_wcomponent_id : undefined,
     }
 }
 
 
-
-export function wcomponent_supabase_to_app (item: SupabaseReadWComponent): WComponent
+// Exported only to allow for testing
+export function wcomponent_supabase_to_app (item: SupabaseReadWComponent): WComponent | undefined
 {
     let wc = supabase_item_to_app(item)
+    const maybe_wc = filter_out_unsupported_wcomponent_types(wc)
+    if (!maybe_wc) return undefined
     wc = parse_wcomponent(wc)
     return wc
+}
+
+
+function filter_out_unsupported_wcomponent_types (wcomponent: WComponent): WComponent | undefined
+{
+    if (wcomponent_types_set.has(wcomponent.type)) return wcomponent
+
+    console.warn(`Unsupported wcomponent type "${wcomponent.type}", id "${wcomponent.id}", title: "${wcomponent.title}".  This wcomponent will not be used.`)
+    return undefined
 }

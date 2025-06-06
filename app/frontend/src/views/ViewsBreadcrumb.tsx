@@ -139,13 +139,6 @@ const state = experimental_features.get_state()
 const view_options: { id: ViewType, title: string }[] = [
     { id: "knowledge", title: "Knowledge" },
 ]
-if (state.enable_prioritisation_views)
-{
-    view_options.push(
-        { id: "priorities", title: "Priorities" },
-        { id: "priorities_list", title: "Priorities list" },
-    )
-}
 if (state.enable_action_kanban_view)
 {
     view_options.push(

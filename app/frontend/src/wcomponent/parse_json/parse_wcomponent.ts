@@ -1,3 +1,7 @@
+// TODO move this and other parse / stringify functions to a directory for
+// input/output conversion (either from supabase, browser local storage, or
+// other sources)
+
 import type { Prediction } from "../../shared/uncertainty/interfaces"
 import {
     clean_base_object_of_sync_meta_fields,

@@ -17,13 +17,15 @@ export function parse_specialised_objects_fromto_server (data: SpecialisedObject
 
     if (data)
     {
-        delete (data as any).wcomponent_ids_to_delete  // Can remove this once all user's data is cleared of this attribute
+        // 2025-06-06 commented out because I don't think this is needed anymore
+        // but not 100% sure.
+        // delete (data as any).wcomponent_ids_to_delete  // Can remove this once all user's data is cleared of this attribute
         const data_keys = Object.keys(data)
 
-        const extra = data_keys.filter(k => !expected_specialised_object_keys.has(k as any))
+        const extra = data_keys.filter(k => !expected_specialised_object_keys.has(k))
         if (extra.length) throw new Error(`Unexpected keys "${extra.join(", ")}" in specialised objects state`)
 
-        const missing = Array.from(expected_specialised_object_keys).filter(k => !data.hasOwnProperty(k))
+        const missing = Array.from(expected_specialised_object_keys).filter(k => !Object.hasOwnProperty.call(data, k))
         if (missing.length) throw new Error(`Expected keys "${missing.join(", ")}" missing in specialised objects state`)
 
         wcomponents = data.wcomponents.map(parse_wcomponent)

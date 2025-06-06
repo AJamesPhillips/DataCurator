@@ -60,14 +60,12 @@ interface ExperimentalFeaturesState
 {
     enable_angular_connections: boolean
     enable_action_kanban_view: boolean
-    enable_prioritisation_views: boolean
 }
 const get_experimental_features_state = (): ExperimentalFeaturesState =>
 {
     const obj = get_persisted_state_object<ExperimentalFeaturesState>("experimental_features")
     return {
         enable_angular_connections: obj.enable_angular_connections ?? false,
-        enable_prioritisation_views: obj.enable_prioritisation_views ?? false,
         enable_action_kanban_view: obj.enable_action_kanban_view ?? false,
     }
 }

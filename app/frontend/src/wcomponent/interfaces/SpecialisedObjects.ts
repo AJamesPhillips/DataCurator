@@ -6,7 +6,6 @@ import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentNodeGoal } from "./goal"
 import type { HasObjectives, WComponentJudgement } from "./judgement"
-import type { WComponentPrioritisation } from "./priorities"
 import type {
     HasValuePossibilities,
     HasVAPSetsAndMaybeValuePossibilities,
@@ -26,10 +25,10 @@ import type {
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement | WComponentPrioritisation
-type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection & keyof WComponentJudgement & keyof WComponentPrioritisation, "type">
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
+type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection & keyof WComponentJudgement, "type">
 export type WComponentCommon = {
-    [K in WComponentCommonKeys]: WComponentNode[K] | WComponentConnection[K] | WComponentCausalConnection[K] | WComponentJudgement[K] | WComponentPrioritisation[K]
+    [K in WComponentCommonKeys]: WComponentNode[K] | WComponentConnection[K] | WComponentCausalConnection[K] | WComponentJudgement[K]
 }
 export type PartialWComponentWithoutType = Partial<WComponent> & { type?: undefined }
 
@@ -180,13 +179,6 @@ export function wcomponent_has_objectives (wcomponent: WComponent | undefined, l
 }
 
 
-
-export function wcomponent_is_prioritisation (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentPrioritisation
-{
-    return wcomponent_is_a("prioritisation", wcomponent, log_error_id)
-}
-
-
 export function wcomponent_is_causal_link (wcomponent: WComponent | undefined): wcomponent is WComponentCausalConnection
 {
     return wcomponent_is_a("causal_link", wcomponent)
@@ -218,8 +210,7 @@ export function wcomponent_is_node (wcomponent: WComponent | undefined): wcompon
         wcomponent_is_goal(wcomponent) ||
         wcomponent_is_sub_state(wcomponent) ||
         wcomponent_is_state_value(wcomponent) ||
-        wcomponent_is_counterfactual_v2(wcomponent) ||
-        wcomponent_is_prioritisation(wcomponent)
+        wcomponent_is_counterfactual_v2(wcomponent)
     )
 }
 
@@ -276,7 +267,6 @@ export function wcomponent_has_validity_predictions (wcomponent: WComponent): wc
     return validity !== undefined && validity.length > 0
 }
 const types_without_validity = new Set<WComponentType>([
-    "prioritisation",
     "counterfactualv2",
     "sub_state",
 ])

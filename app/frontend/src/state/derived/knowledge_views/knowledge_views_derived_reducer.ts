@@ -14,18 +14,16 @@ import type {
 } from "../../../shared/interfaces/knowledge_view"
 import { is_defined } from "../../../shared/utils/is_defined"
 import { sort_list, SortDirection } from "../../../shared/utils/sort"
-import { get_created_at_ms, get_sim_datetime_ms } from "../../../shared/utils_datetime/utils_datetime"
+import { get_created_at_ms } from "../../../shared/utils_datetime/utils_datetime"
 import { remove_rich_text } from "../../../sharedf/rich_text/remove_rich_text"
 import { set_union } from "../../../utils/set"
 import { update_substate } from "../../../utils/update_state"
-import type { WComponentPrioritisation } from "../../../wcomponent/interfaces/priorities"
 import {
     WComponent,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_node,
     wcomponent_is_plain_connection,
-    wcomponent_is_prioritisation,
     WComponentConnection,
     WComponentNode,
     WComponentsById
@@ -212,7 +210,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         wcomponents_by_id,
         active_counterfactual_ids: knowledge_view.active_counterfactual_v2_ids || [],
     })
-    const prioritisations = get_prioritisations(wc_ids_by_type.prioritisation, wcomponents_by_id)
     const wc_id_connections_map = get_wc_id_connections_map(wc_ids_by_type.any_link, wcomponents_by_id)
     const available_filter_options = get_available_filter_options(wcomponents)
     const datetime_lines_config = get_composed_datetime_lines_config(foundational_knowledge_views, true)
@@ -228,7 +225,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
         wcomponent_unfound_ids,
         wc_id_to_active_counterfactuals_v2_map,
         wc_ids_by_type,
-        prioritisations,
         wc_id_connections_map,
         available_filter_options,
         composed_datetime_line_config: datetime_lines_config,
@@ -261,7 +257,6 @@ export function get_foundational_knowledge_views (knowledge_view: KnowledgeView,
 const invalid_node_types = new Set<WComponentType>([
     "causal_link",
     "relation_link",
-    // "prioritisation",
     // "judgement",
     // "objective",
 ])
@@ -304,16 +299,6 @@ function calculate_wc_id_to_counterfactuals_v2_map (args: CalculateWcIdCounterfa
     })
 
     return map
-}
-
-
-
-function get_prioritisations (prioritisation_ids: Set<string>, wcomponents_by_id: WComponentsById): WComponentPrioritisation[]
-{
-    const prioritisations = Array.from(prioritisation_ids).map(id => wcomponents_by_id[id])
-        .filter(wcomponent_is_prioritisation)
-
-    return sort_list(prioritisations, p => (get_sim_datetime_ms(p) || get_created_at_ms(p)), SortDirection.descending)
 }
 
 

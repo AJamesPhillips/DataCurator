@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js"
 
 import type { Base } from "../../../shared/interfaces/base"
+import { is_defined } from "../../../shared/utils/is_defined"
 import type { UpsertItemReturn } from "./interface"
 
 
@@ -11,7 +12,7 @@ type CreateItemArgs<SWrite, SRead, U> =
     table: string
     item: U
     converter_app_to_supabase: (item: U) => SWrite
-    converter_supabase_to_app: (item: SRead) => U
+    converter_supabase_to_app: (item: SRead) => U | undefined
 }
 export async function supabase_create_item <SWrite extends { id: string }, SRead extends SWrite, U extends Base> (args: CreateItemArgs<SWrite, SRead, U>): Promise<UpsertItemReturn<U>>
 {
@@ -23,7 +24,7 @@ export async function supabase_create_item <SWrite extends { id: string }, SRead
         .eq("id", item_to_insert.id)
         .select<"", SRead>()
 
-    const items: U[] = (result.data || []).map(args.converter_supabase_to_app)
+    const items: U[] = (result.data || []).map(args.converter_supabase_to_app).filter(is_defined)
     const item = items[0]
 
     return { status: result.status, item, error: result.error || undefined }

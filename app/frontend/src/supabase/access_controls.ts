@@ -12,8 +12,6 @@ export async function get_access_controls_for_base (base_id: number)
         .select<"access_controls", SupabaseAccessControl>()
         .eq("base_id", base_id)
 
-    debugger
-
     const access_controls = data ? data.map(ac => ({
         ...ac,
         inserted_at: new Date(ac.inserted_at),

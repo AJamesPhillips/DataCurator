@@ -26,7 +26,6 @@ export function get_empty_wcomponent_ids_by_type (): WComponentIdsByType
         objective: new Set(),
         counterfactualv2: new Set(),
         goal: new Set(),
-        prioritisation: new Set(),
 
         judgement_or_objective: new Set(),
         goal_or_action: new Set(),

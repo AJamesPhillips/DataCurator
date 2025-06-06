@@ -17,7 +17,6 @@ import { test_derive_connection_coords } from "./canvas/connections/derive_coord
 import { test_calculate_new_zoom_xy } from "./canvas/zoom_utils"
 import { test_handle_on_blur } from "./form/EditableCustomDateTime"
 import { test_calc_ids_to_move_and_conflicts_functions } from "./knowledge_view/change_base/calc_ids_to_move_and_conflicts"
-import { test_get_actions_parent_ids } from "./priorities/utils/get_actions_parent_ids"
 import { test_number_to_significant_figures } from "./shared/format_number_to_significant_figures.test"
 import { test_number_to_string } from "./shared/format_number_to_string.test"
 import { test_graph_related_functions } from "./shared/utils/graph.test"
@@ -47,6 +46,9 @@ import { test_specialised_objects_accessors } from "./state/specialised_objects/
 import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/tidy_wcomponent.test"
 import { test_merge_knowledge_views } from "./state/sync/merge/merge_knowledge_views"
 import { test_merge_wcomponent } from "./state/sync/merge/merge_wcomponents"
+import { test_supabase_get_items } from "./state/sync/supabase/get_items.test"
+import { test_supabase_item_to_app } from "./state/sync/supabase/item_convertion.test"
+import { test_wcomponent_supabase_to_app } from "./state/sync/supabase/wcomponent.test"
 import { test_refresh_bases_for_current_user } from "./state/user_info/refresh_bases_for_current_user.test"
 import { test_array_functions } from "./utils/array"
 import { test_binary_search_functions } from "./utils/binary_search"
@@ -92,7 +94,6 @@ async function run_all_tests ()
     ;(await test_calculate_new_zoom_xy)()
     ;(await test_handle_on_blur)()
     ;(await test_calc_ids_to_move_and_conflicts_functions)()
-    ;(await test_get_actions_parent_ids)()
     ;(await test_number_to_significant_figures)()
     ;(await test_number_to_string)()
     ;(await test_graph_related_functions)()
@@ -117,6 +118,9 @@ async function run_all_tests ()
     ;(await test_tidy_wcomponent)()
     ;(await test_merge_knowledge_views)()
     ;(await test_merge_wcomponent)()
+    ;(await test_supabase_get_items)()
+    ;(await test_supabase_item_to_app)()
+    ;(await test_wcomponent_supabase_to_app)()
     ;(await test_refresh_bases_for_current_user)()
     ;(await test_array_functions)()
     ;(await test_binary_search_functions)()

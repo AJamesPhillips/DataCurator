@@ -2,7 +2,6 @@ import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { KnowledgeContentControls } from "../knowledge_view/KnowledgeContentControls"
-import { PrioritiesContentControls } from "../priorities/PrioritiesContentControls"
 import type { RootState } from "../state/State"
 
 
@@ -21,7 +20,6 @@ function _MainContentControls (props: Props)
 
     return <div className="main_content_controls">
         {view === "knowledge" && <KnowledgeContentControls />}
-        {view === "priorities" && <PrioritiesContentControls />}
     </div>
 }
 

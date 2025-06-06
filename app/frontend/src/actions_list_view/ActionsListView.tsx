@@ -109,7 +109,7 @@ function _ActionsListViewContent (props: Props)
     const most_recent_action_id = useMemo(() =>
     {
         const actions_on_current_kv = sort_list(actions, get_created_at_ms, SortDirection.descending)
-        const most_recent_action_id = (actions_on_current_kv || [])[0]?.id || ""
+        const most_recent_action_id = actions_on_current_kv[0]?.id || ""
 
         return most_recent_action_id
     }, [actions])
@@ -137,8 +137,8 @@ function _ActionsListViewContent (props: Props)
             const top = initial_scroll.current.top - (e.clientY - pointer_down_at.y)
             action_list_view_content_el.current.scroll(left, top)
         }}
-        onPointerUp={e => set_pointer_down_at(undefined)}
-        onPointerLeave={e => set_pointer_down_at(undefined)}
+        onPointerUp={() => set_pointer_down_at(undefined)}
+        onPointerLeave={() => set_pointer_down_at(undefined)}
         onPointerOut={e =>
         {
             let target: HTMLElement | null = e.relatedTarget as HTMLElement

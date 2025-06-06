@@ -38,7 +38,6 @@ import {
     wcomponent_is_judgement_or_objective,
     wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
-    wcomponent_is_prioritisation,
     wcomponent_is_state_value,
     wcomponent_is_statev2,
     wcomponent_is_sub_state,
@@ -55,7 +54,6 @@ import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WC
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
 import { WComponentConnectionForm } from "./WComponentConnectionForm"
 import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
-import { WComponentDateTimeFormField } from "./WComponentDateTimeFormField"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentFromTo } from "./WComponentFromTo"
 import { WComponentImageForm } from "./WComponentImageForm"
@@ -410,11 +408,6 @@ function _WComponentForm (props: Props)
         </FormControl>}
 
         {wcomponent_is_event(wcomponent)&& <WComponentEventAtFormField
-            wcomponent={wcomponent}
-            upsert_wcomponent={wrapped_upsert_wcomponent}
-        />}
-
-        {wcomponent_is_prioritisation(wcomponent) && <WComponentDateTimeFormField
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}

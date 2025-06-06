@@ -49,6 +49,9 @@ export interface SpecialisedObjectsSaveConflicts
 export interface SyncStateForDataType
 {
     status: SYNC_STATUS | undefined
+    // TODO: document if and why user_info.chosen_base_id,
+    // routing.storage_location and sync.specialised_objects.loading_base_id are
+    // different from each other
     loading_base_id: number | undefined
     error_message: string
 

@@ -11,11 +11,12 @@ interface CommonFields
 
 export function app_item_to_supabase <U extends Base & CommonFields> (item: U, base_id?: number): SupabaseWriteItem<U>
 {
-    // TODO document why item.base_id might be undefined and or updte types / date in database
+    // TODO document why item.base_id might be undefined and or update types / date in database
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     base_id = item.base_id ?? base_id
 
-    // Document if this is a typeguard / sanity check or if this is actually doing something important?
+    // Document why this is needed; if this is a typeguard / sanity check or if
+    // this is actually doing something important?
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (base_id === undefined) throw new Error("Must provide base_id for app_item_to_supabase")
 

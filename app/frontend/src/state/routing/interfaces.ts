@@ -37,13 +37,11 @@ export interface RoutingState
 }
 
 // TODO: merge with ROUTE_TYPES?
-export type ViewType = "priorities" | "priorities_list" | "actions_list" | "knowledge" | "objectives"
+// export type ViewType = "priorities" | "priorities_list" | "actions_list" | "knowledge" | "objectives"
+export type ViewType = "actions_list" | "knowledge"
 const _view_types: {[k in ViewType]: true} = {
-    "priorities": true,
-    "priorities_list": true,
     "actions_list": true,
     "knowledge": true,
-    "objectives": true,
 }
 const routing_view_types = Object.keys(_view_types)
 export const is_routing_view_types = (str: string): str is ViewType => routing_view_types.includes(str)
@@ -58,6 +56,9 @@ export interface RoutingStateArgs
     zoom: number
     x: number
     y: number
+    // TODO: document if and why user_info.chosen_base_id,
+    // routing.storage_location and sync.specialised_objects.loading_base_id are
+    // different from each other
     storage_location: number | undefined
 
     created_at_datetime: Date

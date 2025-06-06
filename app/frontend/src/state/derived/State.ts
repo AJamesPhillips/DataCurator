@@ -4,7 +4,6 @@ import type {
     KnowledgeViewTreeSortType,
     KnowledgeViewWComponentIdEntryMap,
 } from "../../shared/interfaces/knowledge_view"
-import type { WComponentPrioritisation } from "../../wcomponent/interfaces/priorities"
 import type {
     WComponentsById
 } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -57,7 +56,6 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
 
     wc_id_to_active_counterfactuals_v2_map: WcIdToCounterfactualsV2Map
     wc_ids_by_type: WComponentIdsByType
-    prioritisations: WComponentPrioritisation[]
 
     wc_id_connections_map: {[wc_id: string]: Set<string>}
     active_judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }

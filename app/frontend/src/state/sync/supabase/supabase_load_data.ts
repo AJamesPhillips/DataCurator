@@ -27,7 +27,7 @@ export async function supabase_load_data (load_state_from_storage: boolean, base
     const wcomponents_other_bases_response = await supabase_get_wcomponents_from_other_bases({
         supabase, base_id,
         knowledge_views: knowledge_views_response.value,
-        wcomponents: wcomponents_response.value,
+        wcomponents: wcomponents_response.wcomponents,
     })
     if (wcomponents_other_bases_response.error) return Promise.reject(wcomponents_other_bases_response.error)
 
@@ -41,7 +41,7 @@ export async function supabase_load_data (load_state_from_storage: boolean, base
 
 
     const wcomponents = [
-        ...wcomponents_response.value,
+        ...wcomponents_response.wcomponents,
         ...wcomponents_other_bases_response.wcomponents,
     ]
 

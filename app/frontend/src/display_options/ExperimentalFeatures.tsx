@@ -45,20 +45,6 @@ export function ExperimentalFeatures()
                 }}
             />
         </p>
-
-        <p className="section">
-            <ExperimentalWarning /> <b>Enable Prioritisation</b>
-            <span>Enable list and timeline views, and creating prioritisation components</span>
-            <EditableCheckbox
-                value={state.enable_prioritisation_views}
-                on_change={value =>
-                {
-                    experimental_features.set_state_and_reload_page({
-                        enable_prioritisation_views: value,
-                    })
-                }}
-            />
-        </p>
     </>
 }
 
