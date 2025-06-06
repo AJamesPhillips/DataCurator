@@ -48,16 +48,19 @@
     .sub_state_type_status__set
     {
         color: rgba(50, 50, 50, 0.8);
+        fill: rgba(50, 50, 50, 0.8);
     }
 
     .sub_state_type_status__not_set
     {
         color: rgba(200, 200, 200, 0.4);
+        fill: rgba(200, 200, 200, 0.4);
     }
 
     .sub_state_type_status__invalid
     {
         color: rgba(200, 0, 0, 0.8);
+        fill: rgba(200, 0, 0, 0.8);
     }
 }
 
@@ -66,15 +69,18 @@
     .sub_state_type_status__set
     {
         color: rgba(200, 200, 200, 1);
+        fill: rgba(200, 200, 200, 1);
     }
 
     .sub_state_type_status__not_set
     {
-        color: rgba(120, 120, 120, 1);
+        color: rgb(76, 76, 76);
+        fill: rgb(76, 76, 76);
     }
 
     .sub_state_type_status__invalid
     {
         color: rgba(255, 100, 100, 1);
+        fill: rgba(255, 100, 100, 1);
     }
 }
