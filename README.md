@@ -4,10 +4,9 @@
 A collaborative real time planning application for complex projects.  Integrates a subset of features from:
 
 * whiteboard applications like Miro
-* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) from [Scott Fortmann-Roe](https://github.com/scottfr/) (Oct 2024 - calculations are now supported!)
+* complex system maps like [Kumu](https://kumu.io/), [InsightMaker](https://insightmaker.com) from [Scott Fortmann-Roe](https://github.com/scottfr/) (Oct 2024 - calculations are now supported)
 * micro note taking, hierarchical and knowledge hyper graphs like [Obsidian](https://obsidian.md/), [Workflowy](https://workflowy.com/a/), [Roam Research](https://roamresearch.com/), [TheBrain](https://www.thebrain.com/)
 * theory of change maps like [TOCO](https://www.theoryofchange.org/toco-software/)
-* Gantt chart like Microsoft project
 
 Find out more at [DataCurator.org](https://datacurator.org/), view [an example map](https://datacurator.org/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12) or [sign up](https://datacurator.org/)
 
@@ -17,6 +16,8 @@ Find out more at [DataCurator.org](https://datacurator.org/), view [an example m
 * Counterfactuals have been deprecated in favour of "state value"s which are more
 flexible and allow for a wider range of use cases.  They're functionality will
 be removed in future versions.
+* Gantt chart like Microsoft project
+  * June 2025 - have removed the prioritisation component type, and the two views ("Priorities" (map) and "Priorities list") with commit a7f2d8b1.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs) for a description of these prioritisation features before they were removed.
 
 ### Data storage
 
