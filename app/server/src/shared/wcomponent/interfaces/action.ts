@@ -30,13 +30,6 @@ export const action_statuses_set = new Set(action_statuses)
 export interface WComponentNodeAction extends WComponentNodeBase, StartedStoppedAt
 {
     type: "action"
-    // +++ 2021-05-24
-    // Commented out outcome_ids -> VAP ids because:
-    //   * It can be recorded using the `description` field
-    //   * It should be possible to capture using casual links
-    // --- 2021-05-24
-    // outcome_ids: string[] // VAP ids
-
     // Making this optional because some actions that occur and that we perform, are done without
     // a conscious goal.
     //
