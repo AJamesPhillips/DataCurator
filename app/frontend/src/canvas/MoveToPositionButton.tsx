@@ -5,8 +5,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { ViewType } from "../state/routing/interfaces"
-import type { RootState } from "../state/State"
-import { optional_view_type } from "../views/optional_view_type"
 import type { PositionAndZoom } from "./interfaces"
 
 
@@ -17,16 +15,12 @@ interface OwnProps
     move_to_xy: PositionAndZoom | undefined
 }
 
-const map_state = (state: RootState) => ({
-    view: state.routing.args.view,
-})
-
 const map_dispatch = {
     move: (position: PositionAndZoom, view: ViewType) => ACTIONS.routing.change_route({
         args: { view, ...position },
     })
 }
-const connector = connect(map_state, map_dispatch)
+const connector = connect(null, map_dispatch)
 type Props = ConnectedProps<typeof connector> & OwnProps
 
 function _MoveToPositionButton (props: Props)
@@ -35,13 +29,11 @@ function _MoveToPositionButton (props: Props)
 
     if (!move_to_position) return null
 
-    const view = optional_view_type(props.view)
-
     return (
         <Box zIndex={10} m={2}>
             <IconButton
                 size="small"
-                onClick={() => props.move(move_to_position, view)}
+                onClick={() => props.move(move_to_position, "knowledge")}
                 aria-label={props.description}
             >
                 <FilterCenterFocusIcon />

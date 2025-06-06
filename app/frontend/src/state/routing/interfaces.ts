@@ -37,7 +37,6 @@ export interface RoutingState
 }
 
 // TODO: merge with ROUTE_TYPES?
-// export type ViewType = "priorities" | "priorities_list" | "actions_list" | "knowledge" | "objectives"
 export type ViewType = "actions_list" | "knowledge"
 const _view_types: {[k in ViewType]: true} = {
     "actions_list": true,

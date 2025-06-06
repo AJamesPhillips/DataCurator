@@ -6,8 +6,6 @@ import { factory_render_list_content } from "../form/editable_list/render_list_c
 import type { KnowledgeView } from "../shared/interfaces/knowledge_view"
 import { sentence_case } from "../shared/utils/sentence_case"
 import { Link } from "../sharedf/Link"
-import type { ViewType } from "../state/routing/interfaces"
-import { optional_view_type } from "../views/optional_view_type"
 import { factory_get_kv_details, make_default_kv_title } from "./common"
 import { create_new_knowledge_view } from "./create_new_knowledge_view"
 import type { KnowledgeViewListProps } from "./interfaces"
@@ -16,7 +14,7 @@ import type { KnowledgeViewListProps } from "./interfaces"
 
 export function KnowledgeViewList (props: KnowledgeViewListProps)
 {
-    const { parent_knowledge_view_id, knowledge_views, current_view, sort_type } = props
+    const { parent_knowledge_view_id, knowledge_views, sort_type } = props
 
 
     if (!props.editing && knowledge_views.length === 0) return null
@@ -27,7 +25,7 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
         get_id: kv => kv.id,
 
         item_props: {
-            get_summary: factory_get_summary(current_view),
+            get_summary: factory_get_summary(),
             get_details: factory_get_kv_details(props),
             get_details3,
             calc_initial_custom_expansion_state: factory_calc_initial_custom_expansion_state(props),
@@ -82,9 +80,9 @@ export function KnowledgeViewList (props: KnowledgeViewListProps)
 
 
 
-function factory_get_summary (current_view: ViewType)
+function factory_get_summary ()
 {
-    const view = optional_view_type(current_view)
+    const view = "knowledge"
 
     return (knowledge_view: KnowledgeView, crud: ListItemCRUD<KnowledgeView>) => <Link
         route={undefined}
