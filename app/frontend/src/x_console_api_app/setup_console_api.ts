@@ -1,4 +1,3 @@
-import { get_action_active_date_ranges } from "../priorities/utils/get_action_active_date_ranges"
 import { is_defined } from "../shared/utils/is_defined"
 import type { ComposedKnowledgeView } from "../state/derived/State"
 import { get_wcomponent_from_state } from "../state/specialised_objects/accessors"
@@ -8,9 +7,8 @@ import {
     WComponent,
     WComponentsById,
     is_a_wcomponent,
-    wcomponent_is_action,
     wcomponent_is_causal_link,
-    wcomponent_is_plain_connection,
+    wcomponent_is_plain_connection
 } from "../wcomponent/interfaces/SpecialisedObjects"
 
 
@@ -28,8 +26,6 @@ interface ConsoleApi
     create_wcomponent: typeof create_wcomponent
     get_current_wcomponent: () => WComponent | undefined
     get_selected_wcomponents: () => WComponent[]
-    get_action_wcomponent_elapsed_minutes: (wc: WComponent, as_text?: boolean) => number | string
-    get_selected_wcomponents_elapsed_minutes: (as_text?: boolean) => number | string
 }
 
 interface KnowledgeGraphApi
@@ -321,24 +317,6 @@ function get_selected_wcomponents ()
 }
 
 
-
-function get_action_wcomponent_elapsed_minutes (wcomponent: WComponent, as_text: true): string
-function get_action_wcomponent_elapsed_minutes (wcomponent: WComponent, as_text: boolean | undefined): number
-function get_action_wcomponent_elapsed_minutes (wcomponent: WComponent, as_text?: boolean): number | string
-{
-    let elapsed_time = 0
-    if (wcomponent_is_action(wcomponent))
-    {
-        const transitions = get_action_active_date_ranges(wcomponent)
-        transitions.forEach(({ start, stop }) => elapsed_time += (stop.getTime() - start.getTime()))
-    }
-
-    elapsed_time = Math.round(elapsed_time / 1000) // get value in seconds
-
-    return as_text ? seconds_to_string(elapsed_time) : round_seconds_to_minutes(elapsed_time)
-}
-
-
 function round_seconds_to_minutes (elapsed_time: number)
 {
     return Number.parseFloat((elapsed_time / 60).toFixed(2))  // return value in minutes
@@ -365,17 +343,6 @@ function seconds_to_string (elapsed_time: number)
 }
 
 
-
-function get_selected_wcomponents_elapsed_minutes (as_text?: boolean): number | string
-{
-    const elapsed_minutes = get_selected_wcomponents().map(w => get_action_wcomponent_elapsed_minutes(w, false)).reduce(((i, t) => i + t), 0)
-    const elapsed_seconds = elapsed_minutes * 60
-
-    return as_text ? seconds_to_string(elapsed_seconds) : round_seconds_to_minutes(elapsed_seconds)
-}
-
-
-
 export function setup_console_api ()
 {
     const console_api: ConsoleApi = {
@@ -390,10 +357,9 @@ export function setup_console_api ()
         create_wcomponent,
         get_current_wcomponent,
         get_selected_wcomponents,
-        get_action_wcomponent_elapsed_minutes,
-        get_selected_wcomponents_elapsed_minutes,
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     ;(window as any).console_api = console_api
 }
 
@@ -401,5 +367,6 @@ export function setup_console_api ()
 
 function get_state (): RootState
 {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
     return (window as any).debug_state
 }
