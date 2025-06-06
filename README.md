@@ -17,7 +17,7 @@ Find out more at [DataCurator.org](https://datacurator.org/), view [an example m
 flexible and allow for a wider range of use cases.  They're functionality will
 be removed in future versions.
 * Gantt chart like Microsoft project
-  * June 2025 - have removed the prioritisation component type, and the two views ("Priorities" (map) and "Priorities list") with commit a7f2d8b1.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs) for a description of these prioritisation features before they were removed.
+  * June 2025 - have removed the prioritisation component type, and the two views ("Priorities" (map) and "Priorities list") with commits a7f2d8b1 and 8b23d031.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs) for a description of these prioritisation features before they were removed.
 
 ### Data storage
 
