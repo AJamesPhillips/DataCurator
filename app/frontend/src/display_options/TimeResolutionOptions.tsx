@@ -38,7 +38,6 @@ function _TimeResolutionOptions (props: Props)
     return <ButtonGroup
         disableElevation
         variant="contained"
-        value={props.time_resolution}
     >
         {time_resolution_types.map(type => (
             <Button

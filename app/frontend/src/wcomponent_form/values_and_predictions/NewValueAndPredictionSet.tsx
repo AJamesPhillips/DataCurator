@@ -96,8 +96,8 @@ function SimplifiedBooleanForm (props: SimplifiedBooleanFormProps)
     if (!entry) return null
 
 
-    const is_true = !!entry && entry.probability === 1 && entry.conviction === 1
-    const is_false = !!entry && entry.probability === 0 && entry.conviction === 1
+    const is_true = entry.probability === 1 && entry.conviction === 1
+    const is_false = entry.probability === 0 && entry.conviction === 1
 
 
     return <div>

@@ -117,7 +117,7 @@ function _WComponentKnowledgeViewForm (props: Props)
     }
 
 
-    const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry?.frame_height !== undefined)
+    const can_delete_frame = (knowledge_view_entry?.frame_width !== undefined && knowledge_view_entry.frame_height !== undefined)
 
     return <div>
         {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
@@ -238,7 +238,6 @@ function _WComponentKnowledgeViewForm (props: Props)
             <br />
             {show_add_button && <Button
                 value={add_button_text}
-                extra_class_names="left"
                 onClick={() => upsert_entry(knowledge_view.id, { blocked: undefined, passthrough: undefined })}
             />}
         </div>}

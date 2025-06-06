@@ -1,6 +1,6 @@
 import MenuIcon from "@mui/icons-material/Menu"
 import { Button, MenuItem as MaterialMenuItem, Menu } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
@@ -37,9 +37,7 @@ const base_allowed_routes = ALLOWED_ROUTES.filter(r => !hide_routes.has(r))
 function _AppMenuItemsContainer (props: Props)
 {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const handle_menu_icon_click = (event: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) => {
-        setAnchorEl(event.currentTarget)
-    }
+
     const handle_menu_close = () => {
         setAnchorEl(null)
     }
@@ -74,7 +72,7 @@ function _AppMenuItemsContainer (props: Props)
                     aria-controls="select_tab"
                     aria-haspopup="true"
                     style={{ display: "flex", flex: 1, justifyContent: "end" }}
-                    onClick={handle_menu_icon_click}
+                    onClick={e => setAnchorEl(e.currentTarget)}
                 >
                     <MenuIcon />
                 </Button>

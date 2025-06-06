@@ -114,7 +114,7 @@ function _FindAllCausalPaths (props: Props)
     </div>
 }
 
-export const FindAllCausalPaths = connector(_FindAllCausalPaths) as FunctionComponent<{}>
+export const FindAllCausalPaths = connector(_FindAllCausalPaths) as FunctionComponent
 
 
 

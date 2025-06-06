@@ -142,7 +142,7 @@ function _LinkButton (props: Props & LinkButtonOwnProps)
 {
     const partial_routing_args: Partial<RoutingStateArgs> = props.args || {}
 
-    const on_click = (e: h.JSX.TargetedEvent<HTMLInputElement, MouseEvent>) => {
+    const on_click = (e: h.JSX.TargetedEvent<HTMLAnchorElement, MouseEvent>) => {
         e.stopImmediatePropagation()
         e.preventDefault()
 

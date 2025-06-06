@@ -59,15 +59,15 @@ function _ViewOptions (props: Props)
     return (
         <ButtonGroup
             size="small"
-            value={props.presenting ? "presenting" : "editing"}
         >
             <Tooltip title={button_edit_title} aria-label={button_edit_title}>
                 <IconButton
                     className={classes.inverse_disabled}
                     disabled={are_in_edit_mode}
-                    // `component` is a workaround to get tooltip to work when button is disabled
+                    // 2022-jan-20: `component` is a workaround to get tooltip to work when button is disabled
                     // https://stackoverflow.com/a/63276424/539490
-                    component={are_in_edit_mode ? "div" : undefined}
+                    // 2025-jun-06: upgrading preact seems to have broken this type, so has disabled for now
+                    // component={are_in_edit_mode ? "div" : undefined}
                     onClick={are_in_edit_mode ? undefined : props.toggle_consumption_formatting}
                     value="editing"
                     size="large">

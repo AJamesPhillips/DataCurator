@@ -1,5 +1,5 @@
 import { MenuItem as MaterialMenuItem } from "@mui/material"
-import { ComponentChildren, FunctionComponent, h } from "preact"
+import { ComponentChildren, FunctionComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { FilterContextTabTitle } from "../filter_context/FilterContextTabTitle"
@@ -73,7 +73,7 @@ export function CustomisableAppMenuItem (props: { on_pointer_down: () => void } 
 {
     return <MaterialMenuItem
         style={{ display: "flex", justifyContent: "flex-start", padding: "0.5em" }}
-        onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+        onPointerDown={e =>
         {
             e.stopImmediatePropagation()
             props.on_pointer_down()

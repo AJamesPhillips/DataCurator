@@ -16,7 +16,6 @@ import {
     ListItemText,
 } from "@mui/material"
 import makeStyles from "@mui/styles/makeStyles"
-import withStyles from "@mui/styles/withStyles"
 import { useState } from "preact/hooks"
 
 
@@ -31,9 +30,7 @@ export function ActiveUserWidget ()
         set_user_list_is_open(true)
     }
 
-    const handleClose = (value: string) => {
-        set_user_list_is_open(false)
-    }
+    const handle_close = () => set_user_list_is_open(false)
 
     if (active_user_count <= 0) return null
 
@@ -46,18 +43,18 @@ export function ActiveUserWidget ()
                 onClick={handleClickOpen}
                 size="small"
             >
-                <StyledBadge
+                <Badge
                     badgeContent={active_user_count}
                     color="secondary"
-                    overlap="rectangle"
+                    overlap="rectangular"
                     max={10}
+                    style={{ top: 2, right: "-0.42em", zIndex: 1 }}
                 >
                     {(active_user_count == 1) && <PersonIcon className={classes.icon} />}
                     {(active_user_count > 1) && <PeopleIcon className={classes.icon} />}
-
-                </StyledBadge>
+                </Badge>
             </IconButton>
-            <Dialog open={user_list_is_open} onClose={handleClose} scroll="paper">
+            <Dialog open={user_list_is_open} onClose={handle_close} scroll="paper">
                 <DialogTitle>Active Users</DialogTitle>
                 <DialogContent>
                     <List dense>
@@ -81,7 +78,7 @@ export function ActiveUserWidget ()
                     </List>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>
+                    <Button onClick={handle_close}>
                         Close
                     </Button>
                 </DialogActions>
@@ -91,21 +88,15 @@ export function ActiveUserWidget ()
 }
 
 
-const StyledBadge = withStyles((theme) => ({
-    badge: {
-        top:2, right:"-0.42em",
-        zIndex: 1,
-    },
-  }))(Badge)
 
 const use_styles = makeStyles(theme => ({
     button: {
-        display:"inline-block",
-        marginRight:"1em",
+        display: "inline-block",
+        marginRight: "1em",
         border: `1px ${theme.palette.divider} solid`
     },
     icon: {
-        position:"relative",
-        zIndex:10,
+        position: "relative",
+        zIndex: 10,
     }
 }))

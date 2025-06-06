@@ -1,4 +1,3 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
 import { Accordion, AccordionDetails, AccordionSummary, Box, Typography } from "@mui/material"
 import { h } from "preact"
 import { useState } from "preact/hooks"
@@ -46,7 +45,7 @@ function _HelpMenu (props: Props)
                 <Accordion
                     expanded={expanded === "kbd-shortcuts"}
                     onChange={handle_change("kbd-shortcuts")}
-                    expandIcon={<ExpandMoreIcon />}
+                    // expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
                         <Typography component="h2" variant="h6">Commands / shortcuts</Typography>
@@ -77,7 +76,7 @@ function _HelpMenu (props: Props)
                 <Accordion
                     expanded={expanded === "general-tips"}
                     onChange={handle_change("general-tips")}
-                    expandIcon={<ExpandMoreIcon />}
+                    // expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
                         <Typography component="h2" variant="h6">General tips</Typography>
@@ -93,7 +92,7 @@ function _HelpMenu (props: Props)
                 <Accordion
                     expanded={expanded === "detailed-tips"}
                     onChange={handle_change("detailed-tips")}
-                    expandIcon={<ExpandMoreIcon />}
+                    // expandIcon={<ExpandMoreIcon />}
                 >
                     <AccordionSummary>
                         <Typography component="h2" variant="h6">Detailed tips</Typography>

@@ -270,7 +270,7 @@ class _Canvas extends Component<Props, State>
 
         const right_button = e.button === 2
         if (right_button) pub_sub.canvas.pub("canvas_right_click", { x, y })
-        else "todo publish canvas_control_left_click"
+        // else TODO: publish canvas_control_left_click
     }
 
 
@@ -376,7 +376,7 @@ class _Canvas extends Component<Props, State>
 }
 
 
-export const Canvas = connector(_Canvas) as FunctionalComponent<OwnProps>
+export const Canvas = connector(_Canvas as any) as FunctionalComponent<OwnProps>
 
 
 const blur_filter_defs = <defs>
@@ -453,9 +453,9 @@ function get_pointer_position (e: h.JSX.TargetedEvent<HTMLDivElement, WheelEvent
 
     let event_target = e.target as HTMLElement
 
-    if (event_target?.id !== GRAPH_CONTAINER_ID)
+    if (event_target.id !== GRAPH_CONTAINER_ID)
     {
-        while (event_target && event_target.id !== GRAPH_VISUALS_CONTAINER_ID)
+        while (event_target.id !== GRAPH_VISUALS_CONTAINER_ID)
         {
             pointer_x += event_target.offsetLeft || 0  // `|| 0` needed as svg elements do not have `.offsetLeft`
             pointer_y += event_target.offsetTop || 0

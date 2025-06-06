@@ -24,7 +24,7 @@ import { Prioritisation } from "./Prioritisation"
 
 
 
-export function PrioritiesListView (props: {})
+export function PrioritiesListView ()
 {
     return <MainArea
         main_content={<PrioritiesListViewContent />}

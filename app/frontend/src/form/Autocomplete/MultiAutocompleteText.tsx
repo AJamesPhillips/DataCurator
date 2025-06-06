@@ -1,8 +1,8 @@
+import { Box } from "@mui/material"
 import { FunctionalComponent, h } from "preact"
 import { useMemo } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { Box } from "@mui/material"
 import { ACTIONS } from "../../state/actions"
 import type { RootState } from "../../state/State"
 import { AutocompleteText } from "./AutocompleteText"
@@ -60,10 +60,10 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
             missing.forEach(missing_id =>
             {
-                const missing_option: E = {
+                const missing_option = {
                     id: missing_id,
                     title: "<Label Not found>"
-                } as any
+                } as E
 
                 missing_options_by_id[missing_id] = missing_option
                 filtered_options.push(missing_option)
@@ -85,7 +85,10 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
 
 
     return (
-        <Box width="100%" overflowX="hidden">
+        <Box
+            width="100%"
+            // overflowX="hidden"
+        >
             {editable && <AutocompleteText
                 {...props}
                 selected_option_id={undefined}
@@ -113,7 +116,7 @@ function _MultiAutocompleteText <E extends AutocompleteOption> (props: Props<E>)
                         }}
                         on_mouse_over_option={props.on_mouse_over_option}
                         on_mouse_leave_option={props.on_mouse_leave_option}
-                        on_pointer_down_selected_option={(e, id) =>
+                        on_pointer_down_selected_option={id =>
                         {
                             props.change_route({ item_id: id })
                         }}

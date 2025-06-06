@@ -143,13 +143,13 @@ export function SimulationScenarioSummary (props: Props)
         </div>
 
         <br />
-        retailer_initial_stock: {retailer_initial_stock?.parsed_value}
+        retailer_initial_stock: {retailer_initial_stock.parsed_value}
         {/* {(retailer_initial_stock?.certainty || 1) * 100}% */}
         &nbsp;
-        retailer_storage: {retailer_storage?.parsed_value}
+        retailer_storage: {retailer_storage.parsed_value}
         {/* {(retailer_storage?.certainty || 1) * 100}% */}
         &nbsp;
-        demand_signal_multiplier: {demand_signal_multiplier?.parsed_value}
+        demand_signal_multiplier: {demand_signal_multiplier.parsed_value}
         {/* {(demand_signal_multiplier?.certainty || 1) * 100}% */}
 
         <br />

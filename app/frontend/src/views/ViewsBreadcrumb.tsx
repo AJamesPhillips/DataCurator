@@ -1,5 +1,5 @@
 import { Box, Breadcrumbs, MenuItem, Select, Typography } from "@mui/material"
-import { FunctionalComponent, h } from "preact"
+import { FunctionalComponent } from "preact"
 import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText, OPTION_NONE_ID } from "../form/Autocomplete/AutocompleteText"
@@ -102,7 +102,7 @@ function _ViewsBreadcrumb (props: Props)
                 {view_options.map(opt => <MenuItem
                     value={opt.id}
                     selected={opt.id === props.view}
-                    onPointerDown={(e: h.JSX.TargetedEvent<HTMLDivElement, MouseEvent>) =>
+                    onPointerDown={e =>
                     {
                         e.stopImmediatePropagation()
                         props.change_route({ args: { view: opt.id } })

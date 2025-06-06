@@ -86,7 +86,6 @@ function _AlignComponentForm (props: Props)
                     if (!knowledge_view_id) return
                     props.snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })
                 }}
-                is_left={true}
             />
             &nbsp;
             <ButtonSnapXToDatetime {...props} />
@@ -102,7 +101,6 @@ function _AlignComponentForm (props: Props)
                     const override_entry = get_middle_of_screen(state)
                     props.bulk_add_to_knowledge_view({ knowledge_view_id, wcomponent_ids, override_entry })
                 }}
-                is_left={true}
             />
         </>}
 
@@ -122,7 +120,6 @@ function _AlignComponentForm (props: Props)
 
                     props.bulk_update_knowledge_view_entries({ knowledge_view_id, changes })
                 }}
-                is_left={true}
             />
         </>}
 
@@ -136,7 +133,6 @@ function _AlignComponentForm (props: Props)
                 {
                     props.change_current_knowledge_view_entries_order({ wcomponent_ids, order: "front" })
                 }}
-                is_left={true}
             />
         </span>
         &nbsp;
@@ -148,7 +144,6 @@ function _AlignComponentForm (props: Props)
                 {
                     props.change_current_knowledge_view_entries_order({ wcomponent_ids, order: "back" })
                 }}
-                is_left={true}
             />
         </span>
     </div>

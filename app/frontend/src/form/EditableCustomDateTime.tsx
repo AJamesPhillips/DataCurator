@@ -106,12 +106,12 @@ function _EditableCustomDateTime (props: Props)
             }}
 
             // Can not use onKeyPress as `Escape` key is never captured & reported by this method
-            onKeyDown={(e: h.JSX.TargetedKeyboardEvent<HTMLInputElement>) =>
+            onKeyDown={e =>
             {
                 const is_enter = e.key === "Enter"
                 const is_escape = e.key === "Escape"
 
-                if (is_enter || is_escape) (e.target as any)?.blur()
+                if (is_enter || is_escape) e.currentTarget.blur()
             }}
 
             onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) =>

@@ -31,7 +31,7 @@ function _SidePanelOrMenuButton (props: Props)
         aria-label="open side panel"
         color="inherit"
         edge="end"
-        onClick={props.set_or_toggle_display_side_panel}
+        onClick={() => props.set_or_toggle_display_side_panel()}
         size="small"
     >
         {props.display_side_panel ? <CloseIcon /> : <MenuIcon />}

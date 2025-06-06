@@ -1,16 +1,9 @@
-import { Box, StyledEngineProvider, Theme, ThemeProvider, Tooltip } from "@mui/material"
+import { Box, StyledEngineProvider, ThemeProvider, Tooltip } from "@mui/material"
 import { h } from "preact"
 import { useState } from "preact/hooks"
 
 import { Button } from "../sharedf/Button"
 import { DefaultTheme, WarningTheme } from "../ui_themes/material_default"
-
-
-
-declare module "@mui/styles/defaultTheme" {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface DefaultTheme extends Theme {}
-}
 
 
 
@@ -44,7 +37,7 @@ export function ConfirmatoryButton (props: OwnProps)
                     {
                         e.stopImmediatePropagation()
                         set_ready_to_progress(false)
-                        props.on_click && props.on_click()
+                        if (props.on_click) props.on_click()
                     }}
                     startIcon={props.button_icon}
                 >

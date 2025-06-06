@@ -104,7 +104,6 @@ function _ButtonSnapXToDatetime (props: Props)
                 set_number_changed(number_changed)
                 setTimeout(() => set_number_changed(undefined), 1000)
             }}
-            is_left={true}
         />
         {number_changed_text}
     </div>

@@ -41,11 +41,11 @@ export function EditablePercentage (props: OwnProps)
             value={value}
             conditional_on_change={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) conditional_on_change && conditional_on_change(valid_value)
+                if (valid_value !== undefined && conditional_on_change) conditional_on_change(valid_value)
             }}
             on_blur={new_value => {
                 const valid_value = string_to_percentage(new_value)
-                if (valid_value !== undefined) on_blur && on_blur(valid_value)
+                if (valid_value !== undefined && on_blur) on_blur(valid_value)
             }}
             on_blur_type={on_blur_type}
         />&nbsp;%

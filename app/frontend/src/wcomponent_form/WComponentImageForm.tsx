@@ -1,5 +1,4 @@
 import { TextField } from "@mui/material"
-import { h } from "preact"
 
 import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 
@@ -20,12 +19,9 @@ export function WComponentImageForm(props: OwnProps)
         <TextField
             fullWidth={true}
             label="Summary Image URL"
-            onChange={(e: h.JSX.TargetedEvent<HTMLInputElement, Event>) => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                const url: string | undefined = e.target?.value ?? undefined
-                if (url !== undefined) {
-                    upsert_wcomponent({ summary_image: url })
-                }
+            onChange={e => {
+                const url = e.currentTarget.value
+                upsert_wcomponent({ summary_image: url })
             }}
             value={summary_image}
             variant="outlined"

@@ -14,8 +14,6 @@ import { get_store } from "../../state/store"
 
 
 
-interface OwnProps { }
-
 const map_state = (state: RootState) =>
 {
     const current_composed_kv = get_current_composed_knowledge_view_from_state(state)
@@ -37,7 +35,7 @@ const map_dispatch = {
 }
 
 const connector = connect(map_state, map_dispatch)
-type Props = ConnectedProps<typeof connector> & OwnProps
+type Props = ConnectedProps<typeof connector>
 
 
 
@@ -51,7 +49,6 @@ function _ToggleDatetimeMarkers (props: Props)
         <ButtonGroup
             disableElevation
             variant="contained"
-            value={display_time_marks}
         >
             <Button
                 onClick={() =>
@@ -81,4 +78,4 @@ function _ToggleDatetimeMarkers (props: Props)
     </Box>
 }
 
-export const ToggleDatetimeMarkers = connector(_ToggleDatetimeMarkers) as FunctionalComponent<OwnProps>
+export const ToggleDatetimeMarkers = connector(_ToggleDatetimeMarkers) as FunctionalComponent

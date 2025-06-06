@@ -1,6 +1,5 @@
 import { PlainShortcutKeys } from "../help_menu/ShortcutCommand"
 import { shortcuts_map } from "../help_menu/shortcuts"
-
 import { Button } from "../sharedf/Button"
 import {
     conditionally_decrease_selected_components,
@@ -14,7 +13,7 @@ import { get_store } from "../state/store"
 
 
 
-export function SelectionControlSidePanel (props: {})
+export function SelectionControlSidePanel ()
 {
     const store = get_store()
 

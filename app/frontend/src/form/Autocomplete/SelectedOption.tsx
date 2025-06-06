@@ -1,6 +1,5 @@
 import ClearIcon from "@mui/icons-material/Clear"
 import { ButtonGroup, IconButton, Tooltip, Typography } from "@mui/material"
-import { h } from "preact"
 
 import { Button } from "../../sharedf/Button"
 import { color_to_opposite, color_to_string } from "../../sharedf/color"
@@ -15,7 +14,7 @@ interface Props <E extends AutocompleteOption = AutocompleteOption>
     on_remove_option: (removed_id: string) => void
     on_mouse_over_option?: (id: E["id"] | undefined) => void
     on_mouse_leave_option?: (id: E["id"] | undefined) => void
-    on_pointer_down_selected_option?: (e: h.JSX.TargetedPointerEvent<HTMLButtonElement>, id: E["id"]) => void
+    on_pointer_down_selected_option?: (id: E["id"]) => void
 }
 
 export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
@@ -35,7 +34,7 @@ export function SelectedOption <E extends AutocompleteOption> (props: Props<E>)
             style={{ margin: 5 }}
         >
             <Button
-                onClick={e => pointer_down && pointer_down(e, option.id)}
+                onClick={() => pointer_down && pointer_down(option.id)}
                 disabled={!pointer_down}
                 style={{
                     cursor: !pointer_down ? "not-allowed" : "",

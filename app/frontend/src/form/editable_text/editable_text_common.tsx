@@ -49,7 +49,7 @@ export interface EditableTextComponentArgs
     on_focus: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     on_change: (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) => void
     on_blur: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
-    on_key_down: (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => void
+    // on_key_down: h.JSX.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>
 }
 
 
@@ -184,10 +184,10 @@ function _EditableTextCommon (props: Props)
 
 
 
-    const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-    {
-        handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur)
-    }, [wrapped_conditional_on_change, wrapped_on_blur])
+    // const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
+    // {
+    //     handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur)
+    // }, [wrapped_conditional_on_change, wrapped_on_blur])
 
 
     // When component unmounts, check if it is still being edited.  If so then the `handle_on_blur` above has
@@ -230,7 +230,7 @@ function _EditableTextCommon (props: Props)
             on_focus,
             on_change: handle_on_change,
             on_blur: handle_on_blur,
-            on_key_down,
+            // on_key_down,
         })
     }, [value, on_render, on_focus, handle_on_change, handle_on_blur])
 

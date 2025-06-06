@@ -1,6 +1,4 @@
-
 import { Button } from "../sharedf/Button"
-
 
 
 interface NowButtonProps
@@ -18,6 +16,5 @@ export function NowButton (props: NowButtonProps)
             const datetime_ms = new Date().getTime() + 60000
             props.change_datetime_ms(datetime_ms)
         }}
-        is_left={true}
     />
 }

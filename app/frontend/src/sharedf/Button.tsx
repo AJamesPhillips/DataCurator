@@ -1,7 +1,6 @@
-import { h } from "preact"
-import { Button as MaterialButton } from "@mui/material"
+import { Hidden, Button as MaterialButton } from "@mui/material"
 import type { ButtonProps } from "@mui/material/Button"
-import { Hidden } from "@mui/material"
+import { h } from "preact"
 
 import "./Button.scss"
 
@@ -30,7 +29,7 @@ export function Button (props: ButtonProps & SpecificProps)
                 // title to show even when button is disabled, this may break
                 // other things.
                 style={{ ...props.style, pointerEvents: "initial" }}
-                component={props.component}
+                // component={props.component}
                 disabled={props.disabled || false}
                 disableElevation={props.disableElevation || true}
                 disableFocusRipple={props.disableFocusRipple || false}
@@ -50,7 +49,7 @@ export function Button (props: ButtonProps & SpecificProps)
                     e.preventDefault()
                     // Using onPointerDown otherwise other onPointerDown on parent elements fire
                     // and the onClick here never gets to fire
-                    props.onPointerDown && props.onPointerDown(e)
+                    if (props.onPointerDown) props.onPointerDown(e)
                 }}
                 onClick={(e: h.JSX.TargetedPointerEvent<HTMLButtonElement>) =>
                 {
@@ -60,7 +59,7 @@ export function Button (props: ButtonProps & SpecificProps)
                     // Not sure we want to put this here
                     e.stopImmediatePropagation()
                     e.preventDefault()
-                    props.onClick && props.onClick(e)
+                    if (props.onClick) props.onClick(e)
                 }}
             >
                 { props.children || props.value }
