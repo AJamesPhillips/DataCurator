@@ -41,7 +41,9 @@ export enum EditableTextOnBlurType {
 }
 
 
-
+// Note: KeyDownEvent should be `h.JSX.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>`
+// but that does not seem to work.
+type KeyDownEvent = h.JSX.TargetedKeyboardEvent<HTMLDivElement>
 export interface EditableTextComponentArgs
 {
     value: string
@@ -49,7 +51,7 @@ export interface EditableTextComponentArgs
     on_focus: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
     on_change: (e: h.JSX.TargetedEvent<HTMLTextAreaElement | HTMLInputElement, Event>) => void
     on_blur: (e: h.JSX.TargetedFocusEvent<HTMLTextAreaElement | HTMLInputElement>) => void
-    // on_key_down: h.JSX.KeyboardEventHandler<HTMLTextAreaElement | HTMLInputElement>
+    on_key_down: (e: KeyDownEvent) => void
 }
 
 
@@ -184,10 +186,10 @@ function _EditableTextCommon (props: Props)
 
 
 
-    // const on_key_down = useMemo(() => (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) =>
-    // {
-    //     handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur)
-    // }, [wrapped_conditional_on_change, wrapped_on_blur])
+    const on_key_down = useMemo(() => (e: KeyDownEvent) =>
+    {
+        handle_general_key_down(e, el_ref.current, wrapped_conditional_on_change, wrapped_on_blur)
+    }, [wrapped_conditional_on_change, wrapped_on_blur])
 
 
     // When component unmounts, check if it is still being edited.  If so then the `handle_on_blur` above has
@@ -230,7 +232,7 @@ function _EditableTextCommon (props: Props)
             on_focus,
             on_change: handle_on_change,
             on_blur: handle_on_blur,
-            // on_key_down,
+            on_key_down,
         })
     }, [value, on_render, on_focus, handle_on_change, handle_on_blur])
 
@@ -297,7 +299,7 @@ function handle_text_field_focus (args: HandleTextFieldFocusArgs)
 
 
 
-function handle_general_key_down (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement | undefined, wrapped_conditional_on_change: (new_value: string) => void, wrapped_on_blur: (new_value: string) => void)
+function handle_general_key_down (e: KeyDownEvent, el: HTMLInputElement | HTMLTextAreaElement | undefined, wrapped_conditional_on_change: (new_value: string) => void, wrapped_on_blur: (new_value: string) => void)
 {
     const is_editing_this_specific_text = document.activeElement === el
     if (!is_editing_this_specific_text) return
@@ -313,7 +315,7 @@ enum ReplacingTextType
 {
     url, title, nothing
 }
-function handle_ctrl_k_link_insert (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement, conditional_on_change: (value: string) => void)
+function handle_ctrl_k_link_insert (e: KeyDownEvent, el: HTMLInputElement | HTMLTextAreaElement, conditional_on_change: (value: string) => void)
 {
     if (!e.ctrlKey) return
     if (e.key !== "k") return
@@ -355,7 +357,7 @@ function handle_ctrl_k_link_insert (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaE
 }
 
 
-function handle_stop_propagation (e: h.JSX.TargetedKeyboardEvent<HTMLTextAreaElement | HTMLInputElement>, el: HTMLInputElement | HTMLTextAreaElement, wrapped_on_blur: (new_value: string) => void)
+function handle_stop_propagation (e: KeyDownEvent, el: HTMLInputElement | HTMLTextAreaElement, wrapped_on_blur: (new_value: string) => void)
 {
     if (e.ctrlKey && e.key === "e")
     {

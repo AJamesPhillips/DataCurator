@@ -13,7 +13,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
     return <EditableTextCommon
         {...props}
 
-        component={({ value, on_render, on_focus, on_change, on_blur }: EditableTextComponentArgs) =>
+        component={({ value, on_render, on_focus, on_change, on_blur, on_key_down }: EditableTextComponentArgs) =>
         {
             return <TextField
                 fullWidth={true}
@@ -25,6 +25,7 @@ export function EditableText (props: EditableTextCommonOwnProps)
                 onFocus={on_focus}
                 onChange={on_change}
                 onBlur={on_blur}
+                onKeyDown={on_key_down}
                 inputRef={on_render}
                 spellcheck={props.spellcheck}
             />
