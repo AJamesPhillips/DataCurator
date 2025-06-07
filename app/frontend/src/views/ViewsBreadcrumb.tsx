@@ -90,8 +90,10 @@ function _ViewsBreadcrumb (props: Props)
         .map(calc_if_is_hidden)
     levels.unshift({ options: top_level_options, selected_id: last_parent_id, parent_id: undefined })
 
+    const show_view_type_selector = props.view !== "knowledge" || view_options_selectable.length > 1
+
     return <Breadcrumbs style={{ marginTop: "8px" }}>
-        <Box>
+        {show_view_type_selector && <Box>
             <Select
                 variant="standard"
                 label={<Typography noWrap={true}>View Type:</Typography>}
@@ -102,6 +104,7 @@ function _ViewsBreadcrumb (props: Props)
                 {view_options.map(opt => <MenuItem
                     value={opt.id}
                     selected={opt.id === props.view}
+                    disabled={!opt.selectable}
                     onPointerDown={e =>
                     {
                         e.stopImmediatePropagation()
@@ -111,7 +114,7 @@ function _ViewsBreadcrumb (props: Props)
                     {opt.title}
                 </MenuItem>)}
             </Select>
-        </Box>
+        </Box>}
         {levels.map(level => <Box>
             <AutocompleteText
                 allow_none={level.parent_id !== undefined}
@@ -136,16 +139,11 @@ export const ViewsBreadcrumb = connector(_ViewsBreadcrumb) as FunctionalComponen
 
 
 const state = experimental_features.get_state()
-const view_options: { id: ViewType, title: string }[] = [
-    { id: "knowledge", title: "Knowledge" },
+const view_options: { id: ViewType, title: string, selectable: boolean }[] = [
+    { id: "knowledge", title: "Knowledge", selectable: true },
+    { id: "actions_list", title: "Actions list", selectable: state.enable_action_kanban_view },
 ]
-if (state.enable_action_kanban_view)
-{
-    view_options.push(
-        { id: "actions_list", title: "Actions list" },
-    )
-}
-
+const view_options_selectable = view_options.filter(opt => opt.selectable)
 
 
 interface KnowledgeViewOption
