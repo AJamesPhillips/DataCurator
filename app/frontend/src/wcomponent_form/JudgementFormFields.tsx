@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { AutocompleteText } from "../form/Autocomplete/AutocompleteText"
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
+import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
 import { sentence_case } from "../shared/utils/sentence_case"
 import { calculate_judgement_value } from "../sharedf/judgement_badge/calculate_judgement_value"
@@ -128,8 +129,17 @@ function _JudgementFormFields (props: Props)
                 {target_VAPs_represent !== VAPsType.boolean && <EditableTextSingleLine
                     placeholder="Value..."
                     value={wcomponent.judgement_comparator_value || ""}
-                    conditional_on_change={new_value =>
-                        {
+                    // 2026-06-07 change from a `conditional_on_change` to
+                    // `on_blur` as when editing the value it's very slow because
+                    // each keypress triggers a re-render of the whole form &
+                    // components on the knowledge view.  `on_blue` is worse
+                    // than `conditional_on_change` in that `conditional_on_change`
+                    // allows you to see the value change in real-time including
+                    // seeing the judgements/objective badges on states and goals
+                    // change colour as you type.
+                    on_blur_type={EditableTextOnBlurType.conditional}
+                    on_blur={new_value =>
+                    {
                         const judgement_comparator_value = new_value.trim()
 
                         if (judgement_comparator_value === wcomponent.judgement_comparator_value) return
