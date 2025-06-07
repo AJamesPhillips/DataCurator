@@ -109,7 +109,19 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         derived_composed_wcomponent,
         kv_from_different_base,
         wc_id_to_counterfactuals_map: get_wc_id_to_counterfactuals_v2_map(state),
+
+        // 2025-06-06: Temporarily restoring passing composed_wcomponents_by_id
+        // so that component titles that
+        // mention other components can be rendered.  This was removed so that
+        // knowledge views with a large number of components could be re-rendered
+        // quickly.  The long term solution is to move as much of this state
+        // either into the derived state or, when suitable (and for titles that
+        // would not be suitable as the state can change without a page
+        // reload) to access the state directly from child functions that are
+        // called from the render function.
         composed_wcomponents_by_id: state.derived.composed_wcomponents_by_id,
+        // composed_wcomponents_by_id: {},
+
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         is_current_item: state.routing.item_id === wcomponent_id,
         is_selected,
@@ -163,14 +175,6 @@ function _WComponentCanvasNode (props: Props)
         validity_value,
         created_at_ms, sim_ms, certainty_formatting,
         clicked_wcomponent, clear_selected_wcomponents,
-        // 2025-06-06: Temporarily restoring this so that component titles that
-        // mention other components can be rendered.  This was removed so that
-        // knowledge views with a large number of components could be re-rendered
-        // quickly.  The long term solution is to move as much of this state
-        // either into the derived state or, when suitable (and for titles that
-        // would not be suitable for state that does not change without a page
-        // reload) to access the state directly from child functions that are
-        // called from the render function.
         composed_wcomponents_by_id,
     } = props
     const { change_route, set_highlighted_wcomponent } = props
