@@ -1,8 +1,10 @@
 
 
+const BUILD_VERSION = "2025-06-09"
+
 export function AboutSidePanel ()
 {
     return <div>
-        <span className="description_label">Version</span> <b>2025-06-06</b>
+        <span className="description_label">Version</span> <b>{BUILD_VERSION}</b>
     </div>
 }

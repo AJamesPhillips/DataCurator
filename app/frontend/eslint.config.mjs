@@ -32,6 +32,22 @@ export default tseslint.config(
             "no-constant-condition": "off",
             "prefer-const": "off",
         },
+        // This is another failed attempt to silence a warning from eslint about
+        // script "not found by the project service. Consider either including
+        // it in the tsconfig.json or including it in allowDefaultProject.eslint"
+        overrides: [
+            {
+                files: ["scripts/*.js"],
+                languageOptions: {
+                    parserOptions: {
+                        allowDefaultProject: true
+                    }
+                }
+            }
+        ],
+        // This is another failed attempt to silence a warning from eslint about
+        // script "not found by the project service. Consider either including
+        // it in the tsconfig.json or including it in allowDefaultProject.eslint"
         ignores: [
             "scripts/*.js",
             "eslint.config.mjs"

@@ -39,8 +39,12 @@
     "types",
     "lib/datacurator-core/types"
   ],
+  // This is another failed attempt to silence a warning from eslint about
+  // script "not found by the project service. Consider either including
+  // it in the tsconfig.json or including it in allowDefaultProject.eslint"
   "exclude": [
     "scripts",
+    "scripts/*.js",
     "eslint.config.mjs"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
