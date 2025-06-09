@@ -1,6 +1,6 @@
 
 
-const BUILD_VERSION = "2025-06-09"
+const BUILD_VERSION = "2025-06-09-b"
 
 export function AboutSidePanel ()
 {
