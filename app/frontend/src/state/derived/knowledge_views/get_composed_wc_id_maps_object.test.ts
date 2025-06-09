@@ -21,7 +21,6 @@ function test_helper__make_knowledge_view (kv_wc_entry: KnowledgeViewWComponentE
         sort_type: "normal",
         created_at: date1,
         base_id: 1,
-        goal_ids: [],
     }
 
     if (kv_wc_entry) kv.wc_id_map[wcomponent_id] = kv_wc_entry

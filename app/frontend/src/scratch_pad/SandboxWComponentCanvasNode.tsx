@@ -82,7 +82,6 @@ function sandbox_code ()
         },
         created_at,
         base_id: -1,
-        goal_ids: [],
         sort_type: "normal",
     }
 

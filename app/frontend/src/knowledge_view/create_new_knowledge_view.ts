@@ -20,7 +20,6 @@ export function get_new_knowledge_view_object (args: Partial<KnowledgeView> & Ha
         title: "",
         description: "",
         wc_id_map: {},
-        goal_ids: [],
         sort_type: "normal",
         ...args,
     }

@@ -23,7 +23,6 @@ function test_helper__make_knowledge_view (wc_id_map: KnowledgeViewWComponentIdE
         sort_type: "normal",
         created_at: date1,
         base_id: 1,
-        goal_ids: [],
     }
 
     return kv

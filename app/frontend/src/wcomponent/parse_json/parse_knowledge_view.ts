@@ -26,7 +26,6 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
         sort_type: knowledge_view.sort_type || "normal",
     }
 
-    knowledge_view = upgrade_2021_05_24_knowledge_view(knowledge_view)
     knowledge_view = upgrade_2021_11_19_knowledge_view(knowledge_view)
 
     return knowledge_view
@@ -87,17 +86,6 @@ function remove_wc_id_map_passthrough_entries (wc_id_map: KnowledgeViewWComponen
 
     return new_wc_id_map
 }
-
-
-
-function upgrade_2021_05_24_knowledge_view (knowledge_view: KnowledgeView): KnowledgeView
-{
-    // data migrate to ensure goal_ids array is always present
-    // TODO remove once MVP1.0
-    const goal_ids = knowledge_view.goal_ids || []
-    return { ...knowledge_view, goal_ids }
-}
-
 
 
 function upgrade_2021_11_19_knowledge_view (knowledge_view: KnowledgeView): KnowledgeView
