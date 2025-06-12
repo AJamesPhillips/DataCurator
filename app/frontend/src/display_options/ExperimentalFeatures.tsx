@@ -45,6 +45,19 @@ export function ExperimentalFeatures()
                 }}
             />
         </p>
+
+        <div className="section">
+            <ExperimentalWarning /> <b>Enable aligning components by time on x-axis</b>
+            <EditableCheckbox
+                value={state.enable_align_components_on_x_by_time}
+                on_change={value =>
+                {
+                    experimental_features.set_state_and_reload_page({
+                        enable_align_components_on_x_by_time: value,
+                    })
+                }}
+            />
+        </div>
     </>
 }
 

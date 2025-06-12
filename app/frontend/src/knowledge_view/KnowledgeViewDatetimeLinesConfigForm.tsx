@@ -9,6 +9,7 @@ import {
     get_composed_datetime_lines_config,
     get_foundational_knowledge_views,
 } from "../state/derived/knowledge_views/knowledge_views_derived_reducer"
+import { experimental_features } from "../state/display_options/persistance"
 import { DEFAULT_DATETIME_LINE_CONFIG } from "./datetime_line"
 
 
@@ -23,6 +24,10 @@ interface OwnProps
 
 export const KnowledgeViewDatetimeLinesConfigForm = (props: OwnProps) =>
 {
+    const experimental = experimental_features.get_state()
+    if (!experimental.enable_align_components_on_x_by_time) return null
+
+
     const { editing, knowledge_view } = props
 
     const foundational_knowledge_views = get_foundational_knowledge_views(knowledge_view, props.knowledge_views_by_id, false)

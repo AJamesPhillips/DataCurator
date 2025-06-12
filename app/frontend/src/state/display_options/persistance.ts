@@ -52,6 +52,11 @@ export function display_options_starting_state (): DisplayOptionsState
         ...obj,
     }
 
+    if (!get_experimental_features_state().enable_align_components_on_x_by_time)
+    {
+        state.display_time_marks = false
+    }
+
     return state
 }
 
@@ -60,6 +65,7 @@ interface ExperimentalFeaturesState
 {
     enable_angular_connections: boolean
     enable_action_kanban_view: boolean
+    enable_align_components_on_x_by_time: boolean
 }
 const get_experimental_features_state = (): ExperimentalFeaturesState =>
 {
@@ -67,6 +73,7 @@ const get_experimental_features_state = (): ExperimentalFeaturesState =>
     return {
         enable_angular_connections: obj.enable_angular_connections ?? false,
         enable_action_kanban_view: obj.enable_action_kanban_view ?? false,
+        enable_align_components_on_x_by_time: obj.enable_align_components_on_x_by_time ?? false,
     }
 }
 export const experimental_features = {

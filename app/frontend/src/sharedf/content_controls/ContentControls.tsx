@@ -10,6 +10,7 @@ import { MoveToWComponentButton } from "../../canvas/MoveToWComponentButton"
 import { ActiveCreatedAtFilterWarning } from "../../sharedf/ActiveCreatedAtFilterWarning"
 import { ACTIONS } from "../../state/actions"
 import { get_actually_display_time_sliders } from "../../state/controls/accessors"
+import { experimental_features } from "../../state/display_options/persistance"
 import type { RootState } from "../../state/State"
 import type { TimeSliderEvent } from "../../time_control/interfaces"
 import { TimeSlider } from "../../time_control/TimeSlider"
@@ -116,7 +117,9 @@ function _ContentControls (props: Props)
                     <ActiveFilterWarning />
                 </Box>
 
-                <ToggleDatetimeMarkers />
+                {experimental_features.get_state().enable_align_components_on_x_by_time &&
+                    <ToggleDatetimeMarkers />
+                }
 
 
                 <div>

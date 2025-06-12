@@ -19,7 +19,6 @@ const map_state = (state: RootState) => ({
     display_by_simulated_time: state.display_options.display_by_simulated_time,
     focused_mode: state.display_options.focused_mode,
     circular_links: state.display_options.circular_links,
-    display_time_marks: state.display_options.display_time_marks,
     animate_connections: state.display_options.animate_connections,
     show_large_grid: state.display_options.show_large_grid,
     display_time_sliders: state.controls.display_time_sliders,
@@ -32,7 +31,6 @@ const map_dispatch = {
     set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
     set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
     set_or_toggle_circular_links: ACTIONS.display.set_or_toggle_circular_links,
-    set_display_time_marks: ACTIONS.display.set_display_time_marks,
     set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections,
     set_or_toggle_show_large_grid: ACTIONS.display.set_or_toggle_show_large_grid,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
@@ -151,33 +149,6 @@ function _DisplayOptionsSidePanel (props: Props)
                 on_change={props.set_or_toggle_animate_connections}
             />
         </p>
-
-
-
-        <p className="section">
-            <b>Show time markers</b>
-
-            <EditableCheckbox
-                value={props.display_time_marks}
-                on_change={props.set_display_time_marks}
-            />
-        </p>
-
-
-
-        {/* <p className="section">
-            <b>Display by simulated time</b>
-
-            <EditableCheckbox
-                value={props.display_by_simulated_time}
-                on_change={props.set_display_by_simulated_time}
-            />
-
-            <br />
-            <span style={{ backgroundColor: "pink" }}>
-                Experimental view not optimised for data sets over a large period of time.  Probably want to use "Show time markers" above.
-            </span>
-        </p> */}
 
 
         <p className="section">

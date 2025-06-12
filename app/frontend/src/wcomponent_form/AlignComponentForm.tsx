@@ -6,6 +6,7 @@ import { bezier_middle, derive_connection_coords } from "../canvas/connections/d
 import { Button } from "../sharedf/Button"
 import { ACTIONS } from "../state/actions"
 import { get_middle_of_screen } from "../state/display_options/display"
+import { experimental_features } from "../state/display_options/persistance"
 import {
     get_current_knowledge_view_from_state,
     get_wcomponent_from_state,
@@ -87,8 +88,10 @@ function _AlignComponentForm (props: Props)
                     props.snap_to_grid_knowledge_view_entries({ wcomponent_ids, knowledge_view_id })
                 }}
             />
-            &nbsp;
-            <ButtonSnapXToDatetime {...props} />
+            {experimental_features.get_state().enable_align_components_on_x_by_time && <>
+                &nbsp;
+                <ButtonSnapXToDatetime {...props} />
+            </>}
             &nbsp;
             <Button
                 disabled={!knowledge_view_id}
