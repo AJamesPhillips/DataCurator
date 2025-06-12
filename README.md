@@ -17,7 +17,10 @@ Find out more at [DataCurator.org](https://datacurator.org/), view [an example m
 flexible and allow for a wider range of use cases.  They're functionality will
 be removed in future versions.
 * Gantt chart like Microsoft project
-  * June 2025 - have removed the prioritisation component type, and the two views ("Priorities" (map) and "Priorities list") with commits a7f2d8b1 and 8b23d031.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs) for a description of these prioritisation features before they were removed.
+  * the `prioritisation` component type, and the two views ("Priorities" (map) and "Priorities list") have been removed with commits [a7f2d8b1](https://github.com/AJamesPhillips/DataCurator/commit/a7f2d8b1cae927c29d65626137e47641fe92489d) and [8b23d031](https://github.com/AJamesPhillips/DataCurator/commit/8b23d0312678443fc14fc9fa837163ec3373615f) - June 2025.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs&t=0s) for a description of these prioritisation features before they were removed.
+* the `goal` component type has been removed with commit [10f50645](https://github.com/AJamesPhillips/DataCurator/commit/10f506458ef8ac7a267fccc43e5adeb09ad55108) - June 2025.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs&t=0s) and [this video](https://www.youtube.com/watch?v=pP48SHsFI6k&t=866s) for a description of this goal component type and features associated with it.
+
+
 
 ### Data storage
 
