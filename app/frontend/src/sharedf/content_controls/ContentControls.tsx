@@ -33,7 +33,6 @@ const map_state = (state: RootState) =>
 {
     return {
         linked_datetime_sliders: state.controls.linked_datetime_sliders,
-        display_by_simulated_time: state.display_options.display_by_simulated_time,
         display_time_sliders: state.controls.display_time_sliders,
         actually_display_time_sliders: get_actually_display_time_sliders(state),
         editing: !state.display_options.consumption_formatting,
@@ -48,7 +47,6 @@ const map_dispatch = {
     change_display_at_sim_datetime: ACTIONS.display_at_sim_datetime.change_display_at_sim_datetime,
     toggle_linked_datetime_sliders: ACTIONS.controls.toggle_linked_datetime_sliders,
     set_display_time_sliders: ACTIONS.controls.set_display_time_sliders,
-    set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
     set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections,
 }
 
@@ -155,31 +153,6 @@ function _ContentControls (props: Props)
                 {/* <Box component="label">
                     {/ * <Box component="span" pr={1}>Time Resolution: </Box> * /}
                     <TimeResolutionOptions  />
-                </Box> */}
-
-                {/* <Box component="label">
-                    <ButtonGroup
-                        disableElevation
-                        variant="contained"
-                        value={props.display_by_simulated_time}
-                    >
-                        <Button
-                            onClick={() => props.set_display_by_simulated_time(true)}
-                            aria-label="Display by simulated time"
-                            className={invert_classes.inverse_disabled}
-                            disabled={props.display_by_simulated_time}
-                        >
-                            Time
-                        </Button>
-                        <Button
-                            onClick={() => props.set_display_by_simulated_time(false)}
-                            aria-label="Display by relationships"
-                            className={invert_classes.inverse_disabled}
-                            disabled={!props.display_by_simulated_time}
-                        >
-                            Relationships
-                        </Button>
-                    </ButtonGroup>
                 </Box> */}
             </Toolbar>
         </Box>

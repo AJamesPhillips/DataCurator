@@ -23,7 +23,6 @@ export interface DisplayOptionsState
     consumption_formatting: boolean
     focused_mode: boolean
     time_resolution: TimeResolution
-    display_by_simulated_time: boolean
     display_time_marks: boolean
     animate_connections: boolean
     circular_links: boolean

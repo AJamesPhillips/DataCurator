@@ -16,7 +16,6 @@ import { TimeResolutionOptions } from "./TimeResolutionOptions"
 const map_state = (state: RootState) => ({
     validity_filter: state.display_options.validity_filter,
     certainty_formatting: state.display_options.certainty_formatting,
-    display_by_simulated_time: state.display_options.display_by_simulated_time,
     focused_mode: state.display_options.focused_mode,
     circular_links: state.display_options.circular_links,
     animate_connections: state.display_options.animate_connections,
@@ -28,7 +27,6 @@ const map_state = (state: RootState) => ({
 const map_dispatch = {
     set_validity_filter: ACTIONS.display.set_validity_filter,
     set_certainty_formatting: ACTIONS.display.set_certainty_formatting,
-    set_display_by_simulated_time: ACTIONS.display.set_display_by_simulated_time,
     set_or_toggle_focused_mode: ACTIONS.display.set_or_toggle_focused_mode,
     set_or_toggle_circular_links: ACTIONS.display.set_or_toggle_circular_links,
     set_or_toggle_animate_connections: ACTIONS.display.set_or_toggle_animate_connections,

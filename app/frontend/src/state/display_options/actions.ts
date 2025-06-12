@@ -92,26 +92,6 @@ export const is_set_certainty_formatting = (action: AnyAction): action is Action
 }
 
 
-
-interface SetDisplayBySimulatedTimeArgs
-{
-    display_by_simulated_time: boolean
-}
-interface ActionSetDisplayBySimulatedTime extends Action, SetDisplayBySimulatedTimeArgs {}
-
-const set_display_by_simulated_time_type = "set_display_by_simulated_time"
-
-const set_display_by_simulated_time = (display_by_simulated_time: boolean): ActionSetDisplayBySimulatedTime =>
-{
-    return { type: set_display_by_simulated_time_type, display_by_simulated_time }
-}
-
-export const is_set_display_by_simulated_time = (action: AnyAction): action is ActionSetDisplayBySimulatedTime => {
-    return action.type === set_display_by_simulated_time_type
-}
-
-
-
 interface SetDisplayTimeMarksArgs
 {
     display_time_marks: boolean
@@ -215,7 +195,6 @@ export const display_actions = {
     set_time_resolution,
     set_validity_filter,
     set_certainty_formatting,
-    set_display_by_simulated_time,
     set_display_time_marks,
     set_or_toggle_animate_connections,
     set_or_toggle_circular_links,

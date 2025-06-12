@@ -4,7 +4,6 @@ import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
 import {
     is_set_certainty_formatting,
-    is_set_display_by_simulated_time,
     is_set_display_time_marks,
     is_set_or_toggle_animate_connections,
     is_set_or_toggle_circular_links,
@@ -53,12 +52,6 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
         state = update_substate(state, "display_options", "certainty_formatting", action.certainty_formatting)
         const derived_certainty_formatting = derive_certainty_formatting(action.certainty_formatting)
         state = update_substate(state, "display_options", "derived_certainty_formatting", derived_certainty_formatting)
-    }
-
-
-    if (is_set_display_by_simulated_time(action))
-    {
-        state = update_substate(state, "display_options", "display_by_simulated_time", action.display_by_simulated_time)
     }
 
 

@@ -3,7 +3,6 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ActionsListView } from "../actions_list_view/ActionsListView"
 import { KnowledgeGraphView } from "../knowledge_view/KnowledgeGraphView"
-import { KnowledgeTimeView } from "../knowledge_view/KnowledgeTimeView"
 import type { RootState } from "../state/State"
 
 
@@ -11,9 +10,8 @@ import type { RootState } from "../state/State"
 const map_state = (state: RootState) =>
 {
     const { view } = state.routing.args
-    const { display_by_simulated_time } = state.display_options
 
-    return { view, display_by_simulated_time }
+    return { view }
 }
 
 
@@ -29,8 +27,7 @@ function _MainAreaRouter (props: Props)
 
     if (props.view === "knowledge")
     {
-        if (props.display_by_simulated_time) el = <KnowledgeTimeView />
-        else el = <KnowledgeGraphView />
+        el = <KnowledgeGraphView />
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     else if (props.view === "actions_list") el = <ActionsListView />
