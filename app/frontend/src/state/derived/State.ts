@@ -59,7 +59,6 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
 
     wc_id_connections_map: {[wc_id: string]: Set<string>}
     active_judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
-    active_judgement_or_objective_ids_by_goal_or_action_id: { [target_wcomponent_id: string]: string[] }
 
 
     composed_datetime_line_config: ComposedDatetimeLineConfig
@@ -76,7 +75,7 @@ export interface ComposedKnowledgeView extends Omit<KnowledgeView, "wc_id_map" |
 }
 
 
-type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "goal_or_action" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
+type ExtendedWComponentType = WComponentType | "judgement_or_objective" | "has_objectives" | "any_link" | "any_node" | "any_state_VAPs" | "has_single_datetime"
 export type WComponentIdsByType = { [t in ExtendedWComponentType]: Set<string> }
 
 
@@ -94,7 +93,6 @@ export interface DerivedState
     nested_knowledge_view_ids: NestedKnowledgeViewIds
 
     judgement_or_objective_ids_by_target_id: { [target_wcomponent_id: string]: string[] }
-    judgement_or_objective_ids_by_goal_or_action_id: { [goal_wcomponent_id: string]: string[] }
 
     current_composed_knowledge_view: ComposedKnowledgeView | undefined
 }

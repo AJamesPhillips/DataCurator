@@ -11,13 +11,12 @@ import { RootState } from "../state/State"
 import { get_current_knowledge_view_from_state } from "../state/specialised_objects/accessors"
 import { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import { WComponentNodeAction } from "../wcomponent/interfaces/action"
-import { WComponentNodeGoal } from "../wcomponent/interfaces/goal"
 
 
 
 interface OwnProps
 {
-    wcomponent: WComponentNodeGoal | WComponentNodeAction
+    wcomponent: WComponentNodeAction
     upsert_wcomponent: (partial_wcomponent: Partial<WComponent>) => void
 }
 
@@ -26,7 +25,7 @@ const map_state = (state: RootState) =>
 {
     return {
         current_kv_id: get_current_knowledge_view_from_state(state)?.id,
-        goal_or_action_wcomponent_ids: state.derived.wcomponent_ids_by_type.goal_or_action,
+        action_wcomponent_ids: state.derived.wcomponent_ids_by_type.action,
         wcomponents_by_id: state.specialised_objects.wcomponents_by_id,
         knowledge_views_by_id: state.specialised_objects.knowledge_views_by_id,
         is_editing: !state.display_options.consumption_formatting,
@@ -41,14 +40,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 
 
 
-function _WComponentParentGoalOrActionForm (props: Props)
+function _WComponentParentActionForm (props: Props)
 {
     const { wcomponent, wcomponents_by_id, upsert_wcomponent } = props
 
 
-    const sorted_goal_or_action_wcomponents = useMemo(() =>
+    const sorted_action_wcomponents = useMemo(() =>
     {
-        const goal_or_action_wcomponents = Array.from(props.goal_or_action_wcomponent_ids)
+        const action_wcomponents = Array.from(props.action_wcomponent_ids)
             .map(id => wcomponents_by_id[id])
             .filter(is_defined)
 
@@ -59,12 +58,12 @@ function _WComponentParentGoalOrActionForm (props: Props)
             return wc.id === props.current_kv_id ? new Date().getTime() : wc.created_at.getTime()
         }
 
-        return sort_list(goal_or_action_wcomponents, sort_ids, SortDirection.descending)
-    }, [props.goal_or_action_wcomponent_ids, wcomponents_by_id, props.current_kv_id])
+        return sort_list(action_wcomponents, sort_ids, SortDirection.descending)
+    }, [props.action_wcomponent_ids, wcomponents_by_id, props.current_kv_id])
 
 
     const wcomponent_id_options = get_wcomponent_search_options({
-        wcomponents: sorted_goal_or_action_wcomponents,
+        wcomponents: sorted_action_wcomponents,
         wcomponents_by_id,
         knowledge_views_by_id: props.knowledge_views_by_id,
         wc_id_to_counterfactuals_map: {},
@@ -74,7 +73,7 @@ function _WComponentParentGoalOrActionForm (props: Props)
 
 
     return <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
-        <FormLabel component="legend">Parent Goal (or Action)</FormLabel>
+        <FormLabel component="legend">Parent Action</FormLabel>
         <MultiAutocompleteText
             placeholder="Add Label"
             selected_option_ids={wcomponent.parent_goal_or_action_ids || []}
@@ -82,9 +81,9 @@ function _WComponentParentGoalOrActionForm (props: Props)
             allow_none={true}
             on_change={labels_ids =>
             {
-                const new_parent_goal_or_action_ids = labels_ids.filter(id => !!id)
+                const new_parent_action_ids = labels_ids.filter(id => !!id)
                 upsert_wcomponent({
-                    parent_goal_or_action_ids: new_parent_goal_or_action_ids
+                    parent_goal_or_action_ids: new_parent_action_ids
                 })
             }}
             // on_mouse_over_option={id => props.set_highlighted_wcomponent({ id, highlighted: true })}
@@ -94,4 +93,4 @@ function _WComponentParentGoalOrActionForm (props: Props)
     </FormControl>
 }
 
-export const WComponentParentGoalOrActionForm = connector(_WComponentParentGoalOrActionForm) as FunctionalComponent<OwnProps>
+export const WComponentParentActionForm = connector(_WComponentParentActionForm) as FunctionalComponent<OwnProps>

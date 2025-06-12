@@ -128,10 +128,6 @@ export function LandingPage()
                         DataCurator is for anyone trying to understand a complex system and intervene in it, who has a lot of information to understand and interpret.
                     </p>
 
-                    <p>
-                        Use it for simple note-taking and organizing, or model and plan an entire intervention. Choose key indicators to simplify the map or use the goal-priority view to keep your goals on track.
-                    </p>
-
                     <h3>
                         How do I get started?
                     </h3>

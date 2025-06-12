@@ -13,7 +13,6 @@ import {
     wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
     wcomponent_is_action,
-    wcomponent_is_goal,
     wcomponent_is_plain_connection,
     wcomponent_is_process,
 } from "../interfaces/SpecialisedObjects"
@@ -28,7 +27,6 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
     wcomponent = upgrade_2021_05_19_process_actions(wcomponent)
     wcomponent = upgrade_2021_05_24_action(wcomponent)
-    wcomponent = upgrade_2021_06_12_goal(wcomponent)
 
     wcomponent = {
         ...parse_base_dates(wcomponent),
@@ -111,19 +109,6 @@ function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         const depends_on_action_ids = wcomponent.depends_on_action_ids || []
         wcomponent = { ...wcomponent, depends_on_action_ids }
-    }
-
-    return wcomponent
-}
-
-
-
-function upgrade_2021_06_12_goal (wcomponent: WComponent): WComponent
-{
-    if (wcomponent_is_goal(wcomponent))
-    {
-        const objective_ids = wcomponent.objective_ids || []
-        wcomponent = { ...wcomponent, objective_ids }
     }
 
     return wcomponent

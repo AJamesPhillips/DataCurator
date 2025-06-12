@@ -132,11 +132,11 @@ function _JudgementFormFields (props: Props)
                     // 2026-06-07 change from a `conditional_on_change` to
                     // `on_blur` as when editing the value it's very slow because
                     // each keypress triggers a re-render of the whole form &
-                    // components on the knowledge view.  `on_blue` is worse
+                    // components on the knowledge view.  `on_blur` is worse
                     // than `conditional_on_change` in that `conditional_on_change`
                     // allows you to see the value change in real-time including
-                    // seeing the judgements/objective badges on states and goals
-                    // change colour as you type.
+                    // seeing the judgements/objective badges on components with
+                    // states value (like statev2 and actions) change colour as you type.
                     on_blur_type={EditableTextOnBlurType.conditional}
                     on_blur={new_value =>
                     {

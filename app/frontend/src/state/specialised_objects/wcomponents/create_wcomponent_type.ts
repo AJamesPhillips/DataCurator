@@ -23,7 +23,7 @@ import {
     get_current_composed_knowledge_view_from_state,
     get_wcomponent_from_state,
 } from "../accessors"
-import { get_default_parent_goal_or_action_ids } from "../get_default_parent_goal_or_action_ids"
+import { get_default_parent_action_ids } from "../get_default_parent_action_ids"
 import type { AddToKnowledgeViewArgs } from "./actions"
 
 
@@ -108,7 +108,7 @@ function set_parent_goal_or_action_ids (wcomponent: WComponent, state: RootState
     const { wcomponents_by_id, knowledge_views_by_id } = state.specialised_objects
 
     const knowledge_view_id = composed_knowledge_view?.id
-    const parent_goal_or_action_ids = get_default_parent_goal_or_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
+    const parent_goal_or_action_ids = get_default_parent_action_ids(knowledge_view_id, knowledge_views_by_id, wcomponents_by_id)
 
     return {
         ...wcomponent,

@@ -1,8 +1,8 @@
 import { is_defined } from "../../shared/utils/is_defined"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
-import type { WComponentHasObjectives, WComponentJudgement } from "../../wcomponent/interfaces/judgement"
-import { wcomponent_is_goal, wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
+import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
+import { wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { RootState } from "../State"
@@ -26,13 +26,6 @@ export function derived_state_reducer (prev_state: RootState, state: RootState)
 
         const judgement_or_objective_ids_by_target_id = update_judgement_or_objective_ids_by_target_id(judgement_or_objectives)
         state = update_substate(state, "derived", "judgement_or_objective_ids_by_target_id", judgement_or_objective_ids_by_target_id)
-
-        const goals = get_wcomponents_from_state(state, state.derived.wcomponent_ids_by_type.goal)
-            .filter(is_defined)
-            .filter(wcomponent_is_goal)
-
-        const judgement_or_objective_ids_by_goal_or_action_id = update_judgement_or_objective_ids_by_goal_or_action_id(goals)
-        state = update_substate(state, "derived", "judgement_or_objective_ids_by_goal_or_action_id", judgement_or_objective_ids_by_goal_or_action_id)
     }
 
 
@@ -79,23 +72,6 @@ function update_judgement_or_objective_ids_by_target_id (judgement_or_objectives
 }
 
 
-
-function update_judgement_or_objective_ids_by_goal_or_action_id (goals_and_actions: WComponentHasObjectives[])
-{
-    const judgement_or_objective_ids_by_goal_or_action_id: { [goal_or_action_id: string]: string[] } = {}
-
-    goals_and_actions
-    // .sort () // some kind of sort so that front end display is stable and predictable
-    .forEach(({ id: goal_or_action_id, objective_ids }) =>
-    {
-        judgement_or_objective_ids_by_goal_or_action_id[goal_or_action_id] = objective_ids || []
-    })
-
-    return judgement_or_objective_ids_by_goal_or_action_id
-}
-
-
-
 function conditionally_update_active_judgement_or_objective_ids (prev_state: RootState, state: RootState): RootState
 {
     let { current_composed_knowledge_view } = state.derived
@@ -111,12 +87,10 @@ function conditionally_update_active_judgement_or_objective_ids (prev_state: Roo
 
     // todo: we should update when the order of elements in current_composed_knowledge_view
     // changes so that ... <todo insert reason.  Perhaps it's so that the list of judgements / objectives
-    // are in the correct order when they are rendered on/for their targets and for their goals or actions?>
+    // are in the correct order when they are rendered on/for their targets and for their actions?>
     if (current_composed_knowledge_view && (kv_id_changed || judgement_or_objective_ids_by_target_id_changed || created_at_ms_changed || sim_ms_changed))
     {
         const active_judgement_or_objective_ids_by_target_id: { [id: string]: string[] } = {}
-        const active_judgement_or_objective_ids_by_goal_or_action_id: { [id: string]: string[] } = {}
-
 
         const { wc_ids_by_type, composed_visible_wc_id_map } = current_composed_knowledge_view
         const judgement_or_objectives = get_judgement_or_objectives(state, wc_ids_by_type.judgement_or_objective)
@@ -153,15 +127,12 @@ function conditionally_update_active_judgement_or_objective_ids (prev_state: Roo
 
         const {
             judgement_or_objective_ids_by_target_id,
-            judgement_or_objective_ids_by_goal_or_action_id,
         } = state.derived
 
         Object.keys(composed_visible_wc_id_map)
         .forEach(id =>
         {
             const target_ids = judgement_or_objective_ids_by_target_id[id]
-            const ids_from_goal_or_action = judgement_or_objective_ids_by_goal_or_action_id[id]
-
             if (target_ids)
             {
                 const active_judgement_or_objective_ids = target_ids.filter(judgement_or_objective_id_is_active)
@@ -172,24 +143,12 @@ function conditionally_update_active_judgement_or_objective_ids (prev_state: Roo
                     active_judgement_or_objective_ids_by_target_id[id] = sorted
                 }
             }
-
-            if (ids_from_goal_or_action)
-            {
-                const active_judgement_or_objective_ids = ids_from_goal_or_action.filter(judgement_or_objective_id_is_active)
-                if (active_judgement_or_objective_ids.length)
-                {
-                    const sorted = sort_list(active_judgement_or_objective_ids, get_wcomponent_ids_sort_key, SortDirection.descending)
-
-                    active_judgement_or_objective_ids_by_goal_or_action_id[id] = sorted
-                }
-            }
         })
 
 
         current_composed_knowledge_view = {
             ...current_composed_knowledge_view,
             active_judgement_or_objective_ids_by_target_id,
-            active_judgement_or_objective_ids_by_goal_or_action_id,
         }
         state = update_substate(state, "derived", "current_composed_knowledge_view", current_composed_knowledge_view)
     }

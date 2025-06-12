@@ -33,18 +33,6 @@ export interface WComponentNodeStateV2 extends WComponentNodeBase, Partial<WComp
     type: "statev2"
     subtype: WComponentStateV2SubType | undefined
 
-    // boolean subtype specific explainable fields
-    // boolean_true_str?: string
-    // boolean_false_str?: string
-
-    // 2023-09-23  Not sure yet if calculations belong only on StateV2 or if this should be
-    // an interface and be made available for several different types of component
-    // It certainly belongs on this component though.
-    // 2023-10-03  As only this component has `subtype` then I think only this
-    // component can have calculations
-    // 2024-05-03  Exploring adding calculations to action component to allow for
-    // simulations to be "self documenting".
-    // `calculations?: PlainCalculationObject[]` is add by `Partial<WComponentCalculations>`
     units?: string
 }
 

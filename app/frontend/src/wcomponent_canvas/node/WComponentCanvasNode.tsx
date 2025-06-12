@@ -30,7 +30,6 @@ import {
     connection_terminal_sides,
     wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_has_objectives,
     wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
@@ -84,7 +83,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     let wc_ids_excluded_by_filters = new Set<string>()
     if (current_composed_knowledge_view)
     {
-        have_judgements = !!(current_composed_knowledge_view.active_judgement_or_objective_ids_by_target_id[wcomponent_id] || current_composed_knowledge_view.active_judgement_or_objective_ids_by_goal_or_action_id[wcomponent_id])
+        have_judgements = !!(current_composed_knowledge_view.active_judgement_or_objective_ids_by_target_id[wcomponent_id])
         kv_entry = current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
         wc_ids_excluded_by_filters = current_composed_knowledge_view.filters.wc_ids_excluded_by_filters
     }
@@ -315,7 +314,6 @@ function _WComponentCanvasNode (props: Props)
         || (!derived_composed_wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(derived_composed_wcomponent)
             || wcomponent_is_judgement_or_objective(derived_composed_wcomponent)
-            || (wcomponent_has_objectives(derived_composed_wcomponent) && (derived_composed_wcomponent.objective_ids || []).length > 0)
             // || is_highlighted
             // || is_current_item
             || props.have_judgements
@@ -562,6 +560,7 @@ function get_wcomponent_color (args: GetWcomponentColorArgs)
         // }
         // else
         // {
+        //  TODO: maybe reactive this code when we add an expectation type of component
         //     // background = wcomponent_is_action(args.wcomponent) ? "rgb(255, 238, 198)"
         //     //     : ((wcomponent_is_goal(args.wcomponent)
         //     //     // || wcomponent_is_judgement_or_objective(wcomponent)

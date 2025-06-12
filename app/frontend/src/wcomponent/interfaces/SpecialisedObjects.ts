@@ -4,8 +4,7 @@ import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
-import type { WComponentNodeGoal } from "./goal"
-import type { HasObjectives, WComponentJudgement } from "./judgement"
+import type { WComponentJudgement } from "./judgement"
 import type {
     HasValuePossibilities,
     HasVAPSetsAndMaybeValuePossibilities,
@@ -55,7 +54,6 @@ export type WComponentNode = WComponentNodeEvent
     | WComponentStateValue
     | WComponentNodeProcess
     | WComponentNodeAction
-    | WComponentNodeGoal
 
 
 
@@ -167,17 +165,6 @@ export function wcomponent_is_action (wcomponent: WComponent | undefined, log_er
     return wcomponent_is_a("action", wcomponent, log_error_id)
 }
 
-export function wcomponent_is_goal (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentNodeGoal
-{
-    return wcomponent_is_a("goal", wcomponent, log_error_id)
-}
-
-// Need to keep in sync with wc_ids_by_type.has_objectives
-export function wcomponent_has_objectives (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponent & HasObjectives
-{
-    return wcomponent_is_action(wcomponent, undefined) || wcomponent_is_goal(wcomponent, log_error_id)
-}
-
 
 export function wcomponent_is_causal_link (wcomponent: WComponent | undefined): wcomponent is WComponentCausalConnection
 {
@@ -207,7 +194,6 @@ export function wcomponent_is_node (wcomponent: WComponent | undefined): wcompon
         wcomponent_is_statev2(wcomponent) ||
         wcomponent_is_process(wcomponent) ||
         wcomponent_is_action(wcomponent) ||
-        wcomponent_is_goal(wcomponent) ||
         wcomponent_is_sub_state(wcomponent) ||
         wcomponent_is_state_value(wcomponent) ||
         wcomponent_is_counterfactual_v2(wcomponent)

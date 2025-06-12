@@ -11,7 +11,6 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
     knowledge_view = clean_base_object_of_sync_meta_fields(knowledge_view) // defensive
 
     let wc_id_map = knowledge_view.wc_id_map
-    // wc_id_map = optionally_remove_invalid_wc_ids(knowledge_view, false, wcomponent_ids)
     if (remove_passthrough_entries)
     {
         wc_id_map = remove_wc_id_map_passthrough_entries(wc_id_map)
@@ -33,43 +32,6 @@ export function parse_knowledge_view (knowledge_view: KnowledgeView, wcomponent_
 
 
 
-function optionally_remove_invalid_wc_ids (kv: KnowledgeView, remove_missing: boolean, wcomponent_ids?: Set<string>): KnowledgeViewWComponentIdEntryMap
-{
-    if (!wcomponent_ids) return kv.wc_id_map
-
-    const new_wc_id_map: KnowledgeViewWComponentIdEntryMap = {}
-    const missing_ids: string[] = []
-
-    Object.entries(kv.wc_id_map).forEach(([id, value]) =>
-    {
-        if (remove_missing)
-        {
-            if (wcomponent_ids.has(id)) new_wc_id_map[id] = value
-            else missing_ids.push(id)
-        }
-        else
-        {
-            new_wc_id_map[id] = value
-            if (!wcomponent_ids.has(id)) missing_ids.push(id)
-        }
-    })
-
-
-    if (missing_ids.length > 0)
-    {
-        // We don't want to remove them yet as some views are a hybrid of components from multiple bases
-        // and we should implement the functionality to load other bases, instead of (before we) drop
-        // "invalid" wcomponent ids from knowledge views
-        console.warn(`${remove_missing ? "Dropped " : ""}${missing_ids.length} invalid ids in KnowledgeView: ${kv.id}`)
-        console.warn(missing_ids)
-    }
-
-
-    return new_wc_id_map
-}
-
-
-
 function remove_wc_id_map_passthrough_entries (wc_id_map: KnowledgeViewWComponentIdEntryMap): KnowledgeViewWComponentIdEntryMap
 {
     const new_wc_id_map = { ...wc_id_map }
@@ -81,8 +43,6 @@ function remove_wc_id_map_passthrough_entries (wc_id_map: KnowledgeViewWComponen
         delete new_wc_id_map[id]
         deleted_ids.push(id)
     })
-
-    // if (deleted_ids.length) console .log(`Deleted ${deleted_ids.length} passthrough ids`)
 
     return new_wc_id_map
 }

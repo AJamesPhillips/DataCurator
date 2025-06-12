@@ -173,7 +173,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     const current_composed_knowledge_view = args.current_composed_knowledge_view || {
         composed_visible_wc_id_map: {},
         active_judgement_or_objective_ids_by_target_id: {},
-        active_judgement_or_objective_ids_by_goal_or_action_id: {},
         filters: {
             wc_ids_excluded_by_any_filter: new Set(),
             wc_ids_excluded_by_filters: new Set(),

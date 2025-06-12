@@ -35,7 +35,6 @@ const map_state = (state: RootState) =>
 
     return {
         active_judgement_or_objective_ids_by_target_id: current_composed_kv?.active_judgement_or_objective_ids_by_target_id,
-        active_judgement_or_objective_ids_by_goal_or_action_id: current_composed_kv?.active_judgement_or_objective_ids_by_goal_or_action_id,
     }
 }
 
@@ -48,7 +47,6 @@ function _WComponentJudgements (props: Props)
 {
     const {
         active_judgement_or_objective_ids_by_target_id,
-        active_judgement_or_objective_ids_by_goal_or_action_id,
         target_VAPs_represent, value,
     } = props
 
@@ -57,11 +55,9 @@ function _WComponentJudgements (props: Props)
     {
         return [
             ...((active_judgement_or_objective_ids_by_target_id || {})[props.wcomponent.id] || []),
-            ...((active_judgement_or_objective_ids_by_goal_or_action_id || {})[props.wcomponent.id] || []),
         ]
     }, [
         active_judgement_or_objective_ids_by_target_id,
-        active_judgement_or_objective_ids_by_goal_or_action_id,
     ])
 
 

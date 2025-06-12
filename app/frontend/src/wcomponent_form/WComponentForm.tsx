@@ -27,14 +27,12 @@ import {
 import {
     WComponent,
     wcomponent_can_have_validity_predictions,
-    wcomponent_has_objectives,
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_causal_link,
     wcomponent_is_counterfactual_v2,
     wcomponent_is_deleted,
     wcomponent_is_event,
-    wcomponent_is_goal,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
@@ -47,7 +45,6 @@ import {
 } from "../wcomponent_derived/get_wcomponent_state_UI_value"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
-import { ChosenObjectivesFormFields } from "./ChosenObjectivesFormFields"
 import { JudgementFormFields } from "./JudgementFormFields"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
@@ -57,7 +54,7 @@ import { WComponentCounterfactualForm } from "./WComponentCounterfactualForm"
 import { WComponentEventAtFormField } from "./WComponentEventAtFormField"
 import { WComponentFromTo } from "./WComponentFromTo"
 import { WComponentImageForm } from "./WComponentImageForm"
-import { WComponentParentGoalOrActionForm } from "./WComponentParentGoalOrActionForm"
+import { WComponentParentActionForm } from "./WComponentParentActionForm"
 import { WComponentStateForm } from "./WComponentStateForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
@@ -394,7 +391,7 @@ function _WComponentForm (props: Props)
         />}
 
 
-        {(wcomponent_is_goal(wcomponent) || wcomponent_is_action(wcomponent)) && <WComponentParentGoalOrActionForm
+        {wcomponent_is_action(wcomponent) && <WComponentParentActionForm
             {...{ wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent }}
         />}
 
@@ -418,13 +415,6 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-
-
-        {wcomponent_has_objectives(wcomponent) && <ChosenObjectivesFormFields
-            editing_allowed={editing_allowed}
-            wcomponent={wcomponent}
-            upsert_wcomponent={wrapped_upsert_wcomponent}
-        /> }
 
 
         {wcomponent_can_have_validity_predictions(wcomponent) && <WComponentValidityPredictionsForm

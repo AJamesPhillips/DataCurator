@@ -5,7 +5,7 @@ import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
 
 
 
-export type WComponentNodeType = "event" | "statev2" | "state_value" | "sub_state" | "multidimensional_state" | "process" | "action" | "actor" | "counterfactualv2" | "goal" | "judgement" | "objective"
+export type WComponentNodeType = "event" | "statev2" | "state_value" | "sub_state" | "multidimensional_state" | "process" | "action" | "actor" | "counterfactualv2" | "judgement" | "objective"
 export type WComponentConnectionType = "causal_link" | "relation_link"
 export type WComponentType = WComponentNodeType | WComponentConnectionType
 const _wcomponent_types: {[P in WComponentType]: true} = {
@@ -22,7 +22,6 @@ const _wcomponent_types: {[P in WComponentType]: true} = {
     judgement: true,
     objective: true,
     counterfactualv2: true,
-    goal: true,
 }
 export const wcomponent_types: WComponentType[] = (Object.keys(_wcomponent_types) as WComponentType[])
     .sort()

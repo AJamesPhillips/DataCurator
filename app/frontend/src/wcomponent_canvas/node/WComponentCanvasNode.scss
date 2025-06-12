@@ -123,8 +123,8 @@
     background-color: pink;
 }
 
-.node_is_type_goal > .node_main_content
-, .node_is_type_judgement > .node_main_content
+// TODO: maybe change this code to be used for an expectation type of component
+.node_is_type_judgement > .node_main_content
 , .node_is_type_objective > .node_main_content
 {
     box-shadow: inset #67c767 0px 0px 4px 2px;

@@ -1,4 +1,3 @@
-import type { HasObjectives } from "./judgement"
 import type { WComponentCalculations, WComponentNodeBase } from "./wcomponent_base"
 
 
@@ -21,22 +20,16 @@ export const action_statuses: ActionStatusType[] = [
 export const action_statuses_set = new Set(action_statuses)
 
 
-export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives, Partial<WComponentCalculations>
+export interface WComponentNodeAction extends WComponentNodeBase, Partial<WComponentCalculations>
 {
     type: "action"
     // Making this optional because some actions that occur and that we perform, are done without
     // a conscious goal.
     //
-    // +++ 2021-05-24
-    // If the action has a status of potential and the goal can have any status and
-    // be sensible (correct?)
-    // If the action has a status !== potential and the goal has a status of potential
-    // then this likely inconsistent but not that important?
-    // --- 2021-05-24
-    //
     // +++ 2022-01-09
-    // Allow an action to be contributing to (encompassed by) one or more actions or goals
-    // --- 2022-01-09
+    // Allow an action to be contributing to (encompassed by) one or more actions
+    // +++ 2025-06-12
+    // `goal` type components have been deprecated, so this is now only used for actions
     parent_goal_or_action_ids?: string[]
 
     todo_index?: number
@@ -46,11 +39,4 @@ export interface WComponentNodeAction extends WComponentNodeBase, HasObjectives,
     reason_for_status: string
 
     depends_on_action_ids: string[]
-
-    // 2024-05-03  Exploring adding calculations to action component to allow for
-    // simulations to be "self documenting".
-    // I don't think it needs to have subtype or units as one action can have
-    // multiple calculations and assign outputs back to multiple other states
-    // with different subtypes and units.
-    // `calculations?: PlainCalculationObject[]` is add by `Partial<WComponentCalculations>`
 }
