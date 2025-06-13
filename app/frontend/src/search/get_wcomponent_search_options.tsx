@@ -1,13 +1,10 @@
-import { h } from "preact"
 
 import type { AutocompleteOption } from "../form/Autocomplete/interfaces"
 import type { KnowledgeViewsById } from "../shared/interfaces/knowledge_view"
-import { JudgementBadgeConnected } from "../sharedf/judgement_badge/JudgementBadgeConnected"
 import { RichTextType, get_title } from "../sharedf/rich_text/get_rich_text"
 import {
     WComponent,
     WComponentsById,
-    wcomponent_is_judgement_or_objective,
     wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
 } from "../wcomponent/interfaces/SpecialisedObjects"
@@ -63,19 +60,10 @@ export function get_wcomponent_search_options (args: GetWcomponentSearchOptionsA
                 subtitle += ` -- @@${wcomponent.from_id} -> @@${wcomponent.to_id}`
             }
 
-            let jsx: h.JSX.Element | undefined = undefined
-            if (wcomponent_is_judgement_or_objective(wcomponent))
-            {
-                jsx = <div>
-                    <JudgementBadgeConnected judgement_or_objective_id={wcomponent.id} hide_judgement_trend={false} />
-                    {title}
-                </div>
-            }
 
             return {
                 id: wcomponent.id,
                 title,
-                jsx,
                 raw_title: wcomponent.title,
                 subtitle,
                 color: wcomponent.label_color,

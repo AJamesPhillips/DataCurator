@@ -1,19 +1,16 @@
 import { ConnectionTerminus } from "../../canvas/connections/terminal"
-import { KnowledgeViewWComponentEntry, KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
+import { KnowledgeViewWComponentIdEntryMap } from "../../shared/interfaces/knowledge_view"
 import { ComposedKnowledgeView } from "../../state/derived/State"
-import { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import {
-    ConnectionTerminalAttributeType,
     ConnectionTerminalType,
     WComponent,
-    wcomponent_is_plain_connection,
-    WComponentConnection,
+    WComponentConnection
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 
 
 export interface GetConnectionTerminiArgs
 {
-    wcomponent: WComponentConnection | WComponentJudgement
+    wcomponent: WComponentConnection
     from_wc?: WComponent
     to_wc?: WComponent
     current_composed_knowledge_view: ComposedKnowledgeView
@@ -53,30 +50,15 @@ export function get_connection_termini (args: GetConnectionTerminiArgs)
 
 interface GetConnectionTerminalNodePositionsArgs
 {
-    wcomponent: WComponentConnection | WComponentJudgement
+    wcomponent: WComponentConnection
     wc_id_map: KnowledgeViewWComponentIdEntryMap
 }
 function get_connection_terminal_node_positions ({ wcomponent, wc_id_map }: GetConnectionTerminalNodePositionsArgs)
 {
-    let kv_entry_from_wc: KnowledgeViewWComponentEntry | undefined = undefined
-    let kv_entry_to_wc: KnowledgeViewWComponentEntry | undefined = undefined
-    let from_attribute: ConnectionTerminalAttributeType | undefined = undefined
-    let to_attribute: ConnectionTerminalAttributeType | undefined = undefined
-
-    if (wcomponent_is_plain_connection(wcomponent))
-    {
-        kv_entry_from_wc = wc_id_map[wcomponent.from_id]
-        kv_entry_to_wc = wc_id_map[wcomponent.to_id]
-        from_attribute = wcomponent.from_type
-        to_attribute = wcomponent.to_type
-    }
-    else
-    {
-        kv_entry_from_wc = wc_id_map[wcomponent.id]
-        kv_entry_to_wc = wc_id_map[wcomponent.judgement_target_wcomponent_id]
-        from_attribute = "meta"
-        to_attribute = "meta"
-    }
+    const kv_entry_from_wc = wc_id_map[wcomponent.from_id]
+    const kv_entry_to_wc = wc_id_map[wcomponent.to_id]
+    const from_attribute = wcomponent.from_type
+    const to_attribute = wcomponent.to_type
 
     return { kv_entry_from_wc, kv_entry_to_wc, from_attribute, to_attribute }
 }

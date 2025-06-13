@@ -31,7 +31,6 @@ type Props = ConnectedProps<typeof connector>
 function _CreateNewWComponent (props: Props)
 {
     const {
-        // a_selected_wcomponent_id: judgement_target_wcomponent_id,
         current_knowledge_view,
         editing,
         base_id,

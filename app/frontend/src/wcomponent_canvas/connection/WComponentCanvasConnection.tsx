@@ -15,7 +15,6 @@ import {
     WComponent,
     wcomponent_can_render_connection,
     wcomponent_is_causal_link,
-    wcomponent_is_judgement_or_objective,
     wcomponent_is_plain_connection,
     wcomponent_is_statev2,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
@@ -27,8 +26,7 @@ import { convert_VAP_set_to_VAP_visuals } from "../../wcomponent_derived/value_a
 import { get_current_VAP_set } from "../../wcomponent_derived/value_and_prediction/get_current_v2_VAP_set"
 import {
     calc_connection_wcomponent_should_display,
-    calc_display_opacity,
-    calc_judgement_connection_wcomponent_should_display,
+    calc_display_opacity
 } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
 import { get_connection_termini } from "./connection_termini"
@@ -80,19 +78,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
 
             // TODO move all of this into a derived reducer
             connection_effect = calculate_effect(wcomponent, from_wc, state)
-        }
-        else if (wcomponent_is_judgement_or_objective(wcomponent))
-        {
-            const target_id = wcomponent.judgement_target_wcomponent_id
-            const target_wc = get_wcomponent_from_state(state, target_id)
-            const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id]
-
-            should_display = calc_judgement_connection_wcomponent_should_display({
-                wcomponent, kv_entry,
-                target_wc, target_wc__kv_entry,
-                created_at_ms, sim_ms,
-                selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
-            })
         }
     }
 

@@ -17,7 +17,6 @@ interface UpsertWComponentArgs
     wcomponent: WComponent
     is_source_of_truth?: boolean
     add_to_knowledge_view?: AddToKnowledgeViewArgs
-    add_to_top?: boolean
 }
 interface ActionUpsertWComponent extends Action, UpsertWComponentArgs {}
 

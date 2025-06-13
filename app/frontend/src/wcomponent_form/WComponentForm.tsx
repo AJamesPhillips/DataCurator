@@ -32,7 +32,6 @@ import {
     wcomponent_is_counterfactual_v2,
     wcomponent_is_deleted,
     wcomponent_is_event,
-    wcomponent_is_judgement_or_objective,
     wcomponent_is_not_deleted,
     wcomponent_is_plain_connection,
     wcomponent_is_state_value,
@@ -43,7 +42,6 @@ import {
 } from "../wcomponent_derived/get_wcomponent_state_UI_value"
 import type { DerivedValueForUI } from "../wcomponent_derived/interfaces/value"
 import { DisplayValue } from "../wcomponent_derived/shared_components/DisplayValue"
-import { JudgementFormFields } from "./JudgementFormFields"
 import { wcomponent_statev2_subtype_options, wcomponent_type_options } from "./type_options"
 import { WComponentKnowledgeViewForm } from "./wcomponent_knowledge_view_form/WComponentKnowledgeViewForm"
 import { WComponentCausalLinkForm } from "./WComponentCausalLinkForm"
@@ -374,11 +372,6 @@ function _WComponentForm (props: Props)
             wcomponent={wcomponent}
             editing={editing_allowed}
             upsert_wcomponent={wrapped_upsert_wcomponent}
-        />}
-
-
-        {wcomponent_is_judgement_or_objective(wcomponent) && <JudgementFormFields
-            {...{ wcomponent, upsert_wcomponent: wrapped_upsert_wcomponent }}
         />}
 
 

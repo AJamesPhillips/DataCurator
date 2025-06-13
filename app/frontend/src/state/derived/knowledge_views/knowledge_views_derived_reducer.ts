@@ -28,7 +28,6 @@ import {
     WComponentNode,
     WComponentsById
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
-import type { WComponentType } from "../../../wcomponent/interfaces/wcomponent_base"
 import type { OverlappingWcIdMap } from "../../../wcomponent_derived/interfaces/canvas"
 import type { WcIdToCounterfactualsV2Map } from "../../../wcomponent_derived/interfaces/counterfactual"
 import { FilterContextFilters } from "../../filter_context/state"
@@ -172,7 +171,6 @@ export function calculate_composed_knowledge_view (args: CalculateComposedKnowle
     const { knowledge_view, knowledge_views_by_id, wcomponents_by_id } = args
     const current_composed_knowledge_view = args.current_composed_knowledge_view || {
         composed_visible_wc_id_map: {},
-        active_judgement_or_objective_ids_by_target_id: {},
         filters: {
             wc_ids_excluded_by_any_filter: new Set(),
             wc_ids_excluded_by_filters: new Set(),
@@ -250,17 +248,6 @@ export function get_foundational_knowledge_views (knowledge_view: KnowledgeView,
 
     return foundation_knowledge_views
 }
-
-
-
-const invalid_node_types = new Set<WComponentType>([
-    "causal_link",
-    "relation_link",
-    // "judgement",
-    // "objective",
-])
-const is_wcomponent_node = (wcomponent: WComponent) => !invalid_node_types.has(wcomponent.type)
-
 
 
 interface CalculateWcIdCounterfactualsV2MapArgs

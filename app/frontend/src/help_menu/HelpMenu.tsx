@@ -133,29 +133,9 @@ const tips_on_linking: (string | h.JSX.Element)[] = [
 
 const general_tips: (string | h.JSX.Element)[] = [
     <div>
-        <Typography component="h3" variant="h6">"Should" word usage</Typography>
-
-        If you find yourself writing states with "should", e.g. "People <b>should</b> listen more and be less reductionist" then you might consider separating this out into its 4 separate parts and phrasing as the positive or desired state.  Specifically:
-        <ol>
-            <li>
-                the attribute, e.g.: "People listen more and be less reductionist".  Note it is usually easier to express this as the desired state of the attribute instead of the pure attribute itself which is usually longer and less easy to work with: "People's ability to listen and what degree of complexity they can hold in their minds about different subjects".
-            </li>
-            <li>
-                the current value, e.g.: "False"
-            </li>
-            <li>
-                the other possibilities.  If the value is a boolean i.e. True/False then this can be skipped otherwise if it is a number or other type of value then add the other different possible values.
-            </li>
-            <li>
-                the judgement or objective about the desired value, e.g.: create a judgement or objective node, target your state node, and choose the desired value via the comparator
-            </li>
-        </ol>
-    </div>
-    ,
-    <div>
         <Typography component="h3" variant="h6">"Action" node type versus "State"</Typography>
 
-        The action and state node types are very similar.  The former can be used to draw attention to the areas where you or a team member can have an effect on the project.  You can use actions to represent the activity of third party actors but this usually draws unwarranted attention to these components.
+        The action components specify each action someone can perform when playing in a simulation built on this model.  e.g. building a new road, or changing a tax rate.
     </div>
 ]
 
@@ -210,30 +190,5 @@ const detailed_tips: (string | h.JSX.Element)[] = [
         </ol>
 
         If the concept later needs to be analysed / comprehended / explored in greater detail it can be decomposed.  Either it could be change to a subtype of "other" with title "The medical response speed and effectiveness", with values of "fast and effective", "fast but ineffective", "slow but effective", "slow and ineffective".  Or replaced by two new seperate states, one for "Medical response speed" and one for "Medical response effectiveness".  In the latter case deleting the first node from the knowledge views would be best.  In the former case, <a href="https: //github.com/centerofci/data-curator2/issues/36">versioning the whole component</a> would make this easier from a user's perspective.
-    </div>
-    ,
-    <div>
-        <Typography component="h3" variant="h6">Temporal uncertainty</Typography>
-
-        <p>
-            Part of making predictions is knowing when some event may occur.  For this we have a very simple "Temporal Uncertainty" form that has three fields: Min, Expected and Max datetime.
-        </p>
-
-        <p>
-            It's important to note that this represents a single event and not a distribution of similar events.  It is also not directly the uncertain temporal range a state might exist over.  i.e. the min is the earliest when the event can occur.  This is easier to understand if you talk about the max value.  The max is the latest the event can occur.  This means the state (associate with state transition events) will occur from the max of an event marking its existence but might occur earlier: up to an including the min datetime of the event.
-        </p>
-
-        <p>
-            A concrete example: you will switch on the light in 1 minute (min), likely in 5 minutes (expected) or at most in 10 minutes (max).  But this does not mean the room will be lit from 1 minutes time to 10 minutes time.
-        </p>
-
-        <p>
-            The current form is also woefully simplistic for a lot of the uncertain temporal distributions you have inside your head, use almost all the time, use seamlessly, unconsciously, and yet are vital to coordinated effective collaboration, for (complex) interventions.
-        </p>
-
-        <p>
-            For example: when are you going to get funding for project X, when will have a hire for position Y, when will your change job, when will you next go shopping (if it's not raining AND someone else not gone yet AND time after 7 am AND time less 10 am then ...).
-        </p>
-
     </div>
 ]

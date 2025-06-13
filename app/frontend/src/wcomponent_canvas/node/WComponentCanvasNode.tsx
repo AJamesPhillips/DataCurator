@@ -31,7 +31,6 @@ import {
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
-    wcomponent_is_judgement_or_objective,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
 import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
@@ -42,7 +41,6 @@ import { Handles } from "./Handles"
 import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
 import "./WComponentCanvasNode.scss"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
-import { WComponentJudgements } from "./WComponentJudgements"
 
 
 
@@ -72,12 +70,10 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         && derived_composed_wcomponent.base_id !== current_composed_knowledge_view.base_id
     )
 
-    let have_judgements = false
     let kv_entry = undefined
     let wc_ids_excluded_by_filters = new Set<string>()
     if (current_composed_knowledge_view)
     {
-        have_judgements = !!(current_composed_knowledge_view.active_judgement_or_objective_ids_by_target_id[wcomponent_id])
         kv_entry = current_composed_knowledge_view.composed_wc_id_map[wcomponent_id]
         wc_ids_excluded_by_filters = current_composed_knowledge_view.filters.wc_ids_excluded_by_filters
     }
@@ -124,7 +120,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         is_editing: !state.display_options.consumption_formatting,
         should_display,
         focused_mode: state.display_options.focused_mode,
-        have_judgements,
         node_is_moving: state.meta_wcomponents.wcomponent_ids_to_move_set.has(wcomponent_id),
         display_time_marks: state.display_options.display_time_marks,
         connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
@@ -299,17 +294,12 @@ function _WComponentCanvasNode (props: Props)
         show_state_value = (is_editing && wcomponent_is_allowed_to_have_state_VAP_sets(derived_composed_wcomponent))
         || (!derived_composed_wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(derived_composed_wcomponent)
-            || wcomponent_is_judgement_or_objective(derived_composed_wcomponent)
             // || is_highlighted
             // || is_current_item
-            || props.have_judgements
         ))
     }
 
     const terminals = get_terminals({ is_on_canvas, is_editing, is_highlighted })
-
-    // const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
-
 
     const on_pointer_down = (e: h.JSX.TargetedEvent<HTMLDivElement, PointerEvent>) =>
     {
@@ -369,7 +359,6 @@ function _WComponentCanvasNode (props: Props)
 
                 {derived_composed_wcomponent && show_state_value && <div className="node_state_container">
                     {is_editing && <div className="description_label">state &nbsp;</div>}
-                    <WComponentJudgements wcomponent={derived_composed_wcomponent} hide_judgement_trend={false} />
                     <div className="value_and_prediction_summary">
                         <NodeValueAndPredictionSetSummary
                             wcomponent={derived_composed_wcomponent}

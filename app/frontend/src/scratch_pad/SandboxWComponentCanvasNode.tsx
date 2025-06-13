@@ -7,7 +7,6 @@ import { get_starting_state } from "../state/starting_state"
 import type { RootState } from "../state/State"
 import { get_store } from "../state/store"
 import { prepare_new_VAP_set } from "../wcomponent/CRUD_helpers/prepare_new_VAP_set"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import type { WComponent } from "../wcomponent/interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "../wcomponent/interfaces/state"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
@@ -38,23 +37,6 @@ function sandbox_code ()
         ]
     }
 
-    const wc12_judgement: WComponentJudgement = {
-        type: "judgement",
-        id: "wc12",
-        created_at,
-        base_id: -1,
-        title: "wc12 title",
-        description: "wc12 description",
-        judgement_target_wcomponent_id: wc11.id,
-        judgement_operator: "==",
-        judgement_comparator_value: "True",
-    }
-    const wc13_judgement: WComponentJudgement = {
-        ...wc12_judgement,
-        id: "wc13",
-        judgement_operator: "!=",
-    }
-
 
     const VAP_set2 = prepare_new_VAP_set(VAPsType.undefined, {}, [], -1)
     VAP_set2.entries[0]!.probability = 0
@@ -70,7 +52,7 @@ function sandbox_code ()
         ]
     }
 
-    const wcomponents = [wc11, wc12_judgement, wc13_judgement, wc14]
+    const wcomponents = [wc11, wc14]
 
     const kv10: KnowledgeView = {
         id: "kv10",

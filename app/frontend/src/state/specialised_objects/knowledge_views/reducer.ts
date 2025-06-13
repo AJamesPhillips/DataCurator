@@ -26,12 +26,12 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
     if (is_upsert_wcomponent(action))
     {
-        const { wcomponent, add_to_knowledge_view, add_to_top } = action
+        const { wcomponent, add_to_knowledge_view } = action
 
         if (add_to_knowledge_view)
         {
             const entry: KnowledgeViewWComponentEntry = { ...add_to_knowledge_view.position }
-            state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry, add_to_top)
+            state = handle_upsert_knowledge_view_entry(state, add_to_knowledge_view.id, wcomponent.id, entry)
         }
 
         const associated_kv = state.specialised_objects.knowledge_views_by_id[wcomponent.id]
@@ -72,7 +72,7 @@ export const knowledge_views_reducer = (state: RootState, action: AnyAction): Ro
 
 
 
-function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string, entry: KnowledgeViewWComponentEntry, add_to_top?: boolean): RootState
+function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id: string, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
 {
     const knowledge_view = get_knowledge_view_from_state(state, knowledge_view_id)
 
@@ -82,12 +82,12 @@ function handle_upsert_knowledge_view_entry (state: RootState, knowledge_view_id
         return state
     }
 
-    return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry, add_to_top)
+    return add_wcomponent_entry_to_knowledge_view(state, knowledge_view, wcomponent_id, entry)
 }
 
 
 
-function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_view: KnowledgeView, wcomponent_id: string, entry: KnowledgeViewWComponentEntry, add_to_top: boolean = true): RootState
+function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_view: KnowledgeView, wcomponent_id: string, entry: KnowledgeViewWComponentEntry): RootState
 {
     let new_wc_id_map = { ...knowledge_view.wc_id_map }
 
@@ -104,14 +104,10 @@ function add_wcomponent_entry_to_knowledge_view (state: RootState, knowledge_vie
         }
     }
 
-    if (add_to_top)
-    {
-        new_wc_id_map[wcomponent_id] = entry
-    }
-    else
-    {
-        new_wc_id_map = { [wcomponent_id]: entry, ...new_wc_id_map }
-    }
+    new_wc_id_map[wcomponent_id] = entry
+    // If you want to ensure the new entry is on the bottom then you can do this:
+    // new_wc_id_map = { [wcomponent_id]: entry, ...new_wc_id_map }
+
     const new_knowledge_view = { ...knowledge_view, wc_id_map: new_wc_id_map }
 
     return handle_upsert_knowledge_view(state, new_knowledge_view)

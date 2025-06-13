@@ -1,6 +1,5 @@
 import type { KnowledgeViewWComponentEntry } from "../shared/interfaces/knowledge_view"
 import { get_created_at_ms } from "../shared/utils_datetime/utils_datetime"
-import type { WComponentJudgement } from "../wcomponent/interfaces/judgement"
 import {
     WComponent,
     WComponentConnection
@@ -97,39 +96,6 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
 
     return true
 }
-
-
-
-
-interface CalculateJudgementCertaintyArgs
-{
-    wcomponent: WComponentJudgement
-    kv_entry: KnowledgeViewWComponentEntry | undefined
-    target_wc: WComponent | undefined
-    target_wc__kv_entry: KnowledgeViewWComponentEntry | undefined
-    created_at_ms: number
-    sim_ms: number
-    selected_wcomponent_ids_set: Set<string>
-    wc_ids_excluded_by_filters: Set<string>
-}
-export function calc_judgement_connection_wcomponent_should_display (args: CalculateJudgementCertaintyArgs): boolean
-{
-    const { target_wc, target_wc__kv_entry } = args
-
-    if (!target_wc || !target_wc__kv_entry) return false
-
-
-    const judgement_connection_should_display = calc_wcomponent_should_display(args)
-    if (!judgement_connection_should_display) return false
-
-    const target_node_should_display = calc_wcomponent_should_display({
-        ...args, wcomponent: target_wc, kv_entry: target_wc__kv_entry
-    })
-    if (!target_node_should_display) return false
-
-    return true
-}
-
 
 
 

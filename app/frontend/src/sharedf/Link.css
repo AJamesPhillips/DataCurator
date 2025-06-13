@@ -3,11 +3,6 @@ a.link
 {
   text-decoration: none;
   color: initial;
-  /* display: block; */
-  /* Disabling height and width to 100% as Link after Judgement's target component
-  is taking up excessive horizontal space */
-  /* height: 100%;
-  width: 100%; */
 }
 
 a.link.normal

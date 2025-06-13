@@ -59,19 +59,6 @@ export const selecting_reducer = (state: RootState, action: AnyAction): RootStat
     }
 
 
-    // The idea behind this functionality is that if there are >0 components selected when a
-    // different knowledge view is navigated to then if they are edited it (should) cause an
-    // exception in the bulk editing reducer as we do not yet filter for ids in that knowledge view
-    // It is disabled because it prevents creating judgements on a selected wcomponent
-    // if (is_change_route(action))
-    // {
-    //     if (action.args && action.args.view === "knowledge")
-    //     {
-    //         state = handle_clear_selected_wcomponents(state)
-    //     }
-    // }
-
-
     if (is_pointerdown_on_component(action))
     {
         const value = { wcomponent_id: action.wcomponent_id, terminal_type: undefined }

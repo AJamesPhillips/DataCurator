@@ -2,7 +2,6 @@ import { h } from "preact"
 
 import { ALTERNATIVE_VALUE_COLOR, AltRouteIcon } from "../../sharedf/icons/AltRouteIcon"
 import { Link } from "../../sharedf/Link"
-import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import type {
     CounterfactualV2StateValueAndPredictionSetInfo,
     TargetVAPIdCounterfactualInfoEntry,
@@ -12,7 +11,6 @@ import type { WComponent } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { VAPVisual } from "../../wcomponent_derived/interfaces/value"
 import { ExploreButtonHandle } from "./ExploreButtonHandle"
 import "./ValueAndPredictionSetSummary.scss"
-import { WComponentJudgements } from "./WComponentJudgements"
 
 
 
@@ -20,23 +18,17 @@ interface OwnProps
 {
     wcomponent: WComponent
     VAP_visual: VAPVisual
-    show_judgements: boolean
     counterfactual_VAP_set: CounterfactualV2StateValueAndPredictionSetInfo
     VAP_id_to_counterfactuals_info_map: TargetVAPIdCounterfactualInfoMap
 }
 
 export function ValueAndPredictionEntryRow (props: OwnProps)
 {
-    const { VAP_visual, show_judgements, counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
+    const { VAP_visual, counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
 
-    // Using an empty wcomponents_by_id for now as judgements on state_value should not be supported (for now)
-    // and I want to think more about this use case before implementing it
-    const wcomponents_by_id = {}
-    const VAPs_represent = get_wcomponent_VAPs_represent(props.wcomponent, wcomponents_by_id)
     const certainty_percent_num = VAP_visual.certainty * 100
     const certainty_percent_str = `${certainty_percent_num}%`
     const rounded_certainty_percent = Math.round(certainty_percent_num)
-    const rounded_certainty_percent_str = `${rounded_certainty_percent}%`
 
     let font_size = 100
     if (rounded_certainty_percent < 100)
@@ -58,12 +50,6 @@ export function ValueAndPredictionEntryRow (props: OwnProps)
         }}
     >
         {VAP_visual.value_text}
-        {show_judgements && <WComponentJudgements
-            wcomponent={props.wcomponent}
-            target_VAPs_represent={VAPs_represent}
-            value={VAP_visual.parsed_value}
-            hide_judgement_trend={true}
-        />}
 
         {cf_entries.map(entry => <CounterfactualLink
             any_active={counterfactual_VAP_set.has_any_counterfactual_applied}

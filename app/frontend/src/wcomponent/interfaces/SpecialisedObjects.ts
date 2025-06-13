@@ -2,7 +2,6 @@ import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
 import type { WComponentNodeAction } from "./action"
 import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
-import type { WComponentJudgement } from "./judgement"
 import type {
     HasValuePossibilities,
     HasVAPSetsAndMaybeValuePossibilities,
@@ -21,10 +20,10 @@ import type {
 
 
 // World Component
-export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection | WComponentJudgement
-type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection & keyof WComponentJudgement, "type">
+export type WComponent = WComponentNode | WComponentConnection | WComponentCausalConnection
+type WComponentCommonKeys = Exclude<keyof WComponentNode & keyof WComponentConnection & keyof WComponentCausalConnection, "type">
 export type WComponentCommon = {
-    [K in WComponentCommonKeys]: WComponentNode[K] | WComponentConnection[K] | WComponentCausalConnection[K] | WComponentJudgement[K]
+    [K in WComponentCommonKeys]: WComponentNode[K] | WComponentConnection[K] | WComponentCausalConnection[K]
 }
 export type PartialWComponentWithoutType = Partial<WComponent> & { type?: undefined }
 
@@ -196,17 +195,6 @@ export function wcomponent_is_node (wcomponent: WComponent | undefined): wcompon
 }
 
 
-export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | undefined, log_error_id: number | string = ""): wcomponent is WComponentJudgement
-{
-    return wcomponent_is_a("judgement", wcomponent, undefined) || wcomponent_is_a("objective", wcomponent, log_error_id)
-}
-export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
-{
-    return wcomponent_is_a("objective", wcomponent)
-}
-
-
-
 export function wcomponent_is_counterfactual_v2 (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentCounterfactualV2
 {
     return wcomponent_is_a("counterfactualv2", wcomponent, log_error_id)
@@ -214,9 +202,9 @@ export function wcomponent_is_counterfactual_v2 (wcomponent: WComponent | undefi
 
 
 
-export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection | WComponentJudgement
+export function wcomponent_can_render_connection (wcomponent: WComponent): wcomponent is WComponentConnection
 {
-    return wcomponent_is_plain_connection(wcomponent) // || wcomponent_is_judgement_or_objective(wcomponent)
+    return wcomponent_is_plain_connection(wcomponent)
 }
 
 export function wcomponent_has_event_at (wcomponent: WComponent): wcomponent is (WComponent & EventAt)
@@ -280,67 +268,6 @@ export function wcomponent_allowed_calculations (wcomponent: WComponent): wcompo
 {
     return wcomponent_is_statev2(wcomponent) || wcomponent_is_action(wcomponent)
 }
-
-// export interface JudgementView
-// {
-//     id: string
-//     created_at: Date
-//     target_knowledge_view_id: string
-//     last_used_at: Date // used when deciding between which of multiple judgement layers to show by default
-//     title: string
-//     description: string
-//     judgement_wcomponent_ids: Set<string>
-// }
-
-
-// type ObjectiveID = string
-// // type ObjectiveType = "value" | "process" | "event"
-// interface Objective
-// {
-//     id: ObjectiveID
-//     created_at: Date
-//     custom_created_at?: Date
-//     component_id: WComponentID
-//     // title: string
-//     // description: string
-//     // type:
-// }
-
-
-// type PlanID = string
-// interface Plan
-// {
-//     id: PlanID
-//     created_at: Date
-//     custom_created_at?: Date
-//     title: string
-//     description: string
-
-// }
-
-
-// type PriorityID = string
-// interface Priority
-// {
-//     id: PriorityID
-//     created_at: Date
-//     custom_created_at?: Date
-//     title: string
-//     description: string
-
-// }
-
-
-// type ActionID = string
-// interface Action
-// {
-//     id: ActionID
-//     created_at: Date
-//     custom_created_at?: Date
-//     title: string
-//     description: string
-
-// }
 
 
 

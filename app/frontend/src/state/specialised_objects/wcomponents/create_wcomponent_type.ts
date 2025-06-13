@@ -8,7 +8,6 @@ import { get_wcomponent_VAPs_represent } from "../../../wcomponent/get_wcomponen
 import {
     WComponent,
     wcomponent_is_action,
-    wcomponent_is_judgement_or_objective,
     wcomponent_is_state_value,
     wcomponent_is_statev2,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
@@ -44,13 +43,11 @@ export function create_wcomponent (args: CreateWComponentArgs)
     const state = store.getState()
 
     let wcomponent = prepare_new_wcomponent_object(args.wcomponent)
-    wcomponent = set_judgement_or_objective_target(wcomponent, state)
     wcomponent = set_parent_goal_or_action_ids(wcomponent, state)
     wcomponent = set_state_value_fields(wcomponent, state)
 
 
     const add_to_knowledge_view = get_knowledge_view_entry(args.add_to_knowledge_view, wcomponent, state)
-    const add_to_top = !wcomponent_is_judgement_or_objective(wcomponent)
 
 
     let created_at_ms = get_created_at_ms(wcomponent)
@@ -60,7 +57,7 @@ export function create_wcomponent (args: CreateWComponentArgs)
     const sim_ms = get_latest_sim_ms_for_routing(wcomponent, state)
 
 
-    store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view, add_to_top }))
+    store.dispatch(ACTIONS.specialised_object.upsert_wcomponent({ wcomponent, add_to_knowledge_view }))
     store.dispatch(ACTIONS.meta_wcomponents.clear_selected_wcomponents())
     store.dispatch(ACTIONS.routing.change_route({
         route: "wcomponents",
@@ -68,31 +65,6 @@ export function create_wcomponent (args: CreateWComponentArgs)
         args: { created_at_ms, sim_ms },
     }))
     return true
-}
-
-
-
-function set_judgement_or_objective_target (wcomponent: WComponent, state: RootState): WComponent
-{
-    if (wcomponent_is_judgement_or_objective(wcomponent))
-    {
-        const selected_wcomponent_ids = state.meta_wcomponents.selected_wcomponent_ids_list
-        const selected_wcomponent_id = selected_wcomponent_ids[0]
-
-        if (selected_wcomponent_ids.length === 1 && selected_wcomponent_id)
-        {
-            const selected_wcomponent = get_wcomponent_from_state(state, selected_wcomponent_id)
-            if (selected_wcomponent)
-            {
-                wcomponent = {
-                    ...wcomponent,
-                    judgement_target_wcomponent_id: selected_wcomponent.id,
-                }
-            }
-        }
-    }
-
-    return wcomponent
 }
 
 
@@ -125,11 +97,7 @@ function get_knowledge_view_entry (add_to_knowledge_view: AddToKnowledgeViewArgs
     if (!add_to_knowledge_view && current_knowledge_view)
     {
         let target_wcomponent_id: string | undefined = undefined
-        if (wcomponent_is_judgement_or_objective(wcomponent))
-        {
-            target_wcomponent_id = wcomponent.judgement_target_wcomponent_id
-        }
-        else if (wcomponent_is_state_value(wcomponent))
+        if (wcomponent_is_state_value(wcomponent))
         {
             target_wcomponent_id = wcomponent.attribute_wcomponent_id
         }

@@ -3,7 +3,6 @@ import { get_new_id } from "datacurator-core/utils/ids"
 
 import type { HasBaseId } from "../../shared/interfaces/base"
 import type { WComponentNodeAction } from "../interfaces/action"
-import type { WComponentJudgement } from "../interfaces/judgement"
 import { WComponent, WComponentConnection, WComponentNode, wcomponent_is_causal_link } from "../interfaces/SpecialisedObjects"
 import type { WComponentNodeStateV2 } from "../interfaces/state"
 import type { WComponentBase } from "../interfaces/wcomponent_base"
@@ -20,11 +19,6 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
         description: "",
         type: "process",
     }
-
-    const when = (partial_wcomponent.custom_created_at
-        || partial_wcomponent.created_at
-        || base.custom_created_at
-        || base.created_at)
 
     let wcomponent: WComponent
 
@@ -52,19 +46,6 @@ export function prepare_new_contextless_wcomponent_object (partial_wcomponent: P
         }
 
         wcomponent = link
-    }
-    else if (partial_wcomponent.type === "judgement" || partial_wcomponent.type === "objective")
-    {
-        const judgement: WComponentJudgement = {
-            ...base,
-            judgement_target_wcomponent_id: "",
-            judgement_operator: "==",
-            judgement_comparator_value: "True",
-            judgement_manual: undefined,
-            ...partial_wcomponent,
-            type: partial_wcomponent.type, // only added to remove type warning
-        }
-        wcomponent = judgement
     }
     else if (partial_wcomponent.type === "statev2")
     {

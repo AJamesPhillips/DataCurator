@@ -1,5 +1,4 @@
 import { Box } from "@mui/material"
-import { useState } from "preact/hooks"
 
 import { get_wcomponent_VAPs_represent } from "../../wcomponent/get_wcomponent_VAPs_represent"
 import type {
@@ -24,7 +23,6 @@ interface OwnProps
 
 export function ValueAndPredictionSetSummary (props: OwnProps)
 {
-    const [show_all_judgements, set_show_all_judgements] = useState(false)
     const { counterfactual_VAP_set, VAP_id_to_counterfactuals_info_map } = props
     // todo should implement this fully?
     const wcomponents_by_id = {}
@@ -39,16 +37,12 @@ export function ValueAndPredictionSetSummary (props: OwnProps)
             position="relative"
             flexDirection="column" justifyContent="flex-end" alignItems="stretch" alignContent="stretch"
             className={`value_and_prediction_set_summary items-${VAP_visuals_data.length} visible-${data_with_non_zero_certainty.length}`}
-            onPointerOver={() => set_show_all_judgements(true)}
-            onPointerLeave={() => set_show_all_judgements(false)}
         >
             {VAP_visuals_data.map((VAP_visual, index) =>
             {
-                const show_judgements = show_all_judgements || index === 0
                 return <ValueAndPredictionEntryRow
                     wcomponent={props.wcomponent}
                     VAP_visual={VAP_visual}
-                    show_judgements={show_judgements}
                     counterfactual_VAP_set={counterfactual_VAP_set}
                     VAP_id_to_counterfactuals_info_map={VAP_id_to_counterfactuals_info_map}
                 />
