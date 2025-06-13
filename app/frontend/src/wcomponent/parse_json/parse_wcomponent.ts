@@ -2,7 +2,6 @@
 // input/output conversion (either from supabase, browser local storage, or
 // other sources)
 
-import type { Prediction } from "../../shared/uncertainty/interfaces"
 import {
     clean_base_object_of_sync_meta_fields,
 } from "../../state/sync/supabase/clean_base_object_for_supabase"
@@ -10,7 +9,6 @@ import {
     ConnectionTerminalAttributeType,
     WComponent,
     wcomponent_has_event_at,
-    wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
     wcomponent_is_action,
     wcomponent_is_plain_connection,
@@ -30,11 +28,6 @@ export function parse_wcomponent (wcomponent: WComponent): WComponent
 
     wcomponent = {
         ...parse_base_dates(wcomponent),
-    }
-
-    if (wcomponent_has_validity_predictions(wcomponent))
-    {
-        wcomponent.validity = wcomponent.validity.map(parse_prediction)
     }
 
     if (wcomponent_has_VAP_sets(wcomponent))
@@ -116,5 +109,4 @@ function upgrade_2021_05_24_action (wcomponent: WComponent): WComponent
 
 
 
-const parse_prediction = (prediction: Prediction) => parse_base_dates(prediction)
 const parse_values_and_predictions_set = (VAP_set: StateValueAndPredictionsSet) => parse_base_dates(VAP_set)

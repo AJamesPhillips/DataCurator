@@ -50,10 +50,9 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const { selected_wcomponent_ids_set } = state.meta_wcomponents
     const { current_composed_knowledge_view: composed_kv } = state.derived
     const { created_at_ms, sim_ms } = state.routing.args
-    const { derived_validity_filter: validity_filter } = state.display_options
     const is_editing = !state.display_options.consumption_formatting
 
-    let validity_value_result: false | { display_certainty: number } = false
+    let should_display = false
     let from_wc: WComponent | undefined = undefined
     let to_wc: WComponent | undefined = undefined
 
@@ -72,9 +71,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const from_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.from_id]
             const to_wc__kv_entry = composed_kv.composed_wc_id_map[wcomponent.to_id]
 
-            validity_value_result = calc_connection_wcomponent_should_display({
+            should_display = calc_connection_wcomponent_should_display({
                 wcomponent, kv_entry,
-                validity_filter,
                 from_wc, to_wc, from_wc__kv_entry, to_wc__kv_entry,
                 created_at_ms, sim_ms,
                 selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
@@ -89,9 +87,8 @@ const map_state = (state: RootState, own_props: OwnProps) =>
             const target_wc = get_wcomponent_from_state(state, target_id)
             const target_wc__kv_entry = composed_kv.composed_wc_id_map[target_id]
 
-            validity_value_result = calc_judgement_connection_wcomponent_should_display({
+            should_display = calc_judgement_connection_wcomponent_should_display({
                 wcomponent, kv_entry,
-                validity_filter,
                 target_wc, target_wc__kv_entry,
                 created_at_ms, sim_ms,
                 selected_wcomponent_ids_set, wc_ids_excluded_by_filters,
@@ -100,7 +97,6 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     }
 
 
-    const validity_value: false | number = validity_value_result === false ? false : validity_value_result.display_certainty
     const shift_or_control_keys_are_down = state.global_keys.derived.shift_or_control_down
 
 
@@ -110,12 +106,11 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         from_wc,
         to_wc,
         connection_effect,
-        validity_value,
+        should_display,
         is_current_item: state.routing.item_id === wcomponent_id,
         is_selected: state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id),
         is_highlighted: state.meta_wcomponents.highlighted_wcomponent_ids.has(wcomponent_id),
         is_editing,
-        certainty_formatting: state.display_options.derived_certainty_formatting,
         shift_or_control_keys_are_down,
         focused_mode: state.display_options.focused_mode,
         connected_neighbour_is_highlighted: state.meta_wcomponents.neighbour_ids_of_highlighted_wcomponent.has(wcomponent_id),
@@ -143,7 +138,7 @@ function _WComponentCanvasConnection (props: Props)
         id, current_composed_knowledge_view, wcomponent,
         from_wc, to_wc,
         is_current_item, is_highlighted, is_selected,
-        validity_value, connection_effect,
+        should_display, connection_effect,
         shift_or_control_keys_are_down,
         change_route, clicked_wcomponent, clear_selected_wcomponents,
     } = props
@@ -160,7 +155,7 @@ function _WComponentCanvasConnection (props: Props)
         return null
     }
 
-    if (validity_value === false) return null
+    if (!should_display) return null
 
     if (!current_composed_knowledge_view)
     {
@@ -192,13 +187,11 @@ function _WComponentCanvasConnection (props: Props)
     )
 
 
-    const validity_opacity = calc_display_opacity({
+    const opacity = calc_display_opacity({
         is_editing: props.is_editing,
-        certainty: validity_value,
         is_current_item,
         is_selected,
         connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
-        certainty_formatting: props.certainty_formatting,
         focused_mode: props.focused_mode,
     })
 
@@ -233,7 +226,7 @@ function _WComponentCanvasConnection (props: Props)
         circular_links={props.circular_links}
         thickness={thickness}
         connection_end_type={connection_end_type}
-        intensity={validity_opacity}
+        opacity={opacity}
         is_highlighted={is_current_item || is_highlighted || is_selected}
         focused_mode={props.focused_mode}
         extra_css_classes={"connection_type_" + wcomponent.type + " " + effect}

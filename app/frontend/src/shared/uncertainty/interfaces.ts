@@ -119,20 +119,3 @@ export interface HasUncertainDatetime
 }
 
 export interface Prediction extends Base, PredictionBase, HasUncertainDatetime {}
-
-
-
-// +++ 2021-04-10
-// Justification for not having single predictions
-//
-// validity is a seperate concept to existence.  Something must first be valid before we care
-// about it existing.  To use in one field we'd need to add a type label e.g.: {"predictions": PredictionWithType[]}
-// where PredictionWithType extends Prediction { type: "validity" | "existence" }
-// and then filter by "validity" first, take that value, if valid, then filter by existence
-// and use that value from the existence type predictions entries for the truthiness
-// probability of the item in question.
-// Or as we have chosen so far to do, keep these two concepts seperate from each other
-// --- 2021-04-10
-// +++ 2024-04-05
-// Removing existence predictions for now.  See commmit message for more details.
-// --- 2024-04-05

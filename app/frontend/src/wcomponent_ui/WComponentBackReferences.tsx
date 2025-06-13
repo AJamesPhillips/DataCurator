@@ -11,7 +11,6 @@ import type { RootState } from "../state/State"
 import {
     WComponent,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_judgement_or_objective,
     wcomponent_is_not_deleted,
@@ -72,12 +71,6 @@ function _WComponentBackReferences (props: Props)
                             (wc.values_and_prediction_sets.find(vap_set =>
                             {
                                 return vap_set.entries.find(vap => (vap.explanation || "").includes(wcomponent_id))
-                            }))
-                        )
-                        || (wcomponent_has_validity_predictions(wc) &&
-                            (wc.validity.find(prediction =>
-                            {
-                                return (prediction.explanation || "").includes(wcomponent_id)
                             }))
                         )
                         || (wcomponent_is_plain_connection(wc) &&

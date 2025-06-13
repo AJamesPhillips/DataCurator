@@ -1,6 +1,5 @@
 import { PlainCalculationObject } from "../../calculations/interfaces"
 import type { Base } from "../../shared/interfaces/base"
-import type { ValidityPredictions } from "../../shared/uncertainty/validity"
 import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
 
 
@@ -42,7 +41,7 @@ export interface WComponentBase extends Base
 
 // TODO: Judgments are also nodes on the canvas so we should rename `WComponentNodeBase` to
 // something else.
-export interface WComponentNodeBase extends WComponentBase, Partial<ValidityPredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
+export interface WComponentNodeBase extends WComponentBase, Partial<HasVAPSetsAndMaybeValuePossibilities>
 {
     type: WComponentNodeType
     // encompassed_by: string

@@ -1,7 +1,5 @@
-import type { WComponentNodeAction } from "./action"
-// import type { Base } from "../../shared/interfaces/base"
 import type { KnowledgeView } from "../../shared/interfaces/knowledge_view"
-import type { ValidityPredictions } from "../../shared/uncertainty/validity"
+import type { WComponentNodeAction } from "./action"
 import type { WComponentCounterfactualV2 } from "./counterfactual"
 import type { EventAt, WComponentNodeEvent } from "./event"
 import type { WComponentJudgement } from "./judgement"
@@ -80,7 +78,7 @@ export const connection_line_behaviours: ConnectionLineBehaviour[] = [
     ConnectionLineBehaviour.angular,
 ]//, "heirarchy"]
 // export type ConnectionDirectionType = "normal" | "reverse" | "bidirectional"
-export interface WComponentConnection extends WComponentBase, Partial<ValidityPredictions>, Partial<HasVAPSetsAndMaybeValuePossibilities>
+export interface WComponentConnection extends WComponentBase, Partial<HasVAPSetsAndMaybeValuePossibilities>
 {
     type: WComponentConnectionType
     from_id: string
@@ -244,22 +242,6 @@ export function wcomponent_is_deleted (wcomponent: WComponent | undefined)
 export function wcomponent_is_not_deleted (wcomponent: WComponent | undefined)
 {
     return wcomponent ? wcomponent.deleted_at === undefined : undefined
-}
-
-
-export function wcomponent_has_validity_predictions (wcomponent: WComponent): wcomponent is (WComponent & ValidityPredictions)
-{
-    const { validity } = wcomponent as Partial<ValidityPredictions>
-    return validity !== undefined && validity.length > 0
-}
-const types_without_validity = new Set<WComponentType>([
-    "counterfactualv2",
-    "sub_state",
-])
-export type WComponentCanHaveValidityPredictions = WComponent & Partial<ValidityPredictions>
-export function wcomponent_can_have_validity_predictions (wcomponent: WComponent): wcomponent is WComponentCanHaveValidityPredictions
-{
-    return !types_without_validity.has(wcomponent.type)
 }
 
 

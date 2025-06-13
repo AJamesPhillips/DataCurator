@@ -3,9 +3,7 @@ import { h_step, position_to_point, round_number, v_step } from "../../canvas/po
 import { SCALE_BY } from "../../canvas/zoom_utils"
 import { SIDE_PANEL_WIDTH } from "../../side_panel/width"
 import { STARTING_ZOOM } from "../routing/starting_state"
-// import { Certainty } from "../../shared/uncertainty/quantified_language"
 import type { RootState } from "../State"
-// import type { ValidityToCertainty, ValidityToCertaintyTypes, ValidityToCertainty_TypeToMap } from "./state"
 
 
 
@@ -80,29 +78,3 @@ export function lefttop_to_xy (position?: Partial<ContentCoordinate> | undefined
 
     return { x, y, zoom }
 }
-
-
-
-
-// export function get_validity_filter_map (validity_filter_type: ValidityToCertaintyTypes)
-// {
-//     return validity_filter_type_to_map[validity_filter_type]
-// }
-
-// const show_invalid: ValidityToCertainty = {
-//     [Certainty.yes]: { display: true, opacity: 1 },
-//     [Certainty.likely]: { display: true, opacity: 0.7 },
-//     [Certainty.maybe]: { display: true, opacity: 0.4 },
-//     [Certainty.unlikely]: { display: true, opacity: 0.1 },
-//     [Certainty.no]: { display: true, opacity: 0.1 },
-// }
-
-// const hide_invalid: ValidityToCertainty = {
-//     ...show_invalid,
-//     [Certainty.no]: { display: false, opacity: 0 },
-// }
-
-// const validity_filter_type_to_map: ValidityToCertainty_TypeToMap = {
-//     show_invalid,
-//     hide_invalid,
-// }

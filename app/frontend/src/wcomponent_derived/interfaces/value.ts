@@ -31,16 +31,6 @@ export interface DerivedValueForUI
 }
 
 
-// Contains is_valid calculation and derived boolean and degree of certainty
-// for determining how it should be displayed
-export interface DerivedValidityForUI
-{
-    is_valid: boolean
-    certainty: number
-}
-
-
-
 export interface VAPVisual
 {
     VAP_id: string

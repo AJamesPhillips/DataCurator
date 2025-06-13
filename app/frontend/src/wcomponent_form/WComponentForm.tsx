@@ -26,7 +26,6 @@ import {
 } from "../wcomponent/CRUD_helpers/prepare_new_wcomponent_object"
 import {
     WComponent,
-    wcomponent_can_have_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_causal_link,
@@ -58,7 +57,6 @@ import { WComponentParentActionForm } from "./WComponentParentActionForm"
 import { WComponentStateForm } from "./WComponentStateForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
 import { WComponentSubStateForm } from "./WComponentSubStateForm"
-import { WComponentValidityPredictionsForm } from "./WComponentValidityPredictionsForm"
 
 
 
@@ -416,12 +414,6 @@ function _WComponentForm (props: Props)
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
 
-
-        {wcomponent_can_have_validity_predictions(wcomponent) && <WComponentValidityPredictionsForm
-            editing_allowed={editing_allowed}
-            wcomponent={wcomponent}
-            upsert_wcomponent={wrapped_upsert_wcomponent}
-        />}
 
         <br />
         <br />

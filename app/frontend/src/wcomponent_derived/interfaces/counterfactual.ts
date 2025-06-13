@@ -7,7 +7,6 @@ export type WcIdToCounterfactualsV2Map = {
 }
 interface WcCounterfactualsByAttribute {
     VAP_sets: VAPSetIdToCounterfactualV2Map
-    // validity_VAP_sets: VAP_set_id_counterfactual_map
 }
 export interface VAPSetIdToCounterfactualV2Map
 {

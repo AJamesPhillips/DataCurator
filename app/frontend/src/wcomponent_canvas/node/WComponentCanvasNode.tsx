@@ -28,9 +28,7 @@ import {
     WComponentsById,
     connection_terminal_attributes,
     connection_terminal_sides,
-    wcomponent_can_have_validity_predictions,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_has_validity_predictions,
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_judgement_or_objective,
@@ -48,7 +46,6 @@ import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSum
 import "./WComponentCanvasNode.scss"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
 import { WComponentJudgements } from "./WComponentJudgements"
-import { WComponentValidityValue } from "./WComponentValidityValue"
 
 
 
@@ -91,12 +88,10 @@ const map_state = (state: RootState, own_props: OwnProps) =>
     const is_selected = state.meta_wcomponents.selected_wcomponent_ids_set.has(wcomponent_id)
     const { created_at_ms, sim_ms } = state.routing.args
 
-    const validity_filter = state.display_options.derived_validity_filter
-
-    const validity_value = (always_show || !derived_composed_wcomponent)
-        ? 1
+    const should_display = (always_show || !derived_composed_wcomponent)
+        ? true
         : calc_wcomponent_should_display({
-            wcomponent: derived_composed_wcomponent, kv_entry, created_at_ms, sim_ms, validity_filter,
+            wcomponent: derived_composed_wcomponent, kv_entry, created_at_ms, sim_ms,
             is_selected, wc_ids_excluded_by_filters,
         })
 
@@ -130,8 +125,7 @@ const map_state = (state: RootState, own_props: OwnProps) =>
         created_at_ms: state.routing.args.created_at_ms,
         sim_ms: state.routing.args.sim_ms,
         is_editing: !state.display_options.consumption_formatting,
-        validity_value,
-        certainty_formatting: state.display_options.derived_certainty_formatting,
+        should_display,
         focused_mode: state.display_options.focused_mode,
         have_judgements,
         node_is_moving: state.meta_wcomponents.wcomponent_ids_to_move_set.has(wcomponent_id),
@@ -171,8 +165,8 @@ function _WComponentCanvasNode (props: Props)
         knowledge_views_by_id,
         is_current_item, is_selected, is_highlighted,
         shift_or_control_keys_are_down,
-        validity_value,
-        created_at_ms, sim_ms, certainty_formatting,
+        should_display,
+        created_at_ms, sim_ms,
         clicked_wcomponent, clear_selected_wcomponents,
         composed_wcomponents_by_id,
     } = props
@@ -216,21 +210,19 @@ function _WComponentCanvasNode (props: Props)
     }, [props.node_is_moving])
 
 
-    if (!validity_value) return null
+    if (!should_display) return null
 
 
-    const validity_opacity = calc_display_opacity({
+    let opacity = calc_display_opacity({
         is_editing,
-        certainty: validity_value,
         is_highlighted,
         connected_neighbour_is_highlighted: props.connected_neighbour_is_highlighted,
         is_selected,
         is_current_item,
-        certainty_formatting,
         focused_mode: props.focused_mode,
     })
 
-    const opacity = props.node_is_moving ? 0.3 : validity_opacity
+    opacity = props.node_is_moving ? 0.3 : opacity
 
     const on_click = factory_on_click({
         wcomponent_id: id,
@@ -303,13 +295,10 @@ function _WComponentCanvasNode (props: Props)
     )
 
 
-    let show_validity_value = false
     let show_state_value = false
 
     if (derived_composed_wcomponent)
     {
-        show_validity_value = (wcomponent_can_have_validity_predictions(derived_composed_wcomponent) && is_editing) || (wcomponent_has_validity_predictions(derived_composed_wcomponent) && is_current_item)
-
         show_state_value = (is_editing && wcomponent_is_allowed_to_have_state_VAP_sets(derived_composed_wcomponent))
         || (!derived_composed_wcomponent.hide_state && (
             wcomponent_has_legitimate_non_empty_state_VAP_sets(derived_composed_wcomponent)
@@ -382,11 +371,6 @@ function _WComponentCanvasNode (props: Props)
 
                     {(is_editing || !derived_composed_wcomponent?.hide_title) && <Markdown options={{ ...MARKDOWN_OPTIONS, forceInline: true }}>{title}</Markdown>}
                 </div>
-
-                {derived_composed_wcomponent && show_validity_value && <div className="node_validity_container">
-                    {is_editing && <div className="description_label">validity</div>}
-                    <WComponentValidityValue wcomponent={derived_composed_wcomponent} />
-                </div>}
 
                 {derived_composed_wcomponent && show_state_value && <div className="node_state_container">
                     {is_editing && <div className="description_label">state &nbsp;</div>}

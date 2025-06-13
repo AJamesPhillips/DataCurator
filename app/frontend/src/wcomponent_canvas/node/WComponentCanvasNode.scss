@@ -32,7 +32,7 @@
     overflow-wrap: break-word;
 }
 
-.node_validity_container, .node_state_container
+.node_state_container
 {
     // This allows the value_and_prediction_summary to wrap onto a different line from the
     // node_judgements_container
@@ -71,7 +71,7 @@
 
 // .color_light
 // {
-//     .node_validity_container, .node_state_container
+//     .node_state_container
 //     {
 //         border-top: thin solid #555;
 //     }

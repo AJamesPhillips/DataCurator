@@ -2,7 +2,6 @@ import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import {
     WComponent,
     wcomponent_has_event_at,
-    wcomponent_has_validity_predictions,
     wcomponent_has_VAP_sets,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { TimeSliderData, TimeSliderEvent, TimeSliderEventType } from "../interfaces"
@@ -53,15 +52,6 @@ export function get_wcomponent_time_slider_data (wcomponents: WComponent[]): Tim
     wcomponents.forEach(wcomponent =>
     {
         create_event(wcomponent.custom_created_at || wcomponent.created_at, "created")
-
-        if (wcomponent_has_validity_predictions(wcomponent))
-        {
-            wcomponent.validity.forEach(({ created_at, custom_created_at, datetime }) =>
-            {
-                create_event(custom_created_at || created_at, "created")
-                create_events_for_temporal_uncertainty(datetime)
-            })
-        }
 
 
         if (wcomponent_has_VAP_sets(wcomponent))

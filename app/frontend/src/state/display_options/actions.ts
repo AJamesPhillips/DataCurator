@@ -2,9 +2,6 @@ import type { Action, AnyAction } from "redux"
 
 import { TimeResolution } from "datacurator-core/interfaces/datetime"
 
-import type { CertaintyFormattingTypes, ValidityFilterTypes } from "./state"
-
-
 
 const toggle_consumption_formatting_type = "toggle_consumption_formatting"
 
@@ -53,43 +50,6 @@ export const is_set_time_resolution = (action: AnyAction): action is ActionSetTi
     return action.type === set_time_resolution_type
 }
 
-
-
-interface SetValidityFilterArgs
-{
-    validity_filter: ValidityFilterTypes
-}
-interface ActionSetValidityFilter extends Action, SetValidityFilterArgs {}
-
-const set_validity_filter_type = "set_validity_filter"
-
-const set_validity_filter = (args: SetValidityFilterArgs): ActionSetValidityFilter =>
-{
-    return { type: set_validity_filter_type, ...args }
-}
-
-export const is_set_validity_filter = (action: AnyAction): action is ActionSetValidityFilter => {
-    return action.type === set_validity_filter_type
-}
-
-
-
-interface SetCertaintyFormattingArgs
-{
-    certainty_formatting: CertaintyFormattingTypes
-}
-interface ActionSetCertaintyFormatting extends Action, SetCertaintyFormattingArgs {}
-
-const set_certainty_formatting_type = "set_certainty_formatting"
-
-const set_certainty_formatting = (args: SetCertaintyFormattingArgs): ActionSetCertaintyFormatting =>
-{
-    return { type: set_certainty_formatting_type, ...args }
-}
-
-export const is_set_certainty_formatting = (action: AnyAction): action is ActionSetCertaintyFormatting => {
-    return action.type === set_certainty_formatting_type
-}
 
 
 interface SetDisplayTimeMarksArgs
@@ -193,8 +153,6 @@ export const display_actions = {
     toggle_consumption_formatting,
     set_or_toggle_focused_mode,
     set_time_resolution,
-    set_validity_filter,
-    set_certainty_formatting,
     set_display_time_marks,
     set_or_toggle_animate_connections,
     set_or_toggle_circular_links,

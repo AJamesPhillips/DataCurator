@@ -3,7 +3,6 @@ import { SortDirection, sort_list } from "../../shared/utils/sort"
 import { update_substate } from "../../utils/update_state"
 import type { WComponentJudgement } from "../../wcomponent/interfaces/judgement"
 import { wcomponent_is_judgement_or_objective } from "../../wcomponent/interfaces/SpecialisedObjects"
-import { default_wcomponent_validity_value, get_wcomponent_validity_value } from "../../wcomponent_derived/get_wcomponent_validity_value"
 import { get_wcomponents_from_state } from "../specialised_objects/accessors"
 import type { RootState } from "../State"
 import { derived_composed_wcomponents_by_id_reducer } from "./derived_composed_wcomponents_by_id_reducer"
@@ -99,9 +98,6 @@ function conditionally_update_active_judgement_or_objective_ids (prev_state: Roo
         judgement_or_objectives.forEach(judgement =>
         {
             if (!composed_visible_wc_id_map[judgement.id]) return
-
-            const { is_valid } = get_wcomponent_validity_value({ wcomponent: judgement, created_at_ms, sim_ms }) || default_wcomponent_validity_value()
-            if (!is_valid) return
 
             active_judgement_or_objectives_by_id[judgement.id] = true
         })

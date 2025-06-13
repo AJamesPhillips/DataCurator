@@ -18,7 +18,7 @@ interface OwnProps {
     line_behaviour: ConnectionLineBehaviour | undefined
     circular_links: boolean
     thickness?: number
-    intensity?: number
+    opacity?: number
     blur?: number
     connection_end_type?: ConnectionEndType
     is_highlighted?: boolean
@@ -63,7 +63,7 @@ export function CanvasConnection (props: OwnProps)
 
     if (!target_connection_coords) return null
 
-    const opacity = props.intensity ?? 1
+    const opacity = props.opacity ?? 1
     // Disabled as not performant at the moment
     // if (opacity !== undefined)
     // {

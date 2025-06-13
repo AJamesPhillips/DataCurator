@@ -6,7 +6,6 @@ import {
     WComponent,
     WComponentsById,
     wcomponent_has_VAP_sets,
-    wcomponent_has_validity_predictions,
     wcomponent_is_allowed_to_have_state_VAP_sets,
 } from "../../../wcomponent/interfaces/SpecialisedObjects"
 
@@ -14,13 +13,6 @@ import {
 
 export function tidy_wcomponent (wcomponent: WComponent, wcomponents_by_id: WComponentsById): WComponent
 {
-    if (wcomponent_has_validity_predictions(wcomponent))
-    {
-        const sorted_predictions = sort_list(wcomponent.validity, get_created_at_ms, SortDirection.ascending)
-        wcomponent.validity = sorted_predictions
-    }
-
-
     if (wcomponent_has_VAP_sets(wcomponent))
     {
         const sorted_VAP_sets = sort_list(wcomponent.values_and_prediction_sets || [], get_created_at_ms, SortDirection.ascending)

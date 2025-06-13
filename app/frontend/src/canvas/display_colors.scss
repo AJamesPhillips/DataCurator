@@ -32,7 +32,7 @@
 // Putting .node_title as quick hack to override Material-UI stylesheets
 .color_light
 {
-    .node_title, .node_validity_value_container
+    .node_title
     {
         color: rgb(255, 255, 255);
     }

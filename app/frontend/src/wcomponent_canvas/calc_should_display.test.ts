@@ -38,12 +38,6 @@ export const test_calc_connection_wcomponent_should_display = describe.delay("ca
         return {
             wcomponent,
             kv_entry: { left: 0, top: 0 },
-            validity_filter: {
-                only_certain_valid: false,
-                only_maybe_valid: false,
-                maybe_invalid: false,
-                show_invalid: true,
-            },
             from_wc,
             to_wc,
             from_wc__kv_entry: { left: 0, top: 0 },
@@ -58,7 +52,7 @@ export const test_calc_connection_wcomponent_should_display = describe.delay("ca
 
     let args = get_args()
     let result = calc_connection_wcomponent_should_display(args)
-    test(result, { display_certainty: 1 }, "should display")
+    test(result, true, "should display")
 
 
     args = get_args()
@@ -77,14 +71,14 @@ export const test_calc_connection_wcomponent_should_display = describe.delay("ca
     args.from_wc = undefined
     args.from_wc__kv_entry = undefined
     result = calc_connection_wcomponent_should_display(args)
-    test(result, { display_certainty: 1 }, "should display if from_wc not present")
+    test(result, true, "should display if from_wc not present")
 
 
     args = get_args()
     args.to_wc = undefined
     args.to_wc__kv_entry = undefined
     result = calc_connection_wcomponent_should_display(args)
-    test(result, { display_certainty: 1 }, "should display if to_wc not present")
+    test(result, true, "should display if to_wc not present")
 
 
     args = get_args()
