@@ -32,7 +32,6 @@ import {
     wcomponent_is_action,
     wcomponent_is_allowed_to_have_state_VAP_sets,
     wcomponent_is_judgement_or_objective,
-    wcomponent_is_sub_state,
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import { ACTION_VALUE_POSSIBILITY_ID } from "../../wcomponent/value/parse_value"
 import { get_wcomponent_state_value_and_probabilities } from "../../wcomponent_derived/get_wcomponent_state_value_and_probabilities"
@@ -40,8 +39,6 @@ import { wcomponent_type_to_text } from "../../wcomponent_derived/wcomponent_typ
 import { calc_display_opacity, calc_wcomponent_should_display } from "../calc_should_display"
 import { factory_on_click } from "../canvas_common"
 import { Handles } from "./Handles"
-import { NodeSubStateSummary } from "./NodeSubStateSummary"
-import { NodeSubStateTypeIndicators } from "./NodeSubStateTypeIndicators"
 import { NodeValueAndPredictionSetSummary } from "./NodeValueAndPredictionSetSummary"
 import "./WComponentCanvasNode.scss"
 import { WComponentCanvasNodeBackgroundFrame } from "./WComponentCanvasNodeBackgroundFrame"
@@ -309,8 +306,6 @@ function _WComponentCanvasNode (props: Props)
         ))
     }
 
-    const sub_state_wcomponent = !derived_composed_wcomponent ? false : (is_editing || !derived_composed_wcomponent.hide_state) && wcomponent_is_sub_state(derived_composed_wcomponent) && derived_composed_wcomponent
-
     const terminals = get_terminals({ is_on_canvas, is_editing, is_highlighted })
 
     // const show_judgements_when_no_state_values = (wcomponent_is_statev2(wcomponent) && (!wcomponent.values_and_prediction_sets || wcomponent.values_and_prediction_sets.length === 0))
@@ -383,20 +378,6 @@ function _WComponentCanvasNode (props: Props)
                         />
                     </div>
                 </div>}
-
-                {sub_state_wcomponent && <div className="node_sub_state_container">
-                    {// todo call this class something different from "value_and_prediction_summary"
-                    }
-                    <div className="value_and_prediction_summary">
-                        <NodeSubStateSummary
-                            wcomponent={sub_state_wcomponent}
-                            created_at_ms={created_at_ms}
-                            sim_ms={sim_ms}
-                        />
-                    </div>
-                </div>}
-
-                {sub_state_wcomponent && <NodeSubStateTypeIndicators wcomponent={sub_state_wcomponent} />}
 
                 {derived_composed_wcomponent && is_editing && <div className="description_label">
                     {wcomponent_type_to_text(derived_composed_wcomponent.type)}

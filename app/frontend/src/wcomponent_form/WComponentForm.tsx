@@ -37,7 +37,6 @@ import {
     wcomponent_is_plain_connection,
     wcomponent_is_state_value,
     wcomponent_is_statev2,
-    wcomponent_is_sub_state,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import {
     get_wcomponent_state_UI_value,
@@ -56,7 +55,6 @@ import { WComponentImageForm } from "./WComponentImageForm"
 import { WComponentParentActionForm } from "./WComponentParentActionForm"
 import { WComponentStateForm } from "./WComponentStateForm"
 import { WComponentStateValueForm } from "./WComponentStateValueForm"
-import { WComponentSubStateForm } from "./WComponentSubStateForm"
 
 
 
@@ -316,11 +314,6 @@ function _WComponentForm (props: Props)
         }
 
         {wcomponent_is_state_value(wcomponent) && <WComponentStateValueForm
-            wcomponent={wcomponent}
-            upsert_wcomponent={wrapped_upsert_wcomponent}
-        />}
-
-        {wcomponent_is_sub_state(wcomponent) && <WComponentSubStateForm
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}

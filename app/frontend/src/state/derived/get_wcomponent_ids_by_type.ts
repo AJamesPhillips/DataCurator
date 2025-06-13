@@ -15,7 +15,6 @@ export function get_empty_wcomponent_ids_by_type (): WComponentIdsByType
         event: new Set(),
         statev2: new Set(),
         state_value: new Set(),
-        sub_state: new Set(),
         multidimensional_state: new Set(),
         process: new Set(),
         action: new Set(),
@@ -67,7 +66,7 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
     wc_ids_by_type.any_state_VAPs = set_union(wc_ids_by_type.statev2,  wc_ids_by_type.causal_link, wc_ids_by_type.action)
 
     // Need to keep in sync with get_current_temporal_value_certainty_from_wcomponent
-    wc_ids_by_type.has_single_datetime = set_union(wc_ids_by_type.event, wc_ids_by_type.sub_state, wc_statev2_ids_with_single_datetime)
+    wc_ids_by_type.has_single_datetime = set_union(wc_ids_by_type.event, wc_statev2_ids_with_single_datetime)
 
     return wc_ids_by_type
 }

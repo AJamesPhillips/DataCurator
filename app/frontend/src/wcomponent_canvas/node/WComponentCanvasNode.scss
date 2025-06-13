@@ -46,13 +46,7 @@
     max-width: 100%;
     align-items: center;
 }
-.node_sub_state_container
-{
-    display: flex;
-    max-width: 100%;
-    overflow: hidden;
-}
-.node_state_container, .node_sub_state_container
+.node_state_container
 {
     .value_and_prediction_summary
     {

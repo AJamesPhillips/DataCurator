@@ -10,7 +10,6 @@ import type {
     WComponentNodeStateV2,
     WComponentStateValue,
 } from "./state"
-import type { WComponentSubState } from "./substate"
 import type {
     WComponentBase,
     WComponentCalculations,
@@ -48,7 +47,6 @@ interface WComponentNodeProcessBase
 // TODO expand this list and add a test to make it robust to additions / deletions / changes
 export type WComponentNode = WComponentNodeEvent
     | WComponentNodeStateV2
-    | WComponentSubState
     | WComponentStateValue
     | WComponentNodeProcess
     | WComponentNodeAction
@@ -192,7 +190,6 @@ export function wcomponent_is_node (wcomponent: WComponent | undefined): wcompon
         wcomponent_is_statev2(wcomponent) ||
         wcomponent_is_process(wcomponent) ||
         wcomponent_is_action(wcomponent) ||
-        wcomponent_is_sub_state(wcomponent) ||
         wcomponent_is_state_value(wcomponent) ||
         wcomponent_is_counterfactual_v2(wcomponent)
     )
@@ -206,13 +203,6 @@ export function wcomponent_is_judgement_or_objective (wcomponent: WComponent | u
 export function wcomponent_is_objective (wcomponent: WComponent): wcomponent is WComponentJudgement
 {
     return wcomponent_is_a("objective", wcomponent)
-}
-
-
-
-export function wcomponent_is_sub_state (wcomponent: WComponent | undefined, log_error_id = ""): wcomponent is WComponentSubState
-{
-    return wcomponent_is_a("sub_state", wcomponent, log_error_id)
 }
 
 

@@ -6,14 +6,11 @@ import type {
 import { get_uncertain_datetime, uncertain_datetime_is_eternal } from "../../shared/uncertainty/datetime"
 import type { TemporalUncertainty } from "../../shared/uncertainty/interfaces"
 import { SortDirection, sort_list } from "../../shared/utils/sort"
-import { get_created_at_ms, partition_items_by_created_at_datetime } from "../../shared/utils_datetime/utils_datetime"
 import {
     WComponent,
     WComponentsById,
     wcomponent_has_legitimate_non_empty_state_VAP_sets,
-    wcomponent_is_allowed_to_have_state_VAP_sets,
-    wcomponent_is_event,
-    wcomponent_is_sub_state
+    wcomponent_is_event
 } from "../../wcomponent/interfaces/SpecialisedObjects"
 import type { HasVAPSetsAndMaybeValuePossibilities, StateValueAndPredictionsSet } from "../../wcomponent/interfaces/state"
 import { group_versions_by_id } from "../../wcomponent_derived/value_and_prediction/group_versions_by_id"
@@ -241,28 +238,6 @@ export function get_current_temporal_value_certainty_from_wcomponent (wcomponent
         const certainty = prediction.probability * prediction.conviction
 
         return { temporal_uncertainty, certainty }
-    }
-
-    else if (wcomponent_is_sub_state(wcomponent))
-    {
-        const { target_wcomponent_id, selector } = wcomponent
-        const maybe_target_wcomponent = wcomponents_by_id[target_wcomponent_id || ""]
-        const target_wcomponent = wcomponent_is_allowed_to_have_state_VAP_sets(maybe_target_wcomponent) && maybe_target_wcomponent
-        if (!target_wcomponent || !selector) return undefined
-
-        const { target_VAP_set_id } = selector
-        if (!target_VAP_set_id) return undefined
-
-        let { values_and_prediction_sets: target_VAP_sets } = target_wcomponent
-
-        // We know that counterfactuals do not effect the time yet so we don't need to to this yet.
-        // const VAP_set_id_to_counterfactual_v2_map = get_VAP_set_id_to_counterfactual_v2_map(state, target_wcomponent_id)
-
-        target_VAP_sets = target_VAP_sets.filter(({ id }) => id === target_VAP_set_id)
-        target_VAP_sets = partition_items_by_created_at_datetime({ items: target_VAP_sets, created_at_ms }).current_items
-        target_VAP_sets = sort_list(target_VAP_sets, get_created_at_ms, SortDirection.descending)
-        const target_VAP_set = target_VAP_sets[0]
-        return convert_VAP_set_to_temporal_certainty(target_VAP_set)
     }
 
     else if (wcomponent && wcomponent_has_legitimate_non_empty_state_VAP_sets(wcomponent))

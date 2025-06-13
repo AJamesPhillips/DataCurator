@@ -4,14 +4,13 @@ import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
 
 
 
-export type WComponentNodeType = "event" | "statev2" | "state_value" | "sub_state" | "multidimensional_state" | "process" | "action" | "actor" | "counterfactualv2" | "judgement" | "objective"
+export type WComponentNodeType = "event" | "statev2" | "state_value" | "multidimensional_state" | "process" | "action" | "actor" | "counterfactualv2" | "judgement" | "objective"
 export type WComponentConnectionType = "causal_link" | "relation_link"
 export type WComponentType = WComponentNodeType | WComponentConnectionType
 const _wcomponent_types: {[P in WComponentType]: true} = {
     event: true,
     statev2: true,
     state_value: true,
-    sub_state: true,
     multidimensional_state: true,
     process: true,
     action: true,
