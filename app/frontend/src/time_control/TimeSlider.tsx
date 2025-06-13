@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from "react-redux"
 import { date2str_auto } from "datacurator-core/utils/date_helpers"
 
 import { EditableCustomDateTime } from "../form/EditableCustomDateTime"
-import { floor_mseconds_to_resolution } from "../shared/utils/datetime"
+import { floor_mseconds_to_minute_resolution } from "../shared/utils/datetime"
 import type { RootState } from "../state/State"
 import { find_nearest_index_in_sorted_list } from "../utils/binary_search"
 import type { TimeSliderEvent } from "./interfaces"
@@ -27,7 +27,6 @@ interface OwnProps
 
 const map_state = (state: RootState, { get_handle_ms }: OwnProps) => ({
     handle_datetime_ms: get_handle_ms(state),
-    time_resolution: state.display_options.time_resolution,
 })
 
 const connector = connect(map_state)
@@ -40,7 +39,7 @@ function _TimeSlider (props: Props)
     const event_start_datetimes_ms = props.events.map(event =>
     {
         let ms = event.datetime.getTime()
-        ms = floor_mseconds_to_resolution(ms, props.time_resolution)
+        ms = floor_mseconds_to_minute_resolution(ms)
         return ms
     })
 
@@ -154,7 +153,7 @@ const value_text = (value: number) => `${value}`
 
 const get_value_label_format = (value: number) =>
 {
-    const date_str = date2str_auto({ date: new Date(value), time_resolution: "minute" })
+    const date_str = date2str_auto({ date: new Date(value) })
 
     return <span style={{ whiteSpace: "nowrap" }}>{date_str}</span>
 }

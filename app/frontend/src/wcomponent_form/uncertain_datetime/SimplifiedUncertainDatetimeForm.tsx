@@ -26,7 +26,7 @@ export function SimplifiedUncertainDatetimeForm (props: SimplifiedUncertainDatet
 
 
     return <div>
-        {datetime ? date2str_auto({ date: datetime, time_resolution: undefined }) : "Is Eternal"}
+        {datetime ? date2str_auto({ date: datetime }) : "Is Eternal"}
         <br />
 
         {is_eternal && <Button

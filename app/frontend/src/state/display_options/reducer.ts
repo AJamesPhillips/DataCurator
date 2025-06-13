@@ -9,7 +9,6 @@ import {
     is_set_or_toggle_focused_mode,
     is_set_or_toggle_show_large_grid,
     is_set_show_help_menu,
-    is_set_time_resolution,
     is_toggle_consumption_formatting
 } from "./actions"
 
@@ -27,12 +26,6 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
     {
         const focused_mode = boolean_or_toggle(action.focused_mode, state.display_options.focused_mode)
         state = update_substate(state, "display_options", "focused_mode", focused_mode)
-    }
-
-
-    if (is_set_time_resolution(action))
-    {
-        state = update_substate(state, "display_options", "time_resolution", action.time_resolution)
     }
 
 

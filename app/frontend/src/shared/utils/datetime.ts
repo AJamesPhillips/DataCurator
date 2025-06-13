@@ -1,22 +1,12 @@
-import { TimeResolution } from "datacurator-core/interfaces/datetime"
 import { date2str_auto } from "datacurator-core/utils/date_helpers"
 
 
 
-export function floor_mseconds_to_resolution (ms: number, time_resolution: TimeResolution): number
+export function floor_mseconds_to_minute_resolution (ms: number): number
 {
-    const date = floor_datetime_to_resolution(new Date(ms), time_resolution)
+    const date_str = date2str_auto({ date: new Date(ms), time_resolution: "minute" })
 
-    return date.getTime()
-}
-
-
-
-export function floor_datetime_to_resolution (date: Date, time_resolution: TimeResolution)
-{
-    const str = date2str_auto({ date, time_resolution })
-
-    return new Date(str)
+    return new Date(date_str).getTime()
 }
 
 

@@ -59,7 +59,7 @@ export function ScenarioGroupRunResultComponent (props: Props)
 
 
     return <div className={class_name}>
-        {date2str_auto({ date: group_run.started, time_resolution: "second" })}
+        {date2str_auto({ date: group_run.started })}
         &nbsp; {percent_complete}%
 
         &nbsp; &nbsp;

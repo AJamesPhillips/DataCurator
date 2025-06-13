@@ -7,7 +7,6 @@ import { shortcuts_map } from "../help_menu/shortcuts"
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
 import { ExperimentalFeatures } from "./ExperimentalFeatures"
-import { TimeResolutionOptions } from "./TimeResolutionOptions"
 
 
 
@@ -37,14 +36,6 @@ type Props = ConnectedProps<typeof connector>
 function _DisplayOptionsSidePanel (props: Props)
 {
     return <div className="side_panel">
-
-        <p className="section">
-            <b>Time resolution</b> &nbsp;
-
-            <TimeResolutionOptions />
-        </p>
-
-
 
         <p className="section">
             <b>Use "Focused" Mode</b>

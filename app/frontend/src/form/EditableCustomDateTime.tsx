@@ -3,7 +3,6 @@ import { FunctionalComponent, h } from "preact"
 import { useEffect, useRef, useState } from "preact/hooks"
 import { connect, ConnectedProps } from "react-redux"
 
-import { TimeResolution } from "datacurator-core/interfaces/datetime"
 import { date2str, get_today_str } from "datacurator-core/utils/date_helpers"
 import { correct_datetime_for_local_time_zone, date_to_string, valid_date } from "datacurator-core/utils/datetime"
 import { describe, test } from "datacurator-core/utils/test"
@@ -28,7 +27,6 @@ interface OwnProps
 
 
 const map_state = (state: RootState) => ({
-    time_resolution: state.display_options.time_resolution,
     presenting: state.display_options.consumption_formatting,
 })
 
@@ -99,7 +97,7 @@ function _EditableCustomDateTime (props: Props)
                 // this code block should only be run **once** on the render cycle immediately
                 // after focusing the input element
                 const date = props_value(props)
-                const new_working_value = date_to_string({ date, time_resolution: "minute", trim_midnight: false })
+                const new_working_value = date_to_string({ date, trim_midnight: false })
                 r.value = new_working_value
 
                 r.setSelectionRange(0, r.value.length)
@@ -205,12 +203,11 @@ interface PropsToStrValueArgs
 {
     invariant_value?: Date | undefined
     value: Date | undefined
-    time_resolution: TimeResolution
 }
 function props_to_str_value (args: PropsToStrValueArgs)
 {
     const date = props_value(args)
-    const working_value = date_to_string({ date, time_resolution: args.time_resolution })
+    const working_value = date_to_string({ date })
     return working_value
 }
 

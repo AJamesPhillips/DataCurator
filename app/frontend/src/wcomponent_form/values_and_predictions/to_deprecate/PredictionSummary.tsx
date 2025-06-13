@@ -1,11 +1,9 @@
-import { FunctionalComponent, h } from "preact"
-import { connect, ConnectedProps } from "react-redux"
+import { h } from "preact"
 
 import { uncertain_date_to_string } from "datacurator-core/utils/datetime"
 
 import { EditableCustomDateTime } from "../../../form/EditableCustomDateTime"
 import type { TemporalUncertainty } from "../../../shared/uncertainty/interfaces"
-import type { RootState } from "../../../state/State"
 import "./PredictionSummary.scss"
 
 
@@ -20,19 +18,9 @@ interface OwnProps
 }
 
 
-
-const map_state = (state: RootState) => ({
-    time_resolution: state.display_options.time_resolution,
-})
-
-
-const connector = connect(map_state)
-type Props = ConnectedProps<typeof connector> & OwnProps
-
-
-function _PredictionSummary (props: Props)
+export function PredictionSummary (props: OwnProps)
 {
-    const { value, created_at, datetime, probability, conviction, time_resolution } = props
+    const { value, created_at, datetime, probability, conviction } = props
 
     return <div>
         {created_at && <div style={{ display: "inline-flex" }}>
@@ -44,7 +32,7 @@ function _PredictionSummary (props: Props)
         <div className="summary_container">
             <div className="summary_row">
                 <div className="datetimes">
-                    {uncertain_date_to_string(datetime, time_resolution)}
+                    {uncertain_date_to_string(datetime)}
                 </div>
                 {value && <div>&nbsp; &nbsp; &nbsp; {value}</div>}
             </div>
@@ -58,5 +46,3 @@ function _PredictionSummary (props: Props)
         </div>
     </div>
 }
-
-export const PredictionSummary = connector(_PredictionSummary) as FunctionalComponent<OwnProps>

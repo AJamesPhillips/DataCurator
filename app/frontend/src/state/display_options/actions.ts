@@ -1,6 +1,5 @@
 import type { Action, AnyAction } from "redux"
 
-import { TimeResolution } from "datacurator-core/interfaces/datetime"
 
 
 const toggle_consumption_formatting_type = "toggle_consumption_formatting"
@@ -30,26 +29,6 @@ const set_or_toggle_focused_mode = (focused_mode?: boolean): ActionSetOrToggleFo
 export const is_set_or_toggle_focused_mode = (action: AnyAction): action is ActionSetOrToggleFocusedMode => {
     return action.type === set_or_toggle_focused_mode_type
 }
-
-
-
-interface SetTimeResolutionArgs
-{
-    time_resolution: TimeResolution
-}
-interface ActionSetTimeResolution extends Action, SetTimeResolutionArgs {}
-
-const set_time_resolution_type = "set_time_resolution"
-
-const set_time_resolution = (args: SetTimeResolutionArgs): ActionSetTimeResolution =>
-{
-    return { type: set_time_resolution_type, ...args }
-}
-
-export const is_set_time_resolution = (action: AnyAction): action is ActionSetTimeResolution => {
-    return action.type === set_time_resolution_type
-}
-
 
 
 interface SetDisplayTimeMarksArgs
@@ -152,7 +131,6 @@ export const is_set_or_toggle_show_large_grid = (action: AnyAction): action is A
 export const display_actions = {
     toggle_consumption_formatting,
     set_or_toggle_focused_mode,
-    set_time_resolution,
     set_display_time_marks,
     set_or_toggle_animate_connections,
     set_or_toggle_circular_links,

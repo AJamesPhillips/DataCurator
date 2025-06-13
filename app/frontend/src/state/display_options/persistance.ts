@@ -9,7 +9,6 @@ export function display_options_persist (state: RootState)
 {
     const to_persist = pick([
         "consumption_formatting",
-        "time_resolution",
         "display_time_marks",
         "animate_connections",
         "circular_links",
@@ -28,7 +27,6 @@ export function display_options_starting_state (): DisplayOptionsState
     const state: DisplayOptionsState = {
         consumption_formatting: true,
         focused_mode: false,
-        time_resolution: "minute",
         display_time_marks: false,
         animate_connections: false,
         circular_links: true,

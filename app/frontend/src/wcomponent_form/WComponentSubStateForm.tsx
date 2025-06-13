@@ -104,7 +104,7 @@ function _WComponentSubStateForm (props: Props)
         VAP_set_id_options = target_VAP_sets
             .map(({ id, datetime }) =>
             {
-                const title = uncertain_date_to_string(datetime, "minute")
+                const title = uncertain_date_to_string(datetime)
                 return { id, title }
             })
 
