@@ -39,7 +39,9 @@ function remove_deleted_wcomponents (composed_wc_id_map: KnowledgeViewWComponent
     Object.keys(composed_wc_id_map).forEach(id =>
     {
         const wcomponent = wcomponents_by_id[id]
-        // Allow not found wcomponents to be kept as they may be from a different base and just not loaded
+        // Have commented this line out to allow wcomponents which are not found
+        // to still be kept as they may be from a different project (base) and
+        // just not loaded.
         // if (!wcomponent) delete composed_wc_id_map[id]
         if (wcomponent_is_deleted(wcomponent)) delete composed_wc_id_map[id]
     })

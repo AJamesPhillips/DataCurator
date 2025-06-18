@@ -51,7 +51,7 @@ function _StorageOptionsForm (props: Props)
 
 
     if (!users_by_id) return "Loading users..."
-    if (!bases_by_id) return "Loading bases..."
+    if (!bases_by_id) return "Loading projects..."
 
 
     const user_id = user?.id
@@ -88,7 +88,7 @@ function _StorageOptionsForm (props: Props)
 
         {create_base && <div>
             <h4>
-                Create {base_count ? "a new" : "your first" } base
+                Create {base_count ? "a new" : "your first" } project
             </h4>
 
             <input type="text" value={new_base_title}
@@ -100,7 +100,7 @@ function _StorageOptionsForm (props: Props)
                 type="button"
                 disabled={!(new_base_title.trim()) || base_creation_state === "in_progress"}
                 onClick={create_base}
-                value="Create new base"
+                value="Create new project"
             /> &nbsp;
 
             {async_status_to_text(base_creation_state)} &nbsp;
@@ -112,7 +112,7 @@ function _StorageOptionsForm (props: Props)
                     update_chosen_base_id({ base_id: newly_created_base.id })
                     if (on_close) on_close()
                 }}
-                value="Select new base"
+                value="Select new project"
             />}
         </div>}
 

@@ -62,7 +62,7 @@ function _WComponentsSidePanel (props: Props)
         : DisplayType.render_wcomponent
 
 
-    // Look for wcomponent in any base
+    // Look for wcomponent in any project (base)
     useEffect(() =>
     {
         if (wcomponent) return
@@ -75,7 +75,7 @@ function _WComponentsSidePanel (props: Props)
 
     if (display_type === DisplayType.need_to_choose_base_id) return <div>
         <Button
-            value="Choose a base to view"
+            value="Choose a project to view"
             onClick={() => props.set_or_toggle_display_select_storage(true)}
         />
     </div>
@@ -134,9 +134,9 @@ function _WComponentsSidePanel (props: Props)
         <br />
         <br />
 
-        {searching_for_unfound && <div>Searching in other bases...</div>}
+        {searching_for_unfound && <div>Searching in other projects...</div>}
         {!searching_for_unfound && <div>
-            Not found in other bases (that you have access to).
+            Not found in other projects (that you have access to).
 
             {props.editing && id && <NotFoundWComponentKnowledgeViewForm wcomponent_id={id} />}
         </div>}

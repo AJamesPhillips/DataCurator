@@ -16,7 +16,7 @@ export function SelectStorage (props: OwnProps)
 
     return <Modal
         title={<div style={{ margin: 10 }}>
-            <h2 style={{ display: "inline" }}>Knowledge Bases</h2>
+            <h2 style={{ display: "inline" }}>Projects</h2>
         </div>}
         size="medium"
 

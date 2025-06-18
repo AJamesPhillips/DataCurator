@@ -49,14 +49,14 @@ function _KnowledgeViewChangeBase (props: Props)
 
 
     if (chosen_base_id === undefined) return <div>
-        <h4>Change base of knowledge view</h4>
+        <h4>Change project of knowledge view</h4>
 
-        Need to select a base first
+        Need to select a project first
     </div>
 
 
     if (!wcomponents_move_conflicts) return <div>
-        <h4>Change base of knowledge view</h4>
+        <h4>Change project of knowledge view</h4>
 
         <Button
             value="Check if safe to move"
@@ -83,16 +83,17 @@ function _KnowledgeViewChangeBase (props: Props)
 
 
     return <div>
-        <h4>Change base of knowledge view</h4>
+        <h4>Change project of knowledge view</h4>
 
         {wcomponent_conflict_number > 0 && <p>
-            There are other knowledge views which are not nested under this knowledge view and that
+            All the nested knowledge views and their components will be moved however
+            there are other knowledge views which are not nested under this knowledge view and that
             contain <span style={{ color: "darkred" }}>{wcomponent_conflict_number} components</span> that
-            are also in this knowledge view.  These entries can be moved to the new base or left assigned
-            to this base.  All the nested knowledge views and their components will be moved regardless.
-            {/* If these components are moved to the new base then their entries in the other knowledge views
+            are also in this knowledge view.  These knowledge views and their components can be moved to
+            the new project or left assigned to this project.
+            {/* If these components are moved to the new project then their entries in the other knowledge views
             will be <span style={{ fontSize: 11, color: "darkred" }}>PERMANENTLY</span> removed.
-            In the future it will be possible to blend components from multiple bases so this warning will not apply
+            In the future it will be possible to blend components from multiple projects so this warning will not apply
             but we have not yet implemented that functionality. */}
         </p>}
 
@@ -111,7 +112,7 @@ function _KnowledgeViewChangeBase (props: Props)
 
 
         <p>
-            <i><b>Step 2 of 3: Select base to move to</b></i>
+            <i><b>Step 2 of 3: Select project to move to</b></i>
 
             <SelectBaseToMoveTo
                 base_id_to_move_to={base_id_to_move_to}
@@ -123,7 +124,7 @@ function _KnowledgeViewChangeBase (props: Props)
         {base_id_to_move_to !== undefined && <div>
             {ids_to_move_without_conflict.size !== total_possible_ids_to_move && <ConfirmatoryButton
                 disabled={total_possible_ids_to_move === 0}
-                button_text={`Move all ${total_possible_ids_to_move} components to new base (including conflicted)`}
+                button_text={`Move all ${total_possible_ids_to_move} components to new project (including conflicted components)`}
                 on_click={() =>
                 {
                     const ids_to_move = Array.from(ids_to_move_without_conflict).concat(Object.keys(wcomponents_move_conflicts))
@@ -132,7 +133,7 @@ function _KnowledgeViewChangeBase (props: Props)
             />}
             <ConfirmatoryButton
                 disabled={ids_to_move_without_conflict.size === 0}
-                button_text={`Move ${ids_to_move_without_conflict.size} components (no conflicts) to new base`}
+                button_text={`Only move ${ids_to_move_without_conflict.size} components to new project, leaving conflicted components in this project.`}
                 on_click={() =>
                 {
                     const ids_to_move = Array.from(ids_to_move_without_conflict)
@@ -144,12 +145,12 @@ function _KnowledgeViewChangeBase (props: Props)
 
         {result && <p>
             {result.error && <div style={{ backgroundColor: "pink" }}>
-                Got error whilst trying to change base id of components <br />
+                Got error whilst trying to change project id of components <br />
                 <pre>{JSON.stringify(result.error, null, 2)}</pre>
             </div>}
 
             {result.data && <div style={{ backgroundColor: "lightgreen" }}>
-                Successfully changed base id of {result.data} components &amp; knowledge views.  Reloading page in {RELOAD_PAGE_DELAY_IN_SECONDS} seconds
+                Successfully changed project id of {result.data} components &amp; knowledge views.  Reloading page in {RELOAD_PAGE_DELAY_IN_SECONDS} seconds
             </div>}
         </p>}
 
@@ -169,12 +170,12 @@ async function move_ids_to_new_base (ids: string[], from_base_id: number, base_i
     set_result(result)
 
     // This is a simple solution to clear the application state and return it to being valid
-    // This can be improved on to improve user experience.  e.g. we could navigate to the new base
-    // or if we want to keep on this base, we could clear the data and refetch it to get the correct
+    // This can be improved on to improve user experience.  e.g. we could navigate to the new project
+    // or if we want to keep on this project, we could clear the data and refetch it to get the correct
     // list of which wcomponents and knowledge views remain
     if (!result.error)
     {
-        logger.debug("Reloading page after moving ids to new base")
+        logger.debug("Reloading page after moving ids to new project")
         setTimeout(() => document.location.reload(), RELOAD_PAGE_DELAY_IN_SECONDS * 1000)
     }
 }

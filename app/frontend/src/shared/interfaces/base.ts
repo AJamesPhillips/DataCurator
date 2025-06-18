@@ -7,6 +7,7 @@ export interface HasBaseId
     base_id: number
 }
 
+/** Known in UI as `Project` */
 export interface Base extends HasBaseId
 {
     id: string

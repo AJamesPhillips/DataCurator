@@ -141,10 +141,10 @@ function add_child_views (all_kvs_ids_any_base: Set<string>, all_kvs_ids_only_th
         if (lack_parent_in_this_base.length)
         {
             // This says "maybe" because if the knowledge view is nested under a
-            // knowledge view in a different base then it's ok as its parent
-            // exists just in a different base.  i.e. we're in knowledge base 1,
-            // this component kv belongs to knowledge base 1, but it has been nested
-            // under a view that is owner by knowledge base 2.
+            // knowledge view in a different project (base) then it's ok as its parent
+            // exists just in a different project (base).  i.e. we're in knowledge project (base) 1,
+            // this component kv belongs to knowledge project (base) 1, but it has been nested
+            // under a view that is owner by knowledge project (base) 2.
             console.warn(`Maybe broken knowledge view tree.  Look in "Views" for:\n * ${lack_parent_in_this_base.map(kv => `${kv.title} ${kv.id}`).join("\n * ")}`)
         }
 

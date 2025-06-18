@@ -42,7 +42,7 @@ function _CreateNewWComponent (props: Props)
         </FrontendButton>
     </div>
 
-    if (base_id === undefined) return <div class="create_new_wcomponent">Select a base first.</div>
+    if (base_id === undefined) return <div class="create_new_wcomponent">Select a project first.</div>
 
     if (!current_knowledge_view) return <div class="create_new_wcomponent">
         <h3>

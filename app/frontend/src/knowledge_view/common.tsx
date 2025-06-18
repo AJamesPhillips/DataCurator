@@ -67,13 +67,13 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
     if (nested_kv?.ERROR_is_circular) kv_nesting_error = "Is circularly nested"
     if (nested_kv?.ERROR_parent_kv_missing)
     {
-        kv_nesting_error = "Parent knowledge view is missing (may be present in a different knowledge base)"
+        kv_nesting_error = "Parent knowledge view is missing (may be present in a different project)"
     }
 
     let kv_nesting_warning = ""
     if (nested_kv?.ERROR_parent_from_diff_base)
     {
-        kv_nesting_warning = "Parent knowledge view from a different base"
+        kv_nesting_warning = "Parent knowledge view from a different project"
     }
 
 
@@ -81,11 +81,11 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
         {kv_from_different_base && <div
             style={{ cursor: "pointer" }}
             onClick={() => props.update_chosen_base_id({ base_id: knowledge_view.base_id })}
-            title={`Click to change to base ${knowledge_view.base_id}`}
+            title={`Click to change to project ${knowledge_view.base_id}`}
         >
             <WarningTriangle message="" />
             &nbsp;
-            Is part of base "{base_for_knowledge_view?.title}"
+            Is part of project "{base_for_knowledge_view?.title}"
         </div>}
 
         <p style={{ display: "inline-flex" }}>
@@ -197,7 +197,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 args={{ subview_id: knowledge_view.id }}
             >
                 Change to this knowledge view
-            </Link> to edit datetime lines config and change the base.
+            </Link> to edit datetime lines config and change the project.
         </div>}
 
         {editing && is_current_kv && <div>

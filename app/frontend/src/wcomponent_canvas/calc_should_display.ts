@@ -77,7 +77,8 @@ export function calc_connection_wcomponent_should_display (args: CalculateConnec
     if (!connection_should_display) return false
 
 
-    // Allow connections to non-existant components as these components may exist in a different base
+    // Allow connections to non-existant components as these components may
+    // exist in a different project (base)
     if (!from_wc || !to_wc) return true
 
 

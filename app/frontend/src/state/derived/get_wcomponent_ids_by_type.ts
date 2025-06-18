@@ -43,7 +43,7 @@ export function get_wcomponent_ids_by_type (wcomponents_by_id: WComponentsById, 
         const wc = wcomponents_by_id[id]
         if (!wc)
         {
-            console.warn(`Could not find wcomponent by id: ${id}.  Wrong ID or in another base?`)
+            console.warn(`Could not find wcomponent by id: ${id}.  Wrong ID or in another project?`)
             return
         }
 

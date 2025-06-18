@@ -46,7 +46,7 @@ export function BaseFormEditFields (props: OwnProps)
 
 
     return <div>
-        <h4>Edit base</h4>
+        <h4>Edit project</h4>
 
         Title &nbsp; <input
             type="text"

@@ -302,17 +302,17 @@ export function SandBoxSupabase ()
         <br />
         <br />
 
-        <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases, user_id })} value="Get all bases" />
-        <input type="button" onClick={() => get_or_create_an_owned_base({ user_id, set_postgrest_error, set_current_base_id })} value="Get a base (optionally create)" />
+        <input type="button" onClick={() => get_all_bases2({ set_postgrest_error, set_bases, user_id })} value="Get all projects (bases)" />
+        <input type="button" onClick={() => get_or_create_an_owned_base({ user_id, set_postgrest_error, set_current_base_id })} value="Get a project (optionally create)" />
 
         <br />
         <br />
         <DisplaySupabasePostgrestError error={postgrest_error} />
 
-        <h3>Bases</h3>
+        <h3>Projects</h3>
         <br />
         {bases && <div>
-            {bases.length} bases <br/>
+            {bases.length} projects <br/>
 
             {bases
             .map(base =>
@@ -343,7 +343,7 @@ export function SandBoxSupabase ()
         {current_base && <div>
             <hr />
             <br />
-            <h3>Base modification</h3>
+            <h3>Project modification</h3>
             <br />
 
             <input type="button" onClick={() =>
@@ -379,7 +379,7 @@ export function SandBoxSupabase ()
         {current_base && current_base_id && <div>
             <hr />
             <br />
-            <h3>Base sharing</h3>
+            <h3>Project sharing</h3>
             <br />
             {current_base.public_read ? "Is PUBLIC" : "Is private (not public)"}
             <br />
@@ -477,7 +477,7 @@ export function SandBoxSupabase ()
                 onClick={() => modify_knowledge_view({
                     knowledge_view, current_knowledge_views: knowledge_views,
                     set_postgrest_error, set_knowledge_views })}
-                value="Modify a knowledge view (set random title) then fetch all for all bases"
+                value="Modify a knowledge view (set random title) then fetch all for all projects"
             />
         </div>}
 

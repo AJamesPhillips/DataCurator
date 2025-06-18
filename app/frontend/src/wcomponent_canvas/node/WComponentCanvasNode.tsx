@@ -350,7 +350,7 @@ function _WComponentCanvasNode (props: Props)
                     </span>}
 
                     {kv_from_different_base && is_editing && <span>
-                        <WarningTriangle message="Is from a different base to this knowledge view" />
+                        <WarningTriangle message="Is from a different project to this knowledge view" />
                         &nbsp;
                     </span>}
 

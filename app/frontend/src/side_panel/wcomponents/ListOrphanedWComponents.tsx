@@ -59,7 +59,7 @@ function _ListOrphanedWComponents (props: Props)
             Orphaned Components
         </h3>
         <span className="description_label">
-            Show all components in this knowledge base which are not in one or more knowledge views in this base.
+            Show all components in this project which are not in one or more knowledge views in this project.
         </span>
 
         <ButtonGroup fullWidth={true} color="primary" variant="contained" orientation="vertical">

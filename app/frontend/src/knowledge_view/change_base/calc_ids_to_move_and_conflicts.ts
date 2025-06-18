@@ -123,7 +123,7 @@ function get_possible_wc_ids_to_move (args: GetPossibleWComponentIdsToMoveArgs)
         // for now, leave behind any wcomponents that have been deleted and aren't present in another knowledge_views_to_move
         if (kv_entry.blocked || kv_entry.passthrough) return
 
-        // probably belongs to another base
+        // probably belongs to another base (project)
         if (!args.wcomponents_by_id[wc_id]) return
 
         // Do not move any component which has a view that is being kept

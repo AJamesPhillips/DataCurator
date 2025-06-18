@@ -72,7 +72,7 @@ function _AddNewActionButton (props: Props)
         fullWidth={false}
         onClick={handle_click}
         disabled={base_id === undefined}
-        title={base_id === undefined ? "No knowledge base selected" : ""}
+        title={base_id === undefined ? "No project selected" : ""}
     >
         <AddIcon />
     </Button>
@@ -105,7 +105,7 @@ function make_handle_click (args: MakeHandleClickArgs)
 
     return function handle_click ()
     {
-        if (base_id === undefined) throw new Error(`No base_id defined in click for AddNewActionButton`)
+        if (base_id === undefined) throw new Error(`No base_id (project id) defined in click for AddNewActionButton`)
 
         const next_action_position = get_next_available_wc_map_position(composed_wc_id_map, most_recent_action_id, wcomponents_by_id)
 

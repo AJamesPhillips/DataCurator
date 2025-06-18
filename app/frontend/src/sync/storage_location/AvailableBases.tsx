@@ -55,7 +55,7 @@ function _AvailableBases (props: Props)
 
 
     if (!users_by_id) return "Loading users..."
-    if (!bases_by_id) return "Loading bases..."
+    if (!bases_by_id) return "Loading projects..."
 
 
     const bases = sort_list(Object.values(bases_by_id), b => b.inserted_at.getTime(), SortDirection.descending)
@@ -78,7 +78,7 @@ function _AvailableBases (props: Props)
             style={{ float: "right" }}
         />
 
-        <h4>Select a base</h4>
+        <h4>Select a project</h4>
 
         <DisplaySupabasePostgrestError error={error} />
 
@@ -86,7 +86,7 @@ function _AvailableBases (props: Props)
         <thead>
             <tr>
                 <th></th>
-                <th>Knowledge Base Title</th>
+                <th>Project Title</th>
                 <th>{/* Public */}</th>
                 <th>Owner</th>
                 <th>Access</th>

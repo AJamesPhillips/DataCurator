@@ -92,8 +92,8 @@ function _ViewOptions (props: Props)
                     <h1>Warning: Your edits will not be saved</h1>
 
                     <p>
-                        You can make changes to this knowledge base but they will not be saved.
-                        The owner of this knowledge base may give you editing rights if you ask them.
+                        You can make changes to this project but they will not be saved.
+                        The owner of this project may give you editing rights if you ask them.
                     </p>
 
                     <br />

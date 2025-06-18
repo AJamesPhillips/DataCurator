@@ -21,7 +21,7 @@ export function SimulationSummary (props: OwnProps)
     const { knowledge_views_by_id, wcomponents_by_id } = props
     const base_kv = knowledge_views_by_id[foundational_knowledge_view_id]
 
-    if (!base_kv) return <div>Unknown simulation base knowledge view for id: {foundational_knowledge_view_id}</div>
+    if (!base_kv) return <div>Unknown simulation foundation knowledge view for id: {foundational_knowledge_view_id}</div>
 
 
     const created_at_ms = new Date().getTime()

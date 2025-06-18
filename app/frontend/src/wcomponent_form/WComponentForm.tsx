@@ -126,7 +126,7 @@ function _WComponentForm (props: Props)
     if (!ready) return <div>Loading...</div>
     // Type guard
     if (!derived_composed_wcomponent) return <div>Loading...</div>
-    if (base_id === undefined) return <div>Choose a base first.</div>
+    if (base_id === undefined) return <div>Choose a project first.</div>
 
 
     const VAP_set_id_to_counterfactual_v2_map = wc_id_to_counterfactuals_map && wc_id_to_counterfactuals_map[wcomponent_id]?.VAP_sets
@@ -190,16 +190,16 @@ function _WComponentForm (props: Props)
         {props.is_in_editing_mode && !props.allowed_to_edit && <div>
             <WarningTriangle message="" />
             &nbsp;
-            Not allow to edit.  Ask base owner to give you edit permissions.
+            Not allow to edit.  Ask project owner to give you edit permissions.
         </div>}
         {props.wcomponent_from_different_base && <div
             style={{ cursor: "pointer" }}
             onClick={() => props.update_chosen_base_id({ base_id: wcomponent.base_id })}
-            title={`Click to change to base ${wcomponent.base_id}`}
+            title={`Click to change to project ${wcomponent.base_id}`}
         >
             <WarningTriangle />
             &nbsp;
-            Is part of base "{props.base_for_wcomponent?.title}"
+            Is part of project "{props.base_for_wcomponent?.title}"
         </div>}
 
         <FormControl

@@ -51,7 +51,7 @@ function _StorageInfo (props: Props)
                 disableElevation={true}
                 onClick={() => set_or_toggle_display_select_storage(true)}
                 size="small"
-                endIcon={<PermDataSettingIcon titleAccess="Create and Select Knowledge Bases" />}
+                endIcon={<PermDataSettingIcon titleAccess="Create and Select Projects" />}
                 style={{textTransform: "none"}}
                 variant="contained"
             >
