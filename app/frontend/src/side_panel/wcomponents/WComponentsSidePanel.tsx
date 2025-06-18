@@ -10,7 +10,6 @@ import type { RootState } from "../../state/State"
 import { NotFoundWComponentKnowledgeViewForm } from "../../wcomponent_form/wcomponent_knowledge_view_form/NotFoundWComponentKnowledgeViewForm"
 import { WComponentForm } from "../../wcomponent_form/WComponentForm"
 import { CreateNewWComponent } from "./CreateNewWComponent"
-import { ListOrphanedWComponents } from "./ListOrphanedWComponents"
 import { WComponentMultipleForm } from "./WComponentMultipleForm"
 
 
@@ -116,7 +115,7 @@ function _WComponentsSidePanel (props: Props)
 
         <CreateNewWComponent />
 
-        <ListOrphanedWComponents />
+        {/* <ListOrphanedWComponents /> */}
 
     </div>
 
