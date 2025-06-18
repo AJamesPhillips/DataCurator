@@ -89,7 +89,7 @@ function _AvailableBases (props: Props)
                 <th>Project Title</th>
                 <th>{/* Public */}</th>
                 <th>Owner</th>
-                <th>Access</th>
+                <th>Your Access</th>
                 {/* <th>Id</th> */}
                 <th>{/* Edit */}</th>
             </tr>
