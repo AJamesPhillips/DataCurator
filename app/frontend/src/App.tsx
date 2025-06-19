@@ -26,6 +26,7 @@ import { Modal } from "./modal/Modal"
 import { ActiveCreatedAtFilterWarning } from "./sharedf/ActiveCreatedAtFilterWarning"
 import { ActiveFilterWarning } from "./sharedf/ActiveFilterWarning"
 import { ActiveUserWidget } from "./sharedf/ActiveUserWidget"
+import { Toast } from "./sharedf/Toast"
 import { SidePanel } from "./side_panel/SidePanel"
 import { SidePanelOrMenuButton } from "./side_panel/SidePanelOrMenuButton"
 import { SIDE_PANEL_WIDTH } from "./side_panel/width"
@@ -99,6 +100,8 @@ function StyledApp (props: Props)
                 </Typography>
             </Box>}
         />}
+
+        <Toast />
 
         <Box id="app" className={classes.root}>
             <AppBar elevation={1} id="header" position="fixed" className={"app_header " + classes.app_bar}>

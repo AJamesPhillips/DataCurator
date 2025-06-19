@@ -53,7 +53,7 @@ function _HelpMenu (props: Props)
 
                     <AccordionDetails>
                         <Box>
-                            These shortcuts only work when you are not editing a text field.  Some may only work when you are on the Map (Knowledge) canvas view.
+                            These shortcuts only work when you are not editing a text field.  Some may only work when you are viewing a map of components (also known as a knowledge view).
                             {shortcuts_list.map(args => <ShortcutCommand {...args} />)}
                         </Box>
                     </AccordionDetails>

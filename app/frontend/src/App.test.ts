@@ -40,10 +40,12 @@ import { test_get_composed_wcomponents_by_id } from "./state/derived/get_compose
 import { test_calc_if_wcomponent_should_exclude_because_label_or_type } from "./state/derived/knowledge_views/calc_if_wcomponent_should_exclude_because_label_or_type.test"
 import { test_get_composed_wc_id_maps_object } from "./state/derived/knowledge_views/get_composed_wc_id_maps_object.test"
 import { test_knowledge_views_derived_reducer } from "./state/derived/knowledge_views/knowledge_views_derived_reducer.test"
+import { test_display_reducer } from "./state/display_options/reducer.test"
 import { test_merge_routing_state } from "./state/routing/merge_routing_state"
 import { test_routing_state_to_string } from "./state/routing/routing"
 import { test_specialised_objects_accessors } from "./state/specialised_objects/accessors.test"
 import { test_tidy_wcomponent } from "./state/specialised_objects/wcomponents/tidy_wcomponent.test"
+import { test_getting_starting_state } from "./state/starting_state.test"
 import { test_merge_knowledge_views } from "./state/sync/merge/merge_knowledge_views"
 import { test_merge_wcomponent } from "./state/sync/merge/merge_wcomponents"
 import { test_supabase_get_items } from "./state/sync/supabase/get_items.test"
@@ -112,10 +114,12 @@ async function run_all_tests ()
     ;(await test_calc_if_wcomponent_should_exclude_because_label_or_type)()
     ;(await test_get_composed_wc_id_maps_object)()
     ;(await test_knowledge_views_derived_reducer)()
+    ;(await test_display_reducer)()
     ;(await test_merge_routing_state)()
     ;(await test_routing_state_to_string)()
     ;(await test_specialised_objects_accessors)()
     ;(await test_tidy_wcomponent)()
+    ;(await test_getting_starting_state)()
     ;(await test_merge_knowledge_views)()
     ;(await test_merge_wcomponent)()
     ;(await test_supabase_get_items)()

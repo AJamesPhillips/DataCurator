@@ -2,6 +2,7 @@ import type { AnyAction } from "redux"
 
 import { update_substate } from "../../utils/update_state"
 import type { RootState } from "../State"
+import { selector_can_not_edit } from "../user_info/selector"
 import {
     is_set_display_time_marks,
     is_set_or_toggle_animate_connections,
@@ -18,7 +19,15 @@ export const display_reducer = (state: RootState, action: AnyAction): RootState 
 {
     if (is_toggle_consumption_formatting(action))
     {
-        state = update_substate(state, "display_options", "consumption_formatting", !state.display_options.consumption_formatting)
+        const can_not_edit = selector_can_not_edit(state)
+        if (can_not_edit && state.display_options.consumption_formatting)
+        {
+            state = update_substate(state, "toast_message", "warn_can_not_edit_ms", new Date().getTime())
+        }
+        else
+        {
+            state = update_substate(state, "display_options", "consumption_formatting", !state.display_options.consumption_formatting)
+        }
     }
 
 

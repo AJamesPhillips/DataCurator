@@ -11,6 +11,7 @@ import type { SearchState } from "./search/state"
 import type { MetaWComponentsState } from "./specialised_objects/meta_wcomponents/State"
 import type { SpecialisedObjectsState } from "./specialised_objects/State"
 import type { SyncState } from "./sync/state"
+import type { ToastMessageState } from "./toast/state"
 import type { UserInfoState } from "./user_info/state"
 
 
@@ -31,6 +32,7 @@ export interface RootState extends RootStateCore
     routing: RoutingState
     search: SearchState
     sync: SyncState
+    toast_message: ToastMessageState
     user_info: UserInfoState
     view_priorities: ViewPrioritiesState
 }

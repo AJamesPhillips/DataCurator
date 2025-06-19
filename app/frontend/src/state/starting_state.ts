@@ -40,6 +40,7 @@ export function get_starting_state (deps: DependenciesForGettingStartingState = 
         global_keys: get_global_keys_starting_state(),
         meta_wcomponents: get_meta_wcomponents_starting_state(),
         search: search_starting_state(deps),
+        toast_message: {},
         user_info,
         view_priorities: view_priorities_starting_state(),
 

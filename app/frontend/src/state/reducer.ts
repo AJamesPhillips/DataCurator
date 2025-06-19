@@ -43,6 +43,8 @@ export const factory_root_reducer: (initial_state: RootState) => Reducer<RootSta
     state = view_priorities_reducer(state, action)
     state = search_reducer(state, action)
 
+    // This has got a bad smell and should be replaced by reducers that handle
+    // the various logic that this field enables
     state = { ...state, last_action: action }
 
     state = derived_state_reducer(prev_state, state)
