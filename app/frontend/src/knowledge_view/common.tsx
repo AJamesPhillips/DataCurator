@@ -88,7 +88,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             Is part of project "{base_for_knowledge_view?.title}"
         </div>}
 
-        <p style={{ display: "inline-flex" }}>
+        <div style={{ display: "inline-flex" }}>
             <EditableTextSingleLine
                 placeholder="Title"
                 value={knowledge_view.title}
@@ -120,13 +120,13 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
             >
                 <ExternalLinkIcon />Create Component
             </span>}
-        </p>
+        </div>
 
 
         {/* <p>{knowledge_view.is_base ? "All container" : "Normal"}</p> */}
 
 
-        {(editing || knowledge_view.description) && <p>
+        {(editing || knowledge_view.description) && <div>
             {editing && <span className="description_label">Description</span>} &nbsp;
             <EditableText
                 placeholder="..."
@@ -136,7 +136,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 }}
                 on_blur_type={EditableTextOnBlurType.conditional}
             />
-        </p>}
+        </div>}
 
 
         <div>
@@ -148,7 +148,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
         </div>
 
 
-        <p>
+        <div>
             <FoundationKnowledgeViewsList
                 owner_knowledge_view={knowledge_view}
                 on_change={foundation_knowledge_view_ids =>
@@ -156,10 +156,10 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                     crud.update_item({ ...knowledge_view, foundation_knowledge_view_ids })
                 }}
             />
-        </p>
+        </div>
 
 
-        {(editing || kv_nesting_error || kv_nesting_warning) && <p>
+        {(editing || kv_nesting_error || kv_nesting_warning) && <div>
             <span className="description_label">Nest under</span>
 
             {kv_nesting_error && <div style={{ backgroundColor: "pink" }}> {kv_nesting_error} </div>}
@@ -173,10 +173,10 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                     crud.update_item({ ...knowledge_view, parent_knowledge_view_id })
                 }}
             />
-        </p>}
+        </div>}
 
 
-        {editing && <p>
+        {editing && <div>
             <span className="description_label">Sort status</span>
             <AutocompleteText
                 selected_option_id={knowledge_view.sort_type}
@@ -184,7 +184,7 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
                 allow_none={false}
                 on_change={sort_type => sort_type && crud.update_item({ ...knowledge_view, sort_type })}
             />
-        </p>}
+        </div>}
 
 
         <hr />
@@ -220,14 +220,14 @@ export const factory_get_kv_details = (props: KnowledgeViewFormProps) => (knowle
         </div>}
 
 
-        {(editing || children.length > 0) && <p>
+        {(editing || children.length > 0) && <div>
             <KnowledgeViewListsSet
                 {...props}
                 parent_knowledge_view_id={knowledge_view.id}
                 knowledge_views={children}
                 item_descriptor="Nested"
             />
-        </p>}
+        </div>}
 
 
         <br />
