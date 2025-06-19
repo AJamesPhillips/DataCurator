@@ -1,6 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
+import { DependenciesForGettingStartingState } from "../interfaces"
+import { persist_state_object } from "../persistence/persistence_utils"
 import type { ControlsState } from "./state"
 
 
@@ -21,9 +22,9 @@ interface ControlsStartingStateArgs
 {
     storage_location: number | undefined
 }
-export function controls_starting_state (args: ControlsStartingStateArgs): ControlsState
+export function controls_starting_state (args: ControlsStartingStateArgs, deps: DependenciesForGettingStartingState): ControlsState
 {
-    const obj = get_persisted_state_object<ControlsState>("controls")
+    const obj = deps.get_persisted_state_object<ControlsState>("controls")
 
     const state: ControlsState = {
         linked_datetime_sliders: false,

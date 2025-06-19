@@ -1,6 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
+import { DependenciesForGettingStartingState } from "../interfaces"
+import { persist_state_object } from "../persistence/persistence_utils"
 import type { FilterContextState } from "./state"
 
 
@@ -17,9 +18,9 @@ export function filter_context_persist (state: RootState)
 
 
 
-export function filter_context_starting_state (): FilterContextState
+export function filter_context_starting_state (deps: DependenciesForGettingStartingState): FilterContextState
 {
-    const obj = get_persisted_state_object<FilterContextState>("filter_context")
+    const obj = deps.get_persisted_state_object<FilterContextState>("filter_context")
 
     // TODO remove code as only needed to migrate persisted state once
     if (obj.filters instanceof Array) delete obj.filters

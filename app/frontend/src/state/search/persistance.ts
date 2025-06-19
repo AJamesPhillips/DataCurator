@@ -1,6 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
+import { DependenciesForGettingStartingState } from "../interfaces"
+import { persist_state_object } from "../persistence/persistence_utils"
 import type { SearchState } from "./state"
 
 
@@ -17,9 +18,9 @@ export function search_persist (state: RootState)
 
 
 
-export function search_starting_state (): SearchState
+export function search_starting_state (deps: DependenciesForGettingStartingState): SearchState
 {
-    const obj = get_persisted_state_object<SearchState>("search")
+    const obj = deps.get_persisted_state_object<SearchState>("search")
 
     const state: SearchState = {
         search_fields: "all",

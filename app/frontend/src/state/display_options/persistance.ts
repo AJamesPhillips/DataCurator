@@ -1,6 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
+import { DependenciesForGettingStartingState } from "../interfaces"
+import { factory_get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
 import type { DisplayOptionsState } from "./state"
 
 
@@ -20,9 +21,9 @@ export function display_options_persist (state: RootState)
 
 
 
-export function display_options_starting_state (): DisplayOptionsState
+export function display_options_starting_state (deps: DependenciesForGettingStartingState): DisplayOptionsState
 {
-    const obj = get_persisted_state_object<DisplayOptionsState>("display_options")
+    const obj = deps.get_persisted_state_object<DisplayOptionsState>("display_options")
 
     const state: DisplayOptionsState = {
         consumption_formatting: true,
@@ -53,6 +54,7 @@ interface ExperimentalFeaturesState
 }
 const get_experimental_features_state = (): ExperimentalFeaturesState =>
 {
+    const get_persisted_state_object = factory_get_persisted_state_object(localStorage.getItem)
     const obj = get_persisted_state_object<ExperimentalFeaturesState>("experimental_features")
     return {
         enable_angular_connections: obj.enable_angular_connections ?? false,

@@ -1,6 +1,7 @@
 import { pick } from "../../shared/utils/pick"
 import type { RootState } from "../State"
-import { get_persisted_state_object, persist_state_object } from "../persistence/persistence_utils"
+import { DependenciesForGettingStartingState } from "../interfaces"
+import { persist_state_object } from "../persistence/persistence_utils"
 import type { SyncState, SyncStateForDataType } from "./state"
 
 
@@ -15,9 +16,9 @@ export function sync_persist (state: RootState)
 
 
 
-export function sync_starting_state (): SyncState
+export function sync_starting_state (deps: DependenciesForGettingStartingState): SyncState
 {
-    const obj = get_persisted_state_object<SyncState>("sync")
+    const obj = deps.get_persisted_state_object<SyncState>("sync")
 
     const default_sync_state_for_one_data_type: SyncStateForDataType = {
         status: undefined,

@@ -1,6 +1,6 @@
 
 
-type SupportedPersistenceKeys = (
+export type SupportedPersistenceKeys = (
     "display_options"
     | "filter_context"
     | "controls"
@@ -19,15 +19,20 @@ export function persist_state_object (key: SupportedPersistenceKeys, obj: object
 
 
 
-export function get_persisted_state_object <O> (key: SupportedPersistenceKeys): Partial<O>
+export function factory_get_persisted_state_object (local_storage_get_item: (key: string) => string | null)
 {
-    try
+    function get_persisted_state_object <O> (key: SupportedPersistenceKeys): Partial<O>
     {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        return JSON.parse(localStorage.getItem("persisted_" + key) || "{}")
+        try
+        {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            return JSON.parse(local_storage_get_item("persisted_" + key) || "{}")
+        }
+        catch (e)
+        {
+            return {}
+        }
     }
-    catch (e)
-    {
-        return {}
-    }
+
+    return get_persisted_state_object
 }
