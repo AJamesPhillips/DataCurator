@@ -1,6 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit"
 import type { User as SupabaseAuthUser } from "@supabase/supabase-js"
 
+import { access_control_to_str } from "../../access_controls/access_control_to_str"
 import type { SupabaseKnowledgeBaseWithAccess, SupabaseUsersById } from "../../supabase/interfaces"
 import { get_user_name_for_display } from "../../supabase/users"
 import "./StorageOption.scss"
@@ -22,12 +23,9 @@ export function StorageOption (props: OwnProps)
 {
     const { user, users_by_id, base, selected, on_click, on_click_edit } = props
 
-    const { title, public_read, access_level } = base
+    const { title, access_level } = base
 
-    const access_description = access_level === "owner" ? "Editor (Owner)"
-        : access_level === "editor" ? "Editor"
-        : access_level === "viewer" ? "Viewer"
-        : base.public_read ? "Viewer (public access)" : "?"
+    const access_description = access_control_to_str(access_level)
 
     return <tr
         className={"base_option " + (selected ? "selected" : "") }
@@ -37,7 +35,7 @@ export function StorageOption (props: OwnProps)
         <td>
             {title || "(No title)"}
         </td>
-        <td>{public_read && "(Public)"}</td>
+        <td>{base.public_read ? "Public" : "Private"}</td>
 
         <td>{get_user_name_for_display({ users_by_id, current_user_id: user?.id, other_user_id: base.owner_user_id })}</td>
         <td>{access_description}</td>

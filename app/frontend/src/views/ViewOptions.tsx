@@ -7,7 +7,7 @@ import { connect, ConnectedProps } from "react-redux"
 
 import { ACTIONS } from "../state/actions"
 import type { RootState } from "../state/State"
-import { selector_current_user_access_level } from "../state/user_info/selector"
+import { selector_can_not_edit, selector_current_user_access_level } from "../state/user_info/selector"
 import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
 
 
@@ -15,10 +15,12 @@ import { invert_disabled_appearance } from "../ui_themes/invert_disabled"
 const map_state = (state: RootState) =>
 {
     const access_level = selector_current_user_access_level(state)
+    const can_not_edit = selector_can_not_edit(state)
 
     return {
         presenting: state.display_options.consumption_formatting,
         access_level,
+        can_not_edit,
     }
 }
 
@@ -33,8 +35,7 @@ type Props = ConnectedProps<typeof connector>
 
 function _ViewOptions (props: Props)
 {
-    const { access_level } = props
-    const can_not_edit = access_level === "viewer" || access_level === "none"
+    const { access_level, can_not_edit } = props
     const are_in_edit_mode = !props.presenting
 
     const [present_warning, set_present_warning] = useState<boolean | undefined>(undefined)

@@ -94,3 +94,11 @@ export function selector_current_user_access_level (state: RootState)
 
     return base?.access_level
 }
+
+
+export function selector_can_not_edit (state: RootState)
+{
+    const access_level = selector_current_user_access_level(state)
+
+    return access_level === undefined || access_level === "viewer" || access_level === "none"
+}
