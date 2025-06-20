@@ -42,7 +42,14 @@ function _CreateNewWComponent (props: Props)
 
     if (base_id === undefined) return <div class="create_new_wcomponent">Select a project first.</div>
 
-    if (can_not_edit) return <div>This project is read only because you only have {access_control_to_str(props.access_level)} permissions.</div>
+    if (can_not_edit) return <div>
+        <p>
+            Select a component to view it or use the "breadcrumbs" at the top of the page to change to a different project or knowledge view.
+        </p>
+        <p>
+            You have '{access_control_to_str(props.access_level)}' access, so you can view this project but not edit it.
+        </p>
+    </div>
 
     if (!editing) return <div class="create_new_wcomponent">
         <FrontendButton onClick={() => props.toggle_consumption_formatting()}>
