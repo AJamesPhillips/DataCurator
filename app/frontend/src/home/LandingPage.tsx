@@ -12,7 +12,7 @@ import makeStyles from "@mui/styles/makeStyles"
 import { get_supabase } from "datacurator-core/supabase/get_supabase"
 import { useEffect, useState } from "preact/hooks"
 
-import { get_persisted_state_object } from "../state/persistence/persistence_utils"
+import { factory_get_persisted_state_object } from "../state/persistence/persistence_utils"
 import type { UserInfoState } from "../state/user_info/state"
 import { DefaultTheme } from "../ui_themes/material_default"
 import "./LandingPage.scss"
@@ -26,6 +26,7 @@ declare module "@mui/styles/defaultTheme" {
 
 
 
+const get_persisted_state_object = factory_get_persisted_state_object()
 export function LandingPage()
 {
     const supabase = get_supabase()

@@ -141,7 +141,7 @@ function _WComponentKnowledgeViewForm (props: Props)
 
         {(editing_allowed && knowledge_view_entry && !knowledge_view_entry.blocked) && <FormControl variant="standard" component="fieldset" fullWidth={true} margin="normal">
                 <FormLabel component="legend">Frame</FormLabel>
-                <p>
+                <div>
                     <Button
                         value={frame_present ? "Remove Frame" : "Add Frame"}
                         onClick={() =>
@@ -164,7 +164,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                             upsert_entry(knowledge_view.id, args)
                         }}
                     />
-                </p>
+                </div>
                 {frame_present && <>
                     <span className="description_label">Frame Color</span>
                     <ColorPicker
@@ -178,10 +178,10 @@ function _WComponentKnowledgeViewForm (props: Props)
             </FormControl>
         }
 
-        {editing_allowed && <p>
+        {editing_allowed && <div>
             <AlignComponentForm wcomponent_id={wcomponent_id} />
             <br />
-        </p>}
+        </div>}
 
         <div style={{ display: "inline-flex" }}>
             <MoveToWComponentButton
@@ -220,7 +220,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {show_remove_button && <p>
+        {show_remove_button && <div>
             <ConfirmatoryDeleteButton
                 button_text={remove_button_text}
                 tooltip_text={remove_button_tooltip}
@@ -232,7 +232,7 @@ function _WComponentKnowledgeViewForm (props: Props)
                     })
                 }}
             />
-        </p>}
+        </div>}
 
 
         {show_remove_and_block_button && <div>
@@ -250,7 +250,7 @@ function _WComponentKnowledgeViewForm (props: Props)
         </div>}
 
 
-        {editing_allowed && <p>
+        {editing_allowed && <div>
             Add to knowledge view
             <SelectKnowledgeView
                 on_change={knowledge_view_id =>
@@ -260,17 +260,17 @@ function _WComponentKnowledgeViewForm (props: Props)
                     upsert_entry(knowledge_view_id, { blocked: undefined, passthrough: undefined })
                 }}
             />
-        </p>}
+        </div>}
 
 
-        <p>
+        <div>
             <WComponentPresenceInOtherKVs wcomponent_id={wcomponent_id} />
-        </p>
+        </div>
 
 
-        <p>
+        <div>
             <WComponentBackReferences wcomponent_id={wcomponent_id} />
-        </p>
+        </div>
     </div>
 }
 

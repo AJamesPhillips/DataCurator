@@ -54,7 +54,7 @@ interface ExperimentalFeaturesState
 }
 const get_experimental_features_state = (): ExperimentalFeaturesState =>
 {
-    const get_persisted_state_object = factory_get_persisted_state_object(localStorage.getItem)
+    const get_persisted_state_object = factory_get_persisted_state_object()
     const obj = get_persisted_state_object<ExperimentalFeaturesState>("experimental_features")
     return {
         enable_angular_connections: obj.enable_angular_connections ?? false,

@@ -19,7 +19,7 @@ const default_deps: DependenciesForGettingStartingState = {
     get_date: () => new Date(),
     get_url: () => window.location.toString(),
     get_url_hash: () => window.location.hash,
-    get_persisted_state_object: factory_get_persisted_state_object(localStorage.getItem),
+    get_persisted_state_object: factory_get_persisted_state_object(),
 }
 
 

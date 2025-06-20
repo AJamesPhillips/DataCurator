@@ -264,7 +264,7 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_is_statev2(wcomponent) && (editing_allowed || wcomponent.subtype) &&
-        <p>
+        <div>
             <span className="description_label">Subtype</span>&nbsp;
             <div style={{ width: "60%", display: "inline-block" }}>
                 <AutocompleteText
@@ -276,7 +276,7 @@ function _WComponentForm (props: Props)
                     on_change={option_id => wrapped_upsert_wcomponent({ subtype: option_id })}
                 />
             </div>
-        </p>}
+        </div>}
 
 
         {(editing_allowed || wcomponent.description) && <FormControl variant="standard" fullWidth={true} margin="normal">
@@ -323,7 +323,7 @@ function _WComponentForm (props: Props)
 
 
         {wcomponent_is_plain_connection(wcomponent) && <div>
-            <p>
+            <div>
                 <WComponentFromTo
                     connection_terminal_description="From"
                     wcomponent_id={from_wcomponent && from_wcomponent.id}
@@ -333,9 +333,9 @@ function _WComponentForm (props: Props)
                     // Connections can not connect to themselves
                     exclude_ids={new Set([wcomponent.id])}
                 />
-            </p>
+            </div>
 
-            <p>
+            <div>
                 <WComponentFromTo
                     connection_terminal_description="To"
                     wcomponent_id={to_wcomponent && to_wcomponent.id}
@@ -345,9 +345,9 @@ function _WComponentForm (props: Props)
                     // Connections can not connect to themselves
                     exclude_ids={new Set([wcomponent.id])}
                 />
-            </p>
+            </div>
 
-            {editing_allowed && <p style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
+            {editing_allowed && <div style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
                 <Button
                     value="Reverse Direction"
                     onClick={() =>
@@ -355,7 +355,7 @@ function _WComponentForm (props: Props)
                         wrapped_upsert_wcomponent({ to_id: wcomponent.from_id, from_id: wcomponent.to_id })
                     }}
                 />
-            </p>}
+            </div>}
         </div>}
 
 
@@ -416,23 +416,23 @@ function _WComponentForm (props: Props)
             /><br/>
         </FormControl>
 
-        {editing_allowed && <p>
+        {editing_allowed && <div>
             <span className="description_label">Label color</span>
             <ColorPicker
                 color={wcomponent.label_color}
                 conditional_on_blur={color => wrapped_upsert_wcomponent({ label_color: color })}
             />
-        </p>}
+        </div>}
 
         {editing_allowed && <WComponentImageForm
             wcomponent={wcomponent}
             upsert_wcomponent={wrapped_upsert_wcomponent}
         />}
-        {!editing_allowed && wcomponent.summary_image && <p>
+        {!editing_allowed && wcomponent.summary_image && <div>
             <a href={wcomponent.summary_image} target="_blank"><ExternalLinkIcon />Open image</a>
-        </p>}
+        </div>}
 
-        {editing_allowed && <p>
+        {editing_allowed && <div>
             <span className="description_label">Hide node title</span>
             <EditableCheckbox
                 value={wcomponent.hide_title}
@@ -445,7 +445,7 @@ function _WComponentForm (props: Props)
             />
 
             <hr />
-        </p>}
+        </div>}
 
 
         <WComponentKnowledgeViewForm
