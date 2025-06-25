@@ -9,8 +9,7 @@ import {
 } from "datacurator-core/utils/id_regexs"
 
 import {
-    FormatCalculationErrorOrWarning,
-    get_error_or_warning_message,
+    CalculationResultErrorOrWarning
 } from "../../calculations/FormatCalculationErrorOrWarning"
 import { CalculationResult, PlainCalculationObject } from "../../calculations/interfaces"
 import { EditableTextOnBlurType } from "../../form/editable_text/editable_text_common"
@@ -103,7 +102,6 @@ export function EditableCalculationRow (props: CalculationRowProps)
     const show_units_from_target_wcomponent = !!calc.value.match(only_double_at_mentioned_uuids_regex)
 
     const common_css: CSSProperties = { display: "flex" }
-    const error_or_warning = get_error_or_warning_message(result, common_css)
 
     return <Box
         p={1}
@@ -117,7 +115,7 @@ export function EditableCalculationRow (props: CalculationRowProps)
         style={{ display: "flex" }}
         className={"form_section " + (show_options ? "" : "hidden_border")}
     >
-        <FormatCalculationErrorOrWarning {...error_or_warning} />
+        <CalculationResultErrorOrWarning result={result} />
 
         <div style={{ width: "100%", display: "flex" }}>
             <EditableTextSingleLine

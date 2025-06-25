@@ -1,5 +1,6 @@
 import WarningIcon from "@mui/icons-material/Warning"
 import { Typography } from "@mui/material"
+import { CSSProperties } from "preact/compat"
 
 
 interface Props
@@ -26,4 +27,25 @@ export function WarningTriangleV2 (props: Props)
         <WarningIcon />
         <span style={{ position: "relative", top: -7, wordBreak: "" }}>{label}</span>
     </Typography>
+}
+
+
+export function ErrorOrWarningTriangleV2 (props: { message: string, is_error: boolean })
+{
+    const { message } = props
+
+    const css: CSSProperties = {
+        display: "flex",
+        color: props.is_error ? "black" : "lightgrey",
+    }
+
+    return <div style={{
+        ...css,
+        overflow: "hidden",
+        maxHeight: message.length ? 100 : 0,
+        maxWidth: message.length ? 100 : 0,
+        transition: "max-height 1s ease, max-width 1s ease, color 1s ease",
+    }}>
+        <WarningTriangleV2 warning={message} always_display={true} />
+    </div>
 }

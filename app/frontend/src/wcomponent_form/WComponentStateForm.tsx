@@ -12,6 +12,7 @@ import {
     WComponentIsAllowedToHaveStateVAPSets,
 } from "../wcomponent/interfaces/SpecialisedObjects"
 import { VAPsType } from "../wcomponent/interfaces/VAPsType"
+import { WComponentCalculatonsCustomUnitsForm } from "./calculations/WComponentCalculatonsCustomUnitsForm"
 import { WComponentCalculatonsForm } from "./calculations/WComponentCalculatonsForm"
 import { WComponentValuePossibilitiesForm } from "./value_possibilities/WComponentValuePossibilitiesForm"
 import { WComponentValueAndPredictionsForm } from "./WComponentValueAndPredictionsForm"
@@ -55,11 +56,16 @@ function _WComponentStateForm (props: Props)
 
     return <>
         {((editing_allowed && wcomponent_allowed_calculations(wcomponent))
-        || (wcomponent_has_calculations(wcomponent) && wcomponent.calculations.length > 0)) &&
-        <WComponentCalculatonsForm
-            wcomponent={wcomponent}
-            upsert_wcomponent={upsert_wcomponent}
-        />}
+        || (wcomponent_has_calculations(wcomponent) && wcomponent.calculations.length > 0)) && <>
+            <WComponentCalculatonsForm
+                wcomponent={wcomponent}
+                upsert_wcomponent={upsert_wcomponent}
+            />
+            <WComponentCalculatonsCustomUnitsForm
+                wcomponent={wcomponent}
+                upsert_wcomponent={upsert_wcomponent}
+            />
+        </>}
 
 
         {(orig_values_and_prediction_sets !== undefined && (editing_allowed || orig_values_and_prediction_sets.length > 0)) &&

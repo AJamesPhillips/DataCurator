@@ -1,10 +1,8 @@
 import { useMemo } from "preact/hooks"
 import {
-    CalculationErrorOrWarningMessage,
-    FormatCalculationErrorOrWarning,
-    get_error_or_warning_message,
+    CalculationResultErrorOrWarning,
 } from "../calculations/FormatCalculationErrorOrWarning"
-import { PlainCalculationObject } from "../calculations/interfaces"
+import { CalculationResult, PlainCalculationObject } from "../calculations/interfaces"
 import { perform_calculations } from "../calculations/perform_calculations"
 import { EditableTextOnBlurType } from "../form/editable_text/editable_text_common"
 import { EditableTextSingleLine } from "../form/editable_text/EditableTextSingleLine"
@@ -72,7 +70,7 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
         upsert_wcomponent,
     } = props
 
-    const effect_calculaton_error_warning = useMemo<undefined | CalculationErrorOrWarningMessage>(() =>
+    const effect_calculaton_result = useMemo<undefined | CalculationResult>(() =>
     {
         if (!effect_string) return undefined
 
@@ -89,8 +87,7 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
         const effect = calculation_result?.value
         if (effect !== undefined) upsert_wcomponent({ effect_when_true: effect })
 
-        const error_or_warning = get_error_or_warning_message(calculation_result)
-        return error_or_warning
+        return calculation_result
     }, [effect_string])
 
     const display_effect_string = editing || effect_string !== undefined
@@ -101,7 +98,7 @@ export function BasicCausalLinkForm (props: BasicCausalLinkFormProps)
         {display_effect_string && <div>
             <span className="description_label">Effect</span> &nbsp;
             <div style={{ display: "flex" }}>
-                {effect_calculaton_error_warning && <FormatCalculationErrorOrWarning {...effect_calculaton_error_warning} />}
+                {effect_calculaton_result && <CalculationResultErrorOrWarning result={effect_calculaton_result} />}
                 <EditableTextSingleLine
                     placeholder=""
                     value={effect_string || ""}

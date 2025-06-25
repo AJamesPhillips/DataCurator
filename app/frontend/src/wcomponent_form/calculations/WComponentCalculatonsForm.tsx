@@ -6,7 +6,6 @@ import { connect, ConnectedProps } from "react-redux"
 import { PlainCalculationObject } from "../../calculations/interfaces"
 import { perform_calculations } from "../../calculations/perform_calculations"
 import { Button } from "../../sharedf/Button"
-import { WarningTriangleV2 } from "../../sharedf/WarningTriangleV2"
 import type { RootState } from "../../state/State"
 import { index_is_in_bounds, insert_element_at_index, swap_elements } from "../../utils/list"
 import { WComponentCalculations } from "../../wcomponent/interfaces/wcomponent_base"
@@ -47,7 +46,7 @@ function _WComponentCalculatonsForm (props: Props)
         wcomponents_by_id,
     } = props
 
-    const { calculations = [] } = wcomponent
+    const { calculations = [], calculation_custom_units = [] } = wcomponent
 
     // TODO remove this line.
     // We added calculation.id slightly later so for the 3-5 components that
@@ -60,7 +59,7 @@ function _WComponentCalculatonsForm (props: Props)
     calculations.forEach(calc => initial_show_calc_options[calc.id] = false)
     const [show_calc_options, set_show_calc_options] = useState(initial_show_calc_options)
 
-    const calculation_results = perform_calculations(calculations, wcomponents_by_id)
+    const calculation_results = perform_calculations(calculations, wcomponents_by_id, calculation_custom_units)
     const existing_calculation_name_ids = calculations.map(({ name }) => name)
 
     // Note: I do not think `editable_list_entry` makes semantic sense here. We're
@@ -75,16 +74,16 @@ function _WComponentCalculatonsForm (props: Props)
                 <h4 style={{ display: "inline-block" }}>
                     Calculations {(!show_form && calculations.length) ? `(${calculations.length})` : ""}
                 </h4>
-                <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
+                {/* <div style={{ display: "inline-block", position: "relative", top: 7, left: 5 }}>
                     <WarningTriangleV2 warning={""} label="" />
-                </div>
+                </div> */}
             </div>
 
             <div className="expansion_button"/>
         </div>
 
 
-        {/* We could use <div className="details"> here but MUI is slow so want to minimise risks, see #214 */}
+        {/* We could use <div className="details"> here but MUI is slow so want to minimise risk of it degrading performance, see #214 */}
         {show_form && <div>
             <Box display="flex" flexDirection="row" flexWrap="wrap" overflow="hidden">
                 {calculations.map((calc, index) => <EditableCalculationRow

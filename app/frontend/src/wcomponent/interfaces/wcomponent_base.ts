@@ -1,3 +1,5 @@
+import { CustomUnit } from "simulation"
+
 import { PlainCalculationObject } from "../../calculations/interfaces"
 import type { Base } from "../../shared/interfaces/base"
 import type { HasVAPSetsAndMaybeValuePossibilities } from "./state"
@@ -45,7 +47,14 @@ export interface WComponentNodeBase extends WComponentBase, Partial<HasVAPSetsAn
 }
 
 
+export interface CalculationCustomUnit extends CustomUnit
+{
+    // The value for this can be reused so does not guarantee it will remain
+    // unique across time, but at any one time it should be unique.
+    id: number
+}
 export interface WComponentCalculations
 {
     calculations: PlainCalculationObject[]
+    calculation_custom_units?: CalculationCustomUnit[]
 }
