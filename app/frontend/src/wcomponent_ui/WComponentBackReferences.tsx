@@ -44,14 +44,14 @@ type Props = ConnectedProps<typeof connector> & OwnProps
 function _WComponentBackReferences (props: Props)
 {
     const { wcomponent_id, wcomponents_by_id, knowledge_views_by_id } = props
-    const [show_back_references, set_show_back_references] = useState(false)
+    const [find_back_references, set_find_back_references] = useState(false)
     const [other_wcomponents, set_other_wcomponents] = useState<WComponent[]>([])
 
     useEffect(() =>
     {
         let relevant_wcomponents: WComponent[] = []
 
-        if (show_back_references)
+        if (find_back_references)
         {
             relevant_wcomponents = Object.values(wcomponents_by_id)
                 .filter(wc => wcomponent_is_not_deleted(wc))
@@ -85,18 +85,18 @@ function _WComponentBackReferences (props: Props)
         }
 
         set_other_wcomponents(relevant_wcomponents)
-    }, [wcomponent_id, wcomponents_by_id, show_back_references])
+    }, [wcomponent_id, wcomponents_by_id, find_back_references])
 
-    if (!show_back_references) return <div>
+    if (!find_back_references) return <div>
         <Button
-            value="Show back references"
-            onClick={() => set_show_back_references(true)}
+            value="Find back references"
+            onClick={() => set_find_back_references(true)}
         />
     </div>
 
 
     if (other_wcomponents.length === 0) return <div>
-        No back references
+        No back references found in this project.  (Searching over all public and private projects not implemented yet.)
     </div>
 
 
