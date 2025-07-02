@@ -46,10 +46,10 @@ export const test_number_to_significant_figures = describe.delay("run_number_to_
         test(formatted_number, "-27.000", "-27 to 5 sf")
 
         formatted_number = format_number_to_significant_figures(-270000000.2, 11)
-        test(formatted_number, "-270000000.20", "-270.2 million to 11 sf")
+        test(formatted_number, "-270000000.20", "-270.0000002 million to 11 sf")
 
         formatted_number = format_number_to_significant_figures(-270000000.2, 2)
-        test(formatted_number, "-270000000", "-270.2 million to 2 sf")
+        test(formatted_number, "-270000000", "-270.0000002 million to 2 sf")
     })
 
 

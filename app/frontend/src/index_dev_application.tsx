@@ -17,6 +17,7 @@ import { SandboxWComponentCanvasNode } from "./scratch_pad/SandboxWComponentCanv
 import { get_store } from "./state/store"
 import { DataApp } from "./x_data_app/DataApp"
 import { get_data_app_store } from "./x_data_app/state/get_data_app_store"
+import { LakeSim } from "./x_sim_app/lake_sim"
 import { SimHome } from "./x_sim_app/SimHome"
 
 
@@ -53,7 +54,11 @@ const map_request_to_app: {[index: string]: () => JSX.Element} = {
     {
         const store = get_data_app_store({ load_state_from_storage: false })
         return <Provider store={store}><DataApp /></Provider>
-    }
+    },
+    "lake_sims": () =>
+    {
+        return <LakeSim />
+    },
 }
 
 
