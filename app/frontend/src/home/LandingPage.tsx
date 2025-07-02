@@ -75,7 +75,7 @@ export function LandingPage()
                         </Button>
                     </div>
 
-                    {/* Copied from https://centerofci.org/projects/datacurator/ */}
+                    {/* Copied from https://centerofci.org/datacurator/ */}
 
                     <h3>
                         What is <strong>Data Curator</strong>?
@@ -146,7 +146,7 @@ export function LandingPage()
                     </h3>
 
                     <p>
-                        DataCurator is a <a href="https://centerofci.org/projects/datacurator/">CCI project</a> supported by <a href="https://centerofci.org/about/">our generous funders</a>.
+                        DataCurator started as a <a href="https://centerofci.org/datacurator/">CCI project</a> supported by <a href="https://centerofci.org/about/">CCI's generous funders</a>.
                     </p>
 
                     <h3>
@@ -154,7 +154,7 @@ export function LandingPage()
                     </h3>
 
                     <p>
-                        Please post any requests for <a href="https://github.com/centerofci/DataCurator/discussions/categories/q-a">support or questions here</a> or email us at webadmin at centerofci dot org . For any bugs please <a href="https://github.com/centerofci/DataCurator/issues">post here</a>.
+                        Please post any requests for <a href="https://github.com/AJamesPhillips/DataCurator/discussions/categories/q-a">support or questions here</a>. For any bugs please <a href="https://github.com/AJamesPhillips/DataCurator/issues">post here</a>.
                     </p>
 
                     <br />
@@ -167,12 +167,6 @@ export function LandingPage()
                     <div>
                         Example screenshot of the <a href="/app/#wcomponents/&storage_location=16&subview_id=b97c6b8e-b920-4a10-b446-b84588eebd56&view=knowledge&x=8&y=-1909&zoom=12">Foresight Obesity model in DataCurator</a>
                     </div>
-
-                    <p style={{ textAlign: "center" }}>
-                        <a href="https://centerofci.org/about/">
-                            <img src="/cci_logo.svg" style={{ width: 120, marginTop: 40 }} />
-                        </a>
-                    </p>
 
                     <p>
                         <a href="/privacy-policy">Privacy Policy</a><br/>

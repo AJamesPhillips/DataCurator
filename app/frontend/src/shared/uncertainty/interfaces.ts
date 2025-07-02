@@ -66,7 +66,7 @@ export interface TemporalUncertainty extends Partial<PredictionBase>
     //   will/not happen on N datetime       |   true    |  undefined |  whatever X%
     //   did/not happen on N datetime        |   false   |  undefined |  whatever X%
     // There is an implied min max which you can set if needed, without setting them it's likely it will
-    // be assume to be a day resolution.  See https://github.com/centerofci/data-curator/issues/7
+    // be assume to be a day resolution.  See https://github.com/AJamesPhillips/data-curator/issues/7
     //
     // For:
     //   will/not happen before N datetime   |   true    |  undefined |  whatever X%
