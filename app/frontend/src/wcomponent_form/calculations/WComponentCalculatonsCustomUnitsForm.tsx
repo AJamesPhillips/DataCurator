@@ -88,7 +88,8 @@ function _WComponentCalculatonsCustomUnitsForm (props: Props)
                             ...calculation_custom_units.slice(index + 1),
                         ]
 
-                        const modified_calculation_custom_units = modified_calculation_custom_units_with_nulls.filter(calc => !!calc)
+                        const modified_calculation_custom_units: CalculationCustomUnit[] = []
+                        modified_calculation_custom_units_with_nulls.forEach(calc => calc && modified_calculation_custom_units.push(calc))
 
                         props.upsert_wcomponent({ calculation_custom_units: modified_calculation_custom_units })
                     }}
