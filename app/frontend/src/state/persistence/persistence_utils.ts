@@ -19,7 +19,7 @@ export function persist_state_object (key: SupportedPersistenceKeys, obj: object
 
 
 
-export function factory_get_persisted_state_object (local_storage_get_item: (key: string) => string | null = localStorage.getItem)
+export function factory_get_persisted_state_object (local_storage_get_item: (key: string) => string | null = localStorage.getItem.bind(localStorage))
 {
     function get_persisted_state_object <O> (key: SupportedPersistenceKeys): Partial<O>
     {
@@ -30,6 +30,7 @@ export function factory_get_persisted_state_object (local_storage_get_item: (key
         }
         catch (e)
         {
+            console.error(`Error getting and parsing persisted state for key "${key}":`, e)
             return {}
         }
     }
