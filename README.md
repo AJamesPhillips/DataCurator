@@ -14,7 +14,7 @@ Find out more at [DataCurator.org](https://datacurator.org/), view [an example m
 
 ### Deprecated features
 * Counterfactuals have been deprecated in favour of "state value"s which are more
-flexible and allow for a wider range of use cases.  They're functionality will
+flexible and allow for a wider range of use cases.  Their functionality will
 be removed in future versions.
 * Gantt chart like Microsoft project
   * the `prioritisation` component type, and the two views ("Priorities" (map) and "Priorities list") have been removed with commits [a7f2d8b1](https://github.com/AJamesPhillips/DataCurator/commit/a7f2d8b1cae927c29d65626137e47641fe92489d) and [8b23d031](https://github.com/AJamesPhillips/DataCurator/commit/8b23d0312678443fc14fc9fa837163ec3373615f) - June 2025.  See [this video](https://www.youtube.com/watch?v=z2WZMatpVUs&t=0s) for a description of these prioritisation features before they were removed.
