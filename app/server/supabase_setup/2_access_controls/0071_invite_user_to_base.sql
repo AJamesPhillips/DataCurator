@@ -5,7 +5,8 @@ BEGIN
 EXCEPTION WHEN invalid_text_representation THEN
   RETURN NULL;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql
+SET search_path = '';
 
 
 -- CREATE OR REPLACE FUNCTION get_user_id_from_id_or_email(email_or_uid text)
