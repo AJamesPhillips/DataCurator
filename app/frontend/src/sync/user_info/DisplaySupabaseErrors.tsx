@@ -1,4 +1,4 @@
-import type { AuthError, PostgrestError } from "@supabase/supabase-js"
+import type { AuthError } from "@supabase/supabase-js"
 
 
 
@@ -20,7 +20,7 @@ export function DisplaySupabaseSessionError (props: { error: AuthError | null })
 
 
 // TODO merge with error_to_string
-export function DisplaySupabasePostgrestError (props: { error?: PostgrestError | null })
+export function DisplaySupabasePostgrestError (props: { error?: Error | null })
 {
     const { error } = props
     if (!error) return null
