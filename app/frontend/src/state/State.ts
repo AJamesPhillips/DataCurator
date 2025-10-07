@@ -15,13 +15,9 @@ import type { ToastMessageState } from "./toast/state"
 import type { UserInfoState } from "./user_info/state"
 
 
-
-export interface RootStateCore
+export interface RootState
 {
     specialised_objects: SpecialisedObjectsState
-}
-export interface RootState extends RootStateCore
-{
     controls: ControlsState
     derived: DerivedState
     display_options: DisplayOptionsState
