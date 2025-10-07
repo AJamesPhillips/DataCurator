@@ -1,4 +1,5 @@
-
+-- Copied between DataCurator/app/server/supabase_setup/3_users/0090_policy.sql
+-- and wikisim wikisim-supabase/supabase/migrations/2022_03_10_03_user_table_policies.sql repo
 
 
 alter table public.users enable row level security;
