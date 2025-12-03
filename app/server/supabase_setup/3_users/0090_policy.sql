@@ -11,4 +11,4 @@ CREATE policy "User can update their own user entry" on public.users for update 
 --- The user table currently only contains their user name so we can allow all
 --- users to read all user names
 --- SECURITY
-CREATE policy "User can read all users" on public.users for select using ( true );
+CREATE POLICY "Anyone can read all users" ON public.users FOR SELECT USING ( true );
