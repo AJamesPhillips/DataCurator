@@ -222,6 +222,9 @@ function filter_out_unsupported_wcomponent_types (wcomponent: WComponent): WComp
 {
     if (wcomponent_types_set.has(wcomponent.type)) return wcomponent
 
-    console.warn(`Unsupported wcomponent type "${wcomponent.type}", id "${wcomponent.id}", title: "${wcomponent.title}".  This wcomponent will not be used.`)
-    return undefined
+    console.warn(`Unsupported wcomponent type "${wcomponent.type}", id "${wcomponent.id}", title: "${wcomponent.title}".  This wcomponent will be used as a statev2.`)
+    return {
+        ...wcomponent,
+        type: "statev2",
+    }
 }
