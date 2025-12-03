@@ -134,11 +134,11 @@ export function LandingPage()
                     </h3>
 
                     <p>
-                        Click on the <a href="/app/">button</a> above or <a href="https://www.youtube.com/playlist?list=PLdbIJ7BPHJ_lHTDvBE8PhpLccPNq4Mu7E">watch the video tutorial series</a>
+                        Click on the <a href="/app/">button</a> above or <a href="https://www.youtube.com/playlist?list=PLfHCwWfzsc1N3aX1Vf1zJbFXGQKRtfYWs">watch the video tutorial series</a>
                     </p>
 
                     <p>
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLdbIJ7BPHJ_lHTDvBE8PhpLccPNq4Mu7E" title="YouTube video player" frameBorder="0" {...{ allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" }} allowFullScreen></iframe>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/videoseries?list=PLfHCwWfzsc1N3aX1Vf1zJbFXGQKRtfYWs" title="YouTube video player" frameBorder="0" {...{ allow: "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" }} allowFullScreen></iframe>
                     </p>
 
                     <h3>
