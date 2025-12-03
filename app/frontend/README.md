@@ -22,10 +22,12 @@ Note: this does not currently work.  Instead:
 2. open the console
 3. call the function `run_tests()`
 
-### npm run build
+### Build and deploy
 
-Builds the app for production to the `build/` folder.
-It correctly bundles Preact in production mode and optimizes the build for the best performance.
+Ensure you are in `app/frontend` then run `npm run build` which builds the app for production to the `app/frontend/dist/` folder.
+
+rm -rf ../../../data-curator-build/app/* ../../../data-curator-build/assets/*
+cp -r dist/* ../../../data-curator-build/
 
 
 # Dev
