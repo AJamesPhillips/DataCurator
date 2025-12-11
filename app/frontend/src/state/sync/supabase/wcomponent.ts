@@ -211,14 +211,13 @@ export function wcomponent_app_to_supabase (item: WComponent, base_id?: number):
 export function wcomponent_supabase_to_app (item: SupabaseReadWComponent): WComponent | undefined
 {
     let wc = supabase_item_to_app(item)
-    const maybe_wc = filter_out_unsupported_wcomponent_types(wc)
-    if (!maybe_wc) return undefined
-    wc = parse_wcomponent(wc)
+    const converted_wc = convert_unsupported_wcomponent_types(wc)
+    wc = parse_wcomponent(converted_wc)
     return wc
 }
 
 
-function filter_out_unsupported_wcomponent_types (wcomponent: WComponent): WComponent | undefined
+function convert_unsupported_wcomponent_types (wcomponent: WComponent): WComponent
 {
     if (wcomponent_types_set.has(wcomponent.type)) return wcomponent
 
